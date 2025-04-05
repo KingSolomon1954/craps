@@ -1,0 +1,33 @@
+# ----------------------------------------------
+#
+# Performs a build on all branches, including main.
+#
+# ----------------------------------------------
+
+name: Build
+run-name: Build on branch "${{ github.ref_name }}" - ${{ github.event.head_commit.message }}
+
+on:
+
+  push: # All branches do a build on a push, including main
+
+    # Prevent a build loop that can occur when a release
+    # is triggered and artifacts are checked-in.
+    #
+    paths-ignore:
+      - docs/site/**
+      - ./version
+      - etc/changelog
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+
+  do-build:
+    uses: ./.github/workflows/shared-build.yml
+    with:
+      do-release: false
+      release-level: none
+    secrets: inherit  # Pass repository secrets to the shared workflow
