@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: RedFlame.cpp
+// File: RoyalCraps.cpp
 //
 //----------------------------------------------------------------
 
-#include "RedFlame.h"
+#include "RoyalCraps.h"
 #include <iostream>
 #include <rang.hpp>
 #include "gen/BuildInfo.h"
@@ -25,9 +25,9 @@ Constructor
 @param[in] argv
     Array of command line args.
 */
-RedFlame::RedFlame(int argc, char* argv[])
+RoyalCraps::RoyalCraps(int argc, char* argv[])
 {
-    Gen::BuildInfo bld("RedFlame");
+    Gen::BuildInfo bld("RoyalCraps");
     CommandLine cmdline(argc, argv, bld);
     std::cout << bld.fullInfo() << std::endl;
     

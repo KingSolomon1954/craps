@@ -4,7 +4,7 @@ from conan import ConanFile
 from conan.tools.cmake import CMake
 
 class AppRecipe(ConanFile):
-    name = "RedFlame"  # Library name published to Conan Center
+    name = "RoyalCraps"  # Library name published to Conan Center
     license = "MIT Software License"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain", "CMakeDeps"

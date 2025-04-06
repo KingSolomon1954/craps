@@ -29,7 +29,7 @@ Constructor
 CommandLine::CommandLine(int argc, char* argv[],
                          const Gen::BuildInfo& bld)
 {
-    cxxopts::Options options("C++Bootstrap", "A brief description");
+    cxxopts::Options options("RoyalCraps", "A multiplayer dice game");
 
     options.add_options()
         ("f,foo", "Param foo",
@@ -60,10 +60,10 @@ CommandLine::CommandLine(int argc, char* argv[],
         exit(0);
     }
     bool debug = result["debug"].as<bool>();
-    (void)debug;
+    (void)debug;  // suppress compiler warning
     
     int foo = result["foo"].as<int>();    
-    (void)foo;
+    (void)foo;  // suppress compiler warning
     
     std::string bar;
     if (result.count("bar"))

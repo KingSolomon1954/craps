@@ -1,7 +1,7 @@
 .. comment:
-   AppName - full name of application spelled out, e.g, RedFlame
-   ExecName - the invocation name on the command line e.g, rf
+   AppName - full name of application spelled out, e.g, MyApp
+   ExecName - the invocation name on the command line e.g, myapp
 
-.. |AppName| replace:: RedFlame
+.. |AppName| replace:: RoyalCraps
 
-.. |ExecName| replace:: RedFlame
+.. |ExecName| replace:: RoyalCraps

@@ -1,15 +1,15 @@
 //----------------------------------------------------------------
 //
-// File: RedFlameTest.cpp
+// File: RoyalCrapsTest.cpp
 //
 //----------------------------------------------------------------
 
-#include "RedFlame.h"
+#include "RoyalCraps.h"
 #include <doctest/doctest.h>
 
 //----------------------------------------------------------------
 
-TEST_CASE("main::RedFlame:all")
+TEST_CASE("main::RoyalCraps:all")
 {
     REQUIRE(true);
 }

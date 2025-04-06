@@ -1,34 +1,167 @@
-C++ Bootstrap
--------------
-TODO: maybe package up program for installation
-TODO: conan login uses JSON file instead of home grown - postpone
-TODO: conan library producer 
-TODO: conan write a help file for make conan-help
-TODO: contributions.md
-TODO: add remote gdb debug
-TODO: consider code formatting uncrustify.mak
-TODO: add URL link checker https://github.com/lycheeverse/lychee
-TODO: checkout semver to bump versions, you put it in ~/tmp/semver
-https://github.com/fsaintjacques/semver-tool
-https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
-TODO: continue unfinished release logic on release branch, merge to main
+Royal Craps
+-----------
+TODO: 
 
-Done: Fix start-build-container
-Done: multiple container registries auto-login
-Done: maybe add conan as a registry
-Done: maybe use lib-container-registry to implement conan login
-Done: add static code analysis
-Done: publish code coverage report website
-Done: publish static analysis to website
-Done: restructure project layout
-Done: add build passing badge to readme
-Done: conan cache in _build tree, nope, want to share libs across repos
-Done: run CI pipeline upon merge to master
-Done: add badge for code coverage https://img.shields.io
-Done: container images come from DockerHub - cancelled, made ghcr.io public
-Done: add badge for version
-Done: GitHub action to build docs, try docker-in-docker
-Done: add badge for static analysis
-Done: add workflow for branch builds
-Done: add dependency for code coverage so it builds from scratch
-Done: publish docs as part of master CI build
+Casino
+    Top n players (winnings)
+        name, winnings, num sessions, play time
+        name, winnings, num sessions, play time
+    Top Shooters
+        top n longest shooter rolls ever
+        name, date, num rolls, duration
+        name, date, num rolls, duration
+
+Table
+    Identity
+        name
+        location
+        casino
+        game rules
+    Run State
+        list of players
+        list of bets
+        shooter
+        point
+        max bet
+        min bet
+        amount on table
+    Bank
+        money start
+        money current
+        money payout
+        money intake
+        money difference
+        money refill
+        num refills
+    Current Session
+        session start date/time
+        session end date/time
+        session duration
+        session total num dice rolls
+        session total num bets
+        session avg num bets per roll
+        session max amount bets one roll
+        session max amount payout one roll
+        session max amount intake one roll
+        session total payout
+        session total intake
+        session shooter num times
+        session shooter longest time
+        session shooter longest num rolls
+    All-time Sessions
+        total time playing
+        total num sessions
+        avg duration
+        avg win/lose per session
+        avg num of bets per session
+        all-time max payout session
+        all-time max intake session
+        all-time total num dice rolls
+        all-time total num bets
+        all-time avg num bets per roll
+        all-time max amount bets one roll
+        all-time max amount payout one roll
+        all-time max amount intake one roll
+        all-time total payout
+        all-time total intake
+        all-time shooter num times
+        all-time shooter longest time
+        all-time shooter longest num rolls
+
+Bet
+    bet name
+    player name
+    amount
+    odds amount
+
+Player
+    Identity (name, etc)
+        name
+        location
+        betting profile
+    Run State
+        list of bets
+        amount on table
+    Bank
+        money start
+        money current
+        money payout
+        money intake
+        money difference
+        money refill
+        num refills
+    Current Session
+        session start date/time
+        session end date/time
+        session duration
+        session total num dice rolls
+        session total num bets
+        session avg num bets per roll
+        session max amount bets one roll
+        session max amount payout one roll
+        session max amount intake one roll
+        session total payout
+        session total intake
+        session shooter num times
+        session shooter longest time
+        session shooter longest num rolls
+    All-time Sessions
+        total time playing
+        total num sessions
+        avg duration
+        avg win/lose per session
+        number of winning sessions
+        number of losing sessions
+        avg num of table dice rolls per session
+        avg num of bets per session
+        all-time max payout session
+        all-time max intake session
+        all-time total num dice rolls
+        all-time total num bets
+        all-time avg num bets per roll
+        all-time max amount bets one roll
+        all-time max amount payout one roll
+        all-time max amount intake one roll
+        all-time total payout
+        all-time total intake
+        
+        all-time shooter num turns
+        all-time shooter longest time
+        all-time average time being shooter
+        all-time shooter longest num rolls
+        all-time shooter avg num throws per turn
+        all-time shooter num turns winning
+        all-time shooter num turns losing
+        all-time shooter highest winning
+        all-time shooter highest losing
+        all-time shooter win/lose
+
+Rolling
+    automated timed rolling (adjustable), pause
+    user manually rolls
+    animation - full/partial
+
+Betting
+    all bets on/off
+    come out rolls odds working yes/no
+
+Betting automation
+    play pass each roll (amount)
+    play odds each roll (amount)
+    play dont each roll (amount)
+    play dont odds each roll (amount)
+    play come each roll (amount)
+    play come odds each roll (amount)
+    play dont come each roll (amount)
+    play dont come odds each roll (amount)
+    play place each come out roll (number, amount)
+    play dont place each come out roll (number, amount)
+    play hardways each come out roll (number, amount)
+
+Sounds on/off
+    master on/off
+    dice rolling
+    players sounds
+    croupier sounds
+    background music/noise
+

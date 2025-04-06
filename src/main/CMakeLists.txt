@@ -1,6 +1,6 @@
 # --------------------------------------------------------
 #
-# CMakeLists file to compile myapp
+# CMakeLists file to compile RoyalCraps
 #
 # --------------------------------------------------------
 
@@ -9,8 +9,8 @@ find_package(rang REQUIRED)
 
 add_library(main STATIC
     src/CommandLine.cpp
-    src/RedFlame.cpp
     src/Properties.cpp
+    src/RoyalCraps.cpp
 )
 
 target_include_directories(main
@@ -35,11 +35,11 @@ target_compile_definitions(main
     >
 )
 
-add_executable(RedFlame
+add_executable(RoyalCraps
     src/main.cpp
 )
 
-target_link_libraries(RedFlame
+target_link_libraries(RoyalCraps
     PRIVATE main
 )
 

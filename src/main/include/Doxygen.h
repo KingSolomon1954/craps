@@ -10,11 +10,11 @@
 
 /*-----------------------------------------------------------*//**
 
-@mainpage RedFlame
+@mainpage RoyalCraps
 
-![RedFlame](docs/src/images/pub/CampfireLakeSmall.png)
+![RoyalCraps](docs/src/images/pub/CampfireLakeSmall.png)
 
-Add description of RedFlame
+Add description of RoyalCraps
 
 @li @ref App
 @li @ref Gen

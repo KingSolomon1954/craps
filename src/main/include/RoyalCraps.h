@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: RedFlame.h
+// File: RoyalCraps.h
 //
 //----------------------------------------------------------------
 
@@ -8,13 +8,13 @@
 
 namespace App {
 
-class RedFlame
+class RoyalCraps
 {
 public:
     /// @name Lifecycle
     /// @{
-    RedFlame(int argc, char* argv[]);
-   ~RedFlame() = default;
+    RoyalCraps(int argc, char* argv[]);
+   ~RoyalCraps() = default;
     /// @}
 
     /// @name Modifiers
@@ -28,7 +28,7 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class RedFlame
+@class RoaylCraps
 
 @brief Placeholder for Application class.
 

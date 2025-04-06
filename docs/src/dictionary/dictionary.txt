@@ -26,8 +26,8 @@ middleware
 modindex
 NONINFRINGEMENT
 Poco
-redflame
-RedFlame
+royalcraps
+RoyalCraps
 Reusability
 RPC
 rst

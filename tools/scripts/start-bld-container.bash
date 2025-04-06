@@ -7,9 +7,9 @@
 #
 #   Example:
 #       elvis/proj/          <-- container mount point, mounted as "/work"
-#               cpp-bootstrap
-#               project1
-#               RedFlame
+#               craps
+#               project-abc
+#               project-xyz
 #
 # Invocation looks something like this:
 #

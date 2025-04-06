@@ -2,7 +2,7 @@
 #
 # File: Makefile
 #
-# Copyright (c) 2024 KingSolomon1954
+# Copyright (c) 2025 KingSolomon1954
 #
 # SPDX-License-Identifier: MIT
 #
@@ -40,7 +40,7 @@ D_MAK    := $(D_TOOLS)/submakes
 D_SCP    := $(D_TOOLS)/scripts
 D_CONAN  := $(D_TOOLS)/conan
 D_CNTRS  := $(D_TOOLS)/containers
-APP_NAME := RedFlame
+APP_NAME := RoyalCraps
 
 all: all-relay
 

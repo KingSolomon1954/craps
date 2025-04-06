@@ -33,7 +33,7 @@ ${BRIGHT}Static Analysis of Entire Repo:${CLEAR}
 ${BRIGHT}Static Analysis of a Single File:${CLEAR}
     Invoke target with path and a suffix of '.sta'
 
-    > make main/src/RedFlame.sta
+    > make main/src/RoyalCraps.sta
     # Results are output as text to the console.
     # Be aware there is no output if file has no errors.
 
@@ -55,7 +55,7 @@ ${BRIGHT}Suppressing Errors:${CLEAR}
 
     Here is an example entry:
 
-    leakReturnValNotUsed:/work/main/src/RedFlame.cpp:54
+    leakReturnValNotUsed:/work/main/src/RoyalCraps.cpp:54
 
 ${BRIGHT}Repository Setup:${CLEAR}
     Instructions on how to incorporate in repo makefile

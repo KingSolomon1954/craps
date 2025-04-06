@@ -12,8 +12,8 @@
 
 cmake_minimum_required(VERSION 3.20)
 
-project("RedFlame"
-    DESCRIPTION "A high intensity software flame"
+project("RoyalCraps"
+    DESCRIPTION "Multiplayer dice game"
 )
   
 set(CMAKE_CXX_STANDARD 17)

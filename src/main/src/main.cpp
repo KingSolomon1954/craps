@@ -4,14 +4,14 @@
 //
 //----------------------------------------------------------------
 
-#include "RedFlame.h"
+#include "RoyalCraps.h"
 
 //----------------------------------------------------------------
 
 int
 main(int argc, char* argv[])
 {
-    App::RedFlame rf(argc, argv);
+    App::RoyalCraps craps(argc, argv);
     return 0;
 }
 

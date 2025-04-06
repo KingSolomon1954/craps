@@ -4,17 +4,17 @@
 #
 # -----------------------------------------------------------------
 
-add_executable(RedFlame-ut
+add_executable(RoyalCraps-ut
     utest-main.cpp
-    RedFlameTest.cpp
+    RoyalCrapsTest.cpp
     PropertiesTest.cpp
 )
 
-target_link_libraries(RedFlame-ut
+target_link_libraries(RoyalCraps-ut
     PRIVATE main
     PRIVATE doctest::doctest
 )
 
-doctest_discover_tests(RedFlame-ut)
+doctest_discover_tests(RoyalCraps-ut)
 
 # -----------------------------------------------------------------

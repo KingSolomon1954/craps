@@ -2,14 +2,6 @@
 .. |logo image|  image:: /images/pub/LogoBootstrap60x90.png
    :align: middle
 
-This is sample documentation auto-generated from the **C++
-Bootstrap Project**. |logo image| 
-
-Documentation is for a hypothetical application called *RedFlame*. See
-the source code, documentation source, and build automation at the 
-`C++ Bootstrap Project <https://github.com/KingSolomon1954/cpp-bootstrap>`_
-on GitHub.
-
 ***********************
 |AppName| Documentation
 ***********************

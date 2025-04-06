@@ -12,9 +12,9 @@ import datetime
 
 # -- General -----------------------------------------------------
 
-project = 'RedFlame'
-author  = 'RedFlame, Inc'
-copyright = f'{datetime.datetime.now().year}, RedFlame, Inc'
+project = 'RoyalCraps'
+author  = 'KingSolomon1954@github.com'
+copyright = f'{datetime.datetime.now().year}, KingSolomon1954'
 
 # -- File Setup --------------------------------------------------
 
