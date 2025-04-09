@@ -1,17 +1,15 @@
 //----------------------------------------------------------------
 //
-// File: RoyalCrapsTest.cpp
+// File: Globals.h
 //
 //----------------------------------------------------------------
 
-#include "RoyalCraps.h"
-#include <doctest/doctest.h>
+#pragma once
 
-//----------------------------------------------------------------
+namespace App {
 
-TEST_CASE("main::RoyalCraps:all")
-{
-    REQUIRE(true);
-}
+    typedef unsigned int Money;
+
+} // namespace App
 
 //----------------------------------------------------------------

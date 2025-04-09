@@ -26,6 +26,10 @@ include $(D_MAK)/container-names-doxygen.mak
 # Doxyfile to the _build folder since it needs to be modified
 # to contain the version number.
 #
+# Podman, after running Doxygen, returns an error exit code of 1
+# even though Doxygen finished successfully. Therefore the invocation
+# of Podman is placed in a shell conditional.
+#
 docs-doxygen-cmd:
 	# Generating Doxygen docs
 	cp $(DOCS_SRC)/doxygen/Doxyfile $(D_BLD)/Doxyfile
@@ -35,7 +39,13 @@ docs-doxygen-cmd:
 	    --user=$(CNTR_USER) \
 	    --volume $$(pwd):/work \
 	    --workdir=/work \
-	    $(CNTR_DOXYGEN_PATH) doxygen $(D_BLD)/Doxyfile
+	    $(CNTR_DOXYGEN_PATH) doxygen $(D_BLD)/Doxyfile; \
+	    rc=$$?; \
+	    if [ $${rc} = 1 ]; then \
+	        : ; \
+	    else \
+	        echo Bad return code of $$rc; \
+	    fi;
 
 .PHONY: docs-doxygen-cmd
 

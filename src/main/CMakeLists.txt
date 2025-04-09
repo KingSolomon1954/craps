@@ -8,9 +8,10 @@ find_package(cxxopts REQUIRED)
 find_package(rang REQUIRED)
 
 add_library(main STATIC
+    src/Bet.cpp
     src/CommandLine.cpp
+    src/Craps.cpp
     src/Properties.cpp
-    src/RoyalCraps.cpp
 )
 
 target_include_directories(main

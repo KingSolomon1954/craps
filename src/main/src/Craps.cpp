@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include "RoyalCraps.h"
+#include "Craps.h"
 #include <iostream>
 #include <rang.hpp>
 #include "gen/BuildInfo.h"
@@ -14,6 +14,9 @@
 #include "Properties.h"
 
 using namespace App;
+
+const std::string Craps::appNameScreen = "Royal Craps";
+const std::string Craps::appNameExec   = "RoyalCraps";
 
 /*-----------------------------------------------------------*//**
 
@@ -25,9 +28,9 @@ Constructor
 @param[in] argv
     Array of command line args.
 */
-RoyalCraps::RoyalCraps(int argc, char* argv[])
+Craps::Craps(int argc, char* argv[])
 {
-    Gen::BuildInfo bld("RoyalCraps");
+    Gen::BuildInfo bld(App::Craps::appNameScreen);
     CommandLine cmdline(argc, argv, bld);
     std::cout << bld.fullInfo() << std::endl;
     

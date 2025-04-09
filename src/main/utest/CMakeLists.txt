@@ -6,7 +6,7 @@
 
 add_executable(RoyalCraps-ut
     utest-main.cpp
-    RoyalCrapsTest.cpp
+    CrapsTest.cpp
     PropertiesTest.cpp
 )
 
