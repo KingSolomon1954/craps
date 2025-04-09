@@ -494,102 +494,88 @@ class Bet
     unsigned distance;  // num rolls until decision
 };
 
-
 CrapsTable::processBets(point, dice)
 {
     for bet in Bets
     {
-        processOneBet(bet, point, dice)
+        winLose(bet, point, dice)
+        bank.winLose(bet)
+        player.winLose(bet)
     }
+    // Remove bets that had a decision.
+    // These removed bets need screen updates
+    betListForUpdatedViews = pruneBetList();
 }
 
-CrapsTable::processOneBet(bet, point, dice)
+CrapsTable::winLose(bet, point, dice)
 {
     switch bet.betName
     {
-    case Pass:     processPassBet(bet, point, dice)
-    case DontPass: processDontPassBet(bet, point, dice)
-    case Field:    processDontPassBet(bet, point, dice)
+    case Pass:     winLosePassLine(bet, point, dice)
+    case DontPass: winLoseDontPass(bet, point, dice)
+    case Field:    winLoseField(bet, point, dice)
+    ...
     }
 }
 
-enum BetDisposition
+enum Decision
 {
-    Win
-    Lose
+    Win,
+    Lose,
     Keep
 };
 
-CrapsTable::processPassBet(bet, point, dice)
+CrapsTable::winLosePassLine(bet, point, dice)
 {
-    BetDisposition bd = Keep
+    Decision dcn = Keep;
     if (point == 0)  // come out roll
     {
         if ((dice.value == 7) || (dice.value == 11))
         {
-            bd = Win
+            dcn = Win
         }
         else if ((dice.value == 2) || (dice.value == 3) || (dice.value == 12))
         {
-            bd = Lose
+            dcn = Lose
         }
         else
         {
             bet.pivot = dice.value
             bet.distance++
-            bd = Keep
+            dcn = Keep
         }
     }
     else
     {
         if (dice.value == 7)
         {
-            bd = Lose
+            dcn = Lose
         }
         else if (bet.pivot == dice.value)
         {
-            bd = Win
+            dcn = Win
         }
         else
         {
             bet.distance++;
-            bd = Keep
+            dcn = Keep
         }
     }
-    if (bd == Win)
+    if (dcn == Win)
     {
+        assert(bet.win == 0);
         bet.win = bet.contractBet +
         (bet.oddsBet * (oddsPass[bet.pivot].numerator / oddsPass[bet.pivot].denominator));
     }
-    if (bd == Lose)
+    if (dcn == Lose)
     {
+        assert(bet.lose == 0);
         bet.lose = bet.contractBet + bet.oddsBet;
     }
-
 }
 
-struct oddsEntry
-{
-    integer numerator;
-    integer denominator;
-};
 
-oddsPass oddsEntry[12] =
-{
-    {0,0},    // 0
-    {0,0},    // 1
-    {0,0},    // 2
-    {0,0},    // 3
-    {2,1},    // 4
-    {3,2},    // 5
-    {6,5},    // 6
-    {0,0},    // 7
-    {6,5},    // 8
-    {3,2},    // 9
-    {2,1},    // 10
-    {0,0},    // 11
-    {0,0}     // 12
-};
+
 
         oddsTable
         num   pass   dont    buy   lay     place    hardway

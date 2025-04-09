@@ -7,6 +7,7 @@
 add_executable(RoyalCraps-ut
     utest-main.cpp
     CrapsTest.cpp
+    EnumBetNameTest.cpp
     PropertiesTest.cpp
 )
 

@@ -11,6 +11,8 @@ add_library(main STATIC
     src/Bet.cpp
     src/CommandLine.cpp
     src/Craps.cpp
+    src/CrapsTable.cpp
+    src/EnumBetName.cpp
     src/Properties.cpp
 )
 
