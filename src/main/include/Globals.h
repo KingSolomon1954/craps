@@ -8,7 +8,7 @@
 
 namespace App {
 
-    typedef unsigned int Money;
+    typedef unsigned Money;
 
 } // namespace App
 

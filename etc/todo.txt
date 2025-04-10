@@ -463,36 +463,57 @@ ef bets_init():
         "C&E":0                 #craps-eleven, same as any craps plus 11, pays same as
 	} 
 
-class Enum BetName
-{
-    Pass
-    Come
-    DontPass
-    DontCome
-    Place
-    Lay
-    Buy
-    Hardway
-    Field
-    AnyCraps
-    AnySeven
-    CandE
-    Horn
-}
 
 
-class Bet
-{
-    EnumBet  name;
-    Integer  pivot;    
-    unsigned contractBet
-    unsigned oddsBet
-    PlayerId playerId;
-    TableId  tableId;
-    Time     whenPlaced;
-    Time     whenDecided;
-    unsigned distance;  // num rolls until decision
-};
+CrapsBetEvaluator (CBE)
+
+The CBE takes in a bet instance, the point, and the current dice roll
+and evaluates whether the bet has won, lost or not yet reached a
+decision. The results of the evaluation are returned in the very same
+bet instance with several fields filled in.
+
+The CBE works cooperatively with other programming elements that share
+the bet structure.
+
+The caller is responsible for supplying a bet with the name of the bet,
+the amount of the bet, and setting the pivot field to the bet's focus
+number. For initial Pass/Come/DontCome/DontPass bets, the caller sets
+the pivot to zero which indicates a point number is needed for this bet.
+
+The returned bet structure uses the following fields to
+convey handling by the caller:
+
+decision -indicates that a decision has been reached for this bet.
+
+    When true, this bet has reached a decision, and one or more of the
+    win, lose, returnToPlayer fields (below) will have non-zero
+    values. It is the caller's responsibility to remove the bet from
+    the craps table.
+
+    When false, this bet has not reached a decision and should remain on
+    on the Craps table. The win, lose, retrunToPlayer fields will
+    all be zero. The distance field is incremented by one.  On come out
+    rolls the pivot field will be set for Pass/Come/DontPass/DontCome
+    bets.
+
+win - if non-zero, then this bet has won the given amount of money. The
+calculation includes odds winnings. The caller implementation should
+take the win amount, add it with the original contractBet and oddsBet
+and give that amount back to the player.
+
+lose - if non-zero, then this bet has lost the given amount of
+money. The amount is just the contractBet plus odds bet, if any. The
+caller implementation should add this much money to the table's banking
+system and subtract this amount from the player's wallet if not already
+done so.
+
+returnToPlayer - if non-zero then the given amount of money should be
+returned to the player. Note this is not a win. This can happen when a
+box bet wins/loses during a come out roll and the optional setting of
+oddsOffComeOutRoll is true.
+
+
+
 
 CrapsTable::processBets(point, dice)
 {
@@ -507,25 +528,29 @@ CrapsTable::processBets(point, dice)
     betListForUpdatedViews = pruneBetList();
 }
 
-CrapsTable::winLose(bet, point, dice)
+CrapsBetEvaluator::evaluate(bet, point, dice)
 {
+    bet.win = bet.lose = bet.returnToPlayer = 0;
+    bet.distance++;
+    
     switch bet.betName
     {
-    case Pass:     winLosePassLine(bet, point, dice)
-    case DontPass: winLoseDontPass(bet, point, dice)
-    case Field:    winLoseField(bet, point, dice)
+    case Pass:     evalPassLine(bet, point, dice)
+    case DontPass: evalDontPass(bet, point, dice)
+    case Field:    evalField(bet, point, dice)
     ...
     }
 }
 
 enum Decision
 {
+    Keep,
     Win,
-    Lose,
-    Keep
+    Lose
+
 };
 
-CrapsTable::winLosePassLine(bet, point, dice)
+CrapsBetEvaluator::evalPassLine(bet, point, dice)
 {
     Decision dcn = Keep;
     if (point == 0)  // come out roll
@@ -541,7 +566,6 @@ CrapsTable::winLosePassLine(bet, point, dice)
         else
         {
             bet.pivot = dice.value
-            bet.distance++
             dcn = Keep
         }
     }
@@ -557,21 +581,19 @@ CrapsTable::winLosePassLine(bet, point, dice)
         }
         else
         {
-            bet.distance++;
             dcn = Keep
         }
     }
     if (dcn == Win)
     {
-        assert(bet.win == 0);
         bet.win = bet.contractBet +
         (bet.oddsBet * (oddsPass[bet.pivot].numerator / oddsPass[bet.pivot].denominator));
     }
     if (dcn == Lose)
     {
-        assert(bet.lose == 0);
         bet.lose = bet.contractBet + bet.oddsBet;
     }
+    bet.decision = (dcn != Keep);
 }
 
 

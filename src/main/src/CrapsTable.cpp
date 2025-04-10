@@ -5,6 +5,8 @@
 //----------------------------------------------------------------
 
 #include "CrapsTable.h"
+#include "CrapsBet.h"
+#include "CrapsBetEvaluator.h"
 
 using namespace App;
 
@@ -15,8 +17,11 @@ Constructor
 */
 CrapsTable::CrapsTable()
 {
-    Decision dcn = Win;
-    (void) dcn;
+    CrapsBet bet;
+    unsigned point = 0;
+    Dice dice;
+    
+    CrapsBetEvaluator::evaluate(bet, point, dice);
 }
 
 //----------------------------------------------------------------

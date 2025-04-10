@@ -1,45 +1,47 @@
 //----------------------------------------------------------------
 //
-// File: CrapsTable.h
+// File: Dice.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
-#include "Globals.h"
-#include "CrapsBet.h"
-#include "Dice.h"
-
 namespace App {
 
-class CrapsTable
+class Dice
 {
 public:
     /// @name Lifecycle
     /// @{
-    CrapsTable();
-   ~CrapsTable() = default;
+    Dice();
+   ~Dice() = default;
     /// @}
 
     /// @name Modifiers
     /// @{
+    unsigned roll();
     /// @}
 
     /// @name Observers
     /// @{
+    unsigned value() const;
+    unsigned d1() const;
+    unsigned d2() const;
     /// @}
-    
+
 private:
-    Dice dice;
+    unsigned d1_ = 6; 
+    unsigned d2_ = 6; 
+    
 };
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsTable
+@class CrapsBet
 
-@brief Craps Table.
+@brief A bet on the craps table.
 
-Responsible for operating a Craps Table.
+Store info that represents a craps bet.
 
 */
 

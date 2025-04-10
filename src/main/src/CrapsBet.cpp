@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: Bet.cpp
+// File: CrapsBet.cpp
 //
 //----------------------------------------------------------------
 
-#include "Bet.h"
+#include "CrapsBet.h"
 
 using namespace App;
 
@@ -13,7 +13,7 @@ using namespace App;
 Constructor
 
 */
-Bet::Bet()
+CrapsBet::CrapsBet()
 {
     // Empty.
 }

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: Bet.h
+// File: CrapsBet.h
 //
 //----------------------------------------------------------------
 
@@ -11,13 +11,13 @@
 
 namespace App {
 
-class Bet
+class CrapsBet
 {
 public:
     /// @name Lifecycle
     /// @{
-    Bet();
-   ~Bet() = default;
+    CrapsBet();
+   ~CrapsBet() = default;
     /// @}
 
     /// @name Modifiers
@@ -29,16 +29,19 @@ public:
     /// @}
 
     BetName betName = BetName::Invalid;
-    unsigned int pivot = 0;
+    unsigned pivot = 0;
     Money contractBet = 0;
     Money oddsBet = 0;
+    bool oddsOffComeOutRoll = true;
     // PlayerId playerId;
     // TableId tabledId;
-    // Time creationTime;
-    // Time decisionTime;
-    unsigned int distance = 0;
+    // Time whenCreated;
+    // Time whenDecided;
+    unsigned distance = 0;  // num rolls until decision
+    bool decision = false;
     Money win = 0;
     Money lose = 0;
+    Money returnToPlayer = 0;
     
 private:
     
@@ -46,7 +49,7 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class Bet
+@class CrapsBet
 
 @brief A bet on the craps table.
 
