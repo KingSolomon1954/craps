@@ -20,7 +20,7 @@
 enum class BetName
 {
     Invalid = 0, ///< Used for conversion errors
-    Pass,        ///< Pass line bet
+    PassLine,    ///< Pass line bet
     Come,        ///< Come bet
     DontPass,    ///< Dont Pass bet
     DontCome,    ///< Dont Come bet
@@ -47,7 +47,7 @@ namespace EnumBetName
     constexpr const std::array<BetName, 13> enumerators
     {
         // BetName::Invalid, // Purposely leave out
-        BetName::Pass,       ///< Pass line bet
+        BetName::PassLine,   ///< Pass line bet
         BetName::Come,       ///< Come bet
         BetName::DontPass,   ///< Dont Pass bet
         BetName::DontCome,   ///< Dont Come bet

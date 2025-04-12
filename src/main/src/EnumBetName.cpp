@@ -11,7 +11,7 @@ using namespace EnumBetName;
 using namespace Gen;
 
 constexpr const char* InvalidStr  = "Invalid";
-constexpr const char* PassStr     = "Pass";
+constexpr const char* PassLineStr = "PassLine";
 constexpr const char* ComeStr     = "Come";
 constexpr const char* DontPassStr = "DontPass";
 constexpr const char* DontComeStr = "DontCome";
@@ -41,7 +41,7 @@ EnumBetName::toString(BetName b) noexcept
     switch (b)
     {
     case BetName::Invalid:  return InvalidStr;
-    case BetName::Pass:     return PassStr;
+    case BetName::PassLine: return PassLineStr;
     case BetName::Come:     return ComeStr;
     case BetName::DontPass: return DontPassStr;
     case BetName::DontCome: return DontComeStr;
@@ -65,7 +65,7 @@ Convert BetName string to enum.
 @param[in] s
     The bet name as a string. Matching is not sensitive to case.
     Matches against these strings:
-    "Invalid", "Pass", "Come", "DontPass", "DontCome",
+    "Invalid", "PassLine", "Come", "DontPass", "DontCome",
     "Place", "Lay", "Buy", "Hardway", "Field", "AnyCraps",
     "AnySeven", "C&E", or "Horn".
 
@@ -151,9 +151,9 @@ Convert to enum from unsigned integer.
 BetName
 EnumBetName::fromUnsigned(unsigned v) noexcept
 {
-    if (v == static_cast<unsigned>(BetName::Pass))
+    if (v == static_cast<unsigned>(BetName::PassLine))
     {
-        return BetName::Pass;
+        return BetName::PassLine;
     }
     else if (v == static_cast<unsigned>(BetName::Come))
     {

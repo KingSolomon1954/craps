@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: RoyalCraps.cpp
+// File: CrapsGame.cpp
 //
 //----------------------------------------------------------------
 
-#include "Craps.h"
+#include "CrapsGame.h"
 #include <iostream>
 #include <rang.hpp>
 #include "gen/BuildInfo.h"
@@ -15,8 +15,8 @@
 
 using namespace App;
 
-const std::string Craps::appNameScreen = "Royal Craps";
-const std::string Craps::appNameExec   = "RoyalCraps";
+const std::string CrapsGame::appNameScreen = "Royal Craps";
+const std::string CrapsGame::appNameExec   = "RoyalCraps";
 
 /*-----------------------------------------------------------*//**
 
@@ -28,9 +28,9 @@ Constructor
 @param[in] argv
     Array of command line args.
 */
-Craps::Craps(int argc, char* argv[])
+CrapsGame::CrapsGame(int argc, char* argv[])
 {
-    Gen::BuildInfo bld(App::Craps::appNameScreen);
+    Gen::BuildInfo bld(App::CrapsGame::appNameScreen);
     CommandLine cmdline(argc, argv, bld);
     std::cout << bld.fullInfo() << std::endl;
     

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: Craps.h
+// File: CrapsGame.h
 //
 //----------------------------------------------------------------
 
@@ -9,13 +9,13 @@
 
 namespace App {
 
-class Craps
+class CrapsGame
 {
 public:
     /// @name Lifecycle
     /// @{
-    Craps(int argc, char* argv[]);
-   ~Craps() = default;
+    CrapsGame(int argc, char* argv[]);
+   ~CrapsGame() = default;
     /// @}
 
     /// @name Modifiers
@@ -32,11 +32,11 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class Craps
+@class CrapsGame
 
-@brief Placeholder for Application class.
+@brief Craps Game Top Level class.
 
-Supply class description.
+Craps Game.
 
 */
 

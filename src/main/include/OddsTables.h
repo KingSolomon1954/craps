@@ -1,41 +1,16 @@
 //----------------------------------------------------------------
 //
-// File: CrapsBetEvaluator.h
+// File: OddsTables.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
-#include "Globals.h"
-
 namespace App {
 
-class CrapsBet;  // fwd
-class Dice;      // fwd
-    
-class CrapsBetEvaluator
+class OddsTables
 {
 public:
-    /// @name Lifecycle
-    /// @{
-    CrapsBetEvaluator();
-   ~CrapsBetEvaluator() = default;
-    /// @}
-
-    /// @name Modifiers
-    /// @{
-    /// @}
-
-    /// @name Observers
-    /// @{
-    /// @}
-
-
-   static bool evaluate(CrapsBet& bet, unsigned point, const Dice& dice); // , const Dice& dice);
-//  static ReturnCode evaluate(CrapsBet& bet, unsigned point, const Dice& dice, ErrorPass& ep);
-
-private:
-   
     struct OddsEntry
     {
         unsigned int numerator;
@@ -131,26 +106,13 @@ private:
         {0,0},    // 11
         {3,1}     // 12
     };
-
-    enum Decision
-    {
-        Win,
-        Lose,
-        Keep
-    };
-
 };
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsBetEvaluator
+@class OddsTables
 
-@brief Evaluates a CrapsBet for win/lose.
-
-The CBE takes in a bet instance, the point, and the current dice roll
-and evaluates whether the bet has won, lost or not yet reached a
-decision. The results of the evaluation are returned in the very same
-bet instance with several fields filled in.
+@brief Tables specifying odds for payouts.
 
 */
 

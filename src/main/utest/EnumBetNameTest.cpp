@@ -16,9 +16,9 @@ TEST_CASE("EnumBetNameTest: toString")
     std::string s;
     BetName val;
 
-    val = BetName::Pass;
+    val = BetName::PassLine;
     s = EnumBetName::toString(val);
-    CHECK(s == "Pass");
+    CHECK(s == "PassLine");
 
     val = BetName::Come;
     s = EnumBetName::toString(val);
@@ -75,8 +75,8 @@ TEST_CASE("EnumBetNameTest: fromString")
 {
     std::string s;
 
-    s = "pass";
-    CHECK(BetName::Pass == EnumBetName::fromString(s));
+    s = "passline";
+    CHECK(BetName::PassLine == EnumBetName::fromString(s));
 
     s = "COME";
     CHECK(BetName::Come == EnumBetName::fromString(s));
@@ -124,7 +124,7 @@ TEST_CASE("EnumBetNameTest: isConvertibleFrom")
 {
     std::string s;
 
-    s = "pass";
+    s = "passline";
     CHECK(EnumBetName::isConvertibleFrom(s));
 
     s = "COME";
@@ -172,7 +172,7 @@ TEST_CASE("EnumBetNameTest: isConvertibleFrom")
 
 TEST_CASE("EnumBetNameTest: fromUnsigned")
 {
-    CHECK(BetName::Pass      == EnumBetName::fromUnsigned(1u));
+    CHECK(BetName::PassLine  == EnumBetName::fromUnsigned(1u));
     CHECK(BetName::Come      == EnumBetName::fromUnsigned(2u));
     CHECK(BetName::DontPass  == EnumBetName::fromUnsigned(3u));
     CHECK(BetName::DontCome  == EnumBetName::fromUnsigned(4u));
@@ -192,8 +192,8 @@ TEST_CASE("EnumBetNameTest: fromUnsigned")
 
 TEST_CASE("EnumBetNameTest: listAsString")
 {
-    std::string s = "Pass Come DontPass DontCome Place Lay Buy Hardway "
-                    "Field AnyCraps AnySeven C&E Horn";
+    std::string s = "PassLine Come DontPass DontCome Place Lay Buy "
+                    "Hardway Field AnyCraps AnySeven C&E Horn";
     CHECK(s == EnumBetName::listAsString());
 }
 

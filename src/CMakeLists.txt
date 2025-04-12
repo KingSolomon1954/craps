@@ -16,7 +16,7 @@ project("RoyalCraps"
     DESCRIPTION "Multiplayer dice game"
 )
   
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(PROJ_COMPILE_OPTIONS

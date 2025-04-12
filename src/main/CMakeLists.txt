@@ -9,9 +9,8 @@ find_package(rang REQUIRED)
 
 add_library(main STATIC
     src/CommandLine.cpp
-    src/Craps.cpp
+    src/CrapsGame.cpp
     src/CrapsBet.cpp
-    src/CrapsBetEvaluator.cpp
     src/CrapsTable.cpp
     src/Dice.cpp
     src/EnumBetName.cpp

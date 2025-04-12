@@ -4,14 +4,14 @@
 //
 //----------------------------------------------------------------
 
-#include "Craps.h"
+#include "CrapsGame.h"
 
 //----------------------------------------------------------------
 
 int
 main(int argc, char* argv[])
 {
-    App::Craps craps(argc, argv);
+    App::CrapsGame craps(argc, argv);
     return 0;
 }
 

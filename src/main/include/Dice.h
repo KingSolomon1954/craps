@@ -30,9 +30,10 @@ public:
     /// @}
 
 private:
+    int getRandomNumber(int min, int max) const;
+    
     unsigned d1_ = 6; 
     unsigned d2_ = 6; 
-    
 };
 
 /*-----------------------------------------------------------*//**
