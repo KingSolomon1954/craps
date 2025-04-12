@@ -1,7 +1,5 @@
 # --------------------------------------------------------
 #
-# King Solomon Project: C++ Bootstrap
-#
 # File: CMakeLists.txt
 #
 # Copyright (c) 2024 KingSolomon1954

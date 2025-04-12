@@ -43,6 +43,7 @@ public:
     bool oddsOffComeOutRoll() const;
     unsigned distance() const;
     std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
+    std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
     
     bool operator==(const CrapsBet&) const = default;
     /// @}

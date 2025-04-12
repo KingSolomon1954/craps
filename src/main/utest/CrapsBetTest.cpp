@@ -58,18 +58,97 @@ TEST_CASE("CrapsBet::Constructor")
         b4 = std::move(b5);  // This triggers the move assignment operator
         CHECK(b4.betName() == BetName::DontCome);
         CHECK(b4.betId() == b5Id);
+
+        CrapsBet b6(BetName::Field, 100);
+        CrapsBet b7(BetName::Field, 100, 55);
+        CrapsBet b8(BetName::AnyCraps, 100);
+        CrapsBet b9(BetName::AnyCraps, 100, 55);
+        CrapsBet b10(BetName::CandE, 100);
+        CrapsBet b11(BetName::CandE, 100, 55);
     }
     
     SUBCASE("Bad Args")
     {
         CHECK_THROWS_AS(CrapsBet b(BetName::Invalid, 100),
                                    std::invalid_argument);
-        
         CHECK_THROWS_AS(CrapsBet b(BetName::PassLine, 0),
                                    std::invalid_argument);
-        CHECK_THROWS_AS(CrapsBet b(BetName::PassLine, 100, 4),
+        
+        CHECK_THROWS_AS(CrapsBet b(BetName::PassLine, 100, 2),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::PassLine, 100, 3),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::PassLine, 100, 7),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::PassLine, 100, 11),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::PassLine, 100, 12),
+                                   std::invalid_argument);
+        
+        CHECK_THROWS_AS(CrapsBet b(BetName::Come, 100, 2),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Come, 100, 3),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Come, 100, 7),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Come, 100, 11),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Come, 100, 12),
+                                   std::invalid_argument);
+        
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontPass, 100, 2),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontPass, 100, 3),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontPass, 100, 7),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontPass, 100, 11),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontPass, 100, 12),
+                                   std::invalid_argument);
+        
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontCome, 100, 2),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontCome, 100, 3),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontCome, 100, 7),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontCome, 100, 11),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::DontCome, 100, 12),
+                                   std::invalid_argument);
+        
+        CHECK_THROWS_AS(CrapsBet b(BetName::Place, 100, 2),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Place, 100, 3),
                                    std::invalid_argument);
         CHECK_THROWS_AS(CrapsBet b(BetName::Place, 100, 7),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Place, 100, 11),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Place, 100, 12),
+                                   std::invalid_argument);
+
+        CHECK_THROWS_AS(CrapsBet b(BetName::Buy, 100, 2),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Buy, 100, 3),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Buy, 100, 7),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Buy, 100, 11),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Buy, 100, 12),
+                                   std::invalid_argument);
+
+        CHECK_THROWS_AS(CrapsBet b(BetName::Lay, 100, 2),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Lay, 100, 3),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Lay, 100, 7),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Lay, 100, 11),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Lay, 100, 12),
                                    std::invalid_argument);
     }
     

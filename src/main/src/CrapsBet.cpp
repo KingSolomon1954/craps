@@ -28,10 +28,13 @@ time of creation.
     The amount of the bet. Throws if this is zero.
 
 @param[in] pivot
-    The focus number for this bet. For example a Place bet must set the
-    pivot set to 4,5,6,8,9,10 otherwise an exception is thrown.  For
-    initial Pass/Come/DontCome/DontPass bets, the caller sets the pivot
-    to zero to indicate a point number is needed for this bet.
+    The number this bet is focused on. For example a Place bet must set
+    the pivot set to 4,5,6,8,9,10 otherwise an exception is thrown. For
+    Pass/Come/DontCome/DontPass bets, the caller sets the pivot to zero
+    to indicate a point number will bet set later, otherwise the pivot
+    must be 4,5,6,8,9,10. For Field, AnyCraps, C&E bets, the pivot is
+    unused and set to 0.
+    
 */
 CrapsBet::CrapsBet(BetName name, Money contractAmount, unsigned pivot)
     : betId_(++idCounter_)
@@ -70,24 +73,34 @@ CrapsBet::validArgsCtor()
         (betName_ == BetName::DontPass) ||
         (betName_ == BetName::DontCome))
     {
-        if (pivot_ != 0)
+        if ((pivot_ != 0) && (pivot_ != 4) && (pivot_ != 5) &&
+            (pivot_ != 6) && (pivot_ != 8) && (pivot_ != 9) &&
+            (pivot_ != 10))
         {
             throw std::invalid_argument(
-                "CrapsBet()::ctor Bad \"pivot\": for an initial "
-                "PassLine|Come|DontPass|Dontcome bet, pivot must be 0.");
+                "CrapsBet()::ctor Bad \"pivot\": for "
+                "PassLine|Come|DontPass|Dontcome bet, pivot must "
+                "be 0,4,5,6,8,9 or 10.");
         }
     }
-    if (betName_ == BetName::Place)
+    if ((betName_ == BetName::Place) ||
+        (betName_ == BetName::Lay)   ||
+        (betName_ == BetName::Buy))
     {
         if ((pivot_ != 4) && (pivot_ != 5) && (pivot_ != 6)  &&
             (pivot_ != 8) && (pivot_ != 9) && (pivot_ != 10))
         {
             throw std::invalid_argument(
-                "CrapsBet()::ctor Bad \"pivot\": for a Place bet, pivot must "
-                "be one of 4,5,6,8,9,10");
+                "CrapsBet()::ctor Bad \"pivot\": for a Place, Buy, or Lay "
+                "bet, pivot must be one of 4,5,6,8,9,10");
         }
     }
-    
+    if ((betName_ == BetName::Field)    ||
+        (betName_ == BetName::AnyCraps) ||
+        (betName_ == BetName::CandE))
+    {
+        pivot_ = 0;  // Quietly force it to 0.
+    }
 }
 
 /*-----------------------------------------------------------*//**
@@ -288,6 +301,20 @@ std::chrono::time_point<std::chrono::system_clock>
 CrapsBet::whenCreated() const
 {
     return whenCreated_;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns the time the bet reached a decision.
+
+@return
+    time of bet decision.
+
+*/
+std::chrono::time_point<std::chrono::system_clock>
+CrapsBet::whenDecided() const
+{
+    return whenDecided_;
 }
 
 //----------------------------------------------------------------
