@@ -7,6 +7,8 @@
 #include "CrapsBet.h"
 
 #include <stdexcept> // for std::invalid_argument
+#include <iostream>
+#include "gen/ErrorPass.h"
 #include "Dice.h"
 #include "OddsTables.h"
 
@@ -167,40 +169,70 @@ box bet wins/loses during a come out roll and the optional setting of
 oddsOffComeOutRoll is true.
 
 */
-bool
-CrapsBet::evaluate(unsigned point, const Dice& dice)
+Gen::ReturnCode
+CrapsBet::evaluate(unsigned point, const Dice& dice,
+                   DecisionRecord& dr, Gen::ErrorPass& ep)
 {
-    DecisionRecord dr(betId_); (void) dr;
-    if (!validArgsEval()) return false;
+    std::cout << "CrapsBet::evaluate() args" << std::endl
+              << "    point: " << point << std::endl
+              << "     dice: " << dice.value()
+              <<              " (" << dice.d1() << ","
+              <<                      dice.d2() << ")" << std::endl;
+    (void)dr;
+    if (!validArgsEval(point, ep))
+    {
+        std::string s("CrapsBet::evaluate(): Unable to evaluate CrapsBet: ");
+        ep.prepend(s);
+        return Gen::ReturnCode::Fail;
+    }
                          
     distance_++;
-    
+    bool rv;
+    (void) rv;  // compiler confused with scope of rv in switch statement
     switch (betName_)
     {
-    case BetName::PassLine: evalPassLine(point, dice); break;
-    default: return true;
+    case BetName::PassLine:
+    {
+        rv = evalPassLine(point, dice, dr, ep); break;
+    }
+        
+    default: return Gen::ReturnCode::Success;
 
     }
-    return true;
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
 bool
-CrapsBet::evalPassLine(unsigned point, const Dice& dice)
+CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep)
+{
+    if ((point == 0) ||
+        (point == 4) || (point == 5) || (point == 6) ||
+        (point == 8) || (point == 9) || (point == 10))
+    {
+        return true;
+    }
+    std::string s = "bad value for point: " + std::to_string(point);
+    ep.diag = s;
+    return false;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsBet::evalPassLine(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
 {
     (void) point;
     (void) dice;
+    (void) dr;
+    (void) ep;
     whenDecided_ = std::chrono::system_clock::now();
     return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::validArgsEval()
-{
-    return true;    
 }
 
 /*-----------------------------------------------------------*//**
@@ -342,4 +374,34 @@ CrapsBet::whenDecided() const
 
 //----------------------------------------------------------------
 
+std::ostream&
+operator<< (std::ostream& out, const CrapsBet& b)
+{
+    out <<
+    "             betId: " << b.betId()              << std::endl <<
+    "           betName: " << b.betName()            << std::endl <<
+    "             pivot: " << b.pivot()              << std::endl <<
+    "    contractAmount: " << b.contractAmount()     << std::endl <<
+    "        oddsAmount: " << b.oddsAmount()         << std::endl <<
+    "oddsOffComeOutRoll: " << b.oddsOffComeOutRoll() << std::endl <<
+    "          distance: " << b.distance()           << std::endl <<
+    "       whenCreated: " << b.whenCreated()        << std::endl <<
+    "       whenDecided: " << b.whenDecided()        << std::endl;
+    return out;
+}
 
+//----------------------------------------------------------------
+
+std::ostream&
+operator<< (std::ostream& out, const CrapsBet::DecisionRecord& dr)
+{
+    out <<
+    "         betId: " << dr.betId          << std::endl <<
+    "      decision: " << dr.decision       << std::endl <<
+    "           win: " << dr.win            << std::endl <<
+    "          lose: " << dr.lose           << std::endl <<
+    "returnToPlayer: " << dr.returnToPlayer << std::endl;
+    return out;
+}
+
+//----------------------------------------------------------------

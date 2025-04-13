@@ -9,9 +9,13 @@
 #include <rang.hpp>
 #include "gen/BuildInfo.h"
 #include "gen/StringUtils.h"
-#include "codec/EnumChannelDirection.h"
 #include "CommandLine.h"
+#include "CrapsTable.h"
+
+#if 0
+#include "codec/EnumChannelDirection.h"
 #include "Properties.h"
+#endif
 
 using namespace App;
 
@@ -33,7 +37,10 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     Gen::BuildInfo bld(App::CrapsGame::appNameScreen);
     CommandLine cmdline(argc, argv, bld);
     std::cout << bld.fullInfo() << std::endl;
-    
+
+    CrapsTable table;
+
+#if 0    
     ChannelDirection cd = ChannelDirection::Forward;
     std::cout << "Channel direction: " << rang::fg::yellow
               << cd << rang::fg::reset << std::endl;
@@ -42,6 +49,7 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::string y = Gen::StringUtils::toLower(x);
     Properties props;
     (void)props;
+#endif    
 }
 
 //----------------------------------------------------------------

@@ -6,6 +6,7 @@
 
 add_library(gen STATIC
     src/BuildInfo.cpp
+    src/ErrorPass.cpp
     src/StringUtils.cpp
 )
 

@@ -7,6 +7,7 @@
 #include <doctest/doctest.h>
 #include <stdexcept> // for std::invalid_argument
 #include <chrono>
+#include "gen/ErrorPass.h"
 #include "CrapsBet.h"
 #include "Dice.h"
 #include "EnumBetName.h"
@@ -178,3 +179,21 @@ TEST_CASE("CrapsBet::Constructor")
 }
 
 //----------------------------------------------------------------
+
+TEST_CASE("CrapsBet::evaluate()")
+{
+    SUBCASE("Bad Args")
+    {
+        Gen::ErrorPass ep;
+        Dice dice;
+        CrapsBet::DecisionRecord dr;
+        unsigned point = 7;
+        CrapsBet b(BetName::Field, 100);
+        CHECK(!b.evaluate(point, dice, dr, ep));
+        point = 99;
+        CHECK(!b.evaluate(point, dice, dr, ep));
+    }
+}
+
+//----------------------------------------------------------------
+

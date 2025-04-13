@@ -7,8 +7,15 @@
 #pragma once
 
 #include <chrono>
+#include <ostream>
+// #include <variant>
+#include "gen/ReturnCode.h"
 #include "Globals.h"
 #include "EnumBetName.h"
+
+namespace Gen {
+    class ErrorPass;  // fwd
+}
 
 namespace App {
 
@@ -20,17 +27,20 @@ public:
     /// @name Lifecycle
     /// @{
     CrapsBet(BetName name, Money contractAmount, unsigned pivot = 0);
-    CrapsBet(const CrapsBet& other) = default;  // copy ctor
-    CrapsBet(CrapsBet&& other) = default;  // move ctor
-    CrapsBet& operator=(const CrapsBet&) = default;  // assignment
-    CrapsBet& operator=(CrapsBet&&) = default;  // assignment
-   ~CrapsBet() = default;
-    
     /// @}
 
     /// @name Modifiers
     /// @{
-    bool evaluate(unsigned point, const Dice& dice);
+    struct DecisionRecord
+    {
+        unsigned betId = 0;
+        bool decision = false;
+        Money win = 0;
+        Money lose = 0;
+        Money returnToPlayer = 0;
+    };
+    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
+                             DecisionRecord& dr, Gen::ErrorPass& ep);
     /// @}
 
     /// @name Observers
@@ -44,27 +54,11 @@ public:
     unsigned distance() const;
     std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
     std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
+
     
     bool operator==(const CrapsBet&) const = default;
     /// @}
 
-struct DecisionRecord
-{
-    unsigned betId;
-    bool decision = false;
-    Money win = 0;
-    Money lose = 0;
-    Money returnToPlayer = 0;
-    
-    DecisionRecord(unsigned id)
-        : betId(id)
-        , decision(false)
-        , win(0)
-        , lose(0)
-        , returnToPlayer(0)
-    {}
-};
-    
 private:
     enum Decision
     {
@@ -75,8 +69,9 @@ private:
 
     static unsigned idCounter_;
     void validArgsCtor();
-    bool validArgsEval();
-    bool evalPassLine(unsigned point, const Dice& dice);
+    bool validArgsEval(unsigned point, Gen::ErrorPass& ep);
+    bool evalPassLine(unsigned point, const Dice& dice,
+                      DecisionRecord& dr, Gen::ErrorPass& ep);
 
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;
@@ -101,4 +96,7 @@ Store info that represents a craps bet.
 
 } // namespace App
 
+std::ostream& operator<< (std::ostream& out, const App::CrapsBet& b);
+std::ostream& operator<< (std::ostream& out, const App::CrapsBet::DecisionRecord& dr);
+    
 //----------------------------------------------------------------
