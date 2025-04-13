@@ -65,6 +65,11 @@ TEST_CASE("CrapsBet::Constructor")
         CrapsBet b9(BetName::AnyCraps, 100, 55);
         CrapsBet b10(BetName::CandE, 100);
         CrapsBet b11(BetName::CandE, 100, 55);
+
+        CrapsBet b12(BetName::Hardway, 100, 4);
+        CrapsBet b13(BetName::Hardway, 100, 6);
+        CrapsBet b14(BetName::Hardway, 100, 8);
+        CrapsBet b15(BetName::Hardway, 100, 10);
     }
     
     SUBCASE("Bad Args")
@@ -149,6 +154,23 @@ TEST_CASE("CrapsBet::Constructor")
         CHECK_THROWS_AS(CrapsBet b(BetName::Lay, 100, 11),
                                    std::invalid_argument);
         CHECK_THROWS_AS(CrapsBet b(BetName::Lay, 100, 12),
+                                   std::invalid_argument);
+
+        CHECK_THROWS_AS(CrapsBet b(BetName::Hardway, 100, 2),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Hardway, 100, 3),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Hardway, 100, 5),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Hardway, 100, 7),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Hardway, 100, 9),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Hardway, 100, 11),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Hardway, 100, 12),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(BetName::Hardway, 100, 99),
                                    std::invalid_argument);
     }
     

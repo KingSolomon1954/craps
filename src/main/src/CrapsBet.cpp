@@ -18,8 +18,15 @@ unsigned CrapsBet::idCounter_ = 0;
 
 Constructor - creates a CrapsBet
 
-Creates a Craps bet. The bet is given a unique ID and
-time of creation.
+Creates a Craps bet. The bet is given a unique ID and time of creation.
+
+Arguments are checked for validity and if found to be bad then
+std::invalid_argument is thrown.
+
+Note that no check is made here whether the bet is allowed. CrapsBet is
+unaware of the state of any Craps table. This decouples the act of
+creating a bet from placing a bet on a CrapsTable, allowing the
+application better freedom of design.
 
 @param[in] name
     The name/type of the bet. Throws if this is not valid name.
@@ -29,12 +36,17 @@ time of creation.
 
 @param[in] pivot
     The number this bet is focused on. For example a Place bet must set
-    the pivot set to 4,5,6,8,9,10 otherwise an exception is thrown. For
-    Pass/Come/DontCome/DontPass bets, the caller sets the pivot to zero
-    to indicate a point number will bet set later, otherwise the pivot
-    must be 4,5,6,8,9,10. For Field, AnyCraps, C&E bets, the pivot is
-    unused and set to 0.
-    
+    the pivot set to 4,5,6,8,9,10 otherwise a std::invalid_argument
+    exception exception is thrown.
+
+    For Field, AnyCraps and C&E bets, the pivot is unused and internally
+    set to 0.
+
+    For Pass/Come/DontCome/DontPass bets, the caller sets the pivot to
+    zero to indicate the pivot number needs to be set later, or to
+    4,5,6,8,9,10, otherwise a std::invalid_argument exception is thrown.
+    Later, when CrapsBet::evaluate() is called, the pivot is set 
+    to the supplied point.
 */
 CrapsBet::CrapsBet(BetName name, Money contractAmount, unsigned pivot)
     : betId_(++idCounter_)
@@ -95,6 +107,17 @@ CrapsBet::validArgsCtor()
                 "bet, pivot must be one of 4,5,6,8,9,10");
         }
     }
+    if (betName_ == BetName::Hardway)
+    {
+        if ((pivot_ != 4) && (pivot_ != 6)  &&
+            (pivot_ != 8) && (pivot_ != 10))
+        {
+            throw std::invalid_argument(
+                "CrapsBet()::ctor Bad \"pivot\": for Hardway "
+                "bet, pivot must be one of 4,6,8,10");
+        }
+    }
+    
     if ((betName_ == BetName::Field)    ||
         (betName_ == BetName::AnyCraps) ||
         (betName_ == BetName::CandE))
@@ -107,9 +130,9 @@ CrapsBet::validArgsCtor()
 
 Evaluates a CrapsBet for win/lose
 
-Using the suppplied point and the current dice roll, evaluate()
-determines whether this bet has won, lost or not yet reached a
-decision. The results of the evaluation are returned in a DecisionRecord.
+Using the given point and the current dice roll, evaluate() determines
+whether this bet has won, lost or not yet reached a decision. The
+results of the evaluation are returned in a CrapsBet::DecisionRecord.
 
 The DecisionRecord contains the following fields to
 convey handling by the caller:
@@ -122,10 +145,10 @@ decision -indicates that a decision has been reached for this bet.
     the craps table.
 
     When false, this bet has not reached a decision and should remain on
-    on the Craps table. The win, lose, retrunToPlayer fields will
-    all be zero. The distance field is incremented by one.  On come out
-    rolls the pivot field will be set for Pass/Come/DontPass/DontCome
-    bets.
+    on the Craps table. The win, lose, retrunToPlayer fields will all be
+    zero. The distance field is incremented by one. On come out rolls
+    (i.e, the passed in point is zero) then the pivot field, if zero,
+    will be set to the given point for Pass/Come/DontPass/DontCome bets.
 
 win - if non-zero, then this bet has won the given amount of money. The
 calculation includes odds winnings. The caller implementation should
