@@ -20,6 +20,7 @@ public:
     /// @name Modifiers
     /// @{
     unsigned roll();
+    void set(unsigned d1, unsigned d2);  // Primarily for testing
     /// @}
 
     /// @name Observers

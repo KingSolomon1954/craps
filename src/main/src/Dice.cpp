@@ -7,6 +7,7 @@
 #include "Dice.h"
 #include <iostream>
 #include <random>
+#include <stdexcept>
 
 using namespace App;
 
@@ -29,6 +30,21 @@ Dice::roll()
     d1_ = getRandomNumber(1, 6);
     d2_ = getRandomNumber(1, 6);
     return d1_ + d2_;
+}
+
+/*-----------------------------------------------------------*//**
+
+*/
+void
+Dice::set(unsigned d1, unsigned d2)
+{
+    unsigned total = d1 + d2;
+    if ((total < 2) || (total > 12 ))
+    {
+        throw std::invalid_argument("Bad dice value:" + std::to_string(total));
+    }
+    d1_ = d1;
+    d2_ = d2;
 }
 
 /*-----------------------------------------------------------*//**

@@ -21,6 +21,8 @@ unsigned CrapsBet::idCounter_ = 0;
 Constructor - creates a CrapsBet
 
 Creates a Craps bet. The bet is given a unique ID and time of creation.
+The CrapsBet class does not store or use betIds for any purpose. betId
+is meant for upper level designs that track many bets.
 
 Arguments are checked for validity and if found to be bad then
 std::invalid_argument is thrown.
@@ -173,39 +175,60 @@ Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
                    DecisionRecord& dr, Gen::ErrorPass& ep)
 {
-    std::cout << "CrapsBet::evaluate() args" << std::endl
-              << "    point: " << point << std::endl
-              << "     dice: " << dice.value()
-              <<              " (" << dice.d1() << ","
-              <<                      dice.d2() << ")" << std::endl;
-    (void)dr;
+    diagEvalEntered(point, dice);  // TODO use debug conditional
     if (!validArgsEval(point, ep))
     {
-        std::string s("CrapsBet::evaluate(): Unable to evaluate CrapsBet: ");
-        ep.prepend(s);
-        return Gen::ReturnCode::Fail;
+        return diagEvalProcError(ep);
     }
                          
-    distance_++;
-    bool rv;
-    (void) rv;  // compiler confused with scope of rv in switch statement
+    dr = {betId_, false, 0,0,0};   // Prepare decision record
+    Gen::ReturnCode rc;
     switch (betName_)
     {
-    case BetName::PassLine:
-    {
-        rv = evalPassLine(point, dice, dr, ep); break;
-    }
-        
+    case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
-
     }
+
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        return diagEvalProcError(ep);
+    }
+    distance_++;
+    if (dr.decision)
+    {
+        whenDecided_ = std::chrono::system_clock::now();
+    }
+    
+    std::cout << dr << std::endl;
     return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
+void
+CrapsBet::diagEvalEntered(unsigned point, const Dice& dice) const
+{
+    std::cout << "CrapsBet::evaluate(point:" << point
+              << " dice:" << dice.value() << " (" 
+              << dice.d1() << ","
+              << dice.d2() << "))" << std::endl;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
+{
+    std::string s("CrapsBet::evaluate(): Error evaluating betId:");
+    s += std::to_string(betId_) + " betName:" + EnumBetName::toString(betName_) + ". ";
+    ep.prepend(s);
+    return Gen::ReturnCode::Fail;
+}
+
+//----------------------------------------------------------------
+
 bool
-CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep)
+CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
 {
     if ((point == 0) ||
         (point == 4) || (point == 5) || (point == 6) ||
@@ -213,14 +236,14 @@ CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep)
     {
         return true;
     }
-    std::string s = "bad value for point: " + std::to_string(point);
+    std::string s = "Bad value for point:" + std::to_string(point);
     ep.diag = s;
     return false;
 }
 
 //----------------------------------------------------------------
 
-bool
+Gen::ReturnCode
 CrapsBet::evalPassLine(
     unsigned point,
     const Dice& dice,
@@ -232,7 +255,7 @@ CrapsBet::evalPassLine(
     (void) dr;
     (void) ep;
     whenDecided_ = std::chrono::system_clock::now();
-    return true;
+    return Gen::ReturnCode::Success;
 }
 
 /*-----------------------------------------------------------*//**

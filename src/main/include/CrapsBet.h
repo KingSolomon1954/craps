@@ -69,9 +69,12 @@ private:
 
     static unsigned idCounter_;
     void validArgsCtor();
-    bool validArgsEval(unsigned point, Gen::ErrorPass& ep);
-    bool evalPassLine(unsigned point, const Dice& dice,
-                      DecisionRecord& dr, Gen::ErrorPass& ep);
+    bool validArgsEval(unsigned point, Gen::ErrorPass& ep) const;
+    Gen::ReturnCode evalPassLine(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
+    void diagEvalEntered(unsigned point, const Dice& dice) const;
+    Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
 
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;

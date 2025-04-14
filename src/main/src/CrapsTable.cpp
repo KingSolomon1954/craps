@@ -34,11 +34,8 @@ CrapsTable::CrapsTable()
     }
     else
     {
-        std::cout << "Error: " << ep.diag << std::endl;
+        std::cout << ep.diag << std::endl;
     }
-
-    std::cout << dr << std::endl;
-
 }
 
 //----------------------------------------------------------------

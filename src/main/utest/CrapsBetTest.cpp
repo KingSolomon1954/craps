@@ -8,6 +8,7 @@
 #include <stdexcept> // for std::invalid_argument
 #include <chrono>
 #include "gen/ErrorPass.h"
+#include "gen/ReturnCode.h"
 #include "CrapsBet.h"
 #include "Dice.h"
 #include "EnumBetName.h"
@@ -189,9 +190,20 @@ TEST_CASE("CrapsBet::evaluate()")
         CrapsBet::DecisionRecord dr;
         unsigned point = 7;
         CrapsBet b(BetName::Field, 100);
-        CHECK(!b.evaluate(point, dice, dr, ep));
+        CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Fail);
         point = 99;
-        CHECK(!b.evaluate(point, dice, dr, ep));
+        CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Fail);
+    }
+    SUBCASE("PassLine")
+    {
+        Gen::ErrorPass ep;
+        Dice dice;
+        dice.set(2,2);
+        
+        CrapsBet::DecisionRecord dr;
+        unsigned point = 0;
+        CrapsBet b(BetName::PassLine, 100);
+        CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     }
 }
 
