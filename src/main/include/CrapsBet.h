@@ -35,9 +35,20 @@ public:
     {
         unsigned betId = 0;
         bool decision = false;
+        bool pivotAssigned = false;
         Money win = 0;
         Money lose = 0;
         Money returnToPlayer = 0;
+
+        bool operator==(const DecisionRecord& other) const
+        {
+            return betId == other.betId &&
+                   decision == other.decision &&
+                   pivotAssigned == other.pivotAssigned &&
+                   win == other.win &&
+                   lose == other.lose &&
+                   returnToPlayer == other.returnToPlayer;
+        }
     };
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);

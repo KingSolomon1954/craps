@@ -27,10 +27,11 @@ is meant for upper level designs that track many bets.
 Arguments are checked for validity and if found to be bad then
 std::invalid_argument is thrown.
 
-Note that no check is made here whether the bet is allowed. CrapsBet is
-unaware of the state of any Craps table. This decouples the act of
-creating a bet from placing a bet on a CrapsTable, allowing the
-application better freedom of design.
+Note that no check is made at construction time whether the bet is
+allowed to be placed on a Craps table. CrapsBet is unaware of the state
+of any Craps table. This decouples the act of creating a bet from
+placing a bet on a CrapsTable, allowing the application better freedom
+of design.
 
 @param[in] name
     The name/type of the bet. Throws if this is not valid name.
@@ -40,11 +41,33 @@ application better freedom of design.
 
 @param[in] pivot
     The number this bet is focused on. For example a Place bet must set
-    the pivot set to 4,5,6,8,9,10 otherwise a std::invalid_argument
-    exception exception is thrown.
+    the pivot to 4,5,6,8,9 or 10 otherwise a std::invalid_argument
+    exception is thrown.
 
     For Field, AnyCraps and C&E bets, the pivot is unused and internally
     set to 0.
+
+    For PassLine/Come/DontPass/DontCome bets, the caller sets the pivot
+    to zero. Zero indicates the pivot number needs to be set later.
+    These point-based bets get their pivot number assigned during
+    CrapsBet::evaluation(),
+
+    As a special case only for PassLine bets, the caller may also
+    explicitly set the pivot to one of 4,5,6,8,9 or10. This supports the
+    behavior of putting down a PassLine bet after the point is already
+    established.
+
+    Note that CrapsBet constructor knows nothing about the state of the
+    Craps table. It is the responsibility of the caller to ensure the
+    bet is permissable and placed on a Craps table at the right time.
+
+    For PassLine bets, if somehow a pivot is zero and the bet is being
+    evaluated after a point has already been established, then the pivot
+    is silently assigned to the already established point, as if the player
+    made a PassLine bet after point was established.
+
+    Come/DontPass/DontCome bets are rejected if pivot is non-zero, and an
+    exception is thrown.
 
     For Pass/Come/DontCome/DontPass bets, the caller sets the pivot to
     zero to indicate the pivot number needs to be set later, or to
@@ -154,6 +177,14 @@ decision -indicates that a decision has been reached for this bet.
     (i.e, the passed in point is zero) then the pivot field, if zero,
     will be set to the given point for Pass/Come/DontPass/DontCome bets.
 
+pivotAssigned - indicates that a pivot (point) for this bet has been
+established. For example, a Come bet has now been moved to the "6".
+
+    When evaluating PassLine bets, if somehow a pivot is zero and the
+    point has already been established, then the pivot is silently
+    assigned to the already established point, as if the player made a
+    PassLine bet after point was established.
+
 win - if non-zero, then this bet has won the given amount of money. The
 calculation includes odds winnings. The caller implementation should
 take the win amount, add it with the original contractBet and oddsBet
@@ -188,7 +219,6 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
     }
-
     if (rc == Gen::ReturnCode::Fail)
     {
         return diagEvalProcError(ep);
@@ -198,8 +228,6 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     {
         whenDecided_ = std::chrono::system_clock::now();
     }
-    
-    std::cout << dr << std::endl;
     return Gen::ReturnCode::Success;
 }
 
@@ -250,11 +278,63 @@ CrapsBet::evalPassLine(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)    
 {
-    (void) point;
-    (void) dice;
-    (void) dr;
     (void) ep;
-    whenDecided_ = std::chrono::system_clock::now();
+    Decision dcn = Keep;
+    unsigned d = dice.value();  // Cache value once
+
+    if ((point != 0) && (pivot_ == 0))
+    {
+        // Special case where user made a PassLine bet after point was
+        // established, but mistakenly specified 0 for the pivot. Coerce
+        // this PassLine bet to align with the current point before
+        // evaluating any outcome below.
+        pivot_ = point;
+        dr.pivotAssigned = true;
+    }
+
+    if (point == 0)  // come out roll
+    {
+        if ((d == 7) || (d == 11))
+        {
+            dcn = Win;
+        }
+        else if ((d == 2) || (d == 3) || (d == 12))
+        {
+            dcn = Lose;
+        }
+        else
+        {
+            pivot_ = d;
+            dr.pivotAssigned = true;
+            dcn = Keep;
+        }
+    }
+    else
+    {
+        if (d == 7)
+        {
+            dcn = Lose;
+        }
+        else if (pivot_ == d)
+        {
+            dcn = Win;
+        }
+        else
+        {
+            dcn = Keep;
+        }
+    }
+    if (dcn == Win)
+    {
+        dr.win = contractAmount_ +
+            (oddsAmount_ * (OddsTables::oddsPass[d].numerator /
+                            OddsTables::oddsPass[d].denominator));
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_ + oddsAmount_;
+    }
+    dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
 
@@ -421,6 +501,7 @@ operator<< (std::ostream& out, const CrapsBet::DecisionRecord& dr)
     out <<
     "         betId: " << dr.betId          << std::endl <<
     "      decision: " << dr.decision       << std::endl <<
+    " pivotAssigned: " << dr.pivotAssigned  << std::endl <<
     "           win: " << dr.win            << std::endl <<
     "          lose: " << dr.lose           << std::endl <<
     "returnToPlayer: " << dr.returnToPlayer << std::endl;

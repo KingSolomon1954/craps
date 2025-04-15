@@ -22,15 +22,15 @@ CrapsTable::CrapsTable()
 {
     CrapsBet bet(BetName::PassLine, 100, 0);
     std::cout << bet << std::endl;
-    unsigned point = 7;
-    Dice dice;
+    unsigned point = 4;
+    // dice.roll();
+    Dice dice; dice.set(2,2);
 
-    dice.roll();
     CrapsBet::DecisionRecord dr;
     Gen::ErrorPass ep;    
     if (bet.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success)
     {
-        std::cout << "TODO: print decision record " << std::endl;
+        std::cout << dr << std::endl;
     }
     else
     {

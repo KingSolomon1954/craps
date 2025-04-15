@@ -18,7 +18,7 @@ public:
     };
 
     // Used for calculating payouts in Pass, Come, Buy bets
-    OddsEntry oddsPass[13] =
+    static constexpr OddsEntry oddsPass[13] =
     {
         {0,0},    // 0
         {0,0},    // 1
@@ -27,16 +27,16 @@ public:
         {2,1},    // 4
         {3,2},    // 5
         {6,5},    // 6
-        {0,0},    // 7
+        {1,1},    // 7
         {6,5},    // 8
         {3,2},    // 9
         {2,1},    // 10
-        {0,0},    // 11
+        {1,1},    // 11
         {0,0}     // 12
     };
     
     // Used for calculating payouts in DontPass, DontCome, Lay bets
-    OddsEntry oddsDont[13] =
+    static constexpr OddsEntry oddsDont[13] =
     {
         {0,0},    // 0
         {0,0},    // 1
@@ -54,7 +54,7 @@ public:
     };
     
     // Used for calculating payouts in Place bets
-    OddsEntry oddsPlace[13] =
+    static constexpr OddsEntry oddsPlace[13] =
     {
         {0,0},    // 0
         {0,0},    // 1
@@ -72,7 +72,7 @@ public:
     };
     
     // Used for calculating payouts in Hardway bets
-    OddsEntry oddsHardway[13] =
+    static constexpr OddsEntry oddsHardway[13] =
     {
         {0,0},    // 0
         {0,0},    // 1
@@ -90,7 +90,7 @@ public:
     };
 
     // Used for calculating payouts in Field bets
-    OddsEntry oddsField[13] =
+    static constexpr OddsEntry oddsField[13] =
     {
         {0,0},    // 0
         {0,0},    // 1
