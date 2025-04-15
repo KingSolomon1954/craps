@@ -107,14 +107,13 @@ CrapsBet::validArgsCtor()
     {
         throw std::invalid_argument("CrapsBet()::ctor Bad \"contractAmount\": must be > 0.");
     }
-    if ((betName_ == BetName::PassLine) ||
-        (betName_ == BetName::Come)     ||     
-        (betName_ == BetName::DontPass) ||
-        (betName_ == BetName::DontCome))
+    if (betName_ == BetName::PassLine ||
+        betName_ == BetName::Come     ||     
+        betName_ == BetName::DontPass ||
+        betName_ == BetName::DontCome)
     {
-        if ((pivot_ != 0) && (pivot_ != 4) && (pivot_ != 5) &&
-            (pivot_ != 6) && (pivot_ != 8) && (pivot_ != 9) &&
-            (pivot_ != 10))
+        if (pivot_ != 0 && pivot_ != 4 && pivot_ != 5 &&
+            pivot_ != 6 && pivot_ != 8 && pivot_ != 9 && pivot_ != 10)
         {
             throw std::invalid_argument(
                 "CrapsBet()::ctor Bad \"pivot\": for "
@@ -122,12 +121,12 @@ CrapsBet::validArgsCtor()
                 "be 0,4,5,6,8,9 or 10.");
         }
     }
-    if ((betName_ == BetName::Place) ||
-        (betName_ == BetName::Lay)   ||
-        (betName_ == BetName::Buy))
+    if (betName_ == BetName::Place ||
+        betName_ == BetName::Lay   ||
+        betName_ == BetName::Buy)
     {
-        if ((pivot_ != 4) && (pivot_ != 5) && (pivot_ != 6)  &&
-            (pivot_ != 8) && (pivot_ != 9) && (pivot_ != 10))
+        if (pivot_ != 4 && pivot_ != 5 && pivot_ != 6  &&
+            pivot_ != 8 && pivot_ != 9 && pivot_ != 10)
         {
             throw std::invalid_argument(
                 "CrapsBet()::ctor Bad \"pivot\": for a Place, Buy, or Lay "
@@ -136,8 +135,7 @@ CrapsBet::validArgsCtor()
     }
     if (betName_ == BetName::Hardway)
     {
-        if ((pivot_ != 4) && (pivot_ != 6)  &&
-            (pivot_ != 8) && (pivot_ != 10))
+        if (pivot_ != 4 && pivot_ != 6  && pivot_ != 8 && pivot_ != 10)
         {
             throw std::invalid_argument(
                 "CrapsBet()::ctor Bad \"pivot\": for Hardway "
@@ -145,9 +143,9 @@ CrapsBet::validArgsCtor()
         }
     }
     
-    if ((betName_ == BetName::Field)    ||
-        (betName_ == BetName::AnyCraps) ||
-        (betName_ == BetName::CandE))
+    if (betName_ == BetName::Field    ||
+        betName_ == BetName::AnyCraps ||
+        betName_ == BetName::CandE)
     {
         pivot_ = 0;  // Quietly force it to 0.
     }
@@ -155,52 +153,108 @@ CrapsBet::validArgsCtor()
 
 /*-----------------------------------------------------------*//**
 
-Evaluates a CrapsBet for win/lose
+Set, change, or remove the amount for an odds bet.
+
+It is only permissable to set an odds amount if these two conditions
+are true:
+
+* the bet is a PassLine, DontPass, Come, DontCome bet
+
+* the bet has already been assigned its pivot (point) (i.e, pivot is
+non-zero)
+
+@param [in] amount
+    The amount to set it to. Clobbers any previous setting.
+
+@returns
+    Success if the bet was accepted, otherwise Fail and ep has
+    the reason.
+*/
+
+Gen::ReturnCode
+CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
+{
+    (void) amount;
+    (void) ep;
+
+    if (betName_ != BetName::PassLine &&
+        betName_ != BetName::DontPass &&
+        betName_ != BetName::Come     &&
+        betName_ != BetName::DontCome)
+    {
+        std::string s("CrapsBet::setOddsAmount(): "
+            "odds bet only allowed for these bets: "
+            "PassLine|Come|DontPass|DontCome. Current bet is betId:");
+        s += std::to_string(betId_) + " betName:" +
+            EnumBetName::toString(betName_) + ". ";
+        ep.diag = s;
+        return Gen::ReturnCode::Fail;
+    }
+
+    if (pivot_ == 0)
+    {
+        std::string s("CrapsBet::setOddsAmount(): odds bet not "
+            "allowed until after a point is established for this bet. ");
+        s += "betId:" + std::to_string(betId_) + " betName:" +
+            EnumBetName::toString(betName_) + "pivot:" +
+            std::to_string(pivot_) + ".";
+        ep.diag = s;
+        return Gen::ReturnCode::Fail;
+    }
+    oddsAmount_ = amount;
+    return Gen::ReturnCode::Success;    
+}
+
+/*-----------------------------------------------------------*//**
+
+Evaluates a CrapsBet for win/lose.
 
 Using the given point and the current dice roll, evaluate() determines
 whether this bet has won, lost or not yet reached a decision. The
 results of the evaluation are returned in a CrapsBet::DecisionRecord.
 
-The DecisionRecord contains the following fields to
-convey handling by the caller:
+The DecisionRecord contains the following fields to convey handling by
+the caller:
 
 decision -indicates that a decision has been reached for this bet.
 
     When true, this bet has reached a decision, and one or more of the
-    win, lose, returnToPlayer fields (below) will have non-zero
+    win, lose, returnToPlayer fields in this record will have non-zero
     values. It is the caller's responsibility to remove the bet from
     the craps table.
 
     When false, this bet has not reached a decision and should remain on
     on the Craps table. The win, lose, retrunToPlayer fields will all be
-    zero. The distance field is incremented by one. On come out rolls
-    (i.e, the passed in point is zero) then the pivot field, if zero,
-    will be set to the given point for Pass/Come/DontPass/DontCome bets.
+    zero. The distance field (in the CrapsBet) is incremented by one. On
+    come out rolls (i.e, the passed in point is zero) then the CrapsBet
+    pivot field, if zero, will be set to the dice value for
+    Pass/Come/DontPass/DontCome bets.
 
-pivotAssigned - indicates that a pivot (point) for this bet has been
+pivotAssigned - indicates whether a pivot for this bet has been freshly
 established. For example, a Come bet has now been moved to the "6".
+
+    When true, the pivot has been assigned. Caller uses this
+    flag to move a come bet on the table to its box.
 
     When evaluating PassLine bets, if somehow a pivot is zero and the
     point has already been established, then the pivot is silently
     assigned to the already established point, as if the player made a
     PassLine bet after point was established.
 
-win - if non-zero, then this bet has won the given amount of money. The
+win - if non-zero, then this bet has won the given amount. The
 calculation includes odds winnings. The caller implementation should
-take the win amount, add it with the original contractBet and oddsBet
-and give that amount back to the player.
+take the win amount and add it with the original contractAmount and
+oddsAmount to give back to the player.
 
-lose - if non-zero, then this bet has lost the given amount of
-money. The amount is just the contractBet plus odds bet, if any. The
-caller implementation should add this much money to the table's banking
-system and subtract this amount from the player's wallet if not already
-done so.
+lose - if non-zero, then this bet has lost the given amount. The amount
+is just the contractBet plus odds bet, if any. The caller implementation
+should add this amount to the table's banking system and subtract this
+amount from the player's wallet if not already done so.
 
-returnToPlayer - if non-zero then the given amount of money should be
-returned to the player. Note this is not a win. This can happen when a
-box bet wins/loses during a come out roll and the optional setting of
-oddsOffComeOutRoll is true.
-
+returnToPlayer - if non-zero then the given amount should be returned to
+the player. Note this is not a win or lose. This happen when a
+point-based bet wins/loses during a come out roll and the optional
+setting of oddsOffComeOutRoll is true.
 */
 Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
@@ -249,7 +303,7 @@ CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 {
     std::string s("CrapsBet::evaluate(): Error evaluating betId:");
     s += std::to_string(betId_) + " betName:" + EnumBetName::toString(betName_) + ". ";
-    ep.prepend(s);
+    ep.diag = s;
     return Gen::ReturnCode::Fail;
 }
 
@@ -258,9 +312,9 @@ CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 bool
 CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
 {
-    if ((point == 0) ||
-        (point == 4) || (point == 5) || (point == 6) ||
-        (point == 8) || (point == 9) || (point == 10))
+    if (point == 0 ||
+        point == 4 || point == 5 || point == 6 ||
+        point == 8 || point == 9 || point == 10)
     {
         return true;
     }
@@ -287,18 +341,19 @@ CrapsBet::evalPassLine(
         // Special case where user made a PassLine bet after point was
         // established, but mistakenly specified 0 for the pivot. Coerce
         // this PassLine bet to align with the current point before
-        // evaluating any outcome below.
+        // evaluating any outcome below. Turns it into a PassLine bet
+        // placed on the table after the point has already been established.
         pivot_ = point;
         dr.pivotAssigned = true;
     }
 
     if (point == 0)  // come out roll
     {
-        if ((d == 7) || (d == 11))
+        if (d == 7 || d == 11)
         {
             dcn = Win;
         }
-        else if ((d == 2) || (d == 3) || (d == 12))
+        else if (d == 2 || d == 3 || d == 12)
         {
             dcn = Lose;
         }

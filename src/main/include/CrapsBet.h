@@ -52,6 +52,7 @@ public:
     };
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount(Money amount, Gen::ErrorPass& ep);
     /// @}
 
     /// @name Observers

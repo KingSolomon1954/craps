@@ -768,6 +768,54 @@ TEST_CASE("CrapsBet::evaluate()::PassLine")
         CHECK(b121.distance() == 1);
         CHECK(b121.whenDecided() < b121.whenCreated());
     }
+
+    SUBCASE("Distance")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // PassLine bet of 4, roll 10 times no decision
+        // On eleventh roll, make point, win
+        CrapsBet b41(BetName::PassLine, 100, 4);
+        point = 4;
+        dice.set(6,6);
+
+        for (unsigned i = 1; i <= 10; ++i)
+        {
+            CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        }
+        dice.set(3,1);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 100);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 11);
+        CHECK(b41.whenDecided() > b41.whenCreated());
+
+        // PassLine bet of 4, roll 10 times no decision
+        // On eleventh roll, 7-out, lose
+        CrapsBet b42(BetName::PassLine, 100, 4);
+        point = 4;
+        dice.set(6,2);
+
+        for (unsigned i = 1; i <= 10; ++i)
+        {
+            CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        }
+        dice.set(3,4);
+        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 100);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b42.distance() == 11);
+        CHECK(b42.whenDecided() > b42.whenCreated());
+    }
 }
 
 //----------------------------------------------------------------
