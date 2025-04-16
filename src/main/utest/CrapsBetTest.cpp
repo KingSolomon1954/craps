@@ -816,6 +816,122 @@ TEST_CASE("CrapsBet::evaluate()::PassLine")
         CHECK(b42.distance() == 11);
         CHECK(b42.whenDecided() > b42.whenCreated());
     }
+
+    SUBCASE("Odds")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Bad time for odds bet, no point established 
+        CrapsBet b40(BetName::PassLine, 100, 0);
+        CHECK(b40.setOddsAmount(200, ep) == Gen::ReturnCode::Fail);
+        // std::cout << ep.diag << std::endl;
+        
+        // Bad type of bet for odds bet
+        CrapsBet b41(BetName::Place, 100, 4);
+        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Fail);
+        // std::cout << ep.diag << std::endl;
+
+        // PassLine 4 wins with odds
+        CrapsBet b42(BetName::PassLine, 100, 4);
+        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(2,2);
+        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 500);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b42.distance() == 1);
+        CHECK(b42.whenDecided() > b42.whenCreated());
+
+        // PassLine 5 wins with odds
+        CrapsBet b50(BetName::PassLine, 100, 5);
+        CHECK(b50.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 5;
+        dice.set(3,2);
+        CHECK(b50.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 400);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b50.distance() == 1);
+        CHECK(b50.whenDecided() > b50.whenCreated());
+
+        // PassLine 6 wins with odds
+        CrapsBet b60(BetName::PassLine, 100, 6);
+        CHECK(b60.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 6;
+        dice.set(3,3);
+        CHECK(b60.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 340);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b60.distance() == 1);
+        CHECK(b60.whenDecided() > b60.whenCreated());
+
+        // PassLine 8 wins with odds
+        CrapsBet b80(BetName::PassLine, 100, 8);
+        CHECK(b80.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 8;
+        dice.set(4,4);
+        CHECK(b80.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 340);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b80.distance() == 1);
+        CHECK(b80.whenDecided() > b80.whenCreated());
+
+        // PassLine 9 wins with odds
+        CrapsBet b90(BetName::PassLine, 100, 9);
+        CHECK(b90.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 9;
+        dice.set(5,4);
+        CHECK(b90.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 400);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b90.distance() == 1);
+        CHECK(b90.whenDecided() > b90.whenCreated());
+
+        // PassLine 10 wins with odds
+        CrapsBet b100(BetName::PassLine, 100, 10);
+        CHECK(b100.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 10;
+        dice.set(5,5);
+        CHECK(b100.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 500);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b100.distance() == 1);
+        CHECK(b100.whenDecided() > b100.whenCreated());
+
+        // PassLine 10 loses with odds
+        CrapsBet b101(BetName::PassLine, 100, 10);
+        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 10;
+        dice.set(3,4);
+        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 300);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b101.distance() == 1);
+        CHECK(b101.whenDecided() > b101.whenCreated());
+    }
 }
 
 //----------------------------------------------------------------

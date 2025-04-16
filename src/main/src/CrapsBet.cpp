@@ -155,13 +155,16 @@ CrapsBet::validArgsCtor()
 
 Set, change, or remove the amount for an odds bet.
 
-It is only permissable to set an odds amount if these two conditions
-are true:
+It is only permissable to set an odds amount if the following
+two conditions are true:
 
 * the bet is a PassLine, DontPass, Come, DontCome bet
 
 * the bet has already been assigned its pivot (point) (i.e, pivot is
 non-zero)
+
+Also the house limits the amound of the odds bet to 10x the
+amount of the contract bet.
 
 @param [in] amount
     The amount to set it to. Clobbers any previous setting.
@@ -174,16 +177,11 @@ non-zero)
 Gen::ReturnCode
 CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
 {
-    (void) amount;
-    (void) ep;
-
-    if (betName_ != BetName::PassLine &&
-        betName_ != BetName::DontPass &&
-        betName_ != BetName::Come     &&
-        betName_ != BetName::DontCome)
+    if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
+        betName_ != BetName::Come     && betName_ != BetName::DontCome)
     {
         std::string s("CrapsBet::setOddsAmount(): "
-            "odds bet only allowed for these bets: "
+            "an odds bet is only allowed for these bets: "
             "PassLine|Come|DontPass|DontCome. Current bet is betId:");
         s += std::to_string(betId_) + " betName:" +
             EnumBetName::toString(betName_) + ". ";
@@ -193,10 +191,10 @@ CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
 
     if (pivot_ == 0)
     {
-        std::string s("CrapsBet::setOddsAmount(): odds bet not "
+        std::string s("CrapsBet::setOddsAmount(): odds bet is not "
             "allowed until after a point is established for this bet. ");
         s += "betId:" + std::to_string(betId_) + " betName:" +
-            EnumBetName::toString(betName_) + "pivot:" +
+            EnumBetName::toString(betName_) + " pivot:" +
             std::to_string(pivot_) + ".";
         ep.diag = s;
         return Gen::ReturnCode::Fail;
@@ -271,6 +269,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     switch (betName_)
     {
     case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
+    case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
     }
     if (rc == Gen::ReturnCode::Fail)
@@ -382,8 +381,78 @@ CrapsBet::evalPassLine(
     if (dcn == Win)
     {
         dr.win = contractAmount_ +
-            (oddsAmount_ * (OddsTables::oddsPass[d].numerator /
-                            OddsTables::oddsPass[d].denominator));
+            (oddsAmount_ * OddsTables::oddsPass[d].numerator) /
+                           OddsTables::oddsPass[d].denominator;
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_ + oddsAmount_;
+    }
+    dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalDontPass(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep;
+    Decision dcn = Keep;
+    unsigned d = dice.value();  // Cache value once
+
+    if ((point != 0) && (pivot_ == 0))
+    {
+        // Special case where user made a PassLine bet after point was
+        // established, but mistakenly specified 0 for the pivot. Coerce
+        // this PassLine bet to align with the current point before
+        // evaluating any outcome below. Turns it into a PassLine bet
+        // placed on the table after the point has already been established.
+        pivot_ = point;
+        dr.pivotAssigned = true;
+    }
+
+    if (point == 0)  // come out roll
+    {
+        if (d == 7 || d == 11)
+        {
+            dcn = Win;
+        }
+        else if (d == 2 || d == 3 || d == 12)
+        {
+            dcn = Lose;
+        }
+        else
+        {
+            pivot_ = d;
+            dr.pivotAssigned = true;
+            dcn = Keep;
+        }
+    }
+    else
+    {
+        if (d == 7)
+        {
+            dcn = Lose;
+        }
+        else if (pivot_ == d)
+        {
+            dcn = Win;
+        }
+        else
+        {
+            dcn = Keep;
+        }
+    }
+    if (dcn == Win)
+    {
+        dr.win = contractAmount_ +
+            (oddsAmount_ * OddsTables::oddsPass[d].numerator) /
+                           OddsTables::oddsPass[d].denominator;
     }
     if (dcn == Lose)
     {
