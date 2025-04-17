@@ -258,7 +258,7 @@ Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
                    DecisionRecord& dr, Gen::ErrorPass& ep)
 {
-    diagEvalEntered(point, dice);  // TODO use debug conditional
+//  diagEvalEntered(point, dice);  // TODO use debug conditional
     if (!validArgsEval(point, ep))
     {
         return diagEvalProcError(ep);
@@ -401,30 +401,37 @@ CrapsBet::evalDontPass(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)    
 {
-    (void) ep;
     Decision dcn = Keep;
     unsigned d = dice.value();  // Cache value once
-
+    
     if ((point != 0) && (pivot_ == 0))
     {
-        // Special case where user made a PassLine bet after point was
-        // established, but mistakenly specified 0 for the pivot. Coerce
-        // this PassLine bet to align with the current point before
-        // evaluating any outcome below. Turns it into a PassLine bet
-        // placed on the table after the point has already been established.
-        pivot_ = point;
-        dr.pivotAssigned = true;
+        // This bet is in the wrong state, it should not be on the
+        // table.  It means the DontPass bet was placed on the table
+        // after the point was already established, which is illegal for
+        // a DontPass bet. DontPass must sit through come roll
+        // evaluation(s) in order to be assigned a pivot, thus if there
+        // is a point, then pivot cannot be zero.
+        //
+        // Can't evaluate this. Return error.
+        // TODO: epset
+        ep.diag = "illegal bet";
+        return Gen::ReturnCode::Fail;
     }
 
     if (point == 0)  // come out roll
     {
         if (d == 7 || d == 11)
         {
+            dcn = Lose;
+        }
+        else if (d == 2 || d == 3)
+        {
             dcn = Win;
         }
-        else if (d == 2 || d == 3 || d == 12)
+        else if (d == 12)
         {
-            dcn = Lose;
+            dcn = Keep;
         }
         else
         {
@@ -437,11 +444,11 @@ CrapsBet::evalDontPass(
     {
         if (d == 7)
         {
-            dcn = Lose;
+            dcn = Win;
         }
         else if (pivot_ == d)
         {
-            dcn = Win;
+            dcn = Lose;
         }
         else
         {
@@ -451,8 +458,8 @@ CrapsBet::evalDontPass(
     if (dcn == Win)
     {
         dr.win = contractAmount_ +
-            (oddsAmount_ * OddsTables::oddsPass[d].numerator) /
-                           OddsTables::oddsPass[d].denominator;
+            ((oddsAmount_ * OddsTables::oddsDont[pivot_].numerator) /
+                            OddsTables::oddsDont[pivot_].denominator);
     }
     if (dcn == Lose)
     {

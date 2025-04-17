@@ -11,7 +11,7 @@
 
 //----------------------------------------------------------------
 
-TEST_CASE("EnumBetNameTest: toString")
+TEST_CASE("EnumBetName:toString")
 {
     std::string s;
     BetName val;
@@ -71,7 +71,7 @@ TEST_CASE("EnumBetNameTest: toString")
 
 //----------------------------------------------------------------
 
-TEST_CASE("EnumBetNameTest: fromString")
+TEST_CASE("EnumBetName:fromString")
 {
     std::string s;
 
@@ -120,7 +120,7 @@ TEST_CASE("EnumBetNameTest: fromString")
 
 //---------------------------------------------------------------
 
-TEST_CASE("EnumBetNameTest: isConvertibleFrom")
+TEST_CASE("EnumBetName:isConvertibleFrom")
 {
     std::string s;
 
@@ -170,7 +170,7 @@ TEST_CASE("EnumBetNameTest: isConvertibleFrom")
 
 //---------------------------------------------------------------
 
-TEST_CASE("EnumBetNameTest: fromUnsigned")
+TEST_CASE("EnumBetName:fromUnsigned")
 {
     CHECK(BetName::PassLine  == EnumBetName::fromUnsigned(1u));
     CHECK(BetName::Come      == EnumBetName::fromUnsigned(2u));
@@ -190,7 +190,7 @@ TEST_CASE("EnumBetNameTest: fromUnsigned")
 
 //---------------------------------------------------------------
 
-TEST_CASE("EnumBetNameTest: listAsString")
+TEST_CASE("EnumBetName:listAsString")
 {
     std::string s = "PassLine Come DontPass DontCome Place Lay Buy "
                     "Hardway Field AnyCraps AnySeven C&E Horn";
@@ -199,7 +199,7 @@ TEST_CASE("EnumBetNameTest: listAsString")
 
 //---------------------------------------------------------------
 
-TEST_CASE("EnumBetNameTest: ostreamOperator")
+TEST_CASE("EnumBetName:ostreamOperator")
 {
     BetName bn = BetName::DontCome;
 

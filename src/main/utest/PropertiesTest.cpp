@@ -9,7 +9,7 @@
 
 //----------------------------------------------------------------
 
-TEST_CASE("main::Properties:all")
+TEST_CASE("Properties:all")
 {
     REQUIRE(true);
 }

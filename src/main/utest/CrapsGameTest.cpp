@@ -9,7 +9,7 @@
 
 //----------------------------------------------------------------
 
-TEST_CASE("main::Craps:all")
+TEST_CASE("CrapsGame:all")
 {
     REQUIRE(true);
 }

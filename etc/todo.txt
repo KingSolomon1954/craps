@@ -563,3 +563,13 @@ CrapsBetEvaluator::evalPassLine(bet, point, dice)
         10    2,1    1,2     2,1    1,2      9,5      7,1
         11    0,0    0,0     0,0    0,0      0,0      0,0
         12    0,0    0,0     0,0    0,0      0,0      0,0
+
+
+Layer           Tech
+--------------- ----------------------------------------
+Engine          Unreal Engine 5
+Programming     C++ (with Blueprint where convenient)
+Animation       Blender/Maya → FBX → Unreal Sequences
+UI              UMG (Unreal Motion Graphics)
+Audio           Unreal Sound Cues (dice rolls, chip sounds, dealer voice)
+VFX (Optional)  Niagara (for casino glow or excitement FX)
