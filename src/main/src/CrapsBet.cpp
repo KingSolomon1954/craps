@@ -269,6 +269,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     switch (betName_)
     {
     case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
+    case BetName::Come:     rc = evalCome    (point, dice, dr, ep); break;
     case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
     }
@@ -331,45 +332,139 @@ CrapsBet::evalPassLine(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)    
 {
-    (void) ep;
-    Decision dcn = Keep;
-    unsigned d = dice.value();  // Cache value once
-
+    (void) ep; // unused, quiet the compiler
     if ((point != 0) && (pivot_ == 0))
     {
         // Special case where user made a PassLine bet after point was
         // established, but mistakenly specified 0 for the pivot. Coerce
         // this PassLine bet to align with the current point before
-        // evaluating any outcome below. Turns it into a PassLine bet
-        // placed on the table after the point has already been established.
+        // evaluating any outcome. Turns it into a PassLine bet placed
+        // on the table after the point has already been established.
+        // which is legal.
         pivot_ = point;
         dr.pivotAssigned = true;
     }
 
-    if (point == 0)  // come out roll
+    evalPassing(pivot_, dice.value(), dr);
+    return Gen::ReturnCode::Success;
+}
+    
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalCome(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    if ((point == 0) && (pivot_ == 0))
     {
-        if (d == 7 || d == 11)
+        // This bet is in the wrong state, it should not be on the
+        // table. This means the Come bet was placed on the table
+        // during a come out roll, which is illegal. Instead the
+        // user must make a PassLine bet.
+        //
+        // Can't evaluate this. Return error.
+        // TODO: epset
+        ep.diag = "illegal bet";
+        return Gen::ReturnCode::Fail;
+    }
+
+    evalPassing(pivot_, dice.value(), dr);
+    return Gen::ReturnCode::Success;
+
+#if 0
+    Decision dcn = Keep;
+
+    if (pivot == 0)
+    {
+        if (diceVal == 7 || diceVal == 11)
         {
             dcn = Win;
         }
-        else if (d == 2 || d == 3 || d == 12)
+        else if (diceVal == 2 || diceVal == 3 || diceVal == 12)
         {
             dcn = Lose;
         }
         else
         {
-            pivot_ = d;
+            pivot_ = diceVal;
             dr.pivotAssigned = true;
             dcn = Keep;
         }
     }
     else
     {
-        if (d == 7)
+        if (diceVal == 7)
+        {
+            dcn = Lose;
+            if point == 0 then return odds money
+        }
+        else if (pivot_ == diceVal)
+        {
+            dcn = Win;
+            if point == 0 then return odds money
+        }
+        else
+        {
+            dcn = Keep;
+        }
+    }
+    if (dcn == Win)
+    {
+        dr.win = contractAmount_ +
+            (oddsAmount_ * OddsTables::oddsPass[diceVal].numerator) /
+                           OddsTables::oddsPass[diceVal].denominator;
+
+        if (betName_ == BetName::Come && point == 0)
+        {
+        }
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_ + oddsAmount_;
+    }
+    dr.decision = (dcn != Keep);
+#endif
+    
+}
+
+//----------------------------------------------------------------
+//
+// Common function to evaluate PassLine and Come bets.
+// evalPassLine() passes in point for pivot arg, while evalCome() bets
+// pass in pivot for pivot arg.
+//
+void
+CrapsBet::evalPassing(unsigned pivot, unsigned diceVal, DecisionRecord& dr)
+{
+    Decision dcn = Keep;
+
+    if (pivot == 0)
+    {
+        if (diceVal == 7 || diceVal == 11)
+        {
+            dcn = Win;
+        }
+        else if (diceVal == 2 || diceVal == 3 || diceVal == 12)
         {
             dcn = Lose;
         }
-        else if (pivot_ == d)
+        else
+        {
+            pivot_ = diceVal;
+            dr.pivotAssigned = true;
+            dcn = Keep;
+        }
+    }
+    else
+    {
+        if (diceVal == 7)
+        {
+            dcn = Lose;
+        }
+        else if (pivot_ == diceVal)
         {
             dcn = Win;
         }
@@ -381,15 +476,14 @@ CrapsBet::evalPassLine(
     if (dcn == Win)
     {
         dr.win = contractAmount_ +
-            (oddsAmount_ * OddsTables::oddsPass[d].numerator) /
-                           OddsTables::oddsPass[d].denominator;
+            (oddsAmount_ * OddsTables::oddsPass[diceVal].numerator) /
+                           OddsTables::oddsPass[diceVal].denominator;
     }
     if (dcn == Lose)
     {
         dr.lose = contractAmount_ + oddsAmount_;
     }
     dr.decision = (dcn != Keep);
-    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

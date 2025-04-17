@@ -356,7 +356,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
         CHECK(b121.whenDecided() > b121.whenCreated());
     }
     
-    SUBCASE("Point Wins")
+    SUBCASE("number hits before 7")
     {
         Gen::ErrorPass ep;
         CrapsBet::DecisionRecord dr;
@@ -379,12 +379,13 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 4 wins (pivot == 4)
         CrapsBet b42(BetName::PassLine, 100, 4);
+        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(2,2);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 500);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b42.distance() == 1);
@@ -407,12 +408,13 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 5 wins (pivot == 5)
         CrapsBet b52(BetName::PassLine, 100, 5);
+        CHECK(b52.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,2);
         CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 400);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b52.distance() == 1);
@@ -435,12 +437,13 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 6 wins (pivot == 6)
         CrapsBet b62(BetName::PassLine, 100, 6);
+        CHECK(b62.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,3);
         CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 340);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b62.distance() == 1);
@@ -463,12 +466,13 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 8 wins (pivot == 6)
         CrapsBet b82(BetName::PassLine, 100, 8);
+        CHECK(b82.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 8;
         dice.set(4,4);
         CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 340);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b82.distance() == 1);
@@ -491,12 +495,13 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 9 wins (pivot == 9)
         CrapsBet b92(BetName::PassLine, 100, 9);
+        CHECK(b92.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(6,3);
         CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 400);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b92.distance() == 1);
@@ -519,12 +524,13 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 10 wins (pivot == 10)
         CrapsBet b102(BetName::PassLine, 100, 10);
+        CHECK(b102.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 10;
         dice.set(6,4);
         CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 500);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b102.distance() == 1);
@@ -532,7 +538,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
         CHECK(b102.pivot() == 10);
     }
     
-    SUBCASE("7-Out")
+    SUBCASE("7 hits before number")
     {
         Gen::ErrorPass ep;
         CrapsBet::DecisionRecord dr;
@@ -816,122 +822,6 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
         CHECK(b42.distance() == 11);
         CHECK(b42.whenDecided() > b42.whenCreated());
     }
-
-    SUBCASE("Odds")
-    {
-        Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
-        Dice dice;
-        unsigned point = 0;
-
-        // Bad time for odds bet, no point established 
-        CrapsBet b40(BetName::PassLine, 100, 0);
-        CHECK(b40.setOddsAmount(200, ep) == Gen::ReturnCode::Fail);
-        // std::cout << ep.diag << std::endl;
-        
-        // Bad type of bet for odds bet
-        CrapsBet b41(BetName::Place, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Fail);
-        // std::cout << ep.diag << std::endl;
-
-        // PassLine 4 wins with odds
-        CrapsBet b42(BetName::PassLine, 100, 4);
-        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        point = 4;
-        dice.set(2,2);
-        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 500);
-        CHECK(dr.lose == 0);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b42.distance() == 1);
-        CHECK(b42.whenDecided() > b42.whenCreated());
-
-        // PassLine 5 wins with odds
-        CrapsBet b50(BetName::PassLine, 100, 5);
-        CHECK(b50.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        point = 5;
-        dice.set(3,2);
-        CHECK(b50.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 400);
-        CHECK(dr.lose == 0);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b50.distance() == 1);
-        CHECK(b50.whenDecided() > b50.whenCreated());
-
-        // PassLine 6 wins with odds
-        CrapsBet b60(BetName::PassLine, 100, 6);
-        CHECK(b60.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        point = 6;
-        dice.set(3,3);
-        CHECK(b60.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 340);
-        CHECK(dr.lose == 0);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b60.distance() == 1);
-        CHECK(b60.whenDecided() > b60.whenCreated());
-
-        // PassLine 8 wins with odds
-        CrapsBet b80(BetName::PassLine, 100, 8);
-        CHECK(b80.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        point = 8;
-        dice.set(4,4);
-        CHECK(b80.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 340);
-        CHECK(dr.lose == 0);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b80.distance() == 1);
-        CHECK(b80.whenDecided() > b80.whenCreated());
-
-        // PassLine 9 wins with odds
-        CrapsBet b90(BetName::PassLine, 100, 9);
-        CHECK(b90.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        point = 9;
-        dice.set(5,4);
-        CHECK(b90.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 400);
-        CHECK(dr.lose == 0);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b90.distance() == 1);
-        CHECK(b90.whenDecided() > b90.whenCreated());
-
-        // PassLine 10 wins with odds
-        CrapsBet b100(BetName::PassLine, 100, 10);
-        CHECK(b100.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        point = 10;
-        dice.set(5,5);
-        CHECK(b100.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 500);
-        CHECK(dr.lose == 0);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b100.distance() == 1);
-        CHECK(b100.whenDecided() > b100.whenCreated());
-
-        // PassLine 10 loses with odds
-        CrapsBet b101(BetName::PassLine, 100, 10);
-        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        point = 10;
-        dice.set(3,4);
-        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 0);
-        CHECK(dr.lose == 300);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b101.distance() == 1);
-        CHECK(b101.whenDecided() > b101.whenCreated());
-    }
 }
 
 TEST_CASE("CrapsBet:evaluate:DontPass")
@@ -1093,7 +983,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         CHECK(b121.whenDecided() < b121.whenCreated());
     }
 
-    SUBCASE("Point Loses")
+    SUBCASE("number hits before 7")
     {
         Gen::ErrorPass ep;
         CrapsBet::DecisionRecord dr;
@@ -1108,13 +998,14 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         
         // Point of 4 loses (pivot == 4)
         CrapsBet b42(BetName::DontPass, 100, 4);
+        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(2,2);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
-        CHECK(dr.lose == 100);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b42.distance() == 1);
         CHECK(b42.whenDecided() > b42.whenCreated());
@@ -1128,13 +1019,14 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 5 loses (pivot == 5)
         CrapsBet b52(BetName::DontPass, 100, 5);
+        CHECK(b52.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,2);
         CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
-        CHECK(dr.lose == 100);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b52.distance() == 1);
         CHECK(b52.whenDecided() > b52.whenCreated());
@@ -1148,13 +1040,14 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 6 loses (pivot == 6)
         CrapsBet b62(BetName::DontPass, 100, 6);
+        CHECK(b62.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,3);
         CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
-        CHECK(dr.lose == 100);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b62.distance() == 1);
         CHECK(b62.whenDecided() > b62.whenCreated());
@@ -1168,13 +1061,14 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 8 loses (pivot == 6)
         CrapsBet b82(BetName::DontPass, 100, 8);
+        CHECK(b82.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 8;
         dice.set(4,4);
         CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
-        CHECK(dr.lose == 100);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b82.distance() == 1);
         CHECK(b82.whenDecided() > b82.whenCreated());
@@ -1188,13 +1082,14 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 9 loses (pivot == 9)
         CrapsBet b92(BetName::DontPass, 100, 9);
+        CHECK(b92.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(6,3);
         CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
-        CHECK(dr.lose == 100);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b92.distance() == 1);
         CHECK(b92.whenDecided() > b92.whenCreated());
@@ -1208,20 +1103,21 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 10 loses (pivot == 10)
         CrapsBet b102(BetName::DontPass, 100, 10);
+        CHECK(b102.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 10;
         dice.set(6,4);
         CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
-        CHECK(dr.lose == 100);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b102.distance() == 1);
         CHECK(b102.whenDecided() > b102.whenCreated());
         CHECK(b102.pivot() == 10);
     }
     
-    SUBCASE("7-Out wins")
+    SUBCASE("7 hits before number")
     {
         Gen::ErrorPass ep;
         CrapsBet::DecisionRecord dr;
@@ -1230,12 +1126,13 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 4, dice = 7, wins
         CrapsBet b41(BetName::DontPass, 100, 4);
+        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,4);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 200);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b41.distance() == 1);
@@ -1243,12 +1140,13 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 5, dice = 7, wins
         CrapsBet b51(BetName::DontPass, 100, 5);
+        CHECK(b51.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,4);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 233);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b51.distance() == 1);
@@ -1256,12 +1154,13 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 6, dice = 7, wins
         CrapsBet b61(BetName::DontPass, 100, 6);
+        CHECK(b61.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,4);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 266);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b61.distance() == 1);
@@ -1269,12 +1168,13 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 8, dice = 7, wins
         CrapsBet b81(BetName::DontPass, 100, 8);
+        CHECK(b81.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 8;
         dice.set(3,4);
         CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 266);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b81.distance() == 1);
@@ -1282,12 +1182,13 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 9, dice = 7, wins
         CrapsBet b91(BetName::DontPass, 100, 9);
+        CHECK(b91.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(3,4);
         CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 233);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b91.distance() == 1);
@@ -1295,12 +1196,13 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 10, dice = 7, wins
         CrapsBet b101(BetName::DontPass, 100, 10);
+        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 10;
         dice.set(3,4);
         CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
+        CHECK(dr.win == 200);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b101.distance() == 1);
@@ -1511,7 +1413,6 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         Gen::ErrorPass ep;
         CrapsBet::DecisionRecord dr;
         Dice dice;
-        unsigned point = 0;
 
         // Bad time for odds bet, no point established 
         CrapsBet b40(BetName::DontPass, 100, 0);
@@ -1522,96 +1423,356 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         CrapsBet b41(BetName::Place, 100, 4);
         CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Fail);
         // std::cout << ep.diag << std::endl;
+    }
+}
 
-        // DontPass 4 wins with odds
-        CrapsBet b42(BetName::DontPass, 100, 4);
-        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+//----------------------------------------------------------------
+
+TEST_CASE("CrapsBet:evaluate:Come")
+{
+    SUBCASE("Come Out Roll")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Come out roll, illegal - must make pass bet instead
+        CrapsBet b00(BetName::Come, 100);
+        point = 0;
+        dice.set(1,1);  // doesn't matter in this case
+        CHECK(b00.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Fail);
+
+        // Point roll, no pivot yet, dice = 2, loses
+        CrapsBet b21(BetName::Come, 100);
         point = 4;
-        dice.set(6,1);
-        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        dice.set(1,1);
+        CHECK(b21.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 200);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 100);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b21.distance() == 1);
+        CHECK(b21.whenDecided() > b21.whenCreated());
+
+        // Point roll, no pivot yet, dice = 3, loses
+        CrapsBet b31(BetName::Come, 100);
+        point = 4;
+        dice.set(2,1);
+        CHECK(b31.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 100);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b31.distance() == 1);
+        CHECK(b31.whenDecided() > b31.whenCreated());
+
+        // Point roll, no pivot, dice = 4, keep
+        CrapsBet b41(BetName::Come, 100);
+        point = 5;
+        dice.set(3,1);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == true);
+        CHECK(dr.win == 0);
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
-        CHECK(b42.distance() == 1);
-        CHECK(b42.whenDecided() > b42.whenCreated());
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() < b41.whenCreated());
+        CHECK(b41.pivot() == 4);
 
-        // DontPass 5 wins with odds
-        CrapsBet b50(BetName::DontPass, 100, 5);
-        CHECK(b50.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        // Point roll, no pivot, dice = 5, keep
+        CrapsBet b51(BetName::Come, 100);
+        point = 4;
+        dice.set(4,1);
+        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == true);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b51.distance() == 1);
+        CHECK(b51.whenDecided() < b51.whenCreated());
+        CHECK(b51.pivot() == 5);
+
+        // Point roll, no pivot, dice = 6, keep
+        CrapsBet b61(BetName::Come, 100);
+        point = 4;
+        dice.set(5,1);
+        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == true);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b61.distance() == 1);
+        CHECK(b61.whenDecided() < b61.whenCreated());
+        CHECK(b61.pivot() == 6);
+
+        // Point roll, no pivot, dice = 7, wins
+        CrapsBet b71(BetName::Come, 100);
+        point = 4;
+        dice.set(3,4);
+        CHECK(b71.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 100);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b71.distance() == 1);
+        CHECK(b71.whenDecided() > b71.whenCreated());
+
+        // Point roll, no pivot, dice = 8, keep
+        CrapsBet b81(BetName::Come, 100);
+        point = 4;
+        dice.set(4,4);
+        CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == true);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b81.distance() == 1);
+        CHECK(b81.whenDecided() < b81.whenCreated());
+        CHECK(b81.pivot() == 8);
+
+        // Point roll, no pivot, dice = 9, keep
+        CrapsBet b91(BetName::Come, 100);
+        point = 4;
+        dice.set(4,5);
+        CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == true);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b91.distance() == 1);
+        CHECK(b91.whenDecided() < b91.whenCreated());
+        CHECK(b91.pivot() == 9);
+
+        // Point roll, no pivot, dice = 10, keep
+        CrapsBet b101(BetName::Come, 100);
+        point = 4;
+        dice.set(5,5);
+        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == true);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b101.distance() == 1);
+        CHECK(b101.whenDecided() < b101.whenCreated());
+        CHECK(b101.pivot() == 10);
+
+        // Point roll, no pivot, dice = 11, wins
+        CrapsBet b111(BetName::Come, 100);
+        point = 4;
+        dice.set(6,5);
+        CHECK(b111.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 100);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b111.distance() == 1);
+        CHECK(b111.whenDecided() > b111.whenCreated());
+
+        // Point roll, no pivot, dice = 12, loses
+        CrapsBet b121(BetName::Come, 100);
+        point = 4;
+        dice.set(6,6);
+        CHECK(b121.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 100);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b121.distance() == 1);
+        CHECK(b121.whenDecided() > b121.whenCreated());
+    }
+
+    SUBCASE("number hits before 7")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Number 4 wins
+        CrapsBet b41(BetName::Come, 100, 4);
+        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 5;
+        dice.set(2,2);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 500);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() > b41.whenCreated());
+        CHECK(b41.pivot() == 4);
+
+        // Number 5 wins
+        CrapsBet b51(BetName::Come, 100, 5);
+        CHECK(b51.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(3,2);
+        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 400);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b51.distance() == 1);
+        CHECK(b51.whenDecided() > b51.whenCreated());
+        CHECK(b51.pivot() == 5);
+
+        // Number 6 wins
+        CrapsBet b61(BetName::Come, 100, 6);
+        CHECK(b61.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(3,3);
+        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 340);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b61.distance() == 1);
+        CHECK(b61.whenDecided() > b61.whenCreated());
+        CHECK(b61.pivot() == 6);
+
+        // Number 8 wins
+        CrapsBet b81(BetName::Come, 100, 8);
+        CHECK(b81.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(4,4);
+        CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 340);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b81.distance() == 1);
+        CHECK(b81.whenDecided() > b81.whenCreated());
+        CHECK(b81.pivot() == 8);
+
+        // Number 9 wins
+        CrapsBet b91(BetName::Come, 100, 9);
+        CHECK(b91.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(6,3);
+        CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 400);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b91.distance() == 1);
+        CHECK(b91.whenDecided() > b91.whenCreated());
+        CHECK(b91.pivot() == 9);
+
+        // Number 10 wins
+        CrapsBet b101(BetName::Come, 100, 10);
+        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(6,4);
+        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 500);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b101.distance() == 1);
+        CHECK(b101.whenDecided() > b101.whenCreated());
+        CHECK(b101.pivot() == 10);
+    }
+    
+    SUBCASE("7 hits before number")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Number is 4, dice = 7, loses
+        CrapsBet b41(BetName::Come, 100, 4);
+        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(3,4);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 300);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() > b41.whenCreated());
+
+        // Number is 5, dice = 7, loses
+        CrapsBet b51(BetName::Come, 100, 5);
+        CHECK(b51.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,4);
-        CHECK(b50.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 233);
-        CHECK(dr.lose == 0);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
-        CHECK(b50.distance() == 1);
-        CHECK(b50.whenDecided() > b50.whenCreated());
+        CHECK(b51.distance() == 1);
+        CHECK(b51.whenDecided() > b51.whenCreated());
 
-        // DontPass 6 wins with odds
-        CrapsBet b60(BetName::DontPass, 100, 6);
-        CHECK(b60.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        // Number is 6, dice = 7, loses
+        CrapsBet b61(BetName::Come, 100, 6);
+        CHECK(b61.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,4);
-        CHECK(b60.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 266);
-        CHECK(dr.lose == 0);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
-        CHECK(b60.distance() == 1);
-        CHECK(b60.whenDecided() > b60.whenCreated());
+        CHECK(b61.distance() == 1);
+        CHECK(b61.whenDecided() > b61.whenCreated());
 
-        // DontPass 8 wins with odds
-        CrapsBet b80(BetName::DontPass, 100, 8);
-        CHECK(b80.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        // Number is 8, dice = 7, loses
+        CrapsBet b81(BetName::Come, 100, 8);
+        CHECK(b81.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 8;
-        dice.set(4,3);
-        CHECK(b80.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        dice.set(3,4);
+        CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 266);
-        CHECK(dr.lose == 0);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
-        CHECK(b80.distance() == 1);
-        CHECK(b80.whenDecided() > b80.whenCreated());
+        CHECK(b81.distance() == 1);
+        CHECK(b81.whenDecided() > b81.whenCreated());
 
-        // DontPass 9 wins with odds
-        CrapsBet b90(BetName::DontPass, 100, 9);
-        CHECK(b90.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        // Number is 9, dice = 7, loses
+        CrapsBet b91(BetName::Come, 100, 9);
+        CHECK(b91.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(3,4);
-        CHECK(b90.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 233);
-        CHECK(dr.lose == 0);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
-        CHECK(b90.distance() == 1);
-        CHECK(b90.whenDecided() > b90.whenCreated());
+        CHECK(b91.distance() == 1);
+        CHECK(b91.whenDecided() > b91.whenCreated());
 
-        // DontPass 10 wins with odds
-        CrapsBet b100(BetName::DontPass, 100, 10);
-        CHECK(b100.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        point = 10;
-        dice.set(2,5);
-        CHECK(b100.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 200);
-        CHECK(dr.lose == 0);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b100.distance() == 1);
-        CHECK(b100.whenDecided() > b100.whenCreated());
-
-        // DontPass 10 loses with odds
-        CrapsBet b101(BetName::DontPass, 100, 10);
+        // Number is 10, dice = 7, loses
+        CrapsBet b101(BetName::Come, 100, 10);
         CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 10;
-        dice.set(5,5);
+        dice.set(3,4);
         CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
@@ -1620,6 +1781,229 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         CHECK(dr.returnToPlayer == 0);
         CHECK(b101.distance() == 1);
         CHECK(b101.whenDecided() > b101.whenCreated());
+    }
+    
+    SUBCASE("No decision")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // After point, dice = 2, keep
+        CrapsBet b21(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(1,1);
+        CHECK(b21.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b21.distance() == 1);
+        CHECK(b21.whenDecided() < b21.whenCreated());
+
+        // After point, dice = 3, keep
+        CrapsBet b31(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(2,1);
+        CHECK(b31.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b31.distance() == 1);
+        CHECK(b31.whenDecided() < b31.whenCreated());
+
+        // After point, dice = 4, keep
+        CrapsBet b41(BetName::Come, 100, 10);
+        point = 10;
+        dice.set(3,1);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() < b41.whenCreated());
+
+        // After point, dice = 5, keep
+        CrapsBet b51(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(3,2);
+        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b51.distance() == 1);
+        CHECK(b51.whenDecided() < b51.whenCreated());
+
+        // After point, dice = 6, keep
+        CrapsBet b61(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(5,1);
+        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b61.distance() == 1);
+        CHECK(b61.whenDecided() < b61.whenCreated());
+
+        // After point, dice = 7, lose
+        CrapsBet b71(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(3,4);
+        CHECK(b71.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 100);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b71.distance() == 1);
+        CHECK(b71.whenDecided() > b71.whenCreated());
+
+        // After point, dice = 8, keep
+        CrapsBet b81(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(4,4);
+        CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b81.distance() == 1);
+        CHECK(b81.whenDecided() < b81.whenCreated());
+
+        // After point, dice = 9, keep
+        CrapsBet b91(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(4,5);
+        CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b91.distance() == 1);
+        CHECK(b91.whenDecided() < b91.whenCreated());
+
+        // After point, dice = 10 keep
+        CrapsBet b101(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(5,5);
+        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b101.distance() == 1);
+        CHECK(b101.whenDecided() < b101.whenCreated());
+
+        // After point, dice = 11 keep
+        CrapsBet b111(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(6,5);
+        CHECK(b111.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b111.distance() == 1);
+        CHECK(b111.whenDecided() < b111.whenCreated());
+
+        // After point, dice = 12 keep
+        CrapsBet b121(BetName::Come, 100, 4);
+        point = 4;
+        dice.set(6,6);
+        CHECK(b121.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b121.distance() == 1);
+        CHECK(b121.whenDecided() < b121.whenCreated());
+    }
+
+    SUBCASE("Return to player")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Number hits on Come out roll, wins but returns odds
+        CrapsBet b41(BetName::Come, 100, 4);
+        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 0;
+        dice.set(2,2);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 100);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 200);
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() < b41.whenCreated());
+    }
+
+    SUBCASE("Distance")
+    {
+#if 0
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // PassLine bet of 4, roll 10 times no decision
+        // On eleventh roll, make point, win
+        CrapsBet b41(BetName::PassLine, 100, 4);
+        point = 4;
+        dice.set(6,6);
+
+        for (unsigned i = 1; i <= 10; ++i)
+        {
+            CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        }
+        dice.set(3,1);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 100);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 11);
+        CHECK(b41.whenDecided() > b41.whenCreated());
+
+        // PassLine bet of 4, roll 10 times no decision
+        // On eleventh roll, 7-out, lose
+        CrapsBet b42(BetName::PassLine, 100, 4);
+        point = 4;
+        dice.set(6,2);
+
+        for (unsigned i = 1; i <= 10; ++i)
+        {
+            CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        }
+        dice.set(3,4);
+        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 100);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b42.distance() == 11);
+        CHECK(b42.whenDecided() > b42.whenCreated());
+#endif
     }
 }
 
