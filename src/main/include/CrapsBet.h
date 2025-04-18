@@ -53,6 +53,7 @@ public:
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode setOddsAmount(Money amount, Gen::ErrorPass& ep);
+    void setOddsOffComeOut(bool off);
     /// @}
 
     /// @name Observers
@@ -82,19 +83,22 @@ private:
     static unsigned idCounter_;
     void validArgsCtor();
     bool validArgsEval(unsigned point, Gen::ErrorPass& ep) const;
-    void evalPassing(unsigned pivot, unsigned diceVal, DecisionRecord& dr);
     Gen::ReturnCode evalPassLine(
-        unsigned point, const Dice& dice,
-        DecisionRecord& dr, Gen::ErrorPass& ep);
-    Gen::ReturnCode evalDontPass(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalCome(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalDontPass(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
     Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
-
+    void calcPassWin(unsigned diceVal,
+                     DecisionRecord& dr,
+                     bool returnOdds) const;
+    void calcPassLose(DecisionRecord& dr,
+                      bool returnOdds) const;
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;
     unsigned pivot_ = 0;

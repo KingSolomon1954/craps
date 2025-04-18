@@ -1941,7 +1941,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
         Dice dice;
         unsigned point = 0;
 
-        // Number hits on Come out roll, wins but returns odds
+        // Number hits on Come out roll, wins and returns odds
         CrapsBet b41(BetName::Come, 100, 4);
         CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
         point = 0;
@@ -1953,57 +1953,53 @@ TEST_CASE("CrapsBet:evaluate:Come")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 200);
         CHECK(b41.distance() == 1);
-        CHECK(b41.whenDecided() < b41.whenCreated());
-    }
-
-    SUBCASE("Distance")
-    {
-#if 0
-        Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
-        Dice dice;
-        unsigned point = 0;
-
-        // PassLine bet of 4, roll 10 times no decision
-        // On eleventh roll, make point, win
-        CrapsBet b41(BetName::PassLine, 100, 4);
-        point = 4;
-        dice.set(6,6);
-
-        for (unsigned i = 1; i <= 10; ++i)
-        {
-            CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        }
-        dice.set(3,1);
-        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        CHECK(dr.decision == true);
-        CHECK(dr.pivotAssigned == false);
-        CHECK(dr.win == 100);
-        CHECK(dr.lose == 0);
-        CHECK(dr.returnToPlayer == 0);
-        CHECK(b41.distance() == 11);
         CHECK(b41.whenDecided() > b41.whenCreated());
 
-        // PassLine bet of 4, roll 10 times no decision
-        // On eleventh roll, 7-out, lose
-        CrapsBet b42(BetName::PassLine, 100, 4);
-        point = 4;
-        dice.set(6,2);
-
-        for (unsigned i = 1; i <= 10; ++i)
-        {
-            CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
-        }
-        dice.set(3,4);
+        // Same as previous, but enable odds working on come out roll
+        // Number hits on Come out roll, wins with odds
+        CrapsBet b42(BetName::Come, 100, 4);
+        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        b42.setOddsOffComeOut(false);
+        point = 0;
+        dice.set(2,2);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 500);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b42.distance() == 1);
+        CHECK(b42.whenDecided() > b42.whenCreated());
+
+        // 7 repeats before Number Come out roll, loses and returns odds
+        CrapsBet b43(BetName::Come, 100, 4);
+        CHECK(b43.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        point = 0;
+        dice.set(6,1);
+        CHECK(b43.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
         CHECK(dr.lose == 100);
+        CHECK(dr.returnToPlayer == 200);
+        CHECK(b43.distance() == 1);
+        CHECK(b43.whenDecided() > b43.whenCreated());
+
+        // Same as previous, but enable odds working on come out roll
+        // 7 repeats before Number Come out roll, loses odds too
+        CrapsBet b44(BetName::Come, 100, 4);
+        CHECK(b44.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        b44.setOddsOffComeOut(false);
+        point = 0;
+        dice.set(6,1);
+        CHECK(b44.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 300);
         CHECK(dr.returnToPlayer == 0);
-        CHECK(b42.distance() == 11);
-        CHECK(b42.whenDecided() > b42.whenCreated());
-#endif
+        CHECK(b44.distance() == 1);
+        CHECK(b44.whenDecided() > b44.whenCreated());
     }
 }
 
