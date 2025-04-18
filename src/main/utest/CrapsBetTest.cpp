@@ -189,13 +189,19 @@ TEST_CASE("CrapsBet:evaluate:args")
         Gen::ErrorPass ep;
         Dice dice;
         CrapsBet::DecisionRecord dr;
+
+        // bad point
         unsigned point = 7;
         CrapsBet b(BetName::Field, 100);
         CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Fail);
+        
+        // bad point
         point = 99;
         CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Fail);
     }
 }
+
+//----------------------------------------------------------------
 
 TEST_CASE("CrapsBet:evaluate:PassLine")
 {
@@ -822,7 +828,61 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
         CHECK(b42.distance() == 11);
         CHECK(b42.whenDecided() > b42.whenCreated());
     }
+
+    SUBCASE("Minimum amount bets")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Point of 4 wins, min contract, min odds 
+        CrapsBet b41(BetName::PassLine, 1, 4);
+        CHECK(b41.setOddsAmount(1, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(2,2);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 3);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() > b41.whenCreated());
+
+        // Point of 5 wins, min contract, min odds 
+        CrapsBet b51(BetName::PassLine, 1, 5);
+        CHECK(b51.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(2, ep) == Gen::ReturnCode::Success);
+        point = 5;
+        dice.set(3,2);
+        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 4);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b51.distance() == 1);
+        CHECK(b51.whenDecided() > b51.whenCreated());
+
+        // Point of 6 wins, min contract, min odds 
+        CrapsBet b61(BetName::PassLine, 1, 6);
+        CHECK(b61.setOddsAmount(3, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(5, ep) == Gen::ReturnCode::Success);
+        point = 6;
+        dice.set(3,3);
+        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 7);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b61.distance() == 1);
+        CHECK(b61.whenDecided() > b61.whenCreated());
+    }
 }
+
+//----------------------------------------------------------------
 
 TEST_CASE("CrapsBet:evaluate:DontPass")
 {
@@ -1424,6 +1484,64 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Fail);
         // std::cout << ep.diag << std::endl;
     }
+
+    SUBCASE("Minimum amount bets")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Point of 4, 7 out, wins, min contract, min odds 
+        CrapsBet b41(BetName::DontPass, 1, 4);
+        CHECK(b41.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
+        CHECK(b41.setOddsAmount(2, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(6,1);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 2);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() > b41.whenCreated());
+
+        // Point of 5, 7 out,  wins, min contract, min odds 
+        CrapsBet b51(BetName::DontPass, 1, 5);
+        CHECK(b51.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(2, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(3, ep) == Gen::ReturnCode::Success);
+        point = 5;
+        dice.set(3,4);
+        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 3);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b51.distance() == 1);
+        CHECK(b51.whenDecided() > b51.whenCreated());
+
+        // Point of 6, 7 out, wins, min contract, min odds 
+        CrapsBet b61(BetName::DontPass, 1, 6);
+        CHECK(b61.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(2, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(3, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(4, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(5, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(6, ep) == Gen::ReturnCode::Success);
+        point = 6;
+        dice.set(3,4);
+        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 6);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b61.distance() == 1);
+        CHECK(b61.whenDecided() > b61.whenCreated());
+    }
 }
 
 //----------------------------------------------------------------
@@ -2000,6 +2118,58 @@ TEST_CASE("CrapsBet:evaluate:Come")
         CHECK(dr.returnToPlayer == 0);
         CHECK(b44.distance() == 1);
         CHECK(b44.whenDecided() > b44.whenCreated());
+    }
+    
+    SUBCASE("Minimum amount bets")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Point of 4 wins, min contract, min odds 
+        CrapsBet b41(BetName::Come, 1, 4);
+        CHECK(b41.setOddsAmount(1, ep) == Gen::ReturnCode::Success);
+        point = 4;
+        dice.set(2,2);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 3);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() > b41.whenCreated());
+
+        // Point of 5 wins, min contract, min odds 
+        CrapsBet b51(BetName::Come, 1, 5);
+        CHECK(b51.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(2, ep) == Gen::ReturnCode::Success);
+        point = 5;
+        dice.set(3,2);
+        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 4);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b51.distance() == 1);
+        CHECK(b51.whenDecided() > b51.whenCreated());
+
+        // Point of 6 wins, min contract, min odds 
+        CrapsBet b61(BetName::Come, 1, 6);
+        CHECK(b61.setOddsAmount(3, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(5, ep) == Gen::ReturnCode::Success);
+        point = 6;
+        dice.set(3,3);
+        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 7);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b61.distance() == 1);
+        CHECK(b61.whenDecided() > b61.whenCreated());
     }
 }
 

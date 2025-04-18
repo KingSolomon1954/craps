@@ -10,7 +10,7 @@
 #include <iostream>
 #include "gen/ErrorPass.h"
 #include "Dice.h"
-#include "OddsTables.h"
+// #include "OddsTables.h"
 
 using namespace App;
 
@@ -156,14 +156,19 @@ CrapsBet::validArgsCtor()
 Set, change, or remove the amount for an odds bet.
 
 It is only permissable to set an odds amount if the following
-two conditions are true:
+conditions are true:
 
 * the bet is a PassLine, DontPass, Come, DontCome bet
 
 * the bet has already been assigned its pivot (point) (i.e, pivot is
 non-zero)
 
-Also the house limits the amound of the odds bet to 10x the
+* subject to checking house limits for max odds
+
+* minimum bet is given by house rules or the actual dice odds whichever
+* is higher
+
+TODO: Also the house limits the amount of the odds bet to 10x the
 amount of the contract bet.
 
 @param [in] amount
@@ -198,6 +203,31 @@ CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
             std::to_string(pivot_) + ".";
         ep.diag = s;
         return Gen::ReturnCode::Fail;
+    }
+
+    if (betName_ == BetName::PassLine || betName_ == BetName::Come)
+    {
+        if (amount < OddsTables::oddsPass[pivot_].denominator)
+        {
+            std::string s("CrapsBet::setOddsAmount(): odds bet is too small. "
+                "Minimum odds bet for a " + EnumBetName::toString(betName_) +
+                "(" + std::to_string(pivot_) + ") is " +
+                std::to_string(OddsTables::oddsPass[pivot_].denominator) + ".");
+            ep.diag = s;
+            return Gen::ReturnCode::Fail;
+        }
+    }
+    if (betName_ == BetName::DontPass || betName_ == BetName::DontCome)
+    {
+        if (amount < OddsTables::oddsDont[pivot_].denominator)
+        {
+            std::string s("CrapsBet::setOddsAmount(): odds bet is too small. "
+                "Minimum odds bet for a " + EnumBetName::toString(betName_) +
+                "(" + std::to_string(pivot_) + ") is " +
+                std::to_string(OddsTables::oddsDont[pivot_].denominator) + ".");
+            ep.diag = s;
+            return Gen::ReturnCode::Fail;
+        }
     }
     oddsAmount_ = amount;
     return Gen::ReturnCode::Success;    
@@ -326,9 +356,11 @@ CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 void
-CrapsBet::calcPassWin(unsigned diceVal,
-                      DecisionRecord& dr,
-                      bool returnOdds) const
+CrapsBet::calcWinPointBet(
+    unsigned d,
+    DecisionRecord& dr,
+    bool returnOdds,
+    const OddsTables::OddsEntry table[]) const
 {
     dr.win = contractAmount_;
     if (oddsAmount_ == 0) return;
@@ -338,16 +370,14 @@ CrapsBet::calcPassWin(unsigned diceVal,
     }
     else
     {
-        dr.win += (oddsAmount_ *
-                   OddsTables::oddsPass[diceVal].numerator) /
-                   OddsTables::oddsPass[diceVal].denominator;
+        dr.win += (oddsAmount_ * table[d].numerator) / table[d].denominator;
     }
-}    
+}
 
 //----------------------------------------------------------------
 
 void
-CrapsBet::calcPassLose(DecisionRecord& dr, bool returnOdds) const
+CrapsBet::calcLossAnyBet(DecisionRecord& dr, bool returnOdds) const
 {
     dr.lose = contractAmount_;
     if (oddsAmount_ == 0) return;
@@ -372,21 +402,21 @@ CrapsBet::evalPassLine(
 {
     (void) ep; // unused, quiet the compiler
     Decision dcn = Keep;
-    unsigned diceVal = dice.value(); // Cache value once
+    unsigned d = dice.value(); // Cache value once
     
     if (point == 0)
     {
-        if (diceVal == 7 || diceVal == 11)
+        if (d == 7 || d == 11)
         {
             dcn = Win;
         }
-        else if (diceVal == 2 || diceVal == 3 || diceVal == 12)
+        else if (d == 2 || d == 3 || d == 12)
         {
             dcn = Lose;
         }
         else
         {
-            pivot_ = diceVal;
+            pivot_ = d;
             dr.pivotAssigned = true;
             dcn = Keep;
         }
@@ -402,11 +432,11 @@ CrapsBet::evalPassLine(
             pivot_ = point;
             dr.pivotAssigned = true;
         }
-        if (diceVal == 7)
+        if (d == 7)
         {
             dcn = Lose;
         }
-        else if (pivot_ == diceVal)
+        else if (pivot_ == d)
         {
             dcn = Win;
         }
@@ -414,8 +444,8 @@ CrapsBet::evalPassLine(
     }
 
     const bool returnOdds = false;
-    if (dcn == Win)  calcPassWin (diceVal, dr, returnOdds);
-    if (dcn == Lose) calcPassLose(dr, returnOdds);
+    if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass);
+    if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
@@ -444,21 +474,21 @@ CrapsBet::evalCome(
         
     Decision dcn = Keep;
     bool returnOdds = false;
-    unsigned diceVal = dice.value(); // Cache value once
+    unsigned d = dice.value(); // Cache value once
     
     if (point == 0)  // Come out roll (for the table)
     {
-        if (diceVal == 7)
+        if (d == 7)
         {
             dcn = Lose;
             returnOdds = true;
         }
-        else if (diceVal == 2  || diceVal == 3 ||
-                 diceVal == 11 || diceVal == 12)
+        else if (d == 2  || d == 3 ||
+                 d == 11 || d == 12)
         {
             dcn = Keep;
         }
-        else if (pivot_ == diceVal)
+        else if (pivot_ == d)
         {
             dcn = Win;
             returnOdds = true;
@@ -469,28 +499,28 @@ CrapsBet::evalCome(
     {
         if (pivot_ == 0)  // Come bet freshly placed on table.
         {
-            if (diceVal == 7 || diceVal == 11)
+            if (d == 7 || d == 11)
             {
                 dcn = Win;
             }
-            else if (diceVal == 2 || diceVal == 3 || diceVal == 12)
+            else if (d == 2 || d == 3 || d == 12)
             {
                 dcn = Lose;
             }
             else
             {
-                pivot_ = diceVal;
+                pivot_ = d;
                 dr.pivotAssigned = true;
                 dcn = Keep;
             }
         }
         else   // Waiting for a repeating number.
         { 
-            if (diceVal == 7)
+            if (d == 7)
             {
                 dcn = Lose;
             }
-            else if (pivot_ == diceVal)
+            else if (pivot_ == d)
             {
                 dcn = Win;
             }
@@ -498,8 +528,8 @@ CrapsBet::evalCome(
         }
     }
 
-    if (dcn == Win)  calcPassWin (diceVal, dr, returnOdds);
-    if (dcn == Lose) calcPassLose(dr, returnOdds);
+    if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass);
+    if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
@@ -562,21 +592,12 @@ CrapsBet::evalDontPass(
         {
             dcn = Lose;
         }
-        else
-        {
-            dcn = Keep;
-        }
+        // else dcn = Keep;
     }
-    if (dcn == Win)
-    {
-        dr.win = contractAmount_ +
-            ((oddsAmount_ * OddsTables::oddsDont[pivot_].numerator) /
-                            OddsTables::oddsDont[pivot_].denominator);
-    }
-    if (dcn == Lose)
-    {
-        dr.lose = contractAmount_ + oddsAmount_;
-    }
+
+    const bool returnOdds = false;
+    if (dcn == Win)  calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
+    if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
@@ -770,65 +791,3 @@ operator<< (std::ostream& out, const CrapsBet::DecisionRecord& dr)
 }
 
 //----------------------------------------------------------------
-
-#if 0
-
-PassLine()
-{
-    unsigned diceVal = dice.value(); // Cache value once
-    
-    if (point == 0)
-    {
-        if (dice == 7 || dice == 11)
-        {
-            dcn = Win;
-        }
-        else if (dice == 2,3,12)
-        {
-            dcn = Lose;
-        }
-        else
-        {
-            pivot_ = dice;
-            dr.pivotAssigned = true;
-            dcn = Keep;
-        }
-    }
-    else
-    {
-        if (pivot == 0)
-        {
-            pivot_ = point;   // special case handing for pass bet
-            dr.pivotAssigned = true;
-        }
-        if (dice == 7)
-        {
-            dcn = Lose;
-        }
-        else if (pivot == dice)
-        {
-            dcn = Win;
-        }
-        else
-        {
-            dcn = Keep;
-        }
-    }
-
-    bool returnOdds = false;
-    dr.win = calcPassWinnings(diceVal, returnOdds);
-        
-    if (dcn == Win)
-    {
-        dr.win = contractAmount_ +
-            (oddsAmount_ * OddsTables::oddsPass[diceVal].numerator) /
-                           OddsTables::oddsPass[diceVal].denominator;
-    }
-    if (dcn == Lose)
-    {
-        dr.lose = contractAmount_ + oddsAmount_;
-    }
-    dr.decision = (dcn != Keep);
-}
-
-#endif

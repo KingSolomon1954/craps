@@ -12,6 +12,7 @@
 #include "gen/ReturnCode.h"
 #include "Globals.h"
 #include "EnumBetName.h"
+#include "OddsTables.h"
 
 namespace Gen {
     class ErrorPass;  // fwd
@@ -94,11 +95,13 @@ private:
         DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
     Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
-    void calcPassWin(unsigned diceVal,
-                     DecisionRecord& dr,
-                     bool returnOdds) const;
-    void calcPassLose(DecisionRecord& dr,
-                      bool returnOdds) const;
+    void calcWinPointBet(unsigned diceVal,
+                         DecisionRecord& dr,
+                         bool returnOdds,
+                         const OddsTables::OddsEntry table[]) const;
+    void calcLossAnyBet(DecisionRecord& dr, bool returnOdds) const;
+
+    
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;
     unsigned pivot_ = 0;
