@@ -55,7 +55,10 @@ public:
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode setOddsAmount(Money amount, Gen::ErrorPass& ep);
-    void setOddsOffComeOut(bool off);
+    void setOddsBetWorkingComeOutRoll();
+    void setOddsBetOffComeOutRoll();
+    void setPlaceBetWorkingComeOutRoll();
+    void setPlaceBetOffComeOutRoll();
     /// @}
 
     /// @name Observers
@@ -65,7 +68,8 @@ public:
     unsigned pivot() const;
     unsigned contractAmount() const;
     unsigned oddsAmount() const;
-    bool oddsOffComeOutRoll() const;
+    bool oddsBetOffComeOutRoll() const;
+    bool placeBetOffComeOutRoll() const;
     unsigned distance() const;
     std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
     std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
@@ -97,6 +101,9 @@ private:
     Gen::ReturnCode evalDontCome(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalPlace(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
     Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
     void calcWinPointBet(unsigned diceVal,
@@ -111,7 +118,8 @@ private:
     unsigned pivot_ = 0;
     Money contractAmount_ = 0;
     Money oddsAmount_ = 0;
-    bool oddsOffComeOutRoll_ = true;
+    bool oddsBetOffComeOutRoll_ = true;
+    bool placeBetOffComeOutRoll_ = true;
     unsigned distance_ = 0;  // num rolls until decision
     std::chrono::time_point<std::chrono::system_clock> whenCreated_;
     std::chrono::time_point<std::chrono::system_clock> whenDecided_;

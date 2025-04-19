@@ -82,7 +82,8 @@ CrapsBet::CrapsBet(BetName name, Money contractAmount, unsigned pivot)
     , pivot_(pivot)
     , contractAmount_(contractAmount)
     , oddsAmount_(0)
-    , oddsOffComeOutRoll_(true)
+    , oddsBetOffComeOutRoll_(true)
+    , placeBetOffComeOutRoll_(true)
     , distance_(0)
     , whenCreated_(std::chrono::system_clock::now())
 {
@@ -281,7 +282,8 @@ amount from the player's wallet if not already done so.
 returnToPlayer - if non-zero then the given amount should be returned to
 the player. Note this is not a win or lose. This happen when a
 point-based bet wins/loses during a come out roll and the optional
-setting of oddsOffComeOutRoll is true.
+setting of oddsBetOffComeOutRoll is true.
+
 */
 Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
@@ -301,6 +303,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     case BetName::Come:     rc = evalCome    (point, dice, dr, ep); break;
     case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
     case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
+    case BetName::Place   : rc = evalPlace   (point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
     }
     if (rc == Gen::ReturnCode::Fail)
@@ -361,7 +364,7 @@ CrapsBet::calcWinPointBet(
 {
     dr.win = contractAmount_;
     if (oddsAmount_ == 0) return;
-    if (oddsOffComeOutRoll_ && returnOdds)
+    if (oddsBetOffComeOutRoll_ && returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
     }
@@ -378,7 +381,7 @@ CrapsBet::calcLossAnyBet(DecisionRecord& dr, bool returnOdds) const
 {
     dr.lose = contractAmount_;
     if (oddsAmount_ == 0) return;
-    if (oddsOffComeOutRoll_ && returnOdds)
+    if (oddsBetOffComeOutRoll_ && returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
     }
@@ -681,6 +684,48 @@ CrapsBet::evalDontCome(
     return Gen::ReturnCode::Success;
 }
 
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalPlace(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep;
+    Decision dcn = Keep;
+    
+    if (point == 0 && placeBetOffComeOutRoll_)
+    {
+        dcn = Keep;
+    }
+    else
+    {            
+        if (dice.value() == 7)
+        {
+            dcn = Lose;
+        }
+        if (pivot_ == dice.value())
+        {
+            dcn = Win;
+        }
+        // else dcn = keep
+    }
+        
+    if (dcn == Win)
+    {
+        dr.win = (contractAmount_ * OddsTables::oddsPlace[pivot_].numerator) /
+            OddsTables::oddsPlace[pivot_].denominator;
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
 /*-----------------------------------------------------------*//**
 
 Returns the bet ID.
@@ -768,27 +813,76 @@ Returns whether odds are off on the come out roll.
 
 */
 bool
-CrapsBet::oddsOffComeOutRoll() const
+CrapsBet::oddsBetOffComeOutRoll() const
 {
-    return oddsOffComeOutRoll_;
+    return oddsBetOffComeOutRoll_;
 }
 
 /*-----------------------------------------------------------*//**
 
-How to treat the odds bet on come out rolls.
+Disable the odds bet for this bet on come out rolls.
 
-Odds on come out rolls are off by default. This
-can enable or diable it for this bet.
-
-@param off
-    set to true to have odds off (not working ) on come rolls for this bet.
-    set to false to have odds working on the come out roll for this bet.
+Odds bets on come out rolls are off by default.
 
 */
 void
-CrapsBet::setOddsOffComeOut(bool off)
+CrapsBet::setOddsBetOffComeOutRoll()
 {
-    oddsOffComeOutRoll_ = off;
+    oddsBetOffComeOutRoll_ = true;
+}
+
+/*-----------------------------------------------------------*//**
+
+Enable the odds bet for this bet on come out rolls.
+
+Odds bets on come out rolls are off by default.
+
+*/
+void
+CrapsBet::setOddsBetWorkingComeOutRoll()
+{
+    oddsBetOffComeOutRoll_ = false;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns whether the place bet is off on the come out roll.
+
+@return
+    true if place bet is off on the come out roll, false otherwise.
+
+*/
+bool
+CrapsBet::placeBetOffComeOutRoll() const
+{
+    return placeBetOffComeOutRoll_;
+}
+
+/*-----------------------------------------------------------*//**
+
+Disable this place bet on come out rolls.
+
+Place bets on come out rolls are off by default.
+
+*/
+void
+CrapsBet::setPlaceBetOffComeOutRoll()
+{
+    placeBetOffComeOutRoll_ = true;
+}
+
+/*-----------------------------------------------------------*//**
+
+Enable this place bet on come out rolls.
+
+Place bets on come out rolls are off by default. This
+can enable it.
+
+*/
+void
+CrapsBet::setPlaceBetWorkingComeOutRoll()
+{
+    placeBetOffComeOutRoll_ = false;
 }
 
 /*-----------------------------------------------------------*//**
@@ -842,15 +936,15 @@ std::ostream&
 operator<< (std::ostream& out, const CrapsBet& b)
 {
     out <<
-    "             betId: " << b.betId()              << std::endl <<
-    "           betName: " << b.betName()            << std::endl <<
-    "             pivot: " << b.pivot()              << std::endl <<
-    "    contractAmount: " << b.contractAmount()     << std::endl <<
-    "        oddsAmount: " << b.oddsAmount()         << std::endl <<
-    "oddsOffComeOutRoll: " << b.oddsOffComeOutRoll() << std::endl <<
-    "          distance: " << b.distance()           << std::endl <<
-    "       whenCreated: " << b.whenCreated()        << std::endl <<
-    "       whenDecided: " << b.whenDecided()        << std::endl;
+    "             betId: " << b.betId()                 << std::endl <<
+    "           betName: " << b.betName()               << std::endl <<
+    "             pivot: " << b.pivot()                 << std::endl <<
+    "    contractAmount: " << b.contractAmount()        << std::endl <<
+    "        oddsAmount: " << b.oddsAmount()            << std::endl <<
+    "oddsOffComeOutRoll: " << b.oddsBetOffComeOutRoll() << std::endl <<
+    "          distance: " << b.distance()              << std::endl <<
+    "       whenCreated: " << b.whenCreated()           << std::endl <<
+    "       whenDecided: " << b.whenDecided()           << std::endl;
     return out;
 }
 
