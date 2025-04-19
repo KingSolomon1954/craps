@@ -8,6 +8,7 @@
 
 #include <chrono>
 #include <ostream>
+#include <unordered_set>
 // #include <variant>
 #include "gen/ReturnCode.h"
 #include "Globals.h"
@@ -93,6 +94,9 @@ private:
     Gen::ReturnCode evalDontPass(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalDontCome(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
     Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
     void calcWinPointBet(unsigned diceVal,
@@ -111,6 +115,11 @@ private:
     unsigned distance_ = 0;  // num rolls until decision
     std::chrono::time_point<std::chrono::system_clock> whenCreated_;
     std::chrono::time_point<std::chrono::system_clock> whenDecided_;
+
+    std::unordered_set<unsigned> pointNums_ = {4, 5, 6, 8, 9, 10};
+    std::unordered_set<unsigned> fieldNums_ = {2, 3, 4, 9, 10, 11, 12};
+    std::unordered_set<unsigned> crapsNums_ = {2, 3, 12};
+    std::unordered_set<unsigned> bookEnds_  = {2, 3, 11, 12};
 };
 
 /*-----------------------------------------------------------*//**

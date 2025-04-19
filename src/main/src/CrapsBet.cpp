@@ -9,6 +9,7 @@
 #include <stdexcept> // for std::invalid_argument
 #include <iostream>
 #include "gen/ErrorPass.h"
+#include "gen/StringUtils.h"
 #include "Dice.h"
 // #include "OddsTables.h"
 
@@ -112,8 +113,7 @@ CrapsBet::validArgsCtor()
         betName_ == BetName::DontPass ||
         betName_ == BetName::DontCome)
     {
-        if (pivot_ != 0 && pivot_ != 4 && pivot_ != 5 &&
-            pivot_ != 6 && pivot_ != 8 && pivot_ != 9 && pivot_ != 10)
+        if (!pointNums_.contains(pivot_) && pivot_ != 0)
         {
             throw std::invalid_argument(
                 "CrapsBet()::ctor Bad \"pivot\": for "
@@ -125,8 +125,7 @@ CrapsBet::validArgsCtor()
         betName_ == BetName::Lay   ||
         betName_ == BetName::Buy)
     {
-        if (pivot_ != 4 && pivot_ != 5 && pivot_ != 6  &&
-            pivot_ != 8 && pivot_ != 9 && pivot_ != 10)
+        if (!pointNums_.contains(pivot_))
         {
             throw std::invalid_argument(
                 "CrapsBet()::ctor Bad \"pivot\": for a Place, Buy, or Lay "
@@ -301,6 +300,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
     case BetName::Come:     rc = evalCome    (point, dice, dr, ep); break;
     case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
+    case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
     }
     if (rc == Gen::ReturnCode::Fail)
@@ -333,7 +333,7 @@ CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 {
     std::string s("CrapsBet::evaluate(): Error evaluating betId:");
     s += std::to_string(betId_) + " betName:" + EnumBetName::toString(betName_) + ". ";
-    ep.diag = s;
+    Gen::StringUtils::prepend(ep.diag, s);
     return Gen::ReturnCode::Fail;
 }
 
@@ -342,14 +342,11 @@ CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 bool
 CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
 {
-    if (point == 0 ||
-        point == 4 || point == 5 || point == 6 ||
-        point == 8 || point == 9 || point == 10)
+    if (pointNums_.contains(point) || point == 0)
     {
         return true;
     }
-    std::string s = "Bad value for point:" + std::to_string(point);
-    ep.diag = s;
+    ep.diag = "Bad value for point:" + std::to_string(point);
     return false;
 }
 
@@ -410,7 +407,7 @@ CrapsBet::evalPassLine(
         {
             dcn = Win;
         }
-        else if (d == 2 || d == 3 || d == 12)
+        else if (crapsNums_.contains(d))
         {
             dcn = Lose;
         }
@@ -466,9 +463,8 @@ CrapsBet::evalCome(
         // during a come out roll, which is illegal. Instead the
         // user must make a PassLine bet.
         //
-        // Can't evaluate this. Return error.
-        // TODO: epset
-        ep.diag = "illegal bet";
+        ep.diag = "Come bet is not allowed on come out roll. "
+                  "Use PassLine bet instead.";
         return Gen::ReturnCode::Fail;
     }
         
@@ -483,8 +479,7 @@ CrapsBet::evalCome(
             dcn = Lose;
             returnOdds = true;
         }
-        else if (d == 2  || d == 3 ||
-                 d == 11 || d == 12)
+        else if (bookEnds_.contains(d))
         {
             dcn = Keep;
         }
@@ -503,7 +498,7 @@ CrapsBet::evalCome(
             {
                 dcn = Win;
             }
-            else if (d == 2 || d == 3 || d == 12)
+            else if (crapsNums_.contains(d))
             {
                 dcn = Lose;
             }
@@ -555,9 +550,7 @@ CrapsBet::evalDontPass(
         // evaluation(s) in order to be assigned a pivot, thus if there
         // is a point, then pivot cannot be zero.
         //
-        // Can't evaluate this. Return error.
-        // TODO: epset
-        ep.diag = "illegal bet";
+        ep.diag = "DontPass bet is not allowed after point is established.";
         return Gen::ReturnCode::Fail;
     }
 
@@ -596,6 +589,92 @@ CrapsBet::evalDontPass(
     }
 
     const bool returnOdds = false;
+    if (dcn == Win)  calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
+    if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
+    dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalDontCome(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    if (point == 0 && pivot_ == 0)
+    {
+        // This bet is in the wrong state. It should not be on the
+        // table. This means a DontCome bet was placed on the table
+        // during a come out roll, which is illegal. Instead the
+        // user must make a DontPass bet.
+        //
+        ep.diag = "DontCome bet is not allowed on Come out roll. "
+                  " Use DontPass bet instead.";
+        return Gen::ReturnCode::Fail;
+    }
+        
+    Decision dcn = Keep;
+    bool returnOdds = false;
+    unsigned d = dice.value(); // Cache value once
+    
+    if (point == 0)  // Come out roll (for the table)
+    {
+        if (d == 7)
+        {
+            dcn = Win;
+            returnOdds = true;
+        }
+        else if (bookEnds_.contains(d))
+        {
+            dcn = Keep;
+        }
+        else if (pivot_ == d)
+        {
+            dcn = Lose;
+            returnOdds = true;
+        }
+        // else dcn = Keep;
+    }
+    else
+    {
+        if (pivot_ == 0)  // DontCome bet freshly placed on table.
+        {
+            if (d == 7 || d == 11)
+            {
+                dcn = Lose;
+            }
+            else if (d == 2 || d == 3)
+            {
+                dcn = Win;
+            }
+            else if (d == 12)
+            {
+                dcn = Keep;
+            }
+            else
+            {
+                pivot_ = d;
+                dr.pivotAssigned = true;
+                dcn = Keep;
+            }
+        }
+        else   // Waiting for a 7 before number repeats.
+        { 
+            if (d == 7)
+            {
+                dcn = Win;
+            }
+            else if (pivot_ == d)
+            {
+                dcn = Lose;
+            }
+            // else dcn == keep;
+        }
+    }
+
     if (dcn == Win)  calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
     if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
