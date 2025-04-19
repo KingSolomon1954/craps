@@ -84,6 +84,7 @@ CrapsBet::CrapsBet(BetName name, Money contractAmount, unsigned pivot)
     , oddsAmount_(0)
     , oddsBetOffComeOutRoll_(true)
     , placeBetOffComeOutRoll_(true)
+    , hardwayBetOff_(false)
     , distance_(0)
     , whenCreated_(std::chrono::system_clock::now())
 {
@@ -135,7 +136,7 @@ CrapsBet::validArgsCtor()
     }
     if (betName_ == BetName::Hardway)
     {
-        if (pivot_ != 4 && pivot_ != 6  && pivot_ != 8 && pivot_ != 10)
+        if (!hardwayNums_.contains(pivot_))
         {
             throw std::invalid_argument(
                 "CrapsBet()::ctor Bad \"pivot\": for Hardway "
@@ -304,6 +305,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
     case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
     case BetName::Place   : rc = evalPlace   (point, dice, dr, ep); break;
+    case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
     }
     if (rc == Gen::ReturnCode::Fail)
@@ -726,6 +728,52 @@ CrapsBet::evalPlace(
     return Gen::ReturnCode::Success;
 }
 
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalHardway(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep; (void) point;  // unused, quiet the compiler
+    Decision dcn = Keep;
+
+    if (hardwayBetOff_)
+    {
+        dcn = Keep;
+    }
+    else if (dice.value() == 7)
+    {
+        dcn = Lose;
+    }
+    else if (dice.value() == pivot_)
+    {
+        if (dice.d1() == dice.d2())
+        {
+            dcn = Win;
+        }
+        else
+        {
+            dcn = Lose;
+        }
+    }
+    // else dcn = Keep
+    
+    if (dcn == Win)
+    {
+        dr.win = (contractAmount_ * OddsTables::oddsHardway[pivot_].numerator) /
+            OddsTables::oddsHardway[pivot_].denominator;
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
 /*-----------------------------------------------------------*//**
 
 Returns the bet ID.
@@ -820,6 +868,34 @@ CrapsBet::oddsBetOffComeOutRoll() const
 
 /*-----------------------------------------------------------*//**
 
+Returns whether the place bet is off on the come out roll.
+
+@return
+    true if place bet is off on the come out roll, false otherwise.
+
+*/
+bool
+CrapsBet::placeBetOffComeOutRoll() const
+{
+    return placeBetOffComeOutRoll_;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns whether the hardway bet is off or working.
+
+@return
+    true if hardway bet is off, false otherwise.
+
+*/
+bool
+CrapsBet::hardwayBetOff() const
+{
+    return hardwayBetOff_;
+}
+
+/*-----------------------------------------------------------*//**
+
 Disable the odds bet for this bet on come out rolls.
 
 Odds bets on come out rolls are off by default.
@@ -842,20 +918,6 @@ void
 CrapsBet::setOddsBetWorkingComeOutRoll()
 {
     oddsBetOffComeOutRoll_ = false;
-}
-
-/*-----------------------------------------------------------*//**
-
-Returns whether the place bet is off on the come out roll.
-
-@return
-    true if place bet is off on the come out roll, false otherwise.
-
-*/
-bool
-CrapsBet::placeBetOffComeOutRoll() const
-{
-    return placeBetOffComeOutRoll_;
 }
 
 /*-----------------------------------------------------------*//**
@@ -883,6 +945,32 @@ void
 CrapsBet::setPlaceBetWorkingComeOutRoll()
 {
     placeBetOffComeOutRoll_ = false;
+}
+
+/*-----------------------------------------------------------*//**
+
+Enable this hardway bet.
+
+Hardway bets are working by default.
+
+*/
+void
+CrapsBet::setHardwayBetWorking()
+{
+    hardwayBetOff_ = false;
+}
+
+/*-----------------------------------------------------------*//**
+
+Disable this hardway bet.
+
+Hardway bets are working by default.
+
+*/
+void
+CrapsBet::setHardwayBetOff()
+{
+    hardwayBetOff_ = true;
 }
 
 /*-----------------------------------------------------------*//**

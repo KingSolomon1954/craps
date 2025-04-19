@@ -59,6 +59,8 @@ public:
     void setOddsBetOffComeOutRoll();
     void setPlaceBetWorkingComeOutRoll();
     void setPlaceBetOffComeOutRoll();
+    void setHardwayBetWorking();
+    void setHardwayBetOff();
     /// @}
 
     /// @name Observers
@@ -70,6 +72,7 @@ public:
     unsigned oddsAmount() const;
     bool oddsBetOffComeOutRoll() const;
     bool placeBetOffComeOutRoll() const;
+    bool hardwayBetOff() const;
     unsigned distance() const;
     std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
     std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
@@ -104,6 +107,9 @@ private:
     Gen::ReturnCode evalPlace(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalHardway(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
     Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
     void calcWinPointBet(unsigned diceVal,
@@ -120,14 +126,16 @@ private:
     Money oddsAmount_ = 0;
     bool oddsBetOffComeOutRoll_ = true;
     bool placeBetOffComeOutRoll_ = true;
+    bool hardwayBetOff_ = false;
     unsigned distance_ = 0;  // num rolls until decision
     std::chrono::time_point<std::chrono::system_clock> whenCreated_;
     std::chrono::time_point<std::chrono::system_clock> whenDecided_;
 
-    std::unordered_set<unsigned> pointNums_ = {4, 5, 6, 8, 9, 10};
-    std::unordered_set<unsigned> fieldNums_ = {2, 3, 4, 9, 10, 11, 12};
-    std::unordered_set<unsigned> crapsNums_ = {2, 3, 12};
-    std::unordered_set<unsigned> bookEnds_  = {2, 3, 11, 12};
+    std::unordered_set<unsigned> pointNums_   = {4, 5, 6, 8, 9, 10};
+    std::unordered_set<unsigned> fieldNums_   = {2, 3, 4, 9, 10, 11, 12};
+    std::unordered_set<unsigned> crapsNums_   = {2, 3, 12};
+    std::unordered_set<unsigned> bookEnds_    = {2, 3, 11, 12};
+    std::unordered_set<unsigned> hardwayNums_ = {4, 6, 8, 10};
 };
 
 /*-----------------------------------------------------------*//**
