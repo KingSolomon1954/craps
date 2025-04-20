@@ -33,7 +33,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         Dice dice;
         unsigned point = 0;
 
-        // Come out roll, dice = 2, keep
+        // Place 4, come out, dice = 2, keep
         CrapsBet b21(BetName::Place, 100, 4);
         point = 0;
         dice.set(1,1);
@@ -46,7 +46,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(b21.distance() == 1);
         CHECK(b21.whenDecided() < b21.whenCreated());
 
-        // Come out roll, dice = 3, keep
+        // Place 4, come out, dice = 3, keep
         CrapsBet b31(BetName::Place, 100, 4);
         point = 0;
         dice.set(2,1);
@@ -59,7 +59,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(b31.distance() == 1);
         CHECK(b31.whenDecided() < b31.whenCreated());
 
-        // Come out roll, dice = 4, keep
+        // Place 4, come out, dice = 4, keep
         CrapsBet b41(BetName::Place, 100, 4);
         point = 0;
         dice.set(3,1);
@@ -73,7 +73,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(b41.whenDecided() < b41.whenCreated());
         CHECK(b41.pivot() == 4);
 
-        // Come out roll, dice = 4, win
+        // Place 4, come out, dice = 4, win
         CrapsBet b42(BetName::Place, 100, 4);
         b42.setPlaceBetWorkingComeOutRoll();
         point = 0;
@@ -558,6 +558,274 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(b61.whenDecided() > b61.whenCreated());
     }
 }
+
+//----------------------------------------------------------------
+
+TEST_CASE("CrapsBet:evaluate:Buy")
+{
+    SUBCASE("decisions")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+        Dice dice;
+        unsigned point = 0;
+
+        // Buy 4, come out, dice = 2, keep
+        CrapsBet b21(BetName::Buy, 100, 4);
+        point = 0;
+        dice.set(1,1);
+        CHECK(b21.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b21.distance() == 1);
+        CHECK(b21.whenDecided() < b21.whenCreated());
+
+        // Buy 4, come out, dice = 3, keep
+        CrapsBet b31(BetName::Buy, 100, 4);
+        point = 0;
+        dice.set(2,1);
+        CHECK(b31.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b31.distance() == 1);
+        CHECK(b31.whenDecided() < b31.whenCreated());
+
+        // Buy 4, come out, dice = 4, keep
+        CrapsBet b41(BetName::Buy, 100, 4);
+        point = 0;
+        dice.set(3,1);
+        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b41.distance() == 1);
+        CHECK(b41.whenDecided() < b41.whenCreated());
+        CHECK(b41.pivot() == 4);
+
+        // Buy 4, come out, dice = 4, win
+        CrapsBet b42(BetName::Buy, 100, 4);
+        b42.setBuyBetWorkingComeOutRoll();
+        point = 0;
+        dice.set(3,1);
+        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == (200 - 5));
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b42.distance() == 1);
+        CHECK(b42.whenDecided() > b42.whenCreated());
+        CHECK(b42.pivot() == 4);
+
+        // Buy 5, come out, dice = 5, keep
+        CrapsBet b51(BetName::Buy, 100, 5);
+        point = 0;
+        dice.set(4,1);
+        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b51.distance() == 1);
+        CHECK(b51.whenDecided() < b51.whenCreated());
+        CHECK(b51.pivot() == 5);
+
+        // Buy 5, come out, dice = 5, win
+        CrapsBet b52(BetName::Buy, 100, 5);
+        b52.setBuyBetWorkingComeOutRoll();
+        point = 0;
+        dice.set(4,1);
+        CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == (150 -5));
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b52.distance() == 1);
+        CHECK(b52.whenDecided() > b52.whenCreated());
+        CHECK(b52.pivot() == 5);
+
+        // Buy 6, come out, dice = 6, keep
+        CrapsBet b61(BetName::Buy, 100, 6);
+        point = 0;
+        dice.set(5,1);
+        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b61.distance() == 1);
+        CHECK(b61.whenDecided() < b61.whenCreated());
+        CHECK(b61.pivot() == 6);
+
+        // Buy 6, come out, dice = 6, win
+        CrapsBet b62(BetName::Buy, 100, 6);
+        b62.setBuyBetWorkingComeOutRoll();
+        point = 0;
+        dice.set(5,1);
+        CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == (120 - 5));
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b62.distance() == 1);
+        CHECK(b62.whenDecided() > b62.whenCreated());
+        CHECK(b62.pivot() == 6);
+
+        // Buy 6, come out, dice = 7, keep
+        CrapsBet b71(BetName::Buy, 100, 6);
+        point = 0;
+        dice.set(3,4);
+        CHECK(b71.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b71.distance() == 1);
+        CHECK(b71.whenDecided() < b71.whenCreated());
+
+        // Buy 6, come out, dice = 7, lose
+        CrapsBet b72(BetName::Buy, 100, 6);
+        b72.setBuyBetWorkingComeOutRoll();
+        point = 0;
+        dice.set(3,4);
+        CHECK(b72.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 100);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b72.distance() == 1);
+        CHECK(b72.whenDecided() > b72.whenCreated());
+
+        // Buy 8, come out, dice = 8, keep
+        CrapsBet b81(BetName::Buy, 100, 8);
+        point = 0;
+        dice.set(4,4);
+        CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b81.distance() == 1);
+        CHECK(b81.whenDecided() < b81.whenCreated());
+        CHECK(b81.pivot() == 8);
+
+        // Buy 8, come out, dice = 8, win
+        CrapsBet b82(BetName::Buy, 100, 8);
+        b82.setBuyBetWorkingComeOutRoll();
+        point = 0;
+        dice.set(4,4);
+        CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == (120 - 5));
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b82.distance() == 1);
+        CHECK(b82.whenDecided() > b82.whenCreated());
+        CHECK(b82.pivot() == 8);
+
+        // Buy 9, come out, dice = 9, keep
+        CrapsBet b91(BetName::Buy, 100, 9);
+        point = 0;
+        dice.set(4,5);
+        CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b91.distance() == 1);
+        CHECK(b91.whenDecided() < b91.whenCreated());
+        CHECK(b91.pivot() == 9);
+
+        // Buy 9, come out, dice = 9, win
+        CrapsBet b92(BetName::Buy, 100, 9);
+        b92.setBuyBetWorkingComeOutRoll();
+        point = 0;
+        dice.set(4,5);
+        CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == (150 - 5));
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b92.distance() == 1);
+        CHECK(b92.whenDecided() > b92.whenCreated());
+        CHECK(b92.pivot() == 9);
+
+        // Buy 10, come out, dice = 10, keep
+        CrapsBet b101(BetName::Buy, 100, 10);
+        point = 0;
+        dice.set(5,5);
+        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b101.distance() == 1);
+        CHECK(b101.whenDecided() < b101.whenCreated());
+        CHECK(b101.pivot() == 10);
+
+        // Buy 10, come out, dice = 10, win
+        CrapsBet b102(BetName::Buy, 100, 10);
+        b102.setBuyBetWorkingComeOutRoll();
+        point = 0;
+        dice.set(5,5);
+        CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == (200 - 5));
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b102.distance() == 1);
+        CHECK(b102.whenDecided() > b102.whenCreated());
+        CHECK(b102.pivot() == 10);
+
+        // Buy 4, come out, dice = 11, keep
+        CrapsBet b111(BetName::Buy, 100, 4);
+        point = 0;
+        dice.set(6,5);
+        CHECK(b111.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b111.distance() == 1);
+        CHECK(b111.whenDecided() < b111.whenCreated());
+
+        // Buy 4, come out, dice = 12, keep
+        CrapsBet b121(BetName::Buy, 100, 4);
+        point = 0;
+        dice.set(6,6);
+        CHECK(b121.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == false);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b121.distance() == 1);
+        CHECK(b121.whenDecided() < b121.whenCreated());
+    }
+}
+
+//----------------------------------------------------------------
 
 void lay1(unsigned point, unsigned num, unsigned d1, unsigned d2)
 {

@@ -84,6 +84,8 @@ CrapsBet::CrapsBet(BetName name, Money contractAmount, unsigned pivot)
     , oddsAmount_(0)
     , oddsBetOffComeOutRoll_(true)
     , placeBetOffComeOutRoll_(true)
+    , buyBetOffComeOutRoll_(true)
+    , layBetOffComeOutRoll_(true)
     , hardwayBetOff_(false)
     , distance_(0)
     , whenCreated_(std::chrono::system_clock::now())
@@ -305,6 +307,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
     case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
     case BetName::Place   : rc = evalPlace   (point, dice, dr, ep); break;
+    case BetName::Buy     : rc = evalBuy     (point, dice, dr, ep); break;
     case BetName::Lay     : rc = evalLay     (point, dice, dr, ep); break;
     case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
@@ -732,6 +735,51 @@ CrapsBet::evalPlace(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsBet::evalBuy(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep;
+    Decision dcn = Keep;
+    
+    if (point == 0 && buyBetOffComeOutRoll_)
+    {
+        dcn = Keep;
+    }
+    else
+    {            
+        if (dice.value() == 7)
+        {
+            dcn = Lose;
+        }
+        if (pivot_ == dice.value())
+        {
+            dcn = Win;
+        }
+        // else dcn = keep
+    }
+        
+    if (dcn == Win)
+    {
+        dr.win = (contractAmount_ * OddsTables::oddsPass[pivot_].numerator) /
+            OddsTables::oddsPass[pivot_].denominator;
+        unsigned commission = static_cast<unsigned>(contractAmount_ * (5.0f / 100.0f));
+        dr.win -= commission;
+        // TODO: dr.commission = commission;
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsBet::evalLay(
     unsigned point,
     const Dice& dice,
@@ -1005,6 +1053,33 @@ void
 CrapsBet::setPlaceBetWorkingComeOutRoll()
 {
     placeBetOffComeOutRoll_ = false;
+}
+
+/*-----------------------------------------------------------*//**
+
+Disable this Buy bet on come out rolls.
+
+Buy bets on come out rolls are off by default.
+
+*/
+void
+CrapsBet::setBuyBetOffComeOutRoll()
+{
+    buyBetOffComeOutRoll_ = true;
+}
+
+/*-----------------------------------------------------------*//**
+
+Enable this Buy bet on come out rolls.
+
+Buy bets on come out rolls are off by default. This
+can enable it.
+
+*/
+void
+CrapsBet::setBuyBetWorkingComeOutRoll()
+{
+    buyBetOffComeOutRoll_ = false;
 }
 
 /*-----------------------------------------------------------*//**
