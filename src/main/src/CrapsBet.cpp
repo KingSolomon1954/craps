@@ -302,15 +302,16 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     Gen::ReturnCode rc;
     switch (betName_)
     {
-    case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
-    case BetName::Come:     rc = evalCome    (point, dice, dr, ep); break;
-    case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
-    case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
-    case BetName::Place   : rc = evalPlace   (point, dice, dr, ep); break;
-    case BetName::Buy     : rc = evalBuy     (point, dice, dr, ep); break;
-    case BetName::Lay     : rc = evalLay     (point, dice, dr, ep); break;
-    case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
-    default: return Gen::ReturnCode::Success;
+        case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
+        case BetName::Come:     rc = evalCome    (point, dice, dr, ep); break;
+        case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
+        case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
+        case BetName::Place   : rc = evalPlace   (point, dice, dr, ep); break;
+        case BetName::Buy     : rc = evalBuy     (point, dice, dr, ep); break;
+        case BetName::Lay     : rc = evalLay     (point, dice, dr, ep); break;
+        case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
+        case BetName::Field   : rc = evalField   (point, dice, dr, ep); break;
+        default: return Gen::ReturnCode::Fail;
     }
     if (rc == Gen::ReturnCode::Fail)
     {
@@ -813,6 +814,41 @@ CrapsBet::evalLay(
         unsigned commission = static_cast<unsigned>(dr.win * (5.0f / 100.0f));
         dr.win -= commission;
         // TODO: dr.commission = commission;
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalField(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep; (void) point;  // unused, quiet the compiler
+    Decision dcn = Keep;
+    unsigned d = dice.value();  // cache value once
+    
+    if (d == 5 || d == 6 || d == 7 || d == 8) 
+    {
+        dcn = Lose;
+    }
+    else
+    {
+        dcn = Win;
+    }
+        
+    if (dcn == Win)
+    {
+        dr.win = contractAmount_;
+        if (d == 2 || d == 12) dr.win += contractAmount_;  // pays double
     }
     if (dcn == Lose)
     {
