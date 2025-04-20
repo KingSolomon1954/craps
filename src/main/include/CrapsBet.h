@@ -59,6 +59,8 @@ public:
     void setOddsBetOffComeOutRoll();
     void setPlaceBetWorkingComeOutRoll();
     void setPlaceBetOffComeOutRoll();
+    void setLayBetWorkingComeOutRoll();
+    void setLayBetOffComeOutRoll();
     void setHardwayBetWorking();
     void setHardwayBetOff();
     /// @}
@@ -72,6 +74,7 @@ public:
     unsigned oddsAmount() const;
     bool oddsBetOffComeOutRoll() const;
     bool placeBetOffComeOutRoll() const;
+    bool layBetOffComeOutRoll() const;
     bool hardwayBetOff() const;
     unsigned distance() const;
     std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
@@ -107,6 +110,9 @@ private:
     Gen::ReturnCode evalPlace(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalLay(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalHardway(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
@@ -126,6 +132,7 @@ private:
     Money oddsAmount_ = 0;
     bool oddsBetOffComeOutRoll_ = true;
     bool placeBetOffComeOutRoll_ = true;
+    bool layBetOffComeOutRoll_ = true;
     bool hardwayBetOff_ = false;
     unsigned distance_ = 0;  // num rolls until decision
     std::chrono::time_point<std::chrono::system_clock> whenCreated_;

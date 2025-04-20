@@ -305,6 +305,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
     case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
     case BetName::Place   : rc = evalPlace   (point, dice, dr, ep); break;
+    case BetName::Lay     : rc = evalLay     (point, dice, dr, ep); break;
     case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
     default: return Gen::ReturnCode::Success;
     }
@@ -731,6 +732,51 @@ CrapsBet::evalPlace(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsBet::evalLay(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep;
+    Decision dcn = Keep;
+    
+    if (point == 0 && layBetOffComeOutRoll_)
+    {
+        dcn = Keep;
+    }
+    else
+    {            
+        if (dice.value() == 7)
+        {
+            dcn = Win;
+        }
+        if (pivot_ == dice.value())
+        {
+            dcn = Lose;
+        }
+        // else dcn = keep
+    }
+        
+    if (dcn == Win)
+    {
+        dr.win = (contractAmount_ * OddsTables::oddsDont[pivot_].numerator) /
+            OddsTables::oddsDont[pivot_].denominator;
+        unsigned commission = static_cast<unsigned>(dr.win * (5.0f / 100.0f));
+        dr.win -= commission;
+        // TODO: dr.commission = commission;
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsBet::evalHardway(
     unsigned point,
     const Dice& dice,
@@ -882,6 +928,20 @@ CrapsBet::placeBetOffComeOutRoll() const
 
 /*-----------------------------------------------------------*//**
 
+Returns whether the lay bet is off on the come out roll.
+
+@return
+    true if lay bet is off on the come out roll, false otherwise.
+
+*/
+bool
+CrapsBet::layBetOffComeOutRoll() const
+{
+    return layBetOffComeOutRoll_;
+}
+
+/*-----------------------------------------------------------*//**
+
 Returns whether the hardway bet is off or working.
 
 @return
@@ -945,6 +1005,33 @@ void
 CrapsBet::setPlaceBetWorkingComeOutRoll()
 {
     placeBetOffComeOutRoll_ = false;
+}
+
+/*-----------------------------------------------------------*//**
+
+Disable this lay bet on come out rolls.
+
+Lay bets on come out rolls are off by default.
+
+*/
+void
+CrapsBet::setLayBetOffComeOutRoll()
+{
+    layBetOffComeOutRoll_ = true;
+}
+
+/*-----------------------------------------------------------*//**
+
+Enable this lay bet on come out rolls.
+
+Lay bets on come out rolls are off by default. This
+can enable it.
+
+*/
+void
+CrapsBet::setLayBetWorkingComeOutRoll()
+{
+    layBetOffComeOutRoll_ = false;
 }
 
 /*-----------------------------------------------------------*//**
