@@ -41,6 +41,7 @@ public:
         Money win = 0;
         Money lose = 0;
         Money returnToPlayer = 0;
+        Money commission = 0;
 
         bool operator==(const DecisionRecord& other) const
         {
@@ -49,7 +50,8 @@ public:
                    pivotAssigned == other.pivotAssigned &&
                    win == other.win &&
                    lose == other.lose &&
-                   returnToPlayer == other.returnToPlayer;
+                   returnToPlayer == other.returnToPlayer &&
+                   commission == other.commission;
         }
     };
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,

@@ -297,7 +297,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         return diagEvalProcError(ep);
     }
                          
-    dr = {betId_, false, 0,0,0};   // Prepare decision record
+    dr = {betId_, false, 0,0,0,0};   // Prepare decision record
     Gen::ReturnCode rc;
     switch (betName_)
     {
@@ -765,9 +765,8 @@ CrapsBet::evalBuy(
     {
         dr.win = (contractAmount_ * OddsTables::oddsPass[pivot_].numerator) /
             OddsTables::oddsPass[pivot_].denominator;
-        unsigned commission = static_cast<unsigned>(contractAmount_ * (5.0f / 100.0f));
-        dr.win -= commission;
-        // TODO: dr.commission = commission;
+        dr.commission = static_cast<unsigned>(contractAmount_ * (5.0f / 100.0f));
+        dr.win -= dr.commission;
     }
     if (dcn == Lose)
     {
@@ -810,9 +809,8 @@ CrapsBet::evalLay(
     {
         dr.win = (contractAmount_ * OddsTables::oddsDont[pivot_].numerator) /
             OddsTables::oddsDont[pivot_].denominator;
-        unsigned commission = static_cast<unsigned>(dr.win * (5.0f / 100.0f));
-        dr.win -= commission;
-        // TODO: dr.commission = commission;
+        dr.commission = static_cast<unsigned>(dr.win * (5.0f / 100.0f));
+        dr.win -= dr.commission;
     }
     if (dcn == Lose)
     {
