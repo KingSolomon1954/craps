@@ -143,12 +143,27 @@ CrapsBet::validArgsCtor()
                 "bet, pivot must be one of 4,6,8,10");
         }
     }
-    
     if (betName_ == BetName::Field    ||
         betName_ == BetName::AnyCraps ||
-        betName_ == BetName::CandE)
+        betName_ == BetName::AnySeven ||
+        betName_ == BetName::CandE    ||
+        betName_ == BetName::Horn)
     {
         pivot_ = 0;  // Quietly force it to 0.
+    }
+    if (betName_ == BetName::CandE && (contractAmount_ % 2 != 0))
+    {
+        throw std::invalid_argument(
+            "CrapsBet()::ctor C&E bet(" +
+            std::to_string(contractAmount_) +
+            ") is not a multiple of 2. Min amount is 2");
+    }
+    if (betName_ == BetName::Horn && (contractAmount_ % 4 != 0))
+    {
+        throw std::invalid_argument(
+            "CrapsBet()::ctor Horn bet(" +
+            std::to_string(contractAmount_) +
+            ") is not a multiple of 4. Min amount is 4");
     }
 }
 
@@ -242,10 +257,37 @@ Using the given point and the current dice roll, evaluate() determines
 whether this bet has won, lost or not yet reached a decision. The
 results of the evaluation are returned in a CrapsBet::DecisionRecord.
 
+If the skip flag (see setSkipOn()) is true, then this bet skips
+evaluation entriely and returns Success.
+
+@param [in] point
+    supply 0 to indicate a come out roll, otherwise the current point
+    which must be one of 4,5,6,8,9 or 10. If not then an error is
+    returned and ep holds the reason.
+
+@param [in] dice
+    the dice roll to evaluate
+
+@param [inout] dr
+    The DecisionRecord contains the results of the evaluation.
+    If successful then dr has valid contents, otherwise
+    dr should be ignored and ep has description of the error.
+
+@param [inout] ep
+    If evaluation fails, then ep describes the error.
+
+*/
+
+/*-----------------------------------------------------------*//**
+
+@struct CrapsBet::DecisionRecord
+
 The DecisionRecord contains the following fields to convey handling by
 the caller:
 
-decision -indicates that a decision has been reached for this bet.
+@betId - the id of the bet associated with this result
+
+@decision -indicates that a decision has been reached for this bet.
 
     When true, this bet has reached a decision, and one or more of the
     win, lose, returnToPlayer fields in this record will have non-zero
@@ -259,8 +301,8 @@ decision -indicates that a decision has been reached for this bet.
     pivot field, if zero, will be set to the dice value for
     Pass/Come/DontPass/DontCome bets.
 
-pivotAssigned - indicates whether a pivot for this bet has been freshly
-established. For example, a Come bet has now been moved to the "6".
+@pivotAssigned - indicates whether a pivot for this bet has been freshly
+    established. For example, a Come bet has now been moved to the "6".
 
     When true, the pivot has been assigned. Caller uses this
     flag to move a come bet on the table to its box.
@@ -270,21 +312,29 @@ established. For example, a Come bet has now been moved to the "6".
     assigned to the already established point, as if the player made a
     PassLine bet after point was established.
 
-win - if non-zero, then this bet has won the given amount. The
-calculation includes odds winnings. The caller implementation should
-take the win amount and add it with the original contractAmount and
-oddsAmount to give back to the player.
+@win - if non-zero, then this bet has won the given amount.
 
-lose - if non-zero, then this bet has lost the given amount. The amount
-is just the contractBet plus odds bet, if any. The caller implementation
-should add this amount to the table's banking system and subtract this
-amount from the player's wallet if not already done so.
+    The calculation includes odds winnings. The caller implementation
+    should take this win amount and add it with the original
+    contractAmount and oddsAmount to give back to the player.
 
-returnToPlayer - if non-zero then the given amount should be returned to
-the player. Note this is not a win or lose. This happen when a
-point-based bet wins/loses during a come out roll and the optional
-setting of oddsBetOffComeOutRoll is true.
+@lose - if non-zero, then this bet has lost the given amount.
 
+    The amount is the contractBet plus odds bet, if any. The caller
+    implementation should add this amount to the table's banking system
+    and subtract this amount from the player's wallet if not already
+    done so.
+
+@returnToPlayer - if non-zero then the given amount should be returned
+    to the player.
+
+    Note this is not a win or lose. This happens when a point-based bet
+    wins/loses during a come out roll and setOffComeOutRoll() is true.
+
+@commission - Lay and Buy bets require a 5% commission if they win.
+
+    This amount has been subtracted from the win amount.  The table's
+    banking system should deposit this amount if non-zero.
 */
 Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
@@ -298,11 +348,11 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     }
                          
     dr = {betId_, false, 0,0,0,0};   // Prepare decision record
-    Gen::ReturnCode rc;
+    Gen::ReturnCode rc = Gen::ReturnCode::Fail;
     switch (betName_)
     {
         case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
-        case BetName::Come:     rc = evalCome    (point, dice, dr, ep); break;
+        case BetName::Come    : rc = evalCome    (point, dice, dr, ep); break;
         case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
         case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
         case BetName::Place   : rc = evalPlace   (point, dice, dr, ep); break;
@@ -310,7 +360,11 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         case BetName::Lay     : rc = evalLay     (point, dice, dr, ep); break;
         case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
         case BetName::Field   : rc = evalField   (point, dice, dr, ep); break;
-        default: return Gen::ReturnCode::Fail;
+        case BetName::AnyCraps: rc = evalAnyCraps(point, dice, dr, ep); break;
+        case BetName::AnySeven: rc = evalAnySeven(point, dice, dr, ep); break;
+        case BetName::CandE   : rc = evalCandE   (point, dice, dr, ep); break;
+        case BetName::Horn    : rc = evalHorn    (point, dice, dr, ep); break;
+        case BetName::Invalid : return Gen::ReturnCode::Fail;           break;
     }
     if (rc == Gen::ReturnCode::Fail)
     {
@@ -383,7 +437,7 @@ CrapsBet::calcWinPointBet(
 //----------------------------------------------------------------
 
 void
-CrapsBet::calcLossAnyBet(DecisionRecord& dr, bool returnOdds) const
+CrapsBet::calcLossPointBet(DecisionRecord& dr, bool returnOdds) const
 {
     dr.lose = contractAmount_;
     if (oddsAmount_ == 0) return;
@@ -451,7 +505,7 @@ CrapsBet::evalPassLine(
 
     const bool returnOdds = false;
     if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass);
-    if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
+    if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
@@ -533,7 +587,7 @@ CrapsBet::evalCome(
     }
 
     if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass);
-    if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
+    if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
@@ -599,7 +653,7 @@ CrapsBet::evalDontPass(
 
     const bool returnOdds = false;
     if (dcn == Win)  calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
-    if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
+    if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
@@ -685,7 +739,7 @@ CrapsBet::evalDontCome(
     }
 
     if (dcn == Win)  calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
-    if (dcn == Lose) calcLossAnyBet (dr, returnOdds);
+    if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
@@ -735,50 +789,6 @@ CrapsBet::evalPlace(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsBet::evalBuy(
-    unsigned point,
-    const Dice& dice,
-    DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
-{
-    (void) ep;
-    Decision dcn = Keep;
-    
-    if (point == 0 && offComeOutRoll_)
-    {
-        dcn = Keep;
-    }
-    else
-    {            
-        if (dice.value() == 7)
-        {
-            dcn = Lose;
-        }
-        if (pivot_ == dice.value())
-        {
-            dcn = Win;
-        }
-        // else dcn = keep
-    }
-        
-    if (dcn == Win)
-    {
-        dr.win = (contractAmount_ * OddsTables::oddsPass[pivot_].numerator) /
-            OddsTables::oddsPass[pivot_].denominator;
-        dr.commission = static_cast<unsigned>(contractAmount_ * (5.0f / 100.0f));
-        dr.win -= dr.commission;
-    }
-    if (dcn == Lose)
-    {
-        dr.lose = contractAmount_;
-    }
-    dr.decision = (dcn != Keep);
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-
-Gen::ReturnCode
 CrapsBet::evalLay(
     unsigned point,
     const Dice& dice,
@@ -810,6 +820,50 @@ CrapsBet::evalLay(
         dr.win = (contractAmount_ * OddsTables::oddsDont[pivot_].numerator) /
             OddsTables::oddsDont[pivot_].denominator;
         dr.commission = static_cast<unsigned>(dr.win * (5.0f / 100.0f));
+        dr.win -= dr.commission;
+    }
+    if (dcn == Lose)
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalBuy(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep;
+    Decision dcn = Keep;
+    
+    if (point == 0 && offComeOutRoll_)
+    {
+        dcn = Keep;
+    }
+    else
+    {            
+        if (dice.value() == 7)
+        {
+            dcn = Lose;
+        }
+        if (pivot_ == dice.value())
+        {
+            dcn = Win;
+        }
+        // else dcn = keep
+    }
+        
+    if (dcn == Win)
+    {
+        dr.win = (contractAmount_ * OddsTables::oddsPass[pivot_].numerator) /
+            OddsTables::oddsPass[pivot_].denominator;
+        dr.commission = static_cast<unsigned>(contractAmount_ * (5.0f / 100.0f));
         dr.win -= dr.commission;
     }
     if (dcn == Lose)
@@ -898,6 +952,106 @@ CrapsBet::evalHardway(
         dr.lose = contractAmount_;
     }
     dr.decision = (dcn != Keep);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalAnyCraps(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep; (void) point;  // unused, quiet the compiler
+    
+    if (crapsNums_.contains(dice.value()))
+    {
+        dr.win = contractAmount_ * 7;
+    }
+    else
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = true;
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalAnySeven(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep; (void) point;  // unused, quiet the compiler
+    
+    if (dice.value() == 7)
+    {
+        dr.win = contractAmount_ * 4;
+    }
+    else
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = true;
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalCandE(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep; (void) point;  // unused, quiet the compiler
+    
+    if (dice.value() == 11)
+    {
+        dr.win = (contractAmount_ / 2) * 15;
+    }
+    else if (crapsNums_.contains(dice.value()))
+    {
+        dr.win = (contractAmount_ / 2) * 7;
+    }
+    else
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = true;
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalHorn(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)    
+{
+    (void) ep; (void) point;  // unused, quiet the compiler
+
+    if (dice.value() == 2 || dice.value() == 12) 
+    {
+        dr.win = (contractAmount_ / 4) * 30;
+    }
+    else if (dice.value() == 3 || dice.value() == 11) 
+    {
+        dr.win = (contractAmount_ / 4) * 15;
+    }
+    else
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = true;
     return Gen::ReturnCode::Success;
 }
 

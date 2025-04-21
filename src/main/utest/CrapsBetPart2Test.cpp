@@ -1237,3 +1237,292 @@ TEST_CASE("CrapsBet:evaluate:Field")
 }
 
 //----------------------------------------------------------------
+
+void anyCraps1(unsigned point, unsigned d1, unsigned d2)
+{
+    Gen::ErrorPass ep;
+    CrapsBet::DecisionRecord dr;
+
+    Dice dice; dice.set(d1,d2);
+    CrapsBet b(BetName::AnyCraps, 100);
+    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision == true);
+    CHECK(dr.pivotAssigned == false);
+    CHECK(dr.win == 700);
+    CHECK(dr.lose == 0);
+    CHECK(dr.returnToPlayer == 0);
+    CHECK(b.distance() == 1);
+    CHECK(b.whenDecided() > b.whenCreated());
+}
+
+void anyCraps2(unsigned point, unsigned d1, unsigned d2)
+{
+    Gen::ErrorPass ep;
+    CrapsBet::DecisionRecord dr;
+
+    Dice dice; dice.set(d1,d2);
+    CrapsBet b(BetName::AnyCraps, 100);
+    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision == true);
+    CHECK(dr.pivotAssigned == false);
+    CHECK(dr.win == 0);
+    CHECK(dr.lose == 100);
+    CHECK(dr.returnToPlayer == 0);
+    CHECK(b.distance() == 1);
+    CHECK(b.whenDecided() > b.whenCreated());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("CrapsBet:evaluate:AnyCraps")
+{
+    SUBCASE("decisions")
+    {
+        anyCraps1(0, 1, 1);  // come out, dice 2, win
+        anyCraps1(0, 1, 2);  // come out, dice 3, win
+        anyCraps1(0, 6, 6);  // come out, dice 12, win
+        anyCraps1(4, 1, 1);  // point roll, dice 2, win
+        anyCraps1(4, 1, 2);  // point roll, dice 3, win
+        anyCraps1(4, 6, 6);  // point roll, dice 12, win
+
+        anyCraps2(0, 2, 2);  // come out, dice 4, lose
+        anyCraps2(0, 2, 3);  // come out, dice 5, lose
+        anyCraps2(0, 2, 4);  // come out, dice 6 lose
+        anyCraps2(0, 2, 5);  // come out, dice 7 lose
+        anyCraps2(0, 2, 6);  // come out, dice 8 lose
+        anyCraps2(0, 3, 6);  // come out, dice 9 lose
+        anyCraps2(0, 4, 6);  // come out, dice 10 lose
+        anyCraps2(0, 5, 6);  // come out, dice 11 lose
+    }
+}
+
+//----------------------------------------------------------------
+
+void anySeven1(unsigned point, unsigned d1, unsigned d2)
+{
+    Gen::ErrorPass ep;
+    CrapsBet::DecisionRecord dr;
+
+    Dice dice; dice.set(d1,d2);
+    CrapsBet b(BetName::AnySeven, 100);
+    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision == true);
+    CHECK(dr.pivotAssigned == false);
+    CHECK(dr.win == 0);
+    CHECK(dr.lose == 100);
+    CHECK(dr.returnToPlayer == 0);
+    CHECK(b.distance() == 1);
+    CHECK(b.whenDecided() > b.whenCreated());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("CrapsBet:evaluate:AnySeven")
+{
+    SUBCASE("decisions")
+    {
+        Gen::ErrorPass ep;
+        CrapsBet::DecisionRecord dr;
+
+        anySeven1(0, 1, 1);  // come out, dice 2, lose
+        anySeven1(0, 1, 2);  // come out, dice 3, lose
+        anySeven1(0, 1, 3);  // come out, dice 4, lose
+        anySeven1(0, 1, 4);  // come out, dice 5, lose
+        anySeven1(0, 1, 5);  // come out, dice 6 lose
+
+        anySeven1(0, 6, 2);  // come out, dice 8 lose
+        anySeven1(0, 6, 3);  // come out, dice 9 lose
+        anySeven1(0, 6, 4);  // come out, dice 10 lose
+        anySeven1(0, 6, 5);  // come out, dice 11 lose
+        anySeven1(0, 6, 6);  // come out, dice 12 lose
+
+        anySeven1(4, 1, 1);  // come out, dice 2, lose
+        anySeven1(4, 1, 2);  // come out, dice 3, lose
+        anySeven1(4, 1, 3);  // come out, dice 4, lose
+        anySeven1(4, 1, 4);  // come out, dice 5, lose
+        anySeven1(4, 1, 5);  // come out, dice 6 lose
+
+        anySeven1(4, 6, 2);  // come out, dice 8 lose
+        anySeven1(4, 6, 3);  // come out, dice 9 lose
+        anySeven1(4, 6, 4);  // come out, dice 10 lose
+        anySeven1(4, 6, 5);  // come out, dice 11 lose
+        anySeven1(4, 6, 6);  // come out, dice 12 lose
+
+        Dice dice; dice.set(3,4);
+        CrapsBet b(BetName::AnySeven, 100);
+        CHECK(b.evaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision == true);
+        CHECK(dr.pivotAssigned == false);
+        CHECK(dr.win == 400);
+        CHECK(dr.lose == 0);
+        CHECK(dr.returnToPlayer == 0);
+        CHECK(b.distance() == 1);
+        CHECK(b.whenDecided() > b.whenCreated());
+    }
+}
+
+//----------------------------------------------------------------
+
+void cAndE1(unsigned point, unsigned d1, unsigned d2)
+{
+    Gen::ErrorPass ep;
+    CrapsBet::DecisionRecord dr;
+
+    Dice dice; dice.set(d1,d2);
+    CrapsBet b(BetName::CandE, 100);
+    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision == true);
+    CHECK(dr.pivotAssigned == false);
+    if (dice.value() == 11) CHECK(dr.win == 750);
+    if (dice.value() == 2 || dice.value() == 3 || dice.value() == 12)
+        CHECK(dr.win == 350);
+    CHECK(dr.lose == 0);
+    CHECK(dr.returnToPlayer == 0);
+    CHECK(b.distance() == 1);
+    CHECK(b.whenDecided() > b.whenCreated());
+}
+
+void cAndE2(unsigned point, unsigned d1, unsigned d2)
+{
+    Gen::ErrorPass ep;
+    CrapsBet::DecisionRecord dr;
+
+    Dice dice; dice.set(d1,d2);
+    CrapsBet b(BetName::CandE, 100);
+    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision == true);
+    CHECK(dr.pivotAssigned == false);
+    CHECK(dr.win == 0);
+    CHECK(dr.lose == 100);
+    CHECK(dr.returnToPlayer == 0);
+    CHECK(b.distance() == 1);
+    CHECK(b.whenDecided() > b.whenCreated());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("CrapsBet:evaluate:C&E")
+{
+    SUBCASE("decisions")
+    {
+        cAndE1(0, 1, 1);  // come out, dice 2, win
+        cAndE1(0, 1, 2);  // come out, dice 3, win
+        cAndE2(0, 1, 3);  // come out, dice 4, lose
+        cAndE2(0, 1, 4);  // come out, dice 5, lose
+        cAndE2(0, 1, 5);  // come out, dice 6 lose
+        cAndE2(0, 1, 6);  // come out, dice 7 lose
+        cAndE2(0, 6, 2);  // come out, dice 8 lose
+        cAndE2(0, 6, 3);  // come out, dice 9 lose
+        cAndE2(0, 6, 4);  // come out, dice 10 lose
+        cAndE1(0, 6, 5);  // come out, dice 11 win
+        cAndE1(0, 6, 6);  // come out, dice 12 win
+
+        cAndE1(4, 1, 1);  // point roll, dice 2, win
+        cAndE1(4, 1, 2);  // point roll, dice 3, win
+        cAndE2(4, 1, 3);  // point roll, dice 4, lose
+        cAndE2(4, 1, 4);  // point roll, dice 5, lose
+        cAndE2(4, 1, 5);  // point roll, dice 6 lose
+        cAndE2(4, 1, 6);  // point roll, dice 7 lose
+        cAndE2(4, 6, 2);  // point roll, dice 8 lose
+        cAndE2(4, 6, 3);  // point roll, dice 9 lose
+        cAndE2(4, 6, 4);  // point roll, dice 10 lose
+        cAndE1(4, 6, 5);  // point roll, dice 11 win
+        cAndE1(4, 6, 6);  // point roll, dice 12 win
+
+        // Bad bet, below min
+        CHECK_THROWS_AS(CrapsBet b(BetName::CandE, 1),
+                                   std::invalid_argument);
+        // Bad bet, not a multiple of 2
+        CHECK_THROWS_AS(CrapsBet b(BetName::CandE, 3),
+                                   std::invalid_argument);
+
+        CrapsBet b(BetName::CandE, 2);  // good min bet
+    }
+}
+
+//----------------------------------------------------------------
+
+void horn1(unsigned point, unsigned d1, unsigned d2)
+{
+    Gen::ErrorPass ep;
+    CrapsBet::DecisionRecord dr;
+
+    Dice dice; dice.set(d1,d2);
+    CrapsBet b(BetName::Horn, 100);
+    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision == true);
+    CHECK(dr.pivotAssigned == false);
+    if (dice.value() == 2 || dice.value() == 12) CHECK(dr.win == 750);
+    if (dice.value() == 3 || dice.value() == 11) CHECK(dr.win == 375);
+    CHECK(dr.lose == 0);
+    CHECK(dr.returnToPlayer == 0);
+    CHECK(b.distance() == 1);
+    CHECK(b.whenDecided() > b.whenCreated());
+}
+
+void horn2(unsigned point, unsigned d1, unsigned d2)
+{
+    Gen::ErrorPass ep;
+    CrapsBet::DecisionRecord dr;
+
+    Dice dice; dice.set(d1,d2);
+    CrapsBet b(BetName::Horn, 100);
+    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision == true);
+    CHECK(dr.pivotAssigned == false);
+    CHECK(dr.win == 0);
+    CHECK(dr.lose == 100);
+    CHECK(dr.returnToPlayer == 0);
+    CHECK(b.distance() == 1);
+    CHECK(b.whenDecided() > b.whenCreated());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("CrapsBet:evaluate:Horn")
+{
+    SUBCASE("decisions")
+    {
+        horn1(0, 1, 1);  // come out, dice 2, win
+        horn1(0, 1, 2);  // come out, dice 3, win
+        horn2(0, 1, 3);  // come out, dice 4, lose
+        horn2(0, 1, 4);  // come out, dice 5, lose
+        horn2(0, 1, 5);  // come out, dice 6 lose
+        horn2(0, 1, 6);  // come out, dice 7 lose
+        horn2(0, 6, 2);  // come out, dice 8 lose
+        horn2(0, 6, 3);  // come out, dice 9 lose
+        horn2(0, 6, 4);  // come out, dice 10 lose
+        horn1(0, 6, 5);  // come out, dice 11 win
+        horn1(0, 6, 6);  // come out, dice 12 win
+
+        horn1(4, 1, 1);  // point roll, dice 2, win
+        horn1(4, 1, 2);  // point roll, dice 3, win
+        horn2(4, 1, 3);  // point roll, dice 4, lose
+        horn2(4, 1, 4);  // point roll, dice 5, lose
+        horn2(4, 1, 5);  // point roll, dice 6 lose
+        horn2(4, 1, 6);  // point roll, dice 7 lose
+        horn2(4, 6, 2);  // point roll, dice 8 lose
+        horn2(4, 6, 3);  // point roll, dice 9 lose
+        horn2(4, 6, 4);  // point roll, dice 10 lose
+        horn1(4, 6, 5);  // point roll, dice 11 win
+        horn1(4, 6, 6);  // point roll, dice 12 win
+
+        // Bad bet, below min
+        CHECK_THROWS_AS(CrapsBet b(BetName::Horn, 1),
+                                   std::invalid_argument);
+        // Bad bet, below min
+        CHECK_THROWS_AS(CrapsBet b(BetName::Horn, 2),
+                                   std::invalid_argument);
+        // Bad bet, below min
+        CHECK_THROWS_AS(CrapsBet b(BetName::Horn, 3),
+                                   std::invalid_argument);
+        // Good min bet
+        CrapsBet b(BetName::Horn, 4);
+        
+        // Bad bet, not a multiple of 4
+        CHECK_THROWS_AS(CrapsBet b(BetName::Horn, 5),
+                                   std::invalid_argument);
+    }
+}
+
+//----------------------------------------------------------------

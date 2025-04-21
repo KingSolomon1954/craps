@@ -108,16 +108,28 @@ private:
     Gen::ReturnCode evalPlace(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalLay(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalBuy(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
-    Gen::ReturnCode evalLay(
+    Gen::ReturnCode evalHardway(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalField(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
-    Gen::ReturnCode evalHardway(
+    Gen::ReturnCode evalAnyCraps(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalAnySeven(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalCandE(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalHorn(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
@@ -126,7 +138,7 @@ private:
                          DecisionRecord& dr,
                          bool returnOdds,
                          const OddsTables::OddsEntry table[]) const;
-    void calcLossAnyBet(DecisionRecord& dr, bool returnOdds) const;
+    void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
 
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;
