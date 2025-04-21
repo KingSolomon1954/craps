@@ -82,11 +82,8 @@ CrapsBet::CrapsBet(BetName name, Money contractAmount, unsigned pivot)
     , pivot_(pivot)
     , contractAmount_(contractAmount)
     , oddsAmount_(0)
-    , oddsBetOffComeOutRoll_(true)
-    , placeBetOffComeOutRoll_(true)
-    , buyBetOffComeOutRoll_(true)
-    , layBetOffComeOutRoll_(true)
-    , hardwayBetOff_(false)
+    , offComeOutRoll_(true)
+    , skip_(false)
     , distance_(0)
     , whenCreated_(std::chrono::system_clock::now())
 {
@@ -138,6 +135,7 @@ CrapsBet::validArgsCtor()
     }
     if (betName_ == BetName::Hardway)
     {
+        offComeOutRoll_ = false;  // default is hardways always working
         if (!hardwayNums_.contains(pivot_))
         {
             throw std::invalid_argument(
@@ -292,6 +290,7 @@ Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
                    DecisionRecord& dr, Gen::ErrorPass& ep)
 {
+    if (skip_) return Gen::ReturnCode::Success;
 //  diagEvalEntered(point, dice);  // TODO use debug conditional
     if (!validArgsEval(point, ep))
     {
@@ -371,7 +370,7 @@ CrapsBet::calcWinPointBet(
 {
     dr.win = contractAmount_;
     if (oddsAmount_ == 0) return;
-    if (oddsBetOffComeOutRoll_ && returnOdds)
+    if (offComeOutRoll_ && returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
     }
@@ -388,7 +387,7 @@ CrapsBet::calcLossAnyBet(DecisionRecord& dr, bool returnOdds) const
 {
     dr.lose = contractAmount_;
     if (oddsAmount_ == 0) return;
-    if (oddsBetOffComeOutRoll_ && returnOdds)
+    if (offComeOutRoll_ && returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
     }
@@ -703,7 +702,7 @@ CrapsBet::evalPlace(
     (void) ep;
     Decision dcn = Keep;
     
-    if (point == 0 && placeBetOffComeOutRoll_)
+    if (point == 0 && offComeOutRoll_)
     {
         dcn = Keep;
     }
@@ -745,7 +744,7 @@ CrapsBet::evalBuy(
     (void) ep;
     Decision dcn = Keep;
     
-    if (point == 0 && buyBetOffComeOutRoll_)
+    if (point == 0 && offComeOutRoll_)
     {
         dcn = Keep;
     }
@@ -790,7 +789,7 @@ CrapsBet::evalLay(
     (void) ep;
     Decision dcn = Keep;
     
-    if (point == 0 && layBetOffComeOutRoll_)
+    if (point == 0 && offComeOutRoll_)
     {
         dcn = Keep;
     }
@@ -870,7 +869,7 @@ CrapsBet::evalHardway(
     (void) ep; (void) point;  // unused, quiet the compiler
     Decision dcn = Keep;
 
-    if (hardwayBetOff_)
+    if (offComeOutRoll_)
     {
         dcn = Keep;
     }
@@ -984,191 +983,129 @@ CrapsBet::oddsAmount() const
 
 /*-----------------------------------------------------------*//**
 
-Returns whether odds are off on the come out roll.
+Returns whether the bet is "working/on" or "not-working/off" on a
+come out roll.
+
+For point bets (PassLine|Come|DontPass|DontCome), this refers to the
+odds amount.
 
 @return
-    true if odds are off on the come out roll, false otherwise.
+    true if "off" on come out roll, false otherwise.
+*/
+bool
+CrapsBet::offComeOutRoll() const
+{
+    return offComeOutRoll_;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns whether Hardway bet is "working/on" or "not-working/off".
+
+@return
+    true if "working", false otherwise.
 
 */
 bool
-CrapsBet::oddsBetOffComeOutRoll() const
+CrapsBet::hardwayWorking() const
 {
-    return oddsBetOffComeOutRoll_;
+    return !offComeOutRoll_;
 }
 
 /*-----------------------------------------------------------*//**
 
-Returns whether the place bet is off on the come out roll.
+Set this bet to be off on come out rolls.
+
+Off is the default,
+*/
+void
+CrapsBet::setOffComeOutRoll()
+{
+    offComeOutRoll_ = true;
+}
+
+/*-----------------------------------------------------------*//**
+
+Set this bet to be working on come out rolls.
+
+Off is the default.
+*/
+void
+CrapsBet::setOnComeOutRoll()
+{
+    offComeOutRoll_ = false;
+}
+
+/*-----------------------------------------------------------*//**
+
+Set this Hardway bet to "working".
+
+Working is the default for a Hardway bet. 
+
+If this bet is not a Hardway bet, then just silently returns.
+*/
+void
+CrapsBet::setHardwayOn()
+{
+    if (betName_ != BetName::Hardway) return;
+    offComeOutRoll_ = true;
+}
+
+/*-----------------------------------------------------------*//**
+
+Set this Hardway bet to "off".
+
+Working is the default for a Hardway bet.
+
+If this bet is not a Hardway bet, then just silently returns.
+*/
+void
+CrapsBet::setHardwayOff()
+{
+    if (betName_ != BetName::Hardway) return;
+    offComeOutRoll_ = false;
+}
+
+/*-----------------------------------------------------------*//**
+
+Skip this bet when evaluateBet() is called.
+
+When evaluateBet() is called, this bet will be skipped as if it doesn't
+exist. No stats will be incremented and no processing will occur.
+
+This supports different CrapsTable designs where in one case perhaps
+the table maintains single list of all bets which are later fed to
+evaluateBet(), even those bets that are not actually on the table.
+*/
+void
+CrapsBet::setSkipOn()
+{
+    skip_ = true;
+}
+
+/*-----------------------------------------------------------*//**
+
+Sets the skip flag to false.
+
+Reverses a previous setSkipOn().
+*/
+void
+CrapsBet::setSkipOff()
+{
+    skip_ = false;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns the state of the skip flag.
 
 @return
-    true if place bet is off on the come out roll, false otherwise.
-
+    True if skip flag is on, otherwise false
 */
 bool
-CrapsBet::placeBetOffComeOutRoll() const
+CrapsBet::skipOn() const
 {
-    return placeBetOffComeOutRoll_;
-}
-
-/*-----------------------------------------------------------*//**
-
-Returns whether the lay bet is off on the come out roll.
-
-@return
-    true if lay bet is off on the come out roll, false otherwise.
-
-*/
-bool
-CrapsBet::layBetOffComeOutRoll() const
-{
-    return layBetOffComeOutRoll_;
-}
-
-/*-----------------------------------------------------------*//**
-
-Returns whether the hardway bet is off or working.
-
-@return
-    true if hardway bet is off, false otherwise.
-
-*/
-bool
-CrapsBet::hardwayBetOff() const
-{
-    return hardwayBetOff_;
-}
-
-/*-----------------------------------------------------------*//**
-
-Disable the odds bet for this bet on come out rolls.
-
-Odds bets on come out rolls are off by default.
-
-*/
-void
-CrapsBet::setOddsBetOffComeOutRoll()
-{
-    oddsBetOffComeOutRoll_ = true;
-}
-
-/*-----------------------------------------------------------*//**
-
-Enable the odds bet for this bet on come out rolls.
-
-Odds bets on come out rolls are off by default.
-
-*/
-void
-CrapsBet::setOddsBetWorkingComeOutRoll()
-{
-    oddsBetOffComeOutRoll_ = false;
-}
-
-/*-----------------------------------------------------------*//**
-
-Disable this place bet on come out rolls.
-
-Place bets on come out rolls are off by default.
-
-*/
-void
-CrapsBet::setPlaceBetOffComeOutRoll()
-{
-    placeBetOffComeOutRoll_ = true;
-}
-
-/*-----------------------------------------------------------*//**
-
-Enable this place bet on come out rolls.
-
-Place bets on come out rolls are off by default. This
-can enable it.
-
-*/
-void
-CrapsBet::setPlaceBetWorkingComeOutRoll()
-{
-    placeBetOffComeOutRoll_ = false;
-}
-
-/*-----------------------------------------------------------*//**
-
-Disable this Buy bet on come out rolls.
-
-Buy bets on come out rolls are off by default.
-
-*/
-void
-CrapsBet::setBuyBetOffComeOutRoll()
-{
-    buyBetOffComeOutRoll_ = true;
-}
-
-/*-----------------------------------------------------------*//**
-
-Enable this Buy bet on come out rolls.
-
-Buy bets on come out rolls are off by default. This
-can enable it.
-
-*/
-void
-CrapsBet::setBuyBetWorkingComeOutRoll()
-{
-    buyBetOffComeOutRoll_ = false;
-}
-
-/*-----------------------------------------------------------*//**
-
-Disable this lay bet on come out rolls.
-
-Lay bets on come out rolls are off by default.
-
-*/
-void
-CrapsBet::setLayBetOffComeOutRoll()
-{
-    layBetOffComeOutRoll_ = true;
-}
-
-/*-----------------------------------------------------------*//**
-
-Enable this lay bet on come out rolls.
-
-Lay bets on come out rolls are off by default. This
-can enable it.
-
-*/
-void
-CrapsBet::setLayBetWorkingComeOutRoll()
-{
-    layBetOffComeOutRoll_ = false;
-}
-
-/*-----------------------------------------------------------*//**
-
-Enable this hardway bet.
-
-Hardway bets are working by default.
-
-*/
-void
-CrapsBet::setHardwayBetWorking()
-{
-    hardwayBetOff_ = false;
-}
-
-/*-----------------------------------------------------------*//**
-
-Disable this hardway bet.
-
-Hardway bets are working by default.
-
-*/
-void
-CrapsBet::setHardwayBetOff()
-{
-    hardwayBetOff_ = true;
+    return skip_;
 }
 
 /*-----------------------------------------------------------*//**
@@ -1222,15 +1159,16 @@ std::ostream&
 operator<< (std::ostream& out, const CrapsBet& b)
 {
     out <<
-    "             betId: " << b.betId()                 << std::endl <<
-    "           betName: " << b.betName()               << std::endl <<
-    "             pivot: " << b.pivot()                 << std::endl <<
-    "    contractAmount: " << b.contractAmount()        << std::endl <<
-    "        oddsAmount: " << b.oddsAmount()            << std::endl <<
-    "oddsOffComeOutRoll: " << b.oddsBetOffComeOutRoll() << std::endl <<
-    "          distance: " << b.distance()              << std::endl <<
-    "       whenCreated: " << b.whenCreated()           << std::endl <<
-    "       whenDecided: " << b.whenDecided()           << std::endl;
+    "         betId: " << b.betId()           << std::endl <<
+    "       betName: " << b.betName()         << std::endl <<
+    "         pivot: " << b.pivot()           << std::endl <<
+    "contractAmount: " << b.contractAmount()  << std::endl <<
+    "    oddsAmount: " << b.oddsAmount()      << std::endl <<
+    "offComeOutRoll: " << b.offComeOutRoll()  << std::endl <<
+    "      distance: " << b.distance()        << std::endl <<
+    "   whenCreated: " << b.whenCreated()     << std::endl <<
+    "   whenDecided: " << b.whenDecided()     << std::endl <<
+    "          skip: " << b.skipOn()          << std::endl;
     return out;
 }
 

@@ -55,16 +55,12 @@ public:
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode setOddsAmount(Money amount, Gen::ErrorPass& ep);
-    void setOddsBetWorkingComeOutRoll();
-    void setOddsBetOffComeOutRoll();
-    void setPlaceBetWorkingComeOutRoll();
-    void setPlaceBetOffComeOutRoll();
-    void setBuyBetWorkingComeOutRoll();
-    void setBuyBetOffComeOutRoll();
-    void setLayBetWorkingComeOutRoll();
-    void setLayBetOffComeOutRoll();
-    void setHardwayBetWorking();
-    void setHardwayBetOff();
+    void setOffComeOutRoll();
+    void setOnComeOutRoll();
+    void setHardwayOff();
+    void setHardwayOn();
+    void setSkipOn();
+    void setSkipOff();
     /// @}
 
     /// @name Observers
@@ -74,10 +70,9 @@ public:
     unsigned pivot() const;
     unsigned contractAmount() const;
     unsigned oddsAmount() const;
-    bool oddsBetOffComeOutRoll() const;
-    bool placeBetOffComeOutRoll() const;
-    bool layBetOffComeOutRoll() const;
-    bool hardwayBetOff() const;
+    bool offComeOutRoll() const;
+    bool hardwayWorking() const;
+    bool skipOn() const;
     unsigned distance() const;
     std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
     std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
@@ -131,17 +126,13 @@ private:
                          const OddsTables::OddsEntry table[]) const;
     void calcLossAnyBet(DecisionRecord& dr, bool returnOdds) const;
 
-    
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;
     unsigned pivot_ = 0;
     Money contractAmount_ = 0;
     Money oddsAmount_ = 0;
-    bool oddsBetOffComeOutRoll_ = true;
-    bool placeBetOffComeOutRoll_ = true;
-    bool buyBetOffComeOutRoll_ = true;
-    bool layBetOffComeOutRoll_ = true;
-    bool hardwayBetOff_ = false;
+    bool offComeOutRoll_ = true;
+    bool skip_ = false;
     unsigned distance_ = 0;  // num rolls until decision
     std::chrono::time_point<std::chrono::system_clock> whenCreated_;
     std::chrono::time_point<std::chrono::system_clock> whenDecided_;

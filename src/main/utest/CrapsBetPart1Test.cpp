@@ -35,7 +35,7 @@ TEST_CASE("CrapsBet:Constructor")
         CHECK(b.pivot() == 0);
         CHECK(b.contractAmount() == 100);
         CHECK(b.oddsAmount() == 0);
-        CHECK(b.oddsBetOffComeOutRoll());
+        CHECK(b.offComeOutRoll());
         CHECK(b.distance() == 0);
         CHECK(b.whenCreated() < std::chrono::system_clock::now());
 
@@ -2083,7 +2083,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
         // Number hits on Come out roll, wins with odds
         CrapsBet b42(BetName::Come, 100, 4);
         CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        b42.setOddsBetWorkingComeOutRoll();
+        b42.setOnComeOutRoll();
         point = 0;
         dice.set(2,2);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2113,7 +2113,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
         // 7 repeats before Number Come out roll, loses odds too
         CrapsBet b44(BetName::Come, 100, 4);
         CHECK(b44.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        b44.setOddsBetWorkingComeOutRoll();
+        b44.setOnComeOutRoll();
         point = 0;
         dice.set(6,1);
         CHECK(b44.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2712,7 +2712,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
         // Number hits on Come out roll, loses with odds
         CrapsBet b42(BetName::DontCome, 100, 4);
         CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        b42.setOddsBetWorkingComeOutRoll();
+        b42.setOnComeOutRoll();
         point = 0;
         dice.set(2,2);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2742,7 +2742,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
         // 7 repeats before Number Come out roll, loses odds too
         CrapsBet b44(BetName::DontCome, 100, 4);
         CHECK(b44.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
-        b44.setOddsBetWorkingComeOutRoll();
+        b44.setOnComeOutRoll();
         point = 0;
         dice.set(6,1);
         CHECK(b44.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);

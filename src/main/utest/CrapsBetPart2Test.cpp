@@ -75,7 +75,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         // Place 4, come out, dice = 4, win
         CrapsBet b42(BetName::Place, 100, 4);
-        b42.setPlaceBetWorkingComeOutRoll();
+        b42.setOnComeOutRoll();
         point = 0;
         dice.set(3,1);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -104,7 +104,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         // Come out roll, dice = 5, win
         CrapsBet b52(BetName::Place, 100, 5);
-        b52.setPlaceBetWorkingComeOutRoll();
+        b52.setOnComeOutRoll();
         point = 0;
         dice.set(4,1);
         CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -133,7 +133,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         // Come out roll, dice = 6, win
         CrapsBet b62(BetName::Place, 100, 6);
-        b62.setPlaceBetWorkingComeOutRoll();
+        b62.setOnComeOutRoll();
         point = 0;
         dice.set(5,1);
         CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -161,7 +161,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         // Come out roll, dice = 7, lose
         CrapsBet b72(BetName::Place, 100, 6);
-        b72.setPlaceBetWorkingComeOutRoll();
+        b72.setOnComeOutRoll();
         point = 0;
         dice.set(3,4);
         CHECK(b72.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -189,7 +189,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         // Come out roll, dice = 8, win
         CrapsBet b82(BetName::Place, 100, 8);
-        b82.setPlaceBetWorkingComeOutRoll();
+        b82.setOnComeOutRoll();
         point = 0;
         dice.set(4,4);
         CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -218,7 +218,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         // Come out roll, dice = 9, keep
         CrapsBet b92(BetName::Place, 100, 9);
-        b92.setPlaceBetWorkingComeOutRoll();
+        b92.setOnComeOutRoll();
         point = 0;
         dice.set(4,5);
         CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -247,7 +247,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         // Come out roll, dice = 10, win
         CrapsBet b102(BetName::Place, 100, 10);
-        b102.setPlaceBetWorkingComeOutRoll();
+        b102.setOnComeOutRoll();
         point = 0;
         dice.set(5,5);
         CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -612,7 +612,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
 
         // Buy 4, come out, dice = 4, win
         CrapsBet b42(BetName::Buy, 100, 4);
-        b42.setBuyBetWorkingComeOutRoll();
+        b42.setOnComeOutRoll();
         point = 0;
         dice.set(3,1);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -641,7 +641,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
 
         // Buy 5, come out, dice = 5, win
         CrapsBet b52(BetName::Buy, 100, 5);
-        b52.setBuyBetWorkingComeOutRoll();
+        b52.setOnComeOutRoll();
         point = 0;
         dice.set(4,1);
         CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -670,7 +670,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
 
         // Buy 6, come out, dice = 6, win
         CrapsBet b62(BetName::Buy, 100, 6);
-        b62.setBuyBetWorkingComeOutRoll();
+        b62.setOnComeOutRoll();
         point = 0;
         dice.set(5,1);
         CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -698,7 +698,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
 
         // Buy 6, come out, dice = 7, lose
         CrapsBet b72(BetName::Buy, 100, 6);
-        b72.setBuyBetWorkingComeOutRoll();
+        b72.setOnComeOutRoll();
         point = 0;
         dice.set(3,4);
         CHECK(b72.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -726,7 +726,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
 
         // Buy 8, come out, dice = 8, win
         CrapsBet b82(BetName::Buy, 100, 8);
-        b82.setBuyBetWorkingComeOutRoll();
+        b82.setOnComeOutRoll();
         point = 0;
         dice.set(4,4);
         CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -755,7 +755,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
 
         // Buy 9, come out, dice = 9, win
         CrapsBet b92(BetName::Buy, 100, 9);
-        b92.setBuyBetWorkingComeOutRoll();
+        b92.setOnComeOutRoll();
         point = 0;
         dice.set(4,5);
         CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -784,7 +784,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
 
         // Buy 10, come out, dice = 10, win
         CrapsBet b102(BetName::Buy, 100, 10);
-        b102.setBuyBetWorkingComeOutRoll();
+        b102.setOnComeOutRoll();
         point = 0;
         dice.set(5,5);
         CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -851,7 +851,7 @@ void lay2(unsigned point, unsigned num, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b(BetName::Lay, 100, num);
-    b.setLayBetWorkingComeOutRoll();
+    b.setOnComeOutRoll();
     CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
@@ -869,7 +869,7 @@ void lay3(unsigned point, unsigned num, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b(BetName::Lay, 100, num);
-    b.setLayBetWorkingComeOutRoll();
+    b.setOnComeOutRoll();
     CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
