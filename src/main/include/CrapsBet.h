@@ -8,8 +8,8 @@
 
 #include <chrono>
 #include <ostream>
+#include <string>
 #include <unordered_set>
-// #include <variant>
 #include "gen/ReturnCode.h"
 #include "Globals.h"
 #include "EnumBetName.h"
@@ -28,7 +28,8 @@ class CrapsBet
 public:
     /// @name Lifecycle
     /// @{
-    CrapsBet(BetName name, Money contractAmount, unsigned pivot = 0);
+    CrapsBet(const std::string& playerId, BetName name,
+             Money contractAmount, unsigned pivot = 0);
     /// @}
 
     /// @name Modifiers
@@ -42,6 +43,7 @@ public:
         Money lose = 0;
         Money returnToPlayer = 0;
         Money commission = 0;
+        std::string playerId;
 
         bool operator==(const DecisionRecord& other) const
         {
@@ -51,7 +53,8 @@ public:
                    win == other.win &&
                    lose == other.lose &&
                    returnToPlayer == other.returnToPlayer &&
-                   commission == other.commission;
+                   commission == other.commission &&
+                   playerId == other.playerId;
         }
     };
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
@@ -67,6 +70,7 @@ public:
 
     /// @name Observers
     /// @{
+    const std::string& playerId() const;
     unsigned betId() const;
     BetName betName() const;
     unsigned pivot() const;
@@ -140,6 +144,7 @@ private:
                          const OddsTables::OddsEntry table[]) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
 
+    std::string playerId_;
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;
     unsigned pivot_ = 0;

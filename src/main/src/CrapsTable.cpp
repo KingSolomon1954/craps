@@ -20,7 +20,7 @@ Constructor
 */
 CrapsTable::CrapsTable()
 {
-    CrapsBet bet(BetName::PassLine, 100, 0);
+    CrapsBet bet("Player1", BetName::PassLine, 100, 0);
     std::cout << bet << std::endl;
     unsigned point = 4;
     // dice.roll();

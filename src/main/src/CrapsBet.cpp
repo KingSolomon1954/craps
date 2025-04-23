@@ -11,7 +11,6 @@
 #include "gen/ErrorPass.h"
 #include "gen/StringUtils.h"
 #include "Dice.h"
-// #include "OddsTables.h"
 
 using namespace App;
 
@@ -28,30 +27,34 @@ is meant for upper level designs that track many bets.
 Arguments are checked for validity and if found to be bad then
 std::invalid_argument is thrown.
 
-Note that no check is made at construction time whether the bet is
-allowed to be placed on a Craps table. CrapsBet is unaware of the state
-of any Craps table. This decouples the act of creating a bet from
-placing a bet on a CrapsTable, allowing the application better freedom
-of design.
+Note that no check is made at this time whether the bet is allowed to be
+placed on a Craps table. CrapsBet is unaware of the state of any Craps
+table. This decouples the act of creating a bet from placing a bet on a
+CrapsTable, allowing the application better freedom of design.
+
+@param[in] playerId
+    The player making this bet.
 
 @param[in] name
     The name/type of the bet. Throws if this is not valid name.
 
 @param[in] contractAmount
     The amount of the bet. Throws if this is zero.
+    For C&E bets, min bet is 2 must be a multiple of 2.
+    For Horn bets, min bet is 4 must be a multiple of 4.
 
 @param[in] pivot
     The number this bet is focused on. For example a Place bet must set
     the pivot to 4,5,6,8,9 or 10 otherwise a std::invalid_argument
     exception is thrown.
 
-    For Field, AnyCraps and C&E bets, the pivot is unused and internally
-    set to 0.
+    For Field, AnyCraps, AnySeven, C&E and Horn bets, the pivot is
+    unused and internally set to 0.
 
     For PassLine/Come/DontPass/DontCome bets, the caller sets the pivot
     to zero. Zero indicates the pivot number needs to be set later.
     These point-based bets get their pivot number assigned during
-    CrapsBet::evaluation(),
+    CrapsBet::evaluate(),
 
     As a special case only for PassLine bets, the caller may also
     explicitly set the pivot to one of 4,5,6,8,9 or10. This supports the
@@ -66,18 +69,14 @@ of design.
     evaluated after a point has already been established, then the pivot
     is silently assigned to the already established point, as if the player
     made a PassLine bet after point was established.
-
-    Come/DontPass/DontCome bets are rejected if pivot is non-zero, and an
-    exception is thrown.
-
-    For Pass/Come/DontCome/DontPass bets, the caller sets the pivot to
-    zero to indicate the pivot number needs to be set later, or to
-    4,5,6,8,9,10, otherwise a std::invalid_argument exception is thrown.
-    Later, when CrapsBet::evaluate() is called, the pivot is set 
-    to the supplied point.
 */
-CrapsBet::CrapsBet(BetName name, Money contractAmount, unsigned pivot)
-    : betId_(++idCounter_)
+CrapsBet::CrapsBet(
+    const std::string& playerId,
+    BetName name,
+    Money contractAmount,
+    unsigned pivot)
+    : playerId_(playerId)
+    , betId_(++idCounter_)
     , betName_(name)
     , pivot_(pivot)
     , contractAmount_(contractAmount)
@@ -347,7 +346,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         return diagEvalProcError(ep);
     }
                          
-    dr = {betId_, false, 0,0,0,0};   // Prepare decision record
+    dr = {betId_, false, 0,0,0,0, 0, playerId_};   // Prepare decision record
     Gen::ReturnCode rc = Gen::ReturnCode::Fail;
     switch (betName_)
     {
@@ -1057,11 +1056,23 @@ CrapsBet::evalHorn(
 
 /*-----------------------------------------------------------*//**
 
+Returns the playerId.
+
+@return
+    The playerId
+*/
+const std::string&
+CrapsBet::playerId() const
+{
+    return playerId_;
+}
+
+/*-----------------------------------------------------------*//**
+
 Returns the bet ID.
 
 @return
     The unique bet ID associated with this bet.
-
 */
 unsigned
 CrapsBet::betId() const
@@ -1075,7 +1086,6 @@ Returns the bet name/type.
 
 @return
     The bet name/type.
-
 */
 BetName
 CrapsBet::betName() const
@@ -1093,7 +1103,6 @@ the pivot is zero indicating a point number is not yet established.
 
 @return
     The pivot.
-
 */
 unsigned
 CrapsBet::pivot() const
@@ -1109,7 +1118,6 @@ Contract amount does not include the odds amount.
 
 @return
     The contract amount.
-
 */
 unsigned
 CrapsBet::contractAmount() const
@@ -1125,7 +1133,6 @@ Odd amount does not include the contract amount.
 
 @return
     The odds amount.
-
 */
 unsigned
 CrapsBet::oddsAmount() const
@@ -1156,7 +1163,6 @@ Returns whether Hardway bet is "working/on" or "not-working/off".
 
 @return
     true if "working", false otherwise.
-
 */
 bool
 CrapsBet::hardwayWorking() const
@@ -1269,7 +1275,6 @@ dice rolls so far.
 
 @return
     number of dice rolls so far to reach a decision.
-
 */
 unsigned
 CrapsBet::distance() const
@@ -1283,7 +1288,6 @@ Returns the time of the bet creation.
 
 @return
     time of bet creation.
-
 */
 std::chrono::time_point<std::chrono::system_clock>
 CrapsBet::whenCreated() const
@@ -1297,7 +1301,6 @@ Returns the time the bet reached a decision.
 
 @return
     time of bet decision.
-
 */
 std::chrono::time_point<std::chrono::system_clock>
 CrapsBet::whenDecided() const
@@ -1311,16 +1314,17 @@ std::ostream&
 operator<< (std::ostream& out, const CrapsBet& b)
 {
     out <<
-    "         betId: " << b.betId()           << std::endl <<
-    "       betName: " << b.betName()         << std::endl <<
-    "         pivot: " << b.pivot()           << std::endl <<
-    "contractAmount: " << b.contractAmount()  << std::endl <<
-    "    oddsAmount: " << b.oddsAmount()      << std::endl <<
-    "offComeOutRoll: " << b.offComeOutRoll()  << std::endl <<
-    "      distance: " << b.distance()        << std::endl <<
-    "   whenCreated: " << b.whenCreated()     << std::endl <<
-    "   whenDecided: " << b.whenDecided()     << std::endl <<
-    "          skip: " << b.skipOn()          << std::endl;
+    "      playerId: " << b.playerId()       << std::endl <<
+    "         betId: " << b.betId()          << std::endl <<
+    "       betName: " << b.betName()        << std::endl <<
+    "         pivot: " << b.pivot()          << std::endl <<
+    "contractAmount: " << b.contractAmount() << std::endl <<
+    "    oddsAmount: " << b.oddsAmount()     << std::endl <<
+    "offComeOutRoll: " << b.offComeOutRoll() << std::endl <<
+    "      distance: " << b.distance()       << std::endl <<
+    "   whenCreated: " << b.whenCreated()    << std::endl <<
+    "   whenDecided: " << b.whenDecided()    << std::endl <<
+    "          skip: " << b.skipOn()         << std::endl;
     return out;
 }
 
@@ -1330,6 +1334,7 @@ std::ostream&
 operator<< (std::ostream& out, const CrapsBet::DecisionRecord& dr)
 {
     out <<
+    "      playerId: " << dr.playerId       << std::endl <<
     "         betId: " << dr.betId          << std::endl <<
     "      decision: " << dr.decision       << std::endl <<
     " pivotAssigned: " << dr.pivotAssigned  << std::endl <<

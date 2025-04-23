@@ -14,6 +14,8 @@ add_library(main STATIC
     src/CrapsTable.cpp
     src/Dice.cpp
     src/EnumBetName.cpp
+    src/Player.cpp
+    src/PlayerIdGenerator.cpp
     src/Properties.cpp
 )
 
