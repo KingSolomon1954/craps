@@ -19,7 +19,6 @@
 */
 enum class BetName
 {
-    Invalid = 0, ///< Used for conversion errors
     PassLine,    ///< Pass line bet
     Come,        ///< Come bet
     DontPass,    ///< Dont Pass bet
@@ -32,7 +31,9 @@ enum class BetName
     AnyCraps,    ///< Any Craps bet
     AnySeven,    ///< Any Seven bet
     CandE,       ///< Craps & Eleven bet
-    Horn         ///< Horn bet
+    Horn,        ///< Horn bet
+    Count,       ///< Always last, tells how many bet names exist
+    Invalid      ///< Always last, used for conversion errors
 };
 
 namespace EnumBetName
@@ -46,7 +47,6 @@ namespace EnumBetName
     /** Initialized array of enums for iterating. */
     constexpr const std::array<BetName, 13> enumerators
     {
-        // BetName::Invalid, // Purposely leave out
         BetName::PassLine,   ///< Pass line bet
         BetName::Come,       ///< Come bet
         BetName::DontPass,   ///< Dont Pass bet
@@ -60,6 +60,8 @@ namespace EnumBetName
         BetName::AnySeven,   ///< Any Seven bet
         BetName::CandE,      ///< Craps & Eleven bet
         BetName::Horn        ///< Horn bet
+        // BetName::count    // Purposely leave out
+        // BetName::Invalid  // Purposely leave out
     };
 }
 

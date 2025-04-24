@@ -10,7 +10,6 @@
 using namespace EnumBetName;
 using namespace Gen;
 
-constexpr const char* InvalidStr  = "Invalid";
 constexpr const char* PassLineStr = "PassLine";
 constexpr const char* ComeStr     = "Come";
 constexpr const char* DontPassStr = "DontPass";
@@ -24,6 +23,7 @@ constexpr const char* AnyCrapsStr = "AnyCraps";
 constexpr const char* AnySevenStr = "AnySeven";
 constexpr const char* CandEStr    = "C&E";
 constexpr const char* HornStr     = "Horn";
+constexpr const char* InvalidStr  = "Invalid";
 
 /*-----------------------------------------------------------*//**
 
@@ -40,7 +40,6 @@ EnumBetName::toString(BetName b) noexcept
 {
     switch (b)
     {
-    case BetName::Invalid:  return InvalidStr;
     case BetName::PassLine: return PassLineStr;
     case BetName::Come:     return ComeStr;
     case BetName::DontPass: return DontPassStr;
@@ -54,6 +53,8 @@ EnumBetName::toString(BetName b) noexcept
     case BetName::AnySeven: return AnySevenStr;
     case BetName::CandE:    return CandEStr;
     case BetName::Horn:     return HornStr;
+    case BetName::Count:    // fall through
+    case BetName::Invalid:  break; // quiet the compiler
     }
     return InvalidStr;
 }

@@ -363,6 +363,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         case BetName::AnySeven: rc = evalAnySeven(point, dice, dr, ep); break;
         case BetName::CandE   : rc = evalCandE   (point, dice, dr, ep); break;
         case BetName::Horn    : rc = evalHorn    (point, dice, dr, ep); break;
+        case BetName::Count   : // fall through
         case BetName::Invalid : return Gen::ReturnCode::Fail;           break;
     }
     if (rc == Gen::ReturnCode::Fail)

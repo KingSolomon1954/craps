@@ -172,19 +172,19 @@ TEST_CASE("EnumBetName:isConvertibleFrom")
 
 TEST_CASE("EnumBetName:fromUnsigned")
 {
-    CHECK(BetName::PassLine  == EnumBetName::fromUnsigned(1u));
-    CHECK(BetName::Come      == EnumBetName::fromUnsigned(2u));
-    CHECK(BetName::DontPass  == EnumBetName::fromUnsigned(3u));
-    CHECK(BetName::DontCome  == EnumBetName::fromUnsigned(4u));
-    CHECK(BetName::Place     == EnumBetName::fromUnsigned(5u));
-    CHECK(BetName::Lay       == EnumBetName::fromUnsigned(6u));
-    CHECK(BetName::Buy       == EnumBetName::fromUnsigned(7u));
-    CHECK(BetName::Hardway   == EnumBetName::fromUnsigned(8u));
-    CHECK(BetName::Field     == EnumBetName::fromUnsigned(9u));
-    CHECK(BetName::AnyCraps  == EnumBetName::fromUnsigned(10u));
-    CHECK(BetName::AnySeven  == EnumBetName::fromUnsigned(11u));
-    CHECK(BetName::CandE     == EnumBetName::fromUnsigned(12u));
-    CHECK(BetName::Horn      == EnumBetName::fromUnsigned(13u));
+    CHECK(BetName::PassLine  == EnumBetName::fromUnsigned(0u));
+    CHECK(BetName::Come      == EnumBetName::fromUnsigned(1u));
+    CHECK(BetName::DontPass  == EnumBetName::fromUnsigned(2u));
+    CHECK(BetName::DontCome  == EnumBetName::fromUnsigned(3u));
+    CHECK(BetName::Place     == EnumBetName::fromUnsigned(4u));
+    CHECK(BetName::Lay       == EnumBetName::fromUnsigned(5u));
+    CHECK(BetName::Buy       == EnumBetName::fromUnsigned(6u));
+    CHECK(BetName::Hardway   == EnumBetName::fromUnsigned(7u));
+    CHECK(BetName::Field     == EnumBetName::fromUnsigned(8u));
+    CHECK(BetName::AnyCraps  == EnumBetName::fromUnsigned(9u));
+    CHECK(BetName::AnySeven  == EnumBetName::fromUnsigned(10u));
+    CHECK(BetName::CandE     == EnumBetName::fromUnsigned(11u));
+    CHECK(BetName::Horn      == EnumBetName::fromUnsigned(12u));
     CHECK(BetName::Invalid   == EnumBetName::fromUnsigned(99u));
 }
 

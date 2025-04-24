@@ -31,7 +31,12 @@ public:
         CrapsBet* pBet;
     };
 
-    std::unordered_map<BetName, std::vector<shared_ptr<CrapsBet>>>
+    // Bets on the table are kept in a fixed sized array with each array
+    // index representing a list of bets of that type.  This allows
+    // easier traversals that mimic real life table actions where, for
+    // example, the house always collects losing bets in a certain order
+    // followed by payouts in a certain order.
+    std::unordered_map<BetName, std::list<shared_ptr<CrapsBet>>>
     
     void addPlayer(const Player& player);
     void removePlayer(const std::string& playerName);
