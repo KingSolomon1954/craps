@@ -4,8 +4,6 @@
 #
 # -----------------------------------------------------------------
 
-find_package(stduuid REQUIRED)
-
 add_library(gen STATIC
     src/BuildInfo.cpp
     src/ErrorPass.cpp
@@ -18,10 +16,6 @@ add_library(gen STATIC
 target_include_directories(gen
     PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include
-)
-
-target_link_libraries(gen
-    PUBLIC stduuid::stduuid
 )
 
 target_compile_definitions(gen

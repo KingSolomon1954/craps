@@ -5,31 +5,49 @@
 //----------------------------------------------------------------
 
 #include "gen/Uuid.h"
+#include <array>
+#include <iomanip>
+#include <iostream>
 #include <random>
-#include <uuid.h>
+#include <sstream>
+#include <string>
 
 using namespace Gen;
 
 /*-----------------------------------------------------------*//**
 
-Return a UUID based on random number generator.
+Generate a UUID v4 string.
+
+Uses C++ random.
 
 @return
-    UUID as a string.
+    A random UUID as a string.
 */
-std::string
-Gen::generateUuid()
+Uuid
+generateUuid()
 {
     std::random_device rd;
-    auto seed_data = std::array<int, 6> {};
-    std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
-    std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
-    std::ranlux48_base generator(seq);
+    std::uniform_int_distribution<uint32_t> dist(0, 255);
 
-    uuids::basic_uuid_random_generator<std::ranlux48_base> gen(&generator);
-    uuids::uuid const id = gen();
+    std::array<uint8_t, 16> bytes{};
+    for (auto& byte : bytes)
+    {
+        byte = static_cast<uint8_t>(dist(rd));
+    }
 
-    return uuids::to_string(id);
+    // Set UUID version to 4
+    bytes[6] = (bytes[6] & 0x0F) | 0x40;
+    // Set UUID variant to 10xx
+    bytes[8] = (bytes[8] & 0x3F) | 0x80;
+
+    // Format into UUID string
+    std::ostringstream oss;
+    for (size_t i = 0; i < bytes.size(); ++i)
+    {
+        if (i == 4 || i == 6 || i == 8 || i == 10) oss << '-';
+        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(bytes[i]);
+    }
+    return oss.str();
 }
 
 //----------------------------------------------------------------

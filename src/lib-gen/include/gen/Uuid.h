@@ -10,7 +10,8 @@
 
 namespace Gen {
 
-std::string generateUuid();
+    using Uuid = std::string;
+    std::string generateUuid();
 
 } // namespace Gen
 

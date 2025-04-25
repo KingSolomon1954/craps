@@ -5,7 +5,6 @@
 //----------------------------------------------------------------
 
 #include "CrapsTable.h"
-
 #include <iostream>
 #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
@@ -36,6 +35,51 @@ CrapsTable::CrapsTable()
     {
         std::cout << ep.diag << std::endl;
     }
+
+    // Process all bets
+    for (size_t i = 0; i < static_cast<size_t>(BetName::Count); ++i)
+    {
+        auto& bets = tableBets_[i];
+        for (auto& b : bets)
+        {
+            b->setSkipOn();
+        }
+    }
+
+    // Process all bets
+    for (size_t i = 0; i < tableBets_.size(); ++i)
+    {
+        auto& bets = tableBets_[i];
+        for (auto& b : bets)
+        {
+            b->setSkipOn();
+        }
+    }
+    
+    // Process all bets
+    for (auto name : EnumBetName::enumerators)
+    {
+        auto& bets = tableBets_[static_cast<size_t>(name)];
+        for (auto& b : bets)
+        {
+            b->setSkipOn();
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::addPlayer(const Gen::Uuid& playerId)
+{
+    (void) playerId;
+    // Player player& = PlayerManager::getPlayer(playerId);
+}
+
+void
+CrapsTable::removePlayer(const Gen::Uuid& playerId)
+{
+    (void) playerId;
 }
 
 //----------------------------------------------------------------

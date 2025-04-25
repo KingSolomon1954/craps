@@ -21,7 +21,6 @@ class AppRecipe(ConanFile):
     def requirements(self):
         self.requires("cxxopts/3.2.0")
         self.requires("rang/3.2")
-        self.requires("stduuid/1.2.3")
         self.requires("doctest/[~2.4.11]")
         
     def build_requirements(self):

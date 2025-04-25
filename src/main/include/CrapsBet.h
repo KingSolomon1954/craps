@@ -11,6 +11,7 @@
 #include <string>
 #include <unordered_set>
 #include "gen/ReturnCode.h"
+#include "gen/Uuid.h"
 #include "Globals.h"
 #include "EnumBetName.h"
 #include "OddsTables.h"
@@ -28,7 +29,7 @@ class CrapsBet
 public:
     /// @name Lifecycle
     /// @{
-    CrapsBet(const std::string& playerId, BetName name,
+    CrapsBet(const Gen::Uuid& playerId, BetName name,
              Money contractAmount, unsigned pivot = 0);
     /// @}
 
@@ -43,7 +44,7 @@ public:
         Money lose = 0;
         Money returnToPlayer = 0;
         Money commission = 0;
-        std::string playerId;
+        Gen::Uuid playerId;
 
         bool operator==(const DecisionRecord& other) const
         {
@@ -70,7 +71,7 @@ public:
 
     /// @name Observers
     /// @{
-    const std::string& playerId() const;
+    const Gen::Uuid& playerId() const;
     unsigned betId() const;
     BetName betName() const;
     unsigned pivot() const;
@@ -144,7 +145,7 @@ private:
                          const OddsTables::OddsEntry table[]) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
 
-    std::string playerId_;
+    Gen::Uuid playerId_;
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;
     unsigned pivot_ = 0;

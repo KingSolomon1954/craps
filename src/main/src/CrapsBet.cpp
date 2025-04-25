@@ -71,7 +71,7 @@ CrapsTable, allowing the application better freedom of design.
     made a PassLine bet after point was established.
 */
 CrapsBet::CrapsBet(
-    const std::string& playerId,
+    const Gen::Uuid& playerId,
     BetName name,
     Money contractAmount,
     unsigned pivot)
@@ -1062,7 +1062,7 @@ Returns the playerId.
 @return
     The playerId
 */
-const std::string&
+const Gen::Uuid&
 CrapsBet::playerId() const
 {
     return playerId_;

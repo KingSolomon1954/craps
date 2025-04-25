@@ -39,7 +39,7 @@ enum class BetName
 namespace EnumBetName
 {
     BetName     fromString(const std::string& s);
-    BetName     fromUnsigned(unsigned v)                noexcept;
+    BetName     fromUnsigned(size_t v)                  noexcept;
     std::string toString(BetName b)                     noexcept;
     bool        isConvertibleFrom(const std::string& s) noexcept;
     std::string listAsString();

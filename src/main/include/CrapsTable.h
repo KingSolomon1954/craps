@@ -6,9 +6,15 @@
 
 #pragma once
 
+#include <list>
+#include <array>
+#include "gen/ErrorPass.h"
+#include "gen/ReturnCode.h"
+#include "gen/Uuid.h"
 #include "Globals.h"
 #include "CrapsBet.h"
 #include "Dice.h"
+#include "Player.h"
 
 namespace App {
 
@@ -23,26 +29,54 @@ public:
 
     /// @name Modifiers
     /// @{
+    // void resetTable();
+    void addPlayer   (const Gen::Uuid& playerId);
+    void removePlayer(const Gen::Uuid& playerId);
+
+    Gen::ReturnCode addBet   (const CrapsBet& bet, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet(const CrapsBet& bet, Gen::ErrorPass& ep);
+    
 #if 0
 
-    class TableBet
-    {
-        CrapsPlayer* pPlayer;
-        CrapsBet* pBet;
-    };
+    BetManager      (Croupier)
+    PlayerManager
+    GameFlowManager (Stickman)
+    
+    // Bets on the table are kept in a fixed sized array of lists, where
+    // each array index equates to a bet type, and holds a list of bets
+    // of that type. This allows easier traversals later that mimic real
+    // life table actions where, for example, the house always first
+    // collects losing bets in a certain order followed by payouts of
+    // winning bets in a certain order.
+    using BetPtr = std::shared_ptr<CrapsBet>;
+    using BetList = std::list<BetPtr>;
+    using BetTable = std::array<BetList>, static_cast<size_t>(BetName::Count);
+    
+    // Array of lists
+    // std::array<std::list<BetPtr>, static_cast<size_t>(BetName::Count)> tableBets_;
 
-    // Bets on the table are kept in a fixed sized array with each array
-    // index representing a list of bets of that type.  This allows
-    // easier traversals that mimic real life table actions where, for
-    // example, the house always collects losing bets in a certain order
-    // followed by payouts in a certain order.
-    std::unordered_map<BetName, std::list<shared_ptr<CrapsBet>>>
+    // Array of Betlists
+    // std::array<BetList>, static_cast<size_t>(BetName::Count)> tableBets_;
+
+    BetTable tableBets_;
+
+    
+    // Add a bet
+    BetPtr newBet = std::make_shared<CrapsBet>(...);
+    tableBets_[static_cast<size_t>(CrapsBetType::PassLine)].push_back(newBet);
+
+    // Iterate over all place bets
+    for (auto& bet : tableBets_[static_cast<size_t>(CrapsBetType::Place)])
+    {
+        bet->resolve();
+    }
+
     
     void addPlayer(const Player& player);
     void removePlayer(const std::string& playerName);
     void resetTable();
 
-    Gen::ReturnCode placeBet(const std::string& playerId, const CrapsBet& bet), Gen::ErrorPass& ep;
+    Gen::ReturnCode addBet(const std::string& playerId, const CrapsBet& bet), Gen::ErrorPass& ep;
     Gen::ReturnCode removeBet(const CrapsBet& bet, Gen::ErrorPass& ep);
     
     void startNewRound();         // Initiates come-out roll
@@ -73,6 +107,20 @@ public:
     
 private:
     Dice dice;
+    using BetPtr = std::shared_ptr<CrapsBet>;
+    using BetList = std::list<BetPtr>;
+    using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
+//  using BetTable = std::array<BetList, static_cast<size_t>(BetName::Count)>;
+
+    // Turn bet name enums into size_t to avoid casting each time.
+    // Used when directly indexing into tableBets_;
+    static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
+    
+    BetTable tableBets_;
+
+    static inline constexpr size_t MaxPlayers = 6;
+    using Players = std::array<Gen::Uuid, MaxPlayers>;
+    Players players_;
 };
 
 /*-----------------------------------------------------------*//**

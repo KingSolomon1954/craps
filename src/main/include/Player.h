@@ -7,8 +7,9 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include <memory>
+#include <vector>
+#include <gen/Uuid.h>
 
 namespace App {
 
@@ -17,16 +18,18 @@ class CrapsBet;  // fwd
 class Player
 {
 public:
-    Player(const std::string& uuid_,
-           const std::string& name_,
-           unsigned startingBalance = 1000);
+    Player(const std::string& name,
+           unsigned startingBalance);
+    Player(const Gen::Uuid&,
+           const std::string& name,
+           unsigned startingBalance);
     std::string serialize() const;
     static Player deserialize(const std::string& line);
 
 private:    
-    std::string uuid;
-    std::string name;
-    unsigned balance;
+    const Gen::Uuid uuid_;
+    const std::string name_;
+    unsigned balance_;
     std::vector<std::shared_ptr<class CrapsBet>> bets;
 };
 

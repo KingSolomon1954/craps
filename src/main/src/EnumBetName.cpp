@@ -141,66 +141,66 @@ EnumBetName::isConvertibleFrom(const std::string& s) noexcept
 
 /*-----------------------------------------------------------*//**
 
-Convert to enum from unsigned integer.
+Convert to enum from size_t/unsigned integer.
 
 @param[in] v
-    The enum as an unsigned integer.
+    Number to turn into an enum.
 
 @return
     Enum value. Returns Invalid for an unrecognized conversion.
 */
 BetName
-EnumBetName::fromUnsigned(unsigned v) noexcept
+EnumBetName::fromUnsigned(size_t v) noexcept
 {
-    if (v == static_cast<unsigned>(BetName::PassLine))
+    if (v == static_cast<size_t>(BetName::PassLine))
     {
         return BetName::PassLine;
     }
-    else if (v == static_cast<unsigned>(BetName::Come))
+    else if (v == static_cast<size_t>(BetName::Come))
     {
         return BetName::Come;
     }
-    else if (v == static_cast<unsigned>(BetName::DontPass))
+    else if (v == static_cast<size_t>(BetName::DontPass))
     {
         return BetName::DontPass;
     }
-    else if (v == static_cast<unsigned>(BetName::DontCome))
+    else if (v == static_cast<size_t>(BetName::DontCome))
     {
         return BetName::DontCome;
     }
-    else if (v == static_cast<unsigned>(BetName::Place))
+    else if (v == static_cast<size_t>(BetName::Place))
     {
         return BetName::Place;
     }
-    else if (v == static_cast<unsigned>(BetName::Lay))
+    else if (v == static_cast<size_t>(BetName::Lay))
     {
         return BetName::Lay;
     }
-    else if (v == static_cast<unsigned>(BetName::Buy))
+    else if (v == static_cast<size_t>(BetName::Buy))
     {
         return BetName::Buy;
     }
-    else if (v == static_cast<unsigned>(BetName::Hardway))
+    else if (v == static_cast<size_t>(BetName::Hardway))
     {
         return BetName::Hardway;
     }
-    else if (v == static_cast<unsigned>(BetName::Field))
+    else if (v == static_cast<size_t>(BetName::Field))
     {
         return BetName::Field;
     }
-    else if (v == static_cast<unsigned>(BetName::AnyCraps))
+    else if (v == static_cast<size_t>(BetName::AnyCraps))
     {
         return BetName::AnyCraps;
     }
-    else if (v == static_cast<unsigned>(BetName::AnySeven))
+    else if (v == static_cast<size_t>(BetName::AnySeven))
     {
         return BetName::AnySeven;
     }
-    else if (v == static_cast<unsigned>(BetName::CandE))
+    else if (v == static_cast<size_t>(BetName::CandE))
     {
         return BetName::CandE;
     }
-    else if (v == static_cast<unsigned>(BetName::Horn))
+    else if (v == static_cast<size_t>(BetName::Horn))
     {
         return BetName::Horn;
     }
