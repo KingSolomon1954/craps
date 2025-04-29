@@ -31,30 +31,29 @@ public:
     /// @name Modifiers
     /// @{
     // void resetTable();
-    void addPlayer   (const Gen::Uuid& playerId);
-    void removePlayer(const Gen::Uuid& playerId);
+    Gen::ReturnCode addPlayer   (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
+    Gen::ReturnCode removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep);
 
-    Gen::ReturnCode addBet   (std::shared_ptr<CrapsBet> bet, Gen::ErrorPass& ep);
+    Gen::ReturnCode addBet   (      std::shared_ptr<CrapsBet>  bet, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep);
     
     void resolveRoll();           // Resolves bets for current roll
+    /// @}
+
+    /// @name Observers
+    /// @{
+    std::vector<Gen::Uuid> getPlayerList() const;
+    
+    /// @}
     
 #if 0
     // Add a bet
     BetPtr newBet = std::make_shared<CrapsBet>(...);
-    tableBets_[static_cast<size_t>(CrapsBetType::PassLine)].push_back(newBet);
 
-    void addPlayer(const Player& player);
-    void removePlayer(const std::string& playerName);
     void resetTable();
-
-    Gen::ReturnCode addBet(const std::string& playerId, const CrapsBet& bet), Gen::ErrorPass& ep;
-    Gen::ReturnCode removeBet(const CrapsBet& bet, Gen::ErrorPass& ep);
     void rollDice();              // Rolls two dice
-    
     void startNewRound();         // Initiates come-out roll
     void advanceShooter();        // Move to next player/shooter
-
     bool isComeOutRoll() const;
     int  getPoint() const;        // Returns current point, or 0 if in come-out
     Dice getLastRoll() const;     // Get last dice roll
@@ -64,15 +63,18 @@ public:
 
 #endif
     
-    /// @}
-
-    /// @name Observers
-    /// @{
-    /// @}
-    
 private:
     Dice dice;
 
+    static inline constexpr size_t MaxPlayers = 6;
+    using PlayerList = std::list<Gen::Uuid>;
+    PlayerList players_;
+    Gen::ReturnCode removeUuid(const Gen::Uuid& id, Gen::ErrorPass& ep);
+    bool containsUuid(const Gen::Uuid& id) const;
+    Gen::ReturnCode updateUuid(const Gen::Uuid& oldId,
+                               const Gen::Uuid& newId,
+                               Gen::ErrorPass& ep);
+    
     // Bets on the table are kept in a fixed sized array of lists, where
     // each array index equates to a bet type, and holds a list of bets
     // of that type. This allows easier traversals later that mimic real
@@ -89,11 +91,7 @@ private:
     // Turn bet name enums into size_t to avoid casting each time.
     // Used when directly indexing into tableBets_;
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
-    
 
-    static inline constexpr size_t MaxPlayers = 6;
-    using Players = std::array<Gen::Uuid, MaxPlayers>;
-    Players players_;
 };
 
 /*-----------------------------------------------------------*//**

@@ -17,8 +17,9 @@ add_library(main STATIC
     src/Globals.cpp
     src/Player.cpp
     src/PlayerManager.cpp
-    src/PlayerIdGenerator.cpp
+    src/PlayerPicker.cpp
     src/Properties.cpp
+    src/TablePicker.cpp
 )
 
 target_include_directories(main

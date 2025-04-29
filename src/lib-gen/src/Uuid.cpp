@@ -24,7 +24,7 @@ Uses C++ random.
     A random UUID as a string.
 */
 Uuid
-generateUuid()
+Gen::generateUuid()
 {
     std::random_device rd;
     std::uniform_int_distribution<uint32_t> dist(0, 255);

@@ -1,22 +1,21 @@
 //----------------------------------------------------------------
 //
-// File: PlayerIdGenerator.h
+// File: TablePicker.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
-#include <string>
-
 namespace App {
 
-class PlayerIdGenerator
+class TablePicker
 {
 public:
-    static unsigned generatePlayerId();
+    TablePicker();
+   ~TablePicker();
 
 private:
-    static constexpr std::string idFile = "player_id.txt";
+
 };
 
 } // namespace App

@@ -25,9 +25,10 @@ public:
            const std::string& name,
            unsigned startingBalance);
     void processDecision(const CrapsBet::DecisionRecord& dr);
+    const Gen::Uuid& getUuid() const;
     std::string serialize() const;
     static Player deserialize(const std::string& line);
-
+    
 private:    
     const Gen::Uuid uuid_;
     const std::string name_;
@@ -38,10 +39,3 @@ private:
 } // namespace App
 
 //----------------------------------------------------------------
-
-#if 0
-
-std::string newPlayerId = Gen::generateUuid();
-Player p(newPlayerId, "Alice");
-
-#endif

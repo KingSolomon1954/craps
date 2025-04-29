@@ -38,21 +38,17 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     Gen::BuildInfo bld(App::CrapsGame::appNameScreen);
     CommandLine cmdline(argc, argv, bld);
     std::cout << bld.fullInfo() << std::endl;
-
+    
     // Init globals and manage their lifetime
     std::unique_ptr<PlayerManager> pPlayerMgr(initPlayerManager()); (void) pPlayerMgr;
     std::unique_ptr<CrapsTable> pTable(initCrapsTable()); (void) pTable;
-    
-#if 0    
-    ChannelDirection cd = ChannelDirection::Forward;
-    std::cout << "Channel direction: " << rang::fg::yellow
-              << cd << rang::fg::reset << std::endl;
 
-    std::string x("QuestionEverything");
-    std::string y = Gen::StringUtils::toLower(x);
-    Properties props;
-    (void)props;
-#endif    
+    Player alice("Alice", 1000u);
+    Player john("John", 1000u);
+
+    Gen::ErrorPass ep;
+    Gbl::pTable->addPlayer(alice.getUuid(), ep);
+    Gbl::pTable->addPlayer(john.getUuid(), ep);
 }
 
 //----------------------------------------------------------------

@@ -19,6 +19,7 @@ public:
 
     /// @name Modifiers
     /// @{
+
     /// @}
 
     /// @name Observers

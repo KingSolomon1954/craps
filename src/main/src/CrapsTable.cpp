@@ -21,6 +21,67 @@ CrapsTable::CrapsTable()
 {
     CrapsBet bet("Player1", BetName::PassLine, 100, 0);
     std::cout << bet << std::endl;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsTable::addPlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
+{
+    if (containsUuid(playerId)) return Gen::ReturnCode::Success;
+    if (players_.size() == MaxPlayers)
+    {
+        (void) ep;  // TODO fill out ep
+        return Gen::ReturnCode::Fail;
+    }
+    players_.push_back(playerId);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
+{
+    // TODO: Do something if player has working bets
+    return removeUuid(playerId, ep);
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsTable::addBet(std::shared_ptr<CrapsBet> bet, Gen::ErrorPass& ep)
+{
+    if (!containsUuid(bet->playerId()))
+    {
+        (void) ep;  // TODO fill out ep. Player has to join table
+        return Gen::ReturnCode::Fail;
+    }
+    // TODO: is bet allowed to be made on table
+    tableBets_[static_cast<size_t>(bet->betName())].push_back(std::move(bet));
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsTable::removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep)
+{
+    (void) ep;
+    // TODO not all bets can be removed.
+    tableBets_[static_cast<size_t>(bet->betName())].remove(bet);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::resolveRoll()
+{
+    // bm_.resolveBets(point, dice);
+    
+    CrapsBet bet("Player1", BetName::PassLine, 100, 0);
+    // Gbl::pPlayerMgr->processDecision(dr);
     unsigned point = 4;
     // dice.roll();
     Dice dice; dice.set(2,2);
@@ -75,52 +136,40 @@ CrapsTable::CrapsTable()
 
 //----------------------------------------------------------------
 
-void
-CrapsTable::addPlayer(const Gen::Uuid& playerId)
+bool
+CrapsTable::containsUuid(const Gen::Uuid& id) const
 {
-    (void) playerId;
-    // Player player& = PlayerManager::getPlayer(playerId);
-}
-
-//----------------------------------------------------------------
-
-void
-CrapsTable::removePlayer(const Gen::Uuid& playerId)
-{
-    (void) playerId;
+    return std::find(players_.begin(), players_.end(), id) != players_.end();
 }
 
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::addBet(std::shared_ptr<CrapsBet> bet, Gen::ErrorPass& ep)
+CrapsTable::removeUuid(const Gen::Uuid& id, Gen::ErrorPass& ep)
 {
-    (void) ep;
-    // TODO: is bet allowed to be made on table
-    tableBets_[static_cast<size_t>(bet->betName())].push_back(std::move(bet));
-    return Gen::ReturnCode::Success;
+    auto it = std::find(players_.begin(), players_.end(), id);
+    if (it != players_.end())
+    {
+        players_.erase(it);
+        return Gen::ReturnCode::Success;
+    }
+    (void) ep;  // TODO fill out ep
+    return Gen::ReturnCode::Fail;
 }
 
 //----------------------------------------------------------------
 
-Gen::ReturnCode
-CrapsTable::removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep)
+std::vector<Gen::Uuid>
+CrapsTable::getPlayerList() const
 {
-    (void) bet;
-    (void) ep;
+    std::vector<Gen::Uuid> v;
+    for (const auto& id : players_)
+    {
+        v.push_back(id);
+    }
+    return v;
+}
+
+//----------------------------------------------------------------
+
     
-    tableBets_[static_cast<size_t>(bet->betName())].remove(bet);
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-
-void
-CrapsTable::resolveRoll()
-{
-    // bm_.resolveBets(point, dice);
-    // Gbl::pPlayerMgr->processDecision(dr);
-}
-
-//----------------------------------------------------------------
-

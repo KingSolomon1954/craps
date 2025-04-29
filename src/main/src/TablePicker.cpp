@@ -1,21 +1,20 @@
 //----------------------------------------------------------------
 //
-// File: PlayerIdGenerator.cpp
+// File: TablePicker.cpp
 //
 //----------------------------------------------------------------
 
 #include <fstream>
-#include "PlayerIdGenerator.h"
+#include <string>
+#include "TablePicker.h"
 
 using namespace App;
 
-// constexpr std::string PlayerIdGenerator::idFile = "player_id.txt";
-
 //----------------------------------------------------------------
 
-unsigned
-PlayerIdGenerator::generatePlayerId()
+TablePicker::TablePicker()
 {
+    std::string idFile("someFile");
     std::ifstream inFile(idFile);
     int lastId = 0;
 
@@ -33,8 +32,6 @@ PlayerIdGenerator::generatePlayerId()
         outFile << newId;
         outFile.close();
     }
-
-    return newId;
 }
 
 //----------------------------------------------------------------

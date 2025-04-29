@@ -9,7 +9,7 @@
 
 namespace App {
 
-class CrapsTable;  // fwd
+class CrapsTable;     // fwd
 class PlayerManager;  // fwd
     
 class CrapsGame
