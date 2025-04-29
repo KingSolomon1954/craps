@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 #include <gen/Uuid.h>
+#include "CrapsBet.h"
 
 namespace App {
 
@@ -23,6 +24,7 @@ public:
     Player(const Gen::Uuid&,
            const std::string& name,
            unsigned startingBalance);
+    void processDecision(const CrapsBet::DecisionRecord& dr);
     std::string serialize() const;
     static Player deserialize(const std::string& line);
 

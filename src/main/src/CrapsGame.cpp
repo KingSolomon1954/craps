@@ -11,6 +11,7 @@
 #include "gen/StringUtils.h"
 #include "CommandLine.h"
 #include "CrapsTable.h"
+#include "PlayerManager.h"
 
 #if 0
 #include "codec/EnumChannelDirection.h"
@@ -38,8 +39,10 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     CommandLine cmdline(argc, argv, bld);
     std::cout << bld.fullInfo() << std::endl;
 
-    CrapsTable table;
-
+    // Init globals and manage their lifetime
+    std::unique_ptr<PlayerManager> pPlayerMgr(initPlayerManager()); (void) pPlayerMgr;
+    std::unique_ptr<CrapsTable> pTable(initCrapsTable()); (void) pTable;
+    
 #if 0    
     ChannelDirection cd = ChannelDirection::Forward;
     std::cout << "Channel direction: " << rang::fg::yellow
@@ -53,3 +56,24 @@ CrapsGame::CrapsGame(int argc, char* argv[])
 }
 
 //----------------------------------------------------------------
+
+PlayerManager*
+CrapsGame::initPlayerManager()
+{
+    auto p = new PlayerManager();
+    Gbl::pPlayerMgr = p;
+    return p;
+}
+
+//----------------------------------------------------------------
+
+CrapsTable*
+CrapsGame::initCrapsTable()
+{
+    auto t = new CrapsTable();
+    Gbl::pTable = t;
+    return t;
+}
+
+//----------------------------------------------------------------
+

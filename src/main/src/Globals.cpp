@@ -1,21 +1,17 @@
 //----------------------------------------------------------------
 //
-// File: PlayerManager.cpp
+// File: Globals.cpp
 //
 //----------------------------------------------------------------
 
+#include "Globals.h"
+#include "CrapsTable.h"
 #include "PlayerManager.h"
 
 using namespace App;
 
-/*-----------------------------------------------------------*//**
-
-Constructor
-
-*/
-PlayerManager::PlayerManager()
-{
-    // Empty.
-}
+CrapsTable* Gbl::pTable = NULL;
+PlayerManager* Gbl::pPlayerMgr = NULL;
 
 //----------------------------------------------------------------
+

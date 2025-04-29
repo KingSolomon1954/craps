@@ -465,3 +465,30 @@ Animation       Blender/Maya → FBX → Unreal Sequences
 UI              UMG (Unreal Motion Graphics)
 Audio           Unreal Sound Cues (dice rolls, chip sounds, dealer voice)
 VFX (Optional)  Niagara (for casino glow or excitement FX)
+
+
+
+CrapsTable.h
+    Controller
+        Dice
+        Point
+        Shooter
+        resolveBets
+    BetManager
+    Bank
+    Players
+    Rules
+        OddsTables.h
+        Min/Max bets
+        N x Odds
+    History
+    Statistics
+
+PlayerManager
+
+Player.h
+    Bank
+    History
+    Statistics
+
+CrapsBet.h

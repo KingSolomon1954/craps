@@ -65,6 +65,12 @@ CrapsTable::CrapsTable()
             b->setSkipOn();
         }
     }
+
+    // Process all Place bets
+    for (auto& b : tableBets_[PlaceBetIndex])
+    {
+        b->setSkipOn();
+    }
 }
 
 //----------------------------------------------------------------
@@ -76,6 +82,8 @@ CrapsTable::addPlayer(const Gen::Uuid& playerId)
     // Player player& = PlayerManager::getPlayer(playerId);
 }
 
+//----------------------------------------------------------------
+
 void
 CrapsTable::removePlayer(const Gen::Uuid& playerId)
 {
@@ -83,3 +91,36 @@ CrapsTable::removePlayer(const Gen::Uuid& playerId)
 }
 
 //----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsTable::addBet(std::shared_ptr<CrapsBet> bet, Gen::ErrorPass& ep)
+{
+    (void) ep;
+    // TODO: is bet allowed to be made on table
+    tableBets_[static_cast<size_t>(bet->betName())].push_back(std::move(bet));
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsTable::removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep)
+{
+    (void) bet;
+    (void) ep;
+    
+    tableBets_[static_cast<size_t>(bet->betName())].remove(bet);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::resolveRoll()
+{
+    // bm_.resolveBets(point, dice);
+    // Gbl::pPlayerMgr->processDecision(dr);
+}
+
+//----------------------------------------------------------------
+

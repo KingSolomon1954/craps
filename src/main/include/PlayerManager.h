@@ -1,24 +1,20 @@
 //----------------------------------------------------------------
 //
-// File: CrapsGame.h
+// File: PlayerManager.h
 //
 //----------------------------------------------------------------
 
 #pragma once
-#include <string>
 
 namespace App {
 
-class CrapsTable;  // fwd
-class PlayerManager;  // fwd
-    
-class CrapsGame
+class PlayerManager
 {
 public:
     /// @name Lifecycle
     /// @{
-    CrapsGame(int argc, char* argv[]);
-   ~CrapsGame() = default;
+    PlayerManager();
+   ~PlayerManager() = default;
     /// @}
 
     /// @name Modifiers
@@ -29,21 +25,18 @@ public:
     /// @{
     /// @}
 
-    static const std::string appNameScreen;
-    static const std::string appNameExec;
-
 private:
-    CrapsTable* initCrapsTable();
-    PlayerManager* initPlayerManager();
+    unsigned d1_ = 6; 
+    unsigned d2_ = 6; 
 };
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsGame
+@class PlayerManager
 
-@brief Craps Game Top Level class.
+@brief Managers players
 
-Craps Game.
+Manages players.
 
 */
 
