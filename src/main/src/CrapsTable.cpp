@@ -19,8 +19,8 @@ Constructor
 */
 CrapsTable::CrapsTable()
 {
-    CrapsBet bet("Player1", BetName::PassLine, 100, 0);
-    std::cout << bet << std::endl;
+//    CrapsBet bet("Player1", BetName::PassLine, 100, 0);
+//    std::cout << bet << std::endl;
 }
 
 //----------------------------------------------------------------
@@ -28,7 +28,12 @@ CrapsTable::CrapsTable()
 Gen::ReturnCode
 CrapsTable::addPlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 {
-    if (containsUuid(playerId)) return Gen::ReturnCode::Success;
+    if (containsUuid(playerId))
+    {
+        ep.diag = "Unable to add Player to table. "
+            "Player is already joined.";
+        return Gen::ReturnCode::Fail;
+    }
     if (players_.size() == MaxPlayers)
     {
         (void) ep;  // TODO fill out ep
@@ -44,7 +49,12 @@ Gen::ReturnCode
 CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 {
     // TODO: Do something if player has working bets
-    return removeUuid(playerId, ep);
+    if (removeUuid(playerId, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("Unable to remove player. ");
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
@@ -52,14 +62,44 @@ CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 Gen::ReturnCode
 CrapsTable::addBet(std::shared_ptr<CrapsBet> bet, Gen::ErrorPass& ep)
 {
-    if (!containsUuid(bet->playerId()))
+    if (!betAllowed(*bet, ep))
     {
-        (void) ep;  // TODO fill out ep. Player has to join table
+        ep.prepend("This bet is disallowed. ");
         return Gen::ReturnCode::Fail;
     }
-    // TODO: is bet allowed to be made on table
     tableBets_[static_cast<size_t>(bet->betName())].push_back(std::move(bet));
     return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsTable::betAllowed(const CrapsBet& bet, Gen::ErrorPass& ep) const
+{
+    if (!bettingOpen_)
+    {
+        ep.diag = "Betting is closed at the moment - dice roll is underway.";
+        return false;
+    }
+    if (!containsUuid(bet.playerId()))
+    {
+        ep.diag = "Player is not joined with this table.";
+        return false;
+    }
+    if (bet.betName() == BetName::Come || bet.betName() == BetName::DontCome)
+    {
+        if (point_ == 0)
+        {
+            ep.diag = "Betting Come or DontCome is not allowed during come out roll.";
+            return false;
+        }
+    }
+    if (bet.betName() == BetName::DontPass && point_ != 0)
+    {
+        ep.diag = "Betting DontPass is not allowed after a point is established.";
+        return false;
+    }
+    return true;
 }
 
 //----------------------------------------------------------------
@@ -75,8 +115,93 @@ CrapsTable::removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep)
 
 //----------------------------------------------------------------
 
+Gen::ReturnCode
+CrapsTable::addOdds(std::shared_ptr<CrapsBet> bet, Money oddsAmount, Gen::ErrorPass& ep)
+{
+    if (!bettingOpen_)
+    {
+        ep.diag = "Unable to add odds. Betting is closed at the moment.";
+        return Gen::ReturnCode::Fail;
+    }
+    if (!containsUuid(bet->playerId()))
+    {
+        ep.diag = "Unable to add odds. Player is not joined with this table.";
+        return Gen::ReturnCode::Fail;
+    }
+    if (!containsBet(bet))      //  Is this bet instance on the table?
+    {
+        ep.diag = "Unable to add odds. This bet instance is not on the table.";
+        return Gen::ReturnCode::Fail;
+    }
+    
+    return bet->setOddsAmount(oddsAmount, ep);
+}
+
+//----------------------------------------------------------------
+
 void
-CrapsTable::resolveRoll()
+CrapsTable::rollDice()
+{
+    bettingOpen_ = false; // No more bets
+    dice_.roll();
+    // announce outcome
+    // 7-out, point,
+    resolveBets();
+    advanceState();      // Update point, update shooter, update stats
+    bettingOpen_ = true; // Betting allowed
+}
+
+//----------------------------------------------------------------
+//
+// update point, update shooter, update stats
+//
+void
+CrapsTable::advanceState()
+{
+#if 0
+    if (point_ == 0)
+    {
+        if d = [ 4, 5, 6, 8 9 10 ]
+            point_ - d;
+            move puck
+    }
+    else
+    {
+        if d = 7
+        {
+            7-out
+            clear puck
+            advance shooter
+        }
+    }
+#endif    
+}
+
+
+//----------------------------------------------------------------
+
+bool
+CrapsTable::containsBet(const BetPtr bet) const
+{
+    // Process all bets
+    for (size_t i = 0; i < tableBets_.size(); ++i)
+    {
+        auto& bets = tableBets_[i];
+        auto it = std::find(bets.begin(), bets.end(), bet);
+        if (it != bets.end())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+//
+// Resolves bets for current roll
+//
+void
+CrapsTable::resolveBets()
 {
     // bm_.resolveBets(point, dice);
     
@@ -153,14 +278,31 @@ CrapsTable::removeUuid(const Gen::Uuid& id, Gen::ErrorPass& ep)
         players_.erase(it);
         return Gen::ReturnCode::Success;
     }
-    (void) ep;  // TODO fill out ep
+    ep.diag = "No player with UUID:\"" + id + "\".";
+    return Gen::ReturnCode::Fail;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsTable::updatePlayerId(const Gen::Uuid& oldId,
+                           const Gen::Uuid& newId,
+                           Gen::ErrorPass& ep)
+{
+    auto it = std::find(players_.begin(), players_.end(), oldId);
+    if (it != players_.end())
+    {
+        *it = newId;
+        return Gen::ReturnCode::Success;
+    }
+    (void) ep; // TODO: fill out ep
     return Gen::ReturnCode::Fail;
 }
 
 //----------------------------------------------------------------
 
 std::vector<Gen::Uuid>
-CrapsTable::getPlayerList() const
+CrapsTable::getPlayers() const
 {
     std::vector<Gen::Uuid> v;
     for (const auto& id : players_)
@@ -172,4 +314,52 @@ CrapsTable::getPlayerList() const
 
 //----------------------------------------------------------------
 
-    
+unsigned
+CrapsTable::getNumPlayers() const
+{
+    return players_.size();
+}
+
+//----------------------------------------------------------------
+
+// Returns current point, or 0 if in come-out
+
+unsigned
+CrapsTable::getPoint() const
+{
+    return point_;
+}
+
+//----------------------------------------------------------------
+
+Gen::Uuid
+CrapsTable::getIdShooter() const
+{
+    return shooterId_;
+}
+
+//----------------------------------------------------------------
+
+Dice
+CrapsTable::getLastRoll() const
+{
+    return dice_;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsTable::isComeOutRoll() const
+{
+    return point_ == 0;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsTable::isBettingOpen() const
+{
+    return bettingOpen_;
+}
+
+//----------------------------------------------------------------

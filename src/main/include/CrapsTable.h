@@ -33,39 +33,45 @@ public:
     // void resetTable();
     Gen::ReturnCode addPlayer   (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
     Gen::ReturnCode removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep);
+    Gen::ReturnCode updatePlayerId(const Gen::Uuid& oldId,
+                                   const Gen::Uuid& newId,
+                                   Gen::ErrorPass& ep);
 
     Gen::ReturnCode addBet   (      std::shared_ptr<CrapsBet>  bet, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep);
-    
-    void resolveRoll();           // Resolves bets for current roll
+    Gen::ReturnCode addOdds(std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
+    void rollDice();
     /// @}
 
     /// @name Observers
     /// @{
-    std::vector<Gen::Uuid> getPlayerList() const;
-    
+    unsigned getNumPlayers() const;
+    std::vector<Gen::Uuid> getPlayers() const;
+    unsigned getPoint() const;
+    Gen::Uuid getIdShooter() const;
+    Dice getLastRoll() const;
+    bool isComeOutRoll() const;
+    bool isBettingOpen() const;
     /// @}
     
 #if 0
-    // Add a bet
-    BetPtr newBet = std::make_shared<CrapsBet>(...);
-
     void resetTable();
-    void rollDice();              // Rolls two dice
     void startNewRound();         // Initiates come-out roll
     void advanceShooter();        // Move to next player/shooter
-    bool isComeOutRoll() const;
-    int  getPoint() const;        // Returns current point, or 0 if in come-out
-    Dice getLastRoll() const;     // Get last dice roll
-    const std::string& getCurrentShooter() const;
-    std::vector<std::string> getPlayerList() const;
     std::vector<CrapsBet> getBetsForPlayer(const std::string& playerName) const;
 
 #endif
     
 private:
-    Dice dice;
+    Dice dice_;
+    unsigned point_ = 0;
+    Gen::Uuid shooterId_;
+    bool bettingOpen_ = true;
 
+    // Players must join table in order to play.  We only hold the
+    // player's UUID here in a std::list container and rely on the
+    // PlayerManager to interface with players.
+    // 
     static inline constexpr size_t MaxPlayers = 6;
     using PlayerList = std::list<Gen::Uuid>;
     PlayerList players_;
@@ -81,17 +87,21 @@ private:
     // life table actions where, for example, the house always first
     // collects losing bets in a certain order followed by payouts of
     // winning bets in a certain order.
-    
+    //
     using BetPtr = std::shared_ptr<CrapsBet>;
     using BetList = std::list<BetPtr>;
     using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
 //  using BetTable = std::array<BetList, static_cast<size_t>(BetName::Count)>;
     BetTable tableBets_;
 
+    bool containsBet(const BetPtr bet) const;
     // Turn bet name enums into size_t to avoid casting each time.
     // Used when directly indexing into tableBets_;
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
 
+    bool betAllowed(const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    void resolveBets();
+    void advanceState();
 };
 
 /*-----------------------------------------------------------*//**
