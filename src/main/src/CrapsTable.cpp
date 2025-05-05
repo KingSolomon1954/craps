@@ -58,7 +58,10 @@ CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 }
 
 //----------------------------------------------------------------
-
+//
+// Adds the given bet to the table. It is an error if the bet already
+// exists on the table.
+//
 Gen::ReturnCode
 CrapsTable::addBet(std::shared_ptr<CrapsBet> bet, Gen::ErrorPass& ep)
 {
@@ -118,23 +121,29 @@ CrapsTable::removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep)
 Gen::ReturnCode
 CrapsTable::addOdds(std::shared_ptr<CrapsBet> bet, Money oddsAmount, Gen::ErrorPass& ep)
 {
+    std::string diag = "Unable to add odds. ";
     if (!bettingOpen_)
     {
-        ep.diag = "Unable to add odds. Betting is closed at the moment.";
+        ep.diag = diag +  "Betting is closed at the moment.";
         return Gen::ReturnCode::Fail;
     }
     if (!containsUuid(bet->playerId()))
     {
-        ep.diag = "Unable to add odds. Player is not joined with this table.";
+        ep.diag = diag + "Player is not joined with this table.";
         return Gen::ReturnCode::Fail;
     }
-    if (!containsBet(bet))      //  Is this bet instance on the table?
+    if (!containsBet(bet))
     {
-        ep.diag = "Unable to add odds. This bet instance is not on the table.";
+        ep.diag = diag + "This bet instance is not on the table.";
         return Gen::ReturnCode::Fail;
     }
-    
-    return bet->setOddsAmount(oddsAmount, ep);
+
+    if (bet->setOddsAmount(oddsAmount, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend(diag);
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

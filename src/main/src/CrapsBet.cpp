@@ -134,7 +134,7 @@ CrapsBet::validArgsCtor()
     }
     if (betName_ == BetName::Hardway)
     {
-        offComeOutRoll_ = false;  // default is hardways always working
+        offComeOutRoll_ = false;  // For hardways, default is  always working
         if (!hardwayNums_.contains(pivot_))
         {
             throw std::invalid_argument(

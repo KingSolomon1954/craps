@@ -37,9 +37,13 @@ public:
                                    const Gen::Uuid& newId,
                                    Gen::ErrorPass& ep);
 
-    Gen::ReturnCode addBet   (      std::shared_ptr<CrapsBet>  bet, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep);
-    Gen::ReturnCode addOdds(std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode addBet          (      std::shared_ptr<CrapsBet>  bet, Gen::ErrorPass& ep);
+    Gen::ReturnCode changeBetAmount (      std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet       (const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep);
+    
+    Gen::ReturnCode addOdds         (std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode changeOddsAmount(std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeOdds      (std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
     void rollDice();
     /// @}
 

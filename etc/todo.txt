@@ -491,4 +491,24 @@ Player.h
     History
     Statistics
 
-CrapsBet.h
+CrapsBet.h (interface)
+
+    void setOffComeOutRoll();
+    void setOnComeOutRoll();
+    void setHardwayOff();
+    void setHardwayOn();
+    void setSkipOn();
+    void setSkipOff();
+
+    const Gen::Uuid& playerId() const;
+    unsigned betId() const;
+    BetName betName() const;
+    unsigned pivot() const;
+    unsigned contractAmount() const;
+    unsigned oddsAmount() const;
+    bool offComeOutRoll() const;
+    bool hardwayWorking() const;
+    bool skipOn() const;
+    unsigned distance() const;
+    std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
+    std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
