@@ -9,6 +9,7 @@
 #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
 #include "CrapsBet.h"
+#include "DecisionRecord.h"
 
 using namespace App;
 
@@ -220,7 +221,7 @@ CrapsTable::resolveBets()
     // dice.roll();
     Dice dice; dice.set(2,2);
 
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
     Gen::ErrorPass ep;    
     if (bet.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success)
     {
@@ -237,7 +238,7 @@ CrapsTable::resolveBets()
         auto& bets = tableBets_[i];
         for (auto& b : bets)
         {
-            b->setSkipOn();
+            b->pivot();
         }
     }
 
@@ -247,7 +248,7 @@ CrapsTable::resolveBets()
         auto& bets = tableBets_[i];
         for (auto& b : bets)
         {
-            b->setSkipOn();
+            b->pivot();
         }
     }
     
@@ -257,14 +258,14 @@ CrapsTable::resolveBets()
         auto& bets = tableBets_[static_cast<size_t>(name)];
         for (auto& b : bets)
         {
-            b->setSkipOn();
+            b->pivot();
         }
     }
 
     // Process all Place bets
     for (auto& b : tableBets_[PlaceBetIndex])
     {
-        b->setSkipOn();
+        b->pivot();
     }
 }
 

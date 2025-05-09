@@ -10,6 +10,7 @@
 #include <iostream>
 #include "gen/ErrorPass.h"
 #include "gen/StringUtils.h"
+#include "DecisionRecord.h"
 #include "Dice.h"
 
 using namespace App;
@@ -82,7 +83,6 @@ CrapsBet::CrapsBet(
     , contractAmount_(contractAmount)
     , oddsAmount_(0)
     , offComeOutRoll_(true)
-    , skip_(false)
     , distance_(0)
     , whenCreated_(std::chrono::system_clock::now())
 {
@@ -256,9 +256,6 @@ Using the given point and the current dice roll, evaluate() determines
 whether this bet has won, lost or not yet reached a decision. The
 results of the evaluation are returned in a CrapsBet::DecisionRecord.
 
-If the skip flag (see setSkipOn()) is true, then this bet skips
-evaluation entriely and returns Success.
-
 @param [in] point
     supply 0 to indicate a come out roll, otherwise the current point
     which must be one of 4,5,6,8,9 or 10. If not then an error is
@@ -339,7 +336,6 @@ Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
                    DecisionRecord& dr, Gen::ErrorPass& ep)
 {
-    if (skip_) return Gen::ReturnCode::Success;
 //  diagEvalEntered(point, dice);  // TODO use debug conditional
     if (!validArgsEval(point, ep))
     {
@@ -1227,48 +1223,6 @@ CrapsBet::setHardwayOff()
 
 /*-----------------------------------------------------------*//**
 
-Skip this bet when evaluateBet() is called.
-
-When evaluateBet() is called, this bet will be skipped as if it doesn't
-exist. No stats will be incremented and no processing will occur.
-
-This supports different CrapsTable designs where in one case perhaps
-the table maintains single list of all bets which are later fed to
-evaluateBet(), even those bets that are not actually on the table.
-*/
-void
-CrapsBet::setSkipOn()
-{
-    skip_ = true;
-}
-
-/*-----------------------------------------------------------*//**
-
-Sets the skip flag to false.
-
-Reverses a previous setSkipOn().
-*/
-void
-CrapsBet::setSkipOff()
-{
-    skip_ = false;
-}
-
-/*-----------------------------------------------------------*//**
-
-Returns the state of the skip flag.
-
-@return
-    True if skip flag is on, otherwise false
-*/
-bool
-CrapsBet::skipOn() const
-{
-    return skip_;
-}
-
-/*-----------------------------------------------------------*//**
-
 Returns the number of dice rolls to reach a decision.
 
 If a decision is not yet reached it is the number of
@@ -1324,15 +1278,14 @@ operator<< (std::ostream& out, const CrapsBet& b)
     "offComeOutRoll: " << b.offComeOutRoll() << std::endl <<
     "      distance: " << b.distance()       << std::endl <<
     "   whenCreated: " << b.whenCreated()    << std::endl <<
-    "   whenDecided: " << b.whenDecided()    << std::endl <<
-    "          skip: " << b.skipOn()         << std::endl;
+    "   whenDecided: " << b.whenDecided()    << std::endl;
     return out;
 }
 
 //----------------------------------------------------------------
 
 std::ostream&
-operator<< (std::ostream& out, const CrapsBet::DecisionRecord& dr)
+operator<< (std::ostream& out, const DecisionRecord& dr)
 {
     out <<
     "      playerId: " << dr.playerId       << std::endl <<

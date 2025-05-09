@@ -15,6 +15,7 @@
 namespace App {
 
 class CrapsBet;  // fwd
+class DecisionRecort;  // fwd
 
 class Player
 {
@@ -24,7 +25,7 @@ public:
     Player(const Gen::Uuid&,
            const std::string& name,
            unsigned startingBalance);
-    void processDecision(const CrapsBet::DecisionRecord& dr);
+    void processDecision(const DecisionRecord& dr);
     const Gen::Uuid& getUuid() const;
     std::string serialize() const;
     static Player deserialize(const std::string& line);

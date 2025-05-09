@@ -491,14 +491,24 @@ Player.h
     History
     Statistics
 
-CrapsBet.h (interface)
 
+CrapsTable
+{
+    BetPtr = addBet(Uuid, BetName, contractAmount, pivot, Gen::ErrorPass& ep);
+    Gen::ReturnCode setBet(BetPtr bet, newContractAmount, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet(BetPtr bet, Gen::ErrorPass& ep);
+    
+    Gen::ReturnCode addOdds(BetPtr bet, Money oddsAmount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOdds(BetPtr bet, Money oddsAmount, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeOdds(BetPtr bet, Gen::ErrorPass& ep);
+};
+
+CrapsBet.h (interface)
+{
     void setOffComeOutRoll();
     void setOnComeOutRoll();
     void setHardwayOff();
     void setHardwayOn();
-    void setSkipOn();
-    void setSkipOff();
 
     const Gen::Uuid& playerId() const;
     unsigned betId() const;
@@ -508,7 +518,7 @@ CrapsBet.h (interface)
     unsigned oddsAmount() const;
     bool offComeOutRoll() const;
     bool hardwayWorking() const;
-    bool skipOn() const;
     unsigned distance() const;
     std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
     std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
+}

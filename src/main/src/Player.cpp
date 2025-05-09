@@ -105,7 +105,7 @@ Player - place bet on table
         for (dr in lose list)
             pm.processDecision(id, dr);
             lookup player by ID
-            player.processDecision(const CrapsBet::DecisionRecord& dr)
+            player.processDecision(const DecisionRecord& dr)
         endfor                                
 
 #endif
@@ -113,7 +113,7 @@ Player - place bet on table
 //----------------------------------------------------------------
 
 void
-Player::processDecision(const CrapsBet::DecisionRecord& dr)
+Player::processDecision(const DecisionRecord& dr)
 {
     (void) dr;
 }

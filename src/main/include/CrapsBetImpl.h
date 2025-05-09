@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: CrapsBet.h
+// File: CrapsBetImpl.h
 //
 //----------------------------------------------------------------
 
@@ -10,8 +10,10 @@
 #include <ostream>
 #include <string>
 #include <unordered_set>
-#include "CrapsBetIntfc.h"
 #include "gen/ReturnCode.h"
+#include "gen/Uuid.h"
+#include "DecisionRecord.h"
+#include "EnumBetName.h"
 #include "Globals.h"
 #include "OddsTables.h"
 
@@ -22,9 +24,8 @@ namespace Gen {
 namespace App {
 
 class Dice;  // fwd
-class DecisionRecord;  // fwd
     
-class CrapsBet : public CrapsBetIntfc
+class CrapsBetImpl : public CrapsBet
 {
 public:
     /// @name Lifecycle
@@ -35,6 +36,8 @@ public:
 
     /// @name Modifiers
     /// @{
+    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
+                             DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode setOddsAmount(Money amount, Gen::ErrorPass& ep);
 
     
@@ -72,8 +75,6 @@ private:
     static unsigned idCounter_;
     void validArgsCtor();
     bool validArgsEval(unsigned point, Gen::ErrorPass& ep) const;
-    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
-                             DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalPassLine(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
@@ -128,6 +129,7 @@ private:
     Money contractAmount_ = 0;
     Money oddsAmount_ = 0;
     bool offComeOutRoll_ = true;
+    bool skip_ = false;
     unsigned distance_ = 0;  // num rolls until decision
     std::chrono::time_point<std::chrono::system_clock> whenCreated_;
     std::chrono::time_point<std::chrono::system_clock> whenDecided_;
@@ -137,22 +139,20 @@ private:
     std::unordered_set<unsigned> crapsNums_   = {2, 3, 12};
     std::unordered_set<unsigned> bookEnds_    = {2, 3, 11, 12};
     std::unordered_set<unsigned> hardwayNums_ = {4, 6, 8, 10};
-
-    friend class CrapsTable;
 };
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsBet Implementation
+@class CrapsBet
 
 @brief A bet on the craps table.
 
-Manage a craps bet on the table.
+Store info that represents a craps bet.
 
 */
 
 } // namespace App
 
-std::ostream& operator<< (std::ostream& out, const App::CrapsBet& b);
+friend std::ostream& operator<< (std::ostream& out, const App::CrapsBet& b);
     
 //----------------------------------------------------------------
