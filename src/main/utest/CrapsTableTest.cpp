@@ -130,58 +130,98 @@ TEST_CASE("CrapsTable:placing bets")
         CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
         CHECK(t.getNumPlayers() == 1);
         CHECK(t.addBet(p1.getUuid(), BetName::Hardway, 10, 10, ep) != nullptr);
-        CHECK(t.getNumBets() == 1);
+        CHECK(t.getNumBetsOnTable() == 1);
         
         // Place a bet but wrong time for it
         CHECK(t.isComeOutRoll());
         CHECK(t.addBet(p1.getUuid(), BetName::Come, 10, 0, ep) == nullptr);
         CHECK(t.addBet(p1.getUuid(), BetName::DontCome, 10, 0, ep) == nullptr);
-        CHECK(t.getNumBets() == 1);
+        CHECK(t.getNumBetsOnTable() == 1);
 
         // Place same bet twice
         CHECK(t.addBet(p1.getUuid(), BetName::Hardway, 10, 8, ep) != nullptr);
-        CHECK(t.getNumBets() == 2);
+        CHECK(t.getNumBetsOnTable() == 2);
         CHECK(t.addBet(p1.getUuid(), BetName::Hardway, 10, 8, ep) == nullptr);
-        CHECK(t.getNumBets() == 2);
+        CHECK(t.getNumBetsOnTable() == 2);
 
         // Add a bet, remember it
         CrapsTable::BetIntfcPtr b1 = t.addBet(
             p1.getUuid(), BetName::Field, 10, 0, ep);
         // Ensure table finds it as a bet.
         CHECK(t.haveBet(b1));
-        CHECK(t.getNumBets() == 3);
+        CHECK(t.getNumBetsOnTable() == 3);
 
         // Create a bet outside of table, ensure table rejects it
         CrapsTable::BetIntfcPtr b2 = std::make_shared<CrapsBet>(
             p1.getUuid(), BetName::Hardway, 10, 8);
         CHECK(!t.haveBet(b2));
-        
+
+        // Can't bet zero amount
+        CHECK(t.addBet(p1.getUuid(), BetName::DontPass, 0, 0, ep) == nullptr);
 // std::cout << ep.diag << std::endl;
     }
 
-    SUBCASE("good bets")
+    SUBCASE("change bets")
     {
         CrapsTable t;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
-#if 0
-        // Create some bets to be used below
-        std::shared_ptr<CrapsBet> pass  = std::make_shared<CrapsBet>(p1.getUuid(), BetName::PassLine, 10);
-        std::shared_ptr<CrapsBet> place = std::make_shared<CrapsBet>(p1.getUuid(), BetName::Place, 6, 10);
-        std::shared_ptr<CrapsBet> field = std::make_shared<CrapsBet>(p1.getUuid(), BetName::Field, 10);
-        std::shared_ptr<CrapsBet> hard  = std::make_shared<CrapsBet>(p1.getUuid(), BetName::Hardway, 10, 10);
-
-        CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
-        CHECK(t.isComeOutRoll());
         
-        CHECK(t.addBet(pass, ep)  == Gen::ReturnCode::Success);
-        CHECK(t.addBet(place, ep) == Gen::ReturnCode::Success);
-        CHECK(t.addBet(field, ep) == Gen::ReturnCode::Success);
-        CHECK(t.addBet(hard, ep)  == Gen::ReturnCode::Success);
-#endif
-// std::cout << ep.diag << std::endl;
+        CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
+        CrapsTable::BetIntfcPtr b1 = t.addBet(
+            p1.getUuid(), BetName::Field, 10, 0, ep);
+        CHECK(t.changeBetAmount(b1, 10, ep) == Gen::ReturnCode::Success);
+        CHECK(b1->contractAmount() == 20);
+
+        CHECK(t.changeBetAmount(b1, -5, ep) == Gen::ReturnCode::Success);
+        CHECK(b1->contractAmount() == 15);
+
+        CHECK(t.changeBetAmount(b1, -20, ep) == Gen::ReturnCode::Fail);
+        CHECK(b1->contractAmount() == 15);
+        CHECK(t.changeBetAmount(b1, -15, ep) == Gen::ReturnCode::Fail);
+        CHECK(b1->contractAmount() == 15);
+
+        CrapsTable::BetIntfcPtr b2 = t.addBet(
+            p1.getUuid(), BetName::PassLine, 10, 0, ep);
+        CHECK(t.changeBetAmount(b2, 20, ep) == Gen::ReturnCode::Success);
+        CHECK(b2->contractAmount() == 30);
+        CHECK(t.changeBetAmount(b2, -10, ep) == Gen::ReturnCode::Success);
+        CHECK(b2->contractAmount() == 20);
+
+        CrapsTable::BetIntfcPtr b3 = t.addBet(
+            p1.getUuid(), BetName::DontPass, 10, 0, ep);
+        CHECK(t.changeBetAmount(b3, 20, ep) == Gen::ReturnCode::Success);
+        CHECK(b3->contractAmount() == 30);
+        CHECK(t.changeBetAmount(b3, -10, ep) == Gen::ReturnCode::Success);
+        CHECK(b3->contractAmount() == 20);
+
+        // TODO: add more Pass/Dont tests when table establishes a point.
+        // std::cout << ep.diag << std::endl;
     }
     
+    SUBCASE("amount on table")
+    {
+        CrapsTable t;
+        Gen::ErrorPass ep;
+        Player p1("p1", 1000);
+
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
+        
+        CrapsTable::BetIntfcPtr b1 = t.addBet(
+            p1.getUuid(), BetName::Field, 10, 0, ep);
+        CHECK(t.getAmountOnTable() == 10);
+        
+        CHECK(t.changeBetAmount(b1, 10, ep) == Gen::ReturnCode::Success);
+        CHECK(t.getAmountOnTable() == 20);
+
+        CrapsTable::BetIntfcPtr b2 = t.addBet(
+            p1.getUuid(), BetName::PassLine, 10, 0, ep);
+        CHECK(t.getAmountOnTable() == 30);
+        CHECK(t.changeBetAmount(b2, -5, ep) == Gen::ReturnCode::Success);
+        CHECK(t.getAmountOnTable() == 25);
+    }
+
 }
     
 //----------------------------------------------------------------

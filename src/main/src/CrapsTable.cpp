@@ -138,6 +138,26 @@ CrapsTable::betAllowed(const Gen::Uuid& playerId,
 }
 
 //----------------------------------------------------------------
+//
+// Change the contract amount of the bet by +/- delta.
+//
+Gen::ReturnCode
+CrapsTable::changeBetAmount(BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep)
+{
+    int newAmount = pBet->contractAmount() + delta;
+    newAmount = std::max(newAmount, 0);
+    // Downcast to concrete class.
+    std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
+    if (pConcrete->setContractAmount(newAmount, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("Unable to change contract bet amount. ");
+        return Gen::ReturnCode::Fail;
+    }
+// TODO adjust money on table
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
 
 Gen::ReturnCode
 CrapsTable::removeBet(BetIntfcPtr pBet, Gen::ErrorPass& ep)
@@ -271,11 +291,9 @@ CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
             betName == b->betName() &&
             pivot == b->pivot())
         {
-std::cout << "Howie 1 returning true pivot:" << pivot << std::endl;            
             return true;
         }
     }
-std::cout << "Howie 2 returning false pivot:" << pivot << std::endl;            
     return false;
 }
 
@@ -434,7 +452,7 @@ CrapsTable::getLastRoll() const
 // Returns number of bets currently on the table.
 //
 unsigned
-CrapsTable::getNumBets() const
+CrapsTable::getNumBetsOnTable() const
 {
     unsigned num = 0;
     // Vist each list of bets
@@ -444,6 +462,26 @@ CrapsTable::getNumBets() const
         num += bets.size();
     }
     return num;
+}
+
+//----------------------------------------------------------------
+//
+// Returns the amount of money currently bet on the table.
+//
+unsigned
+CrapsTable::getAmountOnTable() const
+{
+    unsigned amount = 0;
+    // Vist each list of bets
+    for (size_t i = 0; i < tableBets_.size(); ++i)
+    {
+        auto& bets = tableBets_[i];
+        for (auto& b : bets)
+        {
+            amount += b->contractAmount() + b->oddsAmount();
+        }
+    }
+    return amount;
 }
 
 //----------------------------------------------------------------

@@ -43,11 +43,11 @@ public:
                        Money contractAmount,
                        unsigned pivot,
                        Gen::ErrorPass& ep);
-    Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
     
     Gen::ReturnCode addOdds         (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode changeOddsAmount(BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode changeOddsAmount(BetIntfcPtr bet, int delta, Gen::ErrorPass& ep);
     Gen::ReturnCode removeOdds      (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
     void rollDice();
     /// @}
@@ -62,7 +62,8 @@ public:
     Dice getLastRoll()                         const;
     bool isComeOutRoll()                       const;
     bool isBettingOpen()                       const;
-    unsigned getNumBets()                      const;
+    Money getAmountOnTable()                   const; 
+    unsigned getNumBetsOnTable()               const;
     bool haveBet(const BetIntfcPtr bet)        const;
     bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
     /// @}

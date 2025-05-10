@@ -184,6 +184,45 @@ CrapsBet::operator==(const CrapsBet& other) const
 
 /*-----------------------------------------------------------*//**
 
+Sets the contract bet to the new amount.
+
+*/
+Gen::ReturnCode
+CrapsBet::setContractAmount(Money amount, Gen::ErrorPass& ep)
+{
+    if (amount == 0)
+    {
+        ep.diag = "New contract amount would be zero or less.";
+        return Gen::ReturnCode::Fail;
+    }
+    
+    if (betName_ == BetName::PassLine ||
+        betName_ == BetName::Come)
+    {
+        if (pivot_ != 0 && amount < contractAmount_)
+        {
+            ep.diag = "Cannot reduce contract amount for PassLine/Come "
+                      "bets after point is established.";
+            return Gen::ReturnCode::Fail;
+        }
+    }
+
+    if (betName_ == BetName::DontPass ||
+        betName_ == BetName::DontCome)
+    {
+        if (pivot_ != 0 && amount > contractAmount_)
+        {
+            ep.diag = "Cannot increase contract amount for DontPass/DontCome "
+                      "bets after point is established.";
+            return Gen::ReturnCode::Fail;
+        }
+    }
+    contractAmount_ = amount;
+    return Gen::ReturnCode::Success;
+}
+
+/*-----------------------------------------------------------*//**
+
 Set, change, or remove the amount for an odds bet.
 
 It is only permissable to set an odds amount if the following
