@@ -29,7 +29,7 @@ CrapsTable::CrapsTable()
 Gen::ReturnCode
 CrapsTable::addPlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 {
-    if (containsUuid(playerId))
+    if (havePlayer(playerId))
     {
         ep.diag = "Unable to add Player to table. "
             "Player is already joined.";
@@ -58,39 +58,65 @@ CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
     return Gen::ReturnCode::Success;
 }
 
-//----------------------------------------------------------------
-//
-// Adds the given bet to the table. It is an error if the bet already
-// exists on the table.
-//
-Gen::ReturnCode
-CrapsTable::addBet(std::shared_ptr<CrapsBet> bet, Gen::ErrorPass& ep)
+/*-----------------------------------------------------------*//**
+
+Creates a bet and adds it to the table.
+
+It is an error if the same bet name already exists for this plapyer.
+
+@param playerId
+@param betName
+@param contractAmount
+@param ep
+@return Interface pointer to the CrapsBet
+
+*/
+CrapsTable::BetIntfcPtr
+CrapsTable::addBet(
+    const Gen::Uuid& playerId,
+    BetName betName,
+    Money contractAmount,
+    unsigned pivot,
+    Gen::ErrorPass& ep)
 {
-    if (!betAllowed(*bet, ep))
+    std::string diag = "Unable to add bet. ";
+    if (!betAllowed(playerId, betName, pivot, ep))
     {
-        ep.prepend("This bet is disallowed. ");
-        return Gen::ReturnCode::Fail;
+        ep.prepend(diag);
+        return nullptr;
     }
-    tableBets_[static_cast<size_t>(bet->betName())].push_back(std::move(bet));
-    return Gen::ReturnCode::Success;
+    try
+    {
+        BetIntfcPtr b = std::make_shared<CrapsBet>(playerId, betName, contractAmount, pivot);
+        tableBets_[static_cast<size_t>(betName)].push_back(b);
+        return b;
+    }
+    catch (const std::invalid_argument& e)
+    {
+        ep.diag = diag + e.what();
+        return nullptr;
+    }
 }
 
 //----------------------------------------------------------------
 
 bool
-CrapsTable::betAllowed(const CrapsBet& bet, Gen::ErrorPass& ep) const
+CrapsTable::betAllowed(const Gen::Uuid& playerId,
+                       BetName betName,
+                       unsigned pivot,
+                       Gen::ErrorPass& ep) const
 {
     if (!bettingOpen_)
     {
         ep.diag = "Betting is closed at the moment - dice roll is underway.";
         return false;
     }
-    if (!containsUuid(bet.playerId()))
+    if (!havePlayer(playerId))
     {
         ep.diag = "Player is not joined with this table.";
         return false;
     }
-    if (bet.betName() == BetName::Come || bet.betName() == BetName::DontCome)
+    if (betName == BetName::Come || betName == BetName::DontCome)
     {
         if (point_ == 0)
         {
@@ -98,9 +124,14 @@ CrapsTable::betAllowed(const CrapsBet& bet, Gen::ErrorPass& ep) const
             return false;
         }
     }
-    if (bet.betName() == BetName::DontPass && point_ != 0)
+    if (betName == BetName::DontPass && point_ != 0)
     {
         ep.diag = "Betting DontPass is not allowed after a point is established.";
+        return false;
+    }
+    if (haveBet(playerId, betName, pivot))
+    {
+        ep.diag = "Player XXX has already made this bet.";
         return false;
     }
     return true;
@@ -109,18 +140,32 @@ CrapsTable::betAllowed(const CrapsBet& bet, Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::removeBet(const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep)
+CrapsTable::removeBet(BetIntfcPtr pBet, Gen::ErrorPass& ep)
 {
-    (void) ep;
-    // TODO not all bets can be removed.
-    tableBets_[static_cast<size_t>(bet->betName())].remove(bet);
+    std::string diag = "Unable to remove bet. ";
+    if (!haveBet(pBet))
+    {
+        ep.diag = diag + "This bet instance is not on the table.";
+        return Gen::ReturnCode::Fail;
+    }
+    if (pBet->betName() == BetName::PassLine ||
+        pBet->betName() == BetName::Come)
+    {
+        if (pBet->pivot() != 0)  // This bet has a point.
+        {
+            ep.diag = diag + "PassLine bets must remain on table "
+                             "until a decision.";
+            return Gen::ReturnCode::Fail;
+        }
+    }
+    tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
     return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::addOdds(std::shared_ptr<CrapsBet> bet, Money oddsAmount, Gen::ErrorPass& ep)
+CrapsTable::addOdds(BetIntfcPtr pBet, Money oddsAmount, Gen::ErrorPass& ep)
 {
     std::string diag = "Unable to add odds. ";
     if (!bettingOpen_)
@@ -128,18 +173,20 @@ CrapsTable::addOdds(std::shared_ptr<CrapsBet> bet, Money oddsAmount, Gen::ErrorP
         ep.diag = diag +  "Betting is closed at the moment.";
         return Gen::ReturnCode::Fail;
     }
-    if (!containsUuid(bet->playerId()))
+    if (!havePlayer(pBet->playerId()))
     {
         ep.diag = diag + "Player is not joined with this table.";
         return Gen::ReturnCode::Fail;
     }
-    if (!containsBet(bet))
+    if (!haveBet(pBet))
     {
         ep.diag = diag + "This bet instance is not on the table.";
         return Gen::ReturnCode::Fail;
     }
 
-    if (bet->setOddsAmount(oddsAmount, ep) == Gen::ReturnCode::Fail)
+    // Downcast to concrete class.
+    std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
+    if (pConcrete->setOddsAmount(oddsAmount, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend(diag);
         return Gen::ReturnCode::Fail;
@@ -189,9 +236,12 @@ CrapsTable::advanceState()
 
 
 //----------------------------------------------------------------
-
+//
+// Given a BetIntfcPtr, dDetermine if we already have the given
+// bet on the table.
+// 
 bool
-CrapsTable::containsBet(const BetPtr bet) const
+CrapsTable::haveBet(const BetIntfcPtr bet) const
 {
     // Process all bets
     for (size_t i = 0; i < tableBets_.size(); ++i)
@@ -203,6 +253,29 @@ CrapsTable::containsBet(const BetPtr bet) const
             return true;
         }
     }
+    return false;
+}
+
+//----------------------------------------------------------------
+//
+// Determine if we already have the given bet on the table.
+// 
+bool
+CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
+                    unsigned pivot) const
+{
+    auto& bets = tableBets_[static_cast<size_t>(betName)];
+    for (auto& b : bets)
+    {
+        if (playerId == b->playerId() &&
+            betName == b->betName() &&
+            pivot == b->pivot())
+        {
+std::cout << "Howie 1 returning true pivot:" << pivot << std::endl;            
+            return true;
+        }
+    }
+std::cout << "Howie 2 returning false pivot:" << pivot << std::endl;            
     return false;
 }
 
@@ -272,7 +345,7 @@ CrapsTable::resolveBets()
 //----------------------------------------------------------------
 
 bool
-CrapsTable::containsUuid(const Gen::Uuid& id) const
+CrapsTable::havePlayer(const Gen::Uuid& id) const
 {
     return std::find(players_.begin(), players_.end(), id) != players_.end();
 }
@@ -331,9 +404,9 @@ CrapsTable::getNumPlayers() const
 }
 
 //----------------------------------------------------------------
-
+//
 // Returns current point, or 0 if in come-out
-
+//
 unsigned
 CrapsTable::getPoint() const
 {
@@ -354,6 +427,23 @@ Dice
 CrapsTable::getLastRoll() const
 {
     return dice_;
+}
+
+//----------------------------------------------------------------
+//
+// Returns number of bets currently on the table.
+//
+unsigned
+CrapsTable::getNumBets() const
+{
+    unsigned num = 0;
+    // Vist each list of bets
+    for (size_t i = 0; i < tableBets_.size(); ++i)
+    {
+        auto& bets = tableBets_[i];
+        num += bets.size();
+    }
+    return num;
 }
 
 //----------------------------------------------------------------

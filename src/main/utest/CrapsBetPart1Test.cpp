@@ -18,6 +18,7 @@
 #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
 #include "CrapsBet.h"
+#include "DecisionRecord.h"
 #include "Dice.h"
 #include "EnumBetName.h"
 
@@ -195,7 +196,7 @@ TEST_CASE("CrapsBet:evaluate:args")
     {
         Gen::ErrorPass ep;
         Dice dice;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
 
         // bad point
         unsigned point = 7;
@@ -215,7 +216,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -372,7 +373,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
     SUBCASE("number hits before 7")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -554,7 +555,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
     SUBCASE("7 hits before number")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -640,7 +641,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
     SUBCASE("No decision")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -791,7 +792,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
     SUBCASE("Distance")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -839,7 +840,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
     SUBCASE("Minimum amount bets")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -896,7 +897,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1053,7 +1054,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
     SUBCASE("number hits before 7")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1187,7 +1188,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
     SUBCASE("7 hits before number")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1279,7 +1280,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
     SUBCASE("No decision")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1430,7 +1431,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
     SUBCASE("Distance")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
         
@@ -1478,7 +1479,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
     SUBCASE("Odds")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
 
         // Bad time for odds bet, no point established 
@@ -1495,7 +1496,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
     SUBCASE("Minimum amount bets")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1558,7 +1559,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1721,7 +1722,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
     SUBCASE("number hits before 7")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1819,7 +1820,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
     SUBCASE("7 hits before number")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1911,7 +1912,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
     SUBCASE("No decision")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -2062,7 +2063,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
     SUBCASE("Return to player")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -2130,7 +2131,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
     SUBCASE("Minimum amount bets")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -2187,7 +2188,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -2350,7 +2351,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
     SUBCASE("number hits before 7")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -2448,7 +2449,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
     SUBCASE("7 hits before number")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -2540,7 +2541,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
     SUBCASE("No decision")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -2691,7 +2692,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
     SUBCASE("Return to player")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -2759,7 +2760,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
     SUBCASE("Minimum amount bets")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 

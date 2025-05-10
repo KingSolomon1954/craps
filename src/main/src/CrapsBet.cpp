@@ -166,6 +166,22 @@ CrapsBet::validArgsCtor()
     }
 }
 
+//----------------------------------------------------------------
+
+bool
+CrapsBet::operator==(const CrapsBet& other) const
+{
+    return playerId_       == other.playerId_       &&
+           betId_          == other.betId_          &&
+           pivot_          == other.pivot_          &&
+           contractAmount_ == other.contractAmount_ &&
+           oddsAmount_     == other.oddsAmount_     &&
+           offComeOutRoll_ == other.offComeOutRoll_ &&
+           distance_       == other.distance_       &&
+           whenCreated_    == other.whenCreated_    &&
+           whenDecided_    == other.whenDecided_;    
+}
+
 /*-----------------------------------------------------------*//**
 
 Set, change, or remove the amount for an odds bet.

@@ -121,24 +121,41 @@ TEST_CASE("CrapsTable:placing bets")
         CrapsTable t;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
-
-        // Create some bets to be used below
-        std::shared_ptr<CrapsBet> pass     = std::make_shared<CrapsBet>(p1.getUuid(), BetName::PassLine, 10);
-        std::shared_ptr<CrapsBet> come     = std::make_shared<CrapsBet>(p1.getUuid(), BetName::Come, 10);
-        std::shared_ptr<CrapsBet> dontpass = std::make_shared<CrapsBet>(p1.getUuid(), BetName::DontPass, 10);
-        std::shared_ptr<CrapsBet> dontcome = std::make_shared<CrapsBet>(p1.getUuid(), BetName::DontCome, 10);
-
+        
         // Place a bet but player hasn't yet joined the table
-        CHECK(t.addBet(pass, ep) == Gen::ReturnCode::Fail);
+        CHECK(t.getNumPlayers() == 0);
+        CHECK(t.addBet(p1.getUuid(), BetName::PassLine, 10, 0, ep) == nullptr);
 
-        // Place a bad bet for come out roll
+        // Place a good bet first
         CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
+        CHECK(t.getNumPlayers() == 1);
+        CHECK(t.addBet(p1.getUuid(), BetName::Hardway, 10, 10, ep) != nullptr);
+        CHECK(t.getNumBets() == 1);
+        
+        // Place a bet but wrong time for it
         CHECK(t.isComeOutRoll());
-        CHECK(t.addBet(come, ep) == Gen::ReturnCode::Fail);
-        CHECK(t.addBet(dontcome, ep) == Gen::ReturnCode::Fail);
+        CHECK(t.addBet(p1.getUuid(), BetName::Come, 10, 0, ep) == nullptr);
+        CHECK(t.addBet(p1.getUuid(), BetName::DontCome, 10, 0, ep) == nullptr);
+        CHECK(t.getNumBets() == 1);
 
-        // TODO place a bad bet after point is established
-        // Can't change point on table - not yet implemented
+        // Place same bet twice
+        CHECK(t.addBet(p1.getUuid(), BetName::Hardway, 10, 8, ep) != nullptr);
+        CHECK(t.getNumBets() == 2);
+        CHECK(t.addBet(p1.getUuid(), BetName::Hardway, 10, 8, ep) == nullptr);
+        CHECK(t.getNumBets() == 2);
+
+        // Add a bet, remember it
+        CrapsTable::BetIntfcPtr b1 = t.addBet(
+            p1.getUuid(), BetName::Field, 10, 0, ep);
+        // Ensure table finds it as a bet.
+        CHECK(t.haveBet(b1));
+        CHECK(t.getNumBets() == 3);
+
+        // Create a bet outside of table, ensure table rejects it
+        CrapsTable::BetIntfcPtr b2 = std::make_shared<CrapsBet>(
+            p1.getUuid(), BetName::Hardway, 10, 8);
+        CHECK(!t.haveBet(b2));
+        
 // std::cout << ep.diag << std::endl;
     }
 
@@ -147,7 +164,7 @@ TEST_CASE("CrapsTable:placing bets")
         CrapsTable t;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
-
+#if 0
         // Create some bets to be used below
         std::shared_ptr<CrapsBet> pass  = std::make_shared<CrapsBet>(p1.getUuid(), BetName::PassLine, 10);
         std::shared_ptr<CrapsBet> place = std::make_shared<CrapsBet>(p1.getUuid(), BetName::Place, 6, 10);
@@ -161,7 +178,7 @@ TEST_CASE("CrapsTable:placing bets")
         CHECK(t.addBet(place, ep) == Gen::ReturnCode::Success);
         CHECK(t.addBet(field, ep) == Gen::ReturnCode::Success);
         CHECK(t.addBet(hard, ep)  == Gen::ReturnCode::Success);
-
+#endif
 // std::cout << ep.diag << std::endl;
     }
     

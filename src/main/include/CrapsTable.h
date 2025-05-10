@@ -37,25 +37,34 @@ public:
                                    const Gen::Uuid& newId,
                                    Gen::ErrorPass& ep);
 
-    Gen::ReturnCode addBet          (      std::shared_ptr<CrapsBet>  bet, Gen::ErrorPass& ep);
-    Gen::ReturnCode changeBetAmount (      std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet       (const std::shared_ptr<CrapsBet>& bet, Gen::ErrorPass& ep);
+    using BetIntfcPtr = std::shared_ptr<CrapsBetIntfc>;
+    BetIntfcPtr addBet(const Gen::Uuid& playerId,
+                       BetName betName,
+                       Money contractAmount,
+                       unsigned pivot,
+                       Gen::ErrorPass& ep);
+    Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
     
-    Gen::ReturnCode addOdds         (std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode changeOddsAmount(std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeOdds      (std::shared_ptr<CrapsBet>  bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode addOdds         (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode changeOddsAmount(BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeOdds      (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
     void rollDice();
     /// @}
 
     /// @name Observers
     /// @{
-    unsigned getNumPlayers() const;
-    std::vector<Gen::Uuid> getPlayers() const;
-    unsigned getPoint() const;
-    Gen::Uuid getIdShooter() const;
-    Dice getLastRoll() const;
-    bool isComeOutRoll() const;
-    bool isBettingOpen() const;
+    bool havePlayer(const Gen::Uuid& playerId) const;
+    unsigned getNumPlayers()                   const;
+    std::vector<Gen::Uuid> getPlayers()        const;
+    unsigned getPoint()                        const;
+    Gen::Uuid getIdShooter()                   const;
+    Dice getLastRoll()                         const;
+    bool isComeOutRoll()                       const;
+    bool isBettingOpen()                       const;
+    unsigned getNumBets()                      const;
+    bool haveBet(const BetIntfcPtr bet)        const;
+    bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
     /// @}
     
 #if 0
@@ -80,7 +89,6 @@ private:
     using PlayerList = std::list<Gen::Uuid>;
     PlayerList players_;
     Gen::ReturnCode removeUuid(const Gen::Uuid& id, Gen::ErrorPass& ep);
-    bool containsUuid(const Gen::Uuid& id) const;
     Gen::ReturnCode updateUuid(const Gen::Uuid& oldId,
                                const Gen::Uuid& newId,
                                Gen::ErrorPass& ep);
@@ -92,18 +100,16 @@ private:
     // collects losing bets in a certain order followed by payouts of
     // winning bets in a certain order.
     //
-    using BetPtr = std::shared_ptr<CrapsBet>;
-    using BetList = std::list<BetPtr>;
+    using BetList = std::list<BetIntfcPtr>;
     using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
-//  using BetTable = std::array<BetList, static_cast<size_t>(BetName::Count)>;
     BetTable tableBets_;
 
-    bool containsBet(const BetPtr bet) const;
     // Turn bet name enums into size_t to avoid casting each time.
     // Used when directly indexing into tableBets_;
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
 
-    bool betAllowed(const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool betAllowed(const Gen::Uuid& playerId, BetName betName,
+                    unsigned pivot, Gen::ErrorPass& ep) const;
     void resolveBets();
     void advanceState();
 };

@@ -21,7 +21,7 @@ namespace Gen {
 
 namespace App {
 
-class Dice;  // fwd
+class Dice;            // fwd
 class DecisionRecord;  // fwd
     
 class CrapsBet : public CrapsBetIntfc
@@ -35,30 +35,33 @@ public:
 
     /// @name Modifiers
     /// @{
-    Gen::ReturnCode setOddsAmount(Money amount, Gen::ErrorPass& ep);
-
+    void setOffComeOutRoll() override;  // intfc
+    void setOnComeOutRoll()  override;  // intfc
+    void setHardwayOff()     override;  // intfc
+    void setHardwayOn()      override;  // intfc
     
-    void setOffComeOutRoll() override;
-    void setOnComeOutRoll() override;
-    void setHardwayOff() override;
-    void setHardwayOn() override;
+    Gen::ReturnCode setContractAmount(Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount    (Money amount, Gen::ErrorPass& ep);
+    
+    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
+                             DecisionRecord& dr, Gen::ErrorPass& ep);
     /// @}
 
     /// @name Observers
     /// @{
-    const Gen::Uuid& playerId() const override;
-    unsigned betId() const override;
-    BetName betName() const override;
-    unsigned pivot() const override;
-    unsigned contractAmount() const override;
-    unsigned oddsAmount() const override;
-    bool offComeOutRoll() const override;
-    bool hardwayWorking() const override;
-    unsigned distance() const override;
-    std::chrono::time_point<std::chrono::system_clock> whenCreated() const override;
-    std::chrono::time_point<std::chrono::system_clock> whenDecided() const override;
+    const Gen::Uuid& playerId() const override;  // intfc
+    unsigned betId()            const override;  // intfc
+    BetName betName()           const override;  // intfc
+    unsigned pivot()            const override;  // intfc
+    unsigned contractAmount()   const override;  // intfc
+    unsigned oddsAmount()       const override;  // intfc
+    bool offComeOutRoll()       const override;  // intfc
+    bool hardwayWorking()       const override;  // intfc
+    unsigned distance()         const override;  // intfc
+    std::chrono::time_point<std::chrono::system_clock> whenCreated() const override;  // intfc
+    std::chrono::time_point<std::chrono::system_clock> whenDecided() const override;  // intfc
     
-    bool operator==(const CrapsBet&) const = default;
+    bool operator==(const CrapsBet&) const;
     /// @}
 
 private:
@@ -72,8 +75,6 @@ private:
     static unsigned idCounter_;
     void validArgsCtor();
     bool validArgsEval(unsigned point, Gen::ErrorPass& ep) const;
-    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
-                             DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalPassLine(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
