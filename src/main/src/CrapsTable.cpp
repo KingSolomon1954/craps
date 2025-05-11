@@ -159,7 +159,6 @@ CrapsTable::changeBetAmount(BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep)
         ep.prepend("Unable to change contract bet amount. ");
         return Gen::ReturnCode::Fail;
     }
-// TODO adjust money on table
     return Gen::ReturnCode::Success;
 }
 
@@ -191,9 +190,9 @@ CrapsTable::removeBet(BetIntfcPtr pBet, Gen::ErrorPass& ep)
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::addOdds(BetIntfcPtr pBet, Money oddsAmount, Gen::ErrorPass& ep)
+CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
 {
-    std::string diag = "Unable to add odds. ";
+    std::string diag = "Unable to make odds bet. ";
     if (!bettingOpen_)
     {
         ep.diag = diag +  "Betting is closed at the moment.";
@@ -212,7 +211,7 @@ CrapsTable::addOdds(BetIntfcPtr pBet, Money oddsAmount, Gen::ErrorPass& ep)
 
     // Downcast to concrete class.
     std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
-    if (pConcrete->setOddsAmount(oddsAmount, ep) == Gen::ReturnCode::Fail)
+    if (pConcrete->setOddsAmount(newAmount, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend(diag);
         return Gen::ReturnCode::Fail;

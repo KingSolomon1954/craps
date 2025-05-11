@@ -278,17 +278,66 @@ TEST_CASE("CrapsTable:placing bets")
 
         CHECK(t.getAmountOnTable() == 0);
         CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
-        
+
+        // Add odds bet, during come out roll - fail
+        CHECK(t.isComeOutRoll());
         CrapsTable::BetIntfcPtr b1 = t.addBet(
             p1.getUuid(), BetName::PassLine, 10, 0, ep);
         CHECK(t.getAmountOnTable() == 10);
         CHECK(t.getNumBetsOnTable() == 1);
-        CHECK(t.addOdds(b1, 10, ep) == Gen::ReturnCode::Fail);
+        CHECK(t.setOdds(b1, 10, ep) == Gen::ReturnCode::Fail);
         CHECK(t.getAmountOnTable() == 10);
         CHECK(t.getNumBetsOnTable() == 1);
-std::cout << ep.diag << std::endl;
+
+        // Reset to 0 bets
+        CHECK(t.removeBet(b1, ep) == Gen::ReturnCode::Success);
+        CHECK(t.getNumBetsOnTable() == 0);
+
+        // Establish a point
+        t.testSetState(4, 6, 6);
         
-        // TODO more tests when point is established
+        // Create a bet outside of table, table rejects odds bet
+        CrapsTable::BetIntfcPtr b2 = std::make_shared<CrapsBet>(
+            p1.getUuid(), BetName::PassLine, 10, 4);
+        CHECK(!t.haveBet(b2));
+        CHECK(t.setOdds(b2, 10, ep) == Gen::ReturnCode::Fail);
+
+        // Add a PassLine bet. pivot is focused on point 4.
+        CrapsTable::BetIntfcPtr b3 = t.addBet(
+            p1.getUuid(), BetName::PassLine, 10, 0, ep);
+        CHECK(b3 != nullptr);
+        
+        // Make an odds bet with zero amount, does nothing, but allowed
+        CHECK(t.setOdds(b3, 0, ep) == Gen::ReturnCode::Success);
+        
+// std::cout << ep.diag << std::endl;
+
+        // Make a valid odds bet 
+        CHECK(t.setOdds(b3, 10, ep) == Gen::ReturnCode::Success);
+        CHECK(t.getAmountOnTable() == 20);
+        
+        // Remove odds bet 
+        CHECK(t.setOdds(b3, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(t.getAmountOnTable() == 10);
+        
+        // Add odds back in again
+        CHECK(t.setOdds(b3, 10, ep) == Gen::ReturnCode::Success);
+        CHECK(t.getAmountOnTable() == 20);
+        
+        // Change odds bet 
+        unsigned newAmount = b3->oddsAmount() + 20;
+        CHECK(t.setOdds(b3, newAmount, ep) == Gen::ReturnCode::Success);
+        CHECK(t.getAmountOnTable() == 40);
+        
+        // Change odds bet to zero
+        CHECK(t.setOdds(b3, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(b3->oddsAmount() == 0);
+        CHECK(t.getAmountOnTable() == 10);
+        
+        // Change odds from zero to an amount
+        CHECK(t.setOdds(b3, 20, ep) == Gen::ReturnCode::Success);
+        CHECK(b3->oddsAmount() == 20);
+        CHECK(t.getAmountOnTable() == 30);
     }
 }
     

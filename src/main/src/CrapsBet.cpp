@@ -250,7 +250,7 @@ amount of the contract bet.
 */
 
 Gen::ReturnCode
-CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
+CrapsBet::setOddsAmount(Money newAmount, Gen::ErrorPass& ep)
 {
     if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
         betName_ != BetName::Come     && betName_ != BetName::DontCome)
@@ -262,6 +262,16 @@ CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
         ep.diag = s;
         return Gen::ReturnCode::Fail;
     }
+
+    // OK to remove odds bet anytime.
+//  if (amount == 0 && oddsAmount_ > 0)
+    if (newAmount == 0)
+    {
+        oddsAmount_ = 0;
+        return Gen::ReturnCode::Success;
+    }
+
+    // Otherwise, caller is adding or changing amount
 
     if (pivot_ == 0)
     {
@@ -276,29 +286,31 @@ CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
 
     if (betName_ == BetName::PassLine || betName_ == BetName::Come)
     {
-        if (amount < OddsTables::oddsPass[pivot_].denominator)
+        if (newAmount < OddsTables::oddsPass[pivot_].denominator)
         {
-            std::string s("Odds bet amount is too small. "
+            std::string s("Odds bet amount of ");
+            s += std::to_string(newAmount) + " is too small. "
                 "Minimum odds bet for a " + EnumBetName::toString(betName_) +
                 "(" + std::to_string(pivot_) + ") is " +
-                std::to_string(OddsTables::oddsPass[pivot_].denominator) + ".");
+                std::to_string(OddsTables::oddsPass[pivot_].denominator) + ".";
             ep.diag = s;
             return Gen::ReturnCode::Fail;
         }
     }
     if (betName_ == BetName::DontPass || betName_ == BetName::DontCome)
     {
-        if (amount < OddsTables::oddsDont[pivot_].denominator)
+        if (newAmount < OddsTables::oddsDont[pivot_].denominator)
         {
-            std::string s("Odds bet amount is too small. "
+            std::string s("Odds bet amount of ");
+            s += std::to_string(newAmount) + " is too small. "
                 "Minimum odds bet for a " + EnumBetName::toString(betName_) +
                 "(" + std::to_string(pivot_) + ") is " +
-                std::to_string(OddsTables::oddsDont[pivot_].denominator) + ".");
+                std::to_string(OddsTables::oddsDont[pivot_].denominator) + ".";
             ep.diag = s;
             return Gen::ReturnCode::Fail;
         }
     }
-    oddsAmount_ = amount;
+    oddsAmount_ = newAmount;
     return Gen::ReturnCode::Success;    
 }
 

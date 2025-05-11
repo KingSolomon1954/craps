@@ -45,10 +45,8 @@ public:
                        Gen::ErrorPass& ep);
     Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOdds         (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
     
-    Gen::ReturnCode addOdds         (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode changeOddsAmount(BetIntfcPtr bet, int delta, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeOdds      (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
     void rollDice();
     void testSetState(unsigned point, unsigned d1, unsigned d2);
     /// @}
