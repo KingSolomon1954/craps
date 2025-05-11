@@ -50,6 +50,7 @@ public:
     Gen::ReturnCode changeOddsAmount(BetIntfcPtr bet, int delta, Gen::ErrorPass& ep);
     Gen::ReturnCode removeOdds      (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
     void rollDice();
+    void testSetState(unsigned point, unsigned d1, unsigned d2);
     /// @}
 
     /// @name Observers
@@ -110,7 +111,7 @@ private:
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
 
     bool betAllowed(const Gen::Uuid& playerId, BetName betName,
-                    unsigned pivot, Gen::ErrorPass& ep) const;
+                    unsigned& pivot, Gen::ErrorPass& ep) const;
     void resolveBets();
     void advanceState();
 };

@@ -255,9 +255,8 @@ CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
     if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
         betName_ != BetName::Come     && betName_ != BetName::DontCome)
     {
-        std::string s("CrapsBet::setOddsAmount(): "
-            "an odds bet is only allowed for these bets: "
-            "PassLine|Come|DontPass|DontCome. Current bet is betId:");
+        std::string s("Odds bet is only available for "
+            "PassLine|Come|DontPass|DontCome bets. Current bet is betId:");
         s += std::to_string(betId_) + " betName:" +
             EnumBetName::toString(betName_) + ". ";
         ep.diag = s;
@@ -266,8 +265,8 @@ CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
 
     if (pivot_ == 0)
     {
-        std::string s("CrapsBet::setOddsAmount(): odds bet is not "
-            "allowed until after a point is established for this bet. ");
+        std::string s("Odds bet is not allowed. "
+            "Need a point to be established for this bet. ");
         s += "betId:" + std::to_string(betId_) + " betName:" +
             EnumBetName::toString(betName_) + " pivot:" +
             std::to_string(pivot_) + ".";
@@ -279,7 +278,7 @@ CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
     {
         if (amount < OddsTables::oddsPass[pivot_].denominator)
         {
-            std::string s("CrapsBet::setOddsAmount(): odds bet is too small. "
+            std::string s("Odds bet amount is too small. "
                 "Minimum odds bet for a " + EnumBetName::toString(betName_) +
                 "(" + std::to_string(pivot_) + ") is " +
                 std::to_string(OddsTables::oddsPass[pivot_].denominator) + ".");
@@ -291,7 +290,7 @@ CrapsBet::setOddsAmount(Money amount, Gen::ErrorPass& ep)
     {
         if (amount < OddsTables::oddsDont[pivot_].denominator)
         {
-            std::string s("CrapsBet::setOddsAmount(): odds bet is too small. "
+            std::string s("Odds bet amount is too small. "
                 "Minimum odds bet for a " + EnumBetName::toString(betName_) +
                 "(" + std::to_string(pivot_) + ") is " +
                 std::to_string(OddsTables::oddsDont[pivot_].denominator) + ".");

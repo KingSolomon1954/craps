@@ -121,6 +121,7 @@ TEST_CASE("CrapsTable:placing bets")
         CrapsTable t;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
+        Player p2("p2", 1000);
         
         // Place a bet but player hasn't yet joined the table
         CHECK(t.getNumPlayers() == 0);
@@ -128,7 +129,8 @@ TEST_CASE("CrapsTable:placing bets")
 
         // Place a good bet first
         CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
-        CHECK(t.getNumPlayers() == 1);
+        CHECK(t.addPlayer(p2.getUuid(), ep) == Gen::ReturnCode::Success);
+        CHECK(t.getNumPlayers() == 2);
         CHECK(t.addBet(p1.getUuid(), BetName::Hardway, 10, 10, ep) != nullptr);
         CHECK(t.getNumBetsOnTable() == 1);
         
@@ -158,7 +160,25 @@ TEST_CASE("CrapsTable:placing bets")
 
         // Can't bet zero amount
         CHECK(t.addBet(p1.getUuid(), BetName::DontPass, 0, 0, ep) == nullptr);
-// std::cout << ep.diag << std::endl;
+
+        // Can't bet DontPass if there's a point
+        t.testSetState(4,6,6);
+        CHECK(t.addBet(p1.getUuid(), BetName::DontPass, 10, 0, ep) == nullptr);
+
+        // OK to bet PassLine if there's a point, pivot will be coerced to point
+        CrapsTable::BetIntfcPtr b3 = t.addBet(
+            p1.getUuid(), BetName::PassLine, 10, 5, ep);
+        CHECK(b3 != nullptr);
+        CHECK(b3->pivot() == 4);
+        CHECK(t.getNumBetsOnTable() == 4);
+
+        // Again, this time with pivot = zero.
+        CrapsTable::BetIntfcPtr b4 = t.addBet(
+            p2.getUuid(), BetName::PassLine, 10, 0, ep);
+        CHECK(b4 != nullptr);
+        CHECK(b4->pivot() == 4);
+        CHECK(t.getNumBetsOnTable() == 5);
+        // std::cout << ep.diag << std::endl;
     }
 
     SUBCASE("change bets")
@@ -197,6 +217,7 @@ TEST_CASE("CrapsTable:placing bets")
 
         // TODO: add more Pass/Dont tests when table establishes a point.
         // std::cout << ep.diag << std::endl;
+        t.testSetState(4, 6, 6);
     }
     
     SUBCASE("amount on table")
@@ -222,6 +243,53 @@ TEST_CASE("CrapsTable:placing bets")
         CHECK(t.getAmountOnTable() == 25);
     }
 
+    SUBCASE("remove bet")
+    {
+        CrapsTable t;
+        Gen::ErrorPass ep;
+        Player p1("p1", 1000);
+
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
+        
+        CrapsTable::BetIntfcPtr b1 = t.addBet(
+            p1.getUuid(), BetName::Field, 10, 0, ep);
+        CHECK(t.getAmountOnTable() == 10);
+        CHECK(t.getNumBetsOnTable() == 1);
+        CHECK(t.removeBet(b1, ep) == Gen::ReturnCode::Success);
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.getNumBetsOnTable() == 0);
+
+        // Can't remove PassLine bet after point established
+        t.testSetState(4, 6, 6);
+        b1 = t.addBet(p1.getUuid(), BetName::PassLine, 10, 0, ep);
+        CHECK(b1 != nullptr);
+        CHECK(t.getAmountOnTable() == 10);
+        CHECK(t.getNumBetsOnTable() == 1);
+        CHECK(t.removeBet(b1, ep) == Gen::ReturnCode::Fail);
+        CHECK(t.getNumBetsOnTable() == 1);
+    }
+
+    SUBCASE("odds bet")
+    {
+        CrapsTable t;
+        Gen::ErrorPass ep;
+        Player p1("p1", 1000);
+
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
+        
+        CrapsTable::BetIntfcPtr b1 = t.addBet(
+            p1.getUuid(), BetName::PassLine, 10, 0, ep);
+        CHECK(t.getAmountOnTable() == 10);
+        CHECK(t.getNumBetsOnTable() == 1);
+        CHECK(t.addOdds(b1, 10, ep) == Gen::ReturnCode::Fail);
+        CHECK(t.getAmountOnTable() == 10);
+        CHECK(t.getNumBetsOnTable() == 1);
+std::cout << ep.diag << std::endl;
+        
+        // TODO more tests when point is established
+    }
 }
     
 //----------------------------------------------------------------

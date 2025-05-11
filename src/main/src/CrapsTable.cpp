@@ -103,7 +103,7 @@ CrapsTable::addBet(
 bool
 CrapsTable::betAllowed(const Gen::Uuid& playerId,
                        BetName betName,
-                       unsigned pivot,
+                       unsigned& pivot,
                        Gen::ErrorPass& ep) const
 {
     if (!bettingOpen_)
@@ -126,13 +126,19 @@ CrapsTable::betAllowed(const Gen::Uuid& playerId,
     }
     if (betName == BetName::DontPass && point_ != 0)
     {
-        ep.diag = "Betting DontPass is not allowed after a point is established.";
+        ep.diag = "DontPass is not allowed while there is already a point.";
         return false;
     }
     if (haveBet(playerId, betName, pivot))
     {
         ep.diag = "Player XXX has already made this bet.";
         return false;
+    }
+    if (betName == BetName::PassLine && point_ != 0)
+    {
+        // Player made PassLine bet after point already established.
+        // Silently coerce the pivot to agree with the point.
+        pivot = point_;
     }
     return true;
 }
@@ -173,7 +179,7 @@ CrapsTable::removeBet(BetIntfcPtr pBet, Gen::ErrorPass& ep)
     {
         if (pBet->pivot() != 0)  // This bet has a point.
         {
-            ep.diag = diag + "PassLine bets must remain on table "
+            ep.diag = diag + "PassLine|Come bets must remain on table "
                              "until a decision.";
             return Gen::ReturnCode::Fail;
         }
@@ -212,6 +218,15 @@ CrapsTable::addOdds(BetIntfcPtr pBet, Money oddsAmount, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
     return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::testSetState(unsigned point, unsigned d1, unsigned d2)
+{
+    point_ = point;
+    dice_.set(d1, d2);
 }
 
 //----------------------------------------------------------------
