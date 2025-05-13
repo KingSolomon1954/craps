@@ -220,56 +220,6 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
 }
 
 //----------------------------------------------------------------
-
-void
-CrapsTable::testSetState(unsigned point, unsigned d1, unsigned d2)
-{
-    point_ = point;
-    dice_.set(d1, d2);
-}
-
-//----------------------------------------------------------------
-
-void
-CrapsTable::rollDice()
-{
-    bettingOpen_ = false; // No more bets
-    dice_.roll();
-    // announce outcome
-    // 7-out, point,
-    resolveBets();
-    advanceState();      // Update point, update shooter, update stats
-    bettingOpen_ = true; // Betting allowed
-}
-
-//----------------------------------------------------------------
-//
-// update point, update shooter, update stats
-//
-void
-CrapsTable::advanceState()
-{
-#if 0
-    if (point_ == 0)
-    {
-        if d = [ 4, 5, 6, 8 9 10 ]
-            point_ - d;
-            move puck
-    }
-    else
-    {
-        if d = 7
-        {
-            7-out
-            clear puck
-            advance shooter
-        }
-    }
-#endif    
-}
-
-
-//----------------------------------------------------------------
 //
 // Given a BetIntfcPtr, dDetermine if we already have the given
 // bet on the table.
@@ -313,12 +263,194 @@ CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
 
 //----------------------------------------------------------------
 //
-// Resolves bets for current roll
+// Suppports unit testing. Not meant for callers.
 //
+void
+CrapsTable::testSetState(unsigned point, unsigned d1, unsigned d2)
+{
+    point_ = point;
+    dice_.set(d1, d2);
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::rollDice()
+{
+    declareBettingClosed();
+    throwDice();
+    resolveBets();
+    advanceState();      // Update point, update shooter, update stats
+    declareBettingOpen();
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::declareBettingClosed()
+{
+    bettingOpen_ = false; // No more bets
+    // TODO announce betting closed
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::declareBettingOpen()
+{
+    bettingOpen_ = true;
+    // TODO announce betting open
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::throwDice()
+{
+    // TODO announce throw start
+    dice_.roll();
+    // TODO announce throw end
+    //     dice = <value>
+    //     d1 =  <num>    
+    //     d2 =  <num>
+}
+
+//----------------------------------------------------------------
+//
+// update point, update shooter, update stats
+//
+void
+CrapsTable::advanceState()
+{
+    if (point_ == 0) // come out roll
+    {
+        if (CrapsBet::pointNums_.contains(dice_.value()))
+        {
+            point_ = dice_.value();
+            // TODO announce new point
+            // move puck
+        }
+    }
+    else
+    {
+        if (dice_.value() == 7)
+        {
+            point_ = 0;
+            // TODO announce 7-out
+            // clear puck
+            advanceShooter();
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::advanceShooter()
+{
+    // TODO next shooter
+    // TODO announce new shooter
+}
+
+//----------------------------------------------------------------
+
 void
 CrapsTable::resolveBets()
 {
-    // bm_.resolveBets(point, dice);
+    // TODO: announce resolve bets START
+    evaluateBets();
+    dispenseResults();
+    trimTableBets();
+    // TODO: announce resolve bets END
+}
+    
+//----------------------------------------------------------------
+//
+// Visit each bet on the table
+//
+void
+CrapsTable::evaluateBets()
+{
+    // Process all bets
+    for (size_t i = 0; i < tableBets_.size(); ++i)
+    {
+        auto& bets = tableBets_[i];
+        for (auto& b : bets)
+        {
+            evalOneBet(b);
+        }
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Creates a decision record for the given bet and adds
+// it to the list.
+//
+void
+CrapsTable::evalOneBet(const BetIntfcPtr pBet)
+{    
+    DecisionRecord dr;
+    Gen::ErrorPass ep;
+    
+    // Downcast to concrete class.
+    std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
+    if (pConcrete->evaluate(point_, dice_, dr, ep) == Gen::ReturnCode::Success)
+    {
+        std::cout << dr << std::endl;
+    }
+    else
+    {
+        std::cout << ep.diag << std::endl;
+    }
+    // TODO add record to drl
+}
+
+//----------------------------------------------------------------
+//
+// Inform Players and Table Bank of results.
+//
+void
+CrapsTable::dispenseResults()
+{
+    // TODO
+    // table bank processes results
+    // player manager processes results, one by one or in bulk?
+}
+
+//----------------------------------------------------------------
+//
+// Trim after dispensing results. Want the bet object available
+// when player processes a decision record. A player implementation
+// might not be holding their bet pointers, yet still want to
+// access the bet. Should be valid to lookup bet by id.
+//    
+void
+CrapsTable::trimTableBets()
+{
+    // TODO
+    clearDrls();
+}
+
+//----------------------------------------------------------------
+//
+// Zero out decision result list(s).
+//
+void
+CrapsTable::clearDrls()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+//
+// Resolves bets for current roll.
+//
+#if 0
+void
+CrapsTable::resolveBetsOld()
+{
+    // TODO: announce resolve bets start
     
     CrapsBet bet("Player1", BetName::PassLine, 100, 0);
     // Gbl::pPlayerMgr->processDecision(dr);
@@ -372,7 +504,9 @@ CrapsTable::resolveBets()
     {
         b->pivot();
     }
+    // TODO: announce resolve bets end
 }
+#endif
 
 //----------------------------------------------------------------
 

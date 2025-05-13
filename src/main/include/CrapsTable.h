@@ -70,7 +70,6 @@ public:
 #if 0
     void resetTable();
     void startNewRound();         // Initiates come-out roll
-    void advanceShooter();        // Move to next player/shooter
     std::vector<CrapsBet> getBetsForPlayer(const std::string& playerName) const;
 
 #endif
@@ -110,8 +109,17 @@ private:
 
     bool betAllowed(const Gen::Uuid& playerId, BetName betName,
                     unsigned& pivot, Gen::ErrorPass& ep) const;
+    void declareBettingClosed();
+    void throwDice();
     void resolveBets();
     void advanceState();
+    void advanceShooter();
+    void declareBettingOpen();
+    void evaluateBets();
+    void dispenseResults();
+    void trimTableBets();
+    void clearDrls();
+    void evalOneBet(const BetIntfcPtr pBet);
 };
 
 /*-----------------------------------------------------------*//**

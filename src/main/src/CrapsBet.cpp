@@ -17,6 +17,12 @@ using namespace App;
 
 unsigned CrapsBet::idCounter_ = 0;
 
+const std::unordered_set<unsigned> CrapsBet::pointNums_   = {4, 5, 6, 8, 9, 10};
+const std::unordered_set<unsigned> CrapsBet::fieldNums_   = {2, 3, 4, 9, 10, 11, 12};
+const std::unordered_set<unsigned> CrapsBet::crapsNums_   = {2, 3, 12};
+const std::unordered_set<unsigned> CrapsBet::bookEnds_    = {2, 3, 11, 12};
+const std::unordered_set<unsigned> CrapsBet::hardwayNums_ = {4, 6, 8, 10};
+
 /*-----------------------------------------------------------*//**
 
 Constructor - creates a CrapsBet
@@ -180,7 +186,7 @@ CrapsBet::operator==(const CrapsBet& other) const
            distance_       == other.distance_       &&
            whenCreated_    == other.whenCreated_    &&
            whenDecided_    == other.whenDecided_;    
-}
+} 
 
 /*-----------------------------------------------------------*//**
 
@@ -192,7 +198,8 @@ CrapsBet::setContractAmount(Money amount, Gen::ErrorPass& ep)
 {
     if (amount == 0)
     {
-        ep.diag = "New contract amount would be zero or less.";
+        ep.diag = "New contract amount would be zero or less. "
+            "Use removeBet() if intent is to pull the bet.";
         return Gen::ReturnCode::Fail;
     }
     
