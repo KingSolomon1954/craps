@@ -14,6 +14,7 @@
 #include "gen/Uuid.h"
 #include "Globals.h"
 #include "CrapsBet.h"
+#include "DecisionRecord.h"
 #include "Dice.h"
 #include "Player.h"
 
@@ -103,8 +104,14 @@ private:
     using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
     BetTable tableBets_;
 
+    // After each dice roll, a decision list is populated with the
+    // the results of all bets on the table, one entry for each bet.
+    using DecisionList = std::list<DecisionRecord>;
+    DecisionList drl_;
+    
     // Turn bet name enums into size_t to avoid casting each time.
     // Used when directly indexing into tableBets_;
+    // TODO might not need this - remove later.
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
 
     bool betAllowed(const Gen::Uuid& playerId, BetName betName,
@@ -118,8 +125,13 @@ private:
     void evaluateBets();
     void dispenseResults();
     void trimTableBets();
-    void clearDrls();
+    void clearDrl();
     void evalOneBet(const BetIntfcPtr pBet);
+
+    void disburseHouseWins();
+    void disbursePlayerWins();
+    void disbursePlayerLoses();
+    void disbursePlayerKeeps();
 };
 
 /*-----------------------------------------------------------*//**

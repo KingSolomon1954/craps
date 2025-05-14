@@ -6,10 +6,12 @@
 
 #include "CrapsTable.h"
 #include <iostream>
+#include <cassert>
 #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
 #include "CrapsBet.h"
 #include "DecisionRecord.h"
+#include "PlayerManager.h"
 
 using namespace App;
 
@@ -361,17 +363,20 @@ CrapsTable::resolveBets()
     evaluateBets();
     dispenseResults();
     trimTableBets();
+    clearDrl();
     // TODO: announce resolve bets END
 }
     
 //----------------------------------------------------------------
 //
-// Visit each bet on the table
+// Visit each bet on the table for a decsion.
+//
+// Upon returning, the decision results list (DRL) is populated.
 //
 void
 CrapsTable::evaluateBets()
 {
-    // Process all bets
+    assert(drl_.empty());
     for (size_t i = 0; i < tableBets_.size(); ++i)
     {
         auto& bets = tableBets_[i];
@@ -384,8 +389,7 @@ CrapsTable::evaluateBets()
 
 //----------------------------------------------------------------
 //
-// Creates a decision record for the given bet and adds
-// it to the list.
+// Creates a decision record for the given bet and adds it to the DRL.
 //
 void
 CrapsTable::evalOneBet(const BetIntfcPtr pBet)
@@ -397,49 +401,112 @@ CrapsTable::evalOneBet(const BetIntfcPtr pBet)
     std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
     if (pConcrete->evaluate(point_, dice_, dr, ep) == Gen::ReturnCode::Success)
     {
+        drl_.push_back(dr);
         std::cout << dr << std::endl;
     }
     else
     {
         std::cout << ep.diag << std::endl;
     }
-    // TODO add record to drl
 }
 
 //----------------------------------------------------------------
 //
-// Inform Players and Table Bank of results.
+// Inform Players and Bank of results.
 //
 void
 CrapsTable::dispenseResults()
 {
-    // TODO
-    // table bank processes results
-    // player manager processes results, one by one or in bulk?
+    disburseHouseWins();
+    disbursePlayerWins();
+    disbursePlayerLoses();
+    disbursePlayerKeeps();
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::disburseHouseWins()
+{
+    for (const auto& r : drl_)
+    {
+        if (r.lose > 0)
+        {
+            // TODO table bank wins
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::disbursePlayerWins()
+{
+    for (const auto& r : drl_)
+    {
+        if (r.win > 0)
+        {
+            Gbl::pPlayerMgr->disburseWin(r);
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::disbursePlayerLoses()
+{
+    for (const auto& r : drl_)
+    {
+        if (r.lose > 0)
+        {
+            Gbl::pPlayerMgr->disburseLose(r);
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::disbursePlayerKeeps()
+{
+    for (const auto& r : drl_)
+    {
+        if (!r.decision)
+        {
+            Gbl::pPlayerMgr->disburseKeep(r);
+        }
+    }
 }
 
 //----------------------------------------------------------------
 //
-// Trim after dispensing results. Want the bet object available
+// Remove bets from table that had a decision.
+//
+// Only trim after dispensing results. Need the bet object available
 // when player processes a decision record. A player implementation
-// might not be holding their bet pointers, yet still want to
-// access the bet. Should be valid to lookup bet by id.
+// might not be holding their bet pointers, yet still want to access
+// the bet. It should be valid for player to lookup bet by id while
+// processing decision record.
 //    
 void
 CrapsTable::trimTableBets()
 {
     // TODO
-    clearDrls();
+    // walk the drl
+    // if bet has a decision
+    //     find bet in table array and remove it
+    // 
 }
 
 //----------------------------------------------------------------
 //
-// Zero out decision result list(s).
+// Zero out decision result list.
 //
 void
-CrapsTable::clearDrls()
+CrapsTable::clearDrl()
 {
-    // TODO
+    drl_.clear();
 }
 
 //----------------------------------------------------------------
@@ -452,7 +519,7 @@ CrapsTable::resolveBetsOld()
 {
     // TODO: announce resolve bets start
     
-    CrapsBet bet("Player1", BetName::PassLine, 100, 0);
+    CrapsBet bet("Player1", BetName::Passine, 100, 0);
     // Gbl::pPlayerMgr->processDecision(dr);
     unsigned point = 4;
     // dice.roll();

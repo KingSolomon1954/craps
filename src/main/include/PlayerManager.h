@@ -8,6 +8,8 @@
 
 namespace App {
 
+struct DecisionRecord;  // fwd
+    
 class PlayerManager
 {
 public:
@@ -19,11 +21,13 @@ public:
 
     /// @name Modifiers
     /// @{
-
     /// @}
 
     /// @name Observers
     /// @{
+    void disburseWin(const DecisionRecord& dr) const;
+    void disburseLose(const DecisionRecord& dr) const;
+    void disburseKeep(const DecisionRecord& dr) const;
     /// @}
 
 private:
