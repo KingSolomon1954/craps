@@ -5,8 +5,11 @@
 //----------------------------------------------------------------
 
 #include "Player.h"
-#include <sstream>
+#include <cassert>
 #include <fstream>
+#include <sstream>
+#include "CrapsBet.h"
+#include "DecisionRecord.h"
 
 using namespace App;
 
@@ -19,7 +22,7 @@ Player::Player(
     unsigned startingBalance)
     : uuid_(Gen::generateUuid())
     , name_(name)
-    , balance_(startingBalance)
+    , wallet_(startingBalance)
 {
     // empty
 }
@@ -34,7 +37,7 @@ Player::Player(
     unsigned startingBalance)
     : uuid_(uuid)
     , name_(name)
-    , balance_(startingBalance)
+    , wallet_(startingBalance)
 {
     // empty
 }
@@ -113,10 +116,94 @@ Player - place bet on table
 //----------------------------------------------------------------
 
 void
-Player::processDecision(const DecisionRecord& dr)
+Player::processWin(const DecisionRecord& dr)
 {
-    (void) dr;
+    assert(dr.win > 0);
+    wallet_.deposit(dr.returnToPlayer);
+    wallet_.deposit(dr.win);
+    // TODO update win stats
+    auto pBet = findBetById(dr.betId);
+    // pBet->startTime - endTime ...
+    (void) removeBetByPtr(pBet);
 }
+
+//----------------------------------------------------------------
+
+void
+Player::processLose(const DecisionRecord& dr)
+{
+    assert(dr.lose > 0);
+    wallet_.deposit(dr.returnToPlayer);
+    // Money was already withdrawn from wallet when making the bet
+    // TODO update lose stats before removing bet
+    auto pBet = findBetById(dr.betId);
+    // pBet->startTime - endTime ...
+    (void) removeBetByPtr(pBet);
+}
+
+//----------------------------------------------------------------
+
+void
+Player::processKeep(const DecisionRecord& dr)
+{
+    assert((dr.lose == dr.win) == 0);
+    // TODO
+    // maybe pivot assigned, if so do auto odds?
+    // update stats
+}
+
+//----------------------------------------------------------------
+//
+// Search for a bet by ID
+//
+Player::BetIntfcPtr
+Player::findBetById(unsigned betId) const
+{
+    auto it = std::find_if(bets_.begin(), bets_.end(),
+                   [betId](const BetIntfcPtr& b)
+                   {
+                       return b->betId() == betId;
+                   });
+    if (it != bets_.end())
+    {
+        return *it;
+    }
+    return nullptr;
+}
+
+//----------------------------------------------------------------
+
+bool
+Player::removeBetByPtr(BetIntfcPtr& b)
+{
+    auto it = std::find(bets_.begin(), bets_.end(), b);
+    if (it != bets_.end())
+    {
+        bets_.erase(it);
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+#if 0
+bool
+Player::removeBetById(unsigned betId)
+{
+    auto it = std::remove_if(bets_.begin(), bets_.end(),
+                   [betId](const BetIntfcPtr& b)
+                   {
+                       return b->betId() == betId;
+                   });
+    if (it != bets_.end())
+    {
+        bets_.erase(it, bets_.end());
+        return true;
+    }
+    return false;
+}
+#endif
 
 //----------------------------------------------------------------
 //
@@ -125,7 +212,7 @@ Player::processDecision(const DecisionRecord& dr)
 std::string
 Player::serialize() const
 {
-    return uuid_ + "," + name_ + "," + std::to_string(balance_);
+    return uuid_ + "," + name_ + "," + std::to_string(wallet_.getBalance());
 }
 
 //----------------------------------------------------------------

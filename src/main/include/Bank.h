@@ -19,6 +19,8 @@ class Bank
 public:
     enum class TransactionType { Deposit, Withdraw, Refill };
 
+//  enum class TransactionType { StartSession, EndSession, Refill };
+
     struct Transaction
     {
         TransactionType type;

@@ -21,7 +21,9 @@ Constructor
 
 */
 CrapsTable::CrapsTable()
+    :houseBank_(1000)
 {
+    
 //    CrapsBet bet("Player1", BetName::PassLine, 100, 0);
 //    std::cout << bet << std::endl;
 }
@@ -417,7 +419,7 @@ CrapsTable::evalOneBet(const BetIntfcPtr pBet)
 void
 CrapsTable::dispenseResults()
 {
-    disburseHouseWins();
+    disburseHouseResults();
     disbursePlayerWins();
     disbursePlayerLoses();
     disbursePlayerKeeps();
@@ -426,13 +428,21 @@ CrapsTable::dispenseResults()
 //----------------------------------------------------------------
 
 void
-CrapsTable::disburseHouseWins()
+CrapsTable::disburseHouseResults()
 {
     for (const auto& r : drl_)
     {
         if (r.lose > 0)
         {
-            // TODO table bank wins
+            houseBank_.deposit(r.lose);
+        }
+        if (r.win > 0)
+        {
+            houseBank_.withdraw(r.win);
+        }
+        if (r.commission > 0)
+        {
+            houseBank_.deposit(r.commission);
         }
     }
 }

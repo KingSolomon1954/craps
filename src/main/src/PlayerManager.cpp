@@ -44,7 +44,7 @@ PlayerManager::disburseLose(const DecisionRecord& dr) const
     (void) dr;
     // TODO
     // Lookup playerId
-    // Call playerIntfc->playerWin(dr)
+    // Call playerIntfc->playerLose(dr)
 }
 
 /*-----------------------------------------------------------*//**
@@ -58,7 +58,7 @@ PlayerManager::disburseKeep(const DecisionRecord& dr) const
     (void) dr;
     // TODO
     // Lookup playerId
-    // Call playerIntfc->playerWin(dr)
+    // Call playerIntfc->playerKeep(dr)
 }
 
 //----------------------------------------------------------------

@@ -12,6 +12,7 @@
 #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
 #include "gen/Uuid.h"
+#include "Bank.h"
 #include "Globals.h"
 #include "CrapsBet.h"
 #include "DecisionRecord.h"
@@ -38,7 +39,7 @@ public:
                                    const Gen::Uuid& newId,
                                    Gen::ErrorPass& ep);
 
-    using BetIntfcPtr = std::shared_ptr<CrapsBetIntfc>;
+    using BetIntfcPtr = std::shared_ptr<class CrapsBetIntfc>;
     BetIntfcPtr addBet(const Gen::Uuid& playerId,
                        BetName betName,
                        Money contractAmount,
@@ -76,6 +77,7 @@ public:
 #endif
     
 private:
+    Bank houseBank_;
     Dice dice_;
     unsigned point_ = 0;
     Gen::Uuid shooterId_;
@@ -128,7 +130,7 @@ private:
     void clearDrl();
     void evalOneBet(const BetIntfcPtr pBet);
 
-    void disburseHouseWins();
+    void disburseHouseResults();
     void disbursePlayerWins();
     void disbursePlayerLoses();
     void disbursePlayerKeeps();

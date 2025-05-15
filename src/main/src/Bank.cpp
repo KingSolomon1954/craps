@@ -81,3 +81,20 @@ Bank::totalDeposited() const
 }
 
 //----------------------------------------------------------------
+
+Money
+Bank::totalWithdrawn() const
+{
+    Money total = 0;
+    for (const auto& tx : history_)
+    {
+        if (tx.type == TransactionType::Withdraw)
+        {
+            total += tx.amount;
+        }
+    }
+    return total;
+}
+
+//----------------------------------------------------------------
+
