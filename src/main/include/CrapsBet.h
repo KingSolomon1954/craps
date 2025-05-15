@@ -10,10 +10,9 @@
 #include <ostream>
 #include <string>
 #include <unordered_set>
+#include "CrapsBetIntfc.h"
 #include "gen/ReturnCode.h"
-#include "gen/Uuid.h"
 #include "Globals.h"
-#include "EnumBetName.h"
 #include "OddsTables.h"
 
 namespace Gen {
@@ -22,9 +21,10 @@ namespace Gen {
 
 namespace App {
 
-class Dice;  // fwd
+class Dice;            // fwd
+class DecisionRecord;  // fwd
     
-class CrapsBet
+class CrapsBet : public CrapsBetIntfc
 {
 public:
     /// @name Lifecycle
@@ -35,56 +35,33 @@ public:
 
     /// @name Modifiers
     /// @{
-    struct DecisionRecord
-    {
-        unsigned betId = 0;
-        bool decision = false;
-        bool pivotAssigned = false;
-        Money win = 0;
-        Money lose = 0;
-        Money returnToPlayer = 0;
-        Money commission = 0;
-        Gen::Uuid playerId;
-
-        bool operator==(const DecisionRecord& other) const
-        {
-            return betId == other.betId &&
-                   decision == other.decision &&
-                   pivotAssigned == other.pivotAssigned &&
-                   win == other.win &&
-                   lose == other.lose &&
-                   returnToPlayer == other.returnToPlayer &&
-                   commission == other.commission &&
-                   playerId == other.playerId;
-        }
-    };
+    void setOffComeOutRoll() override;  // intfc
+    void setOnComeOutRoll()  override;  // intfc
+    void setHardwayOff()     override;  // intfc
+    void setHardwayOn()      override;  // intfc
+    
+    Gen::ReturnCode setContractAmount(Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount    (Money amount, Gen::ErrorPass& ep);
+    
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount(Money amount, Gen::ErrorPass& ep);
-    void setOffComeOutRoll();
-    void setOnComeOutRoll();
-    void setHardwayOff();
-    void setHardwayOn();
-    void setSkipOn();
-    void setSkipOff();
     /// @}
 
     /// @name Observers
     /// @{
-    const Gen::Uuid& playerId() const;
-    unsigned betId() const;
-    BetName betName() const;
-    unsigned pivot() const;
-    unsigned contractAmount() const;
-    unsigned oddsAmount() const;
-    bool offComeOutRoll() const;
-    bool hardwayWorking() const;
-    bool skipOn() const;
-    unsigned distance() const;
-    std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
-    std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
+    const Gen::Uuid& playerId() const override;  // intfc
+    unsigned betId()            const override;  // intfc
+    BetName betName()           const override;  // intfc
+    unsigned pivot()            const override;  // intfc
+    unsigned contractAmount()   const override;  // intfc
+    unsigned oddsAmount()       const override;  // intfc
+    bool offComeOutRoll()       const override;  // intfc
+    bool hardwayWorking()       const override;  // intfc
+    unsigned distance()         const override;  // intfc
+    std::chrono::time_point<std::chrono::system_clock> whenCreated() const override;  // intfc
+    std::chrono::time_point<std::chrono::system_clock> whenDecided() const override;  // intfc
     
-    bool operator==(const CrapsBet&) const = default;
+    bool operator==(const CrapsBet&) const;
     /// @}
 
 private:
@@ -152,31 +129,31 @@ private:
     Money contractAmount_ = 0;
     Money oddsAmount_ = 0;
     bool offComeOutRoll_ = true;
-    bool skip_ = false;
     unsigned distance_ = 0;  // num rolls until decision
     std::chrono::time_point<std::chrono::system_clock> whenCreated_;
     std::chrono::time_point<std::chrono::system_clock> whenDecided_;
 
-    std::unordered_set<unsigned> pointNums_   = {4, 5, 6, 8, 9, 10};
-    std::unordered_set<unsigned> fieldNums_   = {2, 3, 4, 9, 10, 11, 12};
-    std::unordered_set<unsigned> crapsNums_   = {2, 3, 12};
-    std::unordered_set<unsigned> bookEnds_    = {2, 3, 11, 12};
-    std::unordered_set<unsigned> hardwayNums_ = {4, 6, 8, 10};
+    static const std::unordered_set<unsigned> pointNums_;
+    static const std::unordered_set<unsigned> fieldNums_;
+    static const std::unordered_set<unsigned> crapsNums_;
+    static const std::unordered_set<unsigned> bookEnds_;
+    static const std::unordered_set<unsigned> hardwayNums_;
+
+    friend class CrapsTable;
 };
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsBet
+@class CrapsBet Implementation
 
 @brief A bet on the craps table.
 
-Store info that represents a craps bet.
+Manage a craps bet on the table.
 
 */
 
 } // namespace App
 
 std::ostream& operator<< (std::ostream& out, const App::CrapsBet& b);
-std::ostream& operator<< (std::ostream& out, const App::CrapsBet::DecisionRecord& dr);
     
 //----------------------------------------------------------------

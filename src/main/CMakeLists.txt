@@ -8,9 +8,10 @@ find_package(cxxopts REQUIRED)
 find_package(rang REQUIRED)
 
 add_library(main STATIC
+    src/Bank.cpp
     src/CommandLine.cpp
-    src/CrapsGame.cpp
     src/CrapsBet.cpp
+    src/CrapsGame.cpp
     src/CrapsTable.cpp
     src/Dice.cpp
     src/EnumBetName.cpp

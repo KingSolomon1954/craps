@@ -17,6 +17,7 @@
 #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
 #include "CrapsBet.h"
+#include "DecisionRecord.h"
 #include "Dice.h"
 #include "EnumBetName.h"
 
@@ -29,7 +30,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -290,7 +291,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
     SUBCASE("Point Rolls")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -466,7 +467,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
     SUBCASE("Distance")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -514,7 +515,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
     SUBCASE("Minimum amount bets")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -566,7 +567,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
     SUBCASE("decisions")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -830,7 +831,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
 void lay1(unsigned point, unsigned num, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Lay, 100, num);
@@ -847,7 +848,7 @@ void lay1(unsigned point, unsigned num, unsigned d1, unsigned d2)
 void lay2(unsigned point, unsigned num, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Lay, 100, num);
@@ -865,7 +866,7 @@ void lay2(unsigned point, unsigned num, unsigned d1, unsigned d2)
 void lay3(unsigned point, unsigned num, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Lay, 100, num);
@@ -892,7 +893,7 @@ TEST_CASE("CrapsBet:evaluate:Lay")
     SUBCASE("decisions")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
 
         lay1(0, 4, 3, 1);   // Lay 4, come out, dice = 4, keep (odds off come out)
@@ -965,7 +966,7 @@ TEST_CASE("CrapsBet:evaluate:Lay")
 void hard1(unsigned point, unsigned num, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Hardway, 100, num);
@@ -982,7 +983,7 @@ void hard1(unsigned point, unsigned num, unsigned d1, unsigned d2)
 void hard2(unsigned point, unsigned num, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Hardway, 100, num);
@@ -1002,7 +1003,7 @@ void hard2(unsigned point, unsigned num, unsigned d1, unsigned d2)
 void hard3(unsigned point, unsigned num, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Hardway, 100, num);
@@ -1023,7 +1024,7 @@ TEST_CASE("CrapsBet:evaluate:Hardway")
     SUBCASE("decisions")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
 
         hard1(0, 4, 3, 1);   // hard 4, come out, loses easy way
@@ -1092,7 +1093,7 @@ TEST_CASE("CrapsBet:evaluate:Hardway")
     SUBCASE("Distance")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1140,7 +1141,7 @@ TEST_CASE("CrapsBet:evaluate:Hardway")
     SUBCASE("Minimum amount bets")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
 
@@ -1177,7 +1178,7 @@ TEST_CASE("CrapsBet:evaluate:Hardway")
 void field1(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Field, 100);
@@ -1197,7 +1198,7 @@ void field1(unsigned point, unsigned d1, unsigned d2)
 void field2(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Field, 100);
@@ -1218,7 +1219,7 @@ TEST_CASE("CrapsBet:evaluate:Field")
     SUBCASE("decisions")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
         Dice dice;
 
         field1(0, 1, 1);  // come out, dice 2, win
@@ -1241,7 +1242,7 @@ TEST_CASE("CrapsBet:evaluate:Field")
 void anyCraps1(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::AnyCraps, 100);
@@ -1258,7 +1259,7 @@ void anyCraps1(unsigned point, unsigned d1, unsigned d2)
 void anyCraps2(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::AnyCraps, 100);
@@ -1301,7 +1302,7 @@ TEST_CASE("CrapsBet:evaluate:AnyCraps")
 void anySeven1(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::AnySeven, 100);
@@ -1322,7 +1323,7 @@ TEST_CASE("CrapsBet:evaluate:AnySeven")
     SUBCASE("decisions")
     {
         Gen::ErrorPass ep;
-        CrapsBet::DecisionRecord dr;
+        DecisionRecord dr;
 
         anySeven1(0, 1, 1);  // come out, dice 2, lose
         anySeven1(0, 1, 2);  // come out, dice 3, lose
@@ -1366,7 +1367,7 @@ TEST_CASE("CrapsBet:evaluate:AnySeven")
 void cAndE1(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::CandE, 100);
@@ -1385,7 +1386,7 @@ void cAndE1(unsigned point, unsigned d1, unsigned d2)
 void cAndE2(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::CandE, 100);
@@ -1445,7 +1446,7 @@ TEST_CASE("CrapsBet:evaluate:C&E")
 void horn1(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Horn, 100);
@@ -1463,7 +1464,7 @@ void horn1(unsigned point, unsigned d1, unsigned d2)
 void horn2(unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
-    CrapsBet::DecisionRecord dr;
+    DecisionRecord dr;
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Horn, 100);
