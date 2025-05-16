@@ -52,7 +52,6 @@ Player::Player(
     , wallet_(startingBalance)
 {
     setupSubscriptions();
-    // empty
 }
 
 //----------------------------------------------------------------

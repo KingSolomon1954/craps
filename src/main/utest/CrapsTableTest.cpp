@@ -9,7 +9,9 @@
 #include <iostream>
 #include <vector>
 #include "CrapsTable.h"
+#include "EventManager.h"
 #include "Player.h"
+#include "PlayerManager.h"
 
 using namespace App;
 
@@ -36,8 +38,11 @@ TEST_CASE("CrapsTable:players at table")
     SUBCASE("add/remove players")
     {
         CrapsTable t;
+        EventManager em;
+        Gbl::pEventMgr = &em;
         Player p1("p1", 1000);
         Gen::ErrorPass ep;
+        
         CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
         CHECK(t.getNumPlayers() == 1);
         // Add same player again - error
@@ -55,11 +60,10 @@ TEST_CASE("CrapsTable:players at table")
         CHECK(t.addPlayer(p5.getUuid(), ep) == Gen::ReturnCode::Success);
         CHECK(t.addPlayer(p6.getUuid(), ep) == Gen::ReturnCode::Success);
         CHECK(t.addPlayer(p7.getUuid(), ep) == Gen::ReturnCode::Fail);
-        
         // Remove unknown player
         CHECK(t.removePlayer(p7.getUuid(), ep) == Gen::ReturnCode::Fail);
         CHECK(t.getNumPlayers() == 6);
-        
+
         // Remove from middle
         CHECK(t.removePlayer(p3.getUuid(), ep) == Gen::ReturnCode::Success);
         CHECK(t.getNumPlayers() == 5);
@@ -91,6 +95,8 @@ TEST_CASE("CrapsTable:players at table")
     SUBCASE("list of players")
     {
         CrapsTable t;
+        EventManager em;
+        Gbl::pEventMgr = &em;
         CHECK(t.getNumPlayers() == 0);
 
         // Get back empty vector
@@ -119,6 +125,8 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("bad bets")
     {
         CrapsTable t;
+        EventManager em;
+        Gbl::pEventMgr = &em;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
         Player p2("p2", 1000);
@@ -223,6 +231,8 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("amount on table")
     {
         CrapsTable t;
+        EventManager em;
+        Gbl::pEventMgr = &em;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
 
@@ -246,6 +256,8 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("remove bet")
     {
         CrapsTable t;
+        EventManager em;
+        Gbl::pEventMgr = &em;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
 
@@ -270,9 +282,34 @@ TEST_CASE("CrapsTable:placing bets")
         CHECK(t.getNumBetsOnTable() == 1);
     }
 
+
+    SUBCASE("remove player outstanding bets")
+    {
+        CrapsTable t;
+        EventManager em;
+        Gbl::pEventMgr = &em;
+        Gen::ErrorPass ep;
+        Player p1("p1", 1000);
+
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
+        
+        CrapsTable::BetIntfcPtr b1 = t.addBet(
+            p1.getUuid(), BetName::Field, 10, 0, ep);
+        CrapsTable::BetIntfcPtr b2 = t.addBet(
+            p1.getUuid(), BetName::PassLine, 10, 0, ep);
+        CHECK(t.getAmountOnTable() == 20);
+        CHECK(t.getNumBetsOnTable() == 2);
+        CHECK(t.removePlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.getNumBetsOnTable() == 0);
+    }
+
     SUBCASE("odds bet")
     {
         CrapsTable t;
+        EventManager em;
+        Gbl::pEventMgr = &em;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
 
@@ -341,4 +378,35 @@ TEST_CASE("CrapsTable:placing bets")
     }
 }
     
+//----------------------------------------------------------------
+
+TEST_CASE("CrapsTable:roll dice")
+{
+    SUBCASE("first roll")
+    {
+        CrapsTable t;
+        EventManager em;
+        Gbl::pEventMgr = &em;
+        PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
+        Gen::ErrorPass ep;
+
+        // Roll dice with no players
+        // First put table into known state
+        t.testSetState(0, 6, 6);  // coming out, dice=12(6,6)
+        CHECK(t.getLastRoll().value() == 12);
+        CHECK(t.getLastRoll().d1() == 6);
+        CHECK(t.getLastRoll().d2() == 6);
+                    
+        t.rollDice();
+
+        PlayerManager::PlayerPtr john = Gbl::pPlayerMgr->createPlayer("John");
+        PlayerManager::PlayerPtr jane = Gbl::pPlayerMgr->createPlayer("Jane");
+
+        CHECK(t.addPlayer(john->getUuid(), ep) == Gen::ReturnCode::Success);
+        CHECK(t.addPlayer(jane->getUuid(), ep) == Gen::ReturnCode::Success);
+        CHECK(t.getNumPlayers() == 2);
+    }
+}
+
 //----------------------------------------------------------------
