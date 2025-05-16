@@ -11,6 +11,9 @@
 #include <sstream>
 #include "CrapsBet.h"
 #include "DecisionRecord.h"
+#include "Events.h"
+#include "EventManager.h"
+#include "Globals.h"
 
 using namespace App;
 
@@ -48,80 +51,47 @@ Player::Player(
     , name_(name)
     , wallet_(startingBalance)
 {
+    setupSubscriptions();
     // empty
 }
 
 //----------------------------------------------------------------
 
-#if 0
-
-PlayerManager pm;(global)
-    user selects from saved-file players
-    Player alice();
-    Player john();
-
-main()
-    CasinoTables casinoTables(global)
-        load tables from file
-        user selects table or
-        user creates new craps table
-        serialize/deserialize tables
-    PlayerManager (global)
-        load players from file
-        user selects player or
-        user creates new player
-        serialize/deserialize tables
-        maintains list of active players
-
-CrapsTable table_ = new selected table;
-    BetManager bm_;
-
-alice.joinTable(table);
-    table_.addPlayer(alice.uuid);
-john.joinTable(table);
-    table_.addPlayer(john.uuid);
-
-Player  - constructs CraptBet
-    BetPtr bet = createBet(BetName::PassLine, 100);
-
-Player - place bet on table
-
-    Gen::ReturnCode rc = table_.placeBet(BetPtr b, Gen::ErrorPass ep);
-    if (rc == Gen::ReturnCode::Fail)
-        process ep
-    else
-        add bet to list of bets
-        bm_.addBet(b);
-
-    table.startCountdown()
-    user shoots dice
-    table.resolveBets();
-        bm_.resolveBets(point, dice)
-        assert(dr lists are empty)
-        for (bet in tableBets_)
-            DecisionRecord dr;
-            bet.evaluate(point, dice, dr);
-            if dr == keep
-                add dr to keep list
-                no action to bet itself
-            if dr == lost
-                add dr to lose list
-                remove bet from table
-            if dr == win
-                add dr to win list
-                remove bet from table
-        endfor
-        processLose()
-        processWin()
-        processKeep()
-        for (dr in lose list)
-            pm.processDecision(id, dr);
-            lookup player by ID
-            player.processDecision(const DecisionRecord& dr)
-        endfor
-
-#endif
-
+void
+Player::setupSubscriptions()
+{
+    Gbl::pEventMgr->subscribe<BettingClosed>(
+        [this](const BettingClosed&)
+        {
+            this->onBettingClosed();
+        });
+    Gbl::pEventMgr->subscribe<BettingOpened>(
+        [this](const BettingOpened&)
+        {
+            this->onBettingOpened();
+        });
+    Gbl::pEventMgr->subscribe<DiceThrowEnd>(
+        [this](const DiceThrowEnd& evt)
+        {
+            this->onDiceThrowEnd(evt);
+        });
+    Gbl::pEventMgr->subscribe<PointEstablished>(
+        [this](const PointEstablished& evt)
+        {
+            this->onPointEstablished(evt);
+        });
+    Gbl::pEventMgr->subscribe<SevenOut>(
+        [this](const SevenOut&)
+        {
+            this->onSevenOut();
+        });
+    Gbl::pEventMgr->subscribe<NewShooter>(
+        [this](const NewShooter& evt)
+        {
+            this->onNewShooter(evt);
+        });
+}
+                
 //----------------------------------------------------------------
 
 void
@@ -328,8 +298,56 @@ Player::getName() const
 
 //----------------------------------------------------------------
 
+void
+Player::onBettingClosed()
+{
+    // TODO
+}
 
+//----------------------------------------------------------------
 
+void
+Player::onBettingOpened()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+Player::onDiceThrowEnd(const DiceThrowEnd& evt)
+{
+    // TODO
+    (void) evt;
+}
+
+//----------------------------------------------------------------
+
+void
+Player::onPointEstablished(const PointEstablished& evt)
+{
+    // TODO
+    (void) evt;
+}
+
+//----------------------------------------------------------------
+
+void
+Player::onSevenOut()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+Player::onNewShooter(const NewShooter& evt)
+{
+    // TODO
+    (void) evt;
+}
+
+//----------------------------------------------------------------
 
 
 
@@ -364,3 +382,77 @@ Player::deserialize(const std::string& line)
 #endif
 
 //----------------------------------------------------------------
+
+
+
+
+#if 0
+
+PlayerManager pm;(global)
+    user selects from saved-file players
+    Player alice();
+    Player john();
+
+main()
+    CasinoTables casinoTables(global)
+        load tables from file
+        user selects table or
+        user creates new craps table
+        serialize/deserialize tables
+    PlayerManager (global)
+        load players from file
+        user selects player or
+        user creates new player
+        serialize/deserialize tables
+        maintains list of active players
+
+CrapsTable table_ = new selected table;
+    BetManager bm_;
+
+alice.joinTable(table);
+    table_.addPlayer(alice.uuid);
+john.joinTable(table);
+    table_.addPlayer(john.uuid);
+
+Player  - constructs CraptBet
+    BetPtr bet = createBet(BetName::PassLine, 100);
+
+Player - place bet on table
+
+    Gen::ReturnCode rc = table_.placeBet(BetPtr b, Gen::ErrorPass ep);
+    if (rc == Gen::ReturnCode::Fail)
+        process ep
+    else
+        add bet to list of bets
+        bm_.addBet(b);
+
+    table.startCountdown()
+    user shoots dice
+    table.resolveBets();
+        bm_.resolveBets(point, dice)
+        assert(dr lists are empty)
+        for (bet in tableBets_)
+            DecisionRecord dr;
+            bet.evaluate(point, dice, dr);
+            if dr == keep
+                add dr to keep list
+                no action to bet itself
+            if dr == lost
+                add dr to lose list
+                remove bet from table
+            if dr == win
+                add dr to win list
+                remove bet from table
+        endfor
+        processLose()
+        processWin()
+        processKeep()
+        for (dr in lose list)
+            pm.processDecision(id, dr);
+            lookup player by ID
+            player.processDecision(const DecisionRecord& dr)
+        endfor
+
+#endif
+
+

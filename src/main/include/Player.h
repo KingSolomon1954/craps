@@ -20,8 +20,11 @@ using json = nlohmann::json;
 
 namespace App {
 
-class CrapsBet;  // fwd
-class DecisionRecort;  // fwd
+class CrapsBet;         // fwd
+class DecisionRecort;   // fwd
+class DiceThrowEnd;     // fwd
+class PointEstablished; // fwd
+class NewShooter;       // fwd
 
 class Player
 {
@@ -67,6 +70,13 @@ private:
     bool removeBetByPtr(BetIntfcPtr& pBet);
     BetIntfcPtr findBetById(unsigned betId) const;
     void diagBadBetId(const std::string& funcName, unsigned betId) const;
+    void setupSubscriptions();
+    void onBettingClosed();
+    void onBettingOpened();
+    void onDiceThrowEnd(const DiceThrowEnd& evt);
+    void onPointEstablished(const PointEstablished& evt);
+    void onSevenOut();
+    void onNewShooter(const NewShooter& evt);
 };
 
 /*-----------------------------------------------------------*//**

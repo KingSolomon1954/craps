@@ -11,6 +11,8 @@
 #include "gen/ReturnCode.h"
 #include "CrapsBet.h"
 #include "DecisionRecord.h"
+#include "Events.h"
+#include "EventManager.h"
 #include "PlayerManager.h"
 
 using namespace App;
@@ -294,7 +296,7 @@ void
 CrapsTable::declareBettingClosed()
 {
     bettingOpen_ = false; // No more bets
-    // TODO announce betting closed
+    Gbl::pEventMgr->publish(BettingClosed{});
 }
 
 //----------------------------------------------------------------
@@ -303,7 +305,7 @@ void
 CrapsTable::declareBettingOpen()
 {
     bettingOpen_ = true;
-    // TODO announce betting open
+    Gbl::pEventMgr->publish(BettingOpened{});
 }
 
 //----------------------------------------------------------------
@@ -311,12 +313,9 @@ CrapsTable::declareBettingOpen()
 void
 CrapsTable::throwDice()
 {
-    // TODO announce throw start
+    Gbl::pEventMgr->publish(DiceThrowStart{});
     dice_.roll();
-    // TODO announce throw end
-    //     dice = <value>
-    //     d1 =  <num>
-    //     d2 =  <num>
+    Gbl::pEventMgr->publish(DiceThrowEnd{dice_.value(), dice_.d1(), dice_.d2()});
 }
 
 //----------------------------------------------------------------
@@ -331,8 +330,8 @@ CrapsTable::advanceState()
         if (CrapsBet::pointNums_.contains(dice_.value()))
         {
             point_ = dice_.value();
-            // TODO announce new point
-            // move puck
+            Gbl::pEventMgr->publish(PointEstablished{point_});
+            // TODO move puck
         }
     }
     else
@@ -340,7 +339,7 @@ CrapsTable::advanceState()
         if (dice_.value() == 7)
         {
             point_ = 0;
-            // TODO announce 7-out
+            Gbl::pEventMgr->publish(SevenOut{});
             // clear puck
             advanceShooter();
         }
@@ -352,8 +351,26 @@ CrapsTable::advanceState()
 void
 CrapsTable::advanceShooter()
 {
-    // TODO next shooter
-    // TODO announce new shooter
+    if (players_.empty()) return;
+    
+    Gen::Uuid prev = currentShooterId_;
+    
+    auto it = std::find(players_.begin(), players_.end(), currentShooterId_);
+
+    // If not found or at the end, start from beginning
+    if (it == players_.end() || std::next(it) == players_.end())
+    {
+        currentShooterId_ = players_.front();
+    }
+    else
+    {
+        currentShooterId_ = *std::next(it);
+    }
+
+    if (currentShooterId_ != prev)
+    {
+        Gbl::pEventMgr->publish(NewShooter{currentShooterId_});
+    }
 }
 
 //----------------------------------------------------------------
@@ -361,12 +378,12 @@ CrapsTable::advanceShooter()
 void
 CrapsTable::resolveBets()
 {
-    // TODO: announce resolve bets START
+    Gbl::pEventMgr->publish(ResolveBetsStart{});
     evaluateBets();
     dispenseResults();
     trimTableBets();
     clearDrl();
-    // TODO: announce resolve bets END
+    Gbl::pEventMgr->publish(ResolveBetsEnd{});
 }
 
 //----------------------------------------------------------------
@@ -619,9 +636,9 @@ CrapsTable::getPoint() const
 //----------------------------------------------------------------
 
 Gen::Uuid
-CrapsTable::getIdShooter() const
+CrapsTable::getShooterId() const
 {
-    return shooterId_;
+    return currentShooterId_;
 }
 
 //----------------------------------------------------------------
@@ -700,8 +717,6 @@ CrapsTable::isBettingOpen() const
 void
 CrapsTable::resolveBetsOld()
 {
-    // TODO: announce resolve bets start
-
     CrapsBet bet("Player1", BetName::Passine, 100, 0);
     // Gbl::pPlayerMgr->processDecision(dr);
     unsigned point = 4;
@@ -754,6 +769,5 @@ CrapsTable::resolveBetsOld()
     {
         b->pivot();
     }
-    // TODO: announce resolve bets end
 }
 #endif

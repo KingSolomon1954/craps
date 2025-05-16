@@ -24,7 +24,7 @@ TEST_CASE("CrapsTable:constructor")
         CHECK(t.getLastRoll().value() == 12);
         CHECK(t.isComeOutRoll());
         CHECK(t.isBettingOpen());
-        CHECK(t.getIdShooter().empty());
+        CHECK(t.getShooterId().empty());
         CHECK(t.getNumPlayers() == 0);
     }
 }

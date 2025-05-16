@@ -59,7 +59,7 @@ public:
     unsigned getNumPlayers()                   const;
     std::vector<Gen::Uuid> getPlayers()        const;
     unsigned getPoint()                        const;
-    Gen::Uuid getIdShooter()                   const;
+    Gen::Uuid getShooterId()                   const;
     Dice getLastRoll()                         const;
     bool isComeOutRoll()                       const;
     bool isBettingOpen()                       const;
@@ -80,7 +80,7 @@ private:
     Bank houseBank_;
     Dice dice_;
     unsigned point_ = 0;
-    Gen::Uuid shooterId_;
+    Gen::Uuid currentShooterId_;
     bool bettingOpen_ = true;
 
     // Players must join table in order to play.  We only hold the
