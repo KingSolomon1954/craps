@@ -11,6 +11,7 @@ add_executable(RoyalCraps-ut
     CrapsGameTest.cpp
     CrapsTableTest.cpp
     EnumBetNameTest.cpp
+    EventManagerTest.cpp
     PropertiesTest.cpp
 )
 

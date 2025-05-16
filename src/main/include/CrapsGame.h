@@ -10,6 +10,7 @@
 namespace App {
 
 class CrapsTable;     // fwd
+class EventManager;   // fwd
 class PlayerManager;  // fwd
     
 class CrapsGame
@@ -34,6 +35,7 @@ public:
 
 private:
     CrapsTable* initCrapsTable();
+    EventManager* initEventManager();
     PlayerManager* initPlayerManager();
 };
 

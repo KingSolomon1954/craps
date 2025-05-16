@@ -6,11 +6,13 @@
 
 #include "Globals.h"
 #include "CrapsTable.h"
+#include "EventManager.h"
 #include "PlayerManager.h"
 
 using namespace App;
 
-CrapsTable* Gbl::pTable = NULL;
+EventManager*  Gbl::pEventMgr  = NULL;
+CrapsTable*    Gbl::pTable     = NULL;
 PlayerManager* Gbl::pPlayerMgr = NULL;
 
 //----------------------------------------------------------------

@@ -15,8 +15,6 @@ namespace App {
 
 struct DecisionRecord;  // fwd
 
-
-
 class PlayerManager
 {
 public:
