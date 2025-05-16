@@ -47,6 +47,7 @@ CrapsTable::addPlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
     players_.push_back(playerId);
+    Gbl::pEventMgr->publish(PlayerJoinedTable{ playerId });
     return Gen::ReturnCode::Success;
 }
 
@@ -55,12 +56,15 @@ CrapsTable::addPlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 Gen::ReturnCode
 CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 {
-    // TODO: Do something if player has working bets
     if (removeUuid(playerId, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend("Unable to remove player. ");
         return Gen::ReturnCode::Fail;
     }
+
+    // Remove all bets by player, bet money given to the house bank.
+    removePlayerBets(playerId);
+    Gbl::pEventMgr->publish(PlayerLeftTable{ playerId });
     return Gen::ReturnCode::Success;
 }
 
@@ -550,6 +554,46 @@ CrapsTable::removeMatchingBetId(BetList& bets, unsigned betId)
         return true;
     }
     return false;
+}
+
+//----------------------------------------------------------------
+//
+// Administrative function to clear out all bets owned by
+// a player becasue he left the table. Money for each bet found
+// is given to the house, as would occur in a real craps grame.
+//
+void
+CrapsTable::removePlayerBets(const Gen::Uuid& playerId)
+{
+    for (size_t i = 0; i < tableBets_.size(); ++i)
+    {
+        removeBetsByPlayerId(tableBets_[i], playerId);
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Part 2 of removePlayerBets, this part traverses the
+// std::list of bets and removes it if it matches playerId.
+// Claims bet money for the house bank.
+// 
+void
+CrapsTable::removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId)
+{
+    for (auto it = bets.begin(); it != bets.end(); )
+    {
+        if (*it && (*it)->playerId() == playerId)
+        {
+            BetIntfcPtr p = *it;
+            houseBank_.deposit(p->contractAmount());
+            houseBank_.deposit(p->oddsAmount());
+            it = bets.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
 }
 
 //----------------------------------------------------------------

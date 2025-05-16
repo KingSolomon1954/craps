@@ -111,7 +111,10 @@ private:
     using DecisionList = std::list<DecisionRecord>;
     DecisionList drl_;
 
-    // Turn bet name enums into size_t to avoid casting each time.
+    void removePlayerBets(const Gen::Uuid& playerId);
+    void removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId);
+
+// Turn bet name enums into size_t to avoid casting each time.
     // Used when directly indexing into tableBets_;
     // TODO might not need this - remove later.
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);

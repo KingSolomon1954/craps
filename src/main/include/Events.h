@@ -22,9 +22,9 @@ struct ResolveBetsStart {};
 struct ResolveBetsEnd {};
 struct PointEstablished { unsigned point; };
 struct SevenOut {};
-struct NewShooter {const Gen::Uuid& shooterId; };
-struct PlayerJoinedTable {};
-struct PlayerLeftTable {};
+struct NewShooter { const Gen::Uuid& shooterId; };
+struct PlayerJoinedTable { const Gen::Uuid& playerId; };
+struct PlayerLeftTable { const Gen::Uuid& playerId; };
 
 } // namespace App
 
