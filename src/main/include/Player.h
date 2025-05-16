@@ -34,10 +34,10 @@ public:
     Player(const Gen::Uuid&,
            const std::string& name,
            unsigned startingBalance);
-    
+
     bool saveToFile(const std::string& path) const;
     bool loadFromFile(const std::string& path);
-    
+
 //    static Player deserialize(const std::string& line);
 //    std::string serialize() const;
     /// @}
@@ -49,15 +49,15 @@ public:
     void processKeep(const DecisionRecord& dr);
     void fromJson(const json& j);
     /// @}
-    
+
     /// @name Observers
     /// @{
-    const Gen::Uuid& getUuid() const;
+    const Gen::Uuid& getUuid()   const;
     const std::string& getName() const;
-    json toJson() const;
+    json toJson()                const;
     /// @}
 
-private:    
+private:
     Gen::Uuid uuid_;
     std::string name_;
     Bank wallet_;
@@ -86,7 +86,7 @@ Player Responsibilities:
 @li Export a to_json() and from_json() method
 
 */
-    
+
 } // namespace App
 
 //----------------------------------------------------------------

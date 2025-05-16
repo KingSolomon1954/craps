@@ -163,7 +163,7 @@ void
 PlayerManager::diagBadPlayerId(const std::string& funcName,
                                const Gen::Uuid& playerId) const
 {
-    std::string diag = 
+    std::string diag =
         "Internal Error: Unable to process decision record. "
         "PlayerManager::" + funcName + "cant match "
         "decision record playerId against any playerId in "

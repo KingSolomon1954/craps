@@ -48,7 +48,7 @@ public:
     Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
     Gen::ReturnCode setOdds         (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
-    
+
     void rollDice();
     void testSetState(unsigned point, unsigned d1, unsigned d2);
     /// @}
@@ -63,19 +63,19 @@ public:
     Dice getLastRoll()                         const;
     bool isComeOutRoll()                       const;
     bool isBettingOpen()                       const;
-    Money getAmountOnTable()                   const; 
+    Money getAmountOnTable()                   const;
     unsigned getNumBetsOnTable()               const;
     bool haveBet(const BetIntfcPtr bet)        const;
     bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
     /// @}
-    
+
 #if 0
     void resetTable();
     void startNewRound();         // Initiates come-out roll
     std::vector<CrapsBet> getBetsForPlayer(const std::string& playerName) const;
 
 #endif
-    
+
 private:
     Bank houseBank_;
     Dice dice_;
@@ -86,7 +86,7 @@ private:
     // Players must join table in order to play.  We only hold the
     // player's UUID here in a std::list container and rely on the
     // PlayerManager to interface with players.
-    // 
+    //
     static inline constexpr size_t MaxPlayers = 6;
     using PlayerList = std::list<Gen::Uuid>;
     PlayerList players_;
@@ -94,7 +94,7 @@ private:
     Gen::ReturnCode updateUuid(const Gen::Uuid& oldId,
                                const Gen::Uuid& newId,
                                Gen::ErrorPass& ep);
-    
+
     // Bets on the table are kept in a fixed sized array of lists, where
     // each array index equates to a bet type, and holds a list of bets
     // of that type. This allows easier traversals later that mimic real
@@ -110,7 +110,7 @@ private:
     // the results of all bets on the table, one entry for each bet.
     using DecisionList = std::list<DecisionRecord>;
     DecisionList drl_;
-    
+
     // Turn bet name enums into size_t to avoid casting each time.
     // Used when directly indexing into tableBets_;
     // TODO might not need this - remove later.
@@ -129,6 +129,7 @@ private:
     void trimTableBets();
     void clearDrl();
     void evalOneBet(const BetIntfcPtr pBet);
+    bool removeMatchingBetId(BetList& bets, unsigned betId);
 
     void disburseHouseResults();
     void disbursePlayerWins();

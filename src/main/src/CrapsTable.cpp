@@ -23,7 +23,7 @@ Constructor
 CrapsTable::CrapsTable()
     :houseBank_(1000)
 {
-    
+
 //    CrapsBet bet("Player1", BetName::PassLine, 100, 0);
 //    std::cout << bet << std::endl;
 }
@@ -227,7 +227,7 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
 //
 // Given a BetIntfcPtr, dDetermine if we already have the given
 // bet on the table.
-// 
+//
 bool
 CrapsTable::haveBet(const BetIntfcPtr bet) const
 {
@@ -247,7 +247,7 @@ CrapsTable::haveBet(const BetIntfcPtr bet) const
 //----------------------------------------------------------------
 //
 // Determine if we already have the given bet on the table.
-// 
+//
 bool
 CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
                     unsigned pivot) const
@@ -315,7 +315,7 @@ CrapsTable::throwDice()
     dice_.roll();
     // TODO announce throw end
     //     dice = <value>
-    //     d1 =  <num>    
+    //     d1 =  <num>
     //     d2 =  <num>
 }
 
@@ -368,7 +368,7 @@ CrapsTable::resolveBets()
     clearDrl();
     // TODO: announce resolve bets END
 }
-    
+
 //----------------------------------------------------------------
 //
 // Visit each bet on the table for a decsion.
@@ -395,10 +395,10 @@ CrapsTable::evaluateBets()
 //
 void
 CrapsTable::evalOneBet(const BetIntfcPtr pBet)
-{    
+{
     DecisionRecord dr;
     Gen::ErrorPass ep;
-    
+
     // Downcast to concrete class.
     std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
     if (pConcrete->evaluate(point_, dice_, dr, ep) == Gen::ReturnCode::Success)
@@ -493,20 +493,46 @@ CrapsTable::disbursePlayerKeeps()
 //
 // Remove bets from table that had a decision.
 //
-// Only trim after dispensing results. Need the bet object available
+// Only trim after dispensing results. Need the bet object in-scope
 // when player processes a decision record. A player implementation
 // might not be holding their bet pointers, yet still want to access
 // the bet. It should be valid for player to lookup bet by id while
 // processing decision record.
-//    
+//
 void
 CrapsTable::trimTableBets()
 {
-    // TODO
-    // walk the drl
-    // if bet has a decision
-    //     find bet in table array and remove it
-    // 
+    for (const auto& dr : drl_)
+    {
+        if (!dr.decision) continue;
+
+        for (size_t i = 0; i < tableBets_.size(); ++i)
+        {
+            auto& bets = tableBets_[i];
+            if (removeMatchingBetId(bets, dr.betId))
+            {
+                break;
+            }
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsTable::removeMatchingBetId(BetList& bets, unsigned betId)
+{
+    auto it = std::remove_if(bets.begin(), bets.end(),
+                   [betId](const BetIntfcPtr& b)
+                   {
+                       return b->betId() == betId;
+                   });
+    if (it != bets.end())
+    {
+        bets.erase(it, bets.end());
+        return true;
+    }
+    return false;
 }
 
 //----------------------------------------------------------------
@@ -518,72 +544,6 @@ CrapsTable::clearDrl()
 {
     drl_.clear();
 }
-
-//----------------------------------------------------------------
-//
-// Resolves bets for current roll.
-//
-#if 0
-void
-CrapsTable::resolveBetsOld()
-{
-    // TODO: announce resolve bets start
-    
-    CrapsBet bet("Player1", BetName::Passine, 100, 0);
-    // Gbl::pPlayerMgr->processDecision(dr);
-    unsigned point = 4;
-    // dice.roll();
-    Dice dice; dice.set(2,2);
-
-    DecisionRecord dr;
-    Gen::ErrorPass ep;    
-    if (bet.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success)
-    {
-        std::cout << dr << std::endl;
-    }
-    else
-    {
-        std::cout << ep.diag << std::endl;
-    }
-
-    // Process all bets
-    for (size_t i = 0; i < static_cast<size_t>(BetName::Count); ++i)
-    {
-        auto& bets = tableBets_[i];
-        for (auto& b : bets)
-        {
-            b->pivot();
-        }
-    }
-
-    // Process all bets
-    for (size_t i = 0; i < tableBets_.size(); ++i)
-    {
-        auto& bets = tableBets_[i];
-        for (auto& b : bets)
-        {
-            b->pivot();
-        }
-    }
-    
-    // Process all bets
-    for (auto name : EnumBetName::enumerators)
-    {
-        auto& bets = tableBets_[static_cast<size_t>(name)];
-        for (auto& b : bets)
-        {
-            b->pivot();
-        }
-    }
-
-    // Process all Place bets
-    for (auto& b : tableBets_[PlaceBetIndex])
-    {
-        b->pivot();
-    }
-    // TODO: announce resolve bets end
-}
-#endif
 
 //----------------------------------------------------------------
 
@@ -726,3 +686,74 @@ CrapsTable::isBettingOpen() const
 }
 
 //----------------------------------------------------------------
+
+
+
+
+
+
+//----------------------------------------------------------------
+//
+// Shows various ways to walk tableBets_
+//
+#if 0
+void
+CrapsTable::resolveBetsOld()
+{
+    // TODO: announce resolve bets start
+
+    CrapsBet bet("Player1", BetName::Passine, 100, 0);
+    // Gbl::pPlayerMgr->processDecision(dr);
+    unsigned point = 4;
+    // dice.roll();
+    Dice dice; dice.set(2,2);
+
+    DecisionRecord dr;
+    Gen::ErrorPass ep;
+    if (bet.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success)
+    {
+        std::cout << dr << std::endl;
+    }
+    else
+    {
+        std::cout << ep.diag << std::endl;
+    }
+
+    // Process all bets
+    for (size_t i = 0; i < static_cast<size_t>(BetName::Count); ++i)
+    {
+        auto& bets = tableBets_[i];
+        for (auto& b : bets)
+        {
+            b->pivot();
+        }
+    }
+
+    // Process all bets
+    for (size_t i = 0; i < tableBets_.size(); ++i)
+    {
+        auto& bets = tableBets_[i];
+        for (auto& b : bets)
+        {
+            b->pivot();
+        }
+    }
+
+    // Process all bets
+    for (auto name : EnumBetName::enumerators)
+    {
+        auto& bets = tableBets_[static_cast<size_t>(name)];
+        for (auto& b : bets)
+        {
+            b->pivot();
+        }
+    }
+
+    // Process all Place bets
+    for (auto& b : tableBets_[PlaceBetIndex])
+    {
+        b->pivot();
+    }
+    // TODO: announce resolve bets end
+}
+#endif

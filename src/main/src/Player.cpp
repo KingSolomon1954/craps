@@ -39,7 +39,7 @@ Player::Player(
 //----------------------------------------------------------------
 //
 // Constructor.
-// 
+//
 Player::Player(
     const Gen::Uuid& uuid,
     const std::string& name,
@@ -118,7 +118,7 @@ Player - place bet on table
             pm.processDecision(id, dr);
             lookup player by ID
             player.processDecision(const DecisionRecord& dr)
-        endfor                                
+        endfor
 
 #endif
 
@@ -130,7 +130,7 @@ Player::processWin(const DecisionRecord& dr)
     assert(dr.win > 0);
     wallet_.deposit(dr.returnToPlayer);
     wallet_.deposit(dr.win);
-    
+
     // Obtain pointer to the bet (for stats and stuff)
     auto pBet = findBetById(dr.betId);
     if (pBet == nullptr)
@@ -139,10 +139,10 @@ Player::processWin(const DecisionRecord& dr)
         assert(false);
         return;
     }
-    
+
     // TODO update win stats before removing bet
     // pBet->startTime - endTime ...
-    
+
     (void) removeBetByPtr(pBet);
 }
 
@@ -163,7 +163,7 @@ Player::processLose(const DecisionRecord& dr)
         assert(false);
         return;
     }
-    
+
     // TODO update lose stats before removing bet
     // pBet->startTime - endTime ...
 
@@ -184,7 +184,7 @@ Player::processKeep(const DecisionRecord& dr)
         assert(false);
         return;
     }
-    
+
     // TODO
     // maybe the pivot was assigned, if so do auto odds?
     // update stats
@@ -195,7 +195,7 @@ Player::processKeep(const DecisionRecord& dr)
 void
 Player::diagBadBetId(const std::string& funcName, unsigned betId) const
 {
-    std::string diag = 
+    std::string diag =
         "Internal Error: Unable to process decision record. "
         "Player::" + funcName + "cant match "
         "decision record betId against any betId held "

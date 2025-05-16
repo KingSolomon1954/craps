@@ -16,7 +16,7 @@ namespace App {
 struct DecisionRecord;  // fwd
 
 
-    
+
 class PlayerManager
 {
 public:
@@ -43,7 +43,7 @@ public:
     /// @}
 
 private:
-    std::unordered_map<Gen::Uuid, std::shared_ptr<Player>> playersAll_;    
+    std::unordered_map<Gen::Uuid, std::shared_ptr<Player>> playersAll_;
 
     void diagBadPlayerId(const std::string& funcName,
                          const Gen::Uuid& playerId) const;
