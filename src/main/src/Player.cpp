@@ -7,6 +7,7 @@
 #include "Player.h"
 #include <cassert>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include "CrapsBet.h"
 #include "DecisionRecord.h"
@@ -16,7 +17,15 @@ using namespace App;
 //----------------------------------------------------------------
 //
 // Constructor.
-// 
+//
+Player::Player()
+{
+}
+
+//----------------------------------------------------------------
+//
+// Constructor.
+//
 Player::Player(
     const std::string& name,
     unsigned startingBalance)
@@ -121,9 +130,19 @@ Player::processWin(const DecisionRecord& dr)
     assert(dr.win > 0);
     wallet_.deposit(dr.returnToPlayer);
     wallet_.deposit(dr.win);
-    // TODO update win stats
+    
+    // Obtain pointer to the bet (for stats and stuff)
     auto pBet = findBetById(dr.betId);
+    if (pBet == nullptr)
+    {
+        diagBadBetId("processWin() ", dr.betId);
+        assert(false);
+        return;
+    }
+    
+    // TODO update win stats before removing bet
     // pBet->startTime - endTime ...
+    
     (void) removeBetByPtr(pBet);
 }
 
@@ -135,10 +154,20 @@ Player::processLose(const DecisionRecord& dr)
     assert(dr.lose > 0);
     wallet_.deposit(dr.returnToPlayer);
     // Money was already withdrawn from wallet when making the bet
-    // TODO update lose stats before removing bet
+
+    // Obtain pointer to the bet (for stats and stuff)
     auto pBet = findBetById(dr.betId);
+    if (pBet == nullptr)
+    {
+        diagBadBetId("processLose() ", dr.betId);
+        assert(false);
+        return;
+    }
+    
+    // TODO update lose stats before removing bet
     // pBet->startTime - endTime ...
-    (void) removeBetByPtr(pBet);
+
+    (void) removeBetByPtr(pBet);  // Done with this bet
 }
 
 //----------------------------------------------------------------
@@ -147,9 +176,32 @@ void
 Player::processKeep(const DecisionRecord& dr)
 {
     assert((dr.lose == dr.win) == 0);
+    // Obtain pointer to the bet (for stats and stuff)
+    auto pBet = findBetById(dr.betId);
+    if (pBet == nullptr)
+    {
+        diagBadBetId("processKeep() ", dr.betId);
+        assert(false);
+        return;
+    }
+    
     // TODO
-    // maybe pivot assigned, if so do auto odds?
+    // maybe the pivot was assigned, if so do auto odds?
     // update stats
+}
+
+//----------------------------------------------------------------
+
+void
+Player::diagBadBetId(const std::string& funcName, unsigned betId) const
+{
+    std::string diag = 
+        "Internal Error: Unable to process decision record. "
+        "Player::" + funcName + "cant match "
+        "decision record betId against any betId held "
+        "in player betList. Bad betId" + std::to_string(betId);
+    // TODO: error manager
+    std::cerr << diag << std::endl;
 }
 
 //----------------------------------------------------------------
@@ -207,16 +259,86 @@ Player::removeBetById(unsigned betId)
 
 //----------------------------------------------------------------
 //
-// For saving/loading
+// Save Player to file
 //
+bool
+Player::saveToFile(const std::string& path) const
+{
+    std::ofstream out(path);
+    if (!out) return false;
+    out << toJson().dump(2);
+    return true;
+}
+
+//----------------------------------------------------------------
+//
+// Load Player from file
+//
+bool
+Player::loadFromFile(const std::string& path)
+{
+    std::ifstream in(path);
+    if (!in) return false;
+    json j;
+    in >> j;
+    fromJson(j);
+    return true;
+}
+
+//----------------------------------------------------------------
+//
+// Convert Player to JSON
+//
+json Player::toJson() const
+{
+    return json{
+        {"uuid", uuid_},
+        {"name", name_},
+        {"balance", wallet_.getBalance()}
+    };
+}
+
+//----------------------------------------------------------------
+//
+// Convert JSON to Player
+//
+void
+Player::fromJson(const json& j)
+{
+    uuid_ = j.at("uuid").get<std::string>();
+    name_ = j.at("name").get<std::string>();
+    // TODO wallet_.balance = j.at("balance").get<int64_t>();
+}
+
+//----------------------------------------------------------------
+
+const Gen::Uuid&
+Player::getUuid() const
+{
+    return uuid_;
+}
+
+//----------------------------------------------------------------
+
+const std::string&
+Player::getName() const
+{
+    return name_;
+}
+
+//----------------------------------------------------------------
+
+#if 0
 std::string
 Player::serialize() const
 {
     return uuid_ + "," + name_ + "," + std::to_string(wallet_.getBalance());
 }
+#endif
 
 //----------------------------------------------------------------
 
+#if 0
 Player
 Player::deserialize(const std::string& line)
 {
@@ -227,13 +349,6 @@ Player::deserialize(const std::string& line)
     std::getline(ss, balanceStr);
     return Player(uuidStr, nameStr, std::stol(balanceStr));
 }
-
-//----------------------------------------------------------------
-
-const Gen::Uuid&
-Player::getUuid() const
-{
-    return uuid_;
-}
+#endif
 
 //----------------------------------------------------------------

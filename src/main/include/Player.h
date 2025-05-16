@@ -8,12 +8,15 @@
 
 #include <string>
 #include <memory>
-#include <vector>
+#include <list>
+#include <nlohmann/json.hpp>
 #include <gen/Uuid.h>
 #include "Bank.h"
 #include "CrapsTable.h"
 #include "CrapsBet.h"
 #include "CrapsBetIntfc.h"
+
+using json = nlohmann::json;
 
 namespace App {
 
@@ -25,11 +28,18 @@ class Player
 public:
     /// @name Lifecycle
     /// @{
+    Player();
     Player(const std::string& name,
            unsigned startingBalance);
     Player(const Gen::Uuid&,
            const std::string& name,
            unsigned startingBalance);
+    
+    bool saveToFile(const std::string& path) const;
+    bool loadFromFile(const std::string& path);
+    
+//    static Player deserialize(const std::string& line);
+//    std::string serialize() const;
     /// @}
 
     /// @name Modifiers
@@ -37,24 +47,26 @@ public:
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
-    static Player deserialize(const std::string& line);
+    void fromJson(const json& j);
     /// @}
     
     /// @name Observers
     /// @{
     const Gen::Uuid& getUuid() const;
-    std::string serialize() const;
+    const std::string& getName() const;
+    json toJson() const;
     /// @}
 
 private:    
-    const Gen::Uuid uuid_;
-    const std::string name_;
+    Gen::Uuid uuid_;
+    std::string name_;
     Bank wallet_;
     using BetIntfcPtr = std::shared_ptr<class CrapsBetIntfc>;
-    std::vector<BetIntfcPtr> bets_;
+    std::list<BetIntfcPtr> bets_;
 
     bool removeBetByPtr(BetIntfcPtr& pBet);
     BetIntfcPtr findBetById(unsigned betId) const;
+    void diagBadBetId(const std::string& funcName, unsigned betId) const;
 };
 
 /*-----------------------------------------------------------*//**

@@ -6,6 +6,7 @@
 
 find_package(cxxopts REQUIRED)
 find_package(rang REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 add_library(main STATIC
     src/Bank.cpp
@@ -32,6 +33,7 @@ target_link_libraries(main
     PUBLIC codec
     PUBLIC cxxopts::cxxopts
     PUBLIC rang::rang
+    PUBLIC nlohmann_json::nlohmann_json
 )
 
 target_compile_options(main
