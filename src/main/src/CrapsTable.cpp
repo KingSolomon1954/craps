@@ -7,10 +7,7 @@
 #include "CrapsTable.h"
 #include <iostream>
 #include <cassert>
-#include "gen/ErrorPass.h"
-#include "gen/ReturnCode.h"
 #include "CrapsBet.h"
-#include "DecisionRecord.h"
 #include "Events.h"
 #include "EventManager.h"
 #include "PlayerManager.h"
@@ -35,15 +32,15 @@ CrapsTable::CrapsTable()
 Gen::ReturnCode
 CrapsTable::addPlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 {
+    const std::string diag1("Unable to add Player to table. ");
     if (havePlayer(playerId))
     {
-        ep.diag = "Unable to add Player to table. "
-            "Player is already joined.";
+        ep.diag = diag1 + "Player is already joined.";
         return Gen::ReturnCode::Fail;
     }
     if (players_.size() == MaxPlayers)
     {
-        (void) ep;  // TODO fill out ep
+        ep.diag = diag1 + "At max num players " + std::to_string(MaxPlayers) + ".";
         return Gen::ReturnCode::Fail;
     }
     players_.push_back(playerId);
@@ -276,6 +273,18 @@ CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
 // Suppports unit testing. Not meant for callers.
 //
 void
+CrapsTable::testRollDice(unsigned d1, unsigned d2)
+{
+    isTestRoll_ = true;
+    testRollDice_.set(d1, d2);
+    rollDice();
+}
+
+//----------------------------------------------------------------
+//
+// Suppports unit testing. Not meant for callers.
+//
+void
 CrapsTable::testSetState(unsigned point, unsigned d1, unsigned d2)
 {
     point_ = point;
@@ -318,13 +327,16 @@ void
 CrapsTable::throwDice()
 {
     Gbl::pEventMgr->publish(DiceThrowStart{});
-    dice_.roll();
-    Gbl::pEventMgr->publish(DiceThrowEnd{dice_.value(), dice_.d1(), dice_.d2()});
+    if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
+    std::cout << "point:" << point_ << " dice:" << dice_.value()
+              << "(" << dice_.d1() << "," << dice_.d2() << ")\n";
+    Gbl::pEventMgr->publish(DiceThrowEnd{});
+    Gbl::pEventMgr->publish(AnnounceDiceNumber{dice_.value(), dice_.d1(), dice_.d2()});
 }
 
 //----------------------------------------------------------------
 //
-// update point, update shooter, update stats
+// Update point, update shooter, update stats
 //
 void
 CrapsTable::advanceState()
@@ -335,18 +347,18 @@ CrapsTable::advanceState()
         {
             point_ = dice_.value();
             Gbl::pEventMgr->publish(PointEstablished{point_});
-            // TODO move puck
         }
     }
-    else
+    else if (dice_.value() == 7)
     {
-        if (dice_.value() == 7)
-        {
-            point_ = 0;
-            Gbl::pEventMgr->publish(SevenOut{});
-            // clear puck
-            advanceShooter();
-        }
+        point_ = 0;
+        Gbl::pEventMgr->publish(SevenOut{});
+        advanceShooter();
+    }
+    else if (point_ == dice_.value())
+    {
+        point_ = 0;
+        Gbl::pEventMgr->publish(PassLineWinner{});
     }
 }
 
@@ -642,7 +654,7 @@ CrapsTable::updatePlayerId(const Gen::Uuid& oldId,
         *it = newId;
         return Gen::ReturnCode::Success;
     }
-    (void) ep; // TODO: fill out ep
+    ep.diag = "Unable to update playerId. No such ID:" + oldId;
     return Gen::ReturnCode::Fail;
 }
 

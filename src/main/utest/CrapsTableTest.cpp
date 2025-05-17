@@ -380,32 +380,59 @@ TEST_CASE("CrapsTable:placing bets")
     
 //----------------------------------------------------------------
 
+void printDice(unsigned point, const Dice& d)
+{
+    std::cout << "point " << point << " dice " << d.value() << "(" << d.d1() << "," << d.d2() << ")\n";
+}
+    
 TEST_CASE("CrapsTable:roll dice")
 {
     SUBCASE("first roll")
     {
         CrapsTable t;
+        Gbl::pTable = &t;
         EventManager em;
         Gbl::pEventMgr = &em;
         PlayerManager pm;
         Gbl::pPlayerMgr = &pm;
         Gen::ErrorPass ep;
 
-        // Roll dice with no players
-        // First put table into known state
-        t.testSetState(0, 6, 6);  // coming out, dice=12(6,6)
+        // First roll, no players, it's a come out roll.
+        CHECK(t.isComeOutRoll());
+        t.testRollDice(6,6);       // roll a 12, success is no crash
+        CHECK(t.isComeOutRoll());  // still coming out
         CHECK(t.getLastRoll().value() == 12);
         CHECK(t.getLastRoll().d1() == 6);
         CHECK(t.getLastRoll().d2() == 6);
-                    
-        t.rollDice();
 
+        // Create and add a couple of players
         PlayerManager::PlayerPtr john = Gbl::pPlayerMgr->createPlayer("John");
         PlayerManager::PlayerPtr jane = Gbl::pPlayerMgr->createPlayer("Jane");
-
-        CHECK(t.addPlayer(john->getUuid(), ep) == Gen::ReturnCode::Success);
-        CHECK(t.addPlayer(jane->getUuid(), ep) == Gen::ReturnCode::Success);
+        CHECK(john->joinTable(ep) == Gen::ReturnCode::Success);
+        CHECK(jane->joinTable(ep) == Gen::ReturnCode::Success);
         CHECK(t.getNumPlayers() == 2);
+        Money johnBalance = john->getBalance();
+        Money janeBalance = jane->getBalance();
+
+        CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(john->getBalance() == (johnBalance - 10));
+        std::cout << "John makes PassLine bet\n";
+        CHECK(jane->makeBet(BetName::DontPass, 10, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(jane->getBalance() == (janeBalance - 10));
+        std::cout << "Jane makes DontPass bet\n";
+
+        t.testRollDice(3,4);       // roll a 7, pass line win, dont pass lose
+        CHECK(john->getBalance() == (johnBalance + 10));
+        CHECK(jane->getBalance() == (janeBalance - 10));
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.getNumBetsOnTable() == 0);
+        CHECK(john->getNumBetsOnTable() == 0);
+        CHECK(john->getAmountOnTable() == 0);
+        CHECK(jane->getNumBetsOnTable() == 0);
+        CHECK(jane->getAmountOnTable() == 0);
+
+
+        
     }
 }
 

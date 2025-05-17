@@ -9,11 +9,12 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "CrapsBet.h"
+#include "CrapsBetIntfc.h"
+#include "CrapsTable.h"
 #include "DecisionRecord.h"
 #include "Events.h"
 #include "EventManager.h"
-#include "Globals.h"
+#include "PlayerManager.h"
 
 using namespace App;
 
@@ -23,6 +24,7 @@ using namespace App;
 //
 Player::Player()
 {
+    setupSubscriptions();
 }
 
 //----------------------------------------------------------------
@@ -36,7 +38,7 @@ Player::Player(
     , name_(name)
     , wallet_(startingBalance)
 {
-    // empty
+    setupSubscriptions();
 }
 
 //----------------------------------------------------------------
@@ -69,10 +71,20 @@ Player::setupSubscriptions()
         {
             this->onBettingOpened();
         });
-    Gbl::pEventMgr->subscribe<DiceThrowEnd>(
-        [this](const DiceThrowEnd& evt)
+    Gbl::pEventMgr->subscribe<DiceThrowStart>(
+        [this](const DiceThrowStart&)
         {
-            this->onDiceThrowEnd(evt);
+            this->onDiceThrowStart();
+        });
+    Gbl::pEventMgr->subscribe<DiceThrowEnd>(
+        [this](const DiceThrowEnd&)
+        {
+            this->onDiceThrowEnd();
+        });
+    Gbl::pEventMgr->subscribe<AnnounceDiceNumber>(
+        [this](const AnnounceDiceNumber& evt)
+        {
+            this->onAnnounceDiceNumber(evt);
         });
     Gbl::pEventMgr->subscribe<PointEstablished>(
         [this](const PointEstablished& evt)
@@ -84,6 +96,11 @@ Player::setupSubscriptions()
         {
             this->onSevenOut();
         });
+    Gbl::pEventMgr->subscribe<PassLineWinner>(
+        [this](const PassLineWinner&)
+        {
+            this->onPassLineWinner();
+        });
     Gbl::pEventMgr->subscribe<NewShooter>(
         [this](const NewShooter& evt)
         {
@@ -93,14 +110,45 @@ Player::setupSubscriptions()
                 
 //----------------------------------------------------------------
 
+Gen::ReturnCode
+Player::joinTable(Gen::ErrorPass& ep)
+{
+    // For now, using a single global craps table.
+    if (Gbl::pTable->addPlayer(uuid_, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("Player " + name_ + " joining table. ");
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+Player::makeBet(BetName betName,
+                Money contractAmount,
+                unsigned pivot,
+                Gen::ErrorPass& ep)
+{
+    // TODO check sufficient funds first 
+    auto pBet = Gbl::pTable->addBet(uuid_, betName, contractAmount, pivot, ep);
+    if (pBet == nullptr)
+    {
+        return Gen::ReturnCode::Fail;
+    }
+    wallet_.withdraw(contractAmount);
+    bets_.push_back(pBet);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
 void
 Player::processWin(const DecisionRecord& dr)
 {
     assert(dr.win > 0);
-    wallet_.deposit(dr.returnToPlayer);
-    wallet_.deposit(dr.win);
 
-    // Obtain pointer to the bet (for stats and stuff)
+    // Obtain pointer to our bet
     auto pBet = findBetById(dr.betId);
     if (pBet == nullptr)
     {
@@ -109,6 +157,12 @@ Player::processWin(const DecisionRecord& dr)
         return;
     }
 
+    std::cout << name_ << ": processWin(" << pBet->betName() <<
+        ") won:" << dr.win << "\n";
+
+    wallet_.deposit(dr.returnToPlayer);
+    wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
+    
     // TODO update win stats before removing bet
     // pBet->startTime - endTime ...
 
@@ -133,6 +187,9 @@ Player::processLose(const DecisionRecord& dr)
         return;
     }
 
+    std::cout << name_ << ": processLose(" << pBet->betName() <<
+        ") lost:" << dr.lose << "\n";
+
     // TODO update lose stats before removing bet
     // pBet->startTime - endTime ...
 
@@ -144,7 +201,6 @@ Player::processLose(const DecisionRecord& dr)
 void
 Player::processKeep(const DecisionRecord& dr)
 {
-    assert((dr.lose == dr.win) == 0);
     // Obtain pointer to the bet (for stats and stuff)
     auto pBet = findBetById(dr.betId);
     if (pBet == nullptr)
@@ -154,6 +210,11 @@ Player::processKeep(const DecisionRecord& dr)
         return;
     }
 
+    std::cout << name_ << ": processKeep(" << pBet->betName() <<
+        ") lost:" << dr.lose << " won:" << dr.win << "\n";
+
+    assert(dr.lose == 0); assert(dr.win == 0);
+    
     // TODO
     // maybe the pivot was assigned, if so do auto odds?
     // update stats
@@ -204,6 +265,31 @@ Player::removeBetByPtr(BetIntfcPtr& b)
         return true;
     }
     return false;
+}
+
+//----------------------------------------------------------------
+//
+// Returns the amount of money currently bet on the table.
+//
+unsigned
+Player::getAmountOnTable() const
+{
+    unsigned amount = 0;
+    for (auto& b : bets_)
+    {
+        amount += b->contractAmount() + b->oddsAmount();
+    }
+    return amount;
+}
+
+//----------------------------------------------------------------
+//
+// Returns number of bets currently on the table.
+//
+unsigned
+Player::getNumBetsOnTable() const
+{
+    return bets_.size();
 }
 
 //----------------------------------------------------------------
@@ -297,10 +383,19 @@ Player::getName() const
 
 //----------------------------------------------------------------
 
+Money
+Player::getBalance() const
+{
+    return wallet_.getBalance();
+}
+
+//----------------------------------------------------------------
+
 void
 Player::onBettingClosed()
 {
     // TODO
+    std::cout << name_ << " acknowledges BettingClosed\n";
 }
 
 //----------------------------------------------------------------
@@ -309,15 +404,35 @@ void
 Player::onBettingOpened()
 {
     // TODO
+    std::cout << name_ << " acknowledges BettingOpen\n";
 }
 
 //----------------------------------------------------------------
 
 void
-Player::onDiceThrowEnd(const DiceThrowEnd& evt)
+Player::onDiceThrowStart()
 {
     // TODO
-    (void) evt;
+    std::cout << name_ << " acknowledges DiceThrowStart\n";
+}
+
+//----------------------------------------------------------------
+
+void
+Player::onDiceThrowEnd()
+{
+    // TODO
+    std::cout << name_ << " acknowledges DiceThrowEnd\n";
+}
+
+//----------------------------------------------------------------
+
+void
+Player::onAnnounceDiceNumber(const AnnounceDiceNumber& evt)
+{
+    // TODO
+    std::cout << name_ << " acknowledges AnnounceDiceNumber " << evt.val
+              << "(" << evt.d1 << "," << evt.d2 << ")\n";
 }
 
 //----------------------------------------------------------------
@@ -326,7 +441,7 @@ void
 Player::onPointEstablished(const PointEstablished& evt)
 {
     // TODO
-    (void) evt;
+    std::cout << name_ << " acknowledges PointEstablished " << evt.point << "\n";
 }
 
 //----------------------------------------------------------------
@@ -335,6 +450,16 @@ void
 Player::onSevenOut()
 {
     // TODO
+    std::cout << name_ << " acknowledges SevenOut\n";
+}
+
+//----------------------------------------------------------------
+
+void
+Player::onPassLineWinner()
+{
+    // TODO
+    std::cout << name_ << " acknowledges PassLineWinner\n";
 }
 
 //----------------------------------------------------------------
@@ -343,7 +468,8 @@ void
 Player::onNewShooter(const NewShooter& evt)
 {
     // TODO
-    (void) evt;
+    std::cout << name_ << " acknowledges NewShooter " <<
+        Gbl::pPlayerMgr->getPlayer(evt.shooterId)->getName() << "\n";
 }
 
 //----------------------------------------------------------------

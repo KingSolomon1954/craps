@@ -50,6 +50,7 @@ public:
     Gen::ReturnCode setOdds         (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
 
     void rollDice();
+    void testRollDice(unsigned d1, unsigned d2);
     void testSetState(unsigned point, unsigned d1, unsigned d2);
     /// @}
 
@@ -82,7 +83,9 @@ private:
     unsigned point_ = 0;
     Gen::Uuid currentShooterId_;
     bool bettingOpen_ = true;
-
+    bool isTestRoll_ = false;
+    Dice testRollDice_;
+    
     // Players must join table in order to play.  We only hold the
     // player's UUID here in a std::list container and rely on the
     // PlayerManager to interface with players.

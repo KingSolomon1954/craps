@@ -10,21 +10,21 @@
 #include <memory>
 #include <list>
 #include <nlohmann/json.hpp>
+#include "gen/ErrorPass.h"
+#include "gen/ReturnCode.h"
 #include <gen/Uuid.h>
 #include "Bank.h"
-#include "CrapsTable.h"
-#include "CrapsBet.h"
-#include "CrapsBetIntfc.h"
+#include "Events.h"
+#include "EnumBetName.h"
+#include "Globals.h"
 
 using json = nlohmann::json;
 
 namespace App {
 
-class CrapsBet;         // fwd
-class DecisionRecort;   // fwd
-class DiceThrowEnd;     // fwd
-class PointEstablished; // fwd
-class NewShooter;       // fwd
+class CrapsBetIntfc;    // fwd
+class DecisionRecord;   // fwd
+class ErrorPass;        // fwd
 
 class Player
 {
@@ -47,6 +47,12 @@ public:
 
     /// @name Modifiers
     /// @{
+    Gen::ReturnCode joinTable(Gen::ErrorPass& ep);
+    Gen::ReturnCode makeBet(BetName betName,
+                            Money contractAmount,
+                            unsigned pivot,
+                            Gen::ErrorPass& ep);
+    
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
@@ -57,6 +63,9 @@ public:
     /// @{
     const Gen::Uuid& getUuid()   const;
     const std::string& getName() const;
+    Money getAmountOnTable()     const;
+    unsigned getNumBetsOnTable() const;
+    Money getBalance()           const;
     json toJson()                const;
     /// @}
 
@@ -73,9 +82,12 @@ private:
     void setupSubscriptions();
     void onBettingClosed();
     void onBettingOpened();
-    void onDiceThrowEnd(const DiceThrowEnd& evt);
+    void onDiceThrowStart();
+    void onDiceThrowEnd();
+    void onAnnounceDiceNumber(const AnnounceDiceNumber& evt);
     void onPointEstablished(const PointEstablished& evt);
     void onSevenOut();
+    void onPassLineWinner();
     void onNewShooter(const NewShooter& evt);
 };
 
