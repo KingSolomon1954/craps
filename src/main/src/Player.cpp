@@ -157,12 +157,12 @@ Player::processWin(const DecisionRecord& dr)
         return;
     }
 
-    std::cout << name_ << ": processWin(" << pBet->betName() <<
-        ") won:" << dr.win << "\n";
-
     wallet_.deposit(dr.returnToPlayer);
     wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
     
+    std::cout << name_ << ": processWin(" << pBet->betName() <<
+        ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
+
     // TODO update win stats before removing bet
     // pBet->startTime - endTime ...
 
@@ -188,7 +188,7 @@ Player::processLose(const DecisionRecord& dr)
     }
 
     std::cout << name_ << ": processLose(" << pBet->betName() <<
-        ") lost:" << dr.lose << "\n";
+        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
 
     // TODO update lose stats before removing bet
     // pBet->startTime - endTime ...
@@ -211,7 +211,8 @@ Player::processKeep(const DecisionRecord& dr)
     }
 
     std::cout << name_ << ": processKeep(" << pBet->betName() <<
-        ") lost:" << dr.lose << " won:" << dr.win << "\n";
+        ") lost:" << dr.lose << " won:" << dr.win
+        << " balance:" << wallet_.getBalance() << "\n";
 
     assert(dr.lose == 0); assert(dr.win == 0);
     
@@ -265,6 +266,32 @@ Player::removeBetByPtr(BetIntfcPtr& b)
         return true;
     }
     return false;
+}
+
+//----------------------------------------------------------------
+//
+// Remove bet by name.
+//
+Gen::ReturnCode
+Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
+{
+    auto it = std::remove_if(bets_.begin(), bets_.end(),
+        [betName, pivot](const BetIntfcPtr& b)
+        {
+            return (b->betName() == betName) && (b->pivot() == pivot);
+        });
+    if (it == bets_.end())
+    {
+        ep.diag = "not found";
+        return Gen::ReturnCode::Fail;
+    }
+
+    if (Gbl::pTable->removeBet(*it, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("problem");
+    }
+    bets_.erase(it, bets_.end());  // remove from our list of bets
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

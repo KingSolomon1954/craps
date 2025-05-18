@@ -414,6 +414,7 @@ TEST_CASE("CrapsTable:roll dice")
         Money johnBalance = john->getBalance();
         Money janeBalance = jane->getBalance();
 
+        // come out roll, roll a 7, pass line win, dont pass lose
         CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);
         CHECK(john->getBalance() == (johnBalance - 10));
         std::cout << "John makes PassLine bet\n";
@@ -421,7 +422,7 @@ TEST_CASE("CrapsTable:roll dice")
         CHECK(jane->getBalance() == (janeBalance - 10));
         std::cout << "Jane makes DontPass bet\n";
 
-        t.testRollDice(3,4);       // roll a 7, pass line win, dont pass lose
+        t.testRollDice(3,4);
         CHECK(john->getBalance() == (johnBalance + 10));
         CHECK(jane->getBalance() == (janeBalance - 10));
         CHECK(t.getAmountOnTable() == 0);
@@ -430,9 +431,113 @@ TEST_CASE("CrapsTable:roll dice")
         CHECK(john->getAmountOnTable() == 0);
         CHECK(jane->getNumBetsOnTable() == 0);
         CHECK(jane->getAmountOnTable() == 0);
+        CHECK(t.isComeOutRoll());
 
+        // come out roll, roll a 11, pass line win, dont pass lose
+        johnBalance = john->getBalance();  // reset
+        janeBalance = jane->getBalance();  // reset
+        CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(john->getBalance() == (johnBalance - 10));
+        std::cout << "John makes PassLine bet\n";
+        CHECK(jane->makeBet(BetName::DontPass, 10, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(jane->getBalance() == (janeBalance - 10));
+        std::cout << "Jane makes DontPass bet\n";
 
+        t.testRollDice(6,5);
+        CHECK(john->getBalance() == (johnBalance + 10));
+        CHECK(jane->getBalance() == (janeBalance - 10));
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.getNumBetsOnTable() == 0);
+        CHECK(john->getNumBetsOnTable() == 0);
+        CHECK(john->getAmountOnTable() == 0);
+        CHECK(jane->getNumBetsOnTable() == 0);
+        CHECK(jane->getAmountOnTable() == 0);
+        CHECK(t.isComeOutRoll());
+
+        // come out roll, roll a 2, pass line lose, dont pass win
+        johnBalance = john->getBalance();  // reset
+        janeBalance = jane->getBalance();  // reset
+        CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(john->getBalance() == (johnBalance - 10));
+        std::cout << "John makes PassLine bet\n";
+        CHECK(jane->makeBet(BetName::DontPass, 10, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(jane->getBalance() == (janeBalance - 10));
+        std::cout << "Jane makes DontPass bet\n";
+
+        t.testRollDice(1,1);
+        CHECK(john->getBalance() == (johnBalance - 10));
+        CHECK(jane->getBalance() == (janeBalance + 10));
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.getNumBetsOnTable() == 0);
+        CHECK(john->getNumBetsOnTable() == 0);
+        CHECK(john->getAmountOnTable() == 0);
+        CHECK(jane->getNumBetsOnTable() == 0);
+        CHECK(jane->getAmountOnTable() == 0);
+        CHECK(t.isComeOutRoll());
+
+        // come out roll, roll a 3, pass line lose, dont pass win
+        johnBalance = john->getBalance();  // reset
+        janeBalance = jane->getBalance();  // reset
+        CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);
+        std::cout << "John makes PassLine bet\n";
+        CHECK(jane->makeBet(BetName::DontPass, 10, 0, ep) == Gen::ReturnCode::Success);
+        std::cout << "Jane makes DontPass bet\n";
+
+        t.testRollDice(1,2);
+        CHECK(john->getBalance() == (johnBalance - 10));
+        CHECK(jane->getBalance() == (janeBalance + 10));
+        CHECK(t.getAmountOnTable() == 0);
+        CHECK(t.getNumBetsOnTable() == 0);
+        CHECK(john->getNumBetsOnTable() == 0);
+        CHECK(john->getAmountOnTable() == 0);
+        CHECK(jane->getNumBetsOnTable() == 0);
+        CHECK(jane->getAmountOnTable() == 0);
+        CHECK(t.isComeOutRoll());
+
+        // come out roll, roll a 12, pass line lose, dont pass push
+        johnBalance = john->getBalance();  // reset
+        janeBalance = jane->getBalance();  // reset
+        CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);
+        std::cout << "John makes PassLine bet\n";
+        CHECK(jane->makeBet(BetName::DontPass, 10, 0, ep) == Gen::ReturnCode::Success);
+        std::cout << "Jane makes DontPass bet\n";
+
+        t.testRollDice(6,6);
+        CHECK(john->getBalance() == (johnBalance - 10));
+        CHECK(jane->getBalance() == janeBalance - 10);
+        CHECK(t.getAmountOnTable() == 10);
+        CHECK(t.getNumBetsOnTable() == 1);
+        CHECK(john->getNumBetsOnTable() == 0);
+        CHECK(john->getAmountOnTable() == 0);
+        CHECK(jane->getNumBetsOnTable() == 1);
+        CHECK(jane->getAmountOnTable() == 10);
+        CHECK(t.isComeOutRoll());
+
+        jane->removeBet(BetName::DontPass, 0, ep);
+        CHECK(jane->getNumBetsOnTable() == 0);
+        CHECK(t.getNumBetsOnTable() == 0);
         
+        // come out roll, roll a 4, pass line kepp, dont pass keep
+        johnBalance = john->getBalance();  // reset
+        janeBalance = jane->getBalance();  // reset
+        CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);
+        std::cout << "John makes PassLine bet\n";
+        CHECK(jane->makeBet(BetName::DontPass, 10, 0, ep) == Gen::ReturnCode::Success);
+        std::cout << "Jane makes DontPass bet\n";
+        CHECK(john->getBalance() == johnBalance - 10);
+        CHECK(jane->getBalance() == janeBalance - 10);
+
+        t.testRollDice(2,2);
+        CHECK(john->getBalance() == johnBalance - 10);
+        CHECK(jane->getBalance() == janeBalance - 10);
+        CHECK(t.getAmountOnTable() == 20);
+        CHECK(t.getNumBetsOnTable() == 2);
+        CHECK(john->getNumBetsOnTable() == 1);
+        CHECK(john->getAmountOnTable() == 10);
+        CHECK(jane->getNumBetsOnTable() == 1);
+        CHECK(jane->getAmountOnTable() == 10);
+        CHECK(!t.isComeOutRoll());
+        CHECK(t.getPoint() == 4);
     }
 }
 

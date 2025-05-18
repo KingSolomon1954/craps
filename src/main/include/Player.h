@@ -45,6 +45,34 @@ public:
 //    std::string serialize() const;
     /// @}
 
+#if 0
+class Game
+{
+    std::vector<uuid> listPlayers() const;
+    std::vector<uuid> listTables() const;
+    ReturnCdoe joinTable(PlayerId playerId,
+                         TableId tableId,
+                         Gen::ErrorPass& ep);
+    ReturnCdoe leaveTable(PlayerId playerId,
+                          TableId tableId,
+                          Gen::ErrorPass& ep);
+    using BetId = unsigned;
+    using Money = unsigned;
+    using PlayerId = std::string;
+    BetId = placeBet(PlayerId playerId,
+                     BetNameStr betName,
+                     Money contractAmount,
+                     Gen::ErrorPass& ep);
+    ReturnCode = removeBet(BetId, Gen::ErrorPass& ep);
+    ReturnCode = setOdds(BetId, Money oddsAmount, Gen::ErrorPass& ep);
+    ReturnCode = changeBetAmount(BetId, int delta, Gen::ErrorPass& ep);
+    ReturnCode = rollDice();
+    
+    CrapsBetIntfc = getBetInfc(BetId);
+};    
+#endif
+    
+    
     /// @name Modifiers
     /// @{
     Gen::ReturnCode joinTable(Gen::ErrorPass& ep);
@@ -52,7 +80,9 @@ public:
                             Money contractAmount,
                             unsigned pivot,
                             Gen::ErrorPass& ep);
-    
+    Gen::ReturnCode removeBet(BetName betName,
+                              unsigned pivot,
+                              Gen::ErrorPass& ep);
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
