@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <chrono>
 #include <ostream>
 #include "gen/Uuid.h"
 #include "Globals.h"

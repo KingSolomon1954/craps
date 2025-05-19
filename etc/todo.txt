@@ -492,33 +492,31 @@ Player.h
     Statistics
 
 
-CrapsTable
-{
-    BetPtr = addBet(Uuid, BetName, contractAmount, pivot, Gen::ErrorPass& ep);
-    Gen::ReturnCode setBet(BetPtr bet, newContractAmount, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(BetPtr bet, Gen::ErrorPass& ep);
+
+src/main  (model)
+
+src/lib-intfc (controller)
+
+src/lib--gui (view)
+
+src/lib--tui (view)
+
+src/lib-cui (view)
+
+src/lib-gen
+
+main/src
+    model
+    controller
+    view
+        cli
+        gui
+        term
+        
+main/include
+    model
+    controller
+    view/cli
+    view/gui
+    view/term
     
-    Gen::ReturnCode addOdds(BetPtr bet, Money oddsAmount, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOdds(BetPtr bet, Money oddsAmount, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeOdds(BetPtr bet, Gen::ErrorPass& ep);
-};
-
-CrapsBet.h (interface)
-{
-    void setOffComeOutRoll();
-    void setOnComeOutRoll();
-    void setHardwayOff();
-    void setHardwayOn();
-
-    const Gen::Uuid& playerId() const;
-    unsigned betId() const;
-    BetName betName() const;
-    unsigned pivot() const;
-    unsigned contractAmount() const;
-    unsigned oddsAmount() const;
-    bool offComeOutRoll() const;
-    bool hardwayWorking() const;
-    unsigned distance() const;
-    std::chrono::time_point<std::chrono::system_clock> whenCreated() const;
-    std::chrono::time_point<std::chrono::system_clock> whenDecided() const;
-}
