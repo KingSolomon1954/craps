@@ -1,19 +1,21 @@
 //----------------------------------------------------------------
 //
-// File: main.cpp
+// File: Placeholder.cpp
 //
 //----------------------------------------------------------------
 
 #include "controller/Placeholder.h"
 
-//----------------------------------------------------------------
+using namespace Ctrl;
 
-int
-main(int argc, char* argv[])
+/*-----------------------------------------------------------*//**
+
+Constructor
+
+*/
+Placeholder::Placeholder()
 {
-    (void) argc; (void) argv;
-//  App::CrapsGame craps(argc, argv);
-    return 0;
+    // Empty.
 }
 
 //----------------------------------------------------------------

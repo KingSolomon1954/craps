@@ -4,14 +4,16 @@
 #
 # -----------------------------------------------------------------
 
-add_executable(RoyalCraps-ut
-    utest-main.cpp
+add_executable(tui-ut
+    utest-tui-main.cpp
+    PlaceholderTest.cpp
 )
 
-target_link_libraries(RoyalCraps-ut
+target_link_libraries(tui-ut
+    PRIVATE tui
     PRIVATE doctest::doctest
 )
 
-doctest_discover_tests(RoyalCraps-ut)
+doctest_discover_tests(tui-ut)
 
 # -----------------------------------------------------------------

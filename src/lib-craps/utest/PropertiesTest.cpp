@@ -1,19 +1,17 @@
 //----------------------------------------------------------------
 //
-// File: main.cpp
+// File: PropertiesTest.cpp
 //
 //----------------------------------------------------------------
 
-#include "controller/Placeholder.h"
+#include "Properties.h"
+#include <doctest/doctest.h>
 
 //----------------------------------------------------------------
 
-int
-main(int argc, char* argv[])
+TEST_CASE("Properties:all")
 {
-    (void) argc; (void) argv;
-//  App::CrapsGame craps(argc, argv);
-    return 0;
+    REQUIRE(true);
 }
 
 //----------------------------------------------------------------

@@ -1,19 +1,17 @@
 //----------------------------------------------------------------
 //
-// File: main.cpp
+// File: PlaceholderTest.cpp
 //
 //----------------------------------------------------------------
 
-#include "controller/Placeholder.h"
+#include "tui/Placeholder.h"
+#include <doctest/doctest.h>
 
 //----------------------------------------------------------------
 
-int
-main(int argc, char* argv[])
+TEST_CASE("Tui::Placeholder")
 {
-    (void) argc; (void) argv;
-//  App::CrapsGame craps(argc, argv);
-    return 0;
+    REQUIRE(true);
 }
 
 //----------------------------------------------------------------

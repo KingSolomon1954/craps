@@ -10,35 +10,11 @@
 
 /*-----------------------------------------------------------*//**
 
-@mainpage RoyalCraps
+@namespace Gui
 
-![RoyalCraps](docs/src/images/pub/CampfireLakeSmall.png)
-
-Add description of RoyalCraps
-
-@li @ref App
-@li @ref Gen
-@li @ref Ctrl
-@li @ref Tui
-@li @ref free
-
-*/
-
-/*-----------------------------------------------------------*//**
-
-@namespace App
-
-@brief Application level functions and classes.
+@brief Supply Library description.
 
 Add longer description.
-
-*/
-
-/*-----------------------------------------------------------*//**
-
-@defgroup free Free Functions
-
-@brief Functions not in a namespace.
 
 */
 

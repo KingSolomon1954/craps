@@ -1,19 +1,17 @@
 //----------------------------------------------------------------
 //
-// File: main.cpp
+// File: CrapsGameTest.cpp
 //
 //----------------------------------------------------------------
 
-#include "controller/Placeholder.h"
+#include "CrapsGame.h"
+#include <doctest/doctest.h>
 
 //----------------------------------------------------------------
 
-int
-main(int argc, char* argv[])
+TEST_CASE("CrapsGame:all")
 {
-    (void) argc; (void) argv;
-//  App::CrapsGame craps(argc, argv);
-    return 0;
+    REQUIRE(true);
 }
 
 //----------------------------------------------------------------

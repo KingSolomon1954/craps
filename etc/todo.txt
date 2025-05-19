@@ -495,28 +495,13 @@ Player.h
 
 src/main  (model)
 
-src/lib-intfc (controller)
+src/lib-controller (controller)
 
-src/lib--gui (view)
+src/lib--gui (GUI view)
 
-src/lib--tui (view)
+src/lib--tui (Terminal/curses view)
 
-src/lib-cui (view)
+src/lib-cui (Command line view)
 
-src/lib-gen
+src/lib-gen (utilities)
 
-main/src
-    model
-    controller
-    view
-        cli
-        gui
-        term
-        
-main/include
-    model
-    controller
-    view/cli
-    view/gui
-    view/term
-    
