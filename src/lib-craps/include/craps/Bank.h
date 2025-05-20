@@ -10,7 +10,7 @@
 #include <string>
 #include <cstdint>
 #include <optional>
-#include "craps/Globals.h"
+#include <controller/Globals.h>
 
 namespace Craps {
 
@@ -24,32 +24,32 @@ public:
     struct Transaction
     {
         TransactionType type;
-        Money amount;
+        Gbl::Money amount;
         std::string note;
     };
 
     /// @name Lifecycle
     /// @{
-    Bank(Money initialBalance = 0);
+    Bank(Gbl::Money initialBalance = 0);
     /// @}
 
     /// @name Modifiers
     /// @{
-    bool deposit (Money amount, const std::string& note = "");
-    bool withdraw(Money amount, const std::string& note = "");
-    void refill  (Money amount, const std::string& note = "Refill");
+    bool deposit (Gbl::Money amount, const std::string& note = "");
+    bool withdraw(Gbl::Money amount, const std::string& note = "");
+    void refill  (Gbl::Money amount, const std::string& note = "Refill");
     /// @}
 
     /// @name Observers
     /// @{
-    Money getBalance() const;
+    Gbl::Money getBalance() const;
     const std::vector<Transaction>& getHistory() const;
-    Money totalDeposited() const;
-    Money totalWithdrawn() const;
+    Gbl::Money totalDeposited() const;
+    Gbl::Money totalWithdrawn() const;
     /// @}
 
 private:
-    Money balance_ = 0;
+    Gbl::Money balance_ = 0;
     std::vector<Transaction> history_;
 };
 

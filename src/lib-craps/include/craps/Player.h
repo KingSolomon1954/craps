@@ -10,13 +10,13 @@
 #include <memory>
 #include <list>
 #include <nlohmann/json.hpp>
-#include "gen/ErrorPass.h"
-#include "gen/ReturnCode.h"
-#include "gen/Uuid.h"
+#include <controller/Globals.h>
 #include "craps/Bank.h"
 #include "craps/Events.h"
 #include "craps/EnumBetName.h"
-#include "craps/Globals.h"
+#include "gen/ErrorPass.h"
+#include "gen/ReturnCode.h"
+#include "gen/Uuid.h"
 
 using json = nlohmann::json;
 
@@ -77,10 +77,10 @@ class CrapsInterface
     static BetId placeBet(TableId tableId,
                           PlayerId playerId,
                           BetNameStr betName,
-                          Money contractAmount,
+                          Gbl::Money contractAmount,
                           Gen::ErrorPass& ep);
     static ReturnCode removeBet(TableId tableId, BetId bet, Gen::ErrorPass& ep);
-    static ReturnCode setOdds(TableId tableId, BetId bet, Money oddsAmount, Gen::ErrorPass& ep);
+    static ReturnCode setOdds(TableId tableId, BetId bet, Gbl::Money oddsAmount, Gen::ErrorPass& ep);
     static ReturnCode changeBetAmount(TableId tableId, BetId bet, int delta, Gen::ErrorPass& ep);
     static void rollDice(TalbeId tableId);
     
@@ -92,7 +92,7 @@ class CrapsInterface
     /// @{
     Gen::ReturnCode joinTable(Gen::ErrorPass& ep);
     Gen::ReturnCode makeBet(BetName betName,
-                            Money contractAmount,
+                            Gbl::Money contractAmount,
                             unsigned pivot,
                             Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(BetName betName,
@@ -108,9 +108,9 @@ class CrapsInterface
     /// @{
     const Gen::Uuid& getUuid()   const;
     const std::string& getName() const;
-    Money getAmountOnTable()     const;
+    Gbl::Money getAmountOnTable()     const;
     unsigned getNumBetsOnTable() const;
-    Money getBalance()           const;
+    Gbl::Money getBalance()           const;
     json toJson()                const;
     /// @}
 

@@ -82,7 +82,7 @@ CrapsTable::BetIntfcPtr
 CrapsTable::addBet(
     const Gen::Uuid& playerId,
     BetName betName,
-    Money contractAmount,
+    Gbl::Money contractAmount,
     unsigned pivot,
     Gen::ErrorPass& ep)
 {

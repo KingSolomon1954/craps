@@ -7,7 +7,7 @@
 #pragma once
 
 #include <ostream>
-#include <craps/Globals.h>
+#include <controller/Globals.h>
 #include <gen/Uuid.h>
 
 namespace Craps {
@@ -17,10 +17,10 @@ struct DecisionRecord
     unsigned betId = 0;
     bool decision = false;
     bool pivotAssigned = false;
-    Money win = 0;
-    Money lose = 0;
-    Money returnToPlayer = 0;
-    Money commission = 0;
+    Gbl::Money win = 0;
+    Gbl::Money lose = 0;
+    Gbl::Money returnToPlayer = 0;
+    Gbl::Money commission = 0;
     Gen::Uuid playerId;
 
     bool operator==(const DecisionRecord& other) const

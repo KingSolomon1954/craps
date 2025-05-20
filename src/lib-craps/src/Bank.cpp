@@ -10,7 +10,7 @@ using namespace Craps;
 
 //----------------------------------------------------------------
 
-Bank::Bank(Money initialBalance)
+Bank::Bank(Gbl::Money initialBalance)
     : balance_(initialBalance)
 {
     history_.push_back({ TransactionType::Refill, initialBalance, "Initial Balance" });
@@ -19,7 +19,7 @@ Bank::Bank(Money initialBalance)
 //----------------------------------------------------------------
 
 bool
-Bank::deposit(Money amount, const std::string& note)
+Bank::deposit(Gbl::Money amount, const std::string& note)
 {
     if (amount <= 0) return false;
     balance_ += amount;
@@ -30,7 +30,7 @@ Bank::deposit(Money amount, const std::string& note)
 //----------------------------------------------------------------
 
 bool
-Bank::withdraw(Money amount, const std::string& note)
+Bank::withdraw(Gbl::Money amount, const std::string& note)
 {
     if (amount <= 0 || amount > balance_) return false;
     balance_ -= amount;
@@ -41,7 +41,7 @@ Bank::withdraw(Money amount, const std::string& note)
 //----------------------------------------------------------------
 
 void
-Bank::refill(Money amount, const std::string& note)
+Bank::refill(Gbl::Money amount, const std::string& note)
 {
     if (amount <= 0) return;
     balance_ += amount;
@@ -50,7 +50,7 @@ Bank::refill(Money amount, const std::string& note)
 
 //----------------------------------------------------------------
 
-Money
+Gbl::Money
 Bank::getBalance() const
 {
     return balance_;
@@ -66,10 +66,10 @@ Bank::getHistory() const
 
 //----------------------------------------------------------------
 
-Money
+Gbl::Money
 Bank::totalDeposited() const
 {
-    Money total = 0;
+    Gbl::Money total = 0;
     for (const auto& tx : history_)
     {
         if (tx.type == TransactionType::Deposit)
@@ -82,10 +82,10 @@ Bank::totalDeposited() const
 
 //----------------------------------------------------------------
 
-Money
+Gbl::Money
 Bank::totalWithdrawn() const
 {
-    Money total = 0;
+    Gbl::Money total = 0;
     for (const auto& tx : history_)
     {
         if (tx.type == TransactionType::Withdraw)

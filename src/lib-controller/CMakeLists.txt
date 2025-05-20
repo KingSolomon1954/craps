@@ -5,8 +5,10 @@
 # -----------------------------------------------------------------
 
 add_library(controller STATIC
-    src/Placeholder.cpp
     src/AppController.cpp
+    src/CommandLine.cpp
+    src/Globals.cpp
+    src/Placeholder.cpp
 )
 
 target_include_directories(controller

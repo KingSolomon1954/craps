@@ -126,7 +126,7 @@ Player::joinTable(Gen::ErrorPass& ep)
 
 Gen::ReturnCode
 Player::makeBet(BetName betName,
-                Money contractAmount,
+                Gbl::Money contractAmount,
                 unsigned pivot,
                 Gen::ErrorPass& ep)
 {
@@ -410,7 +410,7 @@ Player::getName() const
 
 //----------------------------------------------------------------
 
-Money
+Gbl::Money
 Player::getBalance() const
 {
     return wallet_.getBalance();

@@ -17,7 +17,6 @@ add_library(craps STATIC
     src/CrapsTable.cpp
     src/Dice.cpp
     src/EnumBetName.cpp
-    src/Globals.cpp
     src/Player.cpp
     src/PlayerManager.cpp
     src/Properties.cpp
@@ -29,6 +28,7 @@ target_include_directories(craps
 
 target_link_libraries(craps
     PUBLIC gen
+    PUBLIC controller
     PUBLIC nlohmann_json::nlohmann_json
     PRIVATE cxxopts::cxxopts
     PRIVATE rang::rang

@@ -4,14 +4,14 @@
 //
 //----------------------------------------------------------------
 
-#include <craps/CommandLine.h>
 #include <iostream>
 #include <string>
 #include <cxxopts.hpp>
 #include <rang.hpp>
+#include <controller/CommandLine.h>
 #include <gen/BuildInfo.h>
 
-using namespace Craps;
+using namespace Ctrl;
 
 /*-----------------------------------------------------------*//**
 
@@ -56,7 +56,7 @@ CommandLine::CommandLine(int argc, char* argv[],
     if (result.count("version"))
     {
         std::cout << rang::style::bold
-            << bld.shortInfo() << rang::style::reset;
+            << bld.fullInfo() << rang::style::reset;
         exit(0);
     }
     bool debug = result["debug"].as<bool>();

@@ -13,7 +13,7 @@
 #include "gen/ReturnCode.h"
 #include "gen/Uuid.h"
 #include "craps/Bank.h"
-#include "craps/Globals.h"
+#include "controller/Globals.h"
 #include "craps/CrapsBet.h"
 #include "craps/DecisionRecord.h"
 #include "craps/Dice.h"
@@ -42,12 +42,12 @@ public:
     using BetIntfcPtr = std::shared_ptr<class CrapsBetIntfc>;
     BetIntfcPtr addBet(const Gen::Uuid& playerId,
                        BetName betName,
-                       Money contractAmount,
+                       Gbl::Money contractAmount,
                        unsigned pivot,
                        Gen::ErrorPass& ep);
     Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOdds         (BetIntfcPtr bet, Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOdds         (BetIntfcPtr bet, Gbl::Money amount, Gen::ErrorPass& ep);
 
     void rollDice();
     void testRollDice(unsigned d1, unsigned d2);
@@ -64,7 +64,7 @@ public:
     Dice getLastRoll()                         const;
     bool isComeOutRoll()                       const;
     bool isBettingOpen()                       const;
-    Money getAmountOnTable()                   const;
+    Gbl::Money getAmountOnTable()              const;
     unsigned getNumBetsOnTable()               const;
     bool haveBet(const BetIntfcPtr bet)        const;
     bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
