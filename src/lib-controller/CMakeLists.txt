@@ -6,6 +6,7 @@
 
 add_library(controller STATIC
     src/Placeholder.cpp
+    src/AppController.cpp
 )
 
 target_include_directories(controller
@@ -14,6 +15,7 @@ target_include_directories(controller
 
 target_link_libraries(controller
     PUBLIC gen
+    PUBLIC craps
 )
 
 target_compile_definitions(controller

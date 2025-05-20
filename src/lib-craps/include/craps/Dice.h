@@ -39,14 +39,14 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsBet
+@class Dice
 
-@brief A bet on the craps table.
+@brief Dice
 
-Store info that represents a craps bet.
+Two die.
 
 */
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

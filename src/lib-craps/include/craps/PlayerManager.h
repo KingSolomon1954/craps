@@ -9,9 +9,9 @@
 #include <memory>
 #include <unordered_map>
 #include <gen/Uuid.h>
-#include "Player.h"
+#include "craps/Player.h"
 
-namespace App {
+namespace Craps {
 
 struct DecisionRecord;  // fwd
 
@@ -72,6 +72,6 @@ PlayerManager Responsibilities:
 
 */
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

@@ -4,22 +4,22 @@
 //
 //----------------------------------------------------------------
 
-#include "CrapsGame.h"
+#include "craps/CrapsGame.h"
 #include <iostream>
 #include <rang.hpp>
 #include "gen/BuildInfo.h"
 #include "gen/StringUtils.h"
-#include "CommandLine.h"
-#include "CrapsTable.h"
-#include "EventManager.h"
-#include "PlayerManager.h"
+#include "craps/CommandLine.h"
+#include "craps/CrapsTable.h"
+#include "craps/EventManager.h"
+#include "craps/PlayerManager.h"
 
 #if 0
 #include "controller/EnumChannelDirection.h"
 #include "Properties.h"
 #endif
 
-using namespace App;
+using namespace Craps;
 
 const std::string CrapsGame::appNameScreen = "Royal Craps";
 const std::string CrapsGame::appNameExec   = "RoyalCraps";
@@ -36,7 +36,7 @@ Constructor
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
-    Gen::BuildInfo bld(App::CrapsGame::appNameScreen);
+    Gen::BuildInfo bld(Craps::CrapsGame::appNameScreen);
     CommandLine cmdline(argc, argv, bld);
     std::cout << bld.fullInfo() << std::endl;
     

@@ -4,12 +4,12 @@
 //
 //----------------------------------------------------------------
 
-#include "Globals.h"
-#include "CrapsTable.h"
-#include "EventManager.h"
-#include "PlayerManager.h"
+#include <craps/Globals.h>
+#include <craps/CrapsTable.h>
+#include <craps/EventManager.h>
+#include <craps/PlayerManager.h>
 
-using namespace App;
+using namespace Craps;
 
 EventManager*  Gbl::pEventMgr  = NULL;
 CrapsTable*    Gbl::pTable     = NULL;

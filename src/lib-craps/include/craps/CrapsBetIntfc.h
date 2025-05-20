@@ -8,9 +8,9 @@
 
 #include <chrono>
 #include "gen/Uuid.h"
-#include "EnumBetName.h"
+#include "craps/EnumBetName.h"
 
-namespace App {
+namespace Craps {
 
 class CrapsBetIntfc
 {
@@ -53,6 +53,6 @@ An interface to manage a craps bet on the table.
 
 */
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

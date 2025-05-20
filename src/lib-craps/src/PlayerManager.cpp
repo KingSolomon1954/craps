@@ -4,13 +4,13 @@
 //
 //----------------------------------------------------------------
 
-#include "PlayerManager.h"
+#include "craps/PlayerManager.h"
 #include <cassert>
 #include <fstream>
 #include <iostream>
-#include "DecisionRecord.h"
+#include "craps/DecisionRecord.h"
 
-using namespace App;
+using namespace Craps;
 
 /*-----------------------------------------------------------*//**
 

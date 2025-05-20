@@ -4,15 +4,15 @@
 //
 //----------------------------------------------------------------
 
-#include "CrapsTable.h"
+#include <craps/CrapsTable.h>
 #include <iostream>
 #include <cassert>
-#include "CrapsBet.h"
-#include "Events.h"
-#include "EventManager.h"
-#include "PlayerManager.h"
+#include <craps/CrapsBet.h>
+#include <craps/Events.h>
+#include <craps/EventManager.h>
+#include <craps/PlayerManager.h>
 
-using namespace App;
+using namespace Craps;
 
 /*-----------------------------------------------------------*//**
 

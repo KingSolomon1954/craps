@@ -1,25 +1,25 @@
 //----------------------------------------------------------------
 //
-// File: CrapsGame.h
+// File: CommandLine.h
 //
 //----------------------------------------------------------------
 
 #pragma once
-#include <string>
+
+namespace Gen
+{
+    class BuildInfo;  // fwd
+}
 
 namespace Craps {
 
-class CrapsTable;     // fwd
-class EventManager;   // fwd
-class PlayerManager;  // fwd
-    
-class CrapsGame
+class CommandLine
 {
 public:
     /// @name Lifecycle
     /// @{
-    CrapsGame(int argc, char* argv[]);
-   ~CrapsGame() = default;
+    CommandLine(int argc, char* argv[], const Gen::BuildInfo& bld);
+   ~CommandLine() = default;
     /// @}
 
     /// @name Modifiers
@@ -29,23 +29,15 @@ public:
     /// @name Observers
     /// @{
     /// @}
-
-    static const std::string appNameScreen;
-    static const std::string appNameExec;
-
-private:
-    CrapsTable* initCrapsTable();
-    EventManager* initEventManager();
-    PlayerManager* initPlayerManager();
 };
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsGame
+@class CommandLine
 
-@brief Craps Game Top Level class.
+@brief Process command line arguments.
 
-Craps Game.
+Supply class description.
 
 */
 

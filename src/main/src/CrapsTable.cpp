@@ -12,7 +12,7 @@
 #include "EventManager.h"
 #include "PlayerManager.h"
 
-using namespace App;
+using namespace Craps;
 
 /*-----------------------------------------------------------*//**
 

@@ -10,16 +10,16 @@
 #include <ostream>
 #include <string>
 #include <unordered_set>
-#include "CrapsBetIntfc.h"
+#include "craps/CrapsBetIntfc.h"
+#include "craps/Globals.h"
+#include "craps/OddsTables.h"
 #include "gen/ReturnCode.h"
-#include "Globals.h"
-#include "OddsTables.h"
 
 namespace Gen {
     class ErrorPass;  // fwd
 }
 
-namespace App {
+namespace Craps {
 
 class Dice;            // fwd
 class DecisionRecord;  // fwd
@@ -152,8 +152,8 @@ Manage a craps bet on the table.
 
 */
 
-} // namespace App
+} // namespace Craps
 
-std::ostream& operator<< (std::ostream& out, const App::CrapsBet& b);
+std::ostream& operator<< (std::ostream& out, const Craps::CrapsBet& b);
     
 //----------------------------------------------------------------

@@ -7,10 +7,10 @@
 #pragma once
 
 #include <ostream>
-#include "gen/Uuid.h"
-#include "Globals.h"
+#include <craps/Globals.h>
+#include <gen/Uuid.h>
 
-namespace App {
+namespace Craps {
 
 struct DecisionRecord
 {
@@ -46,8 +46,8 @@ Results of a bet after dice throw.
 
 */
 
-} // namespace App
+} // namespace Craps
 
-std::ostream& operator<< (std::ostream& out, const App::DecisionRecord& dr);
+std::ostream& operator<< (std::ostream& out, const Craps::DecisionRecord& dr);
 
 //----------------------------------------------------------------

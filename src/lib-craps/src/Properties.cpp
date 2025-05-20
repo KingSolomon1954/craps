@@ -4,9 +4,9 @@
 //
 //----------------------------------------------------------------
 
-#include "Properties.h"
+#include <craps/Properties.h>
 
-using namespace App;
+using namespace Craps;
 
 /*-----------------------------------------------------------*//**
 

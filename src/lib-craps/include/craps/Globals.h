@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace App {
+namespace Craps {
 
 typedef unsigned Money;
 
@@ -22,6 +22,6 @@ public:
     static PlayerManager* pPlayerMgr;
 };
     
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

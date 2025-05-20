@@ -12,15 +12,15 @@
 #include <nlohmann/json.hpp>
 #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
-#include <gen/Uuid.h>
-#include "Bank.h"
-#include "Events.h"
-#include "EnumBetName.h"
-#include "Globals.h"
+#include "gen/Uuid.h"
+#include "craps/Bank.h"
+#include "craps/Events.h"
+#include "craps/EnumBetName.h"
+#include "craps/Globals.h"
 
 using json = nlohmann::json;
 
-namespace App {
+namespace Craps {
 
 class CrapsBetIntfc;    // fwd
 class DecisionRecord;   // fwd
@@ -154,6 +154,6 @@ Player Responsibilities:
 
 */
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

@@ -4,8 +4,8 @@
 //
 //----------------------------------------------------------------
 
-#include "EnumBetName.h"
-#include "gen/StringUtils.h"
+#include <craps/EnumBetName.h>
+#include <gen/StringUtils.h>
 
 using namespace EnumBetName;
 using namespace Gen;

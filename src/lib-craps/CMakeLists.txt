@@ -5,21 +5,22 @@
 # --------------------------------------------------------
 
 find_package(nlohmann_json REQUIRED)
+find_package(cxxopts REQUIRED)
+find_package(rang REQUIRED)
 
 add_library(craps STATIC
   
-#    src/Bank.cpp
-#    src/CrapsBet.cpp
-#    src/CrapsGame.cpp
-#    src/CrapsTable.cpp
+    src/Bank.cpp
+    src/CommandLine.cpp
+    src/CrapsBet.cpp
+    src/CrapsGame.cpp
+    src/CrapsTable.cpp
     src/Dice.cpp
-#    src/EnumBetName.cpp
-#    src/Globals.cpp
-#    src/Player.cpp
-#    src/PlayerManager.cpp
-#    src/PlayerPicker.cpp
-#    src/Properties.cpp
-#    src/TablePicker.cpp
+    src/EnumBetName.cpp
+    src/Globals.cpp
+    src/Player.cpp
+    src/PlayerManager.cpp
+    src/Properties.cpp
 )
 
 target_include_directories(craps
@@ -29,6 +30,8 @@ target_include_directories(craps
 target_link_libraries(craps
     PUBLIC gen
     PUBLIC nlohmann_json::nlohmann_json
+    PRIVATE cxxopts::cxxopts
+    PRIVATE rang::rang
 )
 
 target_compile_definitions(craps

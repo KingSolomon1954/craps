@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace App {
+namespace Craps {
 
 class Properties
 {
@@ -36,6 +36,6 @@ Supply class description.
 
 */
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

@@ -16,17 +16,18 @@
 
 Add description of RoyalCraps
 
-@li @ref App
 @li @ref Gen
+@li @ref Craps
 @li @ref Ctrl
 @li @ref Tui
+@li @ref Gui
 @li @ref free
 
 */
 
 /*-----------------------------------------------------------*//**
 
-@namespace App
+@namespace Craps
 
 @brief Application level functions and classes.
 

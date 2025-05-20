@@ -4,19 +4,19 @@
 //
 //----------------------------------------------------------------
 
-#include "Player.h"
+#include "craps/Player.h"
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "CrapsBetIntfc.h"
-#include "CrapsTable.h"
-#include "DecisionRecord.h"
-#include "Events.h"
-#include "EventManager.h"
-#include "PlayerManager.h"
+#include "craps/CrapsBetIntfc.h"
+#include "craps/CrapsTable.h"
+#include "craps/DecisionRecord.h"
+#include "craps/Events.h"
+#include "craps/EventManager.h"
+#include "craps/PlayerManager.h"
 
-using namespace App;
+using namespace Craps;
 
 //----------------------------------------------------------------
 //

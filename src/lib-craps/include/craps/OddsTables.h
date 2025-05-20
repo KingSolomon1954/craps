@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace App {
+namespace Craps {
 
 class OddsTables
 {
@@ -116,6 +116,6 @@ public:
 
 */
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

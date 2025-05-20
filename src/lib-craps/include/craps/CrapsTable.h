@@ -12,14 +12,14 @@
 #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
 #include "gen/Uuid.h"
-#include "Bank.h"
-#include "Globals.h"
-#include "CrapsBet.h"
-#include "DecisionRecord.h"
-#include "Dice.h"
-#include "Player.h"
+#include "craps/Bank.h"
+#include "craps/Globals.h"
+#include "craps/CrapsBet.h"
+#include "craps/DecisionRecord.h"
+#include "craps/Dice.h"
+#include "craps/Player.h"
 
-namespace App {
+namespace Craps {
 
 class CrapsTable
 {
@@ -170,6 +170,6 @@ Responsibilities:
 
 */
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

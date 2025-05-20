@@ -10,9 +10,9 @@
 #include <string>
 #include <cstdint>
 #include <optional>
-#include "Globals.h"
+#include "craps/Globals.h"
 
-namespace App {
+namespace Craps {
 
 class Bank
 {
@@ -63,6 +63,6 @@ Manages money.
 
 */
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

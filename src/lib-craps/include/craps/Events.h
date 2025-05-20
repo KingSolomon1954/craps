@@ -5,13 +5,9 @@
 //----------------------------------------------------------------
 
 #pragma once
-#include "gen/Uuid.h"
+#include <gen/Uuid.h>
 
-// namespace Gen {
-//     class Uuid; // fwd
-// }
-
-namespace App {
+namespace Craps {
     
 // Events
 struct BettingOpened {};
@@ -28,6 +24,6 @@ struct NewShooter { const Gen::Uuid& shooterId; };
 struct PlayerJoinedTable { const Gen::Uuid& playerId; };
 struct PlayerLeftTable { const Gen::Uuid& playerId; };
 
-} // namespace App
+} // namespace Craps
 
 //----------------------------------------------------------------

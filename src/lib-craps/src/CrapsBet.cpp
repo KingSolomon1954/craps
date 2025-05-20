@@ -4,16 +4,16 @@
 //
 //----------------------------------------------------------------
 
-#include "CrapsBet.h"
+#include "craps/CrapsBet.h"
 
 #include <stdexcept> // for std::invalid_argument
 #include <iostream>
+#include "craps/DecisionRecord.h"
+#include "craps/Dice.h"
 #include "gen/ErrorPass.h"
 #include "gen/StringUtils.h"
-#include "DecisionRecord.h"
-#include "Dice.h"
 
-using namespace App;
+using namespace Craps;
 
 unsigned CrapsBet::idCounter_ = 0;
 
