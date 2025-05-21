@@ -4,17 +4,17 @@
 //
 //----------------------------------------------------------------
 
-#include "craps/Player.h"
+#include <craps/Player.h>
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "craps/CrapsBetIntfc.h"
-#include "craps/CrapsTable.h"
-#include "craps/DecisionRecord.h"
-#include "craps/Events.h"
-#include "craps/EventManager.h"
-#include "craps/PlayerManager.h"
+#include <controller/Events.h>
+#include <controller/EventManager.h>
+#include <controller/PlayerManager.h>
+#include <craps/CrapsBetIntfc.h>
+#include <craps/CrapsTable.h>
+#include <craps/DecisionRecord.h>
 
 using namespace Craps;
 
@@ -61,48 +61,48 @@ Player::Player(
 void
 Player::setupSubscriptions()
 {
-    Gbl::pEventMgr->subscribe<BettingClosed>(
-        [this](const BettingClosed&)
+    Gbl::pEventMgr->subscribe<Ctrl::BettingClosed>(
+        [this](const Ctrl::BettingClosed&)
         {
             this->onBettingClosed();
         });
-    Gbl::pEventMgr->subscribe<BettingOpened>(
-        [this](const BettingOpened&)
+    Gbl::pEventMgr->subscribe<Ctrl::BettingOpened>(
+        [this](const Ctrl::BettingOpened&)
         {
             this->onBettingOpened();
         });
-    Gbl::pEventMgr->subscribe<DiceThrowStart>(
-        [this](const DiceThrowStart&)
+    Gbl::pEventMgr->subscribe<Ctrl::DiceThrowStart>(
+        [this](const Ctrl::DiceThrowStart&)
         {
             this->onDiceThrowStart();
         });
-    Gbl::pEventMgr->subscribe<DiceThrowEnd>(
-        [this](const DiceThrowEnd&)
+    Gbl::pEventMgr->subscribe<Ctrl::DiceThrowEnd>(
+        [this](const Ctrl::DiceThrowEnd&)
         {
             this->onDiceThrowEnd();
         });
-    Gbl::pEventMgr->subscribe<AnnounceDiceNumber>(
-        [this](const AnnounceDiceNumber& evt)
+    Gbl::pEventMgr->subscribe<Ctrl::AnnounceDiceNumber>(
+        [this](const Ctrl::AnnounceDiceNumber& evt)
         {
             this->onAnnounceDiceNumber(evt);
         });
-    Gbl::pEventMgr->subscribe<PointEstablished>(
-        [this](const PointEstablished& evt)
+    Gbl::pEventMgr->subscribe<Ctrl::PointEstablished>(
+        [this](const Ctrl::PointEstablished& evt)
         {
             this->onPointEstablished(evt);
         });
-    Gbl::pEventMgr->subscribe<SevenOut>(
-        [this](const SevenOut&)
+    Gbl::pEventMgr->subscribe<Ctrl::SevenOut>(
+        [this](const Ctrl::SevenOut&)
         {
             this->onSevenOut();
         });
-    Gbl::pEventMgr->subscribe<PassLineWinner>(
-        [this](const PassLineWinner&)
+    Gbl::pEventMgr->subscribe<Ctrl::PassLineWinner>(
+        [this](const Ctrl::PassLineWinner&)
         {
             this->onPassLineWinner();
         });
-    Gbl::pEventMgr->subscribe<NewShooter>(
-        [this](const NewShooter& evt)
+    Gbl::pEventMgr->subscribe<Ctrl::NewShooter>(
+        [this](const Ctrl::NewShooter& evt)
         {
             this->onNewShooter(evt);
         });
@@ -455,7 +455,7 @@ Player::onDiceThrowEnd()
 //----------------------------------------------------------------
 
 void
-Player::onAnnounceDiceNumber(const AnnounceDiceNumber& evt)
+Player::onAnnounceDiceNumber(const Ctrl::AnnounceDiceNumber& evt)
 {
     // TODO
     std::cout << name_ << " acknowledges AnnounceDiceNumber " << evt.val
@@ -465,7 +465,7 @@ Player::onAnnounceDiceNumber(const AnnounceDiceNumber& evt)
 //----------------------------------------------------------------
 
 void
-Player::onPointEstablished(const PointEstablished& evt)
+Player::onPointEstablished(const Ctrl::PointEstablished& evt)
 {
     // TODO
     std::cout << name_ << " acknowledges PointEstablished " << evt.point << "\n";
@@ -492,7 +492,7 @@ Player::onPassLineWinner()
 //----------------------------------------------------------------
 
 void
-Player::onNewShooter(const NewShooter& evt)
+Player::onNewShooter(const Ctrl::NewShooter& evt)
 {
     // TODO
     std::cout << name_ << " acknowledges NewShooter " <<

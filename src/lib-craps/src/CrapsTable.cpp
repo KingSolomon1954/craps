@@ -7,10 +7,10 @@
 #include <craps/CrapsTable.h>
 #include <iostream>
 #include <cassert>
+#include <controller/Events.h>
+#include <controller/EventManager.h>
+#include <controller/PlayerManager.h>
 #include <craps/CrapsBet.h>
-#include <craps/Events.h>
-#include <craps/EventManager.h>
-#include <craps/PlayerManager.h>
 
 using namespace Craps;
 
@@ -44,7 +44,7 @@ CrapsTable::addPlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
     players_.push_back(playerId);
-    Gbl::pEventMgr->publish(PlayerJoinedTable{ playerId });
+    Gbl::pEventMgr->publish(Ctrl::PlayerJoinedTable{ playerId });
     return Gen::ReturnCode::Success;
 }
 
@@ -61,7 +61,7 @@ CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 
     // Remove all bets by player, bet money given to the house bank.
     removePlayerBets(playerId);
-    Gbl::pEventMgr->publish(PlayerLeftTable{ playerId });
+    Gbl::pEventMgr->publish(Ctrl::PlayerLeftTable{ playerId });
     return Gen::ReturnCode::Success;
 }
 
@@ -309,7 +309,7 @@ void
 CrapsTable::declareBettingClosed()
 {
     bettingOpen_ = false; // No more bets
-    Gbl::pEventMgr->publish(BettingClosed{});
+    Gbl::pEventMgr->publish(Ctrl::BettingClosed{});
 }
 
 //----------------------------------------------------------------
@@ -318,7 +318,7 @@ void
 CrapsTable::declareBettingOpen()
 {
     bettingOpen_ = true;
-    Gbl::pEventMgr->publish(BettingOpened{});
+    Gbl::pEventMgr->publish(Ctrl::BettingOpened{});
 }
 
 //----------------------------------------------------------------
@@ -326,12 +326,12 @@ CrapsTable::declareBettingOpen()
 void
 CrapsTable::throwDice()
 {
-    Gbl::pEventMgr->publish(DiceThrowStart{});
+    Gbl::pEventMgr->publish(Ctrl::DiceThrowStart{});
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
     std::cout << "point:" << point_ << " dice:" << dice_.value()
               << "(" << dice_.d1() << "," << dice_.d2() << ")\n";
-    Gbl::pEventMgr->publish(DiceThrowEnd{});
-    Gbl::pEventMgr->publish(AnnounceDiceNumber{dice_.value(), dice_.d1(), dice_.d2()});
+    Gbl::pEventMgr->publish(Ctrl::DiceThrowEnd{});
+    Gbl::pEventMgr->publish(Ctrl::AnnounceDiceNumber{dice_.value(), dice_.d1(), dice_.d2()});
 }
 
 //----------------------------------------------------------------
@@ -346,19 +346,19 @@ CrapsTable::advanceState()
         if (CrapsBet::pointNums_.contains(dice_.value()))
         {
             point_ = dice_.value();
-            Gbl::pEventMgr->publish(PointEstablished{point_});
+            Gbl::pEventMgr->publish(Ctrl::PointEstablished{point_});
         }
     }
     else if (dice_.value() == 7)
     {
         point_ = 0;
-        Gbl::pEventMgr->publish(SevenOut{});
+        Gbl::pEventMgr->publish(Ctrl::SevenOut{});
         advanceShooter();
     }
     else if (point_ == dice_.value())
     {
         point_ = 0;
-        Gbl::pEventMgr->publish(PassLineWinner{});
+        Gbl::pEventMgr->publish(Ctrl::PassLineWinner{});
     }
 }
 
@@ -385,7 +385,7 @@ CrapsTable::advanceShooter()
 
     if (currentShooterId_ != prev)
     {
-        Gbl::pEventMgr->publish(NewShooter{currentShooterId_});
+        Gbl::pEventMgr->publish(Ctrl::NewShooter{currentShooterId_});
     }
 }
 
@@ -394,12 +394,12 @@ CrapsTable::advanceShooter()
 void
 CrapsTable::resolveBets()
 {
-    Gbl::pEventMgr->publish(ResolveBetsStart{});
+    Gbl::pEventMgr->publish(Ctrl::ResolveBetsStart{});
     evaluateBets();
     dispenseResults();
     trimTableBets();
     clearDrl();
-    Gbl::pEventMgr->publish(ResolveBetsEnd{});
+    Gbl::pEventMgr->publish(Ctrl::ResolveBetsEnd{});
 }
 
 //----------------------------------------------------------------

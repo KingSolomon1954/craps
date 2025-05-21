@@ -12,7 +12,7 @@
 #include <typeindex>
 #include <any>
 
-namespace Craps {
+namespace Ctrl {
 
 class EventManager
 {
@@ -55,7 +55,7 @@ Pub/Sub various events.
 
 */
 
-} // namespace Craps
+} // namespace Ctrl
 
 //----------------------------------------------------------------
 

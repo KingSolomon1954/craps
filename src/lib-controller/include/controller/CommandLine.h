@@ -6,19 +6,14 @@
 
 #pragma once
 
-namespace Gen
-{
-    class BuildInfo;  // fwd
-}
-
-namespace Craps {
+namespace Ctrl {
 
 class CommandLine
 {
 public:
     /// @name Lifecycle
     /// @{
-    CommandLine(int argc, char* argv[], const Gen::BuildInfo& bld);
+    CommandLine(int argc, char* argv[]);
    ~CommandLine() = default;
     /// @}
 
@@ -41,6 +36,6 @@ Supply class description.
 
 */
 
-} // namespace Craps
+} // namespace Ctrl
 
 //----------------------------------------------------------------

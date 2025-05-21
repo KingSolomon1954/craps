@@ -4,11 +4,18 @@
 #
 # -----------------------------------------------------------------
 
+find_package(cxxopts REQUIRED)
+find_package(rang REQUIRED)
+
 add_library(controller STATIC
     src/AppController.cpp
     src/CommandLine.cpp
+    src/CrapsGame.cpp
     src/Globals.cpp
     src/Placeholder.cpp
+    src/PlayerManager.cpp
+    src/Properties.cpp
+    src/TableManager.cpp
 )
 
 target_include_directories(controller
@@ -18,6 +25,8 @@ target_include_directories(controller
 target_link_libraries(controller
     PUBLIC gen
     PUBLIC craps
+    PRIVATE cxxopts::cxxopts
+    PRIVATE rang::rang
 )
 
 target_compile_definitions(controller

@@ -4,9 +4,9 @@
 //
 //----------------------------------------------------------------
 
-#include <craps/Properties.h>
+#include <controller/Properties.h>
 
-using namespace Craps;
+using namespace Ctrl;
 
 /*-----------------------------------------------------------*//**
 

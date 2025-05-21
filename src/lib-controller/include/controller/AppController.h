@@ -9,7 +9,7 @@
 #include <memory>
 // #include "view/IView.h"
 // #include "controller/GameController.h"
-#include "craps/PlayerManager.h"
+#include "controller/PlayerManager.h"
 // #include "model/CrapsTable.h"
 
 namespace Ctrl {
@@ -25,7 +25,7 @@ public:
 private:
     int view_;
 //  std::unique_ptr<IView> view_;
-    Craps::PlayerManager playerManager_;
+    Ctrl::PlayerManager playerManager_;
 
     std::vector<int> loadAvailableTables();
 //  std::vector<CrapsTable> loadAvailableTables();

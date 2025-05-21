@@ -493,7 +493,9 @@ Player.h
 
 
 
-src/main  (model)
+src/main  (startup)
+
+src/lib-craps (model)
 
 src/lib-controller (controller)
 

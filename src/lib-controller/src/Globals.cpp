@@ -6,13 +6,15 @@
 
 #include <string>
 #include <controller/Globals.h>
+#include <controller/EventManager.h>
+#include <controller/PlayerManager.h>
 #include <craps/CrapsTable.h>
-#include <craps/EventManager.h>
-#include <craps/PlayerManager.h>
+#include <gen/BuildInfo.h>
 
-Craps::EventManager*  Gbl::pEventMgr  = NULL;
-Craps::CrapsTable*    Gbl::pTable     = NULL;
-Craps::PlayerManager* Gbl::pPlayerMgr = NULL;
+Ctrl::EventManager*  Gbl::pEventMgr  = NULL;
+Ctrl::PlayerManager* Gbl::pPlayerMgr = NULL;
+Craps::CrapsTable*   Gbl::pTable     = NULL;
+Gen::BuildInfo*      Gbl::pBuildInfo = NULL;
 
 const std::string Gbl::appNameScreen = "Royal Craps";
 const std::string Gbl::appNameExec   = "RoyalCraps";

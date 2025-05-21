@@ -4,13 +4,13 @@
 //
 //----------------------------------------------------------------
 
-#include "PlayerManager.h"
+#include <controller/PlayerManager.h>
 #include <cassert>
 #include <fstream>
 #include <iostream>
-#include "DecisionRecord.h"
+#include <craps/DecisionRecord.h>
 
-using namespace App;
+using namespace Ctrl;
 
 /*-----------------------------------------------------------*//**
 
@@ -31,7 +31,7 @@ Create a Player
 PlayerManager::PlayerPtr
 PlayerManager::createPlayer(const std::string& name)
 {
-    auto player = std::make_shared<Player>(name, 1000); // Default balance
+    auto player = std::make_shared<Craps::Player>(name, 1000); // Default balance
     playersAll_[player->getUuid()] = player;
     return player;
 }
@@ -64,7 +64,7 @@ PlayerManager::loadPlayers()
 
     for (const auto& entry : index["players"])
     {
-        auto player = std::make_shared<Player>();
+        auto player = std::make_shared<Craps::Player>();
         if (player->loadFromFile("players/" + entry["uuid"].get<Gen::Uuid>() + ".json"))
         {
             playersAll_[player->getUuid()] = player;
@@ -104,7 +104,7 @@ Called by CrapsTable to dish out a winning bet to a Player.
 
 */
 void
-PlayerManager::disburseWin(const DecisionRecord& dr) const
+PlayerManager::disburseWin(const Craps::DecisionRecord& dr) const
 {
     auto pPlayer = getPlayer(dr.playerId);
     if (pPlayer == nullptr)
@@ -124,7 +124,7 @@ Called by CrapsTable to dish out a losing bet to a Player.
 
 */
 void
-PlayerManager::disburseLose(const DecisionRecord& dr) const
+PlayerManager::disburseLose(const Craps::DecisionRecord& dr) const
 {
     auto pPlayer = getPlayer(dr.playerId);
     if (pPlayer == nullptr)
@@ -145,7 +145,7 @@ have no decision on the current roll of dice.
 
 */
 void
-PlayerManager::disburseKeep(const DecisionRecord& dr) const
+PlayerManager::disburseKeep(const Craps::DecisionRecord& dr) const
 {
     auto pPlayer = getPlayer(dr.playerId);
     if (pPlayer == nullptr)

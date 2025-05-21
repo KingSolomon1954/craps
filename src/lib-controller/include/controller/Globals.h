@@ -10,20 +10,28 @@
 
 // Note: Globals in unameed namespace
 
+namespace Gen {
+    class BuildInfo;      // fwd    
+}
+
 namespace Craps {
     class CrapsTable;     // fwd    
+}
+
+namespace Ctrl {
     class EventManager;   // fwd
     class PlayerManager;  // fwd
 }
-    
+
 class Gbl
 {
 public:
     using Money = unsigned;
 
-    static Craps::CrapsTable*    pTable;
-    static Craps::EventManager*  pEventMgr;
-    static Craps::PlayerManager* pPlayerMgr;
+    static Craps::CrapsTable*   pTable;
+    static Ctrl::EventManager*  pEventMgr;
+    static Ctrl::PlayerManager* pPlayerMgr;
+    static Gen::BuildInfo*      pBuildInfo;
 
     static const std::string appNameScreen;
     static const std::string appNameExec;

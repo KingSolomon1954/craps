@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace Craps {
+namespace Ctrl {
 
 class Properties
 {
@@ -36,6 +36,6 @@ Supply class description.
 
 */
 
-} // namespace Craps
+} // namespace Ctrl
 
 //----------------------------------------------------------------

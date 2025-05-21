@@ -9,11 +9,13 @@
 #include <memory>
 #include <unordered_map>
 #include <gen/Uuid.h>
-#include "craps/Player.h"
+#include <craps/Player.h>
 
 namespace Craps {
-
-struct DecisionRecord;  // fwd
+    struct DecisionRecord;  // fwd
+}
+    
+namespace Ctrl {
 
 class PlayerManager
 {
@@ -28,20 +30,20 @@ public:
 
     /// @name Modifiers
     /// @{
-    using PlayerPtr = std::shared_ptr<class Player>;
+    using PlayerPtr = std::shared_ptr<class Craps::Player>;
     PlayerPtr createPlayer(const std::string& name);
     /// @}
 
     /// @name Observers
     /// @{
     PlayerPtr getPlayer(const Gen::Uuid& id) const;
-    void disburseWin (const DecisionRecord& dr) const;
-    void disburseLose(const DecisionRecord& dr) const;
-    void disburseKeep(const DecisionRecord& dr) const;
+    void disburseWin (const Craps::DecisionRecord& dr) const;
+    void disburseLose(const Craps::DecisionRecord& dr) const;
+    void disburseKeep(const Craps::DecisionRecord& dr) const;
     /// @}
 
 private:
-    std::unordered_map<Gen::Uuid, std::shared_ptr<Player>> playersAll_;
+    std::unordered_map<Gen::Uuid, std::shared_ptr<Craps::Player>> playersAll_;
 
     void diagBadPlayerId(const std::string& funcName,
                          const Gen::Uuid& playerId) const;
@@ -72,6 +74,6 @@ PlayerManager Responsibilities:
 
 */
 
-} // namespace Craps
+} // namespace Ctrl
 
 //----------------------------------------------------------------

@@ -9,6 +9,7 @@
 #include <cxxopts.hpp>
 #include <rang.hpp>
 #include <controller/CommandLine.h>
+#include <controller/Globals.h>
 #include <gen/BuildInfo.h>
 
 using namespace Ctrl;
@@ -22,12 +23,8 @@ Constructor
 
 @param[in] argv
     Array of command line args.
-
-@param[in] bld
-    Build info
 */
-CommandLine::CommandLine(int argc, char* argv[],
-                         const Gen::BuildInfo& bld)
+CommandLine::CommandLine(int argc, char* argv[])
 {
     cxxopts::Options options("RoyalCraps", "A multiplayer dice game");
 
@@ -56,7 +53,7 @@ CommandLine::CommandLine(int argc, char* argv[],
     if (result.count("version"))
     {
         std::cout << rang::style::bold
-            << bld.fullInfo() << rang::style::reset;
+                  << Gbl::pBuildInfo->fullInfo() << rang::style::reset;
         exit(0);
     }
     bool debug = result["debug"].as<bool>();

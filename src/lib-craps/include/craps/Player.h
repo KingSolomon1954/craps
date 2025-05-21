@@ -11,20 +11,23 @@
 #include <list>
 #include <nlohmann/json.hpp>
 #include <controller/Globals.h>
+#include "controller/Events.h"
 #include "craps/Bank.h"
-#include "craps/Events.h"
 #include "craps/EnumBetName.h"
-#include "gen/ErrorPass.h"
+// #include "gen/ErrorPass.h"
 #include "gen/ReturnCode.h"
 #include "gen/Uuid.h"
 
 using json = nlohmann::json;
 
+namespace Gen {
+    class ErrorPass;    // fwd
+}
+
 namespace Craps {
 
 class CrapsBetIntfc;    // fwd
 class DecisionRecord;   // fwd
-class ErrorPass;        // fwd
 
 class Player
 {
@@ -129,11 +132,11 @@ private:
     void onBettingOpened();
     void onDiceThrowStart();
     void onDiceThrowEnd();
-    void onAnnounceDiceNumber(const AnnounceDiceNumber& evt);
-    void onPointEstablished(const PointEstablished& evt);
+    void onAnnounceDiceNumber(const Ctrl::AnnounceDiceNumber& evt);
+    void onPointEstablished(const Ctrl::PointEstablished& evt);
     void onSevenOut();
     void onPassLineWinner();
-    void onNewShooter(const NewShooter& evt);
+    void onNewShooter(const Ctrl::NewShooter& evt);
 };
 
 /*-----------------------------------------------------------*//**

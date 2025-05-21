@@ -7,9 +7,16 @@
 #pragma once
 #include <string>
 
-namespace Craps {
+namespace Gen {
+    class BuildInfo;  // fwd
+}
 
-class CrapsTable;     // fwd
+namespace Craps {
+    class CrapsTable; // fwd
+}
+
+namespace Ctrl {
+
 class EventManager;   // fwd
 class PlayerManager;  // fwd
     
@@ -30,13 +37,12 @@ public:
     /// @{
     /// @}
 
-    static const std::string appNameScreen;
-    static const std::string appNameExec;
-
 private:
-    CrapsTable* initCrapsTable();
-    EventManager* initEventManager();
-    PlayerManager* initPlayerManager();
+    void initConfig(int argc, char* argv[]);
+    Gen::BuildInfo*      initBuildInfo();
+    Ctrl::EventManager*  initEventManager();
+    Ctrl::PlayerManager* initPlayerManager();
+    Craps::CrapsTable*   initCrapsTable();
 };
 
 /*-----------------------------------------------------------*//**
