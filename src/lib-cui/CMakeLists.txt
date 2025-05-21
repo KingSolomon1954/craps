@@ -6,6 +6,7 @@
 
 add_library(cui STATIC
     src/Placeholder.cpp
+    src/ConsoleView.cpp
 )
 
 target_include_directories(cui

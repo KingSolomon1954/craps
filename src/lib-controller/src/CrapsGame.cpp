@@ -4,26 +4,21 @@
 //
 //----------------------------------------------------------------
 
-#include "controller/CrapsGame.h"
+#include <controller/CrapsGame.h>
 #include <iostream>
 #include <rang.hpp>
-#include "gen/BuildInfo.h"
-#include "gen/StringUtils.h"
-#include "controller/CommandLine.h"
-#include "controller/EventManager.h"
-#include "controller/Globals.h"
-#include "controller/PlayerManager.h"
-#include "craps/CrapsTable.h"
-
-#if 0
-#include "controller/EnumChannelDirection.h"
-#include "Properties.h"
-#endif
+#include <gen/BuildInfo.h>
+#include <gen/StringUtils.h>
+#include <controller/CommandLine.h>
+#include <controller/EventManager.h>
+#include <controller/GameController.h>
+#include <controller/Globals.h>
+#include <controller/PlayerManager.h>
+#include <controller/ViewIntfc.h>
+#include <craps/CrapsTable.h>
+#include <cui/ConsoleView.h>
 
 using namespace Ctrl;
-
-// const std::string CrapsGame::appNameScreen = "Royal Craps";
-// const std::string CrapsGame::appNameExec   = "RoyalCraps";
 
 /*-----------------------------------------------------------*//**
 
@@ -37,12 +32,21 @@ Constructor
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
+    // TODO: setup logger
     std::unique_ptr<Gen::BuildInfo>  pBuildInfo(initBuildInfo()); (void) pBuildInfo;
-    // Process config files, cmdline, env vars, etc
+
+    // Process config files, cmdline, env vars, etc.
     initConfig(argc, argv);
     
-    // TODO bring in AppController, GameController
-    
+    // Setup the chosen view IAW cmdline option.
+    std::shared_ptr<ViewIntfc> pView = std::make_shared<Cui::ConsoleView>();
+
+    // Bring in GameController, and associate with the view.
+    GameController controller(pView);
+    controller.chooseTableAndPlayers();
+    pView->run();
+
+#if 0    
     // Init globals and manage their lifetime
     std::unique_ptr<Ctrl::EventManager>  pEventMgr(initEventManager());   (void) pEventMgr;
     std::unique_ptr<Ctrl::PlayerManager> pPlayerMgr(initPlayerManager()); (void) pPlayerMgr;
@@ -54,6 +58,7 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     Gen::ErrorPass ep;
     Gbl::pTable->addPlayer(alice.getUuid(), ep);
     Gbl::pTable->addPlayer(john.getUuid(), ep);
+#endif    
 }
 
 //----------------------------------------------------------------

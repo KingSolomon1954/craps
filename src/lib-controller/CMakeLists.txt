@@ -11,6 +11,7 @@ add_library(controller STATIC
     src/AppController.cpp
     src/CommandLine.cpp
     src/CrapsGame.cpp
+    src/GameController.cpp
     src/Globals.cpp
     src/Placeholder.cpp
     src/PlayerManager.cpp
@@ -25,6 +26,8 @@ target_include_directories(controller
 target_link_libraries(controller
     PUBLIC gen
     PUBLIC craps
+    PUBLIC cui
+    PUBLIC gui
     PRIVATE cxxopts::cxxopts
     PRIVATE rang::rang
 )

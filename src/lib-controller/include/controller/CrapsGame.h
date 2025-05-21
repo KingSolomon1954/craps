@@ -51,10 +51,13 @@ private:
 
 @brief Craps Game Top Level class.
 
-Craps Game.
+Responsibiities:
+
+* initialize Configuration
+* initializes Globals
 
 */
 
-} // namespace Craps
+} // namespace Ctrl
 
 //----------------------------------------------------------------
