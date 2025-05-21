@@ -10,9 +10,9 @@
 
 /*-----------------------------------------------------------*//**
 
-@namespace Tui
+@namespace Cui
 
-@brief Supply Library description.
+@brief Console User Interface View
 
 Add longer description.
 

@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace Tui {
+namespace Cui {
 
 class Placeholder
 {
@@ -36,6 +36,6 @@ Supply class description.
 
 */
 
-} // namespace Tui
+} // namespace Cui
 
 //----------------------------------------------------------------

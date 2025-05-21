@@ -23,9 +23,9 @@ target_compile_options(RoyalCraps
 target_link_libraries(RoyalCraps
     PRIVATE gen
     PRIVATE craps
-    PRIVATE tui
-    PRIVATE gui
     PRIVATE controller
+    PRIVATE cui
+    PRIVATE gui
     PRIVATE cxxopts::cxxopts
     PRIVATE rang::rang
     PRIVATE nlohmann_json::nlohmann_json

@@ -4,19 +4,19 @@
 #
 # -----------------------------------------------------------------
 
-add_library(tui STATIC
+add_library(cui STATIC
     src/Placeholder.cpp
 )
 
-target_include_directories(tui
+target_include_directories(cui
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(tui
+target_link_libraries(cui
     PUBLIC gen controller
 )
 
-target_compile_definitions(tui
+target_compile_definitions(cui
     PRIVATE $<$<CONFIG:Debug>:
     POCO_LOG_DEBUG=1
     _DEBUG=1

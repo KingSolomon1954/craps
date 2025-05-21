@@ -1,17 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: PlaceholderTest.cpp
+// File: utest-cui-main.cpp
 //
 //----------------------------------------------------------------
 
-#include "tui/Placeholder.h"
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
-
-//----------------------------------------------------------------
-
-TEST_CASE("Tui::Placeholder")
-{
-    REQUIRE(true);
-}
 
 //----------------------------------------------------------------

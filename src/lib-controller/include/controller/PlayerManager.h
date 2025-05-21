@@ -9,6 +9,7 @@
 #include <memory>
 #include <unordered_map>
 #include <gen/Uuid.h>
+#include <controller/PlayerDescription.h>
 #include <craps/Player.h>
 
 namespace Craps {
@@ -41,6 +42,10 @@ public:
     void disburseLose(const Craps::DecisionRecord& dr) const;
     void disburseKeep(const Craps::DecisionRecord& dr) const;
     /// @}
+
+    using PlayerDescriptions = std::vector<PlayerDescription>;
+    static PlayerDescriptions loadPlayerChoices();
+    static Craps::Player loadPlayer(const Gen::Uuid& playerId);
 
 private:
     std::unordered_map<Gen::Uuid, std::shared_ptr<Craps::Player>> playersAll_;

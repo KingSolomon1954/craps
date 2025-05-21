@@ -4,16 +4,16 @@
 #
 # -----------------------------------------------------------------
 
-add_executable(tui-ut
-    utest-tui-main.cpp
+add_executable(cui-ut
+    utest-cui-main.cpp
     PlaceholderTest.cpp
 )
 
-target_link_libraries(tui-ut
-    PRIVATE tui
+target_link_libraries(cui-ut
+    PRIVATE cui
     PRIVATE doctest::doctest
 )
 
-doctest_discover_tests(tui-ut)
+doctest_discover_tests(cui-ut)
 
 # -----------------------------------------------------------------

@@ -501,9 +501,9 @@ src/lib-controller (controller)
 
 src/lib--gui (GUI view)
 
-src/lib--tui (Terminal/curses view)
+src/lib--cui (Console/curses view)
 
-src/lib-cui (Command line view)
+src/lib-cli (Command line view)
 
 src/lib-gen (utilities)
 

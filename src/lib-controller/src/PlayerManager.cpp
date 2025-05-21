@@ -51,6 +51,31 @@ PlayerManager::getPlayer(const Gen::Uuid& uuid) const
 
 /*-----------------------------------------------------------*//**
 
+Loads player descriptions from file.
+
+*/
+PlayerManager::PlayerDescriptions
+PlayerManager::loadPlayerChoices()
+{
+    // TODO: read directory and build up player choices
+    return {
+        { "John", "The Bronx better",  "abcd", std::chrono::system_clock::now()},
+        { "Jane", "The Chatty roller", "efgh", std::chrono::system_clock::now()},
+        { "Dave", "The quiet gambler", "ijkl", std::chrono::system_clock::now()},
+    };
+}
+
+//----------------------------------------------------------------
+
+Craps::Player
+PlayerManager::loadPlayer(const Gen::Uuid& playerId)
+{
+    // TODO: read from file and create player
+    return Craps::Player();
+}
+
+/*-----------------------------------------------------------*//**
+
 Load all players from file
 
 */

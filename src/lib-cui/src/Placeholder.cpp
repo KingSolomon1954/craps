@@ -4,9 +4,9 @@
 //
 //----------------------------------------------------------------
 
-#include "tui/Placeholder.h"
+#include "cui/Placeholder.h"
 
-using namespace Tui;
+using namespace Cui;
 
 /*-----------------------------------------------------------*//**
 
