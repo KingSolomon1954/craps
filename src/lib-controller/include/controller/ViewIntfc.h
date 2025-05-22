@@ -6,6 +6,10 @@
 
 #pragma once
 
+#include <memory>
+#include <controller/TableManager.h>
+#include <controller/PlayerManager.h>
+
 namespace Ctrl {
 
 class GameControllerIntfc;  // fwd
@@ -23,6 +27,8 @@ public:
     /// @{
     virtual void displayMessage() = 0;
     virtual void displayAboutCraps() = 0;
+    virtual TableManager::TableId promptUserToSelectTable(const TableManager::TableDescriptions& tds) = 0;
+    virtual std::vector<PlayerManager::PlayerId> promptUserToSelectPlayers(const PlayerManager::PlayerDescriptions& pds) = 0;
     /// @}
 
     /// @name Observers

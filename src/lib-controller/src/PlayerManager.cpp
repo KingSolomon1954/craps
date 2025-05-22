@@ -68,7 +68,7 @@ PlayerManager::loadPlayerChoices()
 //----------------------------------------------------------------
 
 Craps::Player
-PlayerManager::loadPlayer(const Gen::Uuid& playerId)
+PlayerManager::loadPlayer(const PlayerId& playerId)
 {
     // TODO: read from file and create player
     return Craps::Player();
@@ -186,7 +186,7 @@ PlayerManager::disburseKeep(const Craps::DecisionRecord& dr) const
 
 void
 PlayerManager::diagBadPlayerId(const std::string& funcName,
-                               const Gen::Uuid& playerId) const
+                               const PlayerId& playerId) const
 {
     std::string diag =
         "Internal Error: Unable to process decision record. "

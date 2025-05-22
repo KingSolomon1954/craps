@@ -12,6 +12,7 @@
 
 namespace Gen {
     class BuildInfo;      // fwd    
+    class MultiLayerCfg;  // fwd    
 }
 
 namespace Craps {
@@ -32,6 +33,7 @@ public:
     static Ctrl::EventManager*  pEventMgr;
     static Ctrl::PlayerManager* pPlayerMgr;
     static Gen::BuildInfo*      pBuildInfo;
+    static Gen::MultiLayerCfg*  pCfg;
 
     static const std::string appNameScreen;
     static const std::string appNameExec;

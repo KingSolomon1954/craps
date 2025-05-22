@@ -1,18 +1,19 @@
 //----------------------------------------------------------------
 //
-// File: Uuid.h
+// File: MultiLayerCfg.cpp
 //
 //----------------------------------------------------------------
 
-#pragma once
+#include <gen/MultiLayerCfg.h>
 
-#include <string>
+using namespace Gen;
 
-namespace Gen {
+//----------------------------------------------------------------
 
-    using Uuid = std::string;
-    Uuid generateUuid();
-
-} // namespace Gen
+int
+MultiLayerCfg::getPlaceholder()
+{
+    return placeholder;
+};
 
 //----------------------------------------------------------------

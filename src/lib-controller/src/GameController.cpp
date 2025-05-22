@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 #include <controller/GameController.h>
-#include <cassert>
+#include <controller/TableManager.h>
 #include <controller/ViewIntfc.h>
 
 using namespace Ctrl;
@@ -24,12 +24,21 @@ GameController::GameController(std::shared_ptr<ViewIntfc> pView)
 //----------------------------------------------------------------
 
 void
-GameController::chooseTableAndPlayers()
+GameController::userSelectsTableAndPlayers()
 {
-    // first orchestrate table and player selection
-    // create craps table
-    // have players join table
+    auto tds = TableManager::loadTableChoices();
+    auto tid = pView_->promptUserToSelectTable(tds);
+
+    auto pds = PlayerManager::loadPlayerChoices();
+    auto playerIds = pView_->promptUserToSelectPlayers(pds);
+    
     table_ = Craps::CrapsTable();
+
+    Gen::ErrorPass ep;
+    for (auto pid : playerIds)  // Players join table
+    {
+        table_.addPlayer(pid, ep);
+    }
 }
 
 //----------------------------------------------------------------

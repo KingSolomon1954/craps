@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: GameControllerIntfc.h
+// File: GameController.h
 //
 //----------------------------------------------------------------
 
@@ -20,7 +20,7 @@ public:
     /// @name Lifecycle
     /// @{
     GameController(std::shared_ptr<ViewIntfc> pView);
-    void chooseTableAndPlayers();
+    void userSelectsTableAndPlayers();
     /// @}
 
     /// @name Modifiers

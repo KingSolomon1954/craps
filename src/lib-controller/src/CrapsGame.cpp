@@ -8,8 +8,10 @@
 #include <iostream>
 #include <rang.hpp>
 #include <gen/BuildInfo.h>
-#include <gen/StringUtils.h>
+#include <gen/MultiLayerCfg.h>
 #include <controller/CommandLine.h>
+#include <controller/ConfigFiles.h>
+#include <controller/Env.h>
 #include <controller/EventManager.h>
 #include <controller/GameController.h>
 #include <controller/Globals.h>
@@ -32,43 +34,36 @@ Constructor
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
-    // TODO: setup logger
-    std::unique_ptr<Gen::BuildInfo>  pBuildInfo(initBuildInfo()); (void) pBuildInfo;
+//  std::unique_ptr<Gen::Logger>        pLogger(initLogger());       (void) pLogger;
+    std::unique_ptr<Gen::BuildInfo>     pBuildInfo(initBuildInfo()); (void) pBuildInfo;
+    std::unique_ptr<Gen::MultiLayerCfg> pCfg(initCfg(argc, argv));   (void) pCfg;
 
-    // Process config files, cmdline, env vars, etc.
-    initConfig(argc, argv);
-    
     // Setup the chosen view IAW cmdline option.
     std::shared_ptr<ViewIntfc> pView = std::make_shared<Cui::ConsoleView>();
-
+    
     // Bring in GameController, and associate with the view.
     GameController controller(pView);
-    controller.chooseTableAndPlayers();
+
+    // Ok now to interact with user via the gui/cui view.
+    controller.userSelectsTableAndPlayers();
     pView->run();
-
-#if 0    
-    // Init globals and manage their lifetime
-    std::unique_ptr<Ctrl::EventManager>  pEventMgr(initEventManager());   (void) pEventMgr;
-    std::unique_ptr<Ctrl::PlayerManager> pPlayerMgr(initPlayerManager()); (void) pPlayerMgr;
-    std::unique_ptr<Craps::CrapsTable>   pTable(initCrapsTable());        (void) pTable;
-
-    Craps::Player alice("Alice", 1000u);
-    Craps::Player john("John", 1000u);
-
-    Gen::ErrorPass ep;
-    Gbl::pTable->addPlayer(alice.getUuid(), ep);
-    Gbl::pTable->addPlayer(john.getUuid(), ep);
-#endif    
 }
 
 //----------------------------------------------------------------
 
-void
-CrapsGame::initConfig(int argc, char* argv[])
+Gen::MultiLayerCfg* 
+CrapsGame::initCfg(int argc, char* argv[])
 {
     // TODO fix up later with real config processing
-    CommandLine cmdline(argc, argv);
+    Gen::MultiLayerCfg* pCfg = new Gen::MultiLayerCfg();
+    CommandLine::processCmdLine(argc, argv, pCfg);
+    ConfigFiles::processFiles(pCfg);
+    Env::processEnv(pCfg);
+
     std::cout << Gbl::pBuildInfo->shortInfo() << std::endl;
+
+    Gbl::pCfg = pCfg;
+    return pCfg;
 }
 
 //----------------------------------------------------------------
@@ -113,3 +108,20 @@ CrapsGame::initCrapsTable()
 
 //----------------------------------------------------------------
 
+
+
+
+
+#if 0    
+    // Init globals and manage their lifetime
+    std::unique_ptr<Ctrl::EventManager>  pEventMgr(initEventManager());   (void) pEventMgr;
+    std::unique_ptr<Ctrl::PlayerManager> pPlayerMgr(initPlayerManager()); (void) pPlayerMgr;
+    std::unique_ptr<Craps::CrapsTable>   pTable(initCrapsTable());        (void) pTable;
+
+    Craps::Player alice("Alice", 1000u);
+    Craps::Player john("John", 1000u);
+
+    Gen::ErrorPass ep;
+    Gbl::pTable->addPlayer(alice.getUuid(), ep);
+    Gbl::pTable->addPlayer(john.getUuid(), ep);
+#endif    

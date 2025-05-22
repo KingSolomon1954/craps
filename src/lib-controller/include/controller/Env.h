@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: CommandLine.h
+// File: Env.h
 //
 //----------------------------------------------------------------
 
@@ -12,12 +12,12 @@ namespace Gen {
     
 namespace Ctrl {
 
-class CommandLine
+class Env
 {
 public:
     /// @name Lifecycle
     /// @{
-    static void processCmdLine(int argc, char* argv[], Gen::MultiLayerCfg* pCfg);
+    static void processEnv(Gen::MultiLayerCfg* pCfg);
     /// @}
 
     /// @name Modifiers
@@ -31,9 +31,9 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class CommandLine
+@class Env
 
-@brief Process command line arguments.
+@brief Process environment vars at startup
 
 Supply class description.
 

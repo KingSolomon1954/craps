@@ -10,8 +10,10 @@ find_package(rang REQUIRED)
 add_library(controller STATIC
     src/AppController.cpp
     src/CommandLine.cpp
+    src/ConfigFiles.cpp
     src/CrapsGame.cpp
     src/GameController.cpp
+    src/Env.cpp
     src/Globals.cpp
     src/Placeholder.cpp
     src/PlayerManager.cpp

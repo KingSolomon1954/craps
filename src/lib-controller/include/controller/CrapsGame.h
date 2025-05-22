@@ -8,7 +8,8 @@
 #include <string>
 
 namespace Gen {
-    class BuildInfo;  // fwd
+    class BuildInfo;      // fwd
+    class MultiLayerCfg;  // fwd
 }
 
 namespace Craps {
@@ -38,8 +39,8 @@ public:
     /// @}
 
 private:
-    void initConfig(int argc, char* argv[]);
     Gen::BuildInfo*      initBuildInfo();
+    Gen::MultiLayerCfg*  initCfg(int argc, char* argv[]);
     Ctrl::EventManager*  initEventManager();
     Ctrl::PlayerManager* initPlayerManager();
     Craps::CrapsTable*   initCrapsTable();

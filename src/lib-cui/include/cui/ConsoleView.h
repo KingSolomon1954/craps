@@ -23,6 +23,10 @@ public:
     /// @{
     void displayMessage() override;
     void displayAboutCraps() override;
+    Ctrl::TableManager::TableId promptUserToSelectTable(
+        const Ctrl::TableManager::TableDescriptions& tds) override;
+    std::vector<Ctrl::PlayerManager::PlayerId> promptUserToSelectPlayers(
+        const Ctrl::PlayerManager::PlayerDescriptions& pds) override;
     /// @}
 
     /// @name Observers

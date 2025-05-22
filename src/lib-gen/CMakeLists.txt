@@ -7,6 +7,7 @@
 add_library(gen STATIC
     src/BuildInfo.cpp
     src/ErrorPass.cpp
+    src/MultiLayerCfg.cpp
     src/StringUtils.cpp
     src/Uuid.cpp
 )

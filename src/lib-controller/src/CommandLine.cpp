@@ -11,6 +11,7 @@
 #include <controller/CommandLine.h>
 #include <controller/Globals.h>
 #include <gen/BuildInfo.h>
+#include <gen/MultiLayerCfg.h>
 
 using namespace Ctrl;
 
@@ -24,7 +25,8 @@ Constructor
 @param[in] argv
     Array of command line args.
 */
-CommandLine::CommandLine(int argc, char* argv[])
+void
+CommandLine::processCmdLine(int argc, char* argv[], Gen::MultiLayerCfg* pCfg)
 {
     cxxopts::Options options("RoyalCraps", "A multiplayer dice game");
 

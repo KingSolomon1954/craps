@@ -45,3 +45,27 @@ ConsoleView::displayAboutCraps()
 }
 
 //----------------------------------------------------------------
+
+Ctrl::TableManager::TableId
+ConsoleView::promptUserToSelectTable(const Ctrl::TableManager::TableDescriptions& tds)
+{
+    // TODO
+    return 0;
+}
+
+//----------------------------------------------------------------
+
+std::vector<Ctrl::PlayerManager::PlayerId>
+ConsoleView::promptUserToSelectPlayers(
+        const Ctrl::PlayerManager::PlayerDescriptions& pds)
+{
+    // TODO
+    (void) pds;
+    return {
+        {"abcd"},
+        {"efgh"},
+        {"ijkl"},
+    };
+}
+
+//----------------------------------------------------------------

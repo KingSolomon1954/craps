@@ -31,6 +31,7 @@ public:
 
     /// @name Modifiers
     /// @{
+    using PlayerId = Gen::Uuid;
     using PlayerPtr = std::shared_ptr<class Craps::Player>;
     PlayerPtr createPlayer(const std::string& name);
     /// @}
@@ -45,13 +46,14 @@ public:
 
     using PlayerDescriptions = std::vector<PlayerDescription>;
     static PlayerDescriptions loadPlayerChoices();
-    static Craps::Player loadPlayer(const Gen::Uuid& playerId);
+//    static Craps::Player loadPlayer(const Gen::Uuid& playerId);
+    static Craps::Player loadPlayer(const PlayerId& playerId);
 
 private:
     std::unordered_map<Gen::Uuid, std::shared_ptr<Craps::Player>> playersAll_;
 
     void diagBadPlayerId(const std::string& funcName,
-                         const Gen::Uuid& playerId) const;
+                         const PlayerId& playerId) const;
 };
 
 /*-----------------------------------------------------------*//**
