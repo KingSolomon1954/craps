@@ -21,7 +21,7 @@ public:
 
     /// @name Modifiers
     /// @{
-    void displayMessage() override;
+    void displayMessage(const std::string& msg) override;
     void displayAboutCraps() override;
     Ctrl::TableManager::TableId promptUserToSelectTable(
         const Ctrl::TableManager::TableDescriptions& tds) override;

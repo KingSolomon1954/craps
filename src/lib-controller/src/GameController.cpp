@@ -7,6 +7,7 @@
 #include <controller/GameController.h>
 #include <controller/TableManager.h>
 #include <controller/ViewIntfc.h>
+#include <iostream>
 
 using namespace Ctrl;
 
@@ -31,12 +32,12 @@ GameController::userSelectsTableAndPlayers()
 
     auto pds = PlayerManager::loadPlayerChoices();
     auto playerIds = pView_->promptUserToSelectPlayers(pds);
-    
     table_ = Craps::CrapsTable();
 
     Gen::ErrorPass ep;
     for (auto pid : playerIds)  // Players join table
     {
+        // TODO: check error return
         table_.addPlayer(pid, ep);
     }
 }

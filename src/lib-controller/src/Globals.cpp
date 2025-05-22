@@ -9,13 +9,13 @@
 #include <controller/PlayerManager.h>
 #include <craps/CrapsTable.h>
 #include <gen/BuildInfo.h>
-#include <gen/MultiLayerCfg.h>
+#include <gen/MultiLayerConfig.h>
 
-Ctrl::EventManager*  Gbl::pEventMgr  = NULL;
-Ctrl::PlayerManager* Gbl::pPlayerMgr = NULL;
-Craps::CrapsTable*   Gbl::pTable     = NULL;
-Gen::BuildInfo*      Gbl::pBuildInfo = NULL;
-Gen::MultiLayerCfg*  Gbl::pCfg       = NULL;
+Ctrl::EventManager*     Gbl::pEventMgr  = NULL;
+Ctrl::PlayerManager*    Gbl::pPlayerMgr = NULL;
+Craps::CrapsTable*      Gbl::pTable     = NULL;
+Gen::BuildInfo*         Gbl::pBuildInfo = NULL;
+Gen::MultiLayerConfig*  Gbl::pCfg       = NULL;
 
 const std::string Gbl::appNameScreen = "Royal Craps";
 const std::string Gbl::appNameExec   = "RoyalCraps";

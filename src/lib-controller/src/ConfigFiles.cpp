@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 #include <controller/ConfigFiles.h>
-#include <gen/MultiLayerCfg.h>
+#include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
 
@@ -17,7 +17,7 @@ Process startup config files.
     The multi-layer configuration structure to populate.
 */
 void
-ConfigFiles::processFiles(Gen::MultiLayerCfg* pCfg)
+ConfigFiles::processFiles(Gen::MultiLayerConfig* pCfg)
 {
     (void) pCfg;
 }
