@@ -7,6 +7,7 @@
 #include <controller/GameController.h>
 #include <controller/TableManager.h>
 #include <controller/ViewIntfc.h>
+#include <craps/CrapsTable.h>
 #include <iostream>
 
 using namespace Ctrl;
@@ -24,21 +25,30 @@ GameController::GameController(std::shared_ptr<ViewIntfc> pView)
 
 //----------------------------------------------------------------
 
-void
-GameController::userSelectsTableAndPlayers()
+Craps::CrapsTable*
+GameController::userSelectsTable()
 {
-    auto tds = TableManager::loadTableChoices();
+    auto tds = Gbl::pTableMgr->loadTableChoices();
     auto tid = pView_->promptUserToSelectTable(tds);
+    
+    auto pTable = Gbl::pTableMgr->loadCrapsTable(tid);
+    Gbl::pTable = pTable;
+    return pTable;
+}
 
-    auto pds = PlayerManager::loadPlayerChoices();
+//----------------------------------------------------------------
+
+void
+GameController::userSelectsPlayers()
+{
+    auto pds = Gbl::pPlayerMgr->loadPlayerChoices();
     auto playerIds = pView_->promptUserToSelectPlayers(pds);
-    table_ = Craps::CrapsTable();
-
+    
     Gen::ErrorPass ep;
     for (auto pid : playerIds)  // Players join table
     {
         // TODO: check error return
-        table_.addPlayer(pid, ep);
+        Gbl::pTable->addPlayer(pid, ep);
     }
 }
 
@@ -47,8 +57,7 @@ GameController::userSelectsTableAndPlayers()
 void
 GameController::rollDice()
 {
-    // TODO
-    // table_.rollDice();
+    Gbl::pTable->rollDice();
 }
 
 //----------------------------------------------------------------

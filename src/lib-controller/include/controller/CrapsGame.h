@@ -20,6 +20,7 @@ namespace Ctrl {
 
 class EventManager;   // fwd
 class PlayerManager;  // fwd
+class TableManager;   // fwd
     
 class CrapsGame
 {
@@ -42,6 +43,7 @@ private:
     Gen::BuildInfo*        initBuildInfo();
     Gen::MultiLayerConfig* initCfg(int argc, char* argv[]);
     Ctrl::EventManager*    initEventManager();
+    Ctrl::TableManager*    initTableManager();
     Ctrl::PlayerManager*   initPlayerManager();
     Craps::CrapsTable*     initCrapsTable();
     void dumpConfig(Gen::MultiLayerConfig* pCfg);

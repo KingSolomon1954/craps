@@ -8,7 +8,10 @@
 
 #include <memory>
 #include <controller/GameControllerIntfc.h>
-#include <craps/CrapsTable.h>
+
+namespace Craps {
+    class CrapsTable;
+}
 
 namespace Ctrl {
 
@@ -20,7 +23,8 @@ public:
     /// @name Lifecycle
     /// @{
     GameController(std::shared_ptr<ViewIntfc> pView);
-    void userSelectsTableAndPlayers();
+    Craps::CrapsTable* userSelectsTable();
+    void userSelectsPlayers();
     /// @}
 
     /// @name Modifiers
@@ -35,7 +39,6 @@ public:
 
 private:
     std::shared_ptr<ViewIntfc> pView_;
-    Craps::CrapsTable table_;
 };
 
 /*-----------------------------------------------------------*//**

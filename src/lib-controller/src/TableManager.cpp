@@ -23,11 +23,11 @@ TableManager::loadTableChoices()
 
 //----------------------------------------------------------------
 
-Craps::CrapsTable
+Craps::CrapsTable*
 TableManager::loadCrapsTable(unsigned tableId)
 {
     // TODO: read from file and create table
-    return Craps::CrapsTable();
+    return new Craps::CrapsTable();
 }
 
 //----------------------------------------------------------------

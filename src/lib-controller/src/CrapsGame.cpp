@@ -38,6 +38,7 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::unique_ptr<Gen::BuildInfo>        pBuildInfo(initBuildInfo());     (void) pBuildInfo;
     std::unique_ptr<Gen::MultiLayerConfig> pCfg(initCfg(argc, argv));       (void) pCfg;
     std::unique_ptr<Ctrl::EventManager>    pEventMgr(initEventManager());   (void) pEventMgr;
+    std::unique_ptr<Ctrl::TableManager>    pTablerMgr(initTableManager());  (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>   pPlayerMgr(initPlayerManager()); (void) pPlayerMgr;
 
     // Setup the chosen view IAW cmdline option.
@@ -47,7 +48,8 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     GameController controller(pView);
 
     // Ok now to interact with user via the gui/cui view.
-    controller.userSelectsTableAndPlayers();
+    std::unique_ptr<Craps::CrapsTable> pTable(controller.userSelectsTable()); (void) pTable;
+    controller.userSelectsPlayers();
     pView->run();
 }
 
@@ -91,22 +93,22 @@ CrapsGame::initEventManager()
 
 //----------------------------------------------------------------
 
+TableManager*
+CrapsGame::initTableManager()
+{
+    auto p = new TableManager();
+    Gbl::pTableMgr = p;
+    return p;
+}
+
+//----------------------------------------------------------------
+
 PlayerManager*
 CrapsGame::initPlayerManager()
 {
     auto p = new PlayerManager();
     Gbl::pPlayerMgr = p;
     return p;
-}
-
-//----------------------------------------------------------------
-
-Craps::CrapsTable*
-CrapsGame::initCrapsTable()
-{
-    auto t = new Craps::CrapsTable();
-    Gbl::pTable = t;
-    return t;
 }
 
 //----------------------------------------------------------------

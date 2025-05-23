@@ -19,7 +19,7 @@ public:
     using TableDescriptions = std::vector<TableDescription>;
 
     static TableDescriptions loadTableChoices();
-    static Craps::CrapsTable loadCrapsTable(TableId tableId);
+    static Craps::CrapsTable* loadCrapsTable(TableId tableId);
     
 private:
 };
