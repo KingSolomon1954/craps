@@ -46,6 +46,7 @@ private:
     Ctrl::TableManager*    initTableManager();
     Ctrl::PlayerManager*   initPlayerManager();
     Craps::CrapsTable*     initCrapsTable();
+    void initLayers(Gen::MultiLayerConfig* pCfg);
     void dumpConfig(Gen::MultiLayerConfig* pCfg);
 };
 

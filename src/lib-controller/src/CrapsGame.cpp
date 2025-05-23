@@ -60,6 +60,8 @@ CrapsGame::initCfg(int argc, char* argv[])
 {
     // TODO fix up later with real config processing
     Gen::MultiLayerConfig* pCfg = new Gen::MultiLayerConfig();
+    initLayers(pCfg);
+
     CommandLine::processCmdLine(argc, argv, pCfg);
     ConfigFiles::processFiles(pCfg);
     Env::processEnv(pCfg);
@@ -71,6 +73,22 @@ CrapsGame::initCfg(int argc, char* argv[])
     return pCfg;
 }
 
+//----------------------------------------------------------------
+
+void
+CrapsGame::initLayers(Gen::MultiLayerConfig* pCfg)
+{
+    Gen::ConfigLayer defaults;
+    Gen::ConfigLayer cfgfile;
+    Gen::ConfigLayer env;
+    Gen::ConfigLayer cmdline;
+    // Order matters. Lookup is reverse order
+    pCfg->addLayer(Gen::MultiLayerConfig::LayerDefaults, defaults);
+    pCfg->addLayer(Gen::MultiLayerConfig::LayerCfgFile, env);
+    pCfg->addLayer(Gen::MultiLayerConfig::LayerEnv,env);
+    pCfg->addLayer(Gen::MultiLayerConfig::LayerCmdLine,cmdline);
+}    
+    
 //----------------------------------------------------------------
 
 Gen::BuildInfo*

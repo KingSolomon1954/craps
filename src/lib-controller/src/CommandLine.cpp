@@ -29,9 +29,14 @@ void
 CommandLine::processCmdLine(int argc, char* argv[],
                             Gen::MultiLayerConfig* pCfg)
 {
-    cxxopts::Options options("RoyalCraps", "A multiplayer dice game");
+    cxxopts::Options options(Gbl::appNameExec, Gbl::appNameScreen + ": A multiplayer dice game");
 
     options.add_options()
+        ("cli", "run as command line program",
+         cxxopts::value<bool>()->default_value("true"))
+        ("con", "run as console program")
+        ("gui", "run as GUI program")
+        
         ("f,foo", "Param foo",
          cxxopts::value<int>()->default_value("10"))
         
@@ -48,6 +53,9 @@ CommandLine::processCmdLine(int argc, char* argv[],
 
     auto result = options.parse(argc, argv);
 
+    // Convenient shorthand
+    const std::string& layer = Gen::MultiLayerConfig::LayerCmdLine;
+    
     if (result.count("help"))
     {
         std::cout << options.help() << std::endl;
@@ -59,6 +67,26 @@ CommandLine::processCmdLine(int argc, char* argv[],
                   << Gbl::pBuildInfo->fullInfo() << rang::style::reset;
         exit(0);
     }
+
+    if (result.count("con"))
+    {
+std::cout << "howie1\n";        
+        Gbl::pCfg->set(layer, "screenRender", "console");
+    }
+
+    if (result.count("cli"))
+    {
+std::cout << "howie2\n";        
+        Gbl::pCfg->set(layer, "screenRender", "cmdline");
+    }
+
+    if (result.count("gui"))
+    {
+std::cout << "howie3\n";        
+        Gbl::pCfg->set(layer, "screenRender", "graphical");
+    }
+
+std::cout << "howie4\n";        
     bool debug = result["debug"].as<bool>();
     (void)debug;  // suppress compiler warning
     

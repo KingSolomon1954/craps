@@ -27,7 +27,7 @@ std::optional<std::string>
 ConfigLayer::get(const std::string& key) const
 {
     auto it = values_.find(key);
-    return it != values_.end() ? std::make_optional(it->second) : std::nullopt;
+    return it != values_.end() ? std::optional<std::string>{it->second} : std::nullopt;
 }
 
 //----------------------------------------------------------------
@@ -41,37 +41,37 @@ ConfigLayer::getAll() const
 //----------------------------------------------------------------
 
 void
-MultiLayerConfig::addLayer(const std::string& name, const ConfigLayer& layer)
+MultiLayerConfig::addLayer(const std::string& name)
 {
-    auto ptr = std::make_shared<ConfigLayer>(layer);
-    layers_.emplace_back(name, ptr);
-    nameToIndex_[name] = layers_.size() - 1;
+    layers_.emplace_back(name, std::make_shared<ConfigLayer>());
 }
 
 //----------------------------------------------------------------
 
 void
-MultiLayerConfig::set(const std::string& layerName, const std::string& key, const std::string& value)
+MultiLayerConfig::set(const std::string& layerName,
+                      const std::string& key,
+                      const std::string& value)
 {
-    auto it = nameToIndex_.find(layerName);
-    if (it != nameToIndex_.end())
+    for (auto& [name, layer] : layers_)
     {
-        layers_[it->second].second->set(key, value);
+        if (name == layerName)
+        {
+            layer->set(key, value);
+            return;
+        }
     }
-    else
-    {
-        std::cerr << "Layer \"" << layerName << "\" not found.\n";
-    }
+    throw std::runtime_error("Layer not found: " + layerName);
 }
 
 //----------------------------------------------------------------
 
 std::optional<std::string>
-MultiLayerConfig::getString(const std::string& key) const
+MultiLayerConfig::get(const std::string& key) const
 {
-    for (auto it = layers_.rbegin(); it != layers_.rend(); ++it)
+    for (const auto& [name, layer] : layers_)
     {
-        if (auto val = it->second->get(key); val.has_value())
+        if (auto val = layer->get(key); val.has_value())
         {
             return val;
         }
@@ -81,28 +81,22 @@ MultiLayerConfig::getString(const std::string& key) const
 
 //----------------------------------------------------------------
 
-std::optional<int>
-MultiLayerConfig::getInt(const std::string& key) const
+std::string
+MultiLayerConfig::getOr(const std::string& key,
+                        const std::string& defaultValue) const
 {
-    if (auto val = getString(key); val.has_value())
-    {
-        try {
-            return std::stoi(*val);
-        } catch (...) {}
-    }
-    return std::nullopt;
+    auto val = get(key);
+    return val.has_value() ? val.value() : defaultValue;
 }
 
 //----------------------------------------------------------------
 
-void
-MultiLayerConfig::listLayers() const
+int
+MultiLayerConfig::getIntOr(const std::string& key,
+                           int defaultValue) const
 {
-    std::cout << "Layers (lowest to highest priority):\n";
-    for (const auto& [name, _] : layers_)
-    {
-        std::cout << "- " << name << '\n';
-    }
+    auto val = get(key);
+    return val.has_value() ? std::stoi(val.value()) : defaultValue;
 }
 
 //----------------------------------------------------------------

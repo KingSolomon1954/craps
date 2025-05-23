@@ -4,14 +4,15 @@
 //
 //----------------------------------------------------------------
 
-#include <iostream>
+#pragma once
+
 #include <string>
 #include <string_view>
 #include <unordered_map>
 #include <vector>
-#include <optional>
 #include <memory>
-#include <sstream>
+#include <optional>
+#include <stdexcept>
 
 namespace Gen {
 
@@ -33,17 +34,17 @@ public:
     static const std::string LayerCfgFile;
     static const std::string LayerEnv;
     static const std::string LayerCmdLine;
-
-    void addLayer(const std::string& name, const ConfigLayer& layer);
+    
+    void addLayer(const std::string& name);
     void set(const std::string& layerName, const std::string& key, const std::string& value);
-    std::optional<std::string> getString(const std::string& key) const;
-    std::optional<int> getInt(const std::string& key) const;
-    void listLayers() const;
+    std::optional<std::string> get(const std::string& key) const;
+    std::string getOr(const std::string& key, const std::string& defaultValue) const;
+    int getIntOr(const std::string& key, int defaultValue) const;
+
     std::unordered_map<std::string, std::string> exportResolved() const;
 
 private:
     std::vector<std::pair<std::string, std::shared_ptr<ConfigLayer>>> layers_;
-    std::unordered_map<std::string, size_t> nameToIndex_;
 };
 
 //----------------------------------------------------------------
