@@ -1,23 +1,23 @@
 //----------------------------------------------------------------
 //
-// File: Env.h
+// File: ConfigEnv.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
 namespace Gen {
-    class MultiLayerConfig;  // fwd
+    class ConfigLayer;  // fwd
 }
     
 namespace Ctrl {
 
-class Env
+class ConfigEnv
 {
 public:
     /// @name Lifecycle
     /// @{
-    static void processEnv(Gen::MultiLayerConfig* pCfg);
+    static void processEnv(Gen::ConfigLayer& Cfg);
     /// @}
 
     /// @name Modifiers
@@ -31,11 +31,12 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class Env
+@class ConfigEnv
 
 @brief Process environment vars at startup
 
-Supply class description.
+Populates MultiLayerConfig "env" layer with environment
+variables.
 
 */
 

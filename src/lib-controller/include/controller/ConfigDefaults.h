@@ -1,24 +1,23 @@
 //----------------------------------------------------------------
 //
-// File: CommandLine.h
+// File: ConfigDefaults.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
 namespace Gen {
-    class MultiLayerConfig;  // fwd
+    class ConfigLayer;  // fwd
 }
     
 namespace Ctrl {
 
-class CommandLine
+class ConfigDefaults
 {
 public:
     /// @name Lifecycle
     /// @{
-    static void processCmdLine(int argc, char* argv[],
-                               Gen::MultiLayerConfig* pCfg);
+    static void processDefaults(Gen::ConfigLayer& cfg);
     /// @}
 
     /// @name Modifiers
@@ -32,11 +31,11 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class CommandLine
+@class ConfigDefaults
 
-@brief Process command line arguments.
+@brief Process startup defaults
 
-Supply class description.
+Populates the MultiLayerConfig "default" layer with values.
 
 */
 

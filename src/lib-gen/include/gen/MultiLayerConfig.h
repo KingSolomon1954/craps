@@ -30,7 +30,7 @@ class MultiLayerConfig
 {
 public:
     static const std::string LayerDefaults;
-    static const std::string LayerCfgFile;
+    static const std::string LayerFiles;
     static const std::string LayerEnv;
     static const std::string LayerCmdLine;
 

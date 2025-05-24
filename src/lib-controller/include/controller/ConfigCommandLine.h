@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: ConfigFiles.h
+// File: ConfigCommandLine.h
 //
 //----------------------------------------------------------------
 
@@ -12,12 +12,13 @@ namespace Gen {
     
 namespace Ctrl {
 
-class ConfigFiles
+class ConfigCommandLine
 {
 public:
     /// @name Lifecycle
     /// @{
-    static void processFiles(Gen::ConfigLayer& cfg);
+    static void processCmdLine(int argc, char* argv[],
+                               Gen::ConfigLayer& cfg);
     /// @}
 
     /// @name Modifiers
@@ -31,11 +32,11 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class ConfigFiles
+@class ConfigCommandLine
 
-@brief Process startup configuration files
+@brief Process command line arguments.
 
-Supply class description.
+Populates the MultiLayerConfig "command line" layer.
 
 */
 

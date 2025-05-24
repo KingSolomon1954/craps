@@ -9,14 +9,14 @@
 #include <rang.hpp>
 #include <gen/BuildInfo.h>
 #include <gen/MultiLayerConfig.h>
-#include <controller/CommandLine.h>
+#include <controller/ConfigCommandLine.h>
+#include <controller/ConfigDefaults.h>
+#include <controller/ConfigEnv.h>
 #include <controller/ConfigFiles.h>
-#include <controller/Env.h>
 #include <controller/EventManager.h>
 #include <controller/GameController.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
-#include <controller/ViewIntfc.h>
 #include <craps/CrapsTable.h>
 #include <cui/ConsoleView.h>
 
@@ -42,8 +42,9 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::unique_ptr<Ctrl::PlayerManager>   pPlayerMgr(initPlayerManager()); (void) pPlayerMgr;
 
     // Setup the chosen view IAW cmdline option.
-    std::shared_ptr<ViewIntfc> pView = std::make_shared<Cui::ConsoleView>();
-    
+//  std::shared_ptr<ViewIntfc> pView = std::make_shared<Cui::ConsoleView>();
+    std::shared_ptr<ViewIntfc> pView = getView();
+
     // Bring in GameController, and associate the view with it.
     GameController controller(pView);
 
@@ -58,17 +59,23 @@ CrapsGame::CrapsGame(int argc, char* argv[])
 Gen::MultiLayerConfig* 
 CrapsGame::initCfg(int argc, char* argv[])
 {
-    // TODO fix up later with real config processing
-    Gen::MultiLayerConfig* pCfg = new Gen::MultiLayerConfig();
-    initLayers(pCfg);
-
-    CommandLine::processCmdLine(argc, argv, pCfg);
-    ConfigFiles::processFiles(pCfg);
-    Env::processEnv(pCfg);
-
+    Gen::MultiLayerConfig* pCfg = initMultiLayerConfig(argc, argv);
     std::cout << Gbl::pBuildInfo->shortInfo() << std::endl;
-
     Gbl::pCfg = pCfg;
+    return pCfg;
+}
+
+//----------------------------------------------------------------
+
+Gen::MultiLayerConfig*
+CrapsGame::initMultiLayerConfig(int argc, char* argv[])
+{
+    auto* pCfg = new Gen::MultiLayerConfig();
+    // Order matters. Lookup later is in reverse order
+    populateLayerDefaults(pCfg);
+    populateLayerFiles(pCfg);
+    populateLayerEnv(pCfg);
+    populateLayerCmdLine(argc, argv, pCfg);
     dumpConfig(pCfg);
     return pCfg;
 }
@@ -76,18 +83,43 @@ CrapsGame::initCfg(int argc, char* argv[])
 //----------------------------------------------------------------
 
 void
-CrapsGame::initLayers(Gen::MultiLayerConfig* pCfg)
+CrapsGame::populateLayerDefaults(Gen::MultiLayerConfig* pCfg)
 {
-    Gen::ConfigLayer defaults;
-    Gen::ConfigLayer cfgfile;
-    Gen::ConfigLayer env;
-    Gen::ConfigLayer cmdline;
-    // Order matters. Lookup is reverse order
-    pCfg->addLayer(Gen::MultiLayerConfig::LayerDefaults, defaults);
-    pCfg->addLayer(Gen::MultiLayerConfig::LayerCfgFile, env);
-    pCfg->addLayer(Gen::MultiLayerConfig::LayerEnv,env);
-    pCfg->addLayer(Gen::MultiLayerConfig::LayerCmdLine,cmdline);
-}    
+    Gen::ConfigLayer defaultsLayer;
+    ConfigDefaults::processDefaults(defaultsLayer);
+    pCfg->addLayer(Gen::MultiLayerConfig::LayerDefaults, defaultsLayer);
+}
+    
+//----------------------------------------------------------------
+
+void
+CrapsGame::populateLayerFiles(Gen::MultiLayerConfig* pCfg)
+{
+    Gen::ConfigLayer filesLayer;
+    ConfigFiles::processFiles(filesLayer);
+    pCfg->addLayer(Gen::MultiLayerConfig::LayerFiles, filesLayer);
+}
+    
+//----------------------------------------------------------------
+
+void
+CrapsGame::populateLayerEnv(Gen::MultiLayerConfig* pCfg)
+{
+    Gen::ConfigLayer envLayer;
+    ConfigEnv::processEnv(envLayer);
+    pCfg->addLayer(Gen::MultiLayerConfig::LayerEnv, envLayer);
+}
+    
+//----------------------------------------------------------------
+
+void
+CrapsGame::populateLayerCmdLine(int argc, char* argv[],
+                                Gen::MultiLayerConfig* pCfg)
+{
+    Gen::ConfigLayer cmdLineLayer;
+    ConfigCommandLine::processCmdLine(argc, argv, cmdLineLayer);
+    pCfg->addLayer(Gen::MultiLayerConfig::LayerCmdLine, cmdLineLayer);
+}
     
 //----------------------------------------------------------------
 
@@ -142,6 +174,21 @@ CrapsGame::dumpConfig(Gen::MultiLayerConfig* pCfg)
     }
 }
     
+//----------------------------------------------------------------
+
+std::shared_ptr<ViewIntfc>
+CrapsGame::getView()
+{
+    std::string v = Gbl::pCfg->getString("viewType").value_or("console");
+    if (v == "console") return std::make_shared<Cui::ConsoleView>();
+//  if (v == "cmdline") return std::make_shared<Cli::CmdLineView>();
+//  if (v == "graphical") return std::make_shared<Gui::GuiView>();
+
+    throw std::invalid_argument("Invalid value for config parameter: viewType"
+        "GUI and CmdLine view not implemented yet");
+    return nullptr;
+}
+
 //----------------------------------------------------------------
 
 #if 0    

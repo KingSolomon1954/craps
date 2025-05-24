@@ -1,25 +1,25 @@
 //----------------------------------------------------------------
 //
-// File: Env.cpp
+// File: ConfigDefaults.cpp
 //
 //----------------------------------------------------------------
 
-#include <controller/Env.h>
+#include <controller/ConfigDefaults.h>
 #include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
 
 /*-----------------------------------------------------------*//**
 
-Process environment variables.
+Process defaults
 
 @param[in,out] pCfg
     The multi-layer configuration structure to populate.
 */
 void
-Env::processEnv(Gen::MultiLayerConfig* pCfg)
+ConfigDefaults::processDefaults(Gen::ConfigLayer& cfg)
 {
-    (void) pCfg;
+    (void) cfg;
 }
 
 //----------------------------------------------------------------

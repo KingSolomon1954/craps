@@ -5,7 +5,9 @@
 //----------------------------------------------------------------
 
 #pragma once
+#include <memory>
 #include <string>
+#include <controller/ViewIntfc.h>
 
 namespace Gen {
     class BuildInfo;         // fwd
@@ -46,8 +48,14 @@ private:
     Ctrl::TableManager*    initTableManager();
     Ctrl::PlayerManager*   initPlayerManager();
     Craps::CrapsTable*     initCrapsTable();
-    void initLayers(Gen::MultiLayerConfig* pCfg);
-    void dumpConfig(Gen::MultiLayerConfig* pCfg);
+    Gen::MultiLayerConfig* initMultiLayerConfig(int argc, char* argv[]);
+    void                   populateLayerDefaults(Gen::MultiLayerConfig* pCfg);
+    void                   populateLayerFiles(Gen::MultiLayerConfig* pCfg);
+    void                   populateLayerEnv(Gen::MultiLayerConfig* pCfg);
+    void                   populateLayerCmdLine(int argc, char* argv[], Gen::MultiLayerConfig* pCfg);
+    void                   dumpConfig(Gen::MultiLayerConfig* pCfg);
+    std::shared_ptr<ViewIntfc> getView();
+    
 };
 
 /*-----------------------------------------------------------*//**

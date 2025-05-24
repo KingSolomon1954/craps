@@ -1,23 +1,23 @@
 //----------------------------------------------------------------
 //
-// File: ConfigFiles.cpp
+// File: ConfigEnv.cpp
 //
 //----------------------------------------------------------------
 
-#include <controller/ConfigFiles.h>
+#include <controller/ConfigEnv.h>
 #include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
 
 /*-----------------------------------------------------------*//**
 
-Process startup config files.
+Process environment variables.
 
 @param[in,out] pCfg
     The multi-layer configuration structure to populate.
 */
 void
-ConfigFiles::processFiles(Gen::ConfigLayer& cfg)
+ConfigEnv::processEnv(Gen::ConfigLayer& cfg)
 {
     (void) cfg;
 }

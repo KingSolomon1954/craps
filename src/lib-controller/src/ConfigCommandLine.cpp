@@ -1,14 +1,14 @@
 //----------------------------------------------------------------
 //
-// File: CommandLine.cpp
+// File: ConfigCommandLine.cpp
 //
 //----------------------------------------------------------------
 
+#include <controller/ConfigCommandLine.h>
 #include <iostream>
 #include <string>
 #include <cxxopts.hpp>
 #include <rang.hpp>
-#include <controller/CommandLine.h>
 #include <controller/Globals.h>
 #include <gen/BuildInfo.h>
 #include <gen/MultiLayerConfig.h>
@@ -26,8 +26,8 @@ Constructor
     Array of command line args.
 */
 void
-CommandLine::processCmdLine(int argc, char* argv[],
-                            Gen::MultiLayerConfig* pCfg)
+ConfigCommandLine::processCmdLine(int argc, char* argv[],
+                                  Gen::ConfigLayer& cfg)
 {
     cxxopts::Options options(Gbl::appNameExec, Gbl::appNameScreen + ": A multiplayer dice game");
 
@@ -70,23 +70,19 @@ CommandLine::processCmdLine(int argc, char* argv[],
 
     if (result.count("con"))
     {
-std::cout << "howie1\n";        
-        Gbl::pCfg->set(layer, "screenRender", "console");
+        cfg.set("viewType", "console");
     }
 
     if (result.count("cli"))
     {
-std::cout << "howie2\n";        
-        Gbl::pCfg->set(layer, "screenRender", "cmdline");
+        cfg.set("viewType", "cmdline");
     }
 
     if (result.count("gui"))
     {
-std::cout << "howie3\n";        
-        Gbl::pCfg->set(layer, "screenRender", "graphical");
+        cfg.set("viewType", "graphical");
     }
 
-std::cout << "howie4\n";        
     bool debug = result["debug"].as<bool>();
     (void)debug;  // suppress compiler warning
     

@@ -9,7 +9,7 @@
 using namespace Gen;
 
 const std::string MultiLayerConfig::LayerDefaults = "defaults";
-const std::string MultiLayerConfig::LayerCfgFile  = "cfgfile";
+const std::string MultiLayerConfig::LayerFiles    = "files";
 const std::string MultiLayerConfig::LayerEnv      = "env";
 const std::string MultiLayerConfig::LayerCmdLine  = "cmdline";
 

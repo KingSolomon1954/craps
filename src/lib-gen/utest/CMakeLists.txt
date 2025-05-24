@@ -7,6 +7,7 @@
 add_executable(gen-ut
     utest-gen-main.cpp
     BuildInfoTest.cpp
+    MultiLayerConfigTest.cpp
     StringUtilsTest.cpp
 )
 
