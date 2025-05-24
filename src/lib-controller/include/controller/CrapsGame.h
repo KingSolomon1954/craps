@@ -11,6 +11,7 @@
 
 namespace Gen {
     class BuildInfo;         // fwd
+    class ConfigLayer;       // fwd
     class MultiLayerConfig;  // fwd
 }
 
@@ -40,6 +41,7 @@ public:
     /// @name Observers
     /// @{
     /// @}
+    static void loadGameDefaults(Gen::ConfigLayer& cfg);
 
 private:
     Gen::BuildInfo*        initBuildInfo();

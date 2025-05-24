@@ -176,16 +176,25 @@ CrapsGame::dumpConfig(Gen::MultiLayerConfig* pCfg)
     
 //----------------------------------------------------------------
 
+void
+CrapsGame::loadGameDefaults(Gen::ConfigLayer& cfg)
+{
+    cfg.set("screen.viewType", "console");
+}
+
+//----------------------------------------------------------------
+
 std::shared_ptr<ViewIntfc>
 CrapsGame::getView()
 {
-    std::string v = Gbl::pCfg->getString("viewType").value_or("console");
+    std::string v = Gbl::pCfg->getString("screen.viewType").value();
     if (v == "console") return std::make_shared<Cui::ConsoleView>();
 //  if (v == "cmdline") return std::make_shared<Cli::CmdLineView>();
 //  if (v == "graphical") return std::make_shared<Gui::GuiView>();
 
-    throw std::invalid_argument("Invalid value for config parameter: viewType"
-        "GUI and CmdLine view not implemented yet");
+    throw std::invalid_argument("Invalid value for config parameter:"
+        "\"screen.viewType\". Options for GUI and CmdLine view not "
+        "implemented yet");
     return nullptr;
 }
 

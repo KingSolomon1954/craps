@@ -53,9 +53,6 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
 
     auto result = options.parse(argc, argv);
 
-    // Convenient shorthand
-    const std::string& layer = Gen::MultiLayerConfig::LayerCmdLine;
-    
     if (result.count("help"))
     {
         std::cout << options.help() << std::endl;
@@ -70,17 +67,17 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
 
     if (result.count("con"))
     {
-        cfg.set("viewType", "console");
+        cfg.set("screen.viewType", "console");
     }
 
     if (result.count("cli"))
     {
-        cfg.set("viewType", "cmdline");
+        cfg.set("screen.viewType", "cmdline");
     }
 
     if (result.count("gui"))
     {
-        cfg.set("viewType", "graphical");
+        cfg.set("screen.viewType", "graphical");
     }
 
     bool debug = result["debug"].as<bool>();
