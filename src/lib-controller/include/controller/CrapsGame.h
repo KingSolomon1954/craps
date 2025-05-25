@@ -11,8 +11,6 @@
 
 namespace Gen {
     class BuildInfo;         // fwd
-    class ConfigLayer;       // fwd
-    class MultiLayerConfig;  // fwd
 }
 
 namespace Craps {
@@ -21,6 +19,7 @@ namespace Craps {
 
 namespace Ctrl {
 
+class ConfigManager;  // fwd
 class EventManager;   // fwd
 class PlayerManager;  // fwd
 class TableManager;   // fwd
@@ -41,21 +40,14 @@ public:
     /// @name Observers
     /// @{
     /// @}
-    static void loadGameDefaults(Gen::ConfigLayer& cfg);
 
 private:
     Gen::BuildInfo*        initBuildInfo();
-    Gen::MultiLayerConfig* initCfg(int argc, char* argv[]);
+    Ctrl::ConfigManager*   initConfigManager(int argc, char* argv[]);
     Ctrl::EventManager*    initEventManager();
     Ctrl::TableManager*    initTableManager();
     Ctrl::PlayerManager*   initPlayerManager();
     Craps::CrapsTable*     initCrapsTable();
-    Gen::MultiLayerConfig* initMultiLayerConfig(int argc, char* argv[]);
-    void                   populateLayerDefaults(Gen::MultiLayerConfig* pCfg);
-    void                   populateLayerFiles(Gen::MultiLayerConfig* pCfg);
-    void                   populateLayerEnv(Gen::MultiLayerConfig* pCfg);
-    void                   populateLayerCmdLine(int argc, char* argv[], Gen::MultiLayerConfig* pCfg);
-    void                   dumpConfig(Gen::MultiLayerConfig* pCfg);
     std::shared_ptr<ViewIntfc> getView();
     
 };

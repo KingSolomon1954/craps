@@ -10,8 +10,8 @@
 #include <cxxopts.hpp>
 #include <rang.hpp>
 #include <controller/Globals.h>
+#include <controller/ConfigManager.h>
 #include <gen/BuildInfo.h>
-#include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
 
@@ -67,17 +67,17 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
 
     if (result.count("con"))
     {
-        cfg.set("screen.viewType", "console");
+        cfg.set(ConfigManager::KeyViewType, "console");
     }
 
     if (result.count("cli"))
     {
-        cfg.set("screen.viewType", "cmdline");
+        cfg.set(ConfigManager::KeyViewType, "cmdline");
     }
 
     if (result.count("gui"))
     {
-        cfg.set("screen.viewType", "graphical");
+        cfg.set(ConfigManager::KeyViewType, "graphical");
     }
 
     bool debug = result["debug"].as<bool>();

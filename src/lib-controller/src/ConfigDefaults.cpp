@@ -7,9 +7,8 @@
 #include <controller/ConfigDefaults.h>
 #include <cstdlib>
 #include <filesystem>
-#include <gen/MultiLayerConfig.h>
+#include <controller/ConfigManager.h>
 #include <controller/Globals.h>
-#include <controller/CrapsGame.h>
 
 using namespace Ctrl;
 
@@ -47,25 +46,25 @@ ConfigDefaults::loadDefaultDirs(Gen::ConfigLayer& cfg)
     const std::string home(fs::path(getenv("HOME")));
     
     // 1. { dirs.shared } Shared (system-wide, read-only)
-    cfg.set("dirs.shared", "/usr/share/" + Gbl::appNameExec);
+    cfg.set(ConfigManager::KeyDirsShared, "/usr/share/" + Gbl::appNameExec);
   
     // 2. { dirs.config } Config dir ($XDG_CONFIG_HOME or ~/.config)
     std::string configDir = getEnvOrDefault("XDG_CONFIG_HOME", home + "/.config/");
-    cfg.set("dirs.config", configDir + Gbl::appNameExec);
+    cfg.set(ConfigManager::KeyDirsConfig, configDir + Gbl::appNameExec);
 
     // 3. { dirs.data } Data dir ($XDG_DATA_HOME or ~/.local/share)
     std::string dataDir = getEnvOrDefault("XDG_DATA_HOME", home + "/.local/share/");
-    cfg.set("dirs.data", dataDir + Gbl::appNameExec);
+    cfg.set(ConfigManager::KeyDirsData, dataDir + Gbl::appNameExec);
 
     // 4. { dirs.cache } Cache/temp dir ($XDG_CACHE_HOME or ~/.cache/)
     std::string cacheDir = getEnvOrDefault("XDG_CACHE_HOME", home + "/.cache/");
-    cfg.set("dirs.cache", cacheDir + Gbl::appNameExec);
+    cfg.set(ConfigManager::KeyDirsCache, cacheDir + Gbl::appNameExec);
 
-    // 5. {"dirs.temp }
-    cfg.set("dirs.temp", "/tmp/" + Gbl::appNameExec);
+    // 5. { dirs.temp }
+    cfg.set(ConfigManager::KeyDirsTemp, "/tmp/" + Gbl::appNameExec);
 
     // 6. { dirs.log }
-    cfg.set("dirs.log",  home + "/.local/state/" + Gbl::appNameExec);
+    cfg.set(ConfigManager::KeyDirsLog,  home + "/.local/state/" + Gbl::appNameExec);
 
     // 7. { dirs.runtime }
     std::string u = getEnvOrDefault("XDG_RUNTIME_DIR",    "not found");
@@ -79,24 +78,16 @@ ConfigDefaults::loadDefaultDirs(Gen::ConfigLayer& cfg)
         u = Gbl::appNameExec + "-player-1";
         // throw std::invalid_argument("No user name found");
     }
-    cfg.set("dirs.runtime", "run/user/" + u);
+    cfg.set(ConfigManager::KeyDirsRuntime, "run/user/" + u);
 
-    // 8. {"dirs.tables }
+    // 8. { dirs.tables }
     std::string v = cfg.get("dirs.shared").value();
-    cfg.set("dirs.tables", v + "/tables");
+    cfg.set(ConfigManager::KeyDirsTables, v + "/tables");
     
-    // 9. {"dirs.players }
-    cfg.set("dirs.players", v + "/players");
+    // 9. { dirs.players }
+    cfg.set(ConfigManager::KeyDirsPlayers, v + "/players");
 }
     
-//----------------------------------------------------------------
-
-void
-ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
-{
-    CrapsGame::loadGameDefaults(cfg);
-}
-
 //----------------------------------------------------------------
 
 std::string
@@ -105,6 +96,15 @@ ConfigDefaults::getEnvOrDefault(const std::string& envVar,
 {
     const char* val = std::getenv(envVar.c_str());
     return val ? std::string(val) : fallback;
+}
+
+//----------------------------------------------------------------
+
+void
+ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
+{
+    cfg.set(ConfigManager::KeyViewType, "console");
+    // TODO more ...
 }
 
 //----------------------------------------------------------------

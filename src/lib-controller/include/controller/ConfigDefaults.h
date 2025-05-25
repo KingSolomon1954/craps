@@ -19,11 +19,11 @@ class ConfigDefaults
 public:
     /// @name Lifecycle
     /// @{
-    static void processDefaults(Gen::ConfigLayer& cfg);
     /// @}
 
     /// @name Modifiers
     /// @{
+    static void processDefaults(Gen::ConfigLayer& cfg);
     /// @}
 
     /// @name Observers

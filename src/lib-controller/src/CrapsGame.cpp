@@ -8,11 +8,7 @@
 #include <iostream>
 #include <rang.hpp>
 #include <gen/BuildInfo.h>
-#include <gen/MultiLayerConfig.h>
-#include <controller/ConfigCommandLine.h>
-#include <controller/ConfigDefaults.h>
-#include <controller/ConfigEnv.h>
-#include <controller/ConfigFiles.h>
+#include <controller/ConfigManager.h>
 #include <controller/EventManager.h>
 #include <controller/GameController.h>
 #include <controller/Globals.h>
@@ -34,12 +30,12 @@ Constructor
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
-//  std::unique_ptr<Gen::Logger>           pLogger(initLogger());           (void) pLogger;
-    std::unique_ptr<Gen::BuildInfo>        pBuildInfo(initBuildInfo());     (void) pBuildInfo;
-    std::unique_ptr<Gen::MultiLayerConfig> pCfg(initCfg(argc, argv));       (void) pCfg;
-    std::unique_ptr<Ctrl::EventManager>    pEventMgr(initEventManager());   (void) pEventMgr;
-    std::unique_ptr<Ctrl::TableManager>    pTablerMgr(initTableManager());  (void) pTablerMgr;
-    std::unique_ptr<Ctrl::PlayerManager>   pPlayerMgr(initPlayerManager()); (void) pPlayerMgr;
+//  std::unique_ptr<Gen::Logger>           pLogger(initLogger());               (void) pLogger;
+    std::unique_ptr<Gen::BuildInfo>        pBuildInfo(initBuildInfo());         (void) pBuildInfo;
+    std::unique_ptr<Ctrl::ConfigManager>   pCfg(initConfigManager(argc, argv)); (void) pCfg;
+    std::unique_ptr<Ctrl::EventManager>    pEventMgr(initEventManager());       (void) pEventMgr;
+    std::unique_ptr<Ctrl::TableManager>    pTablerMgr(initTableManager());      (void) pTablerMgr;
+    std::unique_ptr<Ctrl::PlayerManager>   pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
 
     // Setup the chosen view IAW cmdline option.
 //  std::shared_ptr<ViewIntfc> pView = std::make_shared<Cui::ConsoleView>();
@@ -56,71 +52,14 @@ CrapsGame::CrapsGame(int argc, char* argv[])
 
 //----------------------------------------------------------------
 
-Gen::MultiLayerConfig* 
-CrapsGame::initCfg(int argc, char* argv[])
+Ctrl::ConfigManager*
+CrapsGame::initConfigManager(int argc, char* argv[])
 {
-    Gen::MultiLayerConfig* pCfg = initMultiLayerConfig(argc, argv);
-    std::cout << Gbl::pBuildInfo->shortInfo() << std::endl;
-    Gbl::pCfg = pCfg;
-    return pCfg;
+    auto* p = new Ctrl::ConfigManager(argc, argv);
+    Gbl::pConfigMgr = p;
+    return p;
 }
 
-//----------------------------------------------------------------
-
-Gen::MultiLayerConfig*
-CrapsGame::initMultiLayerConfig(int argc, char* argv[])
-{
-    auto* pCfg = new Gen::MultiLayerConfig();
-    // Order matters. Lookup later is in reverse order
-    populateLayerDefaults(pCfg);
-    populateLayerFiles(pCfg);
-    populateLayerEnv(pCfg);
-    populateLayerCmdLine(argc, argv, pCfg);
-    dumpConfig(pCfg);
-    return pCfg;
-}
-
-//----------------------------------------------------------------
-
-void
-CrapsGame::populateLayerDefaults(Gen::MultiLayerConfig* pCfg)
-{
-    Gen::ConfigLayer defaultsLayer;
-    ConfigDefaults::processDefaults(defaultsLayer);
-    pCfg->addLayer(Gen::MultiLayerConfig::LayerDefaults, defaultsLayer);
-}
-    
-//----------------------------------------------------------------
-
-void
-CrapsGame::populateLayerFiles(Gen::MultiLayerConfig* pCfg)
-{
-    Gen::ConfigLayer filesLayer;
-    ConfigFiles::processFiles(filesLayer);
-    pCfg->addLayer(Gen::MultiLayerConfig::LayerFiles, filesLayer);
-}
-    
-//----------------------------------------------------------------
-
-void
-CrapsGame::populateLayerEnv(Gen::MultiLayerConfig* pCfg)
-{
-    Gen::ConfigLayer envLayer;
-    ConfigEnv::processEnv(envLayer);
-    pCfg->addLayer(Gen::MultiLayerConfig::LayerEnv, envLayer);
-}
-    
-//----------------------------------------------------------------
-
-void
-CrapsGame::populateLayerCmdLine(int argc, char* argv[],
-                                Gen::MultiLayerConfig* pCfg)
-{
-    Gen::ConfigLayer cmdLineLayer;
-    ConfigCommandLine::processCmdLine(argc, argv, cmdLineLayer);
-    pCfg->addLayer(Gen::MultiLayerConfig::LayerCmdLine, cmdLineLayer);
-}
-    
 //----------------------------------------------------------------
 
 Gen::BuildInfo*
@@ -163,38 +102,19 @@ CrapsGame::initPlayerManager()
 
 //----------------------------------------------------------------
 
-void
-CrapsGame::dumpConfig(Gen::MultiLayerConfig* pCfg)
-{
-    auto finalConfig = pCfg->exportResolved();
-    std::cout << "\nResolved Config:\n";
-    for (const auto& [key, value] : finalConfig)
-    {
-        std::cout << key << " = " << value << '\n';
-    }
-}
-    
-//----------------------------------------------------------------
-
-void
-CrapsGame::loadGameDefaults(Gen::ConfigLayer& cfg)
-{
-    cfg.set("screen.viewType", "console");
-}
-
-//----------------------------------------------------------------
-
 std::shared_ptr<ViewIntfc>
 CrapsGame::getView()
 {
-    std::string v = Gbl::pCfg->getString("screen.viewType").value();
+    std::string v = Gbl::pConfigMgr->getString("screen.viewType").value();
     if (v == "console") return std::make_shared<Cui::ConsoleView>();
 //  if (v == "cmdline") return std::make_shared<Cli::CmdLineView>();
 //  if (v == "graphical") return std::make_shared<Gui::GuiView>();
 
-    throw std::invalid_argument("Invalid value for config parameter:"
-        "\"screen.viewType\". Options for GUI and CmdLine view not "
-        "implemented yet");
+    std::string diag = "Invalid value for config parameter:\"" +
+        std::string(ConfigManager::KeyViewType) +
+        "\". Options for GUI and CmdLine view not implemented yet";
+        
+    throw std::invalid_argument(diag);
     return nullptr;
 }
 

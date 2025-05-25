@@ -5,15 +5,15 @@
 //----------------------------------------------------------------
 
 #include <controller/Globals.h>
+#include <controller/ConfigManager.h>
 #include <controller/EventManager.h>
 #include <controller/PlayerManager.h>
 #include <controller/TableManager.h>
 #include <craps/CrapsTable.h>
 #include <gen/BuildInfo.h>
-#include <gen/MultiLayerConfig.h>
 
 Gen::BuildInfo*        Gbl::pBuildInfo = NULL;
-Gen::MultiLayerConfig* Gbl::pCfg       = NULL;
+Ctrl::ConfigManager*   Gbl::pConfigMgr = NULL;
 Ctrl::EventManager*    Gbl::pEventMgr  = NULL;
 Ctrl::TableManager*    Gbl::pTableMgr  = NULL;
 Ctrl::PlayerManager*   Gbl::pPlayerMgr = NULL;
