@@ -15,14 +15,14 @@
 #include <stdexcept> // for std::invalid_argument
 #include <chrono>
 #include <iostream>
-#include "gen/ErrorPass.h"
-#include "gen/ReturnCode.h"
-#include "CrapsBet.h"
-#include "DecisionRecord.h"
-#include "Dice.h"
-#include "EnumBetName.h"
+#include <gen/ErrorPass.h>
+#include <gen/ReturnCode.h>
+#include <craps/CrapsBet.h>
+#include <craps/Dice.h>
+#include <craps/EnumBetName.h>
+#include <craps/DecisionRecord.h>
 
-using namespace App;
+using namespace Craps;
 
 //----------------------------------------------------------------
 

@@ -4,8 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include "EnumBetName.h"
-
+#include <craps/EnumBetName.h>
 #include <sstream>
 #include <doctest/doctest.h>
 

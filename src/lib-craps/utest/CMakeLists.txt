@@ -7,16 +7,14 @@
 add_executable(craps-ut
     utest-lib-craps.cpp
 
-#    CrapsBetPart1Test.cpp
-#    CrapsBetPart2Test.cpp
-#    CrapsGameTest.cpp
-#    CrapsTableTest.cpp
-#    EnumBetNameTest.cpp
-#    EventManagerTest.cpp
-#    PropertiesTest.cpp
+     CrapsBetPart1Test.cpp
+     CrapsBetPart2Test.cpp
+     CrapsTableTest.cpp
+     EnumBetNameTest.cpp
 )
 
 target_link_libraries(craps-ut
+    PRIVATE craps
     PRIVATE gen
     PRIVATE doctest::doctest
 )

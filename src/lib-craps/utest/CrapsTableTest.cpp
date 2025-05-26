@@ -8,12 +8,12 @@
 
 #include <iostream>
 #include <vector>
-#include "CrapsTable.h"
-#include "EventManager.h"
-#include "Player.h"
-#include "PlayerManager.h"
+#include <controller/EventManager.h>
+#include <controller/PlayerManager.h>
+#include <craps/CrapsTable.h>
+#include <craps/Player.h>
 
-using namespace App;
+using namespace Craps;
 
 //----------------------------------------------------------------
 
@@ -38,8 +38,10 @@ TEST_CASE("CrapsTable:players at table")
     SUBCASE("add/remove players")
     {
         CrapsTable t;
-        EventManager em;
+        Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
+        Ctrl::PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
         Player p1("p1", 1000);
         Gen::ErrorPass ep;
         
@@ -95,8 +97,10 @@ TEST_CASE("CrapsTable:players at table")
     SUBCASE("list of players")
     {
         CrapsTable t;
-        EventManager em;
+        Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
+        Ctrl::PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
         CHECK(t.getNumPlayers() == 0);
 
         // Get back empty vector
@@ -125,8 +129,10 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("bad bets")
     {
         CrapsTable t;
-        EventManager em;
+        Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
+        Ctrl::PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
         Player p2("p2", 1000);
@@ -192,6 +198,10 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("change bets")
     {
         CrapsTable t;
+        Ctrl::EventManager em;
+        Gbl::pEventMgr = &em;
+        Ctrl::PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
         
@@ -231,8 +241,10 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("amount on table")
     {
         CrapsTable t;
-        EventManager em;
+        Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
+        Ctrl::PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
 
@@ -256,8 +268,10 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("remove bet")
     {
         CrapsTable t;
-        EventManager em;
+        Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
+        Ctrl::PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
 
@@ -286,8 +300,10 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("remove player outstanding bets")
     {
         CrapsTable t;
-        EventManager em;
+        Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
+        Ctrl::PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
 
@@ -308,8 +324,10 @@ TEST_CASE("CrapsTable:placing bets")
     SUBCASE("odds bet")
     {
         CrapsTable t;
-        EventManager em;
+        Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
+        Ctrl::PlayerManager pm;
+        Gbl::pPlayerMgr = &pm;
         Gen::ErrorPass ep;
         Player p1("p1", 1000);
 
@@ -391,9 +409,9 @@ TEST_CASE("CrapsTable:roll dice")
     {
         CrapsTable t;
         Gbl::pTable = &t;
-        EventManager em;
+        Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
-        PlayerManager pm;
+        Ctrl::PlayerManager pm;
         Gbl::pPlayerMgr = &pm;
         Gen::ErrorPass ep;
 
@@ -406,13 +424,13 @@ TEST_CASE("CrapsTable:roll dice")
         CHECK(t.getLastRoll().d2() == 6);
 
         // Create and add a couple of players
-        PlayerManager::PlayerPtr john = Gbl::pPlayerMgr->createPlayer("John");
-        PlayerManager::PlayerPtr jane = Gbl::pPlayerMgr->createPlayer("Jane");
+        Ctrl::PlayerManager::PlayerPtr john = Gbl::pPlayerMgr->createPlayer("John");
+        Ctrl::PlayerManager::PlayerPtr jane = Gbl::pPlayerMgr->createPlayer("Jane");
         CHECK(john->joinTable(ep) == Gen::ReturnCode::Success);
         CHECK(jane->joinTable(ep) == Gen::ReturnCode::Success);
         CHECK(t.getNumPlayers() == 2);
-        Money johnBalance = john->getBalance();
-        Money janeBalance = jane->getBalance();
+        Gbl::Money johnBalance = john->getBalance();
+        Gbl::Money janeBalance = jane->getBalance();
 
         // come out roll, roll a 7, pass line win, dont pass lose
         CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);
