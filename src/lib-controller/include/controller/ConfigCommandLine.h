@@ -28,6 +28,8 @@ public:
     /// @name Observers
     /// @{
     /// @}
+private:
+    static void setAppPath(char* argv[], Gen::ConfigLayer& cfg);
 };
 
 /*-----------------------------------------------------------*//**

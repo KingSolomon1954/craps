@@ -20,7 +20,7 @@ Ctrl::PlayerManager*   Gbl::pPlayerMgr = NULL;
 Craps::CrapsTable*     Gbl::pTable     = NULL;
 
 const std::string Gbl::appNameScreen = "Royal Craps";
-const std::string Gbl::appNameExec   = "RoyalCraps";
+const std::string Gbl::appNameExec   = "royalcraps";
 
 //----------------------------------------------------------------
 

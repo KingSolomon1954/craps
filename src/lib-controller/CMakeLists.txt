@@ -8,7 +8,6 @@ find_package(cxxopts REQUIRED)
 find_package(rang REQUIRED)
 
 add_library(controller STATIC
-    src/AppController.cpp
     src/ConfigManager.cpp
     src/ConfigCommandLine.cpp
     src/ConfigDefaults.cpp

@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <controller/ConfigCommandLine.h>
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <cxxopts.hpp>
@@ -29,6 +30,7 @@ void
 ConfigCommandLine::processCmdLine(int argc, char* argv[],
                                   Gen::ConfigLayer& cfg)
 {
+    setAppPath(argv, cfg);
     cxxopts::Options options(Gbl::appNameExec, Gbl::appNameScreen + ": A multiplayer dice game");
 
     options.add_options()
@@ -91,4 +93,15 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         bar = result["bar"].as<std::string>();
 }
 
+//----------------------------------------------------------------
+
+void
+ConfigCommandLine::setAppPath(char* argv[], Gen::ConfigLayer& cfg)
+{
+    namespace fs = std::filesystem;
+    fs::path relPath = argv[0];
+    fs::path absPath = fs::absolute(relPath);
+    cfg.set(ConfigManager::KeyAppPath, absPath);
+}
+    
 //----------------------------------------------------------------

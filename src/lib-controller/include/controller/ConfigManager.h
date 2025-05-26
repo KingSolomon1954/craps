@@ -38,7 +38,8 @@ public:
     static constexpr auto LayerNameEnv      = "env";
     static constexpr auto LayerNameCmdLine  = "cmdline";
 
-    static constexpr auto KeyViewType    = "screen.viewType";
+    // Keys to retrieve/deposit config values
+    static constexpr auto KeyAppPath     = "app.execAbsPath";
     static constexpr auto KeyDirsShared  = "dirs.shared";
     static constexpr auto KeyDirsConfig  = "dirs.config";
     static constexpr auto KeyDirsData    = "dirs.data";
@@ -48,6 +49,7 @@ public:
     static constexpr auto KeyDirsRuntime = "dirs.runtime";
     static constexpr auto KeyDirsTables  = "dirs.tables";
     static constexpr auto KeyDirsPlayers = "dirs.players";
+    static constexpr auto KeyViewType    = "screen.viewType";
         
 private:
     void populateLayerDefaults();

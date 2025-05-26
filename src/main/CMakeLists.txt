@@ -8,19 +8,19 @@ find_package(cxxopts REQUIRED)
 find_package(rang REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
-add_executable(RoyalCraps
+add_executable(royalcraps
     src/main.cpp
 )
 
-target_include_directories(RoyalCraps
+target_include_directories(royalcraps
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_compile_options(RoyalCraps
+target_compile_options(royalcraps
     PUBLIC ${PROJ_COMPILE_OPTIONS}
 )
 
-target_link_libraries(RoyalCraps
+target_link_libraries(royalcraps
     PRIVATE gen
     PRIVATE craps
     PRIVATE controller
