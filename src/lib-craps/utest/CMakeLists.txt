@@ -6,11 +6,10 @@
 
 add_executable(craps-ut
     utest-lib-craps.cpp
-
-     CrapsBetPart1Test.cpp
-     CrapsBetPart2Test.cpp
-     CrapsTableTest.cpp
-     EnumBetNameTest.cpp
+    CrapsBetPart1Test.cpp
+    CrapsBetPart2Test.cpp
+    CrapsTableTest.cpp
+    EnumBetNameTest.cpp
 )
 
 target_link_libraries(craps-ut

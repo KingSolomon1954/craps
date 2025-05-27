@@ -25,6 +25,7 @@ public:
     /// @{
     PlayerManager();
    ~PlayerManager() = default;
+    void loadStartingPlayers();
     bool loadPlayers();
     bool savePlayers();
     /// @}

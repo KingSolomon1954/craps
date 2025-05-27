@@ -5,8 +5,17 @@
 //----------------------------------------------------------------
 
 #include <controller/TableManager.h>
+#include <controller/ConfigManager.h>
 
 using namespace Ctrl;
+
+//----------------------------------------------------------------
+
+TableManager::TableManager()
+{
+    // init with last table played
+    // loadFromFile(tid);
+}
 
 //----------------------------------------------------------------
 
@@ -26,6 +35,17 @@ TableManager::loadTableChoices()
 Craps::CrapsTable*
 TableManager::loadCrapsTable(unsigned tableId)
 {
+    // TODO: read from file and create table
+    return new Craps::CrapsTable();
+}
+
+//----------------------------------------------------------------
+
+Craps::CrapsTable*
+TableManager::loadStartingCrapsTable()
+{
+    std::string tid = Gbl::pConfigMgr->getString(ConfigManager::KeyStartTable).value();
+    (void) tid;
     // TODO: read from file and create table
     return new Craps::CrapsTable();
 }

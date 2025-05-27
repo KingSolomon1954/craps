@@ -104,6 +104,7 @@ void
 ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
 {
     cfg.set(ConfigManager::KeyViewType, "console");
+    cfg.set(ConfigManager::KeyStartTable, "todo default table id");
     // TODO more ...
 }
 

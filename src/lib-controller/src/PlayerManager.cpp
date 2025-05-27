@@ -9,6 +9,8 @@
 #include <fstream>
 #include <iostream>
 #include <craps/DecisionRecord.h>
+#include <craps/CrapsTable.h>
+#include <gen/ErrorPass.h>
 
 using namespace Ctrl;
 
@@ -21,7 +23,6 @@ PlayerManager::PlayerManager()
 {
     // Empty.
 }
-
 
 /*-----------------------------------------------------------*//**
 
@@ -63,6 +64,26 @@ PlayerManager::loadPlayerChoices()
         { "Jane", "The Chatty roller", "efgh", std::chrono::system_clock::now()},
         { "Dave", "The quiet gambler", "ijkl", std::chrono::system_clock::now()},
     };
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerManager::loadStartingPlayers()
+{
+    assert(Gbl::pTable);
+    
+    // TODO read from mult layer config
+    // Form list of the last player ids
+    std::vector<PlayerManager::PlayerId> ids;
+    
+    // Add each player to table
+    Gen::ErrorPass ep;
+    for (auto pid : ids)  // Players join table
+    {
+        // TODO: check error return
+        Gbl::pTable->addPlayer(pid, ep);
+    }
 }
 
 //----------------------------------------------------------------

@@ -15,11 +15,13 @@ namespace Ctrl {
 class TableManager
 {
 public:
+    TableManager();
     using TableId = unsigned;
     using TableDescriptions = std::vector<TableDescription>;
 
     static TableDescriptions loadTableChoices();
     static Craps::CrapsTable* loadCrapsTable(TableId tableId);
+    static Craps::CrapsTable* loadStartingCrapsTable();
     
 private:
 };
