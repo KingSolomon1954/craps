@@ -11,6 +11,7 @@
 #include <controller/EventManager.h>
 #include <controller/PlayerManager.h>
 #include <craps/CrapsBet.h>
+#include <craps/TableConfig.h>
 
 using namespace Craps;
 
@@ -24,6 +25,53 @@ CrapsTable::CrapsTable(const TableId& tableId)
     , houseBank_(1000)
 {
     // TODO: read from file and create table.
+}
+
+/*-----------------------------------------------------------*//**
+
+Private Constructor.
+
+*/
+CrapsTable::CrapsTable()
+{
+}
+
+/*-----------------------------------------------------------*//**
+
+Construct Table from in-memory configuration.
+
+Throws upon error.
+
+*/
+CrapsTable*
+CrapsTable::fromConfig(const TableId& tableId, const TableConfig& config)
+{
+    CrapsTable* ct = new CrapsTable();
+    ct->tableId_ = config.tableId;
+    ct->tableName_ = config.tableName;
+    ct->houseBank_ = config.houseBank;
+    
+    (void) config;
+    // TODO: parse config and populate fields.
+    return ct;
+}
+
+/*-----------------------------------------------------------*//**
+
+Construct Table from file.
+
+Throws upon error.
+
+*/
+CrapsTable*
+CrapsTable::fromFile(const TableId& tableId)
+{
+    CrapsTable* ct = new CrapsTable();
+    ct->tableId_ = tableId;
+    ct->houseBank_ = 1000;
+    
+    // TODO: parse config from file and populate fields.
+    return ct;
 }
 
 //----------------------------------------------------------------

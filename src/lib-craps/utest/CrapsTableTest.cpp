@@ -10,10 +10,29 @@
 #include <vector>
 #include <controller/EventManager.h>
 #include <controller/PlayerManager.h>
+#include <craps/TableConfig.h>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
 
 using namespace Craps;
+
+//----------------------------------------------------------------
+//
+// Create a TableConfig used in most all tests
+//
+const Craps::TableConfig& getSharedTestConfig()
+{
+    static Craps::TableConfig cfg = []
+        {
+            // Initialize once
+            Craps::TableConfig c;
+            c.tableId = "1";
+            c.tableName = "Standard Table";
+            c.houseBank = 1000;
+            return c;
+        }();
+    return cfg;
+}
 
 //----------------------------------------------------------------
 
@@ -21,13 +40,13 @@ TEST_CASE("CrapsTable:constructor")
 {
     SUBCASE("initial values")
     {
-        CrapsTable t("1");
-        CHECK(t.getPoint() == 0);
-        CHECK(t.getLastRoll().value() == 12);
-        CHECK(t.isComeOutRoll());
-        CHECK(t.isBettingOpen());
-        CHECK(t.getShooterId().empty());
-        CHECK(t.getNumPlayers() == 0);
+        CrapsTable* t = CrapsTable::fromConfig("1", getSharedTestConfig());
+        CHECK(t->getPoint() == 0);
+        CHECK(t->getLastRoll().value() == 12);
+        CHECK(t->isComeOutRoll());
+        CHECK(t->isBettingOpen());
+        CHECK(t->getShooterId().empty());
+        CHECK(t->getNumPlayers() == 0);
     }
 }
     

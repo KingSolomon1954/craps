@@ -35,8 +35,7 @@ TableManager::loadTableChoices()
 Craps::CrapsTable*
 TableManager::loadCrapsTable(const TableId& tableId)
 {
-    // TODO: read from file and construct table
-    return new Craps::CrapsTable(tableId);
+    return Craps::CrapsTable::fromFile(tableId);
 }
 
 //----------------------------------------------------------------
@@ -45,7 +44,7 @@ Craps::CrapsTable*
 TableManager::loadStartingCrapsTable()
 {
     TableId tid = Gbl::pConfigMgr->getString(ConfigManager::KeyStartTable).value();
-    return new Craps::CrapsTable(tid);
+    return loadCrapsTable(tid);
 }
 
 //----------------------------------------------------------------

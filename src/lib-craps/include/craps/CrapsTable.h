@@ -21,13 +21,19 @@
 
 namespace Craps {
 
+class TableConfig;  // fwd
+    
 class CrapsTable
 {
 public:
     /// @name Lifecycle
     /// @{
     using TableId = std::string;
+    
     CrapsTable(const TableId& tableId);
+    static CrapsTable* fromConfig(const TableId& tableId, const TableConfig& config);
+    static CrapsTable* fromFile(const TableId& tableId);
+    
    ~CrapsTable() = default;
     /// @}
 
@@ -80,6 +86,7 @@ public:
 
 private:
     TableId tableId_;
+    std::string tableName_;
     Bank houseBank_;
     Dice dice_;
     unsigned point_ = 0;
@@ -87,6 +94,8 @@ private:
     bool bettingOpen_ = true;
     bool isTestRoll_ = false;
     Dice testRollDice_;
+
+    CrapsTable();  // private ctor 
     
     // Players must join table in order to play.  We only hold the
     // player's UUID here in a std::list container and rely on the
