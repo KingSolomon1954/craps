@@ -21,20 +21,6 @@ GameController::GameController(std::shared_ptr<ViewIntfc> pView)
     : pView_(std::move(pView))
 {
     pView_->setGameController(this);
-
-#if 0
-    // Startup with last table. If no last table, startup with default table.
-    // Retrieve startup tid from multi layer config
-    auto tid = pTableMgr->loadCrapsTable(tid);
-    
-    // Startup with last set of players.
-    Gen::ErrorPass ep;
-    for (auto pid : playerIds)  // Players join table
-    {
-        // TODO: check error return
-        Gbl::pTable->addPlayer(pid, ep);
-    }
-#endif
 }
 
 //----------------------------------------------------------------

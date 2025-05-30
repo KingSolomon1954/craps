@@ -24,19 +24,19 @@ TableManager::loadTableChoices()
 {
     // TODO: read directory and build up table choices
     return {
-        { "Standard Table",   "a fine table",  1, std::chrono::system_clock::now()},
-        { "No 7-Out Table",   "a crazy table", 2, std::chrono::system_clock::now()},
-        { "Fast-Paced Table", "giddy yap",     3, std::chrono::system_clock::now()},
+        { "Standard Table",   "a fine table",  "1", std::chrono::system_clock::now()},
+        { "No 7-Out Table",   "a crazy table", "2", std::chrono::system_clock::now()},
+        { "Fast-Paced Table", "giddy yap",     "3", std::chrono::system_clock::now()},
     };
 }
 
 //----------------------------------------------------------------
 
 Craps::CrapsTable*
-TableManager::loadCrapsTable(unsigned tableId)
+TableManager::loadCrapsTable(const TableId& tableId)
 {
-    // TODO: read from file and create table
-    return new Craps::CrapsTable();
+    // TODO: read from file and construct table
+    return new Craps::CrapsTable(tableId);
 }
 
 //----------------------------------------------------------------
@@ -44,10 +44,8 @@ TableManager::loadCrapsTable(unsigned tableId)
 Craps::CrapsTable*
 TableManager::loadStartingCrapsTable()
 {
-    std::string tid = Gbl::pConfigMgr->getString(ConfigManager::KeyStartTable).value();
-    (void) tid;
-    // TODO: read from file and create table
-    return new Craps::CrapsTable();
+    TableId tid = Gbl::pConfigMgr->getString(ConfigManager::KeyStartTable).value();
+    return new Craps::CrapsTable(tid);
 }
 
 //----------------------------------------------------------------

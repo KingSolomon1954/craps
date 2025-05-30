@@ -21,7 +21,7 @@ TEST_CASE("CrapsTable:constructor")
 {
     SUBCASE("initial values")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         CHECK(t.getPoint() == 0);
         CHECK(t.getLastRoll().value() == 12);
         CHECK(t.isComeOutRoll());
@@ -37,7 +37,7 @@ TEST_CASE("CrapsTable:players at table")
 {
     SUBCASE("add/remove players")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
         Ctrl::PlayerManager pm;
@@ -96,7 +96,7 @@ TEST_CASE("CrapsTable:players at table")
 
     SUBCASE("list of players")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
         Ctrl::PlayerManager pm;
@@ -128,7 +128,7 @@ TEST_CASE("CrapsTable:placing bets")
 {
     SUBCASE("bad bets")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
         Ctrl::PlayerManager pm;
@@ -197,7 +197,7 @@ TEST_CASE("CrapsTable:placing bets")
 
     SUBCASE("change bets")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
         Ctrl::PlayerManager pm;
@@ -240,7 +240,7 @@ TEST_CASE("CrapsTable:placing bets")
     
     SUBCASE("amount on table")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
         Ctrl::PlayerManager pm;
@@ -267,7 +267,7 @@ TEST_CASE("CrapsTable:placing bets")
 
     SUBCASE("remove bet")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
         Ctrl::PlayerManager pm;
@@ -299,7 +299,7 @@ TEST_CASE("CrapsTable:placing bets")
 
     SUBCASE("remove player outstanding bets")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
         Ctrl::PlayerManager pm;
@@ -323,7 +323,7 @@ TEST_CASE("CrapsTable:placing bets")
 
     SUBCASE("odds bet")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;
         Ctrl::PlayerManager pm;
@@ -407,7 +407,7 @@ TEST_CASE("CrapsTable:roll dice")
 {
     SUBCASE("first roll")
     {
-        CrapsTable t;
+        CrapsTable t("1");
         Gbl::pTable = &t;
         Ctrl::EventManager em;
         Gbl::pEventMgr = &em;

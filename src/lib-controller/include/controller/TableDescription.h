@@ -9,6 +9,7 @@
 #include <chrono>
 #include <string>
 #include <ostream>
+#include <craps/CrapsTable.h>
 
 namespace Ctrl {
 
@@ -16,7 +17,7 @@ struct TableDescription
 {
     std::string name;
     std::string description;
-    unsigned tableId;
+    Craps::CrapsTable::TableId tableId;
     std::chrono::time_point<std::chrono::system_clock> lastUsed;
 };
 

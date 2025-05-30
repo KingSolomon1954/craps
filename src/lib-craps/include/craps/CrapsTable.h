@@ -26,7 +26,8 @@ class CrapsTable
 public:
     /// @name Lifecycle
     /// @{
-    CrapsTable();
+    using TableId = std::string;
+    CrapsTable(const TableId& tableId);
    ~CrapsTable() = default;
     /// @}
 
@@ -78,6 +79,7 @@ public:
 #endif
 
 private:
+    TableId tableId_;
     Bank houseBank_;
     Dice dice_;
     unsigned point_ = 0;

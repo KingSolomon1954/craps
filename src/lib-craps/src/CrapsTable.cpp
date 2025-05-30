@@ -19,12 +19,11 @@ using namespace Craps;
 Constructor
 
 */
-CrapsTable::CrapsTable()
-    :houseBank_(1000)
+CrapsTable::CrapsTable(const TableId& tableId)
+    : tableId_(tableId)
+    , houseBank_(1000)
 {
-
-//    CrapsBet bet("Player1", BetName::PassLine, 100, 0);
-//    std::cout << bet << std::endl;
+    // TODO: read from file and create table.
 }
 
 //----------------------------------------------------------------
