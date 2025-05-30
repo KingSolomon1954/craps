@@ -19,6 +19,9 @@ struct TableConfig
     Craps::CrapsTable::TableId tableId;
     std::string tableName;
     Gbl::Money houseBank;
+    
+    static TableConfig loadTableConfigFromYamlFile(
+        const std::string& filepath);
 };
 
 /*-----------------------------------------------------------*//**

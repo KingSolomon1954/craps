@@ -17,18 +17,6 @@ using namespace Craps;
 
 /*-----------------------------------------------------------*//**
 
-Constructor
-
-*/
-CrapsTable::CrapsTable(const TableId& tableId)
-    : tableId_(tableId)
-    , houseBank_(1000)
-{
-    // TODO: read from file and create table.
-}
-
-/*-----------------------------------------------------------*//**
-
 Private Constructor.
 
 */
@@ -47,12 +35,9 @@ CrapsTable*
 CrapsTable::fromConfig(const TableId& tableId, const TableConfig& config)
 {
     CrapsTable* ct = new CrapsTable();
-    ct->tableId_ = config.tableId;
+    ct->tableId_   = config.tableId;
     ct->tableName_ = config.tableName;
     ct->houseBank_ = config.houseBank;
-    
-    (void) config;
-    // TODO: parse config and populate fields.
     return ct;
 }
 
@@ -66,11 +51,13 @@ Throws upon error.
 CrapsTable*
 CrapsTable::fromFile(const TableId& tableId)
 {
+    std::string filePath = "CrapsTable-" + tableId + ".yaml";
+    TableConfig tc = TableConfig::loadTableConfigFromYamlFile(filePath);
+
     CrapsTable* ct = new CrapsTable();
-    ct->tableId_ = tableId;
-    ct->houseBank_ = 1000;
-    
-    // TODO: parse config from file and populate fields.
+    ct->tableId_ = tc.tableId;
+    ct->tableName_ = tc.tableName;
+    ct->houseBank_ = tc.houseBank;
     return ct;
 }
 

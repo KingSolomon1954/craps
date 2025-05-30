@@ -30,7 +30,7 @@ public:
     /// @{
     using TableId = std::string;
     
-    CrapsTable(const TableId& tableId);
+//    CrapsTable(const TableId& tableId);
     static CrapsTable* fromConfig(const TableId& tableId, const TableConfig& config);
     static CrapsTable* fromFile(const TableId& tableId);
     
