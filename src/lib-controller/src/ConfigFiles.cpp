@@ -16,8 +16,11 @@ namespace fs = std::filesystem;
 
 Process startup config files.
 
-@param[in,out] pCfg
-    The multi-layer configuration structure to populate.
+@param[in] multiConfig
+    The multi-layer configuration structure.
+
+@param[in,out] cfg
+    The configuration layer we populate.
 */
 void
 ConfigFiles::processFiles(const Gen::MultiLayerConfig& multiConfig,
@@ -72,27 +75,10 @@ ConfigFiles::loadSystemConfig(
     const Gen::MultiLayerConfig& multiConfig,
     Gen::ConfigLayer& cfg)
 {
-    (void) cfg;
     const std::string& filename =
         multiConfig.getString(ConfigManager::KeyDirsSysConfig).value() + "/config.yaml";
     existsOrThrow(filename);
-#if 0    
-    YAML::Node root = YAML::LoadFile(filename);
-
-    std::function<void(const YAML::Node&, const std::string&)> recurse;
-    recurse = [&](const YAML::Node& node, const std::string& prefix) {
-        for (const auto& kv : node) {
-            std::string key = prefix.empty() ? kv.first.as<std::string>() : prefix + "." + kv.first.as<std::string>();
-            if (kv.second.IsMap()) {
-                recurse(kv.second, key);
-            } else {
-                cig.set(key, kv.second.as<std::string>());
-            }
-        }
-    };
-
-    recurse(root, "");
-#endif    
+    loadNamedConfig(filename, cfg);
 }
 
 //----------------------------------------------------------------
@@ -102,8 +88,56 @@ ConfigFiles::loadUserConfig(
     const Gen::MultiLayerConfig& multiConfig,
     Gen::ConfigLayer& cfg)
 {
-    (void) multiConfig;
-    (void) cfg;
+    const std::string& filename =
+        multiConfig.getString(ConfigManager::KeyDirsUsrConfig).value() + "/config.yaml";
+    if (fs::exists(filename))
+    {
+        loadNamedConfig(filename, cfg);
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+ConfigFiles::loadNamedConfig(
+    const std::string& filename,
+    Gen::ConfigLayer& cfg)
+{
+#if 0
+    try
+    {
+        YAML::Node root = YAML::LoadFile(filename);
+
+        std::function<void(const YAML::Node&, const std::string&)> recurse;
+        recurse = [&](const YAML::Node& node, const std::string& prefix)
+        {
+            for (const auto& kv : node)
+            {
+                std::string key = prefix.empty() ? kv.first.as<std::string>() :
+                    prefix + "." + kv.first.as<std::string>();
+                if (key.empty())
+                {
+                     throw std::runtime_error("Empty key in YAML file: " + filename);
+                }
+                if (kv.second.IsMap())
+                {
+                    recurse(kv.second, key);
+                }
+                else
+                {
+                    cig.set(key, kv.second.as<std::string>());
+                }
+            }
+        };
+
+        recurse(root, "");
+    }
+    catch (const YAML::Exception& e)
+    {
+        throw std::runtime_error("Failed to parse YAML file " +
+                                 filename + ": " + e.what());
+    }
+#endif    
 }
 
 //----------------------------------------------------------------

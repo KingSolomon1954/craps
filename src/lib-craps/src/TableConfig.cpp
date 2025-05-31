@@ -26,6 +26,9 @@ TableConfig::loadTableConfigFromYamlFile(
 #endif
     // TODO    
     TableConfig config;
+    config.tableId = "1";
+    config.tableName = "Las Vegas";
+    config.houseBank = 1000;
     return config;
 }
 

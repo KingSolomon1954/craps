@@ -39,6 +39,8 @@ private:
     static void loadUserConfig(
         const Gen::MultiLayerConfig& multiConfig, Gen::ConfigLayer& cfg);
     static void existsOrThrow(const std::string& pathStr);
+    static void loadNamedConfig(const std::string& filename,
+                                Gen::ConfigLayer& cfg);
 };
 
 /*-----------------------------------------------------------*//**
