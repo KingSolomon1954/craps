@@ -13,6 +13,7 @@
 #include <controller/Globals.h>
 #include <controller/ConfigManager.h>
 #include <gen/BuildInfo.h>
+#include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
 
@@ -28,8 +29,11 @@ Constructor
 */
 void
 ConfigCommandLine::processCmdLine(int argc, char* argv[],
+                                  const Gen::MultiLayerConfig& multiConfig,
                                   Gen::ConfigLayer& cfg)
 {
+    (void) multiConfig;
+
     setAppPath(argv, cfg);
     cxxopts::Options options(Gbl::appNameExec, Gbl::appNameScreen + ": A multiplayer dice game");
 

@@ -17,8 +17,10 @@ Process environment variables.
     The multi-layer configuration structure to populate.
 */
 void
-ConfigEnv::processEnv(Gen::ConfigLayer& cfg)
+ConfigEnv::processEnv(const Gen::MultiLayerConfig& multiConfig,
+                      Gen::ConfigLayer& cfg)
 {
+    (void) multiConfig;
     (void) cfg;
 }
 

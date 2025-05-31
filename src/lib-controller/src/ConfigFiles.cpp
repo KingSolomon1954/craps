@@ -8,6 +8,7 @@
 #include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
+namespace fs = std::filesystem;
 
 /*-----------------------------------------------------------*//**
 
@@ -17,8 +18,10 @@ Process startup config files.
     The multi-layer configuration structure to populate.
 */
 void
-ConfigFiles::processFiles(Gen::ConfigLayer& cfg)
+ConfigFiles::processFiles(const Gen::MultiLayerConfig& multiConfig,
+                          Gen::ConfigLayer& cfg)
 {
+    (void) multiConfig;
     (void) cfg;
 }
 

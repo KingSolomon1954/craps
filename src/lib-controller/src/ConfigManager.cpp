@@ -51,7 +51,7 @@ void
 ConfigManager::populateLayerFiles()
 {
     Gen::ConfigLayer filesLayer;
-    ConfigFiles::processFiles(filesLayer);
+    ConfigFiles::processFiles(*this, filesLayer);
     addLayer(LayerNameFiles, filesLayer);
 }
     
@@ -61,7 +61,7 @@ void
 ConfigManager::populateLayerEnv()
 {
     Gen::ConfigLayer envLayer;
-    ConfigEnv::processEnv(envLayer);
+    ConfigEnv::processEnv(*this, envLayer);
     addLayer(LayerNameEnv, envLayer);
 }
     
@@ -71,7 +71,7 @@ void
 ConfigManager::populateLayerCmdLine(int argc, char* argv[])
 {
     Gen::ConfigLayer cmdLineLayer;
-    ConfigCommandLine::processCmdLine(argc, argv, cmdLineLayer);
+    ConfigCommandLine::processCmdLine(argc, argv, *this, cmdLineLayer);
     addLayer(LayerNameCmdLine, cmdLineLayer);
 }
     
