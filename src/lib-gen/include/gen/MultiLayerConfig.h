@@ -5,13 +5,14 @@
 //----------------------------------------------------------------
 
 #include <iostream>
+#include <memory>
+#include <mutex>
+#include <optional>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <unordered_map>
 #include <vector>
-#include <optional>
-#include <memory>
-#include <sstream>
 
 namespace Gen {
 
@@ -42,6 +43,7 @@ public:
     std::unordered_map<std::string, std::string> exportResolved() const;
 
 private:
+    mutable std::mutex mutex_;
     std::vector<std::pair<std::string, std::shared_ptr<ConfigLayer>>> layers_;
     std::unordered_map<std::string, size_t> nameToIndex_;
 };

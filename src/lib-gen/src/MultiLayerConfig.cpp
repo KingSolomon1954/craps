@@ -69,6 +69,7 @@ MultiLayerConfig::set(const std::string& layerName, const std::string& key, cons
 std::optional<std::string>
 MultiLayerConfig::getString(const std::string& key) const
 {
+    std::lock_guard<std::mutex> lock(mutex_);
     for (auto it = layers_.rbegin(); it != layers_.rend(); ++it)
     {
         if (auto val = it->second->get(key); val.has_value())

@@ -6,6 +6,7 @@
 
 #include <controller/ConfigManager.h>
 #include <iostream>
+#include <stdexcept>
 #include <controller/ConfigCommandLine.h>
 #include <controller/ConfigDefaults.h>
 #include <controller/ConfigEnv.h>
@@ -18,12 +19,20 @@ using namespace Ctrl;
 
 ConfigManager::ConfigManager(int argc, char* argv[])
 {
-    // Order matters. Lookup later is in reverse order
-    populateLayerDefaults();
-    populateLayerFiles();
-    populateLayerEnv();
-    populateLayerCmdLine(argc, argv);
-    dumpConfig();
+    try
+    {
+        // Order matters. Lookup later is in reverse order
+        populateLayerDefaults();
+        populateLayerFiles();
+        populateLayerEnv();
+        populateLayerCmdLine(argc, argv);
+        dumpConfig();
+    }
+    catch(const std::exception& e)
+    {
+        const std::string diag = "Unable to process configuration. ";
+        throw std::runtime_error(diag  + e.what());
+    }
 }
 
 //----------------------------------------------------------------

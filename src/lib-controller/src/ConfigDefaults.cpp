@@ -31,61 +31,51 @@ ConfigDefaults::processDefaults(Gen::ConfigLayer& cfg)
 void
 ConfigDefaults::loadDefaultDirs(Gen::ConfigLayer& cfg)
 {
+    const std::string home = getEnvOrDefault("HOME", "/tmp");
     namespace fs = std::filesystem;
-
-    // { dirs.shared  }
-    // { dirs.config  }
-    // { dirs.data    }
-    // { dirs.cache   }
-    // { dirs.temp    }
-    // { dirs.log     }
-    // { dirs.runtime }
-    // { dirs.tables  }
-    // { dirs.players }
     
-    const std::string home(fs::path(getenv("HOME")));
-    
-    // 1. { dirs.shared } Shared (system-wide, read-only)
-    cfg.set(ConfigManager::KeyDirsShared, "/usr/share/" + Gbl::appNameExec);
-  
-    // 2. { dirs.config } Config dir ($XDG_CONFIG_HOME or ~/.config)
-    std::string configDir = getEnvOrDefault("XDG_CONFIG_HOME", home + "/.config/");
-    cfg.set(ConfigManager::KeyDirsConfig, configDir + Gbl::appNameExec);
+    // 1. { dirs.sysshared } System-wide, shared configs, read-only)
+    fs::path sysShared = "/usr/share/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsSysShared, sysShared.string());
 
-    // 3. { dirs.data } Data dir ($XDG_DATA_HOME or ~/.local/share)
-    std::string dataDir = getEnvOrDefault("XDG_DATA_HOME", home + "/.local/share/");
-    cfg.set(ConfigManager::KeyDirsData, dataDir + Gbl::appNameExec);
+    // 2. { dirs.systables } System-wide, shared table configs, read-only)
+    fs::path tables = sysShared / "tables";
+    cfg.set(ConfigManager::KeyDirsSysTables, tables.string());
 
-    // 4. { dirs.cache } Cache/temp dir ($XDG_CACHE_HOME or ~/.cache/)
-    std::string cacheDir = getEnvOrDefault("XDG_CACHE_HOME", home + "/.cache/");
-    cfg.set(ConfigManager::KeyDirsCache, cacheDir + Gbl::appNameExec);
+    // 3. { dirs.sysplayers } System-wide, shared player configs, read-only)
+    fs::path players = sysShared / "players";
+    cfg.set(ConfigManager::KeyDirsSysPlayers, players.string());
 
-    // 5. { dirs.temp }
-    cfg.set(ConfigManager::KeyDirsTemp, "/tmp/" + Gbl::appNameExec);
+    // 4. {dirs.sysconfig} System-wide config, admin read/write
+    fs::path sysConfig = "/etc/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsSysConfig, sysConfig.string());
 
-    // 6. { dirs.log }
-    cfg.set(ConfigManager::KeyDirsLog,  home + "/.local/state/" + Gbl::appNameExec);
+    // 5. { dirs.usrconfig } User config, user read/write
+    std::string userConfigStr = getEnvOrDefault("XDG_CONFIG_HOME", home + "/.config");
+    fs::path userConfig = userConfigStr + "/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsUsrConfig, userConfig.string());
 
-    // 7. { dirs.runtime }
-    std::string u = getEnvOrDefault("XDG_RUNTIME_DIR",    "not found");
-    
-    if (u == "not found") u = getEnvOrDefault("LOGNAME",  "not found");
-    if (u == "not found") u = getEnvOrDefault("USERNAME", "not found");
-    if (u == "not found") u = getEnvOrDefault("USER",     "not found");
-    if (u == "not found")
-    {
-        // Probably running in a container, so force a made up name
-        u = Gbl::appNameExec + "-player-1";
-        // throw std::invalid_argument("No user name found");
-    }
-    cfg.set(ConfigManager::KeyDirsRuntime, "run/user/" + u);
+    // 6. { dirs.usrdata } User data, user read/write
+    std::string userDataStr = getEnvOrDefault("XDG_DATA_HOME", home + "/.local/share");
+    fs::path userData = userDataStr + "/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsUsrData, userData.string());
 
-    // 8. { dirs.tables }
-    std::string v = cfg.get("dirs.shared").value();
-    cfg.set(ConfigManager::KeyDirsTables, v + "/tables");
-    
-    // 9. { dirs.players }
-    cfg.set(ConfigManager::KeyDirsPlayers, v + "/players");
+    // 7. { dirs.usrcache } Cache
+    std::string userCacheStr = getEnvOrDefault("XDG_CACHE_HOME", home + "/.cache");
+    fs::path userCache = userCacheStr + "/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsUsrCache, userCache.string());
+
+    // 8. { dirs.usrlog } Log
+    std::string userStateStr = getEnvOrDefault("XDG_STATE_HOME", home + "/.local/state");
+    fs::path userState = userStateStr + "/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsUsrLog, userState.string());
+        
+    // 9. { dirs.usrstate } State  same location as logs
+    cfg.set(ConfigManager::KeyDirsUsrState, userState.string());
+
+    // 10. { dirs.temp } Temp
+    fs::path temp = "/tmp";
+    cfg.set(ConfigManager::KeyDirsTemp, temp.string());
 }
     
 //----------------------------------------------------------------
@@ -104,7 +94,9 @@ void
 ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
 {
     cfg.set(ConfigManager::KeyViewType, "console");
-    cfg.set(ConfigManager::KeyStartTable, "todo default table id");
+    cfg.set(ConfigManager::KeyStartTable, "lasvegas");
+    cfg.set(ConfigManager::KeySoundEnabled, "true");
+    cfg.set(ConfigManager::KeySoundVolume, "50");
     // TODO more ...
 }
 

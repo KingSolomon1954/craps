@@ -507,3 +507,31 @@ src/lib-cli (Command line view)
 
 src/lib-gen (utilities)
 
+
+
+
+
+Directory Structure for royalcraps
+
+The standard directories for royalcraps are:
+
+*  System-Wide Config: /etc/royalcraps/config.conf
+   * Purpose: Default settings for all users (e.g., default bet limits, game rules).
+   * Access: Read-only for users; writable by admins.
+*  User-Specific Config: $XDG_CONFIG_HOME/royalcraps/config.conf (defaults to ~/.config/royalcraps/config.conf)
+   * Purpose: User-customized settings (e.g., key bindings, display preferences).
+   * Access: Read/write for the user.
+*  Save Games: $XDG_DATA_HOME/royalcraps/saves/ (defaults to ~/.local/share/royalcraps/saves/)
+   * Purpose: Store game state (e.g., chips, bet history).
+   * Access: Read/write for the user.
+*  Shared Data: /usr/share/games/royalcraps/
+   *Purpose: Static assets (e.g., ASCII dice art, rule descriptions).
+   *Access: Read-only for users.
+*  Variable Data: /var/games/royalcraps/
+   * Purpose: System-wide data like global high scores.
+   * Access: Writable by the game (e.g., via games group).
+*  Cache: $XDG_CACHE_HOME/royalcraps/ (defaults to ~/.cache/royalcraps/)
+   * Purpose: Temporary data (e.g., precomputed animations).
+   * Access: Read/write for the user.
+*  Executable: /usr/games/royalcraps
+   * Purpose: Game binary
