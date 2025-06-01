@@ -93,10 +93,12 @@ ConfigDefaults::getEnvOrDefault(const std::string& envVar,
 void
 ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
 {
-    cfg.set(ConfigManager::KeyViewType, "console");
-    cfg.set(ConfigManager::KeyStartTable, "lasvegas");
+    cfg.set(ConfigManager::KeyViewType,     "console");
     cfg.set(ConfigManager::KeySoundEnabled, "true");
-    cfg.set(ConfigManager::KeySoundVolume, "50");
+    cfg.set(ConfigManager::KeySoundVolume,  "50");
+    
+    cfg.set(ConfigManager::KeyTableStart,          "LasVegas");
+    cfg.set(ConfigManager::KeyTableStartLastPlyrs, "true");
     // TODO more ...
 }
 
@@ -106,13 +108,13 @@ ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
 
 /usr/share/craps/
 //    ├── tables/
-//    │   ├── vegas_rules.json
-//    │   ├── atlantic_city.json
+//    │   ├── vegas_rules.yaml
+//    │   ├── atlantic_city.yaml
 //    ├── players/
-//    │   ├── demo_player1.json
-//    │   ├── demo_player2.json
+//    │   ├── demo_player1.yaml
+//    │   ├── demo_player2.yaml
 //    ├── themes/
-//    │   └── default_theme.json
+//    │   └── default_theme.yaml
 //    
 
 #endif

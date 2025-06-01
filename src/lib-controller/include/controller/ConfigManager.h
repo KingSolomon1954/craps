@@ -51,15 +51,17 @@ public:
     static constexpr auto KeyDirsUsrState   = "dirs.usrstate";
     static constexpr auto KeyDirsTemp       = "dirs.temp";
     static constexpr auto KeyViewType       = "screen.viewType";
-    static constexpr auto KeyStartTable     = "table.startTableId";
-    static constexpr auto KeyTablePlayer1   = "table.playerId-1";
-    static constexpr auto KeyTablePlayer2   = "table.playerId-2";
-    static constexpr auto KeyTablePlayer3   = "table.playerId-3";
-    static constexpr auto KeyTablePlayer4   = "table.playerId-4";
-    static constexpr auto KeyTablePlayer5   = "table.playerId-5";
-    static constexpr auto KeyTablePlayer6   = "table.playerId-6";
     static constexpr auto KeySoundEnabled   = "sound.enabled";
     static constexpr auto KeySoundVolume    = "sound.volume";
+    
+    static constexpr auto KeyTableStart          = "tbl.startId";
+    static constexpr auto KeyTableStartLastPlyrs = "tbl.startLastPlyrs";
+    static constexpr auto KeyTablePlayer1        = "tbl.plyr1";
+    static constexpr auto KeyTablePlayer2        = "tbl.plyr2";
+    static constexpr auto KeyTablePlayer3        = "tbl.plyr3";
+    static constexpr auto KeyTablePlayer4        = "tbl.plyr4";
+    static constexpr auto KeyTablePlayer5        = "tbl.plyr5";
+    static constexpr auto KeyTablePlayer6        = "tbl.plyr6";
         
 private:
     void populateLayerDefaults();
