@@ -1,58 +1,27 @@
 # --------------------------------------------------------
 #
-# CMakeLists file to compile RoyalCraps
+# CMakeLists file to compile RoyalCraps main
 #
 # --------------------------------------------------------
 
-find_package(cxxopts REQUIRED)
-find_package(rang REQUIRED)
-find_package(nlohmann_json REQUIRED)
-
-add_library(main STATIC
-    src/Bank.cpp
-    src/CommandLine.cpp
-    src/CrapsBet.cpp
-    src/CrapsGame.cpp
-    src/CrapsTable.cpp
-    src/Dice.cpp
-    src/EnumBetName.cpp
-    src/Globals.cpp
-    src/Player.cpp
-    src/PlayerManager.cpp
-    src/PlayerPicker.cpp
-    src/Properties.cpp
-    src/TablePicker.cpp
-)
-
-target_include_directories(main
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-target_link_libraries(main
-    PUBLIC gen
-    PUBLIC codec
-    PUBLIC cxxopts::cxxopts
-    PUBLIC rang::rang
-    PUBLIC nlohmann_json::nlohmann_json
-)
-
-target_compile_options(main
-    PUBLIC ${PROJ_COMPILE_OPTIONS}
-)
-
-target_compile_definitions(main
-    PRIVATE $<$<CONFIG:Debug>:
-    POCO_LOG_DEBUG=1
-    _DEBUG=1
-    >
-)
-
-add_executable(RoyalCraps
+add_executable(royalcraps
     src/main.cpp
 )
 
-target_link_libraries(RoyalCraps
-    PRIVATE main
+target_include_directories(royalcraps
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_compile_options(royalcraps
+    PUBLIC ${PROJ_COMPILE_OPTIONS}
+)
+
+target_link_libraries(royalcraps
+    PRIVATE gen
+    PRIVATE craps
+    PRIVATE controller
+    PRIVATE cui
+    PRIVATE gui
 )
 
 # --------------------------------------------------------
