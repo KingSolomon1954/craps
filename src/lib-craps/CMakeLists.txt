@@ -5,7 +5,7 @@
 # --------------------------------------------------------
 
 find_package(nlohmann_json REQUIRED)
-find_package(cxxopts REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 add_library(craps STATIC
     src/Bank.cpp
@@ -25,6 +25,7 @@ target_link_libraries(craps
     PUBLIC gen
     PUBLIC controller
     PUBLIC nlohmann_json::nlohmann_json
+    PRIVATE yaml-cpp::yaml-cpp
 )
 
 target_compile_definitions(craps

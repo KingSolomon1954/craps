@@ -4,10 +4,6 @@
 #
 # --------------------------------------------------------
 
-find_package(cxxopts REQUIRED)
-find_package(rang REQUIRED)
-find_package(nlohmann_json REQUIRED)
-
 add_executable(royalcraps
     src/main.cpp
 )
@@ -26,9 +22,6 @@ target_link_libraries(royalcraps
     PRIVATE controller
     PRIVATE cui
     PRIVATE gui
-    PRIVATE cxxopts::cxxopts
-    PRIVATE rang::rang
-    PRIVATE nlohmann_json::nlohmann_json
 )
 
 # --------------------------------------------------------

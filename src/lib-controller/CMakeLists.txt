@@ -6,6 +6,7 @@
 
 find_package(cxxopts REQUIRED)
 find_package(rang REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 add_library(controller STATIC
     src/ConfigManager.cpp
@@ -33,6 +34,7 @@ target_link_libraries(controller
     PUBLIC gui
     PRIVATE cxxopts::cxxopts
     PRIVATE rang::rang
+    PRIVATE yaml-cpp::yaml-cpp
 )
 
 target_compile_definitions(controller

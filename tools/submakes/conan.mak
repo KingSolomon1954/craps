@@ -98,6 +98,7 @@ $(CONAN_INSTALL_DONE_DEBUG) $(CONAN_INSTALL_DONE_PROD): \
 	$(CPP_BLD_CNTR_EXEC) conan install \
 	    --settings=build_type=$(_ARG_BLD_TYPE) \
 	    --lockfile=$(_ARG_LOCKFILE) \
+            --build=missing \
 	    $(_CONAN_PY_FILE)
 	@touch $@
 
@@ -168,7 +169,7 @@ conan-lock-debug: _conan-lock2
 _conan-lock1 _conan-lock2:
 	@echo "(conan) Creating Conan lockfile: $(_ARG_LOCKFILE)"
 	$(CPP_BLD_CNTR_EXEC) conan lock create $(_CONAN_PY_FILE) \
-	    --settings=build_type=$(_ARG_BLD_TYPE) \
+	    --settings=build_type=Release \
 	    --lockfile-out=$(_ARG_LOCKFILE)
 
 .PHONY: conan-lock conan-lock-both \
@@ -403,7 +404,7 @@ _conan-pkg-verify1 _conan-pkg-verify2:
 # ------------ Conan Misc Section ------------
 
 conan-clear-cache:
-	@$(CPP_BLD_CNTR_EXEC) conan remove -f "*"
+	@$(CPP_BLD_CNTR_EXEC) conan remove "*" --confirm
 
 .PHONY: conan-clear-cache
 

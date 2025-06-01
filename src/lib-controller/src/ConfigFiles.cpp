@@ -6,8 +6,10 @@
 
 #include <controller/ConfigFiles.h>
 #include <filesystem>
+#include <functional>
 #include <controller/ConfigManager.h>
 #include <gen/MultiLayerConfig.h>
+#include <yaml-cpp/yaml.h>
 
 using namespace Ctrl;
 namespace fs = std::filesystem;
@@ -103,7 +105,6 @@ ConfigFiles::loadNamedConfig(
     const std::string& filename,
     Gen::ConfigLayer& cfg)
 {
-#if 0
     try
     {
         YAML::Node root = YAML::LoadFile(filename);
@@ -125,7 +126,7 @@ ConfigFiles::loadNamedConfig(
                 }
                 else
                 {
-                    cig.set(key, kv.second.as<std::string>());
+                    cfg.set(key, kv.second.as<std::string>());
                 }
             }
         };
@@ -137,7 +138,6 @@ ConfigFiles::loadNamedConfig(
         throw std::runtime_error("Failed to parse YAML file " +
                                  filename + ": " + e.what());
     }
-#endif    
 }
 
 //----------------------------------------------------------------
