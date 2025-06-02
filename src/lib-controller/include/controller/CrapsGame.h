@@ -5,12 +5,9 @@
 //----------------------------------------------------------------
 
 #pragma once
-#include <memory>
-#include <string>
-#include <controller/ViewIntfc.h>
 
 namespace Gen {
-    class BuildInfo;         // fwd
+    class BuildInfo;  // fwd
 }
 
 namespace Craps {
@@ -20,9 +17,12 @@ namespace Craps {
 namespace Ctrl {
 
 class ConfigManager;  // fwd
+class EventLoop;      // fwd
 class EventManager;   // fwd
+class GameController; // fwd
 class PlayerManager;  // fwd
 class TableManager;   // fwd
+class ViewIntfc;      // fwd
     
 class CrapsGame
 {
@@ -46,10 +46,13 @@ private:
     Ctrl::ConfigManager*   initConfigManager(int argc, char* argv[]);
     Ctrl::EventManager*    initEventManager();
     Ctrl::TableManager*    initTableManager();
-    Ctrl::PlayerManager*   initPlayerManager();
     Craps::CrapsTable*     initCrapsTable();
-    std::shared_ptr<ViewIntfc> getView();
+    Ctrl::PlayerManager*   initPlayerManager();
+    Ctrl::ViewIntfc*       initView();
+    Ctrl::GameController*  initGameController();
+    Ctrl::EventLoop*       initEventLoop();
     
+    Ctrl::ViewIntfc* getView();
 };
 
 /*-----------------------------------------------------------*//**

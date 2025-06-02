@@ -15,9 +15,9 @@ add_library(controller STATIC
     src/ConfigEnv.cpp
     src/ConfigFiles.cpp
     src/CrapsGame.cpp
+    src/EventLoop.cpp
     src/GameController.cpp
     src/Globals.cpp
-    src/Placeholder.cpp
     src/PlayerManager.cpp
     src/Properties.cpp
     src/TableManager.cpp

@@ -7,18 +7,8 @@
 #include <cui/ConsoleView.h>
 #include <cassert>
 #include <iostream>
-#include <controller/GameControllerIntfc.h>
 
 using namespace Cui;
-
-//----------------------------------------------------------------
-
-void
-ConsoleView::setGameController(Ctrl::GameControllerIntfc* pCtrlIntfc)
-
-{
-    pCtrlIntfc_ = pCtrlIntfc;
-}
 
 //----------------------------------------------------------------
 

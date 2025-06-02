@@ -5,10 +5,13 @@
 //----------------------------------------------------------------
 
 #include <controller/GameController.h>
+#include <cassert>
+#include <iostream>
+#include <controller/EventLoop.h>
+#include <controller/Globals.h>
 #include <controller/TableManager.h>
 #include <controller/ViewIntfc.h>
 #include <craps/CrapsTable.h>
-#include <iostream>
 
 using namespace Ctrl;
 
@@ -17,32 +20,47 @@ using namespace Ctrl;
 Constructor
 
 */
-GameController::GameController(std::shared_ptr<ViewIntfc> pView)
-    : pView_(std::move(pView))
+GameController::GameController()
 {
-    pView_->setGameController(this);
-}
-
-//----------------------------------------------------------------
-
-Craps::CrapsTable*
-GameController::userSelectsTable()
-{
-    auto tds = Gbl::pTableMgr->loadTableChoices();
-    auto tid = pView_->promptUserToSelectTable(tds);
-    
-    auto pTable = Gbl::pTableMgr->loadCrapsTable(tid);
-    Gbl::pTable = pTable;
-    return pTable;
+    assert(Gbl::pView != nullptr);
 }
 
 //----------------------------------------------------------------
 
 void
+GameController::handleAllEvents(const GameEvent::GameEventPtr& ev)
+{
+    switch(ev->type())
+    {
+        case EventType::UserInputLine: ;
+        case EventType::UserInputChar: ;
+        case EventType::Timer: ;
+        case EventType::Signal: ;
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Not used.
+// Pursue different design for choosing table
+//
+void
+GameController::userSelectsTable()
+{
+    auto tds = Gbl::pTableMgr->loadTableChoices();
+    auto tid = Gbl::pView->promptUserToSelectTable(tds);
+}
+
+//----------------------------------------------------------------
+//
+// Not used.
+// Pursue different design for choosing players
+//
+void
 GameController::userSelectsPlayers()
 {
     auto pds = Gbl::pPlayerMgr->loadPlayerChoices();
-    auto playerIds = pView_->promptUserToSelectPlayers(pds);
+    auto playerIds = Gbl::pView->promptUserToSelectPlayers(pds);
     
     Gen::ErrorPass ep;
     for (auto pid : playerIds)  // Players join table
@@ -50,23 +68,6 @@ GameController::userSelectsPlayers()
         // TODO: check error return
         Gbl::pTable->addPlayer(pid, ep);
     }
-}
-
-//----------------------------------------------------------------
-
-void
-GameController::rollDice()
-{
-    Gbl::pTable->rollDice();
-}
-
-//----------------------------------------------------------------
-
-void
-GameController::onAboutCraps()
-{
-    // TODO
-    // pView_->displayAbout();
 }
 
 //----------------------------------------------------------------

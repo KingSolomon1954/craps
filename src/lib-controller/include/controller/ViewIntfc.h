@@ -13,14 +13,11 @@
 
 namespace Ctrl {
 
-class GameControllerIntfc;  // fwd
-    
 class ViewIntfc
 {
 public:
     /// @name Lifecycle
     /// @{
-    virtual void setGameController(GameControllerIntfc* pCtrlIntfc) = 0;
     virtual void run() = 0;
     /// @}
 

@@ -15,7 +15,6 @@ class ConsoleView : public Ctrl::ViewIntfc
 public:
     /// @name Lifecycle
     /// @{
-    void setGameController(Ctrl::GameControllerIntfc* pCtrlIntfc) override;
     void run() override;
     /// @}
 
@@ -34,7 +33,6 @@ public:
     /// @}
 
 private:
-    Ctrl::GameControllerIntfc* pCtrlIntfc_ = nullptr;
 };
 
 /*-----------------------------------------------------------*//**

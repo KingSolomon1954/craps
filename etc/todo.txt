@@ -11,15 +11,23 @@ Write unit test ConfigManagerTest
 
 load Table choices by reading dir
 load Player choices by reading dir
-rename GameControllerIntfc --> UserIntfc
-design UserInterface API
-design UserIntfc API
-design ViewIntfc API
-
 write script to copy files/assets to install locations
+
+eliminate GameControllerIntfc in favor of Events and EventLoop
 design EventQueue and Events
 Implement minimal game loop
 
+User Input → ConsoleView → GameEvent (UserInputLineEvent) → EventQueue → GameController
+
+    ├── ConsoleView ├── 
+    │               │ 
+    │               ├──>  Generate Event -->  EventLoop
+    │               │
+    ├── GuiView  ── ├
+
+onViewXxx  - prefix for event handlers originating from Views
+onGameXxx  - prefix for event handlers originating from the game/model
+                                            
 
 Royal Craps
 -----------
