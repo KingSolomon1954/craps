@@ -30,13 +30,13 @@ Constructor
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
-//  std::unique_ptr<Gen::Logger>           pLogger(initLogger());               (void) pLogger;
-    std::unique_ptr<Gen::BuildInfo>        pBuildInfo(initBuildInfo());         (void) pBuildInfo;
-    std::unique_ptr<Ctrl::ConfigManager>   pCfg(initConfigManager(argc, argv)); (void) pCfg;
-    std::unique_ptr<Ctrl::EventManager>    pEventMgr(initEventManager());       (void) pEventMgr;
-    std::unique_ptr<Ctrl::TableManager>    pTablerMgr(initTableManager());      (void) pTablerMgr;
-    std::unique_ptr<Craps::CrapsTable>     pTable(initCrapsTable());            (void) pTable;
-    std::unique_ptr<Ctrl::PlayerManager>   pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
+//  std::unique_ptr<Gen::Logger>         pLogger(initLogger());               (void) pLogger;
+    std::unique_ptr<Gen::BuildInfo>      pBuildInfo(initBuildInfo());         (void) pBuildInfo;
+    std::unique_ptr<Ctrl::ConfigManager> pCfg(initConfigManager(argc, argv)); (void) pCfg;
+    std::unique_ptr<Ctrl::EventManager>  pEventMgr(initEventManager());       (void) pEventMgr;
+    std::unique_ptr<Ctrl::TableManager>  pTablerMgr(initTableManager());      (void) pTablerMgr;
+    std::unique_ptr<Craps::CrapsTable>   pTable(initCrapsTable());            (void) pTable;
+    std::unique_ptr<Ctrl::PlayerManager> pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
     
     // Setup the chosen view IAW cmdline option.
     std::shared_ptr<ViewIntfc> pView = getView();
@@ -114,6 +114,7 @@ CrapsGame::getView()
 {
     std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();
     if (v == "console") return std::make_shared<Cui::ConsoleView>();
+    
 //  if (v == "cmdline") return std::make_shared<Cli::CmdLineView>();
 //  if (v == "graphical") return std::make_shared<Gui::GuiView>();
 

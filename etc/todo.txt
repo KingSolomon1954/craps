@@ -1,3 +1,26 @@
+
+Fix Player startup/init
+Load Player from yaml file 
+Save Player to yaml file
+Load Table from yaml file (CrapsTable.cpp)
+Save Table from yaml file (CrapsTable.cpp)
+Load Config to yaml file
+Save Config to yaml file
+Write unit test MultiLayerConfigTest
+Write unit test ConfigManagerTest
+
+load Table choices by reading dir
+load Player choices by reading dir
+rename GameControllerIntfc --> UserIntfc
+design UserInterface API
+design UserIntfc API
+design ViewIntfc API
+
+write script to copy files/assets to install locations
+design EventQueue and Events
+Implement minimal game loop
+
+
 Royal Craps
 -----------
 TODO: 
@@ -492,6 +515,8 @@ Player.h
     Statistics
 
 
+Source Code Layout
+------------------
 
 src/main  (startup)
 
@@ -508,12 +533,10 @@ src/lib-cli (Command line view)
 src/lib-gen (utilities)
 
 
+Runtime Directory Structure
+---------------------------
 
-
-
-Directory Structure for royalcraps
-
-The standard directories for royalcraps are:
+The standard runtime directories for royalcraps are:
 
 *  System-Wide Config: /etc/royalcraps/config.conf
    * Purpose: Default settings for all users (e.g., default bet limits, game rules).

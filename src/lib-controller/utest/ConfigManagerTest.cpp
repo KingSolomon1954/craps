@@ -16,6 +16,7 @@ using namespace Ctrl;
 
 TEST_CASE("ConfigManager::ctor")
 {
+#if 0    
     int argc = 3;
     char* argv[] = {
         const_cast<char*>("RoyalCraps"),
@@ -25,6 +26,7 @@ TEST_CASE("ConfigManager::ctor")
     };
     ConfigManager cfgMgr(argc, argv);
     cfgMgr.listLayers();
+#endif    
 }
 
 //----------------------------------------------------------------

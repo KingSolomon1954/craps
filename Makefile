@@ -47,7 +47,7 @@ all: all-relay
 include $(D_MAK)/container-tech.mak
 include $(D_MAK)/version-vars.mak
 include $(D_MAK)/cpp.mak
-include $(D_MAK)/conan.mak
+include $(D_MAK)/conan-consumer.mak
 include $(D_MAK)/cpp-unit-test.mak
 include $(D_MAK)/cpp-code-coverage.mak
 include $(D_MAK)/cpp-static-analysis.mak

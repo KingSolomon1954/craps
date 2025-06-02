@@ -103,6 +103,7 @@ Load all players from file
 bool
 PlayerManager::loadPlayers()
 {
+    /// TODO switch to a YAML index, or read directory freshly each time
     std::ifstream in("players/index.json");
     if (!in) return false;
     json index;
