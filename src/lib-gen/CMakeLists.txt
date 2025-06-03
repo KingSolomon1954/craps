@@ -4,11 +4,14 @@
 #
 # -----------------------------------------------------------------
 
+find_package(Boost REQUIRED COMPONENTS asio)
+
 add_library(gen STATIC
     src/BuildInfo.cpp
     src/ErrorPass.cpp
     src/MultiLayerConfig.cpp
     src/StringUtils.cpp
+    src/TimerManager.cpp
     src/Uuid.cpp
 )
 
@@ -17,6 +20,10 @@ add_library(gen STATIC
 target_include_directories(gen
     PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
+target_link_libraries(gen
+    PRIVATE boost::boost
 )
 
 target_compile_definitions(gen

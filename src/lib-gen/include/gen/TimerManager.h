@@ -25,8 +25,6 @@ public:
     /// @{
     TimerManager();
    ~TimerManager();
-    void run();
-    void stop();
     /// @}
 
     /// @name Modifiers
@@ -43,6 +41,7 @@ public:
     /// @}
 
 private:
+    void stop();
     void timerHandler(TimerId id);
 
     struct TimerEntry
@@ -55,6 +54,7 @@ private:
     };
 
     boost::asio::io_context io_;
+    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work_;
     std::thread thread_;
     std::unordered_map<TimerId, TimerEntry> timers_;
     std::mutex mutex_;

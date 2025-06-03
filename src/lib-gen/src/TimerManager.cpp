@@ -10,9 +10,12 @@ using namespace Gen;
 
 //----------------------------------------------------------------
 
-TimerManager::TimerManager() : running_(true)
+TimerManager::TimerManager()
+    : io_()
+    , work_(boost::asio::make_work_guard(io_))
+    , running_(true)
+    , thread_(std::thread([this]() {io_.run(); }))
 {
-    thread_ = std::thread([this]() { io_.run(); });
 }
 
 //----------------------------------------------------------------
@@ -29,32 +32,23 @@ TimerManager::~TimerManager()
 //----------------------------------------------------------------
 
 void
-TimerManager::run()
-{
-    if (!running_)
-    {
-        running_ = true;
-        thread_ = std::thread([this]() { io_.run(); });
-    }
-}
-
-//----------------------------------------------------------------
-
-void
 TimerManager::stop()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     running_ = false;
+    work_.reset();  // allow run() to exit
     io_.stop();
 }
 
 //----------------------------------------------------------------
 
-TimerManager::TimerId TimerManager::createTimer(TimerCallback cb, bool repeat)
+TimerManager::TimerId
+TimerManager::createTimer(TimerCallback cb, bool repeat)
 {
     TimerId id = nextId_++;
     std::lock_guard<std::mutex> lock(mutex_);
-    TimerEntry entry{
+    TimerEntry entry
+    {
         std::make_unique<boost::asio::steady_timer>(io_),
         cb,
         std::chrono::milliseconds{0},
