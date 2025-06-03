@@ -13,9 +13,12 @@ load Table choices by reading dir
 load Player choices by reading dir
 write script to copy files/assets to install locations
 
-eliminate GameControllerIntfc in favor of Events and EventLoop
+(Done) eliminate GameControllerIntfc in favor of Events and EventLoop
+(Done) Implement minimal game loop
 design EventQueue and Events
-Implement minimal game loop
+
+Add getBool() to MultiLayerManager
+unit test for TimerManager
 
 User Input → ConsoleView → GameEvent (UserInputLineEvent) → EventQueue → GameController
 

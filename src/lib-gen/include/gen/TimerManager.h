@@ -1,4 +1,9 @@
-// TimerManager.h
+//----------------------------------------------------------------
+//
+// File: ConsoleView.h
+//
+//----------------------------------------------------------------
+
 #pragma once
 
 #include <boost/asio.hpp>
@@ -9,31 +14,43 @@
 #include <memory>
 #include <mutex>
 
+namespace Gen {
+
 class TimerManager {
 public:
     using TimerId = int;
     using TimerCallback = std::function<void()>;
 
+    /// @name Lifecycle
+    /// @{
     TimerManager();
-    ~TimerManager();
-
+   ~TimerManager();
     void run();
     void stop();
+    /// @}
 
-    TimerId addTimer(std::chrono::milliseconds duration, TimerCallback cb, bool repeat = false);
-    TimerId createTimer(std::chrono::milliseconds duration, bool repeat = false);
-    void armTimer(TimerId id, TimerCallback cb);
-    void cancelTimer(TimerId id);
-    void restartTimer(TimerId id);
+    /// @name Modifiers
+    /// @{
+    TimerId createTimer(TimerCallback cb, bool repeat = false);
+    TimerId createTimer(TimerCallback cb, std::chrono::milliseconds duration, bool repeat = false);
+    void armTimer      (TimerId id, std::chrono::milliseconds duration, bool repeat = false);
+    void cancelTimer   (TimerId id);
+    void restartTimer  (TimerId id);
+    /// @}
+
+    /// @name Observers
+    /// @{
+    /// @}
 
 private:
     void timerHandler(TimerId id);
 
-    struct TimerEntry {
+    struct TimerEntry
+    {
         std::unique_ptr<boost::asio::steady_timer> timer;
         TimerCallback callback;
         std::chrono::milliseconds interval;
-        bool repeat;
+        bool repeat = false;
         bool active = false;
     };
 
@@ -45,4 +62,24 @@ private:
     bool running_ = false;
 };
 
+/*-----------------------------------------------------------*//**
 
+@class TimerManager
+
+@brief Timers, managed with a single thread
+
+@li Multiple timers.
+@li Each timer managed by its unique ID.
+@li All timers run on a dedicated thread.
+@li Repeating timers re-arm themselves.
+@li All operations are thread-safe.
+@li Can create timers without arming them (createTimer).
+@li Arm hem later with a callback (armTimer).
+@li Cancel or restart them at any point.
+@li Immplementation uses Boost::Asio.
+
+*/
+
+} // namespace Gen
+
+//----------------------------------------------------------------
