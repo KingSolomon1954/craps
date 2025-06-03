@@ -28,15 +28,25 @@ GameController::GameController()
 //----------------------------------------------------------------
 
 void
-GameController::handleAllEvents(const GameEvent::GameEventPtr& ev)
+GameController::dispatchEvent(GameEvent* pBase)
 {
-    switch(ev->type())
+    switch(pBase->type())
     {
-        case EventType::UserInputLine: ;
-        case EventType::UserInputChar: ;
-        case EventType::Timer: ;
-        case EventType::Signal: ;
+    case EventType::UserInputLine: onUserInputLine(pBase); break;
+    case EventType::UserInputChar: ; break;
+    case EventType::Timer:         ; break;
+    case EventType::Signal:        ; break;
     }
+}
+
+//----------------------------------------------------------------
+
+void
+GameController::onUserInputLine(GameEvent* pBase)
+{
+    auto pEvent = static_cast<UserInputLineEvent*>(pBase);
+    std::cout << "[InputLine] " << pEvent->input << '\n';
+    if (pEvent->input == "quit") Gbl::pEventLoop->stop();
 }
 
 //----------------------------------------------------------------

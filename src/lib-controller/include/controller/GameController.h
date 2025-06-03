@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <controller/EventLoop.h>
+#include <controller/GameEvent.h>
 
 namespace Craps {
     class CrapsTable;
@@ -30,7 +31,7 @@ public:
 
     /// @name Modifiers
     /// @{
-    void handleAllEvents(const GameEvent::GameEventPtr& ev);
+    void dispatchEvent(GameEvent* pBase);
     /// @}
 
     /// @name Observers
@@ -38,7 +39,7 @@ public:
     /// @}
 
 private:
-
+    void onUserInputLine(GameEvent* pBase);
 };
 
 /*-----------------------------------------------------------*//**

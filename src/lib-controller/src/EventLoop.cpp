@@ -59,7 +59,7 @@ EventLoop::processEvents()
             lock.unlock();
 
             // Controller owns event dispatching
-            Gbl::pGameCtrl->handleAllEvents(ev);
+            Gbl::pGameCtrl->dispatchEvent(ev.get());
             
             lock.lock();
         }
