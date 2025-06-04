@@ -38,9 +38,12 @@ public:
     static const std::string LayerCmdLine;
 
     void addLayer(const std::string& name, const ConfigLayer& layer);
-    void set(const std::string& layerName, const std::string& key, const std::string& value);
+    void set(const std::string& layerName,
+             const std::string& key,
+             const std::string& value);
     std::optional<std::string> getString(const std::string& key) const;
-    std::optional<int> getInt(const std::string& key) const;
+    std::optional<int>         getInt   (const std::string& key) const;
+    std::optional<bool>        getBool  (const std::string& key) const;
     void listLayers() const;
     std::unordered_map<std::string, std::string> exportResolved() const;
 

@@ -12,15 +12,14 @@ Write unit test ConfigManagerTest
 load Table choices by reading dir
 load Player choices by reading dir
 write script to copy files/assets to install locations
-
-TimerManager compiles
-unit test for TimerManager
-
-(Done) eliminate GameControllerIntfc in favor of Events and EventLoop
-(Done) Implement minimal game loop
 design EventQueue and Events
 
-Add getBool() to MultiLayerManager
+(Done) TimerManager compiles
+(Done) unit test for TimerManager
+(Done) eliminate GameControllerIntfc in favor of Events and EventLoop
+(Done) Implement minimal game loop
+(Done) Add getBool() to MultiLayerManager
+
 
 User Input → ConsoleView → GameEvent (UserInputLineEvent) → EventQueue → GameController
 

@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <gen/MultiLayerConfig.h>
+#include <algorithm>
 
 using namespace Gen;
 
@@ -90,6 +91,31 @@ MultiLayerConfig::getInt(const std::string& key) const
         try {
             return std::stoi(*val);
         } catch (...) {}
+    }
+    return std::nullopt;
+}
+
+//----------------------------------------------------------------
+
+std::optional<bool>
+MultiLayerConfig::getBool(const std::string& key) const
+{
+    if (auto val = getString(key); val.has_value())
+    {
+        std::string lower;
+        lower.resize(val->size());
+        std::transform(val->begin(), val->end(), lower.begin(), ::tolower);
+
+        if (lower == "true" || lower == "1" ||
+            lower == "yes"  || lower == "on")
+        {
+            return true;
+        }
+        else if (lower == "false" || lower == "0" ||
+                 lower == "no"    || lower == "off")
+        {
+            return false;
+        }
     }
     return std::nullopt;
 }
