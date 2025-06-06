@@ -172,33 +172,3 @@ MultiLayerConfig::exportResolved() const
 }
 
 //----------------------------------------------------------------
-
-#if 0
-
-int main() {
-    MultiLayerConfig cfg;
-
-    ConfigLayer defaults;
-    defaults.set("port", "8080");
-    defaults.set("debug", "false");
-
-    ConfigLayer env;
-    env.set("port", "8500");
-
-    ConfigLayer cli;
-
-    cfg.addLayer("default", defaults);
-    cfg.addLayer("env", env);
-    cfg.addLayer("cli", cli);
-
-    cfg.set("cli", "port", "9000");  // overrides all previous
-    cfg.set("cli", "loglevel", "verbose");
-
-    cfg.listLayers();
-
-    std::cout << "Port: " << cfg.getInt("port").value_or(-1) << "\n";
-    std::cout << "Debug: " << cfg.getString("debug").value_or("N/A") << "\n";
-    std::cout << "Log Level: " << cfg.getString("loglevel").value_or("default") << "\n";
-}
-
-#endif

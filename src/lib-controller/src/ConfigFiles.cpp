@@ -29,8 +29,8 @@ Process startup config files.
 void
 ConfigFiles::processFiles(Gen::MultiLayerConfig& multiConfig)
 {
-    createUserDirs(multiConfig);
     checkSystemDirs(multiConfig);
+    createUserDirs(multiConfig);
 
     // Work with layer directly
     auto& cfg = multiConfig.getLayer(ConfigManager::LayerNameFiles);
@@ -71,16 +71,20 @@ void
 ConfigFiles::checkSystemDirs(const Gen::MultiLayerConfig& multiConfig)
 {
     // Check system directories created by installer
-    std::string sysConfigDir  = multiConfig.getString(ConfigManager::KeyDirsSysConfig).value();
     std::string sysSharedDir  = multiConfig.getString(ConfigManager::KeyDirsSysShared).value();
+    std::string sysConfigDir  = multiConfig.getString(ConfigManager::KeyDirsSysConfig).value();
     std::string sysTablesDir  = multiConfig.getString(ConfigManager::KeyDirsSysTables).value();
     std::string sysPlayersDir = multiConfig.getString(ConfigManager::KeyDirsSysPlayers).value();
+    std::string sysAudioDir   = multiConfig.getString(ConfigManager::KeyDirsSysAudio).value();
+    std::string sysImagesDir  = multiConfig.getString(ConfigManager::KeyDirsSysImages).value();
 
     // Can't continue if basic assets are not found
-    existsOrThrow(sysConfigDir);
     existsOrThrow(sysSharedDir);
+    existsOrThrow(sysConfigDir);
     existsOrThrow(sysTablesDir);
     existsOrThrow(sysPlayersDir);
+    existsOrThrow(sysAudioDir);
+    existsOrThrow(sysImagesDir);
 }
 
 //----------------------------------------------------------------
@@ -160,7 +164,7 @@ ConfigFiles::existsOrThrow(const std::string& pathStr)
 {
     if (!fs::exists(pathStr))
     {
-        throw std::runtime_error("Directory not found: " + pathStr);
+        throw std::runtime_error("Directory/file not found: " + pathStr);
     }
 }
 
