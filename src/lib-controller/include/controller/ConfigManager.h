@@ -40,20 +40,32 @@ public:
 
     // Keys to retrieve/deposit config values
     static constexpr auto KeyAppPath        = "app.execAbsPath";
+
+    // Directory/Folder keys
     static constexpr auto KeyDirsSysShared  = "dirs.sysshared";
+    static constexpr auto KeyDirsSysConfig  = "dirs.sysconfig";
     static constexpr auto KeyDirsSysTables  = "dirs.systables";
     static constexpr auto KeyDirsSysPlayers = "dirs.sysplayers";
-    static constexpr auto KeyDirsSysConfig  = "dirs.sysconfig";
-    static constexpr auto KeyDirsUsrConfig  = "dirs.usrconfig";
+    static constexpr auto KeyDirsSysAudio   = "dirs.sysaudio";
+    static constexpr auto KeyDirsSysImages  = "dirs.sysimages";
     static constexpr auto KeyDirsUsrData    = "dirs.usrdata";
+    static constexpr auto KeyDirsUsrConfig  = "dirs.usrconfig";
+    static constexpr auto KeyDirsUsrTables  = "dirs.usrtables";
+    static constexpr auto KeyDirsUsrPlayers = "dirs.usrplayers";
+    static constexpr auto KeyDirsUsrAudio   = "dirs.usraudio";
+    static constexpr auto KeyDirsUsrImages  = "dirs.usrimages";
     static constexpr auto KeyDirsUsrCache   = "dirs.usrcache";
     static constexpr auto KeyDirsUsrLog     = "dirs.usrlog";
     static constexpr auto KeyDirsUsrState   = "dirs.usrstate";
     static constexpr auto KeyDirsTemp       = "dirs.temp";
+    static constexpr auto KeyDirsAdmConfig  = "dirs.admconfig";
+    
+    // General Config    
     static constexpr auto KeyViewType       = "screen.viewType";
     static constexpr auto KeySoundEnabled   = "sound.enabled";
     static constexpr auto KeySoundVolume    = "sound.volume";
     
+    // Table Setup
     static constexpr auto KeyTableStart          = "tbl.startId";
     static constexpr auto KeyTableStartLastPlyrs = "tbl.startLastPlyrs";
     static constexpr auto KeyTablePlayer1        = "tbl.plyr1";
@@ -64,10 +76,6 @@ public:
     static constexpr auto KeyTablePlayer6        = "tbl.plyr6";
         
 private:
-    void populateLayerDefaults();
-    void populateLayerFiles();
-    void populateLayerEnv();
-    void populateLayerCmdLine(int argc, char* argv[]);
 };
 
 /*-----------------------------------------------------------*//**

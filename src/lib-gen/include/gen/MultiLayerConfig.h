@@ -38,6 +38,7 @@ public:
     static const std::string LayerCmdLine;
 
     void addLayer(const std::string& name, const ConfigLayer& layer);
+    ConfigLayer& getLayer(const std::string& layerName);
     void set(const std::string& layerName,
              const std::string& key,
              const std::string& value);

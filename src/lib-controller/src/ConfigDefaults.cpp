@@ -20,8 +20,11 @@ Process defaults
     The multi-layer configuration structure to populate.
 */
 void
-ConfigDefaults::processDefaults(Gen::ConfigLayer& cfg)
+ConfigDefaults::processDefaults(Gen::MultiLayerConfig& multiConfig)
 {
+    // Work with layer directly
+    auto& cfg = multiConfig.getLayer(ConfigManager::LayerNameDefaults);
+    
     loadDefaultDirs(cfg);
     loadGameDefaults(cfg);
 }
@@ -31,51 +34,98 @@ ConfigDefaults::processDefaults(Gen::ConfigLayer& cfg)
 void
 ConfigDefaults::loadDefaultDirs(Gen::ConfigLayer& cfg)
 {
+    // /usr/share/royalcraps                   system-wide
+    // /usr/share/royalcraps/config            system-wide base config
+    // /usr/share/royalcraps/tables            system-wide table defs
+    // /usr/share/royalcraps/players           system-wide player defs
+    // /usr/share/royalcraps/audio             system-wide sound
+    // /usr/share/royalcraps/images            system-wide images
+    //
+    // $HOME/.config/royalcraps                user config preferences
+    // $HOME/.local/share/royalcraps           user assets base
+    // $HOME/.local/share/royalcraps/tables    user table defs if any
+    // $HOME/.local/share/royalcraps/players   user player defs if any
+    // $HOME/.local/share/royalcraps/audio     user sound if any
+    // $HOME/.local/share/royalcraps/images    user images if any
+    // $HOME/.cache/royalcraps                 intermediate runtime files
+    // $HOME/.local/state/royalcraps           logs/state
+    //
+    // /etc/royalcraps/                        admin settings if needed r/w 
+    // /tmp                                    tmp
+    
     const std::string home = getEnvOrDefault("HOME", "/tmp");
     namespace fs = std::filesystem;
     
-    // 1. { dirs.sysshared } System-wide, shared configs, read-only)
+    // { dirs.sysshared } System-wide, shared assets/configs, read-only)
     fs::path sysShared = "/usr/share/" + Gbl::appNameExec;
     cfg.set(ConfigManager::KeyDirsSysShared, sysShared.string());
 
-    // 2. { dirs.systables } System-wide, shared table configs, read-only)
-    fs::path tables = sysShared / "tables";
-    cfg.set(ConfigManager::KeyDirsSysTables, tables.string());
-
-    // 3. { dirs.sysplayers } System-wide, shared player configs, read-only)
-    fs::path players = sysShared / "players";
-    cfg.set(ConfigManager::KeyDirsSysPlayers, players.string());
-
-    // 4. {dirs.sysconfig} System-wide config, admin read/write
-    fs::path sysConfig = "/etc/" + Gbl::appNameExec;
+    // { dirs.sysconfig } System-wide, shared configs, read-only)
+    fs::path sysConfig = sysShared / "config";
     cfg.set(ConfigManager::KeyDirsSysConfig, sysConfig.string());
 
-    // 5. { dirs.usrconfig } User config, user read/write
-    std::string userConfigStr = getEnvOrDefault("XDG_CONFIG_HOME", home + "/.config");
-    fs::path userConfig = userConfigStr + "/" + Gbl::appNameExec;
-    cfg.set(ConfigManager::KeyDirsUsrConfig, userConfig.string());
+    // { dirs.systables } System-wide, shared table configs, read-only)
+    fs::path sysTables = sysShared / "tables";
+    cfg.set(ConfigManager::KeyDirsSysTables, sysTables.string());
 
-    // 6. { dirs.usrdata } User data, user read/write
-    std::string userDataStr = getEnvOrDefault("XDG_DATA_HOME", home + "/.local/share");
-    fs::path userData = userDataStr + "/" + Gbl::appNameExec;
-    cfg.set(ConfigManager::KeyDirsUsrData, userData.string());
+    // { dirs.sysplayers } System-wide, shared player configs, read-only)
+    fs::path sysPlayers = sysShared / "players";
+    cfg.set(ConfigManager::KeyDirsSysPlayers, sysPlayers.string());
 
-    // 7. { dirs.usrcache } Cache
+    // { dirs.sysaudio } System-wide, shared audio, read-only)
+    fs::path sysAudio = sysShared / "audio";
+    cfg.set(ConfigManager::KeyDirsSysAudio, sysAudio.string());
+
+    // { dirs.sysaudio } System-wide, shared audio, read-only)
+    fs::path sysImages = sysShared / "images";
+    cfg.set(ConfigManager::KeyDirsSysImages, sysImages.string());
+    
+    // { dirs.usrdata } User data, equivalent to /usr/share/royalcraps read/write
+    std::string usrDataStr = getEnvOrDefault("XDG_DATA_HOME", home + "/.local/share");
+    fs::path usrData = usrDataStr + "/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsUsrData, usrData.string());
+    
+    // { dirs.usrconfig } User config, user read/write
+    std::string usrConfigStr = getEnvOrDefault("XDG_CONFIG_HOME", home + "/.config");
+    fs::path usrConfig = usrConfigStr + "/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsUsrConfig, usrConfig.string());
+
+    // { dirs.usrtables } User table configs, if any read/write
+    fs::path usrTables = usrData / "tables";
+    cfg.set(ConfigManager::KeyDirsUsrTables, usrTables.string());
+
+    // { dirs.usrplayers } User player configs, if any read/write
+    fs::path usrPlayers = usrData / "players";
+    cfg.set(ConfigManager::KeyDirsUsrPlayers, usrPlayers.string());
+
+    // { dirs.usraudio } User audio, if any read/write
+    fs::path usrAudio = usrData / "audio";
+    cfg.set(ConfigManager::KeyDirsUsrAudio, usrAudio.string());
+
+    // { dirs.usrimages } User images, if any read/write
+    fs::path usrImages = usrData / "images";
+    cfg.set(ConfigManager::KeyDirsUsrImages, usrImages.string());
+    
+    // { dirs.usrcache } Cache
     std::string userCacheStr = getEnvOrDefault("XDG_CACHE_HOME", home + "/.cache");
     fs::path userCache = userCacheStr + "/" + Gbl::appNameExec;
     cfg.set(ConfigManager::KeyDirsUsrCache, userCache.string());
 
-    // 8. { dirs.usrlog } Log
+    // { dirs.usrlog } Log
     std::string userStateStr = getEnvOrDefault("XDG_STATE_HOME", home + "/.local/state");
     fs::path userState = userStateStr + "/" + Gbl::appNameExec;
     cfg.set(ConfigManager::KeyDirsUsrLog, userState.string());
         
-    // 9. { dirs.usrstate } State  same location as logs
+    // { dirs.usrstate } State  same location as logs
     cfg.set(ConfigManager::KeyDirsUsrState, userState.string());
-
-    // 10. { dirs.temp } Temp
+    
+    // { dirs.temp } Temp
     fs::path temp = "/tmp";
     cfg.set(ConfigManager::KeyDirsTemp, temp.string());
+
+    // {dirs.admconfig} System-wide config, admin read/write
+    fs::path admConfig = "/etc/" + Gbl::appNameExec;
+    cfg.set(ConfigManager::KeyDirsAdmConfig, admConfig.string());
 }
     
 //----------------------------------------------------------------

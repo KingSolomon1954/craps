@@ -21,12 +21,29 @@ ConfigManager::ConfigManager(int argc, char* argv[])
 {
     try
     {
-        // Order matters. Lookup later is in reverse order
-        populateLayerDefaults();
-        populateLayerFiles();
-        populateLayerEnv();
-        populateLayerCmdLine(argc, argv);
+        // Add layers first. Order matters. Lookup later is in 
+        // reverse order of adding.
+        Gen::ConfigLayer defaultsLayer;
+        Gen::ConfigLayer filesLayer;
+        Gen::ConfigLayer envLayer;
+        Gen::ConfigLayer cmdLineLayer;
+        
+        addLayer(LayerNameDefaults, defaultsLayer);
+        addLayer(LayerNameFiles,    filesLayer);
+        addLayer(LayerNameEnv,      envLayer);
+        addLayer(LayerNameCmdLine,  cmdLineLayer);
+
+        // Be aware that addLayer() does a make_shared<> which creates a
+        // copy, so can't use these four layers directly anymore.
+        
+        // OK to now populate the layers in different order 
+        // since some layers depend on others having content.
+
+        ConfigDefaults::processDefaults(*this);
+        ConfigCommandLine::processCmdLine(argc, argv, *this);
+        ConfigEnv::processEnv(*this);
         dumpConfig();
+        ConfigFiles::processFiles(*this); // last since file locations are overridable
     }
     catch(const std::exception& e)
     {
@@ -35,46 +52,6 @@ ConfigManager::ConfigManager(int argc, char* argv[])
     }
 }
 
-//----------------------------------------------------------------
-
-void
-ConfigManager::populateLayerDefaults()
-{
-    Gen::ConfigLayer defaultsLayer;
-    ConfigDefaults::processDefaults(defaultsLayer);
-    addLayer(LayerNameDefaults, defaultsLayer);
-}
-    
-//----------------------------------------------------------------
-
-void
-ConfigManager::populateLayerFiles()
-{
-    Gen::ConfigLayer filesLayer;
-    ConfigFiles::processFiles(*this, filesLayer);
-    addLayer(LayerNameFiles, filesLayer);
-}
-    
-//----------------------------------------------------------------
-
-void
-ConfigManager::populateLayerEnv()
-{
-    Gen::ConfigLayer envLayer;
-    ConfigEnv::processEnv(*this, envLayer);
-    addLayer(LayerNameEnv, envLayer);
-}
-    
-//----------------------------------------------------------------
-
-void
-ConfigManager::populateLayerCmdLine(int argc, char* argv[])
-{
-    Gen::ConfigLayer cmdLineLayer;
-    ConfigCommandLine::processCmdLine(argc, argv, *this, cmdLineLayer);
-    addLayer(LayerNameCmdLine, cmdLineLayer);
-}
-    
 //----------------------------------------------------------------
 
 void

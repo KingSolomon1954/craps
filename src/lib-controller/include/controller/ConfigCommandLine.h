@@ -6,9 +6,11 @@
 
 #pragma once
 
+#include <string>
+
 namespace Gen {
-    class MultiLayerConfig;  // fwd
     class ConfigLayer;       // fwd
+    class MultiLayerConfig;  // fwd
 }
     
 namespace Ctrl {
@@ -19,8 +21,7 @@ public:
     /// @name Lifecycle
     /// @{
     static void processCmdLine(int argc, char* argv[],
-                               const Gen::MultiLayerConfig& multiConfig,
-                               Gen::ConfigLayer& cfg);
+                               Gen::MultiLayerConfig& multiConfig);
     /// @}
 
     /// @name Modifiers
@@ -32,6 +33,8 @@ public:
     /// @}
 private:
     static void setAppPath(char* argv[], Gen::ConfigLayer& cfg);
+    static void setSysConfigDir(const std::string& sysSharedStr,
+                                Gen::ConfigLayer& cfg);
 };
 
 /*-----------------------------------------------------------*//**

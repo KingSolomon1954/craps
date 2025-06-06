@@ -24,9 +24,11 @@ Process environment variables.
     The configuration layer we populate.
 */
 void
-ConfigEnv::processEnv(const Gen::MultiLayerConfig& multiConfig,
-                      Gen::ConfigLayer& cfg)
+ConfigEnv::processEnv(Gen::MultiLayerConfig& multiConfig)
 {
+    // Work with layer directly
+    auto& cfg = multiConfig.getLayer(ConfigManager::LayerNameEnv);
+    
     try
     {
         const std::map<std::string, std::string> envToKey =

@@ -43,11 +43,6 @@ $(D_BLD_DEBUG)/Makefile: $(CONAN_INSTALL_DONE_DEBUG)
 	    -DCMAKE_BUILD_TYPE=Debug \
 	    -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake
 
-# Howie
-#           -DCMAKE_MAP_IMPORTED_CONFIG_DEBUG=RELEASE
-
-#	    -DCMAKE_MAP_IMPORTED_CONFIG_COVERAGE=Release
-
 # Directly invoke cmake's Makefile in prod build folder
 _build-it-prod: $(D_BLD_PROD)/Makefile
 	$(CPP_BLD_CNTR_EXEC) make -C $(D_BLD_PROD) -j$(PROCS)

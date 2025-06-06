@@ -51,8 +51,26 @@ MultiLayerConfig::addLayer(const std::string& name, const ConfigLayer& layer)
 
 //----------------------------------------------------------------
 
+ConfigLayer&
+MultiLayerConfig::getLayer(const std::string& layerName)
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    auto it = nameToIndex_.find(layerName);
+    if (it == nameToIndex_.end()) {
+        throw std::runtime_error("Layer not found: " + layerName);
+    }
+
+    const auto& layerPair = layers_.at(it->second);
+    return *(layerPair.second); // Dereference shared_ptr to get reference
+}
+
+//----------------------------------------------------------------
+
 void
-MultiLayerConfig::set(const std::string& layerName, const std::string& key, const std::string& value)
+MultiLayerConfig::set(const std::string& layerName,
+                      const std::string& key,
+                      const std::string& value)
 {
     auto it = nameToIndex_.find(layerName);
     if (it != nameToIndex_.end())
@@ -138,13 +156,18 @@ std::unordered_map<std::string, std::string>
 MultiLayerConfig::exportResolved() const
 {
     std::unordered_map<std::string, std::string> result;
-    for (const auto& [_, layer] : layers_)
+
+    std::lock_guard<std::mutex> lock(mutex_);  // Make sure to protect access if used concurrently
+
+    for (auto it = layers_.rbegin(); it != layers_.rend(); ++it)
     {
+        const auto& layer = it->second;
         for (const auto& [key, value] : layer->getAll())
         {
-            result.try_emplace(key, value);
+            result.try_emplace(key, value);  // Lower layers won't overwrite higher-priority values
         }
     }
+
     return result;
 }
 

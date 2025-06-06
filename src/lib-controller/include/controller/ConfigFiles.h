@@ -9,8 +9,8 @@
 #include <string>
 
 namespace Gen {
-    class MultiLayerConfig; // fwd
     class ConfigLayer;      // fwd
+    class MultiLayerConfig; // fwd
 }
     
 namespace Ctrl {
@@ -20,8 +20,7 @@ class ConfigFiles
 public:
     /// @name Lifecycle
     /// @{
-    static void processFiles(const Gen::MultiLayerConfig& multiConfig,
-                             Gen::ConfigLayer& cfg);
+    static void processFiles(Gen::MultiLayerConfig& multiConfig);
     /// @}
 
     /// @name Modifiers

@@ -18,18 +18,23 @@ namespace fs = std::filesystem;
 
 Process startup config files.
 
+1. Creates local user directories
+2. Throws if system directories are missing and needed
+3. Finds config files based on MultiLayerConfig
+4. Loads config files into MultiLayerConfig in files layer
+
 @param[in] multiConfig
     The multi-layer configuration structure.
-
-@param[in,out] cfg
-    The configuration layer we populate.
 */
 void
-ConfigFiles::processFiles(const Gen::MultiLayerConfig& multiConfig,
-                          Gen::ConfigLayer& cfg)
+ConfigFiles::processFiles(Gen::MultiLayerConfig& multiConfig)
 {
     createUserDirs(multiConfig);
     checkSystemDirs(multiConfig);
+
+    // Work with layer directly
+    auto& cfg = multiConfig.getLayer(ConfigManager::LayerNameFiles);
+    
     loadSystemConfig(multiConfig, cfg);
     loadUserConfig(multiConfig, cfg);
 }
@@ -39,17 +44,25 @@ ConfigFiles::processFiles(const Gen::MultiLayerConfig& multiConfig,
 void
 ConfigFiles::createUserDirs(const Gen::MultiLayerConfig& multiConfig)
 {
-    std::string configDir = multiConfig.getString(ConfigManager::KeyDirsUsrConfig).value();
-    std::string dataDir   = multiConfig.getString(ConfigManager::KeyDirsUsrData).value();
-    std::string cacheDir  = multiConfig.getString(ConfigManager::KeyDirsUsrCache).value();
-    std::string logDir    = multiConfig.getString(ConfigManager::KeyDirsUsrLog).value();
-    std::string stateDir  = multiConfig.getString(ConfigManager::KeyDirsUsrState).value();
+    std::string usrDataDir    = multiConfig.getString(ConfigManager::KeyDirsUsrData).value();
+    std::string usrConfigDir  = multiConfig.getString(ConfigManager::KeyDirsUsrConfig).value();
+    std::string usrTablesDir  = multiConfig.getString(ConfigManager::KeyDirsUsrTables).value();
+    std::string usrPlayersDir = multiConfig.getString(ConfigManager::KeyDirsUsrPlayers).value();
+    std::string usrAudioDir   = multiConfig.getString(ConfigManager::KeyDirsUsrAudio).value();
+    std::string usrImagesDir  = multiConfig.getString(ConfigManager::KeyDirsUsrImages).value();
+    std::string usrCacheDir   = multiConfig.getString(ConfigManager::KeyDirsUsrCache).value();
+    std::string usrLogDir     = multiConfig.getString(ConfigManager::KeyDirsUsrLog).value();
+    std::string usrStateDir   = multiConfig.getString(ConfigManager::KeyDirsUsrState).value();
 
-    fs::create_directories(configDir);
-    fs::create_directories(dataDir);
-    fs::create_directories(cacheDir);
-    fs::create_directories(logDir);
-    fs::create_directories(stateDir);
+    fs::create_directories(usrDataDir);
+    fs::create_directories(usrConfigDir);
+    fs::create_directories(usrTablesDir);
+    fs::create_directories(usrPlayersDir);
+    fs::create_directories(usrAudioDir);
+    fs::create_directories(usrImagesDir);
+    fs::create_directories(usrCacheDir);
+    fs::create_directories(usrLogDir);
+    fs::create_directories(usrStateDir);
 }
 
 //----------------------------------------------------------------

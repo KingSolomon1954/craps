@@ -35,14 +35,16 @@ Process the command line into configuration structure
 */
 void
 ConfigCommandLine::processCmdLine(int argc, char* argv[],
-                                  const Gen::MultiLayerConfig& multiConfig,
-                                  Gen::ConfigLayer& cfg)
+                                  Gen::MultiLayerConfig& multiConfig)
 {
-    (void) multiConfig;
-
+    // Work with layer directly
+    auto& cfg = multiConfig.getLayer(ConfigManager::LayerNameCmdLine);
+    
     setAppPath(argv, cfg);
     cxxopts::Options options(Gbl::appNameExec, Gbl::appNameScreen + ": A multiplayer dice game");
 
+    std::string sysSharedDir = multiConfig.getString(ConfigManager::KeyDirsSysShared).value();
+    
     options.add_options()
         ("cli", "run as command line program",
          cxxopts::value<bool>()->default_value("true"))
@@ -54,6 +56,9 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         
         ("b,bar", "Param bar",
          cxxopts::value<std::string>())
+
+        ("sys-config-dir", "System Config Directory",
+         cxxopts::value<std::string>()->default_value(sysSharedDir))
         
         ("d,debug", "Enable debugging",
          cxxopts::value<bool>()->default_value("false"))
@@ -92,6 +97,12 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         cfg.set(ConfigManager::KeyViewType, "graphical");
     }
 
+    if (result.count("sys-config-dir"))
+    {
+        std::string sysSharedStr = result["sys-config-dir"].as<std::string>();
+        setSysConfigDir(sysSharedStr, cfg);
+    }
+        
     bool debug = result["debug"].as<bool>();
     (void)debug;  // suppress compiler warning
     
@@ -114,4 +125,26 @@ ConfigCommandLine::setAppPath(char* argv[], Gen::ConfigLayer& cfg)
     cfg.set(ConfigManager::KeyAppPath, absPath);
 }
     
+//----------------------------------------------------------------
+
+void
+ConfigCommandLine::setSysConfigDir(const std::string& sysSharedStr,
+                                   Gen::ConfigLayer& cfg)
+{
+    namespace fs = std::filesystem;
+    fs::path sysShared  = sysSharedStr;
+    fs::path sysConfig  = sysShared / "config";
+    fs::path sysTables  = sysShared / "tables";
+    fs::path sysPlayers = sysShared / "players";
+    fs::path sysAudio   = sysShared / "audio";
+    fs::path sysImages  = sysShared / "images";
+
+    cfg.set(ConfigManager::KeyDirsSysShared,  sysShared.string());
+    cfg.set(ConfigManager::KeyDirsSysConfig,  sysConfig.string());
+    cfg.set(ConfigManager::KeyDirsSysTables,  sysTables.string());
+    cfg.set(ConfigManager::KeyDirsSysPlayers, sysPlayers.string());
+    cfg.set(ConfigManager::KeyDirsSysAudio,   sysAudio.string());
+    cfg.set(ConfigManager::KeyDirsSysImages,  sysImages.string());
+}
+
 //----------------------------------------------------------------

@@ -9,7 +9,8 @@
 #include <string>
 
 namespace Gen {
-    class ConfigLayer;  // fwd
+    class ConfigLayer;      // fwd
+    class MultiLayerConfig; // fwd
 }
     
 namespace Ctrl {
@@ -23,7 +24,7 @@ public:
 
     /// @name Modifiers
     /// @{
-    static void processDefaults(Gen::ConfigLayer& cfg);
+    static void processDefaults(Gen::MultiLayerConfig& multiConfig);
     /// @}
 
     /// @name Observers

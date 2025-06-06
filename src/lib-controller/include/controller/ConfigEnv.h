@@ -7,8 +7,8 @@
 #pragma once
 
 namespace Gen {
-    class MultiLayerConfig; // fwd
     class ConfigLayer;      // fwd
+    class MultiLayerConfig; // fwd
 }
     
 namespace Ctrl {
@@ -18,8 +18,7 @@ class ConfigEnv
 public:
     /// @name Lifecycle
     /// @{
-    static void processEnv(const Gen::MultiLayerConfig& multiConfig,
-                           Gen::ConfigLayer& Cfg);
+    static void processEnv(Gen::MultiLayerConfig& multiConfig);
     /// @}
 
     /// @name Modifiers
