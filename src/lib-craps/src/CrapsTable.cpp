@@ -394,6 +394,7 @@ CrapsTable::advanceState()
         point_ = 0;
         Gbl::pEventMgr->publish(Ctrl::PassLineWinner{});
     }
+    stats_.update(point_, dice_.value(), dice_.d1(), dice_.d2());
 }
 
 //----------------------------------------------------------------

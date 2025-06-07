@@ -9,15 +9,16 @@
 #include <array>
 #include <list>
 #include <memory>
-#include "gen/ErrorPass.h"
-#include "gen/ReturnCode.h"
-#include "gen/Uuid.h"
-#include "craps/Bank.h"
-#include "controller/Globals.h"
-#include "craps/CrapsBet.h"
-#include "craps/DecisionRecord.h"
-#include "craps/Dice.h"
-#include "craps/Player.h"
+#include <gen/ErrorPass.h>
+#include <gen/ReturnCode.h>
+#include <gen/Uuid.h>
+#include <craps/Bank.h>
+#include <controller/Globals.h>
+#include <craps/CrapsBet.h>
+#include <craps/DecisionRecord.h>
+#include <craps/Dice.h>
+#include <craps/Player.h>
+#include <craps/TableStats.h>
 
 namespace Craps {
 
@@ -94,6 +95,7 @@ private:
     bool bettingOpen_ = true;
     bool isTestRoll_ = false;
     Dice testRollDice_;
+    TableStats stats_;
 
     CrapsTable();  // private ctor 
     

@@ -15,6 +15,7 @@ add_library(craps STATIC
     src/EnumBetName.cpp
     src/Player.cpp
     src/TableConfig.cpp
+    src/TableStats.cpp
 )
 
 target_include_directories(craps
