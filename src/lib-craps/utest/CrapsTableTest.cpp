@@ -37,7 +37,7 @@ TEST_CASE("CrapsTable:constructor")
     {
         CrapsTable* t = CrapsTable::fromConfig("1", getSharedTestConfig());
         CHECK(t->getPoint() == 0);
-        CHECK(t->getLastRoll().value() == 12);
+        CHECK(t->getCurRoll().value() == 12);
         CHECK(t->isComeOutRoll());
         CHECK(t->isBettingOpen());
         CHECK(t->getShooterId().empty());
@@ -433,9 +433,9 @@ TEST_CASE("CrapsTable:roll dice")
         CHECK(t->isComeOutRoll());
         t->testRollDice(6,6);       // roll a 12, success is no crash
         CHECK(t->isComeOutRoll());  // still coming out
-        CHECK(t->getLastRoll().value() == 12);
-        CHECK(t->getLastRoll().d1() == 6);
-        CHECK(t->getLastRoll().d2() == 6);
+        CHECK(t->getCurRoll().value() == 12);
+        CHECK(t->getCurRoll().d1() == 6);
+        CHECK(t->getCurRoll().d2() == 6);
 
         // Create and add a couple of players
         Ctrl::PlayerManager::PlayerPtr john = Gbl::pPlayerMgr->createPlayer("John");
