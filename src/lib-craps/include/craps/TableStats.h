@@ -7,6 +7,7 @@
 #pragma once
 
 #include <craps/Dice.h>
+#include <controller/Globals.h>
 
 namespace Gen {
     class ConfigLayer;  // fwd
@@ -23,9 +24,10 @@ public:
 
     /// @name Modifiers
     /// @{
-    void updateBets();
-    void updateAmounts();
-    void updateRoll(unsigned point, const Dice& curRoll, const Dice& prevRoll);
+    void updatePerAddBet(Gbl::Money betAmount);
+    void updatePerOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount);
+    void updateBeforeThrow(unsigned numBetsThisRoll, Gbl::Money amountOnTable);
+    void updateAfterThrow(unsigned point, const Dice& curRoll, const Dice& prevRoll);
     void reset();
     /// @}
 
@@ -35,6 +37,19 @@ public:
     unsigned numRolls = 0;
     unsigned numBets = 0;
     unsigned numSevenOut = 0;                   // Number of times dice passed.
+
+    Gbl::Money totAmtBet = 0;
+    Gbl::Money maxAmtBet = 0;
+    double avgAmtBet     = 0.0;
+
+    unsigned maxBetsPerRoll  = 0;
+    unsigned totBetsPerRoll  = 0;
+    double avgNumBetsPerRoll = 0.0;
+
+    Gbl::Money maxAmtOnTable = 0;
+    Gbl::Money totAmtPerRoll = 0;
+    double avgAmtPerRoll     = 0.0;
+    
     unsigned avgRollsPerShooter = 0;
     unsigned numMaxCnsectvRollsThisShooter = 0; // Longest roll ever before 7-out.
     unsigned numCurCnsectvRollsThisShooter = 0; // Count rolls current shooter.

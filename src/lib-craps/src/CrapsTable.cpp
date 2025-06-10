@@ -130,8 +130,7 @@ CrapsTable::addBet(
     {
         BetIntfcPtr b = std::make_shared<CrapsBet>(playerId, betName, contractAmount, pivot);
         tableBets_[static_cast<size_t>(betName)].push_back(b);
-        stats_.numBets++;
-        stats_.updateBets();
+        stats_.updatePerAddBet(contractAmount);
         return b;
     }
     catch (const std::invalid_argument& e)
@@ -259,6 +258,8 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
         ep.prepend(diag);
         return Gen::ReturnCode::Fail;
     }
+    stats_.updatePerOddsBet(pBet->contractAmount(), newAmount);
+    
     return Gen::ReturnCode::Success;
 }
 
@@ -333,9 +334,11 @@ void
 CrapsTable::rollDice()
 {
     declareBettingClosed();
+    stats_.updateBeforeThrow(getNumBetsOnTable(), getAmountOnTable());
     throwDice();
     resolveBets();
-    advanceState();      // Update point, update shooter, update stats
+    advanceState();      // Update point, update shooter
+    stats_.updateAfterThrow(point_, dice_, prevRoll_);
     declareBettingOpen();
 }
 
@@ -364,7 +367,6 @@ CrapsTable::throwDice()
 {
     Gbl::pEventMgr->publish(Ctrl::DiceThrowStart{});
     prevRoll_ = dice_;
-    stats_.updateAmounts();
 
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
     std::cout << "point:" << point_ << " dice:" << dice_.value()
@@ -399,7 +401,6 @@ CrapsTable::advanceState()
         point_ = 0;
         Gbl::pEventMgr->publish(Ctrl::PassLineWinner{});
     }
-    stats_.updateRoll(point_, dice_, prevRoll_);
 }
 
 //----------------------------------------------------------------

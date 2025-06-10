@@ -11,56 +11,63 @@ using namespace Craps;
 
 /*-----------------------------------------------------------*//**
 
-Update amounts.
-
-Entry point to update amounts.
+Update per add bet.
 
 */
 void
-TableStats::updateAmounts()
+TableStats::updatePerAddBet(Gbl::Money betAmount)
 {
-#if 0    
-
-    numBetsThisRoll = getNumBetsOnTable();
-    maxBetsPerRoll = std::max(numBetsThisRoll, maxBetsPerRoll);
-    totBetsPerRoll += numBetsThisRoll;
-    avgNumBetsPerRoll = totBetsPerRoll / numRolls;
-
-    amtOnTable = getAmountOnTable();
-    maxAmtOnTable = std::max(amtOnTable, maxAmtOnTable);
-    totAmtPerRoll += amtOnTable;
-    avgBetPerRoll = totAmtPerRoll / numRolls;
-#endif    
-}
-
-/*-----------------------------------------------------------*//**
-
-Update bets.
-
-Entry point to update bets.
-
-*/
-void
-TableStats::updateBets()
-{
-#if 0    
+    numBets++;
     totAmtBet += betAmount;
     maxAmtBet = std::max(betAmount, maxAmtBet);
-    avgAmtBet = totAmtBet / numBets;
-#endif
+    avgAmtBet = (double)totAmtBet / (double)numBets;
 }
 
 /*-----------------------------------------------------------*//**
 
-Update stats.
-
-Entry point to update stats.
+Update per odds bet.
 
 */
 void
-TableStats::updateRoll(unsigned point, const Dice& curRoll, const Dice& prevRoll)
+TableStats::updatePerOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount)
 {
-    prevRoll_ = prevRoll;  // Cache local copy as member var.
+    Gbl::Money amount = contractAmount + oddsAmount;
+    totAmtBet += oddsAmount;  // Avoid double counting contract amount
+    maxAmtBet = std::max(amount, maxAmtBet);
+    avgAmtBet = (double)totAmtBet / (double)numBets;
+}
+
+/*-----------------------------------------------------------*//**
+
+Update various stats before dice throw.
+
+*/
+void
+TableStats::updateBeforeThrow(
+    unsigned numBetsThisRoll,
+    Gbl::Money amtOnTable)
+{
+    numRolls++;
+    maxBetsPerRoll = std::max(numBetsThisRoll, maxBetsPerRoll);
+    totBetsPerRoll += numBetsThisRoll;
+    avgNumBetsPerRoll = (double)totBetsPerRoll / (double)numRolls;
+
+    maxAmtOnTable = std::max(amtOnTable, maxAmtOnTable);
+    totAmtPerRoll += amtOnTable;
+    avgAmtPerRoll = (double)totAmtPerRoll / (double)numRolls;
+}
+
+/*-----------------------------------------------------------*//**
+
+Update lots of stats after dice throw.
+
+*/
+void
+TableStats::updateAfterThrow(unsigned point,
+                             const Dice& curRoll,
+                             const Dice& prevRoll)
+{
+    prevRoll_ = prevRoll;  // Cache local copy in member var.
     
     numRolls++;
     if (point == 0)

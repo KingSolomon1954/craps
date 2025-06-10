@@ -109,8 +109,8 @@ Table
         session max positive income one roll
         
         session num bets total
-        session avg num bets per roll
         session max num bets one roll
+        session avg num bets per roll
         session avg amount bet per roll
         session avg amount per bet
         session max amount bet one roll
