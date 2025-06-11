@@ -130,7 +130,7 @@ CrapsTable::addBet(
     {
         BetIntfcPtr b = std::make_shared<CrapsBet>(playerId, betName, contractAmount, pivot);
         tableBets_[static_cast<size_t>(betName)].push_back(b);
-        stats_.updatePerAddBet(contractAmount);
+        stats_.updateAddBet(contractAmount);
         return b;
     }
     catch (const std::invalid_argument& e)
@@ -258,7 +258,7 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
         ep.prepend(diag);
         return Gen::ReturnCode::Fail;
     }
-    stats_.updatePerOddsBet(pBet->contractAmount(), newAmount);
+    stats_.updateOddsBet(pBet->contractAmount(), newAmount);
     
     return Gen::ReturnCode::Success;
 }

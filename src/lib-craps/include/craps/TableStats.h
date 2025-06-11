@@ -9,10 +9,6 @@
 #include <craps/Dice.h>
 #include <controller/Globals.h>
 
-namespace Gen {
-    class ConfigLayer;  // fwd
-}
-    
 namespace Craps {
 
 class TableStats
@@ -24,8 +20,8 @@ public:
 
     /// @name Modifiers
     /// @{
-    void updatePerAddBet(Gbl::Money betAmount);
-    void updatePerOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount);
+    void updateAddBet(Gbl::Money betAmount);
+    void updateOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount);
     void updateBeforeThrow(unsigned numBetsThisRoll, Gbl::Money amountOnTable);
     void updateAfterThrow(unsigned point, const Dice& curRoll, const Dice& prevRoll);
     void reset();
@@ -34,31 +30,53 @@ public:
     /// @name Observers
     /// @{
     /// @}
+    
+    // Betting Stats
+    
+    unsigned numBetsMade = 0;
+    unsigned numBetsWin  = 0;
+    unsigned numBetsLose = 0;
+    unsigned numBetsPush = 0;
+
+    // double winPctg =  (numBetsWin  / numBetsMade) * 100
+    // double losePctg = (numBetsLose / numBetsMade) * 100
+    // double pushPctg = (numBetsPush / numBetsMade) * 100
+
+    Gbl::Money maxAmtOneBet      = 0;
+    Gbl::Money totAmtAllBets     = 0;
+    // double avgAmtPerBet       = 0.0;    // Up to user to calculate
+
+    unsigned maxNumBetsPerRoll   = 0;
+    unsigned totNumBetsPerRoll   = 0;
+    // double avgNumBetsPerRoll  = 0.0;    // Up to user to calculate
+
+    Gbl::Money maxAmtBetOneRoll  = 0;
+    Gbl::Money totAmtBetPerRoll  = 0;
+    // double avgAmtBetPerRoll   = 0.0;    // Up to user to calculate
+
+    Gbl::Money maxAmtWinOneRoll  = 0;
+    Gbl::Money totAmtWinPerRoll  = 0;
+    // double avgAmtWinPerRoll   = 0.0;    // Up to user to calculate
+
+    Gbl::Money maxAmtLoseOneRoll = 0;
+    Gbl::Money totAmtLosePerRoll = 0;
+    // double avgAmtLosePerRoll  = 0.0;    // Up to user to calculate
+    
+    // Dice Roll Stats
+    
     unsigned numRolls = 0;
-    unsigned numBets = 0;
     unsigned numSevenOut = 0;                   // Number of times dice passed.
 
-    Gbl::Money totAmtBet = 0;
-    Gbl::Money maxAmtBet = 0;
-    double avgAmtBet     = 0.0;
-
-    unsigned maxBetsPerRoll  = 0;
-    unsigned totBetsPerRoll  = 0;
-    double avgNumBetsPerRoll = 0.0;
-
-    Gbl::Money maxAmtOnTable = 0;
-    Gbl::Money totAmtPerRoll = 0;
-    double avgAmtPerRoll     = 0.0;
-    
-    unsigned avgRollsPerShooter = 0;
-    unsigned numMaxCnsectvRollsThisShooter = 0; // Longest roll ever before 7-out.
     unsigned numCurCnsectvRollsThisShooter = 0; // Count rolls current shooter.
+    unsigned numMaxCnsectvRollsThisShooter = 0; // Longest roll ever before 7-out.
+    unsigned totCnsectvRollsPerShooter     = 0;
     
-    unsigned numComeOutRolls              = 0;
+    unsigned numComeOutRolls           = 0;
+    unsigned numCurCnsectvComeOutRolls = 0;
+    unsigned numMaxCnsectvComeOutRolls = 0;
+    
     unsigned numNonComeOutRolls           = 0;
-    unsigned numCurCnsectvComeOutRolls    = 0;
     unsigned numCurCnsectvNonComeOutRolls = 0;
-    unsigned numMaxCnsectvComeOutRolls    = 0;
     unsigned numMaxCnsectvNonComeOutRolls = 0;
     
     unsigned numPassLineWins = 0;
@@ -229,30 +247,30 @@ public:
     unsigned num11 = 0;
     unsigned num12 = 0;
     
-    unsigned num2Cnsectv  = 0;
-    unsigned num3Cnsectv  = 0;
-    unsigned num4Cnsectv  = 0;
-    unsigned num5Cnsectv  = 0;
-    unsigned num6Cnsectv  = 0;
-    unsigned num7Cnsectv  = 0;
-    unsigned num8Cnsectv  = 0;
-    unsigned num9Cnsectv  = 0;
-    unsigned num10Cnsectv = 0;
-    unsigned num11Cnsectv = 0;
-    unsigned num12Cnsectv = 0;
-    
-    unsigned num2MaxCnsectv  = 0;
-    unsigned num3MaxCnsectv  = 0;
-    unsigned num4MaxCnsectv  = 0;
-    unsigned num5MaxCnsectv  = 0;
-    unsigned num6MaxCnsectv  = 0;
-    unsigned num7MaxCnsectv  = 0;
-    unsigned num8MaxCnsectv  = 0;
-    unsigned num9MaxCnsectv  = 0;
-    unsigned num10MaxCnsectv = 0;
-    unsigned num11MaxCnsectv = 0;
-    unsigned num12MaxCnsectv = 0;
-    
+    unsigned numCurCnsectvNum2  = 0;
+    unsigned numCurCnsectvNum3  = 0;
+    unsigned numCurCnsectvNum4  = 0;
+    unsigned numCurCnsectvNum5  = 0;
+    unsigned numCurCnsectvNum6  = 0;
+    unsigned numCurCnsectvNum7  = 0;
+    unsigned numCurCnsectvNum8  = 0;
+    unsigned numCurCnsectvNum9  = 0;
+    unsigned numCurCnsectvNum10 = 0;
+    unsigned numCurCnsectvNum11 = 0;
+    unsigned numCurCnsectvNum12 = 0;
+
+    unsigned numMaxCnsectvNum2  = 0;
+    unsigned numMaxCnsectvNum3  = 0;
+    unsigned numMaxCnsectvNum4  = 0;
+    unsigned numMaxCnsectvNum5  = 0;
+    unsigned numMaxCnsectvNum6  = 0;
+    unsigned numMaxCnsectvNum7  = 0;
+    unsigned numMaxCnsectvNum8  = 0;
+    unsigned numMaxCnsectvNum9  = 0;
+    unsigned numMaxCnsectvNum10 = 0;
+    unsigned numMaxCnsectvNum11 = 0;
+    unsigned numMaxCnsectvNum12 = 0;
+
 private:
     void incrementComeOutRolls();
     void incrementNonComeOutRolls();

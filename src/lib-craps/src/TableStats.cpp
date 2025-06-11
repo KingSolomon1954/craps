@@ -11,54 +11,6 @@ using namespace Craps;
 
 /*-----------------------------------------------------------*//**
 
-Update per add bet.
-
-*/
-void
-TableStats::updatePerAddBet(Gbl::Money betAmount)
-{
-    numBets++;
-    totAmtBet += betAmount;
-    maxAmtBet = std::max(betAmount, maxAmtBet);
-    avgAmtBet = (double)totAmtBet / (double)numBets;
-}
-
-/*-----------------------------------------------------------*//**
-
-Update per odds bet.
-
-*/
-void
-TableStats::updatePerOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount)
-{
-    Gbl::Money amount = contractAmount + oddsAmount;
-    totAmtBet += oddsAmount;  // Avoid double counting contract amount
-    maxAmtBet = std::max(amount, maxAmtBet);
-    avgAmtBet = (double)totAmtBet / (double)numBets;
-}
-
-/*-----------------------------------------------------------*//**
-
-Update various stats before dice throw.
-
-*/
-void
-TableStats::updateBeforeThrow(
-    unsigned numBetsThisRoll,
-    Gbl::Money amtOnTable)
-{
-    numRolls++;
-    maxBetsPerRoll = std::max(numBetsThisRoll, maxBetsPerRoll);
-    totBetsPerRoll += numBetsThisRoll;
-    avgNumBetsPerRoll = (double)totBetsPerRoll / (double)numRolls;
-
-    maxAmtOnTable = std::max(amtOnTable, maxAmtOnTable);
-    totAmtPerRoll += amtOnTable;
-    avgAmtPerRoll = (double)totAmtPerRoll / (double)numRolls;
-}
-
-/*-----------------------------------------------------------*//**
-
 Update lots of stats after dice throw.
 
 */
@@ -113,12 +65,12 @@ TableStats::update2(unsigned point)
     num2++;
     if (prevRoll_.value() == 2)
     {
-        num2Cnsectv++;
-        num2MaxCnsectv = std::max(num2MaxCnsectv, num2Cnsectv);
+        numCurCnsectvNum2++;
+        numMaxCnsectvNum2 = std::max(numMaxCnsectvNum2, numCurCnsectvNum2);
     }
     else
     {
-        num2Cnsectv = 0;
+        numCurCnsectvNum2 = 0;
     }
     incrementRollsThisShooter();
     if (point == 0)
@@ -139,12 +91,12 @@ TableStats::update3(unsigned point)
     num3++;
     if (prevRoll_.value() == 3)
     {
-        num3Cnsectv++;
-        num3MaxCnsectv = std::max(num3MaxCnsectv, num3Cnsectv);
+        numCurCnsectvNum3++;
+        numMaxCnsectvNum3 = std::max(numMaxCnsectvNum3, numCurCnsectvNum3);
     }
     else
     {
-        num3Cnsectv = 0;
+        numCurCnsectvNum3 = 0;
     }
     incrementRollsThisShooter();
     if (point == 0)
@@ -165,12 +117,12 @@ TableStats::update4(unsigned d1, unsigned d2)
     num4++;
     if (prevRoll_.value() == 4)
     {
-        num4Cnsectv++;
-        num4MaxCnsectv = std::max(num4MaxCnsectv, num4Cnsectv);
+        numCurCnsectvNum4++;
+        numMaxCnsectvNum4 = std::max(numMaxCnsectvNum4, numCurCnsectvNum4);
     }
     else
     {
-        num4Cnsectv = 0;
+        numCurCnsectvNum4 = 0;
     }
     incrementRollsThisShooter();
     if (armed4)
@@ -199,12 +151,12 @@ TableStats::update5()
     num5++;
     if (prevRoll_.value() == 5)
     {
-        num5Cnsectv++;
-        num5MaxCnsectv = std::max(num5MaxCnsectv, num5Cnsectv);
+        numCurCnsectvNum5++;
+        numMaxCnsectvNum5 = std::max(numMaxCnsectvNum5, numCurCnsectvNum5);
     }
     else
     {
-        num5Cnsectv = 0;
+        numCurCnsectvNum5 = 0;
     }
     incrementRollsThisShooter();
     if (armed5)
@@ -225,12 +177,12 @@ TableStats::update6(unsigned d1, unsigned d2)
     num6++;
     if (prevRoll_.value() == 6)
     {
-        num6Cnsectv++;
-        num6MaxCnsectv = std::max(num6MaxCnsectv, num6Cnsectv);
+        numCurCnsectvNum6++;
+        numMaxCnsectvNum6 = std::max(numMaxCnsectvNum6, numCurCnsectvNum6);
     }
     else
     {
-        num6Cnsectv = 0;
+        numCurCnsectvNum6 = 0;
     }
     incrementRollsThisShooter();
     if (armed6)
@@ -259,12 +211,12 @@ TableStats::update7(unsigned point)
     num7++;
     if (prevRoll_.value() == 7)
     {
-        num7Cnsectv++;
-        num7MaxCnsectv = std::max(num7MaxCnsectv, num7Cnsectv);
+        numCurCnsectvNum7++;
+        numMaxCnsectvNum7 = std::max(numMaxCnsectvNum7, numCurCnsectvNum7);
     }
     else
     {
-        num7Cnsectv = 0;
+        numCurCnsectvNum7 = 0;
     }
     
     if (armed4)
@@ -339,12 +291,12 @@ TableStats::update8(unsigned d1, unsigned d2)
     num8++;
     if (prevRoll_.value() == 8)
     {
-        num8Cnsectv++;
-        num8MaxCnsectv = std::max(num8MaxCnsectv, num8Cnsectv);
+        numCurCnsectvNum8++;
+        numMaxCnsectvNum8 = std::max(numMaxCnsectvNum8, numCurCnsectvNum8);
     }
     else
     {
-        num8Cnsectv = 0;
+        numCurCnsectvNum8 = 0;
     }
     
     incrementRollsThisShooter();
@@ -374,12 +326,12 @@ TableStats::update9()
     num9++;
     if (prevRoll_.value() == 9)
     {
-        num9Cnsectv++;
-        num9MaxCnsectv = std::max(num9MaxCnsectv, num9Cnsectv);
+        numCurCnsectvNum9++;
+        numMaxCnsectvNum9 = std::max(numMaxCnsectvNum9, numCurCnsectvNum9);
     }
     else
     {
-        num9Cnsectv = 0;
+        numCurCnsectvNum9 = 0;
     }
     
     incrementRollsThisShooter();
@@ -401,12 +353,12 @@ TableStats::update10(unsigned d1, unsigned d2)
     num10++;
     if (prevRoll_.value() == 10)
     {
-        num10Cnsectv++;
-        num10MaxCnsectv = std::max(num10MaxCnsectv, num10Cnsectv);
+        numCurCnsectvNum10++;
+        numMaxCnsectvNum10 = std::max(numMaxCnsectvNum10, numCurCnsectvNum10);
     }
     else
     {
-        num10Cnsectv = 0;
+        numCurCnsectvNum10 = 0;
     }
     
     incrementRollsThisShooter();
@@ -436,12 +388,12 @@ TableStats::update11(unsigned point)
     num11++;
     if (prevRoll_.value() == 11)
     {
-        num11Cnsectv++;
-        num11MaxCnsectv = std::max(num11MaxCnsectv, num11Cnsectv);
+        numCurCnsectvNum11++;
+        numMaxCnsectvNum11 = std::max(numMaxCnsectvNum11, numCurCnsectvNum11);
     }
     else
     {
-        num11Cnsectv = 0;
+        numCurCnsectvNum11 = 0;
     }
     
     incrementRollsThisShooter();
@@ -462,12 +414,12 @@ TableStats::update12(unsigned point)
     num12++;
     if (prevRoll_.value() == 12)
     {
-        num12Cnsectv++;
-        num12MaxCnsectv = std::max(num12MaxCnsectv, num12Cnsectv);
+        numCurCnsectvNum12++;
+        numMaxCnsectvNum12 = std::max(numMaxCnsectvNum12, numCurCnsectvNum12);
     }
     else
     {
-        num12Cnsectv = 0;
+        numCurCnsectvNum12 = 0;
     }
     
     incrementRollsThisShooter();
@@ -489,6 +441,7 @@ TableStats::incrementComeOutRolls()
     numCurCnsectvComeOutRolls++;
     numMaxCnsectvComeOutRolls =
         std::max(numMaxCnsectvComeOutRolls, numCurCnsectvComeOutRolls);
+    numCurCnsectvNonComeOutRolls = 0;
 }
 
 //----------------------------------------------------------------
@@ -1050,10 +1003,11 @@ void
 TableStats::incrementSevenOut()
 {
     numSevenOut++;
-    if (numSevenOut > 0)
-    {
-        avgRollsPerShooter = numRolls / numSevenOut;
-    }
+    numMaxCnsectvRollsThisShooter = std::max(numCurCnsectvRollsThisShooter,
+                                             numMaxCnsectvRollsThisShooter);
+    totCnsectvRollsPerShooter += numCurCnsectvRollsThisShooter;
+    // avgNumRollsPerShooter = (double)totCnsectvRollsPerShooter /
+    //                         (double)numSevenOut;
     numCurCnsectvRollsThisShooter = 0;
 
     numMaxCnsectvNonComeOutRolls = std::max(numMaxCnsectvNonComeOutRolls,
@@ -1075,17 +1029,82 @@ TableStats::resetComeOutRollCounters()
     numCurCnsectvCrapsOnComeOutRoll   = 0;
 }
 
+/*-----------------------------------------------------------*//**
+
+Update shooter stats.
+
+Called when moving on to next Shooter.
+
+*/
+#if 0
+void
+TableStats::updateShooter()
+{
+    numMaxCnsectvRollsThisShooter = std::max(numCurCnsectvRollsThisShooter,
+                                             numMaxCnsectvRollsThisShooter);
+    totCnsectvRollsPerShooter += numCurCnsectvRollsThisShooter;
+}
+#endif
+
+/*-----------------------------------------------------------*//**
+
+Update per add bet.
+
+*/
+void
+TableStats::updateAddBet(Gbl::Money betAmount)
+{
+    numBetsMade++;
+    totAmtAllBets += betAmount;
+    maxAmtOneBet = std::max(betAmount, maxAmtOneBet);
+    // avgAmtPerBet = (double)totAmtAllBets / (double)numBetsMade;
+}
+
+/*-----------------------------------------------------------*//**
+
+Update per odds bet.
+
+*/
+void
+TableStats::updateOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount)
+{
+    Gbl::Money amount = contractAmount + oddsAmount;
+    totAmtAllBets += oddsAmount;  // Avoid double counting contract amount
+    maxAmtOneBet = std::max(amount, maxAmtOneBet);
+    // avgAmtPerBet = (double)totAmtAllBets / (double)numBetsMade;
+}
+
+/*-----------------------------------------------------------*//**
+
+Update various stats before dice throw.
+
+*/
+void
+TableStats::updateBeforeThrow(
+    unsigned numBetsThisRoll,
+    Gbl::Money amtOnTable)
+{
+    numRolls++;
+    maxNumBetsPerRoll = std::max(numBetsThisRoll, maxNumBetsPerRoll);
+    totNumBetsPerRoll += numBetsThisRoll;
+    // avgNumBetsPerRoll = (double)totNumBetsPerRoll / (double)numRolls;
+
+    maxAmtBetOneRoll = std::max(amtOnTable, maxAmtBetOneRoll);
+    totAmtBetPerRoll += amtOnTable;
+    // avgAmtBetPerRoll = (double)totAmtBetPerRoll / (double)numRolls;
+}
+
 //-----------------------------------------------------------------
 
 void
 TableStats::reset()
 {
     numRolls                      = 0;
-    numBets                       = 0;
     numSevenOut                   = 0;
-    avgRollsPerShooter            = 0;
-    numMaxCnsectvRollsThisShooter = 0;
+    
     numCurCnsectvRollsThisShooter = 0;
+    numMaxCnsectvRollsThisShooter = 0;
+    totCnsectvRollsPerShooter     = 0;
 
     numComeOutRolls              = 0;
     numNonComeOutRolls           = 0;
@@ -1262,29 +1281,29 @@ TableStats::reset()
     num11 = 0;
     num12 = 0;
 
-    num2Cnsectv  = 0;
-    num3Cnsectv  = 0;
-    num4Cnsectv  = 0;
-    num5Cnsectv  = 0;
-    num6Cnsectv  = 0;
-    num7Cnsectv  = 0;
-    num8Cnsectv  = 0;
-    num9Cnsectv  = 0;
-    num10Cnsectv = 0;
-    num11Cnsectv = 0;
-    num12Cnsectv = 0;
-    
-    num2MaxCnsectv  = 0;
-    num3MaxCnsectv  = 0;
-    num4MaxCnsectv  = 0;
-    num5MaxCnsectv  = 0;
-    num6MaxCnsectv  = 0;
-    num7MaxCnsectv  = 0;
-    num8MaxCnsectv  = 0;
-    num9MaxCnsectv  = 0;
-    num10MaxCnsectv = 0;
-    num11MaxCnsectv = 0;
-    num12MaxCnsectv = 0;
+    numCurCnsectvNum2  = 0;
+    numCurCnsectvNum3  = 0;
+    numCurCnsectvNum4  = 0;
+    numCurCnsectvNum5  = 0;
+    numCurCnsectvNum6  = 0;
+    numCurCnsectvNum7  = 0;
+    numCurCnsectvNum8  = 0;
+    numCurCnsectvNum9  = 0;
+    numCurCnsectvNum10 = 0;
+    numCurCnsectvNum11 = 0;
+    numCurCnsectvNum12 = 0;
+
+    numMaxCnsectvNum2  = 0;
+    numMaxCnsectvNum3  = 0;
+    numMaxCnsectvNum4  = 0;
+    numMaxCnsectvNum5  = 0;
+    numMaxCnsectvNum6  = 0;
+    numMaxCnsectvNum7  = 0;
+    numMaxCnsectvNum8  = 0;
+    numMaxCnsectvNum9  = 0;
+    numMaxCnsectvNum10 = 0;
+    numMaxCnsectvNum11 = 0;
+    numMaxCnsectvNum12 = 0;
     
     armed4  = false;
     armed5  = false;

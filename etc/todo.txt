@@ -13,6 +13,8 @@ load Table choices by reading dir
 load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
+stats design
+stats implementation
 
 (Done) TimerManager compiles
 (Done) unit test for TimerManager
@@ -120,9 +122,7 @@ Table
         session shooter avg turns per session
         session shooter avg time
         session shooter longest time
-        session shooter shortest time
         session shooter longest num rolls
-        session shooter shortest num rolls
         
     All-time Sessions
         all-time total num sessions
@@ -157,9 +157,7 @@ Table
         all-time shooter avg turns per session
         all-time shooter avg time
         all-time shooter longest time
-        all-time shooter shortest time
         all-time shooter longest num rolls
-        all-time shooter shortest num rolls
 
 Player
     Identity (name, etc)
@@ -570,3 +568,81 @@ The standard runtime directories for royalcraps are:
    * Access: Read/write for the user.
 *  Executable: /usr/games/royalcraps
    * Purpose: Game binary
+
+
+
+
+
+
+CrapsTable
+    Stats session_;
+    Stats alltime_;
+
+
+
+CrapsTable
+    Stats stats_;
+
+
+
+
+CrapsTable
+{
+    BettingStats sessionBettingStats_;
+    BettingStats alltimeBettingStats_;
+    DiceRollStats sessionDiceRollStats_;
+    DiceRollStats alltimeDiceRollStats_;
+    SessionHistory sessionHistory_;
+};
+
+BettingStats CrapsTable::getSessionBettingStats();
+DiceRollStats CrapsTable::getSessionDiceRollStats();
+BettingStats CrapsTable::getAlltimeBettingStats();
+DiceRollStats CrapsTable::getAlltimeDiceRollStats();
+
+SessionHistory CrapsTable::getSessionHistory();
+
+PlayerStats
+{
+    PlayerHistory playerHistory;
+    BettingStats  sessionBettingStats;
+    BettingStats  alltimeBettingStats;
+}
+
+
+BettingStats
+{
+    unsigned numBetsMade = 0;
+    unsigned numBetsWin = 0;
+    unsigned numBetsLose = 0;
+    unsigned numBetsPush = 0;
+
+    double winPctg =  (numBetsWin  / numBetsMade) * 100
+    double losePctg = (numBetsLose / numBetsMade) * 100
+    double pushPctg = (numBetsPush / numBetsMade) * 100
+
+    Gbl::Money maxAmtOneBet = 0;
+    Gbl::Money totAmtAllBets = 0;
+    double avgAmtPerBet     = 0.0;
+
+    unsigned maxNumBetsPerRoll  = 0;
+    unsigned totNumBetsPerRoll  = 0;
+    double avgNumBetsPerRoll = 0.0;
+
+    Gbl::Money maxAmtBetOneRoll = 0;
+    Gbl::Money totAmtBetPerRoll = 0;
+    double avgAmtBetPerRoll     = 0.0;
+
+    Gbl::Money maxAmtWinOneRoll = 0;
+    Gbl::Money totAmtWinPerRoll = 0;
+    double avgAmtWinPerRoll     = 0.0;
+
+    Gbl::Money maxAmtLoseOneRoll = 0;
+    Gbl::Money totAmtLosePerRoll = 0;
+    double avgAmtLosePerRoll     = 0.0;
+};
+
+DiceRollStats
+{
+
+};
