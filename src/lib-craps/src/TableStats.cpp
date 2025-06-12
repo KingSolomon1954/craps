@@ -15,13 +15,12 @@ Update lots of stats after dice throw.
 
 */
 void
-TableStats::updateAfterThrow(unsigned point,
-                             const Dice& curRoll,
-                             const Dice& prevRoll)
+TableStats::updateDiceRoll(unsigned point,
+                           const Dice& curRoll,
+                           const Dice& prevRoll)
 {
     prevRoll_ = prevRoll;  // Cache local copy in member var.
-    
-    numRolls++;
+
     if (point == 0)
     {
         incrementComeOutRolls();
@@ -467,10 +466,6 @@ TableStats::incrementPassLineWins()
     numMaxCnsectvPassLineWins = std::max(numMaxCnsectvPassLineWins,
                                          numCurCnsectvPassLineWins);
     numCurCnsectvPassLineLoss = 0;
-
-    numMaxCnsectvNonComeOutRolls = std::max(numMaxCnsectvNonComeOutRolls,
-                                            numCurCnsectvNonComeOutRolls);
-    numCurCnsectvNonComeOutRolls = 0;
 }
 
 //----------------------------------------------------------------
@@ -1003,16 +998,13 @@ void
 TableStats::incrementSevenOut()
 {
     numSevenOut++;
-    numMaxCnsectvRollsThisShooter = std::max(numCurCnsectvRollsThisShooter,
-                                             numMaxCnsectvRollsThisShooter);
+    // avgNumSevenOuts = (double)numSevenOut / (double)numRolls;
+    
+    numTurnsShooter++;           // Same as sevenOut count
     totCnsectvRollsPerShooter += numCurCnsectvRollsThisShooter;
-    // avgNumRollsPerShooter = (double)totCnsectvRollsPerShooter /
-    //                         (double)numSevenOut;
     numCurCnsectvRollsThisShooter = 0;
-
-    numMaxCnsectvNonComeOutRolls = std::max(numMaxCnsectvNonComeOutRolls,
-                                            numCurCnsectvNonComeOutRolls);
-    numCurCnsectvNonComeOutRolls = 0;
+    // avgNumRollsPerShooter = (double)totCnsectvRollsPerShooter /
+    //                         (double)numTurnsShooter;
 }
 
 //-----------------------------------------------------------------
@@ -1028,23 +1020,6 @@ TableStats::resetComeOutRollCounters()
     numCurCnsectvTwelvesOnComeOutRoll = 0;
     numCurCnsectvCrapsOnComeOutRoll   = 0;
 }
-
-/*-----------------------------------------------------------*//**
-
-Update shooter stats.
-
-Called when moving on to next Shooter.
-
-*/
-#if 0
-void
-TableStats::updateShooter()
-{
-    numMaxCnsectvRollsThisShooter = std::max(numCurCnsectvRollsThisShooter,
-                                             numMaxCnsectvRollsThisShooter);
-    totCnsectvRollsPerShooter += numCurCnsectvRollsThisShooter;
-}
-#endif
 
 /*-----------------------------------------------------------*//**
 
@@ -1076,22 +1051,59 @@ TableStats::updateOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount)
 
 /*-----------------------------------------------------------*//**
 
-Update various stats before dice throw.
+Update various betting stats after dice throw.
 
 */
 void
-TableStats::updateBeforeThrow(
-    unsigned numBetsThisRoll,
-    Gbl::Money amtOnTable)
+TableStats::updateBetsAfterThrow(
+    Gbl::Money amtOnTable,
+    const std::pair<unsigned, Gbl::Money>& winStats,
+    const std::pair<unsigned, Gbl::Money>& loseStats,
+    unsigned numBetsKeepThisRoll)
 {
-    numRolls++;
+    Gbl::Money amtWinThisRoll    = winStats.second;
+    Gbl::Money amtLoseThisRoll   = loseStats.second;
+    unsigned numBetsWinThisRoll  = winStats.first;
+    unsigned numBetsLoseThisRoll = loseStats.first;
+    unsigned numBetsThisRoll     = numBetsWinThisRoll  +
+                                   numBetsLoseThisRoll +
+                                   numBetsKeepThisRoll;
+    
+    numBetsWin  += numBetsWinThisRoll;
+    numBetsLose += numBetsLoseThisRoll;
+    numBetsKeep += numBetsKeepThisRoll;
+    
     maxNumBetsPerRoll = std::max(numBetsThisRoll, maxNumBetsPerRoll);
     totNumBetsPerRoll += numBetsThisRoll;
     // avgNumBetsPerRoll = (double)totNumBetsPerRoll / (double)numRolls;
 
+    maxNumBetsWinPerRoll = std::max(numBetsWinThisRoll, maxNumBetsWinPerRoll);
+    totNumBetsWinPerRoll += numBetsWinThisRoll;
+    // avgNumBetsWinPerRoll = (double)totNumBetsWinPerRoll / (double)numRolls;
+
+    maxNumBetsLosePerRoll = std::max(numBetsLoseThisRoll, maxNumBetsLosePerRoll);
+    totNumBetsLosePerRoll += numBetsLoseThisRoll;
+    // avgNumBetsLosePerRoll = (double)totNumBetsLosePerRoll / (double)numRolls;
+
+    maxNumBetsKeepPerRoll = std::max(numBetsKeepThisRoll, maxNumBetsKeepPerRoll);
+    totNumBetsKeepPerRoll += numBetsKeepThisRoll;
+    // avgNumBetsKeepPerRoll = (double)totNumBetsKeepPerRoll / (double)numRolls;
+
     maxAmtBetOneRoll = std::max(amtOnTable, maxAmtBetOneRoll);
     totAmtBetPerRoll += amtOnTable;
     // avgAmtBetPerRoll = (double)totAmtBetPerRoll / (double)numRolls;
+
+    maxAmtWinOneRoll = std::max(amtWinThisRoll, maxAmtWinOneRoll);
+    totAmtWinPerRoll += amtWinThisRoll;
+    // avgAmtWinPerRoll = (double)totAmtWinPerRoll / (double)numRolls;
+    
+    maxAmtLoseOneRoll = std::max(amtLoseThisRoll, maxAmtLoseOneRoll);
+    totAmtLosePerRoll += amtLoseThisRoll;
+    // avgAmtLosePerRoll = (double)totAmtLosePerRoll / (double)numRolls;
+
+    totAmtWin  += amtWinThisRoll;
+    totAmtLose += amtLoseThisRoll;
+    // balance = totAmtWin - totAmtLose;
 }
 
 //-----------------------------------------------------------------
@@ -1099,13 +1111,34 @@ TableStats::updateBeforeThrow(
 void
 TableStats::reset()
 {
+    // Betting Stats
+    numBetsMade = 0;
+    numBetsWin  = 0;
+    numBetsLose = 0;
+    numBetsKeep = 0;
+    maxNumBetsPerRoll     = 0;
+    totNumBetsPerRoll     = 0;
+    maxNumBetsWinPerRoll  = 0;
+    totNumBetsWinPerRoll  = 0;
+    maxNumBetsLosePerRoll = 0;
+    totNumBetsLosePerRoll = 0;
+    maxNumBetsKeepPerRoll = 0;
+    totNumBetsKeepPerRoll = 0;
+    maxAmtOneBet          = 0;
+    totAmtAllBets         = 0;
+    maxAmtBetOneRoll      = 0;
+    totAmtBetPerRoll      = 0;
+    maxAmtWinOneRoll      = 0;
+    totAmtWinPerRoll      = 0;
+    maxAmtLoseOneRoll     = 0;
+    totAmtLosePerRoll     = 0;
+    totAmtWin             = 0;
+    totAmtLose            = 0;
+
+    // Dice Roll Stats
     numRolls                      = 0;
     numSevenOut                   = 0;
     
-    numCurCnsectvRollsThisShooter = 0;
-    numMaxCnsectvRollsThisShooter = 0;
-    totCnsectvRollsPerShooter     = 0;
-
     numComeOutRolls              = 0;
     numNonComeOutRolls           = 0;
     numCurCnsectvComeOutRolls    = 0;
@@ -1305,6 +1338,11 @@ TableStats::reset()
     numMaxCnsectvNum11 = 0;
     numMaxCnsectvNum12 = 0;
     
+    numTurnsShooter               = 0;
+    numCurCnsectvRollsThisShooter = 0;
+    numMaxCnsectvRollsThisShooter = 0;
+    totCnsectvRollsPerShooter     = 0;
+
     armed4  = false;
     armed5  = false;
     armed6  = false;

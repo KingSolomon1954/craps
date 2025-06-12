@@ -153,9 +153,9 @@ private:
     bool removeMatchingBetId(BetList& bets, unsigned betId);
 
     void disburseHouseResults();
-    void disbursePlayerWins();
-    void disbursePlayerLoses();
-    void disbursePlayerKeeps();
+    std::pair<unsigned, Gbl::Money> disbursePlayerWins();
+    std::pair<unsigned, Gbl::Money> disbursePlayerLoses();
+    unsigned disbursePlayerKeeps();
 };
 
 /*-----------------------------------------------------------*//**

@@ -22,8 +22,11 @@ public:
     /// @{
     void updateAddBet(Gbl::Money betAmount);
     void updateOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount);
-    void updateBeforeThrow(unsigned numBetsThisRoll, Gbl::Money amountOnTable);
-    void updateAfterThrow(unsigned point, const Dice& curRoll, const Dice& prevRoll);
+    void updateBetsAfterThrow(Gbl::Money amtOnTable,
+                              const std::pair<unsigned, Gbl::Money>& winStats,
+                              const std::pair<unsigned, Gbl::Money>& loseStats,
+                              unsigned numKeeps);
+    void updateDiceRoll(unsigned point, const Dice& curRoll, const Dice& prevRoll);
     void reset();
     /// @}
 
@@ -36,41 +39,53 @@ public:
     unsigned numBetsMade = 0;
     unsigned numBetsWin  = 0;
     unsigned numBetsLose = 0;
-    unsigned numBetsPush = 0;
+    unsigned numBetsKeep = 0;
 
     // double winPctg =  (numBetsWin  / numBetsMade) * 100
     // double losePctg = (numBetsLose / numBetsMade) * 100
     // double pushPctg = (numBetsPush / numBetsMade) * 100
 
-    Gbl::Money maxAmtOneBet      = 0;
-    Gbl::Money totAmtAllBets     = 0;
-    // double avgAmtPerBet       = 0.0;    // Up to user to calculate
+    unsigned maxNumBetsPerRoll      = 0;
+    unsigned totNumBetsPerRoll      = 0;
+    // double avgNumBetsPerRoll     = 0.0;  // Up to user to calculate
 
-    unsigned maxNumBetsPerRoll   = 0;
-    unsigned totNumBetsPerRoll   = 0;
-    // double avgNumBetsPerRoll  = 0.0;    // Up to user to calculate
+    unsigned maxNumBetsWinPerRoll   = 0;
+    unsigned totNumBetsWinPerRoll   = 0;
+    // double avgNumBetsWinPerRoll  = 0.0;  // Up to user to calculate
 
-    Gbl::Money maxAmtBetOneRoll  = 0;
-    Gbl::Money totAmtBetPerRoll  = 0;
-    // double avgAmtBetPerRoll   = 0.0;    // Up to user to calculate
+    unsigned maxNumBetsLosePerRoll  = 0;
+    unsigned totNumBetsLosePerRoll  = 0;
+    // double avgNumBetsLosePerRoll = 0.0;  // Up to user to calculate
 
-    Gbl::Money maxAmtWinOneRoll  = 0;
-    Gbl::Money totAmtWinPerRoll  = 0;
-    // double avgAmtWinPerRoll   = 0.0;    // Up to user to calculate
+    unsigned maxNumBetsKeepPerRoll  = 0;
+    unsigned totNumBetsKeepPerRoll  = 0;
+    // double avgNumBetsKeepPerRoll = 0.0;  // Up to user to calculate
 
-    Gbl::Money maxAmtLoseOneRoll = 0;
-    Gbl::Money totAmtLosePerRoll = 0;
-    // double avgAmtLosePerRoll  = 0.0;    // Up to user to calculate
+    Gbl::Money maxAmtOneBet         = 0;
+    Gbl::Money totAmtAllBets        = 0;
+    // double avgAmtPerBet          = 0.0;  // Up to user to calculate
+
+    Gbl::Money maxAmtBetOneRoll     = 0;
+    Gbl::Money totAmtBetPerRoll     = 0;
+    // double avgAmtBetPerRoll      = 0.0;  // Up to user to calculate
+
+    Gbl::Money maxAmtWinOneRoll     = 0;
+    Gbl::Money totAmtWinPerRoll     = 0;
+    // double avgAmtWinPerRoll      = 0.0;  // Up to user to calculate
+
+    Gbl::Money maxAmtLoseOneRoll    = 0;
+    Gbl::Money totAmtLosePerRoll    = 0;
+    // double avgAmtLosePerRoll     = 0.0;  // Up to user to calculate
+
+    Gbl::Money totAmtWin            = 0;
+    Gbl::Money totAmtLose           = 0;
+    // balance = totAmtWin - totAmtLose;    // Up to user to calculate
     
     // Dice Roll Stats
     
     unsigned numRolls = 0;
     unsigned numSevenOut = 0;                   // Number of times dice passed.
 
-    unsigned numCurCnsectvRollsThisShooter = 0; // Count rolls current shooter.
-    unsigned numMaxCnsectvRollsThisShooter = 0; // Longest roll ever before 7-out.
-    unsigned totCnsectvRollsPerShooter     = 0;
-    
     unsigned numComeOutRolls           = 0;
     unsigned numCurCnsectvComeOutRolls = 0;
     unsigned numMaxCnsectvComeOutRolls = 0;
@@ -271,6 +286,11 @@ public:
     unsigned numMaxCnsectvNum11 = 0;
     unsigned numMaxCnsectvNum12 = 0;
 
+    unsigned numTurnsShooter               = 0; // Same as sevenOut count
+    unsigned numCurCnsectvRollsThisShooter = 0; // Count rolls current shooter.
+    unsigned numMaxCnsectvRollsThisShooter = 0; // Longest roll ever before 7-out.
+    unsigned totCnsectvRollsPerShooter     = 0;
+    
 private:
     void incrementComeOutRolls();
     void incrementNonComeOutRolls();

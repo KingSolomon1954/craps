@@ -334,11 +334,11 @@ void
 CrapsTable::rollDice()
 {
     declareBettingClosed();
-    stats_.updateBeforeThrow(getNumBetsOnTable(), getAmountOnTable());
     throwDice();
+    stats_.numRolls++;
     resolveBets();
     advanceState();      // Update point, update shooter
-    stats_.updateAfterThrow(point_, dice_, prevRoll_);
+    stats_.updateDiceRoll(point_, dice_, prevRoll_);
     declareBettingOpen();
 }
 
@@ -490,13 +490,17 @@ CrapsTable::evalOneBet(const BetIntfcPtr pBet)
 //
 // Inform Players and Bank of results.
 //
+// Update dice roll stats here, while decision list is available.
+//
 void
 CrapsTable::dispenseResults()
 {
     disburseHouseResults();
-    disbursePlayerWins();
-    disbursePlayerLoses();
-    disbursePlayerKeeps();
+    auto winStats  = disbursePlayerWins();
+    auto loseStats = disbursePlayerLoses();
+    auto numKeeps  = disbursePlayerKeeps();
+    stats_.updateBetsAfterThrow(getAmountOnTable(),
+                                winStats, loseStats, numKeeps);
 }
 
 //----------------------------------------------------------------
@@ -523,44 +527,57 @@ CrapsTable::disburseHouseResults()
 
 //----------------------------------------------------------------
 
-void
+std::pair<unsigned, Gbl::Money>
 CrapsTable::disbursePlayerWins()
 {
+    unsigned numWinningBets = 0;
+    Gbl::Money amtWinningBets = 0;
     for (const auto& r : drl_)
     {
         if (r.win > 0)
         {
             Gbl::pPlayerMgr->disburseWin(r);
+            numWinningBets++;
+            amtWinningBets += r.win;
         }
     }
+    return std::pair<unsigned, Gbl::Money>(numWinningBets, amtWinningBets);
 }
 
 //----------------------------------------------------------------
 
-void
+std::pair<unsigned, Gbl::Money>
 CrapsTable::disbursePlayerLoses()
 {
+    unsigned numLosingBets = 0;
+    Gbl::Money amtLosingBets = 0;
     for (const auto& r : drl_)
     {
         if (r.lose > 0)
         {
             Gbl::pPlayerMgr->disburseLose(r);
+            numLosingBets++;
+            amtLosingBets += r.lose;
         }
     }
+    return std::pair<unsigned, Gbl::Money>(numLosingBets, amtLosingBets);
 }
 
 //----------------------------------------------------------------
 
-void
+unsigned
 CrapsTable::disbursePlayerKeeps()
 {
+    unsigned numKeeps = 0;
     for (const auto& r : drl_)
     {
         if (!r.decision)
         {
             Gbl::pPlayerMgr->disburseKeep(r);
+            numKeeps++;
         }
     }
+    return numKeeps;
 }
 
 //----------------------------------------------------------------
@@ -775,7 +792,7 @@ CrapsTable::getNumBetsOnTable() const
 //
 // Returns the amount of money currently bet on the table.
 //
-unsigned
+Gbl::Money
 CrapsTable::getAmountOnTable() const
 {
     unsigned amount = 0;

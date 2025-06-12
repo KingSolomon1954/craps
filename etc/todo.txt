@@ -15,10 +15,15 @@ write script to copy files/assets to install locations
 design EventQueue and Events
 stats design
 stats implementation
+stats CrapsTable returns stats
+stats updates/saves alltime stats
+stats create Session summaries
+stats CrapsTable returns Session summaries
 
+(Done) Update Shooter stats 
 (Done) TimerManager compiles
-(Done) unit test for TimerManager
-(Done) eliminate GameControllerIntfc in favor of Events and EventLoop
+(Done) Unit test for TimerManager
+(Done) Eliminate GameControllerIntfc in favor of Events and EventLoop
 (Done) Implement minimal game loop
 (Done) Add getBool() to MultiLayerManager
 
