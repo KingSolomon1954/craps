@@ -38,6 +38,7 @@ CrapsTable::fromConfig(const TableId& tableId, const TableConfig& config)
     ct->tableId_   = config.tableId;
     ct->tableName_ = config.tableName;
     ct->houseBank_ = config.houseBank;
+    ct->stats_.tableId = config.tableId;
     return ct;
 }
 
@@ -58,6 +59,7 @@ CrapsTable::fromFile(const TableId& tableId)
     ct->tableId_ = tc.tableId;
     ct->tableName_ = tc.tableName;
     ct->houseBank_ = tc.houseBank;
+    ct->stats_.tableId = tc.tableId;
     return ct;
 }
 

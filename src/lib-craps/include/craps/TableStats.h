@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <string>
 #include <craps/Dice.h>
 #include <controller/Globals.h>
 #include <gen/Timepoint.h>
@@ -35,6 +36,7 @@ public:
     /// @{
     /// @}
 
+    std::string tableId;
     Gen::Timepoint sessionStart;
     Gen::Timepoint sessionEnd;
     
