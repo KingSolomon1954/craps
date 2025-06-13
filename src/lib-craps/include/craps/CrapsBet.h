@@ -49,17 +49,17 @@ public:
 
     /// @name Observers
     /// @{
-    const Gen::Uuid& playerId() const override;  // intfc
-    unsigned betId()            const override;  // intfc
-    BetName betName()           const override;  // intfc
-    unsigned pivot()            const override;  // intfc
-    unsigned contractAmount()   const override;  // intfc
-    unsigned oddsAmount()       const override;  // intfc
-    bool offComeOutRoll()       const override;  // intfc
-    bool hardwayWorking()       const override;  // intfc
-    unsigned distance()         const override;  // intfc
-    std::chrono::time_point<std::chrono::system_clock> whenCreated() const override;  // intfc
-    std::chrono::time_point<std::chrono::system_clock> whenDecided() const override;  // intfc
+    const Gen::Uuid& playerId()  const override;  // intfc
+    unsigned betId()             const override;  // intfc
+    BetName betName()            const override;  // intfc
+    unsigned pivot()             const override;  // intfc
+    unsigned contractAmount()    const override;  // intfc
+    unsigned oddsAmount()        const override;  // intfc
+    bool offComeOutRoll()        const override;  // intfc
+    bool hardwayWorking()        const override;  // intfc
+    unsigned distance()          const override;  // intfc
+    Gen::Timepoint whenCreated() const override;  // intfc
+    Gen::Timepoint whenDecided() const override;  // intfc
     
     bool operator==(const CrapsBet&) const;
     /// @}
@@ -130,8 +130,8 @@ private:
     Gbl::Money oddsAmount_ = 0;
     bool offComeOutRoll_ = true;
     unsigned distance_ = 0;  // num rolls until decision
-    std::chrono::time_point<std::chrono::system_clock> whenCreated_;
-    std::chrono::time_point<std::chrono::system_clock> whenDecided_;
+    Gen::Timepoint whenCreated_;
+    Gen::Timepoint whenDecided_;
 
     static const std::unordered_set<unsigned> pointNums_;
     static const std::unordered_set<unsigned> fieldNums_;

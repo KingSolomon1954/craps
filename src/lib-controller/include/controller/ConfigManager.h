@@ -61,6 +61,7 @@ public:
     static constexpr auto KeyDirsAdmConfig  = "dirs.admconfig";
     
     // General Config    
+    static constexpr auto KeySessionStart   = "sess.start";
     static constexpr auto KeyViewType       = "screen.viewType";
     static constexpr auto KeySoundEnabled   = "sound.enabled";
     static constexpr auto KeySoundVolume    = "sound.volume";

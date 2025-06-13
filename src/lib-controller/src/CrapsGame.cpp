@@ -56,21 +56,21 @@ CrapsGame::CrapsGame(int argc, char* argv[])
 
 //----------------------------------------------------------------
 
-Ctrl::ConfigManager*
-CrapsGame::initConfigManager(int argc, char* argv[])
-{
-    auto* p = new Ctrl::ConfigManager(argc, argv);
-    Gbl::pConfigMgr = p;
-    return p;
-}
-
-//----------------------------------------------------------------
-
 Gen::BuildInfo*
 CrapsGame::initBuildInfo()
 {
     auto p = new Gen::BuildInfo(Gbl::appNameScreen);
     Gbl::pBuildInfo = p;
+    return p;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::ConfigManager*
+CrapsGame::initConfigManager(int argc, char* argv[])
+{
+    auto* p = new Ctrl::ConfigManager(argc, argv);
+    Gbl::pConfigMgr = p;
     return p;
 }
 

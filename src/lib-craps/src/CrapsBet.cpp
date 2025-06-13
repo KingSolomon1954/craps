@@ -4,14 +4,14 @@
 //
 //----------------------------------------------------------------
 
-#include "craps/CrapsBet.h"
+#include <craps/CrapsBet.h>
 
 #include <stdexcept> // for std::invalid_argument
 #include <iostream>
-#include "craps/DecisionRecord.h"
-#include "craps/Dice.h"
-#include "gen/ErrorPass.h"
-#include "gen/StringUtils.h"
+#include <craps/DecisionRecord.h>
+#include <craps/Dice.h>
+#include <gen/ErrorPass.h>
+#include <gen/StringUtils.h>
 
 using namespace Craps;
 
@@ -90,7 +90,6 @@ CrapsBet::CrapsBet(
     , oddsAmount_(0)
     , offComeOutRoll_(true)
     , distance_(0)
-    , whenCreated_(std::chrono::system_clock::now())
 {
     validArgsCtor(); // Throws if bad args
 }
@@ -442,7 +441,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     distance_++;
     if (dr.decision)
     {
-        whenDecided_ = std::chrono::system_clock::now();
+        whenDecided_.setToNow();
     }
     return Gen::ReturnCode::Success;
 }
@@ -1317,7 +1316,7 @@ Returns the time of the bet creation.
 @return
     time of bet creation.
 */
-std::chrono::time_point<std::chrono::system_clock>
+Gen::Timepoint
 CrapsBet::whenCreated() const
 {
     return whenCreated_;
@@ -1330,7 +1329,7 @@ Returns the time the bet reached a decision.
 @return
     time of bet decision.
 */
-std::chrono::time_point<std::chrono::system_clock>
+Gen::Timepoint
 CrapsBet::whenDecided() const
 {
     return whenDecided_;

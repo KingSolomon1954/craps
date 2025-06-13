@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
+#include <gen/Timepoint.h>
 
 using namespace Ctrl;
 
@@ -146,7 +147,9 @@ ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
     cfg.set(ConfigManager::KeyViewType,     "console");
     cfg.set(ConfigManager::KeySoundEnabled, "true");
     cfg.set(ConfigManager::KeySoundVolume,  "50");
-    
+
+    Gen::Timepoint tp;
+    cfg.set(ConfigManager::KeySessionStart,        tp.toString());
     cfg.set(ConfigManager::KeyTableStart,          "LasVegas");
     cfg.set(ConfigManager::KeyTableStartLastPlyrs, "true");
     // TODO more ...

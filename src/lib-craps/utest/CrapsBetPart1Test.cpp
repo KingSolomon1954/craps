@@ -39,7 +39,7 @@ TEST_CASE("CrapsBet:Constructor")
         CHECK(b.oddsAmount() == 0);
         CHECK(b.offComeOutRoll());
         CHECK(b.distance() == 0);
-        CHECK(b.whenCreated() < std::chrono::system_clock::now());
+        CHECK(b.whenCreated().hasExpired());
 
         CrapsBet b1("Player1", BetName::PassLine, 100);
         CHECK(b1.betId() > 0);

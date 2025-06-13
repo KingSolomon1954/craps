@@ -12,6 +12,7 @@ add_library(gen STATIC
     src/MultiLayerConfig.cpp
     src/StringUtils.cpp
     src/TimerManager.cpp
+    src/Timepoint.cpp
     src/Uuid.cpp
 )
 
