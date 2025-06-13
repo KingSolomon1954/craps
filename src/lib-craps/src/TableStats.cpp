@@ -1112,10 +1112,10 @@ void
 TableStats::reset()
 {
     // Betting Stats
-    numBetsMade = 0;
-    numBetsWin  = 0;
-    numBetsLose = 0;
-    numBetsKeep = 0;
+    numBetsMade           = 0;
+    numBetsWin            = 0;
+    numBetsLose           = 0;
+    numBetsKeep           = 0;
     maxNumBetsPerRoll     = 0;
     totNumBetsPerRoll     = 0;
     maxNumBetsWinPerRoll  = 0;

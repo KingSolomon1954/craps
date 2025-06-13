@@ -8,6 +8,7 @@
 
 #include <craps/Dice.h>
 #include <controller/Globals.h>
+#include <gen/Timepoint.h>
 
 namespace Craps {
 
@@ -33,6 +34,9 @@ public:
     /// @name Observers
     /// @{
     /// @}
+
+    Gen::Timepoint sessionStart;
+    Gen::Timepoint sessionEnd;
     
     // Betting Stats
     
