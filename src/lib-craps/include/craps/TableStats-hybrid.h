@@ -118,7 +118,7 @@ public:
     // Dice Roll Stats
     
     unsigned numRolls = 0;
-    unsigned numSevenOuts = 0;              // Number of times dice passed.
+    unsigned numSevenOut = 0;                   // Number of times dice passed.
 
     unsigned numComeOutRolls           = 0;
     unsigned numCurCnsectvComeOutRolls = 0;
@@ -132,35 +132,22 @@ public:
     unsigned numPassLineLoss = 0;
     unsigned numDontPassWins = 0;
     unsigned numDontPassLoss = 0;
-    unsigned numComeWins     = 0;
-    unsigned numComeLose     = 0;
-    unsigned numDontComeWins = 0;
-    unsigned numDontComeLose = 0;
-    
-    unsigned numFieldBetWins           = 0;
-    unsigned numFieldBetLoss           = 0;
-    unsigned numCurCnsectvFieldBetWins = 0;
-    unsigned numCurCnsectvFieldBetLoss = 0;
-    unsigned numMaxCnsectvFieldBetWins = 0;
-    unsigned numMaxCnsectvFieldBetLoss = 0;
+    unsigned numFieldBetWins = 0;
+    unsigned numFieldBetLoss = 0;
     
     unsigned numCurCnsectvPassLineWins = 0;
     unsigned numCurCnsectvPassLineLoss = 0;
     unsigned numCurCnsectvDontPassWins = 0;
     unsigned numCurCnsectvDontPassLoss = 0;
-    unsigned numCurCnsectvComeWins     = 0;
-    unsigned numCurCnsectvComeLose     = 0;
-    unsigned numCurCnsectvDontComeWins = 0;
-    unsigned numCurCnsectvDontComeLose = 0;
-   
+    unsigned numCurCnsectvFieldBetWins = 0;
+    unsigned numCurCnsectvFieldBetLoss = 0;
+    
     unsigned numMaxCnsectvPassLineWins = 0;
     unsigned numMaxCnsectvPassLineLoss = 0;
     unsigned numMaxCnsectvDontPassWins = 0;
     unsigned numMaxCnsectvDontPassLoss = 0;
-    unsigned numMaxCnsectvComeWins     = 0;
-    unsigned numMaxCnsectvComeLose     = 0;
-    unsigned numMaxCnsectvDontComeWins = 0;
-    unsigned numMaxCnsectvDontComeLose = 0;
+    unsigned numMaxCnsectvFieldBetWins = 0;
+    unsigned numMaxCnsectvFieldBetLoss = 0;
     
     unsigned numSevensOnComeOutRoll  = 0; // How often  7 appeared on come out.
     unsigned numElevensOnComeOutRoll = 0; // How often 11 appeared on come out.
@@ -171,10 +158,17 @@ public:
     
     unsigned numCurCnsectvSevensOnComeOutRoll  = 0;
     unsigned numCurCnsectvElevensOnComeOutRoll = 0;
+    unsigned numCurCnsectvTwosOnComeOutRoll    = 0;
+    unsigned numCurCnsectvThreesOnComeOutRoll  = 0;
     unsigned numCurCnsectvTwelvesOnComeOutRoll = 0;
+    unsigned numCurCnsectvCrapsOnComeOutRoll   = 0;
     
     unsigned numMaxCnsectvSevensOnComeOutRoll  = 0;
+    unsigned numMaxCnsectvElevensOnComeOutRoll = 0;
+    unsigned numMaxCnsectvTwosOnComeOutRoll    = 0;
+    unsigned numMaxCnsectvThreesOnComeOutRoll  = 0;
     unsigned numMaxCnsectvTwelvesOnComeOutRoll = 0;
+    unsigned numMaxCnsectvCrapsOnComeOutRoll   = 0;
     
     unsigned numComeWinsOn4  = 0;
     unsigned numComeWinsOn5  = 0;
@@ -332,48 +326,75 @@ public:
     unsigned totCnsectvRollsPerShooter     = 0;
     
 private:
-    void countDiceNumbers  (const Dice& curRoll, const Dice& prevRoll);
-    void countComeOutRolls (unsigned point);
-    void countPointRolls   (unsigned point, unsigned roll);
-    void countShooterRolls (unsigned roll);
-    void countFieldBetWins (unsigned roll);
-    void countFieldBetLose (unsigned roll);
-    void countHardwayWins  (unsigned point, unsigned d1, unsigned d2);
-    void countHardwayLose  (unsigned point, unsigned d1, unsigned d2);
-    void countPassLineWins (unsigned roll);
-    void countPassLineLose (unsigned roll);
-    void countDontPassWins (unsigned roll);
-    void countDontPassLose (unsigned roll);
-    void countComeWins     (unsigned point, unsigned roll);
-    void countComeLose     (unsigned point, unsigned roll);
-    void countDontComeWins (unsigned point, unsigned roll);
-    void countDontComeLose (unsigned point, unsigned roll);
-    
-    void bumpPassLineWins();
-    void bumpPassLineLose();
-    void bumpDontPassWins();
-    void bumpDontPassLose();
-    void bumpComeWins();
-    void bumpComeLose();
-    void bumpDontComeWins();
-    void bumpDontComeLose();
-    void bumpSevenOuts();
-    void bumpSevensOnComeOutRoll();
-    void bumpHardwayWinsOn4();
-    void bumpHardwayLoseOn4();
-    void bumpHardwayWinsOn6();
-    void bumpHardwayLoseOn6();
-    void bumpHardwayWinsOn8();
-    void bumpHardwayLoseOn8();
-    void bumpHardwayWinsOn10();
-    void bumpHardwayLoseOn10();
-
-    void update2 (unsigned point);
-    void update3 (unsigned point);
-    void update7 (unsigned point);
+    void incrementComeOutRolls();
+    void incrementNonComeOutRolls();
+    void incrementPassLineWins();
+    void incrementPassLineLoss();
+    void incrementDontPassWins();
+    void incrementDontPassLoss();
+    void incrementFieldBetWins();
+    void incrementFieldBetLoss();
+    void incrementHardwayWinsOn4();
+    void incrementHardwayLossOn4();
+    void incrementHardwayWinsOn6();
+    void incrementHardwayLossOn6();
+    void incrementHardwayWinsOn8();
+    void incrementHardwayLossOn8();
+    void incrementHardwayWinsOn10();
+    void incrementHardwayLossOn10();
+    void incrementComeWinsOn4();
+    void incrementComeWinsOn5();
+    void incrementComeWinsOn6();
+    void incrementComeWinsOn8();
+    void incrementComeWinsOn9();
+    void incrementComeWinsOn10();
+    void incrementComeLossOn4();
+    void incrementComeLossOn5();
+    void incrementComeLossOn6();
+    void incrementComeLossOn8();
+    void incrementComeLossOn9();
+    void incrementComeLossOn10();
+    void incrementDontWinsOn4();
+    void incrementDontWinsOn5();
+    void incrementDontWinsOn6();
+    void incrementDontWinsOn8();
+    void incrementDontWinsOn9();
+    void incrementDontWinsOn10();
+    void incrementDontLossOn4();
+    void incrementDontLossOn5();
+    void incrementDontLossOn6();
+    void incrementDontLossOn8();
+    void incrementDontLossOn9();
+    void incrementDontLossOn10();
+    void incrementCrapsOnComeOutRoll();
+    void incrementTwosOnComeOutRoll();
+    void incrementThreesOnComeOutRoll();
+    void incrementSevensOnComeOutRoll();
+    void incrementElevensOnComeOutRoll();
+    void incrementTwelvesOnComeOutRoll();
+    void incrementRollsThisShooter();
+    void incrementSevenOut();
+    void resetComeOutRollCounters();
+    void update2(unsigned point);
+    void update3(unsigned point);
+    void update4(unsigned d1, unsigned d2);
+    void update5();
+    void update6(unsigned d1, unsigned d2);
+    void update7(unsigned point);
+    void update8(unsigned d1, unsigned d2);
+    void update9();
+    void update10(unsigned d1, unsigned d2);
     void update11(unsigned point);
     void update12(unsigned point);
-    void updatePointRoll(unsigned point, unsigned roll);
+    
+    Dice prevRoll_;
+    bool armed4  = false;
+    bool armed5  = false;
+    bool armed6  = false;
+    bool armed7  = false;
+    bool armed8  = false;
+    bool armed9  = false;
+    bool armed10 = false;
 };
 
 /*-----------------------------------------------------------*//**
