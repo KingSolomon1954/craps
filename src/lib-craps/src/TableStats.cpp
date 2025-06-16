@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <craps/TableStats.h>
+#include <craps/CrapsBet.h>
 #include <algorithm>
 
 using namespace Craps;
@@ -29,8 +30,8 @@ TableStats::updateDiceRoll(unsigned point,
     countShooterRolls    (roll);
     countFieldBetWins    (roll);
     countFieldBetLose    (roll);
-    countHardwayWins     (d1, d2);
-    countHardwayLose     (d1, d2);
+    countHardwayWins     (point, d1, d2);
+    countHardwayLose     (point, d1, d2);
     
     switch(roll)
     {
@@ -81,7 +82,7 @@ TableStats::countComeOutRolls(unsigned point)
         numCurCnsectvComeOutRolls++;
         numMaxCnsectvComeOutRolls =
             std::max(numMaxCnsectvComeOutRolls, numCurCnsectvComeOutRolls);
-        numCurCnsectvNonComeOutRolls = 0;
+        numCurCnsectvPointRolls = 0;
     }
 }
 
@@ -92,11 +93,11 @@ TableStats::countPointRolls(unsigned point, unsigned roll)
 {
     if (point != 0 && roll != 7)
     {
-        numNonComeOutRolls++;
-        numCurCnsectvNonComeOutRolls++;
-        numMaxCnsectvNonComeOutRolls =
-            std::max(numMaxCnsectvNonComeOutRolls,
-                     numCurCnsectvNonComeOutRolls);
+        numPointRolls++;
+        numCurCnsectvPointRolls++;
+        numMaxCnsectvPointRolls =
+            std::max(numMaxCnsectvPointRolls,
+                     numCurCnsectvPointRolls);
         numCurCnsectvComeOutRolls = 0;
     }
 }
@@ -121,13 +122,13 @@ TableStats::countShooterRolls(unsigned roll)
 void
 TableStats::countFieldBetWins(unsigned roll)
 {
-    if (fieldNums_.contains(roll))
+    if (CrapsBet::fieldNums_.contains(roll))
     {
         numFieldBetWins++;
         numCurCnsectvFieldBetWins++;
         numMaxCnsectvFieldBetWins = std::max(numMaxCnsectvFieldBetWins,
                                              numCurCnsectvFieldBetWins);
-        numCurCnsectvFieldBetLoss = 0;
+        numCurCnsectvFieldBetLose = 0;
     }
 }
 
@@ -136,12 +137,12 @@ TableStats::countFieldBetWins(unsigned roll)
 void
 TableStats::countFieldBetLose(unsigned roll)
 {
-    if (!fieldNums_.contains(roll))
+    if (!CrapsBet::fieldNums_.contains(roll))
     {
-        numFieldBetLoss++;
-        numCurCnsectvFieldBetLoss++;
-        numMaxCnsectvFieldBetLoss = std::max(numMaxCnsectvFieldBetLoss,
-                                             numCurCnsectvFieldBetLoss);
+        numFieldBetLose++;
+        numCurCnsectvFieldBetLose++;
+        numMaxCnsectvFieldBetLose = std::max(numMaxCnsectvFieldBetLose,
+                                             numCurCnsectvFieldBetLose);
         numCurCnsectvFieldBetWins = 0;
     }
 }
@@ -151,27 +152,12 @@ TableStats::countFieldBetLose(unsigned roll)
 void
 TableStats::countHardwayWins(unsigned point, unsigned d1, unsigned d2)
 {
-    if (point == 0) return;  // Assume no hardways on come out rolls
+    if (point == 0) return;  // Assume no hardways bet on come out rolls
     
-    if (d1 == d2)
+    const unsigned roll = d1 + d2;
+    if (d1 == d2 && CrapsBet::hardwayNums_.contains(roll))
     {
-        const unsigned roll = d1 + d2;
-        if (roll == 4)
-        {
-            bumpHardwayWinsOn4();
-        }
-        if (roll == 6)
-        {
-            bumpHardwayWinsOn6();
-        }
-        if (roll == 8)
-        {
-            bumpHardwayWinsOn8();
-        }
-        if (roll == 10)
-        {
-            bumpHardwayWinsOn10();
-        }
+        bumpHardwayWins(roll);
     }
 }
 
@@ -180,27 +166,20 @@ TableStats::countHardwayWins(unsigned point, unsigned d1, unsigned d2)
 void
 TableStats::countHardwayLose(unsigned point, unsigned d1, unsigned d2)
 {
-    if (point == 0) return;  // Assume no hardways on come out rolls
-    
-    if (d1 != d2)
+    if (point == 0) return;  // Assume no hardways bet on come out rolls
+
+    const unsigned roll = d1 + d2;
+    if (roll == 7)
     {
-        const unsigned roll = d1 + d2;
-        if (roll == 4 || roll == 7) 
-        {
-            bumpHardwayLoseOn4();
-        }
-        if (roll == 6 || roll == 7)
-        {
-            bumpHardwayLoseOn6();
-        }
-        if (roll == 8 || roll == 7)
-        {
-            bumpHardwayLoseOn8();
-        }
-        if (roll == 10 || roll == 7)
-        {
-            bumpHardwayLoseOn10();
-        }
+        bumpHardwayLose(4);
+        bumpHardwayLose(6);
+        bumpHardwayLose(8);
+        bumpHardwayLose(10);
+    }
+    
+    if (d1 != d2 && CrapsBet::hardwayNums_.contains(roll))
+    {
+        bumpHardwayLose(roll);
     }
 }
 
@@ -319,7 +298,7 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
 {
     if (point == roll)
     {
-        countPassLinewins(roll);
+        countPassLineWins(roll);
         countDontPassLose(roll);
     }
     countComeWins(point, roll);
@@ -381,8 +360,8 @@ TableStats::bumpComeWins()
 {
     numComeWins++;
     numCurCnsectvComeWins++;
-    numMaxCnsectvComeWins = std::max(numCurCnsectvComeins,
-                                         numMaxCnsectvComeWins);
+    numMaxCnsectvComeWins = std::max(numCurCnsectvComeWins,
+                                     numMaxCnsectvComeWins);
     numCurCnsectvComeLose = 0;
 }
 
@@ -405,7 +384,7 @@ TableStats::bumpDontComeWins()
 {
     numDontComeWins++;
     numCurCnsectvDontComeWins++;
-    numMaxCnsectvDontComeWins = std::max(numCurCnsectvDontComeins,
+    numMaxCnsectvDontComeWins = std::max(numCurCnsectvDontComeWins,
                                          numMaxCnsectvDontComeWins);
     numCurCnsectvComeLose = 0;
 }
@@ -415,7 +394,7 @@ TableStats::bumpDontComeWins()
 void
 TableStats::bumpDontComeLose()
 {
-    numContComeLose++;
+    numDontComeLose++;
     numCurCnsectvDontComeLose++;
     numMaxCnsectvDontComeLose = std::max(numCurCnsectvDontComeLose,
                                          numMaxCnsectvDontComeLose);
@@ -425,97 +404,27 @@ TableStats::bumpDontComeLose()
 //-----------------------------------------------------------------
 
 void
-TableStats::bumpHardwayWinsOn4()
+TableStats::bumpHardwayWins(unsigned roll)
 {
-    numHardwayWinsOn4++;
-    numCurCnsectvHardwayWinsOn4++;
-    numMaxCnsectvHardwayWinsOn4 = std::max(numMaxCnsectvHardwayWinsOn4,
-                                           numCurCnsectvHardwayWinsOn4);
-    numCurCnsectvHardwayLoseOn4 = 0;
+    PointCounts& pc = hardwayCounts[roll];
+    pc.numWins++;
+    pc.curCnsectvWinsCount++;
+    pc.maxCnsectvWinsCount = std::max(pc.curCnsectvWinsCount,
+                                      pc.maxCnsectvWinsCount);
+    pc.curCnsectvLoseCount = 0;
 }
 
 //-----------------------------------------------------------------
 
 void
-TableStats::bumpHardwayLoseOn4()
+TableStats::bumpHardwayLose(unsigned roll)
 {
-    numHardwayLoseOn4++;
-    numCurCnsectvHardwayLoseOn4++;
-    numMaxCnsectvHardwayLoseOn4 = std::max(numMaxCnsectvHardwayLoseOn4,
-                                           numCurCnsectvHardwayLoseOn4);
-    numCurCnsectvHardwayWinsOn4 = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpHardwayWinsOn6()
-{
-    numHardwayWinsOn6++;
-    numCurCnsectvHardwayWinsOn6++;
-    numMaxCnsectvHardwayWinsOn6 = std::max(numMaxCnsectvHardwayWinsOn6,
-                                           numCurCnsectvHardwayWinsOn6);
-    numCurCnsectvHardwayLoseOn6 = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpHardwayLoseOn6()
-{
-    numHardwayLoseOn6++;
-    numCurCnsectvHardwayLoseOn6++;
-    numMaxCnsectvHardwayLoseOn6 = std::max(numMaxCnsectvHardwayLoseOn6,
-                                           numCurCnsectvHardwayLoseOn6);
-    numCurCnsectvHardwayWinsOn6 = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpHardwayWinsOn8()
-{
-    numHardwayWinsOn8++;
-    numCurCnsectvHardwayWinsOn8++;
-    numMaxCnsectvHardwayWinsOn8 = std::max(numMaxCnsectvHardwayWinsOn8,
-                                           numCurCnsectvHardwayWinsOn8);
-    numCurCnsectvHardwayLoseOn8 = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpHardwayLoseOn8()
-{
-    numHardwayLoseOn8++;
-    numCurCnsectvHardwayLoseOn8++;
-    numMaxCnsectvHardwayLoseOn8 = std::max(numMaxCnsectvHardwayLoseOn8,
-                                           numCurCnsectvHardwayLoseOn8);
-    numCurCnsectvHardwayWinsOn8 = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpHardwayWinsOn10()
-{
-    numHardwayWinsOn10++;
-    numCurCnsectvHardwayWinsOn10++;
-    numMaxCnsectvHardwayWinsOn10 = std::max(numMaxCnsectvHardwayWinsOn10,
-                                            numCurCnsectvHardwayWinsOn10);
-    numCurCnsectvHardwayLoseOn10 = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpHardwayLoseOn10()
-{
-    numHardwayLossOn10++;
-    numCurCnsectvHardwayLossOn10++;
-    numMaxCnsectvHardwayLossOn10 = std::max(numMaxCnsectvHardwayLossOn10,
-                                            numCurCnsectvHardwayLossOn10);
-    numCurCnsectvHardwayWinsOn10 = 0;
+    PointCounts& pc = hardwayCounts[roll];
+    pc.numLose++;
+    pc.curCnsectvLoseCount++;
+    pc.maxCnsectvLoseCount = std::max(pc.curCnsectvLoseCount,
+                                      pc.maxCnsectvLoseCount);
+    pc.curCnsectvWinsCount = 0;
 }
 
 //-----------------------------------------------------------------
@@ -542,7 +451,7 @@ TableStats::countPassLineWins(unsigned roll)
     pc.curCnsectvWinsCount++;
     pc.maxCnsectvWinsCount =
         std::max(pc.curCnsectvWinsCount, pc.maxCnsectvWinsCount);
-    pc.curCnsectvLossCount = 0;
+    pc.curCnsectvLoseCount = 0;
 }
 
 //----------------------------------------------------------------
@@ -572,7 +481,7 @@ TableStats::countDontPassWins(unsigned roll)
     pc.curCnsectvWinsCount++;
     pc.maxCnsectvWinsCount =
         std::max(pc.curCnsectvWinsCount, pc.maxCnsectvWinsCount);
-    pc.curCnsectvLossCount = 0;
+    pc.curCnsectvLoseCount = 0;
 }
 
 //----------------------------------------------------------------
@@ -605,7 +514,7 @@ TableStats::countComeWins(unsigned point, unsigned roll)
         pc.maxCnsectvWinsCount =
             std::max(pc.curCnsectvWinsCount, pc.maxCnsectvWinsCount);
         pc.armed = false;
-        pc.curCnsectvLossCount = 0;
+        pc.curCnsectvLoseCount = 0;
     }
 
     // May need to arm the next come bet for this number
@@ -654,7 +563,7 @@ TableStats::countDontComeWins(unsigned point, unsigned roll)
         pc.maxCnsectvWinsCount =
             std::max(pc.curCnsectvWinsCount, pc.maxCnsectvWinsCount);
         pc.armed = false;
-        pc.curCnsectvLossCount = 0;
+        pc.curCnsectvLoseCount = 0;
     }
 
     // May need to arm the next dont come bet for this number
@@ -818,203 +727,90 @@ TableStats::reset()
     totAmtLose            = 0;
 
     // Dice Roll Stats
-    numRolls                     = 0;
-    numSevenOuts                 = 0;
+    numRolls     = 0;
+    numSevenOuts = 0;
+
+    numComeOutRolls           = 0;
+    numCurCnsectvComeOutRolls = 0;
+    numMaxCnsectvComeOutRolls = 0;
     
-    numComeOutRolls              = 0;
-    numNonComeOutRolls           = 0;
-    numCurCnsectvComeOutRolls    = 0;
-    numCurCnsectvNonComeOutRolls = 0;
-    numMaxCnsectvComeOutRolls    = 0;
-    numMaxCnsectvNonComeOutRolls = 0;
-
+    numPointRolls           = 0;
+    numCurCnsectvPointRolls = 0;
+    numMaxCnsectvPointRolls = 0;
+    
     numPassLineWins = 0;
-    numPassLineLoss = 0;
+    numPassLineLose = 0;
     numDontPassWins = 0;
-    numDontPassLoss = 0;
-    numFieldBetWins = 0;
-    numFieldBetLoss = 0;
-
-    numCurCnsectvPassLineWins = 0;
-    numCurCnsectvPassLineLoss = 0;
-    numCurCnsectvDontPassWins = 0;
-    numCurCnsectvDontPassLoss = 0;
+    numDontPassLose = 0;
+    numComeWins     = 0;
+    numComeLose     = 0;
+    numDontComeWins = 0;
+    numDontComeLose = 0;
+    
+    numFieldBetWins           = 0;
+    numFieldBetLose           = 0;
     numCurCnsectvFieldBetWins = 0;
-    numCurCnsectvFieldBetLoss = 0;
-
-    numMaxCnsectvPassLineWins = 0;
-    numMaxCnsectvPassLineLoss = 0;
-    numMaxCnsectvDontPassWins = 0;
-    numMaxCnsectvDontPassLoss = 0;
+    numCurCnsectvFieldBetLose = 0;
     numMaxCnsectvFieldBetWins = 0;
-    numMaxCnsectvFieldBetLoss = 0;
-
-    numSevensOnComeOutRoll  = 0;
+    numMaxCnsectvFieldBetLose = 0;
+    
+    numCurCnsectvPassLineWins = 0;
+    numCurCnsectvPassLineLose = 0;
+    numCurCnsectvDontPassWins = 0;
+    numCurCnsectvDontPassLose = 0;
+    numCurCnsectvComeWins     = 0;
+    numCurCnsectvComeLose     = 0;
+    numCurCnsectvDontComeWins = 0;
+    numCurCnsectvDontComeLose = 0;
+   
+    numMaxCnsectvPassLineWins = 0;
+    numMaxCnsectvPassLineLose = 0;
+    numMaxCnsectvDontPassWins = 0;
+    numMaxCnsectvDontPassLose = 0;
+    numMaxCnsectvComeWins     = 0;
+    numMaxCnsectvComeLose     = 0;
+    numMaxCnsectvDontComeWins = 0;
+    numMaxCnsectvDontComeLose = 0;
+    
+    numSevensOnComeOutRoll            = 0;
+    numMaxCnsectvSevensOnComeOutRoll  = 0;
+    numCurCnsectvSevensOnComeOutRoll  = 0;
+    
     numElevensOnComeOutRoll = 0;
     numTwosOnComeOutRoll    = 0;
     numThreesOnComeOutRoll  = 0;
     numTwelvesOnComeOutRoll = 0;
     numCrapsOnComeOutRoll   = 0;
 
-    numCurCnsectvSevensOnComeOutRoll  = 0;
-    numCurCnsectvElevensOnComeOutRoll = 0;
-    numCurCnsectvTwelvesOnComeOutRoll = 0;
-
-    numMaxCnsectvSevensOnComeOutRoll  = 0;
-    numMaxCnsectvTwosOnComeOutRoll    = 0;
-    numMaxCnsectvThreesOnComeOutRoll  = 0;
-    numMaxCnsectvTwelvesOnComeOutRoll = 0;
-    numMaxCnsectvCrapsOnComeOutRoll   = 0;
-
-    numComeWinsOn4  = 0;
-    numComeWinsOn5  = 0;
-    numComeWinsOn6  = 0;
-    numComeWinsOn8  = 0;
-    numComeWinsOn9  = 0;
-    numComeWinsOn10 = 0;
-
-    numMaxCnsectvComeWinsOn4  = 0;
-    numMaxCnsectvComeWinsOn5  = 0;
-    numMaxCnsectvComeWinsOn6  = 0;
-    numMaxCnsectvComeWinsOn8  = 0;
-    numMaxCnsectvComeWinsOn9  = 0;
-    numMaxCnsectvComeWinsOn10 = 0;
-
-    numCurCnsectvComeWinsOn4  = 0;
-    numCurCnsectvComeWinsOn5  = 0;
-    numCurCnsectvComeWinsOn6  = 0;
-    numCurCnsectvComeWinsOn8  = 0;
-    numCurCnsectvComeWinsOn9  = 0;
-    numCurCnsectvComeWinsOn10 = 0;
-
-    numComeLossOn4  = 0;
-    numComeLossOn5  = 0;
-    numComeLossOn6  = 0;
-    numComeLossOn8  = 0;
-    numComeLossOn9  = 0;
-    numComeLossOn10 = 0;
-
-    numMaxCnsectvComeLossOn4  = 0;
-    numMaxCnsectvComeLossOn5  = 0;
-    numMaxCnsectvComeLossOn6  = 0;
-    numMaxCnsectvComeLossOn8  = 0;
-    numMaxCnsectvComeLossOn9  = 0;
-    numMaxCnsectvComeLossOn10 = 0;
-
-    numCurCnsectvComeLossOn4  = 0;
-    numCurCnsectvComeLossOn5  = 0;
-    numCurCnsectvComeLossOn6  = 0;
-    numCurCnsectvComeLossOn8  = 0;
-    numCurCnsectvComeLossOn9  = 0;
-    numCurCnsectvComeLossOn10 = 0;
-
-    numDontWinsOn4  = 0;
-    numDontWinsOn5  = 0;
-    numDontWinsOn6  = 0;
-    numDontWinsOn8  = 0;
-    numDontWinsOn9  = 0;
-    numDontWinsOn10 = 0;
-
-    numMaxCnsectvDontWinsOn4  = 0;
-    numMaxCnsectvDontWinsOn5  = 0;
-    numMaxCnsectvDontWinsOn6  = 0;
-    numMaxCnsectvDontWinsOn8  = 0;
-    numMaxCnsectvDontWinsOn9  = 0;
-    numMaxCnsectvDontWinsOn10 = 0;
-
-    numCurCnsectvDontWinsOn4  = 0;
-    numCurCnsectvDontWinsOn5  = 0;
-    numCurCnsectvDontWinsOn6  = 0;
-    numCurCnsectvDontWinsOn8  = 0;
-    numCurCnsectvDontWinsOn9  = 0;
-    numCurCnsectvDontWinsOn10 = 0;
-
-    numDontLossOn4  = 0;
-    numDontLossOn5  = 0;
-    numDontLossOn6  = 0;
-    numDontLossOn8  = 0;
-    numDontLossOn9  = 0;
-    numDontLossOn10 = 0;
-
-    numMaxCnsectvDontLossOn4  = 0;
-    numMaxCnsectvDontLossOn5  = 0;
-    numMaxCnsectvDontLossOn6  = 0;
-    numMaxCnsectvDontLossOn8  = 0;
-    numMaxCnsectvDontLossOn9  = 0;
-    numMaxCnsectvDontLossOn10 = 0;
-
-    numCurCnsectvDontLossOn4  = 0;
-    numCurCnsectvDontLossOn5  = 0;
-    numCurCnsectvDontLossOn6  = 0;
-    numCurCnsectvDontLossOn8  = 0;
-    numCurCnsectvDontLossOn9  = 0;
-    numCurCnsectvDontLossOn10 = 0;
-
     numHardwayWinsOn4  = 0;
     numHardwayWinsOn6  = 0;
     numHardwayWinsOn8  = 0;
     numHardwayWinsOn10 = 0;
-
+    
     numCurCnsectvHardwayWinsOn4  = 0;
     numCurCnsectvHardwayWinsOn6  = 0;
     numCurCnsectvHardwayWinsOn8  = 0;
     numCurCnsectvHardwayWinsOn10 = 0;
-
+    
     numMaxCnsectvHardwayWinsOn4  = 0;
     numMaxCnsectvHardwayWinsOn6  = 0;
     numMaxCnsectvHardwayWinsOn8  = 0;
     numMaxCnsectvHardwayWinsOn10 = 0;
-
-    numHardwayLossOn4  = 0;
-    numHardwayLossOn6  = 0;
-    numHardwayLossOn8  = 0;
-    numHardwayLossOn10 = 0;
-
-    numCurCnsectvHardwayLossOn4  = 0;
-    numCurCnsectvHardwayLossOn6  = 0;
-    numCurCnsectvHardwayLossOn8  = 0;
-    numCurCnsectvHardwayLossOn10 = 0;
-
-    numMaxCnsectvHardwayLossOn4  = 0;
-    numMaxCnsectvHardwayLossOn6  = 0;
-    numMaxCnsectvHardwayLossOn8  = 0;
-    numMaxCnsectvHardwayLossOn10 = 0;
-
-    num2  = 0;
-    num3  = 0;
-    num4  = 0;
-    num5  = 0;
-    num6  = 0;
-    num7  = 0;
-    num8  = 0;
-    num9  = 0;
-    num10 = 0;
-    num11 = 0;
-    num12 = 0;
-
-    numCurCnsectvNum2  = 0;
-    numCurCnsectvNum3  = 0;
-    numCurCnsectvNum4  = 0;
-    numCurCnsectvNum5  = 0;
-    numCurCnsectvNum6  = 0;
-    numCurCnsectvNum7  = 0;
-    numCurCnsectvNum8  = 0;
-    numCurCnsectvNum9  = 0;
-    numCurCnsectvNum10 = 0;
-    numCurCnsectvNum11 = 0;
-    numCurCnsectvNum12 = 0;
-
-    numMaxCnsectvNum2  = 0;
-    numMaxCnsectvNum3  = 0;
-    numMaxCnsectvNum4  = 0;
-    numMaxCnsectvNum5  = 0;
-    numMaxCnsectvNum6  = 0;
-    numMaxCnsectvNum7  = 0;
-    numMaxCnsectvNum8  = 0;
-    numMaxCnsectvNum9  = 0;
-    numMaxCnsectvNum10 = 0;
-    numMaxCnsectvNum11 = 0;
-    numMaxCnsectvNum12 = 0;
+    
+    numHardwayLoseOn4  = 0;
+    numHardwayLoseOn6  = 0;
+    numHardwayLoseOn8  = 0;
+    numHardwayLoseOn10 = 0;
+    
+    numCurCnsectvHardwayLoseOn4  = 0;
+    numCurCnsectvHardwayLoseOn6  = 0;
+    numCurCnsectvHardwayLoseOn8  = 0;
+    numCurCnsectvHardwayLoseOn10 = 0;
+    
+    numMaxCnsectvHardwayLoseOn4  = 0;
+    numMaxCnsectvHardwayLoseOn6  = 0;
+    numMaxCnsectvHardwayLoseOn8  = 0;
+    numMaxCnsectvHardwayLoseOn10 = 0;
     
     numTurnsShooter               = 0;
     numCurCnsectvRollsThisShooter = 0;

@@ -20,26 +20,27 @@ public:
 
     struct NumberCounts
     {
-        unsigned count;
-        unsigned curCnsectvCount;
-        unsigned maxCnsectvCount;
+        unsigned count = 0;
+        unsigned curCnsectvCount = 0;
+        unsigned maxCnsectvCount = 0;
     };
     std::array<NumberCounts, 13> numberCounts {};  // Index 2-12 used
 
     struct PointCounts
     {
-        unsigned numWins;
-        unsigned numLoss;
-        bool armed;
-        unsigned curCnsectvWinsCount;
-        unsigned maxCnsectvWinsCount;
-        unsigned curCnsectvLossCount;
-        unsigned maxCnsectvLossCount;
+        unsigned numWins = 0;
+        unsigned numLose = 0;
+        bool armed = false;
+        unsigned curCnsectvWinsCount = 0;
+        unsigned maxCnsectvWinsCount = 0;
+        unsigned curCnsectvLoseCount = 0;
+        unsigned maxCnsectvLoseCount = 0;
     };
     std::array<PointCounts, 11> passLineCounts {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> dontPassCounts {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> comeCounts     {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> dontComeCounts {};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> hardwayCounts  {};  // Index 4,6,8,10 used
     
     /// @name Lifecycle
     /// @{
@@ -54,10 +55,7 @@ public:
                               const std::pair<unsigned, Gbl::Money>& loseStats,
                               unsigned numKeeps);
     void updateDiceRoll(unsigned point, const Dice& curRoll, const Dice& prevRoll);
-    void updateDiceRoll2(unsigned point, const Dice& curRoll, const Dice& prevRoll);
     void reset();
-    
-    void updateNumberCounts(const Dice& curRoll, const Dice& prevRoll);
     /// @}
 
     /// @name Observers
@@ -117,149 +115,61 @@ public:
     
     // Dice Roll Stats
     
-    unsigned numRolls = 0;
+    unsigned numRolls     = 0;
     unsigned numSevenOuts = 0;              // Number of times dice passed.
 
     unsigned numComeOutRolls           = 0;
     unsigned numCurCnsectvComeOutRolls = 0;
     unsigned numMaxCnsectvComeOutRolls = 0;
     
-    unsigned numNonComeOutRolls           = 0;
-    unsigned numCurCnsectvNonComeOutRolls = 0;
-    unsigned numMaxCnsectvNonComeOutRolls = 0;
+    unsigned numPointRolls           = 0;
+    unsigned numCurCnsectvPointRolls = 0;
+    unsigned numMaxCnsectvPointRolls = 0;
     
     unsigned numPassLineWins = 0;
-    unsigned numPassLineLoss = 0;
+    unsigned numPassLineLose = 0;
     unsigned numDontPassWins = 0;
-    unsigned numDontPassLoss = 0;
+    unsigned numDontPassLose = 0;
     unsigned numComeWins     = 0;
     unsigned numComeLose     = 0;
     unsigned numDontComeWins = 0;
     unsigned numDontComeLose = 0;
     
     unsigned numFieldBetWins           = 0;
-    unsigned numFieldBetLoss           = 0;
+    unsigned numFieldBetLose           = 0;
     unsigned numCurCnsectvFieldBetWins = 0;
-    unsigned numCurCnsectvFieldBetLoss = 0;
+    unsigned numCurCnsectvFieldBetLose = 0;
     unsigned numMaxCnsectvFieldBetWins = 0;
-    unsigned numMaxCnsectvFieldBetLoss = 0;
+    unsigned numMaxCnsectvFieldBetLose = 0;
     
     unsigned numCurCnsectvPassLineWins = 0;
-    unsigned numCurCnsectvPassLineLoss = 0;
+    unsigned numCurCnsectvPassLineLose = 0;
     unsigned numCurCnsectvDontPassWins = 0;
-    unsigned numCurCnsectvDontPassLoss = 0;
+    unsigned numCurCnsectvDontPassLose = 0;
     unsigned numCurCnsectvComeWins     = 0;
     unsigned numCurCnsectvComeLose     = 0;
     unsigned numCurCnsectvDontComeWins = 0;
     unsigned numCurCnsectvDontComeLose = 0;
    
     unsigned numMaxCnsectvPassLineWins = 0;
-    unsigned numMaxCnsectvPassLineLoss = 0;
+    unsigned numMaxCnsectvPassLineLose = 0;
     unsigned numMaxCnsectvDontPassWins = 0;
-    unsigned numMaxCnsectvDontPassLoss = 0;
+    unsigned numMaxCnsectvDontPassLose = 0;
     unsigned numMaxCnsectvComeWins     = 0;
     unsigned numMaxCnsectvComeLose     = 0;
     unsigned numMaxCnsectvDontComeWins = 0;
     unsigned numMaxCnsectvDontComeLose = 0;
     
-    unsigned numSevensOnComeOutRoll  = 0; // How often  7 appeared on come out.
+    unsigned numSevensOnComeOutRoll            = 0; // How often 7 appeared on come out.
+    unsigned numMaxCnsectvSevensOnComeOutRoll  = 0;
+    unsigned numCurCnsectvSevensOnComeOutRoll  = 0;
+    
     unsigned numElevensOnComeOutRoll = 0; // How often 11 appeared on come out.
     unsigned numTwosOnComeOutRoll    = 0; // How often  2 appeared on come out.
     unsigned numThreesOnComeOutRoll  = 0; // How often  3 appeared on come out.
     unsigned numTwelvesOnComeOutRoll = 0; // How often 12 appeared on come out.
     unsigned numCrapsOnComeOutRoll   = 0; // How often craps on come out.
-    
-    unsigned numCurCnsectvSevensOnComeOutRoll  = 0;
-    unsigned numCurCnsectvElevensOnComeOutRoll = 0;
-    unsigned numCurCnsectvTwelvesOnComeOutRoll = 0;
-    
-    unsigned numMaxCnsectvSevensOnComeOutRoll  = 0;
-    unsigned numMaxCnsectvTwelvesOnComeOutRoll = 0;
-    
-    unsigned numComeWinsOn4  = 0;
-    unsigned numComeWinsOn5  = 0;
-    unsigned numComeWinsOn6  = 0;
-    unsigned numComeWinsOn8  = 0;
-    unsigned numComeWinsOn9  = 0;
-    unsigned numComeWinsOn10 = 0;
-    
-    unsigned numMaxCnsectvComeWinsOn4  = 0;
-    unsigned numMaxCnsectvComeWinsOn5  = 0;
-    unsigned numMaxCnsectvComeWinsOn6  = 0;
-    unsigned numMaxCnsectvComeWinsOn8  = 0;
-    unsigned numMaxCnsectvComeWinsOn9  = 0;
-    unsigned numMaxCnsectvComeWinsOn10 = 0;
-    
-    unsigned numCurCnsectvComeWinsOn4  = 0;
-    unsigned numCurCnsectvComeWinsOn5  = 0;
-    unsigned numCurCnsectvComeWinsOn6  = 0;
-    unsigned numCurCnsectvComeWinsOn8  = 0;
-    unsigned numCurCnsectvComeWinsOn9  = 0;
-    unsigned numCurCnsectvComeWinsOn10 = 0;
-    
-    unsigned numComeLossOn4  = 0;
-    unsigned numComeLossOn5  = 0;
-    unsigned numComeLossOn6  = 0;
-    unsigned numComeLossOn8  = 0;
-    unsigned numComeLossOn9  = 0;
-    unsigned numComeLossOn10 = 0;
-    
-    unsigned numMaxCnsectvComeLossOn4  = 0;
-    unsigned numMaxCnsectvComeLossOn5  = 0;
-    unsigned numMaxCnsectvComeLossOn6  = 0;
-    unsigned numMaxCnsectvComeLossOn8  = 0;
-    unsigned numMaxCnsectvComeLossOn9  = 0;
-    unsigned numMaxCnsectvComeLossOn10 = 0;
-    
-    unsigned numCurCnsectvComeLossOn4  = 0;
-    unsigned numCurCnsectvComeLossOn5  = 0;
-    unsigned numCurCnsectvComeLossOn6  = 0;
-    unsigned numCurCnsectvComeLossOn8  = 0;
-    unsigned numCurCnsectvComeLossOn9  = 0;
-    unsigned numCurCnsectvComeLossOn10 = 0;
-    
-    unsigned numDontWinsOn4  = 0;
-    unsigned numDontWinsOn5  = 0;
-    unsigned numDontWinsOn6  = 0;
-    unsigned numDontWinsOn8  = 0;
-    unsigned numDontWinsOn9  = 0;
-    unsigned numDontWinsOn10 = 0;
-    
-    unsigned numMaxCnsectvDontWinsOn4  = 0;
-    unsigned numMaxCnsectvDontWinsOn5  = 0;
-    unsigned numMaxCnsectvDontWinsOn6  = 0;
-    unsigned numMaxCnsectvDontWinsOn8  = 0;
-    unsigned numMaxCnsectvDontWinsOn9  = 0;
-    unsigned numMaxCnsectvDontWinsOn10 = 0;
-    
-    unsigned numCurCnsectvDontWinsOn4  = 0;
-    unsigned numCurCnsectvDontWinsOn5  = 0;
-    unsigned numCurCnsectvDontWinsOn6  = 0;
-    unsigned numCurCnsectvDontWinsOn8  = 0;
-    unsigned numCurCnsectvDontWinsOn9  = 0;
-    unsigned numCurCnsectvDontWinsOn10 = 0;
-    
-    unsigned numDontLossOn4  = 0;
-    unsigned numDontLossOn5  = 0;
-    unsigned numDontLossOn6  = 0;
-    unsigned numDontLossOn8  = 0;
-    unsigned numDontLossOn9  = 0;
-    unsigned numDontLossOn10 = 0;
-   
-    unsigned numMaxCnsectvDontLossOn4  = 0;
-    unsigned numMaxCnsectvDontLossOn5  = 0;
-    unsigned numMaxCnsectvDontLossOn6  = 0;
-    unsigned numMaxCnsectvDontLossOn8  = 0;
-    unsigned numMaxCnsectvDontLossOn9  = 0;
-    unsigned numMaxCnsectvDontLossOn10 = 0;
-    
-    unsigned numCurCnsectvDontLossOn4  = 0;
-    unsigned numCurCnsectvDontLossOn5  = 0;
-    unsigned numCurCnsectvDontLossOn6  = 0;
-    unsigned numCurCnsectvDontLossOn8  = 0;
-    unsigned numCurCnsectvDontLossOn9  = 0;
-    unsigned numCurCnsectvDontLossOn10 = 0;
-    
+
     unsigned numHardwayWinsOn4  = 0;
     unsigned numHardwayWinsOn6  = 0;
     unsigned numHardwayWinsOn8  = 0;
@@ -275,57 +185,21 @@ public:
     unsigned numMaxCnsectvHardwayWinsOn8  = 0;
     unsigned numMaxCnsectvHardwayWinsOn10 = 0;
     
-    unsigned numHardwayLossOn4  = 0;
-    unsigned numHardwayLossOn6  = 0;
-    unsigned numHardwayLossOn8  = 0;
-    unsigned numHardwayLossOn10 = 0;
+    unsigned numHardwayLoseOn4  = 0;
+    unsigned numHardwayLoseOn6  = 0;
+    unsigned numHardwayLoseOn8  = 0;
+    unsigned numHardwayLoseOn10 = 0;
     
-    unsigned numCurCnsectvHardwayLossOn4  = 0;
-    unsigned numCurCnsectvHardwayLossOn6  = 0;
-    unsigned numCurCnsectvHardwayLossOn8  = 0;
-    unsigned numCurCnsectvHardwayLossOn10 = 0;
+    unsigned numCurCnsectvHardwayLoseOn4  = 0;
+    unsigned numCurCnsectvHardwayLoseOn6  = 0;
+    unsigned numCurCnsectvHardwayLoseOn8  = 0;
+    unsigned numCurCnsectvHardwayLoseOn10 = 0;
     
-    unsigned numMaxCnsectvHardwayLossOn4  = 0;
-    unsigned numMaxCnsectvHardwayLossOn6  = 0;
-    unsigned numMaxCnsectvHardwayLossOn8  = 0;
-    unsigned numMaxCnsectvHardwayLossOn10 = 0;
+    unsigned numMaxCnsectvHardwayLoseOn4  = 0;
+    unsigned numMaxCnsectvHardwayLoseOn6  = 0;
+    unsigned numMaxCnsectvHardwayLoseOn8  = 0;
+    unsigned numMaxCnsectvHardwayLoseOn10 = 0;
     
-    unsigned num2  = 0;
-    unsigned num3  = 0;
-    unsigned num4  = 0;
-    unsigned num5  = 0;
-    unsigned num6  = 0;
-    unsigned num7  = 0;
-    unsigned num8  = 0;
-    unsigned num9  = 0;
-    unsigned num10 = 0;
-    unsigned num11 = 0;
-    unsigned num12 = 0;
-    
-    unsigned numCurCnsectvNum2  = 0;
-    unsigned numCurCnsectvNum3  = 0;
-    unsigned numCurCnsectvNum4  = 0;
-    unsigned numCurCnsectvNum5  = 0;
-    unsigned numCurCnsectvNum6  = 0;
-    unsigned numCurCnsectvNum7  = 0;
-    unsigned numCurCnsectvNum8  = 0;
-    unsigned numCurCnsectvNum9  = 0;
-    unsigned numCurCnsectvNum10 = 0;
-    unsigned numCurCnsectvNum11 = 0;
-    unsigned numCurCnsectvNum12 = 0;
-
-    unsigned numMaxCnsectvNum2  = 0;
-    unsigned numMaxCnsectvNum3  = 0;
-    unsigned numMaxCnsectvNum4  = 0;
-    unsigned numMaxCnsectvNum5  = 0;
-    unsigned numMaxCnsectvNum6  = 0;
-    unsigned numMaxCnsectvNum7  = 0;
-    unsigned numMaxCnsectvNum8  = 0;
-    unsigned numMaxCnsectvNum9  = 0;
-    unsigned numMaxCnsectvNum10 = 0;
-    unsigned numMaxCnsectvNum11 = 0;
-    unsigned numMaxCnsectvNum12 = 0;
-
     unsigned numTurnsShooter               = 0; // Same as sevenOut count
     unsigned numCurCnsectvRollsThisShooter = 0; // Count rolls current shooter.
     unsigned numMaxCnsectvRollsThisShooter = 0; // Longest roll ever before 7-out.
@@ -357,17 +231,11 @@ private:
     void bumpComeLose();
     void bumpDontComeWins();
     void bumpDontComeLose();
+    void bumpHardwayWins(unsigned roll);
+    void bumpHardwayLose(unsigned roll);
     void bumpSevenOuts();
     void bumpSevensOnComeOutRoll();
-    void bumpHardwayWinsOn4();
-    void bumpHardwayLoseOn4();
-    void bumpHardwayWinsOn6();
-    void bumpHardwayLoseOn6();
-    void bumpHardwayWinsOn8();
-    void bumpHardwayLoseOn8();
-    void bumpHardwayWinsOn10();
-    void bumpHardwayLoseOn10();
-
+    
     void update2 (unsigned point);
     void update3 (unsigned point);
     void update7 (unsigned point);

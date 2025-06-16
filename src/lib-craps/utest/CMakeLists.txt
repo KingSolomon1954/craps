@@ -10,6 +10,7 @@ add_executable(craps-ut
     CrapsBetPart2Test.cpp
     CrapsTableTest.cpp
     EnumBetNameTest.cpp
+    TableStatsTest.cpp
 )
 
 target_link_libraries(craps-ut

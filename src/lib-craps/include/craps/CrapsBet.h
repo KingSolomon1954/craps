@@ -140,6 +140,7 @@ private:
     static const std::unordered_set<unsigned> hardwayNums_;
 
     friend class CrapsTable;
+    friend class TableStats;
 };
 
 /*-----------------------------------------------------------*//**
