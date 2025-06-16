@@ -10,6 +10,11 @@
 
 using namespace Craps;
 
+TableStats::TableStats(const std::string& tableIdArg)
+    : tableId(tableIdArg)
+{
+}
+
 /*-----------------------------------------------------------*//**
 
 Update lots of stats after dice throw.
@@ -20,6 +25,7 @@ TableStats::updateDiceRoll(unsigned point,
                            const Dice& curRoll,
                            const Dice& prevRoll)
 {
+    numRolls++;
     unsigned roll = curRoll.value();
     unsigned d1   = curRoll.d1();
     unsigned d2   = curRoll.d2();
@@ -78,11 +84,7 @@ TableStats::countComeOutRolls(unsigned point)
 {
     if (point == 0)
     {
-        numComeOutRolls++;
-        numCurCnsectvComeOutRolls++;
-        numMaxCnsectvComeOutRolls =
-            std::max(numMaxCnsectvComeOutRolls, numCurCnsectvComeOutRolls);
-        numCurCnsectvPointRolls = 0;
+        comeOutRolls.bump(); pointRolls.disarm();
     }
 }
 
@@ -93,12 +95,7 @@ TableStats::countPointRolls(unsigned point, unsigned roll)
 {
     if (point != 0 && roll != 7)
     {
-        numPointRolls++;
-        numCurCnsectvPointRolls++;
-        numMaxCnsectvPointRolls =
-            std::max(numMaxCnsectvPointRolls,
-                     numCurCnsectvPointRolls);
-        numCurCnsectvComeOutRolls = 0;
+        pointRolls.bump(); comeOutRolls.disarm();
     }
 }
 
@@ -109,12 +106,10 @@ TableStats::countShooterRolls(unsigned roll)
 {
     if (roll == 7)
     {
-        numCurCnsectvRollsThisShooter = 0;
+        shooterCounts.disarm();
         return;
     }
-    numCurCnsectvRollsThisShooter++;
-    numMaxCnsectvRollsThisShooter = std::max(numMaxCnsectvRollsThisShooter,
-                                             numCurCnsectvRollsThisShooter);
+    shooterCounts.bump();
 }
 
 //-----------------------------------------------------------------
@@ -124,11 +119,7 @@ TableStats::countFieldBetWins(unsigned roll)
 {
     if (CrapsBet::fieldNums_.contains(roll))
     {
-        numFieldBetWins++;
-        numCurCnsectvFieldBetWins++;
-        numMaxCnsectvFieldBetWins = std::max(numMaxCnsectvFieldBetWins,
-                                             numCurCnsectvFieldBetWins);
-        numCurCnsectvFieldBetLose = 0;
+        fieldBetWins.bump(); fieldBetLose.disarm();
     }
 }
 
@@ -139,11 +130,7 @@ TableStats::countFieldBetLose(unsigned roll)
 {
     if (!CrapsBet::fieldNums_.contains(roll))
     {
-        numFieldBetLose++;
-        numCurCnsectvFieldBetLose++;
-        numMaxCnsectvFieldBetLose = std::max(numMaxCnsectvFieldBetLose,
-                                             numCurCnsectvFieldBetLose);
-        numCurCnsectvFieldBetWins = 0;
+        fieldBetLose.bump(); fieldBetWins.disarm();
     }
 }
 
@@ -190,15 +177,15 @@ TableStats::update2(unsigned point)
 {
     if (point == 0)
     {
-        numTwosOnComeOutRoll++;
-        numCrapsOnComeOutRoll++;
-        bumpPassLineLose();
-        bumpDontPassWins();
+        twosOnComeOutRoll.bump();  // howie fix - need to disarm
+        crapsOnComeOutRoll.bump(); // howie fix - need to disarm
+        passLineLose.bump(); passLineWins.disarm();
+        dontPassWins.bump(); dontPassLose.disarm();
     }
     else
     {
-        bumpComeLose();
-        bumpDontComeWins();
+        comeLose.bump(); comeWins.disarm();
+        dontComeWins.bump(); dontComeLose.disarm();
     }
 }
 
@@ -209,15 +196,15 @@ TableStats::update3(unsigned point)
 {
     if (point == 0)
     {
-        numThreesOnComeOutRoll++;
-        numCrapsOnComeOutRoll++;
-        bumpPassLineLose();
-        bumpDontPassWins();
+        threesOnComeOutRoll.bump(); // howie fix - need to disarm
+        crapsOnComeOutRoll.bump();  // howie fix - need to disarm
+        passLineLose.bump(); passLineWins.disarm();
+        dontPassWins.bump(); dontPassLose.disarm();
     }
     else
     {
-        bumpComeLose();
-        bumpDontComeWins();
+        comeLose.bump(); comeWins.disarm();
+        dontComeWins.bump(); dontComeLose.disarm();
     }
 }
 
@@ -228,15 +215,16 @@ TableStats::update7(unsigned point)
 {
     if (point == 0)
     {
-        bumpPassLineWins();
-        bumpDontPassLose();
-        bumpSevensOnComeOutRoll();
+        passLineWins.bump();
+        dontPassLose.bump(); dontPassWins.disarm();
+        sevensOnComeOutRoll.bump(); // howie fix - need to disarm
     }
     else
     {
-        bumpComeWins();
-        bumpDontComeLose();
-        bumpSevenOuts();
+        comeWins.bump(); comeLose.disarm();
+        dontComeLose.bump(); dontComeWins.disarm();
+        sevenOuts.bump(); // howie fix - need to disarm
+        shooterCounts.bump(); // howie fix - need to disarm
     }
 
     countComeLose(0, 4);
@@ -261,14 +249,14 @@ TableStats::update11(unsigned point)
 {
     if (point == 0)
     {
-        numElevensOnComeOutRoll++;
-        bumpPassLineWins();
-        bumpDontPassLose();
+        elevensOnComeOutRoll.bump(); // howie fix - need to disarm
+        passLineWins.bump();
+        dontPassLose.bump(); dontPassWins.disarm();
     }
     else
     {
-        bumpComeWins();
-        bumpDontComeLose();
+        comeWins.bump(); comeLose.disarm();
+        dontComeLose.bump(); dontComeWins.disarm();
     }
 }
 
@@ -279,15 +267,15 @@ TableStats::update12(unsigned point)
 {
     if (point == 0)
     {
-        numTwelvesOnComeOutRoll++;
-        numCrapsOnComeOutRoll++;
-        bumpPassLineLose();
-        // bumpDontPassWin();  // push
+        twelvesOnComeOutRoll.bump(); // howie fix - need to disarm
+        crapsOnComeOutRoll.bump();   // howie fix - need to disarm
+        passLineLose.bump(); passLineWins.disarm();
+        dontPassLose.disarm(); // dontPassWin.bump();  // push
     }
     else
     {
-        bumpComeLose();
-        // bumpDontComeWins();  // push
+        comeLose.bump(); comeWins.disarm();
+        dontComeLose.disarm(); // dontComeWins.bump(); // push
     }
 }
 
@@ -303,102 +291,6 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
     }
     countComeWins(point, roll);
     countDontComeLose(point, roll);
-}
-
-//----------------------------------------------------------------
-
-void
-TableStats::bumpPassLineWins()
-{
-    numPassLineWins++;
-    numCurCnsectvPassLineWins++;
-    numMaxCnsectvPassLineWins = std::max(numMaxCnsectvPassLineWins,
-                                         numCurCnsectvPassLineWins);
-    numCurCnsectvPassLineLose = 0;
-}
-
-//----------------------------------------------------------------
-
-void
-TableStats::bumpPassLineLose()
-{
-    numPassLineLose++;
-    numCurCnsectvPassLineLose++;
-    numMaxCnsectvPassLineLose = std::max(numMaxCnsectvPassLineLose,
-                                         numCurCnsectvPassLineLose);
-    numCurCnsectvPassLineWins = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpDontPassWins()
-{
-    numDontPassWins++;
-    numCurCnsectvDontPassWins++;
-    numMaxCnsectvDontPassWins = std::max(numMaxCnsectvDontPassWins,
-                                         numCurCnsectvDontPassWins);
-    numCurCnsectvDontPassLose = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpDontPassLose()
-{
-    numDontPassLose++;
-    numCurCnsectvDontPassLose++;
-    numMaxCnsectvDontPassLose = std::max(numMaxCnsectvDontPassLose,
-                                         numCurCnsectvDontPassLose);
-    numCurCnsectvDontPassWins = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpComeWins()
-{
-    numComeWins++;
-    numCurCnsectvComeWins++;
-    numMaxCnsectvComeWins = std::max(numCurCnsectvComeWins,
-                                     numMaxCnsectvComeWins);
-    numCurCnsectvComeLose = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpComeLose()
-{
-    numComeLose++;
-    numCurCnsectvComeLose++;
-    numMaxCnsectvComeLose = std::max(numCurCnsectvComeLose,
-                                     numMaxCnsectvComeLose);
-    numCurCnsectvComeWins = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpDontComeWins()
-{
-    numDontComeWins++;
-    numCurCnsectvDontComeWins++;
-    numMaxCnsectvDontComeWins = std::max(numCurCnsectvDontComeWins,
-                                         numMaxCnsectvDontComeWins);
-    numCurCnsectvComeLose = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpDontComeLose()
-{
-    numDontComeLose++;
-    numCurCnsectvDontComeLose++;
-    numMaxCnsectvDontComeLose = std::max(numCurCnsectvDontComeLose,
-                                         numMaxCnsectvDontComeLose);
-    numCurCnsectvDontComeWins = 0;
 }
 
 //-----------------------------------------------------------------
@@ -427,24 +319,12 @@ TableStats::bumpHardwayLose(unsigned roll)
     pc.curCnsectvWinsCount = 0;
 }
 
-//-----------------------------------------------------------------
-
-void
-TableStats::bumpSevensOnComeOutRoll()
-{
-    numSevensOnComeOutRoll++;
-    numCurCnsectvSevensOnComeOutRoll++;
-    numMaxCnsectvSevensOnComeOutRoll =
-        std::max(numMaxCnsectvSevensOnComeOutRoll,
-                 numCurCnsectvSevensOnComeOutRoll);
-}
-
 //----------------------------------------------------------------
 
 void
 TableStats::countPassLineWins(unsigned roll)
 {
-    bumpPassLineWins();
+    passLineWins.bump(); passLineLose.disarm();
     // Update stats on the number itself
     PointCounts& pc = passLineCounts[roll];
     pc.numWins++;
@@ -459,7 +339,7 @@ TableStats::countPassLineWins(unsigned roll)
 void
 TableStats::countPassLineLose(unsigned roll)
 {
-    bumpPassLineLose();
+    passLineLose.bump(); passLineWins.disarm();
     // Update stats on the number itself
     PointCounts& pc = passLineCounts[roll];
     pc.numLose++;
@@ -474,7 +354,7 @@ TableStats::countPassLineLose(unsigned roll)
 void
 TableStats::countDontPassWins(unsigned roll)
 {
-    bumpDontPassWins();
+    dontPassWins.bump(); dontPassLose.disarm();
     // Update stats on the number itself
     PointCounts& pc = dontPassCounts[roll];
     pc.numWins++;
@@ -489,7 +369,7 @@ TableStats::countDontPassWins(unsigned roll)
 void
 TableStats::countDontPassLose(unsigned roll)
 {
-    bumpDontPassLose();
+    dontPassLose.bump(); dontPassWins.disarm();
     // Update stats on the number itself
     PointCounts& pc = dontPassCounts[roll];
     pc.numLose++;
@@ -506,7 +386,7 @@ TableStats::countComeWins(unsigned point, unsigned roll)
 {
     if (comeCounts[roll].armed)  // Update per number stats
     {
-        bumpComeWins();
+        comeWins.bump(); comeLose.disarm();
         // Update stats on the number itself
         PointCounts& pc = comeCounts[roll];
         pc.numWins++;
@@ -531,7 +411,7 @@ TableStats::countComeLose(unsigned point, unsigned roll)
 {
     if (comeCounts[roll].armed)
     {
-        bumpComeLose();
+        comeLose.bump(); comeWins.disarm();
         // Update stats on the number itself
         PointCounts& pc = comeCounts[roll];
         pc.numLose++;
@@ -555,7 +435,7 @@ TableStats::countDontComeWins(unsigned point, unsigned roll)
 {
     if (dontComeCounts[roll].armed)  // Update per number stats
     {
-        bumpDontComeWins();
+        dontComeWins.bump(); dontComeLose.disarm();
         // Update stats on the number itself
         PointCounts& pc = dontComeCounts[roll];
         pc.numWins++;
@@ -580,7 +460,7 @@ TableStats::countDontComeLose(unsigned point, unsigned roll)
 {
     if (dontComeCounts[roll].armed)
     {
-        bumpDontComeLose();
+        dontComeLose.bump(); dontComeWins.disarm();
         // Update stats on the number itself
         PointCounts& pc = comeCounts[roll];
         pc.numLose++;
@@ -595,21 +475,6 @@ TableStats::countDontComeLose(unsigned point, unsigned roll)
     {
         dontComeCounts[roll].armed = true;
     }
-}
-
-//----------------------------------------------------------------
-
-void
-TableStats::bumpSevenOuts()
-{
-    numSevenOuts++;
-    // avgNumSevenOuts = (double)numSevenOuts / (double)numRolls;
-    
-    numTurnsShooter++;           // Same as sevenOut count
-    totCnsectvRollsPerShooter += numCurCnsectvRollsThisShooter;
-    numCurCnsectvRollsThisShooter = 0;
-    // avgNumRollsPerShooter = (double)totCnsectvRollsPerShooter /
-    //                         (double)numTurnsShooter;
 }
 
 /*-----------------------------------------------------------*//**
@@ -727,95 +592,73 @@ TableStats::reset()
     totAmtLose            = 0;
 
     // Dice Roll Stats
-    numRolls     = 0;
-    numSevenOuts = 0;
+    numRolls = 0;
+    comeOutRolls.reset();
+    pointRolls.reset();
+    passLineWins.reset();
+    passLineLose.reset();
+    dontPassWins.reset();
+    dontPassLose.reset();
+    comeWins.reset();
+    comeLose.reset();
+    dontComeWins.reset();
+    dontComeLose.reset();
+    fieldBetWins.reset();
+    fieldBetLose.reset();
+    sevenOuts.reset();
+    shooterCounts.reset();
+    twosOnComeOutRoll.reset();
+    threesOnComeOutRoll.reset();
+    sevensOnComeOutRoll.reset();
+    elevensOnComeOutRoll.reset();
+    twelvesOnComeOutRoll.reset();
+    crapsOnComeOutRoll.reset();
+}
 
-    numComeOutRolls           = 0;
-    numCurCnsectvComeOutRolls = 0;
-    numMaxCnsectvComeOutRolls = 0;
-    
-    numPointRolls           = 0;
-    numCurCnsectvPointRolls = 0;
-    numMaxCnsectvPointRolls = 0;
-    
-    numPassLineWins = 0;
-    numPassLineLose = 0;
-    numDontPassWins = 0;
-    numDontPassLose = 0;
-    numComeWins     = 0;
-    numComeLose     = 0;
-    numDontComeWins = 0;
-    numDontComeLose = 0;
-    
-    numFieldBetWins           = 0;
-    numFieldBetLose           = 0;
-    numCurCnsectvFieldBetWins = 0;
-    numCurCnsectvFieldBetLose = 0;
-    numMaxCnsectvFieldBetWins = 0;
-    numMaxCnsectvFieldBetLose = 0;
-    
-    numCurCnsectvPassLineWins = 0;
-    numCurCnsectvPassLineLose = 0;
-    numCurCnsectvDontPassWins = 0;
-    numCurCnsectvDontPassLose = 0;
-    numCurCnsectvComeWins     = 0;
-    numCurCnsectvComeLose     = 0;
-    numCurCnsectvDontComeWins = 0;
-    numCurCnsectvDontComeLose = 0;
-   
-    numMaxCnsectvPassLineWins = 0;
-    numMaxCnsectvPassLineLose = 0;
-    numMaxCnsectvDontPassWins = 0;
-    numMaxCnsectvDontPassLose = 0;
-    numMaxCnsectvComeWins     = 0;
-    numMaxCnsectvComeLose     = 0;
-    numMaxCnsectvDontComeWins = 0;
-    numMaxCnsectvDontComeLose = 0;
-    
-    numSevensOnComeOutRoll            = 0;
-    numMaxCnsectvSevensOnComeOutRoll  = 0;
-    numCurCnsectvSevensOnComeOutRoll  = 0;
-    
-    numElevensOnComeOutRoll = 0;
-    numTwosOnComeOutRoll    = 0;
-    numThreesOnComeOutRoll  = 0;
-    numTwelvesOnComeOutRoll = 0;
-    numCrapsOnComeOutRoll   = 0;
+//-----------------------------------------------------------------
 
-    numHardwayWinsOn4  = 0;
-    numHardwayWinsOn6  = 0;
-    numHardwayWinsOn8  = 0;
-    numHardwayWinsOn10 = 0;
-    
-    numCurCnsectvHardwayWinsOn4  = 0;
-    numCurCnsectvHardwayWinsOn6  = 0;
-    numCurCnsectvHardwayWinsOn8  = 0;
-    numCurCnsectvHardwayWinsOn10 = 0;
-    
-    numMaxCnsectvHardwayWinsOn4  = 0;
-    numMaxCnsectvHardwayWinsOn6  = 0;
-    numMaxCnsectvHardwayWinsOn8  = 0;
-    numMaxCnsectvHardwayWinsOn10 = 0;
-    
-    numHardwayLoseOn4  = 0;
-    numHardwayLoseOn6  = 0;
-    numHardwayLoseOn8  = 0;
-    numHardwayLoseOn10 = 0;
-    
-    numCurCnsectvHardwayLoseOn4  = 0;
-    numCurCnsectvHardwayLoseOn6  = 0;
-    numCurCnsectvHardwayLoseOn8  = 0;
-    numCurCnsectvHardwayLoseOn10 = 0;
-    
-    numMaxCnsectvHardwayLoseOn4  = 0;
-    numMaxCnsectvHardwayLoseOn6  = 0;
-    numMaxCnsectvHardwayLoseOn8  = 0;
-    numMaxCnsectvHardwayLoseOn10 = 0;
-    
-    numTurnsShooter               = 0;
-    numCurCnsectvRollsThisShooter = 0;
-    numMaxCnsectvRollsThisShooter = 0;
-    totCnsectvRollsPerShooter     = 0;
+unsigned
+TableStats::Counter::getCount()
+{
+    return count;
+}
+
+//-----------------------------------------------------------------
+
+unsigned
+TableStats::Counter::getMax()
+{
+    return maxCnsectvCount;
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::Counter::bump()
+{
+    count++;
+    armed ? curCnsectvCount++ : armed = true;
+    maxCnsectvCount = std::max(curCnsectvCount, maxCnsectvCount);
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::Counter::disarm()
+{
+    armed = false;
+    curCnsectvCount = 0;
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::Counter::reset()
+{
+    count = 0;
+    armed = false;
+    curCnsectvCount = 0;
+    maxCnsectvCount = 0;
 }
 
 //-----------------------------------------------------------------

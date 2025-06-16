@@ -45,7 +45,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b21.distance() == 1);
-        CHECK(b21.whenDecided() < b21.whenCreated());
+        CHECK(b21.whenDecided() > b21.whenCreated());
 
         // Place 4, come out, dice = 3, keep
         CrapsBet b31("Player1", BetName::Place, 100, 4);
@@ -58,7 +58,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b31.distance() == 1);
-        CHECK(b31.whenDecided() < b31.whenCreated());
+        CHECK(b31.whenDecided() > b31.whenCreated());
 
         // Place 4, come out, dice = 4, keep
         CrapsBet b41("Player1", BetName::Place, 100, 4);
@@ -71,7 +71,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b41.distance() == 1);
-        CHECK(b41.whenDecided() < b41.whenCreated());
+        CHECK(b41.whenDecided() > b41.whenCreated());
         CHECK(b41.pivot() == 4);
 
         // Place 4, come out, dice = 4, win
@@ -100,7 +100,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b51.distance() == 1);
-        CHECK(b51.whenDecided() < b51.whenCreated());
+        CHECK(b51.whenDecided() > b51.whenCreated());
         CHECK(b51.pivot() == 5);
 
         // Come out roll, dice = 5, win
@@ -129,7 +129,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b61.distance() == 1);
-        CHECK(b61.whenDecided() < b61.whenCreated());
+        CHECK(b61.whenDecided() > b61.whenCreated());
         CHECK(b61.pivot() == 6);
 
         // Come out roll, dice = 6, win
@@ -158,7 +158,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b71.distance() == 1);
-        CHECK(b71.whenDecided() < b71.whenCreated());
+        CHECK(b71.whenDecided() > b71.whenCreated());
 
         // Come out roll, dice = 7, lose
         CrapsBet b72("Player1", BetName::Place, 100, 6);
@@ -185,7 +185,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b81.distance() == 1);
-        CHECK(b81.whenDecided() < b81.whenCreated());
+        CHECK(b81.whenDecided() > b81.whenCreated());
         CHECK(b81.pivot() == 8);
 
         // Come out roll, dice = 8, win
@@ -214,7 +214,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b91.distance() == 1);
-        CHECK(b91.whenDecided() < b91.whenCreated());
+        CHECK(b91.whenDecided() > b91.whenCreated());
         CHECK(b91.pivot() == 9);
 
         // Come out roll, dice = 9, keep
@@ -243,7 +243,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b101.distance() == 1);
-        CHECK(b101.whenDecided() < b101.whenCreated());
+        CHECK(b101.whenDecided() > b101.whenCreated());
         CHECK(b101.pivot() == 10);
 
         // Come out roll, dice = 10, win
@@ -272,7 +272,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b111.distance() == 1);
-        CHECK(b111.whenDecided() < b111.whenCreated());
+        CHECK(b111.whenDecided() > b111.whenCreated());
 
         // Come out roll, dice = 12, keep
         CrapsBet b121("Player1", BetName::Place, 100, 4);
@@ -285,7 +285,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b121.distance() == 1);
-        CHECK(b121.whenDecided() < b121.whenCreated());
+        CHECK(b121.whenDecided() > b121.whenCreated());
     }
     
     SUBCASE("Point Rolls")
@@ -582,7 +582,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b21.distance() == 1);
-        CHECK(b21.whenDecided() < b21.whenCreated());
+        CHECK(b21.whenDecided() > b21.whenCreated());
 
         // Buy 4, come out, dice = 3, keep
         CrapsBet b31("Player1", BetName::Buy, 100, 4);
@@ -595,7 +595,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b31.distance() == 1);
-        CHECK(b31.whenDecided() < b31.whenCreated());
+        CHECK(b31.whenDecided() > b31.whenCreated());
 
         // Buy 4, come out, dice = 4, keep
         CrapsBet b41("Player1", BetName::Buy, 100, 4);
@@ -608,7 +608,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b41.distance() == 1);
-        CHECK(b41.whenDecided() < b41.whenCreated());
+        CHECK(b41.whenDecided() > b41.whenCreated());
         CHECK(b41.pivot() == 4);
 
         // Buy 4, come out, dice = 4, win
@@ -637,7 +637,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b51.distance() == 1);
-        CHECK(b51.whenDecided() < b51.whenCreated());
+        CHECK(b51.whenDecided() > b51.whenCreated());
         CHECK(b51.pivot() == 5);
 
         // Buy 5, come out, dice = 5, win
@@ -666,7 +666,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b61.distance() == 1);
-        CHECK(b61.whenDecided() < b61.whenCreated());
+        CHECK(b61.whenDecided() > b61.whenCreated());
         CHECK(b61.pivot() == 6);
 
         // Buy 6, come out, dice = 6, win
@@ -695,7 +695,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b71.distance() == 1);
-        CHECK(b71.whenDecided() < b71.whenCreated());
+        CHECK(b71.whenDecided() > b71.whenCreated());
 
         // Buy 6, come out, dice = 7, lose
         CrapsBet b72("Player1", BetName::Buy, 100, 6);
@@ -722,7 +722,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b81.distance() == 1);
-        CHECK(b81.whenDecided() < b81.whenCreated());
+        CHECK(b81.whenDecided() > b81.whenCreated());
         CHECK(b81.pivot() == 8);
 
         // Buy 8, come out, dice = 8, win
@@ -751,7 +751,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b91.distance() == 1);
-        CHECK(b91.whenDecided() < b91.whenCreated());
+        CHECK(b91.whenDecided() > b91.whenCreated());
         CHECK(b91.pivot() == 9);
 
         // Buy 9, come out, dice = 9, win
@@ -780,7 +780,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b101.distance() == 1);
-        CHECK(b101.whenDecided() < b101.whenCreated());
+        CHECK(b101.whenDecided() > b101.whenCreated());
         CHECK(b101.pivot() == 10);
 
         // Buy 10, come out, dice = 10, win
@@ -809,7 +809,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b111.distance() == 1);
-        CHECK(b111.whenDecided() < b111.whenCreated());
+        CHECK(b111.whenDecided() > b111.whenCreated());
 
         // Buy 4, come out, dice = 12, keep
         CrapsBet b121("Player1", BetName::Buy, 100, 4);
@@ -822,7 +822,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CHECK(dr.lose == 0);
         CHECK(dr.returnToPlayer == 0);
         CHECK(b121.distance() == 1);
-        CHECK(b121.whenDecided() < b121.whenCreated());
+        CHECK(b121.whenDecided() > b121.whenCreated());
     }
 }
 
@@ -842,7 +842,7 @@ void lay1(unsigned point, unsigned num, unsigned d1, unsigned d2)
     CHECK(dr.lose == 0);
     CHECK(dr.returnToPlayer == 0);
     CHECK(b.distance() == 1);
-    CHECK(b.whenDecided() < b.whenCreated());
+    CHECK(b.whenDecided() > b.whenCreated());
 }
 
 void lay2(unsigned point, unsigned num, unsigned d1, unsigned d2)
@@ -1014,7 +1014,7 @@ void hard3(unsigned point, unsigned num, unsigned d1, unsigned d2)
     CHECK(dr.lose == 0);
     CHECK(dr.returnToPlayer == 0);
     CHECK(b.distance() == 1);
-    CHECK(b.whenDecided() < b.whenCreated());
+    CHECK(b.whenDecided() > b.whenCreated());
 }
 
 //----------------------------------------------------------------

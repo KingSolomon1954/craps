@@ -21,6 +21,7 @@ Private Constructor.
 
 */
 CrapsTable::CrapsTable()
+    : stats_(tableId_)
 {
 }
 
