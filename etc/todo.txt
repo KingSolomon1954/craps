@@ -14,7 +14,8 @@ load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
 
-stats TableStats switch to recordWin(), recordLose(), recordKeep()
+stats TableStats needs refactoring of recordWin/Lose/Keep rolls
+stats TableStats needs fencing around recordWin/Lose/Keep rolls
 stats TableStats unit test
 stats TableStats implement "n" back dice roll sequence 
 stats TableStats serializes, deserializes
@@ -23,6 +24,7 @@ stats CrapsTable returns TableStats
 stats CrapsTable creates Session summaries
 stats CrapsTable returns Session summaries
 
+(Done) stats TableStats switch to recordWin(), recordLose(), recordKeep()
 (Done) stats design
 (Done) stats implementation
 (Done) Update Shooter stats 

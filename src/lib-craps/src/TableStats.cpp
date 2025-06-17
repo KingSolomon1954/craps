@@ -21,7 +21,7 @@ Update lots of stats after dice throw.
 
 */
 void
-TableStats::updateDiceRoll(unsigned point, const Dice& dRoll)
+TableStats::recordDiceRoll(unsigned point, const Dice& dRoll)
 {
     numRolls++;
     unsigned roll = dRoll.value();
@@ -446,87 +446,101 @@ TableStats::countDontComeLose(unsigned point, unsigned roll)
 
 /*-----------------------------------------------------------*//**
 
-Update per add bet.
+Record winning bet.
 
 */
 void
-TableStats::updateAddBet(Gbl::Money betAmount)
+TableStats::recordWin(BetName betName, unsigned pivot,
+                      Gbl::Money amtBet, Gbl::Money amtWin)
 {
-    numBetsMade++;
-    totAmtAllBets += betAmount;
-    maxAmtOneBet = std::max(betAmount, maxAmtOneBet);
+    toNumBetsAllBets++;
+    toNumWinsAllBets++;
+    totNumBetsOneRoll++;
+    totNumBetsWinOneRoll++;
+
+    totAmtAllBets    += amtBet;
+    totAmtWinAllBets += amtWin;
+    totAmtWinOneRoll += amtWin;
+    
+    curNumBetsOneRoll++;
+    curNumBetsWinOneRoll++;
+    
+    curAmtBetsOneRoll += amtBet;
+    curAmtWinOneRoll  += amtWin;
+    
+    maxAmtBetOneBet      = std::max(amtBet, maxAmtBetOneBet);
+    maxAmtBetsOneRoll    = std::max(curAmtBetsOneRoll, maxAmtBetsOneRoll);
+    maxAmtWinOneBet      = std::max(amtWin, maxAmtWinOneBet);
+    maxAmtWinOneRoll     = std::max(curAmtWinOneRoll, maxAmtWinOneRoll);
+    maxNumBetsOneRoll    = std::max(curNumBetsOneRoll, maxNumBetsOneRoll);
+    maxNumBetsWinOneRoll = std::max(curNumBetsWinOneRoll, maxNumBetsWinOneRoll);
     // avgAmtPerBet = (double)totAmtAllBets / (double)numBetsMade;
 }
 
 /*-----------------------------------------------------------*//**
 
-Update per odds bet.
+Record losing bet.
 
 */
 void
-TableStats::updateOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount)
+TableStats::recordLose(BetName betName, unsigned pivot,
+                       Gbl::Money amtBet, Gbl::Money amtLose)
 {
-    Gbl::Money amount = contractAmount + oddsAmount;
-    totAmtAllBets += oddsAmount;  // Avoid double counting contract amount
-    maxAmtOneBet = std::max(amount, maxAmtOneBet);
-    // avgAmtPerBet = (double)totAmtAllBets / (double)numBetsMade;
+    toNumBetsAllBets++;
+    toNumLoseAllBets++;
+    totNumBetsOneRoll++;
+    totNumBetsLoseOneRoll++;
+
+    totAmtAllBets     += amtBet;
+    totAmtLoseAllBets += amtLose;
+    totAmtLoseOneRoll += amtLose;
+    
+    curNumBetsOneRoll++;
+    curNumBetsLoseOneRoll++;
+        
+    curAmtBetsOneRoll += amtBet;
+    curAmtLoseOneRoll += amtLose;
+
+    maxAmtBetOneBet       = std::max(amtBet, maxAmtBetOneBet);
+    maxAmtBetsOneRoll     = std::max(curAmtBetsOneRoll, maxAmtBetsOneRoll);
+    maxAmtLoseOneBet      = std::max(amtLose, maxAmtLoseOneBet);
+    maxAmtLoseOneRoll     = std::max(curAmtLoseOneRoll, maxAmtLoseOneRoll);
+    maxNumBetsOneRoll     = std::max(curNumBetsOneRoll, maxNumBetsOneRoll);
+    maxNumBetsLoseOneRoll = std::max(curNumBetsLoseOneRoll, maxNumBetsLoseOneRoll);
 }
 
 /*-----------------------------------------------------------*//**
 
-Update various betting stats after dice throw.
+Record a keeping bet.
+
+No need to count keeps. They will eventually win or lose.
+But might want to track avg number of keeps per roll.
 
 */
 void
-TableStats::updateBetsAfterThrow(
-    Gbl::Money amtOnTable,
-    const std::pair<unsigned, Gbl::Money>& winStats,
-    const std::pair<unsigned, Gbl::Money>& loseStats,
-    unsigned numBetsKeepThisRoll)
+TableStats::recordKeep(BetName betName, unsigned pivot, Gbl::Money amtBet)
 {
-    Gbl::Money amtWinThisRoll    = winStats.second;
-    Gbl::Money amtLoseThisRoll   = loseStats.second;
-    unsigned numBetsWinThisRoll  = winStats.first;
-    unsigned numBetsLoseThisRoll = loseStats.first;
-    unsigned numBetsThisRoll     = numBetsWinThisRoll  +
-                                   numBetsLoseThisRoll +
-                                   numBetsKeepThisRoll;
+    // toNumBetsAllBets++;  // Don't count here, will be counted when win/lose
+    totNumKeepAllBets++;
+    totNumBetsOneRoll++;
+    totNumBetsKeepOneRoll++;
     
-    numBetsWin  += numBetsWinThisRoll;
-    numBetsLose += numBetsLoseThisRoll;
-    numBetsKeep += numBetsKeepThisRoll;
+    totAmtAllBets     += amtBet;
+    totAmtKeepAllBets += amtBet;
+    totAmtKeepOneRoll += amtBet;
     
-    maxNumBetsPerRoll = std::max(numBetsThisRoll, maxNumBetsPerRoll);
-    totNumBetsPerRoll += numBetsThisRoll;
-    // avgNumBetsPerRoll = (double)totNumBetsPerRoll / (double)numRolls;
-
-    maxNumBetsWinPerRoll = std::max(numBetsWinThisRoll, maxNumBetsWinPerRoll);
-    totNumBetsWinPerRoll += numBetsWinThisRoll;
-    // avgNumBetsWinPerRoll = (double)totNumBetsWinPerRoll / (double)numRolls;
-
-    maxNumBetsLosePerRoll = std::max(numBetsLoseThisRoll, maxNumBetsLosePerRoll);
-    totNumBetsLosePerRoll += numBetsLoseThisRoll;
-    // avgNumBetsLosePerRoll = (double)totNumBetsLosePerRoll / (double)numRolls;
-
-    maxNumBetsKeepPerRoll = std::max(numBetsKeepThisRoll, maxNumBetsKeepPerRoll);
-    totNumBetsKeepPerRoll += numBetsKeepThisRoll;
-    // avgNumBetsKeepPerRoll = (double)totNumBetsKeepPerRoll / (double)numRolls;
-
-    maxAmtBetOneRoll = std::max(amtOnTable, maxAmtBetOneRoll);
-    totAmtBetPerRoll += amtOnTable;
-    // avgAmtBetPerRoll = (double)totAmtBetPerRoll / (double)numRolls;
-
-    maxAmtWinOneRoll = std::max(amtWinThisRoll, maxAmtWinOneRoll);
-    totAmtWinPerRoll += amtWinThisRoll;
-    // avgAmtWinPerRoll = (double)totAmtWinPerRoll / (double)numRolls;
+    curNumBetsOneRoll++;
+    curNumBetsKeepOneRoll++;
     
-    maxAmtLoseOneRoll = std::max(amtLoseThisRoll, maxAmtLoseOneRoll);
-    totAmtLosePerRoll += amtLoseThisRoll;
-    // avgAmtLosePerRoll = (double)totAmtLosePerRoll / (double)numRolls;
+    curAmtBetsOneRoll += amtBet;
+    curAmtKeepOneRoll += amtBet;
 
-    totAmtWin  += amtWinThisRoll;
-    totAmtLose += amtLoseThisRoll;
-    // balance = totAmtWin - totAmtLose;
+    maxAmtBetOneBet       = std::max(amtBet, maxAmtBetOneBet);
+    maxAmtBetsOneRoll     = std::max(curAmtBetsOneRoll, maxAmtBetsOneRoll);
+    maxAmtKeepOneBet      = std::max(amtBet, maxAmtKeepOneBet);
+    maxAmtKeepOneRoll     = std::max(curAmtKeepOneRoll, maxAmtKeepOneRoll);
+    maxNumBetsOneRoll     = std::max(curNumBetsOneRoll, maxNumBetsOneRoll);
+    maxNumBetsKeepOneRoll = std::max(curNumBetsKeepOneRoll, maxNumBetsKeepOneRoll);
 }
 
 //-----------------------------------------------------------------
@@ -544,28 +558,43 @@ TableStats::reset()
     }
     
     // Betting Stats
-    numBetsMade           = 0;
-    numBetsWin            = 0;
-    numBetsLose           = 0;
-    numBetsKeep           = 0;
-    maxNumBetsPerRoll     = 0;
-    totNumBetsPerRoll     = 0;
-    maxNumBetsWinPerRoll  = 0;
-    totNumBetsWinPerRoll  = 0;
-    maxNumBetsLosePerRoll = 0;
-    totNumBetsLosePerRoll = 0;
-    maxNumBetsKeepPerRoll = 0;
-    totNumBetsKeepPerRoll = 0;
-    maxAmtOneBet          = 0;
+    toNumBetsAllBets      = 0;
+    toNumWinsAllBets      = 0;
+    toNumLoseAllBets      = 0;
+    totNumKeepAllBets     = 0;
     totAmtAllBets         = 0;
-    maxAmtBetOneRoll      = 0;
-    totAmtBetPerRoll      = 0;
+    totAmtWinAllBets      = 0;
+    totAmtLoseAllBets     = 0;
+    totAmtKeepAllBets     = 0;
+    maxAmtBetOneBet       = 0;
+    maxAmtWinOneBet       = 0;
+    maxAmtLoseOneBet      = 0;
+    maxAmtKeepOneBet      = 0;
+    curNumBetsOneRoll     = 0;
+    maxNumBetsOneRoll     = 0;
+    totNumBetsOneRoll     = 0;
+    curNumBetsWinOneRoll  = 0;
+    maxNumBetsWinOneRoll  = 0;
+    totNumBetsWinOneRoll  = 0;
+    curNumBetsLoseOneRoll = 0;
+    maxNumBetsLoseOneRoll = 0;
+    totNumBetsLoseOneRoll = 0;
+    curNumBetsKeepOneRoll = 0;
+    maxNumBetsKeepOneRoll = 0;
+    totNumBetsKeepOneRoll = 0;
+    curAmtBetsOneRoll     = 0;
+    maxAmtBetsOneRoll     = 0;
+    totAmtBetsOneRoll     = 0;
+    curAmtWinOneRoll      = 0;
     maxAmtWinOneRoll      = 0;
-    totAmtWinPerRoll      = 0;
+    totAmtWinOneRoll      = 0;
+    curAmtLoseOneRoll     = 0;
     maxAmtLoseOneRoll     = 0;
-    totAmtLosePerRoll     = 0;
-    totAmtWin             = 0;
-    totAmtLose            = 0;
+    totAmtLoseOneRoll     = 0;
+    curAmtKeepOneRoll     = 0;
+    maxAmtKeepOneRoll     = 0;
+    totAmtKeepOneRoll     = 0;
+
 
     // Dice Roll Stats
     numRolls = 0;

@@ -9,6 +9,7 @@
 #include <array>
 #include <string>
 #include <craps/Dice.h>
+#include <craps/EnumBetName.h>
 #include <controller/Globals.h>
 #include <gen/Timepoint.h>
 
@@ -51,13 +52,10 @@ public:
 
     /// @name Modifiers
     /// @{
-    void updateAddBet(Gbl::Money betAmount);
-    void updateOddsBet(Gbl::Money contractAmount, Gbl::Money oddsAmount);
-    void updateBetsAfterThrow(Gbl::Money amtOnTable,
-                              const std::pair<unsigned, Gbl::Money>& winStats,
-                              const std::pair<unsigned, Gbl::Money>& loseStats,
-                              unsigned numKeeps);
-    void updateDiceRoll(unsigned point, const Dice& curRoll);
+    void recordWin (BetName betName, unsigned pivot, Gbl::Money amtBet, Gbl::Money amtWin);
+    void recordLose(BetName betName, unsigned pivot, Gbl::Money amtBet, Gbl::Money amtLose);
+    void recordKeep(BetName betName, unsigned pivot, Gbl::Money amtBet);
+    void recordDiceRoll(unsigned point, const Dice& curRoll);
     void reset();
     /// @}
 
@@ -71,51 +69,66 @@ public:
     
     // Betting Stats
     
-    unsigned numBetsMade = 0;
-    unsigned numBetsWin  = 0;
-    unsigned numBetsLose = 0;
-    unsigned numBetsKeep = 0;
+    unsigned toNumBetsAllBets  = 0;
+    unsigned toNumWinsAllBets  = 0;
+    unsigned toNumLoseAllBets  = 0;
+    unsigned totNumKeepAllBets = 0;
+
+    Gbl::Money totAmtAllBets     = 0;
+    Gbl::Money totAmtWinAllBets  = 0;
+    Gbl::Money totAmtLoseAllBets = 0;
+    Gbl::Money totAmtKeepAllBets = 0;
+    // balance = totAmtWin - totAmtLose;    // Up to user to calculate
+
+    Gbl::Money maxAmtBetOneBet  = 0;
+    Gbl::Money maxAmtWinOneBet  = 0;
+    Gbl::Money maxAmtLoseOneBet = 0;
+    Gbl::Money maxAmtKeepOneBet = 0;
 
     // double winPctg =  (numBetsWin  / numBetsMade) * 100
     // double losePctg = (numBetsLose / numBetsMade) * 100
     // double pushPctg = (numBetsPush / numBetsMade) * 100
 
-    unsigned maxNumBetsPerRoll      = 0;
-    unsigned totNumBetsPerRoll      = 0;
+    unsigned curNumBetsOneRoll      = 0;
+    unsigned maxNumBetsOneRoll      = 0;
+    unsigned totNumBetsOneRoll      = 0;
     // double avgNumBetsPerRoll     = 0.0;  // Up to user to calculate
 
-    unsigned maxNumBetsWinPerRoll   = 0;
-    unsigned totNumBetsWinPerRoll   = 0;
+    unsigned curNumBetsWinOneRoll   = 0;
+    unsigned maxNumBetsWinOneRoll   = 0;
+    unsigned totNumBetsWinOneRoll   = 0;
     // double avgNumBetsWinPerRoll  = 0.0;  // Up to user to calculate
 
-    unsigned maxNumBetsLosePerRoll  = 0;
-    unsigned totNumBetsLosePerRoll  = 0;
+    unsigned curNumBetsLoseOneRoll  = 0;
+    unsigned maxNumBetsLoseOneRoll  = 0;
+    unsigned totNumBetsLoseOneRoll  = 0;
     // double avgNumBetsLosePerRoll = 0.0;  // Up to user to calculate
 
-    unsigned maxNumBetsKeepPerRoll  = 0;
-    unsigned totNumBetsKeepPerRoll  = 0;
+    unsigned curNumBetsKeepOneRoll  = 0;
+    unsigned maxNumBetsKeepOneRoll  = 0;
+    unsigned totNumBetsKeepOneRoll  = 0;
     // double avgNumBetsKeepPerRoll = 0.0;  // Up to user to calculate
 
-    Gbl::Money maxAmtOneBet         = 0;
-    Gbl::Money totAmtAllBets        = 0;
-    // double avgAmtPerBet          = 0.0;  // Up to user to calculate
-
-    Gbl::Money maxAmtBetOneRoll     = 0;
-    Gbl::Money totAmtBetPerRoll     = 0;
+    Gbl::Money curAmtBetsOneRoll    = 0;
+    Gbl::Money maxAmtBetsOneRoll    = 0;
+    Gbl::Money totAmtBetsOneRoll    = 0;
     // double avgAmtBetPerRoll      = 0.0;  // Up to user to calculate
 
+    Gbl::Money curAmtWinOneRoll     = 0;
     Gbl::Money maxAmtWinOneRoll     = 0;
-    Gbl::Money totAmtWinPerRoll     = 0;
+    Gbl::Money totAmtWinOneRoll     = 0;
     // double avgAmtWinPerRoll      = 0.0;  // Up to user to calculate
 
+    Gbl::Money curAmtLoseOneRoll    = 0;
     Gbl::Money maxAmtLoseOneRoll    = 0;
-    Gbl::Money totAmtLosePerRoll    = 0;
+    Gbl::Money totAmtLoseOneRoll    = 0;
     // double avgAmtLosePerRoll     = 0.0;  // Up to user to calculate
 
-    Gbl::Money totAmtWin            = 0;
-    Gbl::Money totAmtLose           = 0;
-    // balance = totAmtWin - totAmtLose;    // Up to user to calculate
-    
+    Gbl::Money curAmtKeepOneRoll    = 0;
+    Gbl::Money maxAmtKeepOneRoll    = 0;
+    Gbl::Money totAmtKeepOneRoll    = 0;
+    // double avgAmtLosePerRoll     = 0.0;  // Up to user to calculate
+
     // Dice Roll Stats
     unsigned numRolls = 0;
     Counter comeOutRolls;

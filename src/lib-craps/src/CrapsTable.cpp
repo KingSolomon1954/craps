@@ -133,7 +133,6 @@ CrapsTable::addBet(
     {
         BetIntfcPtr b = std::make_shared<CrapsBet>(playerId, betName, contractAmount, pivot);
         tableBets_[static_cast<size_t>(betName)].push_back(b);
-        stats_.updateAddBet(contractAmount);
         return b;
     }
     catch (const std::invalid_argument& e)
@@ -261,14 +260,12 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
         ep.prepend(diag);
         return Gen::ReturnCode::Fail;
     }
-    stats_.updateOddsBet(pBet->contractAmount(), newAmount);
-    
     return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 //
-// Given a BetIntfcPtr, dDetermine if we already have the given
+// Given a BetIntfcPtr, determine if we already have the given
 // bet on the table.
 //
 bool
@@ -310,6 +307,28 @@ CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
 
 //----------------------------------------------------------------
 //
+// Find a bet by ID.
+//
+CrapsBetIntfc*
+CrapsTable::findBetById(unsigned betId) const
+
+{
+    for (size_t i = 0; i < tableBets_.size(); ++i)
+    {
+        auto& bets = tableBets_[i];
+        for (auto& b : bets)
+        {
+            if (betId == b->betId())
+            {
+                return b.get();
+            }
+        }
+    }        
+    return nullptr;
+}
+
+//----------------------------------------------------------------
+//
 // Suppports unit testing. Not meant for callers.
 //
 void
@@ -341,7 +360,7 @@ CrapsTable::rollDice()
     stats_.numRolls++;
     resolveBets();
     advanceState();      // Update point, update shooter
-    stats_.updateDiceRoll(point_, dice_);
+    stats_.recordDiceRoll(point_, dice_);
     declareBettingOpen();
 }
 
@@ -498,11 +517,9 @@ void
 CrapsTable::dispenseResults()
 {
     disburseHouseResults();
-    auto winStats  = disbursePlayerWins();
-    auto loseStats = disbursePlayerLoses();
-    auto numKeeps  = disbursePlayerKeeps();
-    stats_.updateBetsAfterThrow(getAmountOnTable(),
-                                winStats, loseStats, numKeeps);
+    disbursePlayerWins();
+    disbursePlayerLoses();
+    disbursePlayerKeeps();
 }
 
 //----------------------------------------------------------------
@@ -529,57 +546,55 @@ CrapsTable::disburseHouseResults()
 
 //----------------------------------------------------------------
 
-std::pair<unsigned, Gbl::Money>
+void
 CrapsTable::disbursePlayerWins()
 {
-    unsigned numWinningBets = 0;
-    Gbl::Money amtWinningBets = 0;
     for (const auto& r : drl_)
     {
         if (r.win > 0)
         {
             Gbl::pPlayerMgr->disburseWin(r);
-            numWinningBets++;
-            amtWinningBets += r.win;
+            CrapsBetIntfc* pb = findBetById(r.betId);
+            stats_.recordWin(pb->betName(), pb->pivot(),
+                             pb->contractAmount() + pb->oddsAmount(),
+                             r.win);
         }
     }
-    return std::pair<unsigned, Gbl::Money>(numWinningBets, amtWinningBets);
 }
 
 //----------------------------------------------------------------
 
-std::pair<unsigned, Gbl::Money>
+void
 CrapsTable::disbursePlayerLoses()
 {
-    unsigned numLosingBets = 0;
-    Gbl::Money amtLosingBets = 0;
     for (const auto& r : drl_)
     {
         if (r.lose > 0)
         {
             Gbl::pPlayerMgr->disburseLose(r);
-            numLosingBets++;
-            amtLosingBets += r.lose;
+            CrapsBetIntfc* pb = findBetById(r.betId);
+            stats_.recordLose(pb->betName(), pb->pivot(),
+                              pb->contractAmount() + pb->oddsAmount(),
+                              r.lose);
         }
     }
-    return std::pair<unsigned, Gbl::Money>(numLosingBets, amtLosingBets);
 }
 
 //----------------------------------------------------------------
 
-unsigned
+void
 CrapsTable::disbursePlayerKeeps()
 {
-    unsigned numKeeps = 0;
     for (const auto& r : drl_)
     {
         if (!r.decision)
         {
             Gbl::pPlayerMgr->disburseKeep(r);
-            numKeeps++;
+            CrapsBetIntfc* pb = findBetById(r.betId);
+            stats_.recordKeep(pb->betName(), pb->pivot(),
+                              pb->contractAmount() + pb->oddsAmount());
         }
     }
-    return numKeeps;
 }
 
 //----------------------------------------------------------------

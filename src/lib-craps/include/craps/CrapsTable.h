@@ -149,11 +149,12 @@ private:
     void clearDrl();
     void evalOneBet(const BetIntfcPtr pBet);
     bool removeMatchingBetId(BetList& bets, unsigned betId);
+    CrapsBetIntfc* findBetById(unsigned betId) const;
 
     void disburseHouseResults();
-    std::pair<unsigned, Gbl::Money> disbursePlayerWins();
-    std::pair<unsigned, Gbl::Money> disbursePlayerLoses();
-    unsigned disbursePlayerKeeps();
+    void disbursePlayerWins();
+    void disbursePlayerLoses();
+    void disbursePlayerKeeps();
 };
 
 /*-----------------------------------------------------------*//**

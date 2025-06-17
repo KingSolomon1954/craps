@@ -123,7 +123,7 @@ TEST_CASE("TableStats:diceroll:one")
     // Initial comeout roll, dice = 2, 
     // seq: 2
     point = 0; dice.set(1,1);
-    ts.updateDiceRoll(point, dice);
+    ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 1);
     CHECK(ts.numberCounts[2].count() == 1);
     CHECK(ts.numberCounts[2].repeats() == 0);
@@ -164,7 +164,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Same roll again, dice = 2, check for consecutives
     // seq: 2,2
-    ts.updateDiceRoll(point, dice);
+    ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 2);
     CHECK(ts.numberCounts[2].count() == 2);
     CHECK(ts.numberCounts[2].repeats() == 1);
@@ -206,7 +206,7 @@ TEST_CASE("TableStats:diceroll:one")
     // Still comeout roll, dice = 3, consecutive 2's stop
     // seq: 2,2,3
     point = 0; dice.set(1,2); 
-    ts.updateDiceRoll(point, dice);
+    ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 3);
     CHECK(ts.numberCounts[2].count() == 2);
     CHECK(ts.numberCounts[2].repeats() == 1);
@@ -252,7 +252,7 @@ TEST_CASE("TableStats:diceroll:one")
     // Still comeout roll, dice = 11, win on pass line
     // seq: 2,2,3,11
     point = 0; dice.set(5,6); 
-    ts.updateDiceRoll(point, dice);
+    ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 4);
     CHECK(ts.numberCounts[2].count() == 2);
     CHECK(ts.numberCounts[2].repeats() == 1);
@@ -301,7 +301,7 @@ TEST_CASE("TableStats:diceroll:one")
     // Still comeout roll, dice = 12, lose on pass line
     // seq: 2,2,3,11,12
     point = 0; dice.set(6,6); 
-    ts.updateDiceRoll(point, dice);
+    ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 5);
     CHECK(ts.numberCounts[2].count() == 2);
     CHECK(ts.numberCounts[2].repeats() == 1);
@@ -352,7 +352,7 @@ TEST_CASE("TableStats:diceroll:one")
     // Still comeout roll, dice = 7, win on pass line
     // seq: 2,2,3,11,12,7
     point = 0; dice.set(5,2); 
-    ts.updateDiceRoll(point, dice);
+    ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 6);
     CHECK(ts.numberCounts[2].count() == 2);
     CHECK(ts.numberCounts[2].repeats() == 1);
@@ -408,7 +408,7 @@ TEST_CASE("TableStats:diceroll:one")
     // Still comeout roll, dice = 7 again, win on pass line
     // seq: 2,2,3,11,12,7,7
     point = 0; dice.set(3,4); 
-    ts.updateDiceRoll(point, dice);
+    ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 7);
     CHECK(ts.numberCounts[2].count() == 2);
     CHECK(ts.numberCounts[2].repeats() == 1);
