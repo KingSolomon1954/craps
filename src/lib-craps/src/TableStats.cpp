@@ -320,6 +320,12 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
     }
     countComeWins(point, roll);
     countDontComeLose(point, roll);
+    if (point != 0)
+    {
+        // Establish new come and dont come bets
+        comeCounts[roll].wins.armed = true;
+        dontComeCounts[roll].wins.armed = true;
+    }
 }
 
 //-----------------------------------------------------------------
@@ -328,11 +334,7 @@ void
 TableStats::bumpHardwayWins(unsigned roll)
 {
     PointCounts& pc = hardwayCounts[roll];
-    pc.numWins++;
-    pc.curCnsectvWinsCount++;
-    pc.maxCnsectvWinsCount = std::max(pc.curCnsectvWinsCount,
-                                      pc.maxCnsectvWinsCount);
-    pc.curCnsectvLoseCount = 0;
+    pc.wins.bump(); pc.lose.disarm();
 }
 
 //-----------------------------------------------------------------
@@ -341,11 +343,7 @@ void
 TableStats::bumpHardwayLose(unsigned roll)
 {
     PointCounts& pc = hardwayCounts[roll];
-    pc.numLose++;
-    pc.curCnsectvLoseCount++;
-    pc.maxCnsectvLoseCount = std::max(pc.curCnsectvLoseCount,
-                                      pc.maxCnsectvLoseCount);
-    pc.curCnsectvWinsCount = 0;
+    pc.lose.bump(); pc.wins.disarm();
 }
 
 //----------------------------------------------------------------
@@ -356,11 +354,7 @@ TableStats::countPassLineWins(unsigned roll)
     passLineWins.bump(); passLineLose.disarm();
     // Update stats on the number itself
     PointCounts& pc = passLineCounts[roll];
-    pc.numWins++;
-    pc.curCnsectvWinsCount++;
-    pc.maxCnsectvWinsCount =
-        std::max(pc.curCnsectvWinsCount, pc.maxCnsectvWinsCount);
-    pc.curCnsectvLoseCount = 0;
+    pc.wins.bump(); pc.lose.disarm();
 }
 
 //----------------------------------------------------------------
@@ -371,11 +365,7 @@ TableStats::countPassLineLose(unsigned roll)
     passLineLose.bump(); passLineWins.disarm();
     // Update stats on the number itself
     PointCounts& pc = passLineCounts[roll];
-    pc.numLose++;
-    pc.curCnsectvLoseCount++;
-    pc.maxCnsectvLoseCount =
-        std::max(pc.curCnsectvLoseCount, pc.maxCnsectvLoseCount);
-    pc.curCnsectvWinsCount = 0;
+    pc.lose.bump(); pc.wins.disarm();
 }
 
 //----------------------------------------------------------------
@@ -386,11 +376,7 @@ TableStats::countDontPassWins(unsigned roll)
     dontPassWins.bump(); dontPassLose.disarm();
     // Update stats on the number itself
     PointCounts& pc = dontPassCounts[roll];
-    pc.numWins++;
-    pc.curCnsectvWinsCount++;
-    pc.maxCnsectvWinsCount =
-        std::max(pc.curCnsectvWinsCount, pc.maxCnsectvWinsCount);
-    pc.curCnsectvLoseCount = 0;
+    pc.wins.bump(); pc.lose.disarm();
 }
 
 //----------------------------------------------------------------
@@ -401,11 +387,7 @@ TableStats::countDontPassLose(unsigned roll)
     dontPassLose.bump(); dontPassWins.disarm();
     // Update stats on the number itself
     PointCounts& pc = dontPassCounts[roll];
-    pc.numLose++;
-    pc.curCnsectvLoseCount++;
-    pc.maxCnsectvLoseCount =
-        std::max(pc.curCnsectvLoseCount, pc.maxCnsectvLoseCount);
-    pc.curCnsectvWinsCount = 0;
+    pc.lose.bump(); pc.wins.disarm();
 }
 
 //----------------------------------------------------------------
@@ -413,72 +395,47 @@ TableStats::countDontPassLose(unsigned roll)
 void
 TableStats::countComeWins(unsigned point, unsigned roll)
 {
-    if (comeCounts[roll].armed)  // Update per number stats
+    if (comeCounts[roll].wins.armed)
     {
         comeWins.bump(); comeLose.disarm();
         // Update stats on the number itself
         PointCounts& pc = comeCounts[roll];
-        pc.numWins++;
-        pc.curCnsectvWinsCount++;
-        pc.maxCnsectvWinsCount =
-            std::max(pc.curCnsectvWinsCount, pc.maxCnsectvWinsCount);
-        pc.armed = false;
-        pc.curCnsectvLoseCount = 0;
-    }
-
-    // May need to arm the next come bet for this number
-    if (point != 0)   // But only if not coming out
-    {
-        comeCounts[roll].armed = true;
+        pc.wins.bump(); pc.lose.disarm();
     }
 }
 
 //----------------------------------------------------------------
-
+//
+// Only called when there's a seven. Point is always 0.
+// Is called for 4,5,6,8,9,10.
+//
 void
 TableStats::countComeLose(unsigned point, unsigned roll)
 {
-    if (comeCounts[roll].armed)
+    if (comeCounts[roll].wins.armed)
     {
         comeLose.bump(); comeWins.disarm();
         // Update stats on the number itself
         PointCounts& pc = comeCounts[roll];
-        pc.numLose++;
-        pc.curCnsectvLoseCount++;
-        pc.maxCnsectvLoseCount =
-            std::max(pc.curCnsectvLoseCount, pc.maxCnsectvLoseCount);
-        pc.curCnsectvWinsCount = 0;
-    }
-
-    // May need to arm the next come bet for this number
-    if (point != 0)   // But only if not coming out
-    {
-        comeCounts[roll].armed = true;
+        pc.lose.bump(); pc.wins.disarm();
+        pc.lose.disarm();
     }
 }
 
 //----------------------------------------------------------------
-
+//
+// Only called when there's a seven. Point is always 0.
+// Is called for 4,5,6,8,9,10.
+//
 void
 TableStats::countDontComeWins(unsigned point, unsigned roll)
 {
-    if (dontComeCounts[roll].armed)  // Update per number stats
+    if (dontComeCounts[roll].wins.armed)
     {
         dontComeWins.bump(); dontComeLose.disarm();
         // Update stats on the number itself
         PointCounts& pc = dontComeCounts[roll];
-        pc.numWins++;
-        pc.curCnsectvWinsCount++;
-        pc.maxCnsectvWinsCount =
-            std::max(pc.curCnsectvWinsCount, pc.maxCnsectvWinsCount);
-        pc.armed = false;
-        pc.curCnsectvLoseCount = 0;
-    }
-
-    // May need to arm the next dont come bet for this number
-    if (point != 0)   // But only if not coming out
-    {
-        dontComeCounts[roll].armed = true;
+        pc.wins.bump(); pc.lose.disarm();
     }
 }
 
@@ -487,22 +444,12 @@ TableStats::countDontComeWins(unsigned point, unsigned roll)
 void
 TableStats::countDontComeLose(unsigned point, unsigned roll)
 {
-    if (dontComeCounts[roll].armed)
+    if (dontComeCounts[roll].wins.armed)
     {
         dontComeLose.bump(); dontComeWins.disarm();
         // Update stats on the number itself
-        PointCounts& pc = comeCounts[roll];
-        pc.numLose++;
-        pc.curCnsectvLoseCount++;
-        pc.maxCnsectvLoseCount =
-            std::max(pc.curCnsectvLoseCount, pc.maxCnsectvLoseCount);
-        pc.curCnsectvWinsCount = 0;
-    }
-
-    // May need to arm the next dont come bet for this number
-    if (point != 0)   // But only if not coming out
-    {
-        dontComeCounts[roll].armed = true;
+        PointCounts& pc = dontComeCounts[roll];
+        pc.lose.bump(); pc.wins.disarm();
     }
 }
 
@@ -596,6 +543,15 @@ TableStats::updateBetsAfterThrow(
 void
 TableStats::reset()
 {
+    for (unsigned i = 4; i < 11; i++)
+    {
+        passLineCounts[i].reset();
+        dontPassCounts[i].reset();
+        comeCounts[i].reset();
+        dontComeCounts[i].reset();
+        hardwayCounts[i].reset();
+    }
+    
     // Betting Stats
     numBetsMade           = 0;
     numBetsWin            = 0;
@@ -688,6 +644,15 @@ TableStats::Counter::reset()
     armed = false;
     curCnsectvCount = 0;
     maxCnsectvCount = 0;
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::PointCounts::reset()
+{
+    wins.reset();
+    lose.reset();
 }
 
 //-----------------------------------------------------------------

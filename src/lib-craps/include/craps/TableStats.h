@@ -26,22 +26,6 @@ public:
     };
     std::array<NumberCounts, 13> numberCounts {};  // Index 2-12 used
 
-    struct PointCounts
-    {
-        unsigned numWins = 0;
-        unsigned numLose = 0;
-        bool armed = false;
-        unsigned curCnsectvWinsCount = 0;
-        unsigned maxCnsectvWinsCount = 0;
-        unsigned curCnsectvLoseCount = 0;
-        unsigned maxCnsectvLoseCount = 0;
-    };
-    std::array<PointCounts, 11> passLineCounts {};  // Index 4,5,6,8,9,10 used
-    std::array<PointCounts, 11> dontPassCounts {};  // Index 4,5,6,8,9,10 used
-    std::array<PointCounts, 11> comeCounts     {};  // Index 4,5,6,8,9,10 used
-    std::array<PointCounts, 11> dontComeCounts {};  // Index 4,5,6,8,9,10 used
-    std::array<PointCounts, 11> hardwayCounts  {};  // Index 4,6,8,10 used
-
     struct Counter
     {
         unsigned count = 0;
@@ -55,6 +39,19 @@ public:
         void reset();
     };
     
+    struct PointCounts
+    {
+        Counter wins;
+        Counter lose;
+        void reset();
+    };
+    
+    std::array<PointCounts, 11> passLineCounts {};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> dontPassCounts {};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> comeCounts     {};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> dontComeCounts {};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> hardwayCounts  {};  // Index 4,6,8,10 used
+
     /// @name Lifecycle
     /// @{
     explicit TableStats(const std::string& tableId);
