@@ -154,7 +154,7 @@ private:
     void countDiceNumbers  (const Dice& curRoll, const Dice& prevRoll);
     void countComeOutRolls (unsigned point);
     void countPointRolls   (unsigned point, unsigned roll);
-    void countShooterRolls (unsigned roll);
+    void countShooterRolls (unsigned point, unsigned roll);
     void countFieldBetWins (unsigned roll);
     void countFieldBetLose (unsigned roll);
     void countHardwayWins  (unsigned point, unsigned d1, unsigned d2);
@@ -167,6 +167,7 @@ private:
     void countComeLose     (unsigned point, unsigned roll);
     void countDontComeWins (unsigned point, unsigned roll);
     void countDontComeLose (unsigned point, unsigned roll);
+    void disarmThese       (unsigned point, unsigned roll);
     
     void bumpHardwayWins(unsigned roll);
     void bumpHardwayLose(unsigned roll);
