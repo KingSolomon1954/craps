@@ -70,7 +70,6 @@ public:
     unsigned getPoint()                        const;
     Gen::Uuid getShooterId()                   const;
     Dice getCurRoll()                          const;
-    Dice getPrevRoll()                         const;
     bool isComeOutRoll()                       const;
     bool isBettingOpen()                       const;
     Gbl::Money getAmountOnTable()              const;
@@ -91,7 +90,6 @@ private:
     std::string tableName_;
     Bank houseBank_;
     Dice dice_;
-    Dice prevRoll_;
     unsigned point_ = 0;
     Gen::Uuid currentShooterId_;
     bool bettingOpen_ = true;

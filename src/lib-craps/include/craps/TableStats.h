@@ -17,23 +17,14 @@ namespace Craps {
 class TableStats
 {
 public:
-
-    struct NumberCounts
-    {
-        unsigned count = 0;
-        unsigned curCnsectvCount = 0;
-        unsigned maxCnsectvCount = 0;
-    };
-    std::array<NumberCounts, 13> numberCounts {};  // Index 2-12 used
-
     struct Counter
     {
-        unsigned count = 0;
+        unsigned count_ = 0;
         bool armed = false;
-        unsigned curCnsectvCount = 0;
-        unsigned maxCnsectvCount = 0;
-        unsigned getCount();
-        unsigned getMax();
+        unsigned curRepeats = 0;
+        unsigned maxRepeats = 0;
+        unsigned count() const;
+        unsigned repeats() const;
         void bump();
         void disarm();
         void reset();
@@ -46,6 +37,7 @@ public:
         void reset();
     };
     
+    std::array<Counter,     13> numberCounts   {};  // Index 2-12 used
     std::array<PointCounts, 11> passLineCounts {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> dontPassCounts {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> comeCounts     {};  // Index 4,5,6,8,9,10 used
@@ -65,7 +57,7 @@ public:
                               const std::pair<unsigned, Gbl::Money>& winStats,
                               const std::pair<unsigned, Gbl::Money>& loseStats,
                               unsigned numKeeps);
-    void updateDiceRoll(unsigned point, const Dice& curRoll, const Dice& prevRoll);
+    void updateDiceRoll(unsigned point, const Dice& curRoll);
     void reset();
     /// @}
 
@@ -148,7 +140,7 @@ public:
     Counter crapsOnComeOutRoll;
     
 private:
-    void countDiceNumbers  (const Dice& curRoll, const Dice& prevRoll);
+    void countDiceNumbers  (unsigned roll);
     void countComeOutRolls (unsigned point);
     void countPointRolls   (unsigned point, unsigned roll);
     void countShooterRolls (unsigned point, unsigned roll);

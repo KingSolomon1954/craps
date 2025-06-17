@@ -341,7 +341,7 @@ CrapsTable::rollDice()
     stats_.numRolls++;
     resolveBets();
     advanceState();      // Update point, update shooter
-    stats_.updateDiceRoll(point_, dice_, prevRoll_);
+    stats_.updateDiceRoll(point_, dice_);
     declareBettingOpen();
 }
 
@@ -369,7 +369,6 @@ void
 CrapsTable::throwDice()
 {
     Gbl::pEventMgr->publish(Ctrl::DiceThrowStart{});
-    prevRoll_ = dice_;
 
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
     std::cout << "point:" << point_ << " dice:" << dice_.value()
@@ -756,14 +755,6 @@ Gen::Uuid
 CrapsTable::getShooterId() const
 {
     return currentShooterId_;
-}
-
-//----------------------------------------------------------------
-
-Dice
-CrapsTable::getPrevRoll() const
-{
-    return prevRoll_;
 }
 
 //----------------------------------------------------------------

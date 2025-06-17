@@ -21,17 +21,15 @@ Update lots of stats after dice throw.
 
 */
 void
-TableStats::updateDiceRoll(unsigned point,
-                           const Dice& curRoll,
-                           const Dice& prevRoll)
+TableStats::updateDiceRoll(unsigned point, const Dice& dRoll)
 {
     numRolls++;
-    unsigned roll = curRoll.value();
-    unsigned d1   = curRoll.d1();
-    unsigned d2   = curRoll.d2();
+    unsigned roll = dRoll.value();
+    unsigned d1   = dRoll.d1();
+    unsigned d2   = dRoll.d2();
 
     disarmThese          (point, roll);
-    countDiceNumbers     (curRoll, prevRoll);
+    countDiceNumbers     (roll);
     countComeOutRolls    (point);
     countPointRolls      (point, roll);
     countShooterRolls    (point, roll);
@@ -59,22 +57,15 @@ TableStats::updateDiceRoll(unsigned point,
 //-----------------------------------------------------------------
 
 void
-TableStats::countDiceNumbers(const Dice& curRoll,
-                             const Dice& prevRoll)
+TableStats::countDiceNumbers(unsigned roll)
 {
-    unsigned roll = curRoll.value();
-    NumberCounts& nc = numberCounts[roll];
-    
-    nc.count++;
-    if (roll == prevRoll.value())
+    numberCounts[roll].bump();
+    for (unsigned i = 2; i < 13; i++)
     {
-        nc.curCnsectvCount++;
-        nc.maxCnsectvCount =
-            std::max(nc.curCnsectvCount, nc.maxCnsectvCount);
-    }
-    else
-    {
-        nc.curCnsectvCount = 0;
+        if (i != roll)
+        {
+            numberCounts[i].disarm();
+        }
     }
 }
 
@@ -603,17 +594,17 @@ TableStats::reset()
 //-----------------------------------------------------------------
 
 unsigned
-TableStats::Counter::getCount()
+TableStats::Counter::count() const
 {
-    return count;
+    return count_;
 }
 
 //-----------------------------------------------------------------
 
 unsigned
-TableStats::Counter::getMax()
+TableStats::Counter::repeats() const
 {
-    return maxCnsectvCount;
+    return maxRepeats;
 }
 
 //-----------------------------------------------------------------
@@ -621,9 +612,9 @@ TableStats::Counter::getMax()
 void
 TableStats::Counter::bump()
 {
-    count++;
-    armed ? curCnsectvCount++ : armed = true;
-    maxCnsectvCount = std::max(curCnsectvCount, maxCnsectvCount);
+    count_++;
+    armed ? curRepeats++ : armed = true;
+    maxRepeats = std::max(curRepeats, maxRepeats);
 }
 
 //-----------------------------------------------------------------
@@ -632,7 +623,7 @@ void
 TableStats::Counter::disarm()
 {
     armed = false;
-    curCnsectvCount = 0;
+    curRepeats = 0;
 }
 
 //-----------------------------------------------------------------
@@ -640,10 +631,10 @@ TableStats::Counter::disarm()
 void
 TableStats::Counter::reset()
 {
-    count = 0;
+    count_ = 0;
     armed = false;
-    curCnsectvCount = 0;
-    maxCnsectvCount = 0;
+    curRepeats = 0;
+    maxRepeats = 0;
 }
 
 //-----------------------------------------------------------------

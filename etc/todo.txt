@@ -14,7 +14,9 @@ load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
 
+stats TableStats switch to recordWin(), recordLose(), recordKeep()
 stats TableStats unit test
+stats TableStats implement "n" back dice roll sequence 
 stats TableStats serializes, deserializes
 stats TableStats reads, modifies, wrties alltime stats
 stats CrapsTable returns TableStats
