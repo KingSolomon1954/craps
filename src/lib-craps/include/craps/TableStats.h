@@ -7,9 +7,11 @@
 #pragma once
 
 #include <array>
+#include <deque>
+#include <map>
 #include <string>
 #include <craps/Dice.h>
-#include <craps/EnumBetName.h>
+#include <craps/CrapsBetIntfc.h>
 #include <controller/Globals.h>
 #include <gen/Timepoint.h>
 
@@ -18,6 +20,33 @@ namespace Craps {
 class TableStats
 {
 public:
+    /// @name Lifecycle
+    /// @{
+    explicit TableStats(const std::string& tableId);
+    /// @}
+
+    /// @name Modifiers
+    /// @{
+    void recordWin (CrapsBetIntfc* bet, Gbl::Money amtWin);
+    void recordLose(CrapsBetIntfc* bet, Gbl::Money amtLose);
+    void recordKeep(CrapsBetIntfc* bet);
+    void recordDiceRoll(unsigned point, const Dice& curRoll);
+    void reset();
+    void resetRollCounts();  // Should be private, called only by CrapsTable
+    void setRollHistorySize(size_t rollHistorySize);
+    /// @}
+
+    /// @name Observers
+    /// @{
+    size_t getRollHistorySize() const;
+    /// @}
+
+    std::string tableId;
+    Gen::Timepoint sessionStart;
+    Gen::Timepoint sessionEnd;
+    
+    std::deque<Dice> recentRolls;
+    
     struct Counter
     {
         unsigned count_ = 0;
@@ -45,40 +74,30 @@ public:
     std::array<PointCounts, 11> dontComeCounts {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> hardwayCounts  {};  // Index 4,6,8,10 used
 
-    /// @name Lifecycle
-    /// @{
-    explicit TableStats(const std::string& tableId);
-    /// @}
-
-    /// @name Modifiers
-    /// @{
-    void recordWin (BetName betName, unsigned pivot, Gbl::Money amtBet, Gbl::Money amtWin);
-    void recordLose(BetName betName, unsigned pivot, Gbl::Money amtBet, Gbl::Money amtLose);
-    void recordKeep(BetName betName, unsigned pivot, Gbl::Money amtBet);
-    void recordDiceRoll(unsigned point, const Dice& curRoll);
-    void reset();
-    /// @}
-
-    /// @name Observers
-    /// @{
-    /// @}
-
-    std::string tableId;
-    Gen::Timepoint sessionStart;
-    Gen::Timepoint sessionEnd;
-    
     // Betting Stats
+
+    struct BetStat
+    {
+        unsigned count = 0;
+        unsigned distance = 0;
+    };
     
-    unsigned toNumBetsAllBets  = 0;
-    unsigned toNumWinsAllBets  = 0;
-    unsigned toNumLoseAllBets  = 0;
+    struct BetTypesWinLose
+    {
+        std::map<std::string, BetStat> wins;
+        std::map<std::string, BetStat> lose;
+    };
+    BetTypesWinLose betsWinLose;
+    
+    unsigned totNumBetsAllBets = 0;
+    unsigned totNumWinsAllBets = 0;
+    unsigned totNumLoseAllBets = 0;
     unsigned totNumKeepAllBets = 0;
 
     Gbl::Money totAmtAllBets     = 0;
-    Gbl::Money totAmtWinAllBets  = 0;
+    Gbl::Money totAmtWinsAllBets = 0;
     Gbl::Money totAmtLoseAllBets = 0;
     Gbl::Money totAmtKeepAllBets = 0;
-    // balance = totAmtWin - totAmtLose;    // Up to user to calculate
 
     Gbl::Money maxAmtBetOneBet  = 0;
     Gbl::Money maxAmtWinOneBet  = 0;
@@ -89,45 +108,31 @@ public:
     // double losePctg = (numBetsLose / numBetsMade) * 100
     // double pushPctg = (numBetsPush / numBetsMade) * 100
 
-    unsigned curNumBetsOneRoll      = 0;
-    unsigned maxNumBetsOneRoll      = 0;
-    unsigned totNumBetsOneRoll      = 0;
-    // double avgNumBetsPerRoll     = 0.0;  // Up to user to calculate
+    struct NumBets
+    {
+        unsigned current = 0;
+        unsigned max     = 0;
+        unsigned total   = 0;
+        void reset();
+    };
+    
+    NumBets numBetsOneRoll;
+    NumBets numBetsWinOneRoll;
+    NumBets numBetsLoseOneRoll;
+    NumBets numBetsKeepOneRoll;
+    
+    struct AmtBets
+    {
+        Gbl::Money current = 0;
+        Gbl::Money max     = 0;
+        Gbl::Money total   = 0;
+        void reset();
+    };
 
-    unsigned curNumBetsWinOneRoll   = 0;
-    unsigned maxNumBetsWinOneRoll   = 0;
-    unsigned totNumBetsWinOneRoll   = 0;
-    // double avgNumBetsWinPerRoll  = 0.0;  // Up to user to calculate
-
-    unsigned curNumBetsLoseOneRoll  = 0;
-    unsigned maxNumBetsLoseOneRoll  = 0;
-    unsigned totNumBetsLoseOneRoll  = 0;
-    // double avgNumBetsLosePerRoll = 0.0;  // Up to user to calculate
-
-    unsigned curNumBetsKeepOneRoll  = 0;
-    unsigned maxNumBetsKeepOneRoll  = 0;
-    unsigned totNumBetsKeepOneRoll  = 0;
-    // double avgNumBetsKeepPerRoll = 0.0;  // Up to user to calculate
-
-    Gbl::Money curAmtBetsOneRoll    = 0;
-    Gbl::Money maxAmtBetsOneRoll    = 0;
-    Gbl::Money totAmtBetsOneRoll    = 0;
-    // double avgAmtBetPerRoll      = 0.0;  // Up to user to calculate
-
-    Gbl::Money curAmtWinOneRoll     = 0;
-    Gbl::Money maxAmtWinOneRoll     = 0;
-    Gbl::Money totAmtWinOneRoll     = 0;
-    // double avgAmtWinPerRoll      = 0.0;  // Up to user to calculate
-
-    Gbl::Money curAmtLoseOneRoll    = 0;
-    Gbl::Money maxAmtLoseOneRoll    = 0;
-    Gbl::Money totAmtLoseOneRoll    = 0;
-    // double avgAmtLosePerRoll     = 0.0;  // Up to user to calculate
-
-    Gbl::Money curAmtKeepOneRoll    = 0;
-    Gbl::Money maxAmtKeepOneRoll    = 0;
-    Gbl::Money totAmtKeepOneRoll    = 0;
-    // double avgAmtLosePerRoll     = 0.0;  // Up to user to calculate
+    AmtBets amtBetsOneRoll;
+    AmtBets amtBetsWinOneRoll;
+    AmtBets amtBetsLoseOneRoll;
+    AmtBets amtBetsKeepOneRoll;
 
     // Dice Roll Stats
     unsigned numRolls = 0;
@@ -153,6 +158,8 @@ public:
     Counter crapsOnComeOutRoll;
     
 private:
+    size_t rollHistorySize_ = 25;
+    
     void countDiceNumbers  (unsigned roll);
     void countComeOutRolls (unsigned point);
     void countPointRolls   (unsigned point, unsigned roll);
@@ -180,6 +187,8 @@ private:
     void update11(unsigned point);
     void update12(unsigned point);
     void updatePointRoll(unsigned point, unsigned roll);
+    void recordCommon(Gbl::Money amtBet);
+    void bumpRecentRolls(const Dice& dice);
 };
 
 /*-----------------------------------------------------------*//**

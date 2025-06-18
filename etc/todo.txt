@@ -14,16 +14,17 @@ load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
 
-stats TableStats needs refactoring of recordWin/Lose/Keep rolls
-stats TableStats needs fencing around recordWin/Lose/Keep rolls
+stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 stats TableStats unit test
-stats TableStats implement "n" back dice roll sequence 
 stats TableStats serializes, deserializes
 stats TableStats reads, modifies, wrties alltime stats
 stats CrapsTable returns TableStats
 stats CrapsTable creates Session summaries
 stats CrapsTable returns Session summaries
 
+(Done) TableStats needs fencing around recordWin/Lose/Keep rolls
+(Done) TableStats implement "n" back dice roll history
+(Done) TableStats needs refactoring of recordWin/Lose/Keep rolls
 (Done) stats TableStats switch to recordWin(), recordLose(), recordKeep()
 (Done) stats design
 (Done) stats implementation
@@ -34,6 +35,17 @@ stats CrapsTable returns Session summaries
 (Done) Implement minimal game loop
 (Done) Add getBool() to MultiLayerManager
 
+7(3,4) 8(4,4) 6(3,3) 
+7(34) 8(44) 6(33) 
+7,8,6
+7 8 6
+4 7 8 6
+
+7,8,6,2,2,4
+7,8,6,2,2,4,11
+
+4,2,2,6,8,7
+11,4,2,2,6,8,7
 
 User Input → ConsoleView → GameEvent (UserInputLineEvent) → EventQueue → GameController
 

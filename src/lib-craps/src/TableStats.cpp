@@ -6,6 +6,7 @@
 
 #include <craps/TableStats.h>
 #include <craps/CrapsBet.h>
+#include <craps/EnumBetName.h>
 #include <algorithm>
 
 using namespace Craps;
@@ -21,13 +22,15 @@ Update lots of stats after dice throw.
 
 */
 void
-TableStats::recordDiceRoll(unsigned point, const Dice& dRoll)
+TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 {
     numRolls++;
-    unsigned roll = dRoll.value();
-    unsigned d1   = dRoll.d1();
-    unsigned d2   = dRoll.d2();
+    unsigned roll = dice.value();
+    unsigned d1   = dice.d1();
+    unsigned d2   = dice.d2();
 
+    bumpRecentRolls(dice);
+    
     disarmThese          (point, roll);
     countDiceNumbers     (roll);
     countComeOutRolls    (point);
@@ -444,69 +447,89 @@ TableStats::countDontComeLose(unsigned point, unsigned roll)
     }
 }
 
-/*-----------------------------------------------------------*//**
+//----------------------------------------------------------------
 
-Record winning bet.
-
-*/
 void
-TableStats::recordWin(BetName betName, unsigned pivot,
-                      Gbl::Money amtBet, Gbl::Money amtWin)
+TableStats::resetRollCounts()
 {
-    toNumBetsAllBets++;
-    toNumWinsAllBets++;
-    totNumBetsOneRoll++;
-    totNumBetsWinOneRoll++;
-
-    totAmtAllBets    += amtBet;
-    totAmtWinAllBets += amtWin;
-    totAmtWinOneRoll += amtWin;
-    
-    curNumBetsOneRoll++;
-    curNumBetsWinOneRoll++;
-    
-    curAmtBetsOneRoll += amtBet;
-    curAmtWinOneRoll  += amtWin;
-    
-    maxAmtBetOneBet      = std::max(amtBet, maxAmtBetOneBet);
-    maxAmtBetsOneRoll    = std::max(curAmtBetsOneRoll, maxAmtBetsOneRoll);
-    maxAmtWinOneBet      = std::max(amtWin, maxAmtWinOneBet);
-    maxAmtWinOneRoll     = std::max(curAmtWinOneRoll, maxAmtWinOneRoll);
-    maxNumBetsOneRoll    = std::max(curNumBetsOneRoll, maxNumBetsOneRoll);
-    maxNumBetsWinOneRoll = std::max(curNumBetsWinOneRoll, maxNumBetsWinOneRoll);
-    // avgAmtPerBet = (double)totAmtAllBets / (double)numBetsMade;
+    numBetsOneRoll.current     = 0;
+    numBetsWinOneRoll.current  = 0;
+    numBetsLoseOneRoll.current = 0;
+    numBetsKeepOneRoll.current = 0;
+    amtBetsOneRoll.current     = 0;
+    amtBetsWinOneRoll.current  = 0;
+    amtBetsLoseOneRoll.current = 0;
+    amtBetsKeepOneRoll.current = 0;
 }
 
 /*-----------------------------------------------------------*//**
 
-Record losing bet.
+Record a winning bet.
 
 */
 void
-TableStats::recordLose(BetName betName, unsigned pivot,
-                       Gbl::Money amtBet, Gbl::Money amtLose)
+TableStats::recordWin(CrapsBetIntfc* bet, Gbl::Money amtWin)
 {
-    toNumBetsAllBets++;
-    toNumLoseAllBets++;
-    totNumBetsOneRoll++;
-    totNumBetsLoseOneRoll++;
-
-    totAmtAllBets     += amtBet;
-    totAmtLoseAllBets += amtLose;
-    totAmtLoseOneRoll += amtLose;
+    namespace e = EnumBetName;
+    BetName betName = bet->betName();
+    unsigned distance = bet->distance();
+    betsWinLose.wins[e::toString(betName)].count++;
+    betsWinLose.wins[e::toString(betName)].distance += distance;
     
-    curNumBetsOneRoll++;
-    curNumBetsLoseOneRoll++;
-        
-    curAmtBetsOneRoll += amtBet;
-    curAmtLoseOneRoll += amtLose;
+    unsigned amtBet = bet->contractAmount() + bet->oddsAmount();
+    recordCommon(amtBet);
+    
+    totNumBetsAllBets++;
+    totAmtAllBets += amtBet;
+    
+    totNumWinsAllBets++;
+    numBetsWinOneRoll.total++;
+    
+    totAmtWinsAllBets += amtWin;
+    amtBetsWinOneRoll.total += amtWin;
+    
+    numBetsWinOneRoll.current++;
+    
+    amtBetsWinOneRoll.current += amtWin;
+    
+    maxAmtWinOneBet       = std::max(amtWin, maxAmtWinOneBet);
+    amtBetsWinOneRoll.max = std::max(amtBetsWinOneRoll.current, amtBetsWinOneRoll.max);
+    numBetsWinOneRoll.max = std::max(numBetsWinOneRoll.current, numBetsWinOneRoll.max);
+}
 
-    maxAmtBetOneBet       = std::max(amtBet, maxAmtBetOneBet);
-    maxAmtBetsOneRoll     = std::max(curAmtBetsOneRoll, maxAmtBetsOneRoll);
-    maxAmtLoseOneBet      = std::max(amtLose, maxAmtLoseOneBet);
-    maxAmtLoseOneRoll     = std::max(curAmtLoseOneRoll, maxAmtLoseOneRoll);
-    maxNumBetsOneRoll     = std::max(curNumBetsOneRoll, maxNumBetsOneRoll);
-    maxNumBetsLoseOneRoll = std::max(curNumBetsLoseOneRoll, maxNumBetsLoseOneRoll);
+/*-----------------------------------------------------------*//**
+
+Record a losing bet.
+
+*/
+void
+TableStats::recordLose(CrapsBetIntfc* bet, Gbl::Money amtLose)
+{
+    namespace e = EnumBetName;
+    BetName betName = bet->betName();
+    unsigned distance = bet->distance();
+    betsWinLose.lose[e::toString(betName)].count++;
+    betsWinLose.lose[e::toString(betName)].distance += distance;
+    
+    unsigned amtBet = bet->contractAmount() + bet->oddsAmount();
+    recordCommon(amtBet);
+    
+    totNumBetsAllBets++;
+    totAmtAllBets += amtBet;
+    
+    totNumLoseAllBets++;
+    numBetsLoseOneRoll.total++;
+
+    totAmtLoseAllBets += amtLose;
+    amtBetsLoseOneRoll.total += amtLose;
+    
+    numBetsLoseOneRoll.current++;
+        
+    amtBetsLoseOneRoll.current += amtLose;
+
+    maxAmtLoseOneBet       = std::max(amtLose, maxAmtLoseOneBet);
+    amtBetsLoseOneRoll.max = std::max(amtBetsLoseOneRoll.current, amtBetsLoseOneRoll.max);
+    numBetsLoseOneRoll.max = std::max(numBetsLoseOneRoll.current, numBetsLoseOneRoll.max);
 }
 
 /*-----------------------------------------------------------*//**
@@ -518,29 +541,41 @@ But might want to track avg number of keeps per roll.
 
 */
 void
-TableStats::recordKeep(BetName betName, unsigned pivot, Gbl::Money amtBet)
+TableStats::recordKeep(CrapsBetIntfc* bet)
 {
-    // toNumBetsAllBets++;  // Don't count here, will be counted when win/lose
+    unsigned amtBet = bet->contractAmount() + bet->oddsAmount();
+    recordCommon(amtBet);
+    
+    // totNumBetsAllBets++;      // Don't incr here, counted when win/lose
+    // totAmtAllBets += amtBet;  // Don't incr here, counted when win/lose
     totNumKeepAllBets++;
-    totNumBetsOneRoll++;
-    totNumBetsKeepOneRoll++;
+    numBetsKeepOneRoll.total++;
     
-    totAmtAllBets     += amtBet;
     totAmtKeepAllBets += amtBet;
-    totAmtKeepOneRoll += amtBet;
+    amtBetsKeepOneRoll.total += amtBet;
     
-    curNumBetsOneRoll++;
-    curNumBetsKeepOneRoll++;
+    numBetsKeepOneRoll.current++;
     
-    curAmtBetsOneRoll += amtBet;
-    curAmtKeepOneRoll += amtBet;
+    amtBetsKeepOneRoll.current += amtBet;
 
-    maxAmtBetOneBet       = std::max(amtBet, maxAmtBetOneBet);
-    maxAmtBetsOneRoll     = std::max(curAmtBetsOneRoll, maxAmtBetsOneRoll);
-    maxAmtKeepOneBet      = std::max(amtBet, maxAmtKeepOneBet);
-    maxAmtKeepOneRoll     = std::max(curAmtKeepOneRoll, maxAmtKeepOneRoll);
-    maxNumBetsOneRoll     = std::max(curNumBetsOneRoll, maxNumBetsOneRoll);
-    maxNumBetsKeepOneRoll = std::max(curNumBetsKeepOneRoll, maxNumBetsKeepOneRoll);
+    maxAmtKeepOneBet       = std::max(amtBet, maxAmtKeepOneBet);
+    amtBetsKeepOneRoll.max = std::max(amtBetsKeepOneRoll.current, amtBetsKeepOneRoll.max);
+    numBetsKeepOneRoll.max = std::max(numBetsKeepOneRoll.current, numBetsKeepOneRoll.max);
+}
+
+//-----------------------------------------------------------------
+//
+// Helper function to update common stats between recordWin/Lose/Keep
+//
+void
+TableStats::recordCommon(Gbl::Money amtBet)
+{
+    numBetsOneRoll.total++;
+    numBetsOneRoll.current++;
+    amtBetsOneRoll.current += amtBet;
+    maxAmtBetOneBet   = std::max(amtBet, maxAmtBetOneBet);
+    amtBetsOneRoll.max = std::max(amtBetsOneRoll.current, amtBetsOneRoll.max);
+    numBetsOneRoll.max = std::max(numBetsOneRoll.current, numBetsOneRoll.max);
 }
 
 //-----------------------------------------------------------------
@@ -558,43 +593,26 @@ TableStats::reset()
     }
     
     // Betting Stats
-    toNumBetsAllBets      = 0;
-    toNumWinsAllBets      = 0;
-    toNumLoseAllBets      = 0;
-    totNumKeepAllBets     = 0;
-    totAmtAllBets         = 0;
-    totAmtWinAllBets      = 0;
-    totAmtLoseAllBets     = 0;
-    totAmtKeepAllBets     = 0;
-    maxAmtBetOneBet       = 0;
-    maxAmtWinOneBet       = 0;
-    maxAmtLoseOneBet      = 0;
-    maxAmtKeepOneBet      = 0;
-    curNumBetsOneRoll     = 0;
-    maxNumBetsOneRoll     = 0;
-    totNumBetsOneRoll     = 0;
-    curNumBetsWinOneRoll  = 0;
-    maxNumBetsWinOneRoll  = 0;
-    totNumBetsWinOneRoll  = 0;
-    curNumBetsLoseOneRoll = 0;
-    maxNumBetsLoseOneRoll = 0;
-    totNumBetsLoseOneRoll = 0;
-    curNumBetsKeepOneRoll = 0;
-    maxNumBetsKeepOneRoll = 0;
-    totNumBetsKeepOneRoll = 0;
-    curAmtBetsOneRoll     = 0;
-    maxAmtBetsOneRoll     = 0;
-    totAmtBetsOneRoll     = 0;
-    curAmtWinOneRoll      = 0;
-    maxAmtWinOneRoll      = 0;
-    totAmtWinOneRoll      = 0;
-    curAmtLoseOneRoll     = 0;
-    maxAmtLoseOneRoll     = 0;
-    totAmtLoseOneRoll     = 0;
-    curAmtKeepOneRoll     = 0;
-    maxAmtKeepOneRoll     = 0;
-    totAmtKeepOneRoll     = 0;
-
+    totNumBetsAllBets = 0;
+    totNumWinsAllBets = 0;
+    totNumLoseAllBets = 0;
+    totNumKeepAllBets = 0;
+    totAmtAllBets     = 0;
+    totAmtWinsAllBets = 0;
+    totAmtLoseAllBets = 0;
+    totAmtKeepAllBets = 0;
+    maxAmtBetOneBet   = 0;
+    maxAmtWinOneBet   = 0;
+    maxAmtLoseOneBet  = 0;
+    maxAmtKeepOneBet  = 0;
+    numBetsOneRoll.reset();
+    numBetsWinOneRoll.reset();
+    numBetsLoseOneRoll.reset();
+    numBetsKeepOneRoll.reset();
+    amtBetsOneRoll.reset();
+    amtBetsWinOneRoll.reset();
+    amtBetsLoseOneRoll.reset();
+    amtBetsKeepOneRoll.reset();
 
     // Dice Roll Stats
     numRolls = 0;
@@ -618,6 +636,34 @@ TableStats::reset()
     elevensOnComeOutRoll.reset();
     twelvesOnComeOutRoll.reset();
     crapsOnComeOutRoll.reset();
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::bumpRecentRolls(const Dice& dice)
+{
+    if (recentRolls.size() >= rollHistorySize_)
+    {
+        recentRolls.pop_front();
+    }
+    recentRolls.push_back(dice);
+}
+    
+//-----------------------------------------------------------------
+
+void
+TableStats::setRollHistorySize(size_t rollHistorySize)
+{
+    rollHistorySize_ = rollHistorySize;
+}
+
+//-----------------------------------------------------------------
+
+size_t
+TableStats::getRollHistorySize() const
+{
+    return rollHistorySize_;
 }
 
 //-----------------------------------------------------------------
@@ -673,6 +719,26 @@ TableStats::PointCounts::reset()
 {
     wins.reset();
     lose.reset();
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::NumBets::reset()
+{
+    current = 0;
+    max     = 0;
+    total   = 0;
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::AmtBets::reset()
+{
+    current = 0;
+    max     = 0;
+    total   = 0;
 }
 
 //-----------------------------------------------------------------

@@ -517,6 +517,7 @@ void
 CrapsTable::dispenseResults()
 {
     disburseHouseResults();
+    stats_.resetRollCounts();
     disbursePlayerWins();
     disbursePlayerLoses();
     disbursePlayerKeeps();
@@ -554,10 +555,9 @@ CrapsTable::disbursePlayerWins()
         if (r.win > 0)
         {
             Gbl::pPlayerMgr->disburseWin(r);
-            CrapsBetIntfc* pb = findBetById(r.betId);
-            stats_.recordWin(pb->betName(), pb->pivot(),
-                             pb->contractAmount() + pb->oddsAmount(),
-                             r.win);
+            CrapsBetIntfc* b = findBetById(r.betId);
+            assert(b != nullptr);
+            stats_.recordWin(b, r.win);
         }
     }
 }
@@ -572,10 +572,9 @@ CrapsTable::disbursePlayerLoses()
         if (r.lose > 0)
         {
             Gbl::pPlayerMgr->disburseLose(r);
-            CrapsBetIntfc* pb = findBetById(r.betId);
-            stats_.recordLose(pb->betName(), pb->pivot(),
-                              pb->contractAmount() + pb->oddsAmount(),
-                              r.lose);
+            CrapsBetIntfc* b = findBetById(r.betId);
+            assert(b != nullptr);
+            stats_.recordLose(b, r.lose);
         }
     }
 }
@@ -590,9 +589,9 @@ CrapsTable::disbursePlayerKeeps()
         if (!r.decision)
         {
             Gbl::pPlayerMgr->disburseKeep(r);
-            CrapsBetIntfc* pb = findBetById(r.betId);
-            stats_.recordKeep(pb->betName(), pb->pivot(),
-                              pb->contractAmount() + pb->oddsAmount());
+            CrapsBetIntfc* b = findBetById(r.betId);
+            assert(b != nullptr);
+            stats_.recordKeep(b);
         }
     }
 }
