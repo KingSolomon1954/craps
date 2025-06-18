@@ -24,6 +24,7 @@ Update lots of stats after dice throw.
 void
 TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 {
+    resetRollCounts();  // Clear some counters from previous roll
     numRolls++;
     unsigned roll = dice.value();
     unsigned d1   = dice.d1();
@@ -31,7 +32,7 @@ TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 
     bumpRecentRolls(dice);
     
-    disarmThese          (point, roll);
+    disarmSomeCounts     (point, roll);
     countDiceNumbers     (roll);
     countComeOutRolls    (point);
     countPointRolls      (point, roll);
@@ -88,7 +89,8 @@ TableStats::countComeOutRolls(unsigned point)
 void
 TableStats::countPointRolls(unsigned point, unsigned roll)
 {
-    if (point != 0 && roll != 7)
+//    if (point != 0 && roll != 7)
+    if (point != 0)
     {
         pointRolls.bump(); comeOutRolls.disarm();
     }
@@ -162,9 +164,11 @@ TableStats::countHardwayLose(unsigned point, unsigned d1, unsigned d2)
 }
 
 //-----------------------------------------------------------------
-
+//
+// Based on roll, some counters need to cancel their arm'ing.
+//
 void
-TableStats::disarmThese(unsigned point, unsigned roll)
+TableStats::disarmSomeCounts(unsigned point, unsigned roll)
 {
     if (roll != 2)
     {
@@ -199,8 +203,8 @@ TableStats::update2(unsigned point)
 {
     if (point == 0)
     {
-        twosOnComeOutRoll.bump();  // see disarmThese() 
-        crapsOnComeOutRoll.bump(); // see disarmThese() 
+        twosOnComeOutRoll.bump();  // see disarmSomeCounts() 
+        crapsOnComeOutRoll.bump(); // see disarmSomeCounts() 
         passLineLose.bump(); passLineWins.disarm();
         dontPassWins.bump(); dontPassLose.disarm();
     }
@@ -218,8 +222,8 @@ TableStats::update3(unsigned point)
 {
     if (point == 0)
     {
-        threesOnComeOutRoll.bump(); // see disarmThese() 
-        crapsOnComeOutRoll.bump();  // see disarmThese() 
+        threesOnComeOutRoll.bump(); // see disarmSomeCounts() 
+        crapsOnComeOutRoll.bump();  // see disarmSomeCounts() 
         passLineLose.bump(); passLineWins.disarm();
         dontPassWins.bump(); dontPassLose.disarm();
     }
@@ -239,13 +243,15 @@ TableStats::update7(unsigned point)
     {
         passLineWins.bump(); passLineLose.disarm();
         dontPassLose.bump(); dontPassWins.disarm();
-        sevensOnComeOutRoll.bump(); // see disarmThese() 
+        sevensOnComeOutRoll.bump(); // see disarmSomeCounts() 
     }
     else
     {
-        comeWins.bump(); comeLose.disarm();
+        passLineLose.bump(); passLineWins.disarm();
+        dontPassWins.bump(); dontPassLose.disarm();
+        comeWins.bump();     comeLose.disarm();
         dontComeLose.bump(); dontComeWins.disarm();
-        sevenOuts.bump(); // see disarmThese() 
+        sevenOuts.bump();    // see disarmSomeCounts() 
         shooterCounts.disarm();
     }
 
@@ -271,7 +277,7 @@ TableStats::update11(unsigned point)
 {
     if (point == 0)
     {
-        elevensOnComeOutRoll.bump();  // see disarmThese()
+        elevensOnComeOutRoll.bump();  // see disarmSomeCounts()
         passLineWins.bump(); passLineLose.disarm();
         dontPassLose.bump(); dontPassWins.disarm();
     }
@@ -289,8 +295,8 @@ TableStats::update12(unsigned point)
 {
     if (point == 0)
     {
-        twelvesOnComeOutRoll.bump(); // see disarmThese()
-        crapsOnComeOutRoll.bump();   // see disarmThese()
+        twelvesOnComeOutRoll.bump(); // see disarmSomeCounts()
+        crapsOnComeOutRoll.bump();   // see disarmSomeCounts()
         passLineLose.bump(); passLineWins.disarm();
         dontPassLose.disarm(); // dontPassWin.bump();  // push
     }

@@ -32,7 +32,6 @@ public:
     void recordKeep(CrapsBetIntfc* bet);
     void recordDiceRoll(unsigned point, const Dice& curRoll);
     void reset();
-    void resetRollCounts();  // Should be private, called only by CrapsTable
     void setRollHistorySize(size_t rollHistorySize);
     /// @}
 
@@ -45,7 +44,7 @@ public:
     Gen::Timepoint sessionStart;
     Gen::Timepoint sessionEnd;
     
-    std::deque<Dice> recentRolls;
+    std::deque<Dice> recentRolls;  // Front element is oldest roll
     
     struct Counter
     {
@@ -176,7 +175,8 @@ private:
     void countComeLose     (unsigned point, unsigned roll);
     void countDontComeWins (unsigned point, unsigned roll);
     void countDontComeLose (unsigned point, unsigned roll);
-    void disarmThese       (unsigned point, unsigned roll);
+    void disarmSomeCounts  (unsigned point, unsigned roll);
+    void resetRollCounts();  // Should be private, called only by CrapsTable
     
     void bumpHardwayWins(unsigned roll);
     void bumpHardwayLose(unsigned roll);

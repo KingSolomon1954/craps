@@ -35,12 +35,16 @@ stats CrapsTable returns Session summaries
 (Done) Implement minimal game loop
 (Done) Add getBool() to MultiLayerManager
 
+Formats to display throw history
+--------------------------------
 7(3,4) 8(4,4) 6(3,3) 
 7(34) 8(44) 6(33) 
 7,8,6
 7 8 6
 4 7 8 6
 
+Display throw history left to right or reverse
+----------------------------------------------
 7,8,6,2,2,4
 7,8,6,2,2,4,11
 

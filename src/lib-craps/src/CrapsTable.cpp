@@ -357,7 +357,6 @@ CrapsTable::rollDice()
 {
     declareBettingClosed();
     throwDice();
-    stats_.numRolls++;
     resolveBets();
     advanceState();      // Update point, update shooter
     stats_.recordDiceRoll(point_, dice_);
@@ -517,7 +516,6 @@ void
 CrapsTable::dispenseResults()
 {
     disburseHouseResults();
-    stats_.resetRollCounts();
     disbursePlayerWins();
     disbursePlayerLoses();
     disbursePlayerKeeps();
