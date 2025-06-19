@@ -32,15 +32,15 @@ TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 
     bumpRecentRolls(dice);
     
-    disarmSomeCounts     (point, roll);
-    countDiceNumbers     (roll);
-    countComeOutRolls    (point);
-    countPointRolls      (point, roll);
-    countShooterRolls    (point, roll);
-    countFieldBetWins    (roll);
-    countFieldBetLose    (roll);
-    countHardwayWins     (point, d1, d2);
-    countHardwayLose     (point, d1, d2);
+    disarmSomeCounts (point, roll);
+    countDiceNumbers (roll);
+    countComeOutRolls(point);
+    countPointRolls  (point, roll);
+    countShooterRolls(point, roll);
+    countFieldBetWins(roll);
+    countFieldBetLose(roll);
+    countHardwayWins (point, d1, d2);
+    countHardwayLose (point, d1, d2);
     
     switch(roll)
     {
@@ -89,7 +89,6 @@ TableStats::countComeOutRolls(unsigned point)
 void
 TableStats::countPointRolls(unsigned point, unsigned roll)
 {
-//    if (point != 0 && roll != 7)
     if (point != 0)
     {
         pointRolls.bump(); comeOutRolls.disarm();
@@ -101,7 +100,6 @@ TableStats::countPointRolls(unsigned point, unsigned roll)
 void
 TableStats::countShooterRolls(unsigned point, unsigned roll)
 {
-    if (point != 0 && roll == 7) return;
     shooterCounts.bump();  // see update7 for shooterCounts.disarm()
 }
 
@@ -249,6 +247,8 @@ TableStats::update7(unsigned point)
     {
         passLineLose.bump(); passLineWins.disarm();
         dontPassWins.bump(); dontPassLose.disarm();
+        passLineCounts[point].lose.bump(); passLineCounts[point].wins.disarm();
+        dontPassCounts[point].wins.bump(); dontPassCounts[point].lose.disarm();
         comeWins.bump();     comeLose.disarm();
         dontComeLose.bump(); dontComeWins.disarm();
         sevenOuts.bump();    // see disarmSomeCounts() 
@@ -323,8 +323,10 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
     if (point != 0)
     {
         // Establish new come and dont come bets
-        comeCounts[roll].wins.armed = true;
-        dontComeCounts[roll].wins.armed = true;
+        comeCounts[roll].wins.pivot = roll;
+        comeCounts[roll].lose.pivot = roll;
+        dontComeCounts[roll].wins.pivot = roll;
+        dontComeCounts[roll].lose.pivot = roll;
     }
 }
 
@@ -395,12 +397,13 @@ TableStats::countDontPassLose(unsigned roll)
 void
 TableStats::countComeWins(unsigned point, unsigned roll)
 {
-    if (comeCounts[roll].wins.armed)
+    if (comeCounts[roll].wins.pivot == roll)
     {
         comeWins.bump(); comeLose.disarm();
         // Update stats on the number itself
         PointCounts& pc = comeCounts[roll];
         pc.wins.bump(); pc.lose.disarm();
+        // pc.wins.pivot remains assigned so come bet is re-upped.
     }
 }
 
@@ -412,13 +415,14 @@ TableStats::countComeWins(unsigned point, unsigned roll)
 void
 TableStats::countComeLose(unsigned point, unsigned roll)
 {
-    if (comeCounts[roll].wins.armed)
+    if (comeCounts[roll].lose.pivot == roll)
     {
         comeLose.bump(); comeWins.disarm();
         // Update stats on the number itself
         PointCounts& pc = comeCounts[roll];
-        pc.lose.bump(); pc.wins.disarm();
-        pc.lose.disarm();
+        pc.lose.bump(); pc.lose.disarm();
+        // Unassign pivot, 7-out clears all come bets, no following come bet.
+        pc.lose.pivot = 0;
     }
 }
 
@@ -430,12 +434,14 @@ TableStats::countComeLose(unsigned point, unsigned roll)
 void
 TableStats::countDontComeWins(unsigned point, unsigned roll)
 {
-    if (dontComeCounts[roll].wins.armed)
+    if (dontComeCounts[roll].wins.pivot == roll)
     {
         dontComeWins.bump(); dontComeLose.disarm();
         // Update stats on the number itself
         PointCounts& pc = dontComeCounts[roll];
-        pc.wins.bump(); pc.lose.disarm();
+        pc.wins.bump(); pc.lose.disarm(); 
+        // Unassign pivot, 7 clears all dontcome bets, no following bet.
+        pc.wins.pivot = 0;
     }
 }
 
@@ -444,12 +450,13 @@ TableStats::countDontComeWins(unsigned point, unsigned roll)
 void
 TableStats::countDontComeLose(unsigned point, unsigned roll)
 {
-    if (dontComeCounts[roll].wins.armed)
+    if (dontComeCounts[roll].lose.pivot == roll)
     {
         dontComeLose.bump(); dontComeWins.disarm();
         // Update stats on the number itself
         PointCounts& pc = dontComeCounts[roll];
         pc.lose.bump(); pc.wins.disarm();
+        // pc.lose.pivot remains assigned so dontcome bet is re-upped.
     }
 }
 
@@ -716,6 +723,7 @@ TableStats::Counter::reset()
     armed = false;
     curRepeats = 0;
     maxRepeats = 0;
+    pivot   = 0;
 }
 
 //-----------------------------------------------------------------
@@ -745,6 +753,7 @@ TableStats::AmtBets::reset()
     current = 0;
     max     = 0;
     total   = 0;
+   
 }
 
 //-----------------------------------------------------------------

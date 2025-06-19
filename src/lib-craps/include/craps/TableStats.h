@@ -52,6 +52,7 @@ public:
         bool armed = false;
         unsigned curRepeats = 0;
         unsigned maxRepeats = 0;
+        unsigned pivot = 0;
         unsigned count() const;
         unsigned repeats() const;
         void bump();

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: TableStatsTest.cpp
+// File: TableStatsPart1Test.cpp
 //
 //----------------------------------------------------------------
 
@@ -26,7 +26,7 @@ initCheckPointCounts(const TableStats::PointCounts& pc)
     CHECK(pc.wins.count() == 0);
     CHECK(pc.wins.armed == false);
     CHECK(pc.wins.repeats() == 0);
-    
+
     CHECK(pc.lose.count() == 0);
     CHECK(pc.lose.armed == false);
     CHECK(pc.lose.repeats() == 0);
@@ -114,13 +114,581 @@ TEST_CASE("TableStats:counter")
 
 //----------------------------------------------------------------
 
-TEST_CASE("TableStats:diceroll:one")
+void
+seqHelper(TableStats& ts, unsigned d1, unsigned d2)
+{
+    unsigned point = 0;
+    Dice dice; dice.set(d1,d2);
+    ts.recordDiceRoll(point, dice);
+}
+
+TEST_CASE("TableStats:recentrolls")
 {
     TableStats ts("tableId-LasVegas");
     Dice dice;
     unsigned point = 0;
 
-    // Initial comeout roll, dice = 2, 
+    for (unsigned roll = 2; roll < 13; roll++)
+    {
+        unsigned d1; unsigned d2;
+        switch(roll)
+        {
+            case 2:  d1 = 1; d2 = 1; break;
+            case 3:  d1 = 1; d2 = 2; break;
+            case 4:  d1 = 2; d2 = 2; break;
+            case 5:  d1 = 2; d2 = 3; break;
+            case 6:  d1 = 3; d2 = 3; break;
+            case 7:  d1 = 3; d2 = 4; break;
+            case 8:  d1 = 4; d2 = 4; break;
+            case 9:  d1 = 5; d2 = 4; break;
+            case 10: d1 = 6; d2 = 4; break;
+            case 11: d1 = 6; d2 = 5; break;
+            case 12: d1 = 6; d2 = 6; break;
+        }
+        seqHelper(ts, d1, d2);
+    }
+
+    unsigned expectedRoll = 2;
+    for (const auto roll : ts.recentRolls)
+    {
+        CHECK(roll.value() == expectedRoll++);
+    }
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("TableStats:diceroll:allsevens")
+{
+    // seq: 7,7
+    
+    TableStats ts("tableId-LasVegas");
+    Dice dice;
+    unsigned point = 0;
+
+    // Initial comeout roll, dice = 7,
+    // seq: 7
+    point = 0; dice.set(3,4);
+    ts.recordDiceRoll(point, dice);
+    CHECK(ts.numRolls == 1);
+    CHECK(ts.numberCounts[2].count()    == 0);
+    CHECK(ts.numberCounts[2].repeats()  == 0);
+    CHECK(ts.numberCounts[2].armed      == false);
+    CHECK(ts.numberCounts[3].count()    == 0);
+    CHECK(ts.numberCounts[3].repeats()  == 0);
+    CHECK(ts.numberCounts[3].armed      == false);
+    CHECK(ts.numberCounts[4].count()    == 0);
+    CHECK(ts.numberCounts[4].repeats()  == 0);
+    CHECK(ts.numberCounts[4].armed      == false);
+    CHECK(ts.numberCounts[5].count()    == 0);
+    CHECK(ts.numberCounts[5].repeats()  == 0);
+    CHECK(ts.numberCounts[5].armed      == false);
+    CHECK(ts.numberCounts[6].count()    == 0);
+    CHECK(ts.numberCounts[6].repeats()  == 0);
+    CHECK(ts.numberCounts[6].armed      == false);
+    CHECK(ts.numberCounts[7].count()    == 1);
+    CHECK(ts.numberCounts[7].repeats()  == 0);
+    CHECK(ts.numberCounts[7].armed      == true);
+    CHECK(ts.numberCounts[8].count()    == 0);
+    CHECK(ts.numberCounts[8].repeats()  == 0);
+    CHECK(ts.numberCounts[8].armed      == false);
+    CHECK(ts.numberCounts[9].count()    == 0);
+    CHECK(ts.numberCounts[9].repeats()  == 0);
+    CHECK(ts.numberCounts[9].armed      == false);
+    CHECK(ts.numberCounts[10].count()   == 0);
+    CHECK(ts.numberCounts[10].repeats() == 0);
+    CHECK(ts.numberCounts[10].armed     == false);
+    CHECK(ts.numberCounts[11].count()   == 0);
+    CHECK(ts.numberCounts[11].repeats() == 0);
+    CHECK(ts.numberCounts[11].armed     == false);
+    CHECK(ts.numberCounts[12].count()   == 0);
+    CHECK(ts.numberCounts[12].repeats() == 0);
+    CHECK(ts.numberCounts[12].armed     == false);
+
+    CHECK(ts.comeOutRolls.count()   == 1);
+    CHECK(ts.comeOutRolls.repeats() == 0);
+    CHECK(ts.comeOutRolls.armed     == true);
+    CHECK(ts.pointRolls.count()     == 0);
+    CHECK(ts.pointRolls.repeats()   == 0);
+    CHECK(ts.pointRolls.armed       == false);
+
+    CHECK(ts.passLineWins.count()              == 1);
+    CHECK(ts.passLineWins.repeats()            == 0);
+    CHECK(ts.passLineWins.armed                == true);
+    CHECK(ts.passLineCounts[4].wins.count()    == 0);
+    CHECK(ts.passLineCounts[4].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[4].wins.armed      == false);
+    CHECK(ts.passLineCounts[5].wins.count()    == 0);
+    CHECK(ts.passLineCounts[5].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[5].wins.armed      == false);
+    CHECK(ts.passLineCounts[6].wins.count()    == 0);
+    CHECK(ts.passLineCounts[6].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[6].wins.armed      == false);
+    CHECK(ts.passLineCounts[8].wins.count()    == 0);
+    CHECK(ts.passLineCounts[8].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[8].wins.armed      == false);
+    CHECK(ts.passLineCounts[9].wins.count()    == 0);
+    CHECK(ts.passLineCounts[9].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[9].wins.armed      == false);
+    CHECK(ts.passLineCounts[10].wins.count()   == 0);
+    CHECK(ts.passLineCounts[10].wins.repeats() == 0);
+    CHECK(ts.passLineCounts[10].wins.armed     == false);
+
+    CHECK(ts.passLineLose.count()              == 0);
+    CHECK(ts.passLineLose.repeats()            == 0);
+    CHECK(ts.passLineLose.armed                == false);
+    CHECK(ts.passLineCounts[4].lose.count()    == 0);
+    CHECK(ts.passLineCounts[4].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[4].lose.armed      == false);
+    CHECK(ts.passLineCounts[5].lose.count()    == 0);
+    CHECK(ts.passLineCounts[5].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[5].lose.armed      == false);
+    CHECK(ts.passLineCounts[6].lose.count()    == 0);
+    CHECK(ts.passLineCounts[6].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[6].lose.armed      == false);
+    CHECK(ts.passLineCounts[8].lose.count()    == 0);
+    CHECK(ts.passLineCounts[8].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[8].lose.armed      == false);
+    CHECK(ts.passLineCounts[9].lose.count()    == 0);
+    CHECK(ts.passLineCounts[9].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[9].lose.armed      == false);
+    CHECK(ts.passLineCounts[10].lose.count()   == 0);
+    CHECK(ts.passLineCounts[10].lose.repeats() == 0);
+    CHECK(ts.passLineCounts[10].lose.armed     == false);
+
+    CHECK(ts.dontPassWins.count()              == 0);
+    CHECK(ts.dontPassWins.repeats()            == 0);
+    CHECK(ts.dontPassWins.armed                == false);
+    CHECK(ts.dontPassCounts[4].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[4].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[4].wins.armed      == false);
+    CHECK(ts.dontPassCounts[5].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[5].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[5].wins.armed      == false);
+    CHECK(ts.dontPassCounts[6].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[6].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[6].wins.armed      == false);
+    CHECK(ts.dontPassCounts[8].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[8].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[8].wins.armed      == false);
+    CHECK(ts.dontPassCounts[9].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[9].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[9].wins.armed      == false);
+    CHECK(ts.dontPassCounts[10].wins.count()   == 0);
+    CHECK(ts.dontPassCounts[10].wins.repeats() == 0);
+    CHECK(ts.dontPassCounts[10].wins.armed     == false);
+
+    CHECK(ts.dontPassLose.count()              == 1);
+    CHECK(ts.dontPassLose.repeats()            == 0);
+    CHECK(ts.dontPassLose.armed                == true);
+    CHECK(ts.dontPassCounts[4].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[4].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[4].lose.armed      == false);
+    CHECK(ts.dontPassCounts[5].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[5].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[5].lose.armed      == false);
+    CHECK(ts.dontPassCounts[6].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[6].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[6].lose.armed      == false);
+    CHECK(ts.dontPassCounts[8].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[8].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[8].lose.armed      == false);
+    CHECK(ts.dontPassCounts[9].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[9].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[9].lose.armed      == false);
+    CHECK(ts.dontPassCounts[10].lose.count()   == 0);
+    CHECK(ts.dontPassCounts[10].lose.repeats() == 0);
+    CHECK(ts.dontPassCounts[10].lose.armed     == false);
+
+    CHECK(ts.comeWins.count()              == 0);
+    CHECK(ts.comeWins.repeats()            == 0);
+    CHECK(ts.comeWins.armed                == false);
+    CHECK(ts.comeCounts[4].wins.count()    == 0);
+    CHECK(ts.comeCounts[4].wins.repeats()  == 0);
+    CHECK(ts.comeCounts[4].wins.armed      == false);
+    CHECK(ts.comeCounts[6].wins.count()    == 0);
+    CHECK(ts.comeCounts[6].wins.repeats()  == 0);
+    CHECK(ts.comeCounts[6].wins.armed      == false);
+    CHECK(ts.comeCounts[8].wins.count()    == 0);
+    CHECK(ts.comeCounts[8].wins.repeats()  == 0);
+    CHECK(ts.comeCounts[8].wins.armed      == false);
+    CHECK(ts.comeCounts[10].wins.count()   == 0);
+    CHECK(ts.comeCounts[10].wins.repeats() == 0);
+    CHECK(ts.comeCounts[10].wins.armed     == false);
+
+    CHECK(ts.comeLose.count()              == 0);
+    CHECK(ts.comeLose.repeats()            == 0);
+    CHECK(ts.comeLose.armed                == false);
+    CHECK(ts.comeCounts[4].lose.count()    == 0);
+    CHECK(ts.comeCounts[4].lose.repeats()  == 0);
+    CHECK(ts.comeCounts[4].lose.armed      == false);
+    CHECK(ts.comeCounts[6].lose.count()    == 0);
+    CHECK(ts.comeCounts[6].lose.repeats()  == 0);
+    CHECK(ts.comeCounts[6].lose.armed      == false);
+    CHECK(ts.comeCounts[8].lose.count()    == 0);
+    CHECK(ts.comeCounts[8].lose.repeats()  == 0);
+    CHECK(ts.comeCounts[8].lose.armed      == false);
+    CHECK(ts.comeCounts[10].lose.count()   == 0);
+    CHECK(ts.comeCounts[10].lose.repeats() == 0);
+    CHECK(ts.comeCounts[10].lose.armed     == false);
+
+    CHECK(ts.dontComeWins.count()              == 0);
+    CHECK(ts.dontComeWins.repeats()            == 0);
+    CHECK(ts.dontComeWins.armed                == false);
+    CHECK(ts.dontComeCounts[4].wins.count()    == 0);
+    CHECK(ts.dontComeCounts[4].wins.repeats()  == 0);
+    CHECK(ts.dontComeCounts[4].wins.armed      == false);
+    CHECK(ts.dontComeCounts[6].wins.count()    == 0);
+    CHECK(ts.dontComeCounts[6].wins.repeats()  == 0);
+    CHECK(ts.dontComeCounts[6].wins.armed      == false);
+    CHECK(ts.dontComeCounts[8].wins.count()    == 0);
+    CHECK(ts.dontComeCounts[8].wins.repeats()  == 0);
+    CHECK(ts.dontComeCounts[8].wins.armed      == false);
+    CHECK(ts.dontComeCounts[10].wins.count()   == 0);
+    CHECK(ts.dontComeCounts[10].wins.repeats() == 0);
+    CHECK(ts.dontComeCounts[10].wins.armed     == false);
+
+    CHECK(ts.dontComeLose.count()              == 0);
+    CHECK(ts.dontComeLose.repeats()            == 0);
+    CHECK(ts.dontComeLose.armed                == false);
+    CHECK(ts.dontComeCounts[4].lose.count()    == 0);
+    CHECK(ts.dontComeCounts[4].lose.repeats()  == 0);
+    CHECK(ts.dontComeCounts[4].lose.armed      == false);
+    CHECK(ts.dontComeCounts[6].lose.count()    == 0);
+    CHECK(ts.dontComeCounts[6].lose.repeats()  == 0);
+    CHECK(ts.dontComeCounts[6].lose.armed      == false);
+    CHECK(ts.dontComeCounts[8].lose.count()    == 0);
+    CHECK(ts.dontComeCounts[8].lose.repeats()  == 0);
+    CHECK(ts.dontComeCounts[8].lose.armed      == false);
+    CHECK(ts.dontComeCounts[10].lose.count()   == 0);
+    CHECK(ts.dontComeCounts[10].lose.repeats() == 0);
+    CHECK(ts.dontComeCounts[10].lose.armed     == false);
+
+    CHECK(ts.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.hardwayCounts[4].wins.repeats()  == 0);
+    CHECK(ts.hardwayCounts[4].wins.armed      == false);
+    CHECK(ts.hardwayCounts[6].wins.count()    == 0);
+    CHECK(ts.hardwayCounts[6].wins.repeats()  == 0);
+    CHECK(ts.hardwayCounts[6].wins.armed      == false);
+    CHECK(ts.hardwayCounts[8].wins.count()    == 0);
+    CHECK(ts.hardwayCounts[8].wins.repeats()  == 0);
+    CHECK(ts.hardwayCounts[8].wins.armed      == false);
+    CHECK(ts.hardwayCounts[10].wins.count()   == 0);
+    CHECK(ts.hardwayCounts[10].wins.repeats() == 0);
+    CHECK(ts.hardwayCounts[10].wins.armed     == false);
+
+    CHECK(ts.hardwayCounts[4].lose.count()    == 0);
+    CHECK(ts.hardwayCounts[4].lose.repeats()  == 0);
+    CHECK(ts.hardwayCounts[4].lose.armed      == false);
+    CHECK(ts.hardwayCounts[6].lose.count()    == 0);
+    CHECK(ts.hardwayCounts[6].lose.repeats()  == 0);
+    CHECK(ts.hardwayCounts[6].lose.armed      == false);
+    CHECK(ts.hardwayCounts[8].lose.count()    == 0);
+    CHECK(ts.hardwayCounts[8].lose.repeats()  == 0);
+    CHECK(ts.hardwayCounts[8].lose.armed      == false);
+    CHECK(ts.hardwayCounts[10].lose.count()   == 0);
+    CHECK(ts.hardwayCounts[10].lose.repeats() == 0);
+    CHECK(ts.hardwayCounts[10].lose.armed     == false);
+
+    CHECK(ts.fieldBetWins.count()   == 0);
+    CHECK(ts.fieldBetWins.repeats() == 0);
+    CHECK(ts.fieldBetWins.armed     == false);
+    CHECK(ts.fieldBetLose.count()   == 1);
+    CHECK(ts.fieldBetLose.repeats() == 0);
+    CHECK(ts.fieldBetLose.armed     == true);
+
+    CHECK(ts.sevenOuts.count()              == 0);
+    CHECK(ts.sevenOuts.repeats()            == 0);
+    CHECK(ts.sevenOuts.armed                == false);
+    CHECK(ts.shooterCounts.count()          == 1);
+    CHECK(ts.shooterCounts.repeats()        == 0);
+    CHECK(ts.shooterCounts.armed            == true);
+    CHECK(ts.twosOnComeOutRoll.count()      == 0);
+    CHECK(ts.twosOnComeOutRoll.repeats()    == 0);
+    CHECK(ts.twosOnComeOutRoll.armed        == false);
+    CHECK(ts.threesOnComeOutRoll.count()    == 0);
+    CHECK(ts.threesOnComeOutRoll.repeats()  == 0);
+    CHECK(ts.threesOnComeOutRoll.armed      == false);
+    CHECK(ts.sevensOnComeOutRoll.count()    == 1);
+    CHECK(ts.sevensOnComeOutRoll.repeats()  == 0);
+    CHECK(ts.sevensOnComeOutRoll.armed      == true);
+    CHECK(ts.elevensOnComeOutRoll.count()   == 0);
+    CHECK(ts.elevensOnComeOutRoll.repeats() == 0);
+    CHECK(ts.elevensOnComeOutRoll.armed     == false);
+    CHECK(ts.twelvesOnComeOutRoll.count()   == 0);
+    CHECK(ts.twelvesOnComeOutRoll.repeats() == 0);
+    CHECK(ts.twelvesOnComeOutRoll.armed     == false);
+    CHECK(ts.crapsOnComeOutRoll.count()     == 0);
+    CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
+    CHECK(ts.crapsOnComeOutRoll.armed       == false);
+
+    // Comeout roll, dice = 7,
+    // seq: 7,7
+    point = 0; dice.set(3,4);
+    ts.recordDiceRoll(point, dice);
+    CHECK(ts.numRolls == 2);
+    CHECK(ts.numberCounts[2].count()    == 0);
+    CHECK(ts.numberCounts[2].repeats()  == 0);
+    CHECK(ts.numberCounts[2].armed      == false);
+    CHECK(ts.numberCounts[3].count()    == 0);
+    CHECK(ts.numberCounts[3].repeats()  == 0);
+    CHECK(ts.numberCounts[3].armed      == false);
+    CHECK(ts.numberCounts[4].count()    == 0);
+    CHECK(ts.numberCounts[4].repeats()  == 0);
+    CHECK(ts.numberCounts[4].armed      == false);
+    CHECK(ts.numberCounts[5].count()    == 0);
+    CHECK(ts.numberCounts[5].repeats()  == 0);
+    CHECK(ts.numberCounts[5].armed      == false);
+    CHECK(ts.numberCounts[6].count()    == 0);
+    CHECK(ts.numberCounts[6].repeats()  == 0);
+    CHECK(ts.numberCounts[6].armed      == false);
+    CHECK(ts.numberCounts[7].count()    == 2);
+    CHECK(ts.numberCounts[7].repeats()  == 1);
+    CHECK(ts.numberCounts[7].armed      == true);
+    CHECK(ts.numberCounts[8].count()    == 0);
+    CHECK(ts.numberCounts[8].repeats()  == 0);
+    CHECK(ts.numberCounts[8].armed      == false);
+    CHECK(ts.numberCounts[9].count()    == 0);
+    CHECK(ts.numberCounts[9].repeats()  == 0);
+    CHECK(ts.numberCounts[9].armed      == false);
+    CHECK(ts.numberCounts[10].count()   == 0);
+    CHECK(ts.numberCounts[10].repeats() == 0);
+    CHECK(ts.numberCounts[10].armed     == false);
+    CHECK(ts.numberCounts[11].count()   == 0);
+    CHECK(ts.numberCounts[11].repeats() == 0);
+    CHECK(ts.numberCounts[11].armed     == false);
+    CHECK(ts.numberCounts[12].count()   == 0);
+    CHECK(ts.numberCounts[12].repeats() == 0);
+    CHECK(ts.numberCounts[12].armed     == false);
+
+    CHECK(ts.comeOutRolls.count()   == 2);
+    CHECK(ts.comeOutRolls.repeats() == 1);
+    CHECK(ts.comeOutRolls.armed     == true);
+    CHECK(ts.pointRolls.count()     == 0);
+    CHECK(ts.pointRolls.repeats()   == 0);
+    CHECK(ts.pointRolls.armed       == false);
+
+    CHECK(ts.passLineWins.count()              == 2);
+    CHECK(ts.passLineWins.repeats()            == 1);
+    CHECK(ts.passLineWins.armed                == true);
+    CHECK(ts.passLineCounts[4].wins.count()    == 0);
+    CHECK(ts.passLineCounts[4].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[4].wins.armed      == false);
+    CHECK(ts.passLineCounts[5].wins.count()    == 0);
+    CHECK(ts.passLineCounts[5].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[5].wins.armed      == false);
+    CHECK(ts.passLineCounts[6].wins.count()    == 0);
+    CHECK(ts.passLineCounts[6].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[6].wins.armed      == false);
+    CHECK(ts.passLineCounts[8].wins.count()    == 0);
+    CHECK(ts.passLineCounts[8].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[8].wins.armed      == false);
+    CHECK(ts.passLineCounts[9].wins.count()    == 0);
+    CHECK(ts.passLineCounts[9].wins.repeats()  == 0);
+    CHECK(ts.passLineCounts[9].wins.armed      == false);
+    CHECK(ts.passLineCounts[10].wins.count()   == 0);
+    CHECK(ts.passLineCounts[10].wins.repeats() == 0);
+    CHECK(ts.passLineCounts[10].wins.armed     == false);
+
+    CHECK(ts.passLineLose.count()              == 0);
+    CHECK(ts.passLineLose.repeats()            == 0);
+    CHECK(ts.passLineLose.armed                == false);
+    CHECK(ts.passLineCounts[4].lose.count()    == 0);
+    CHECK(ts.passLineCounts[4].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[4].lose.armed      == false);
+    CHECK(ts.passLineCounts[5].lose.count()    == 0);
+    CHECK(ts.passLineCounts[5].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[5].lose.armed      == false);
+    CHECK(ts.passLineCounts[6].lose.count()    == 0);
+    CHECK(ts.passLineCounts[6].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[6].lose.armed      == false);
+    CHECK(ts.passLineCounts[8].lose.count()    == 0);
+    CHECK(ts.passLineCounts[8].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[8].lose.armed      == false);
+    CHECK(ts.passLineCounts[9].lose.count()    == 0);
+    CHECK(ts.passLineCounts[9].lose.repeats()  == 0);
+    CHECK(ts.passLineCounts[9].lose.armed      == false);
+    CHECK(ts.passLineCounts[10].lose.count()   == 0);
+    CHECK(ts.passLineCounts[10].lose.repeats() == 0);
+    CHECK(ts.passLineCounts[10].lose.armed     == false);
+
+    CHECK(ts.dontPassWins.count()              == 0);
+    CHECK(ts.dontPassWins.repeats()            == 0);
+    CHECK(ts.dontPassWins.armed                == false);
+    CHECK(ts.dontPassCounts[4].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[4].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[4].wins.armed      == false);
+    CHECK(ts.dontPassCounts[5].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[5].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[5].wins.armed      == false);
+    CHECK(ts.dontPassCounts[6].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[6].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[6].wins.armed      == false);
+    CHECK(ts.dontPassCounts[8].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[8].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[8].wins.armed      == false);
+    CHECK(ts.dontPassCounts[9].wins.count()    == 0);
+    CHECK(ts.dontPassCounts[9].wins.repeats()  == 0);
+    CHECK(ts.dontPassCounts[9].wins.armed      == false);
+    CHECK(ts.dontPassCounts[10].wins.count()   == 0);
+    CHECK(ts.dontPassCounts[10].wins.repeats() == 0);
+    CHECK(ts.dontPassCounts[10].wins.armed     == false);
+
+    CHECK(ts.dontPassLose.count()              == 2);
+    CHECK(ts.dontPassLose.repeats()            == 1);
+    CHECK(ts.dontPassLose.armed                == true);
+    CHECK(ts.dontPassCounts[4].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[4].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[4].lose.armed      == false);
+    CHECK(ts.dontPassCounts[5].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[5].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[5].lose.armed      == false);
+    CHECK(ts.dontPassCounts[6].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[6].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[6].lose.armed      == false);
+    CHECK(ts.dontPassCounts[8].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[8].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[8].lose.armed      == false);
+    CHECK(ts.dontPassCounts[9].lose.count()    == 0);
+    CHECK(ts.dontPassCounts[9].lose.repeats()  == 0);
+    CHECK(ts.dontPassCounts[9].lose.armed      == false);
+    CHECK(ts.dontPassCounts[10].lose.count()   == 0);
+    CHECK(ts.dontPassCounts[10].lose.repeats() == 0);
+    CHECK(ts.dontPassCounts[10].lose.armed     == false);
+
+    CHECK(ts.comeWins.count()              == 0);
+    CHECK(ts.comeWins.repeats()            == 0);
+    CHECK(ts.comeWins.armed                == false);
+    CHECK(ts.comeCounts[4].wins.count()    == 0);
+    CHECK(ts.comeCounts[4].wins.repeats()  == 0);
+    CHECK(ts.comeCounts[4].wins.armed      == false);
+    CHECK(ts.comeCounts[6].wins.count()    == 0);
+    CHECK(ts.comeCounts[6].wins.repeats()  == 0);
+    CHECK(ts.comeCounts[6].wins.armed      == false);
+    CHECK(ts.comeCounts[8].wins.count()    == 0);
+    CHECK(ts.comeCounts[8].wins.repeats()  == 0);
+    CHECK(ts.comeCounts[8].wins.armed      == false);
+    CHECK(ts.comeCounts[10].wins.count()   == 0);
+    CHECK(ts.comeCounts[10].wins.repeats() == 0);
+    CHECK(ts.comeCounts[10].wins.armed     == false);
+
+    CHECK(ts.comeLose.count()              == 0);
+    CHECK(ts.comeLose.repeats()            == 0);
+    CHECK(ts.comeLose.armed                == false);
+    CHECK(ts.comeCounts[4].lose.count()    == 0);
+    CHECK(ts.comeCounts[4].lose.repeats()  == 0);
+    CHECK(ts.comeCounts[4].lose.armed      == false);
+    CHECK(ts.comeCounts[6].lose.count()    == 0);
+    CHECK(ts.comeCounts[6].lose.repeats()  == 0);
+    CHECK(ts.comeCounts[6].lose.armed      == false);
+    CHECK(ts.comeCounts[8].lose.count()    == 0);
+    CHECK(ts.comeCounts[8].lose.repeats()  == 0);
+    CHECK(ts.comeCounts[8].lose.armed      == false);
+    CHECK(ts.comeCounts[10].lose.count()   == 0);
+    CHECK(ts.comeCounts[10].lose.repeats() == 0);
+    CHECK(ts.comeCounts[10].lose.armed     == false);
+
+    CHECK(ts.dontComeWins.count()              == 0);
+    CHECK(ts.dontComeWins.repeats()            == 0);
+    CHECK(ts.dontComeWins.armed                == false);
+    CHECK(ts.dontComeCounts[4].wins.count()    == 0);
+    CHECK(ts.dontComeCounts[4].wins.repeats()  == 0);
+    CHECK(ts.dontComeCounts[4].wins.armed      == false);
+    CHECK(ts.dontComeCounts[6].wins.count()    == 0);
+    CHECK(ts.dontComeCounts[6].wins.repeats()  == 0);
+    CHECK(ts.dontComeCounts[6].wins.armed      == false);
+    CHECK(ts.dontComeCounts[8].wins.count()    == 0);
+    CHECK(ts.dontComeCounts[8].wins.repeats()  == 0);
+    CHECK(ts.dontComeCounts[8].wins.armed      == false);
+    CHECK(ts.dontComeCounts[10].wins.count()   == 0);
+    CHECK(ts.dontComeCounts[10].wins.repeats() == 0);
+    CHECK(ts.dontComeCounts[10].wins.armed     == false);
+
+    CHECK(ts.dontComeLose.count()              == 0);
+    CHECK(ts.dontComeLose.repeats()            == 0);
+    CHECK(ts.dontComeLose.armed                == false);
+    CHECK(ts.dontComeCounts[4].lose.count()    == 0);
+    CHECK(ts.dontComeCounts[4].lose.repeats()  == 0);
+    CHECK(ts.dontComeCounts[4].lose.armed      == false);
+    CHECK(ts.dontComeCounts[6].lose.count()    == 0);
+    CHECK(ts.dontComeCounts[6].lose.repeats()  == 0);
+    CHECK(ts.dontComeCounts[6].lose.armed      == false);
+    CHECK(ts.dontComeCounts[8].lose.count()    == 0);
+    CHECK(ts.dontComeCounts[8].lose.repeats()  == 0);
+    CHECK(ts.dontComeCounts[8].lose.armed      == false);
+    CHECK(ts.dontComeCounts[10].lose.count()   == 0);
+    CHECK(ts.dontComeCounts[10].lose.repeats() == 0);
+    CHECK(ts.dontComeCounts[10].lose.armed     == false);
+
+    CHECK(ts.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.hardwayCounts[4].wins.repeats()  == 0);
+    CHECK(ts.hardwayCounts[4].wins.armed      == false);
+    CHECK(ts.hardwayCounts[6].wins.count()    == 0);
+    CHECK(ts.hardwayCounts[6].wins.repeats()  == 0);
+    CHECK(ts.hardwayCounts[6].wins.armed      == false);
+    CHECK(ts.hardwayCounts[8].wins.count()    == 0);
+    CHECK(ts.hardwayCounts[8].wins.repeats()  == 0);
+    CHECK(ts.hardwayCounts[8].wins.armed      == false);
+    CHECK(ts.hardwayCounts[10].wins.count()   == 0);
+    CHECK(ts.hardwayCounts[10].wins.repeats() == 0);
+    CHECK(ts.hardwayCounts[10].wins.armed     == false);
+
+    CHECK(ts.hardwayCounts[4].lose.count()    == 0);
+    CHECK(ts.hardwayCounts[4].lose.repeats()  == 0);
+    CHECK(ts.hardwayCounts[4].lose.armed      == false);
+    CHECK(ts.hardwayCounts[6].lose.count()    == 0);
+    CHECK(ts.hardwayCounts[6].lose.repeats()  == 0);
+    CHECK(ts.hardwayCounts[6].lose.armed      == false);
+    CHECK(ts.hardwayCounts[8].lose.count()    == 0);
+    CHECK(ts.hardwayCounts[8].lose.repeats()  == 0);
+    CHECK(ts.hardwayCounts[8].lose.armed      == false);
+    CHECK(ts.hardwayCounts[10].lose.count()   == 0);
+    CHECK(ts.hardwayCounts[10].lose.repeats() == 0);
+    CHECK(ts.hardwayCounts[10].lose.armed     == false);
+
+    CHECK(ts.fieldBetWins.count()   == 0);
+    CHECK(ts.fieldBetWins.repeats() == 0);
+    CHECK(ts.fieldBetWins.armed     == false);
+    CHECK(ts.fieldBetLose.count()   == 2);
+    CHECK(ts.fieldBetLose.repeats() == 1);
+    CHECK(ts.fieldBetLose.armed     == true);
+
+    CHECK(ts.sevenOuts.count()              == 0);
+    CHECK(ts.sevenOuts.repeats()            == 0);
+    CHECK(ts.sevenOuts.armed                == false);
+    CHECK(ts.shooterCounts.count()          == 2);
+    CHECK(ts.shooterCounts.repeats()        == 1);
+    CHECK(ts.shooterCounts.armed            == true);
+    CHECK(ts.twosOnComeOutRoll.count()      == 0);
+    CHECK(ts.twosOnComeOutRoll.repeats()    == 0);
+    CHECK(ts.twosOnComeOutRoll.armed        == false);
+    CHECK(ts.threesOnComeOutRoll.count()    == 0);
+    CHECK(ts.threesOnComeOutRoll.repeats()  == 0);
+    CHECK(ts.threesOnComeOutRoll.armed      == false);
+    CHECK(ts.sevensOnComeOutRoll.count()    == 2);
+    CHECK(ts.sevensOnComeOutRoll.repeats()  == 1);
+    CHECK(ts.sevensOnComeOutRoll.armed      == true);
+    CHECK(ts.elevensOnComeOutRoll.count()   == 0);
+    CHECK(ts.elevensOnComeOutRoll.repeats() == 0);
+    CHECK(ts.elevensOnComeOutRoll.armed     == false);
+    CHECK(ts.twelvesOnComeOutRoll.count()   == 0);
+    CHECK(ts.twelvesOnComeOutRoll.repeats() == 0);
+    CHECK(ts.twelvesOnComeOutRoll.armed     == false);
+    CHECK(ts.crapsOnComeOutRoll.count()     == 0);
+    CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
+    CHECK(ts.crapsOnComeOutRoll.armed       == false);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("TableStats:diceroll:one")
+{
+    // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12,7,6,7
+    
+    TableStats ts("tableId-LasVegas");
+    Dice dice;
+    unsigned point = 0;
+
+    // Initial comeout roll, dice = 2,
     // seq: 2
     point = 0; dice.set(1,1);
     ts.recordDiceRoll(point, dice);
@@ -205,7 +773,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Still comeout roll, dice = 3, consecutive 2's stop
     // seq: 2,2,3
-    point = 0; dice.set(1,2); 
+    point = 0; dice.set(1,2);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 3);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -251,7 +819,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Still comeout roll, dice = 11, win on pass line
     // seq: 2,2,3,11
-    point = 0; dice.set(5,6); 
+    point = 0; dice.set(5,6);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 4);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -300,7 +868,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Still comeout roll, dice = 12, lose on pass line
     // seq: 2,2,3,11,12
-    point = 0; dice.set(6,6); 
+    point = 0; dice.set(6,6);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 5);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -351,7 +919,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Still comeout roll, dice = 7, win on pass line
     // seq: 2,2,3,11,12,7
-    point = 0; dice.set(5,2); 
+    point = 0; dice.set(5,2);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 6);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -407,7 +975,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Still comeout roll, dice = 7 again, win on pass line
     // seq: 2,2,3,11,12,7,7
-    point = 0; dice.set(3,4); 
+    point = 0; dice.set(3,4);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 7);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -467,7 +1035,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Establish point, dice = 4
     // seq: 2,2,3,11,12,7,7,4
-    point = 0; dice.set(2,2); 
+    point = 0; dice.set(2,2);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 8);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -534,7 +1102,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Point 4, roll an dice = 8
     // seq: 2,2,3,11,12,7,7,4,8
-    point = 4; dice.set(4,4); 
+    point = 4; dice.set(4,4);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 9);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -578,13 +1146,13 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[4].wins.armed == false);
     CHECK(ts.comeCounts[8].wins.count() == 0);
     CHECK(ts.comeCounts[8].wins.repeats() == 0);
-    CHECK(ts.comeCounts[8].wins.armed == true);
+    CHECK(ts.comeCounts[8].wins.armed == false);
     CHECK(ts.dontComeCounts[4].wins.count() == 0);
     CHECK(ts.dontComeCounts[4].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[4].wins.armed == false);
     CHECK(ts.dontComeCounts[8].wins.count() == 0);
     CHECK(ts.dontComeCounts[8].wins.repeats() == 0);
-    CHECK(ts.dontComeCounts[8].wins.armed == true);
+    CHECK(ts.dontComeCounts[8].wins.armed == false);
     CHECK(ts.fieldBetWins.count() == 6);
     CHECK(ts.fieldBetWins.repeats() == 4);
     CHECK(ts.fieldBetLose.count() == 3);
@@ -616,7 +1184,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Point 4, roll an dice = 3
     // seq: 2,2,3,11,12,7,7,4,8,3
-    point = 4; dice.set(2,1); 
+    point = 4; dice.set(2,1);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 10);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -664,13 +1232,13 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[4].wins.armed == false);
     CHECK(ts.comeCounts[8].wins.count() == 0);
     CHECK(ts.comeCounts[8].wins.repeats() == 0);
-    CHECK(ts.comeCounts[8].wins.armed == true);
+    CHECK(ts.comeCounts[8].wins.armed == false);
     CHECK(ts.dontComeCounts[4].wins.count() == 0);
     CHECK(ts.dontComeCounts[4].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[4].wins.armed == false);
     CHECK(ts.dontComeCounts[8].wins.count() == 0);
     CHECK(ts.dontComeCounts[8].wins.repeats() == 0);
-    CHECK(ts.dontComeCounts[8].wins.armed == true);
+    CHECK(ts.dontComeCounts[8].wins.armed == false);
     CHECK(ts.fieldBetWins.count() == 7);
     CHECK(ts.fieldBetWins.repeats() == 4);
     CHECK(ts.fieldBetLose.count() == 3);
@@ -702,7 +1270,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Point 4, roll an dice = 8
     // seq: 2,2,3,11,12,7,7,4,8,3,8
-    point = 4; dice.set(5,3); 
+    point = 4; dice.set(5,3);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 11);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -749,14 +1317,14 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[4].wins.repeats() == 0);
     CHECK(ts.comeCounts[4].wins.armed == false);
     CHECK(ts.comeCounts[8].wins.count() == 1);
-    CHECK(ts.comeCounts[8].wins.repeats() == 1);
+    CHECK(ts.comeCounts[8].wins.repeats() == 0);
     CHECK(ts.comeCounts[8].wins.armed == true);
     CHECK(ts.dontComeCounts[4].wins.count() == 0);
     CHECK(ts.dontComeCounts[4].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[4].wins.armed == false);
     CHECK(ts.dontComeCounts[8].wins.count() == 0);
     CHECK(ts.dontComeCounts[8].wins.repeats() == 0);
-    CHECK(ts.dontComeCounts[8].wins.armed == true);
+    CHECK(ts.dontComeCounts[8].wins.armed == false);
     CHECK(ts.fieldBetWins.count() == 7);
     CHECK(ts.fieldBetWins.repeats() == 4);
     CHECK(ts.fieldBetLose.count() == 4);
@@ -794,9 +1362,9 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.hardwayCounts[10].lose.count() == 0);
     CHECK(ts.hardwayCounts[10].lose.repeats() == 0);
 
-    // Make the point 4, roll an dice = 4
+    // Made the point 4, roll an dice = 4
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4
-    point = 4; dice.set(3,1); 
+    point = 4; dice.set(3,1);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 12);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -841,19 +1409,19 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.dontComeLose.repeats() == 0);
     CHECK(ts.comeCounts[4].wins.count() == 0);
     CHECK(ts.comeCounts[4].wins.repeats() == 0);
-    CHECK(ts.comeCounts[4].wins.armed == true);
+    CHECK(ts.comeCounts[4].wins.armed == false);
     CHECK(ts.comeCounts[8].wins.count() == 1);
-    CHECK(ts.comeCounts[8].wins.repeats() == 1);
+    CHECK(ts.comeCounts[8].wins.repeats() == 0);
     CHECK(ts.comeCounts[8].wins.armed == true);
     CHECK(ts.dontComeCounts[4].wins.count() == 0);
     CHECK(ts.dontComeCounts[4].wins.repeats() == 0);
-    CHECK(ts.dontComeCounts[4].wins.armed == true);
+    CHECK(ts.dontComeCounts[4].wins.armed == false);
     CHECK(ts.dontComeCounts[4].lose.count() == 0);
     CHECK(ts.dontComeCounts[4].lose.repeats() == 0);
     CHECK(ts.dontComeCounts[4].lose.armed == false);
     CHECK(ts.dontComeCounts[8].wins.count() == 0);
     CHECK(ts.dontComeCounts[8].wins.repeats() == 0);
-    CHECK(ts.dontComeCounts[8].wins.armed == true);
+    CHECK(ts.dontComeCounts[8].wins.armed == false);
     CHECK(ts.fieldBetWins.count() == 8);
     CHECK(ts.fieldBetWins.repeats() == 4);
     CHECK(ts.fieldBetLose.count() == 4);
@@ -893,7 +1461,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Come out roll, roll an dice = 12
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12
-    point = 0; dice.set(6,6); 
+    point = 0; dice.set(6,6);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 13);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -938,16 +1506,16 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.dontComeLose.repeats() == 0);
     CHECK(ts.comeCounts[4].wins.count() == 0);
     CHECK(ts.comeCounts[4].wins.repeats() == 0);
-    CHECK(ts.comeCounts[4].wins.armed == true);
+    CHECK(ts.comeCounts[4].wins.armed == false);
     CHECK(ts.comeCounts[8].wins.count() == 1);
-    CHECK(ts.comeCounts[8].wins.repeats() == 1);
+    CHECK(ts.comeCounts[8].wins.repeats() == 0);
     CHECK(ts.comeCounts[8].wins.armed == true);
     CHECK(ts.dontComeCounts[4].wins.count() == 0);
     CHECK(ts.dontComeCounts[4].wins.repeats() == 0);
-    CHECK(ts.dontComeCounts[4].wins.armed == true);
+    CHECK(ts.dontComeCounts[4].wins.armed == false);
     CHECK(ts.dontComeCounts[8].wins.count() == 0);
     CHECK(ts.dontComeCounts[8].wins.repeats() == 0);
-    CHECK(ts.dontComeCounts[8].wins.armed == true);
+    CHECK(ts.dontComeCounts[8].wins.armed == false);
     CHECK(ts.fieldBetWins.count() == 9);
     CHECK(ts.fieldBetWins.repeats() == 4);
     CHECK(ts.fieldBetLose.count() == 4);
@@ -987,7 +1555,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Come out roll, roll an dice = 7 lose come bets, win dont come bets
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12,7
-    point = 0; dice.set(6,1); 
+    point = 0; dice.set(6,1);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 14);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -1034,8 +1602,8 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[4].wins.repeats() == 0);
     CHECK(ts.comeCounts[4].wins.armed == false);
     CHECK(ts.comeCounts[8].wins.count() == 1);
-    CHECK(ts.comeCounts[8].wins.repeats() == 1);
-    CHECK(ts.comeCounts[8].wins.armed == false);
+    CHECK(ts.comeCounts[8].wins.repeats() == 0);
+    CHECK(ts.comeCounts[8].wins.armed == true);
     CHECK(ts.comeCounts[4].lose.count() == 1);
     CHECK(ts.comeCounts[4].lose.repeats() == 0);
     CHECK(ts.comeCounts[4].lose.armed == false);
@@ -1043,10 +1611,10 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[8].lose.repeats() == 0);
     CHECK(ts.comeCounts[8].lose.armed == false);
     CHECK(ts.dontComeCounts[4].wins.count() == 1);
-    CHECK(ts.dontComeCounts[4].wins.repeats() == 1);
+    CHECK(ts.dontComeCounts[4].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[4].wins.armed == true);
     CHECK(ts.dontComeCounts[8].wins.count() == 1);
-    CHECK(ts.dontComeCounts[8].wins.repeats() == 1);
+    CHECK(ts.dontComeCounts[8].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[8].wins.armed == true);
     CHECK(ts.dontComeCounts[4].lose.count() == 0);
     CHECK(ts.dontComeCounts[4].lose.repeats() == 0);
@@ -1093,7 +1661,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Establish point, roll an dice = 6
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12,7,6
-    point = 0; dice.set(3,3); 
+    point = 0; dice.set(3,3);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 15);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -1143,8 +1711,8 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[4].wins.repeats() == 0);
     CHECK(ts.comeCounts[4].wins.armed == false);
     CHECK(ts.comeCounts[8].wins.count() == 1);
-    CHECK(ts.comeCounts[8].wins.repeats() == 1);
-    CHECK(ts.comeCounts[8].wins.armed == false);
+    CHECK(ts.comeCounts[8].wins.repeats() == 0);
+    CHECK(ts.comeCounts[8].wins.armed == true);
     CHECK(ts.comeCounts[4].lose.count() == 1);
     CHECK(ts.comeCounts[4].lose.repeats() == 0);
     CHECK(ts.comeCounts[4].lose.armed == false);
@@ -1152,10 +1720,10 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[8].lose.repeats() == 0);
     CHECK(ts.comeCounts[8].lose.armed == false);
     CHECK(ts.dontComeCounts[4].wins.count() == 1);
-    CHECK(ts.dontComeCounts[4].wins.repeats() == 1);
+    CHECK(ts.dontComeCounts[4].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[4].wins.armed == true);
     CHECK(ts.dontComeCounts[8].wins.count() == 1);
-    CHECK(ts.dontComeCounts[8].wins.repeats() == 1);
+    CHECK(ts.dontComeCounts[8].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[8].wins.armed == true);
     CHECK(ts.dontComeCounts[4].lose.count() == 0);
     CHECK(ts.dontComeCounts[4].lose.repeats() == 0);
@@ -1202,7 +1770,7 @@ TEST_CASE("TableStats:diceroll:one")
 
     // Point 6, roll an dice = 7 seven out pass dice
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12,7,6,7
-    point = 6; dice.set(3,4); 
+    point = 6; dice.set(3,4);
     ts.recordDiceRoll(point, dice);
     CHECK(ts.numRolls == 16);
     CHECK(ts.numberCounts[2].count() == 2);
@@ -1244,7 +1812,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeWins.repeats() == 0);
     CHECK(ts.comeLose.count() == 3);
     CHECK(ts.comeLose.repeats() == 1);
-    CHECK(ts.dontComeWins.count() == 5);
+    CHECK(ts.dontComeWins.count() == 3);
     CHECK(ts.dontComeWins.repeats() == 1);
     CHECK(ts.dontComeLose.count() == 2);
     CHECK(ts.dontComeLose.repeats() == 0);
@@ -1252,8 +1820,8 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[4].wins.repeats() == 0);
     CHECK(ts.comeCounts[4].wins.armed == false);
     CHECK(ts.comeCounts[8].wins.count() == 1);
-    CHECK(ts.comeCounts[8].wins.repeats() == 1);
-    CHECK(ts.comeCounts[8].wins.armed == false);
+    CHECK(ts.comeCounts[8].wins.repeats() == 0);
+    CHECK(ts.comeCounts[8].wins.armed == true);
     CHECK(ts.comeCounts[4].lose.count() == 1);
     CHECK(ts.comeCounts[4].lose.repeats() == 0);
     CHECK(ts.comeCounts[4].lose.armed == false);
@@ -1261,10 +1829,10 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.comeCounts[8].lose.repeats() == 0);
     CHECK(ts.comeCounts[8].lose.armed == false);
     CHECK(ts.dontComeCounts[4].wins.count() == 1);
-    CHECK(ts.dontComeCounts[4].wins.repeats() == 1);
+    CHECK(ts.dontComeCounts[4].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[4].wins.armed == true);
     CHECK(ts.dontComeCounts[8].wins.count() == 1);
-    CHECK(ts.dontComeCounts[8].wins.repeats() == 1);
+    CHECK(ts.dontComeCounts[8].wins.repeats() == 0);
     CHECK(ts.dontComeCounts[8].wins.armed == true);
     CHECK(ts.dontComeCounts[4].lose.count() == 0);
     CHECK(ts.dontComeCounts[4].lose.repeats() == 0);
@@ -1275,7 +1843,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.fieldBetWins.count() == 9);
     CHECK(ts.fieldBetWins.repeats() == 4);
     CHECK(ts.fieldBetLose.count() == 7);
-    CHECK(ts.fieldBetLose.repeats() == 1);
+    CHECK(ts.fieldBetLose.repeats() == 2);
     CHECK(ts.sevenOuts.count() == 1);
     CHECK(ts.sevenOuts.repeats() == 0);
     CHECK(ts.shooterCounts.count() == 16);
@@ -1301,59 +1869,13 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.hardwayCounts[10].wins.count() == 0);
     CHECK(ts.hardwayCounts[10].wins.repeats() == 0);
     CHECK(ts.hardwayCounts[4].lose.count() == 2);
-    CHECK(ts.hardwayCounts[4].lose.repeats() == 0);
+    CHECK(ts.hardwayCounts[4].lose.repeats() == 1);
     CHECK(ts.hardwayCounts[6].lose.count() == 1);
     CHECK(ts.hardwayCounts[6].lose.repeats() == 0);
     CHECK(ts.hardwayCounts[8].lose.count() == 2);
-    CHECK(ts.hardwayCounts[8].lose.repeats() == 0);
+    CHECK(ts.hardwayCounts[8].lose.repeats() == 1);
     CHECK(ts.hardwayCounts[10].lose.count() == 1);
     CHECK(ts.hardwayCounts[10].lose.repeats() == 0);
-
-
-    
-}
-
-//----------------------------------------------------------------
-
-void
-seqHelper(TableStats& ts, unsigned d1, unsigned d2)
-{
-    unsigned point = 0;
-    Dice dice; dice.set(d1,d2);
-    ts.recordDiceRoll(point, dice);
-}
-
-TEST_CASE("TableStats:recentrolls")
-{
-    TableStats ts("tableId-LasVegas");
-    Dice dice;
-    unsigned point = 0;
-
-    for (unsigned roll = 2; roll < 13; roll++)
-    {
-        unsigned d1; unsigned d2;
-        switch(roll)
-        {
-            case 2:  d1 = 1; d2 = 1; break;
-            case 3:  d1 = 1; d2 = 2; break;
-            case 4:  d1 = 2; d2 = 2; break;
-            case 5:  d1 = 2; d2 = 3; break;
-            case 6:  d1 = 3; d2 = 3; break;
-            case 7:  d1 = 3; d2 = 4; break;
-            case 8:  d1 = 4; d2 = 4; break;
-            case 9:  d1 = 5; d2 = 4; break;
-            case 10: d1 = 6; d2 = 4; break;
-            case 11: d1 = 6; d2 = 5; break;
-            case 12: d1 = 6; d2 = 6; break;
-        }
-        seqHelper(ts, d1, d2);
-    }
-
-    unsigned expectedRoll = 2;
-    for (const auto roll : ts.recentRolls)
-    {
-        CHECK(roll.value() == expectedRoll++);
-    }
 }
 
 //----------------------------------------------------------------
