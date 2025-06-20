@@ -203,13 +203,13 @@ TableStats::update2(unsigned point)
     {
         twosOnComeOutRoll.bump();  // see disarmSomeCounts() 
         crapsOnComeOutRoll.bump(); // see disarmSomeCounts() 
-        passLineLose.bump(); passLineWins.disarm();
-        dontPassWins.bump(); dontPassLose.disarm();
+        passLoseComeOut.bump(); passWinsComeOut.disarm();
+        dontPassWinsComeOut.bump(); dontPassLoseComeOut.disarm();
     }
     else
     {
-        comeLose.bump(); comeWins.disarm();
-        dontComeWins.bump(); dontComeLose.disarm();
+        comeLoseComeOut.bump(); comeWinsComeOut.disarm();
+        dontComeWinsComeOut.bump(); dontComeLoseComeOut.disarm();
     }
 }
 
@@ -222,13 +222,13 @@ TableStats::update3(unsigned point)
     {
         threesOnComeOutRoll.bump(); // see disarmSomeCounts() 
         crapsOnComeOutRoll.bump();  // see disarmSomeCounts() 
-        passLineLose.bump(); passLineWins.disarm();
-        dontPassWins.bump(); dontPassLose.disarm();
+        passLoseComeOut.bump(); passWinsComeOut.disarm();
+        dontPassWinsComeOut.bump(); dontPassLoseComeOut.disarm();
     }
     else
     {
-        comeLose.bump(); comeWins.disarm();
-        dontComeWins.bump(); dontComeLose.disarm();
+        comeLoseComeOut.bump(); comeWinsComeOut.disarm();
+        dontComeWinsComeOut.bump(); dontComeLoseComeOut.disarm();
     }
 }
 
@@ -239,35 +239,34 @@ TableStats::update7(unsigned point)
 {
     if (point == 0)
     {
-        passLineWins.bump(); passLineLose.disarm();
-        dontPassLose.bump(); dontPassWins.disarm();
+        passWinsComeOut.bump();     passLoseComeOut.disarm();
+        dontPassLoseComeOut.bump(); dontPassWinsComeOut.disarm();
         sevensOnComeOutRoll.bump(); // see disarmSomeCounts() 
     }
     else
     {
-        passLineLose.bump(); passLineWins.disarm();
-        dontPassWins.bump(); dontPassLose.disarm();
-        passLineCounts[point].lose.bump(); passLineCounts[point].wins.disarm();
-        dontPassCounts[point].wins.bump(); dontPassCounts[point].lose.disarm();
-        comeWins.bump();     comeLose.disarm();
-        dontComeLose.bump(); dontComeWins.disarm();
+        countPassLinePntLose(point);
+        countDontPassPntWins(point);
+        comeWinsComeOut.bump();      comeLoseComeOut.disarm();
+        dontComeLoseComeOut.bump();  dontComeWinsComeOut.disarm();
+        
         sevenOuts.bump();    // see disarmSomeCounts() 
         shooterCounts.disarm();
     }
 
-    countComeLose(0, 4);
-    countComeLose(0, 5);
-    countComeLose(0, 6);
-    countComeLose(0, 8);
-    countComeLose(0, 9);
-    countComeLose(0, 10);
+    countComePntLose(0, 4);
+    countComePntLose(0, 5);
+    countComePntLose(0, 6);
+    countComePntLose(0, 8);
+    countComePntLose(0, 9);
+    countComePntLose(0, 10);
 
-    countDontComeWins(0, 4);
-    countDontComeWins(0, 5);
-    countDontComeWins(0, 6);
-    countDontComeWins(0, 8);
-    countDontComeWins(0, 9);
-    countDontComeWins(0, 10);
+    countDontComePntWins(0, 4);
+    countDontComePntWins(0, 5);
+    countDontComePntWins(0, 6);
+    countDontComePntWins(0, 8);
+    countDontComePntWins(0, 9);
+    countDontComePntWins(0, 10);
 }
 
 //-----------------------------------------------------------------
@@ -278,13 +277,13 @@ TableStats::update11(unsigned point)
     if (point == 0)
     {
         elevensOnComeOutRoll.bump();  // see disarmSomeCounts()
-        passLineWins.bump(); passLineLose.disarm();
-        dontPassLose.bump(); dontPassWins.disarm();
+        passWinsComeOut.bump(); passLoseComeOut.disarm();
+        dontPassLoseComeOut.bump(); dontPassWinsComeOut.disarm();
     }
     else
     {
-        comeWins.bump(); comeLose.disarm();
-        dontComeLose.bump(); dontComeWins.disarm();
+        comeWinsComeOut.bump(); comeLoseComeOut.disarm();
+        dontComeLoseComeOut.bump(); dontComeWinsComeOut.disarm();
     }
 }
 
@@ -297,13 +296,13 @@ TableStats::update12(unsigned point)
     {
         twelvesOnComeOutRoll.bump(); // see disarmSomeCounts()
         crapsOnComeOutRoll.bump();   // see disarmSomeCounts()
-        passLineLose.bump(); passLineWins.disarm();
-        dontPassLose.disarm(); // dontPassWin.bump();  // push
+        passLoseComeOut.bump(); passWinsComeOut.disarm();
+        dontPassLoseComeOut.disarm(); // dontPassWin.bump();  // push
     }
     else
     {
-        comeLose.bump(); comeWins.disarm();
-        dontComeLose.disarm(); // dontComeWins.bump(); // push
+        comeLoseComeOut.bump(); comeWinsComeOut.disarm();
+        dontComeLoseComeOut.disarm(); // dontComeWinsComeOut.bump(); // push
     }
 }
 
@@ -314,19 +313,19 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
 {
     if (point == roll)
     {
-        countPassLineWins(roll);
-        countDontPassLose(roll);
+        countPassLinePntWins(roll);
+        countDontPassPntLose(roll);
         sevenOuts.disarm();
     }
-    countComeWins(point, roll);
-    countDontComeLose(point, roll);
+    countComePntWins(point, roll);
+    countDontComePntLose(point, roll);
     if (point != 0)
     {
         // Establish new come and dont come bets
-        comeCounts[roll].wins.pivot = roll;
-        comeCounts[roll].lose.pivot = roll;
-        dontComeCounts[roll].wins.pivot = roll;
-        dontComeCounts[roll].lose.pivot = roll;
+        comePntCnts[roll].wins.pivot     = roll;
+        comePntCnts[roll].lose.pivot     = roll;
+        dontComePntCnts[roll].wins.pivot = roll;
+        dontComePntCnts[roll].lose.pivot = roll;
     }
 }
 
@@ -351,57 +350,52 @@ TableStats::bumpHardwayLose(unsigned roll)
 //----------------------------------------------------------------
 
 void
-TableStats::countPassLineWins(unsigned roll)
+TableStats::countPassLinePntWins(unsigned roll)
 {
-    passLineWins.bump(); passLineLose.disarm();
     // Update stats on the number itself
-    PointCounts& pc = passLineCounts[roll];
+    PointCounts& pc = passPntCnts[roll];
     pc.wins.bump(); pc.lose.disarm();
 }
 
 //----------------------------------------------------------------
 
 void
-TableStats::countPassLineLose(unsigned roll)
+TableStats::countPassLinePntLose(unsigned roll)
 {
-    passLineLose.bump(); passLineWins.disarm();
     // Update stats on the number itself
-    PointCounts& pc = passLineCounts[roll];
+    PointCounts& pc = passPntCnts[roll];
     pc.lose.bump(); pc.wins.disarm();
 }
 
 //----------------------------------------------------------------
 
 void
-TableStats::countDontPassWins(unsigned roll)
+TableStats::countDontPassPntWins(unsigned roll)
 {
-    dontPassWins.bump(); dontPassLose.disarm();
     // Update stats on the number itself
-    PointCounts& pc = dontPassCounts[roll];
+    PointCounts& pc = dontPassPntCnts[roll];
     pc.wins.bump(); pc.lose.disarm();
 }
 
 //----------------------------------------------------------------
 
 void
-TableStats::countDontPassLose(unsigned roll)
+TableStats::countDontPassPntLose(unsigned roll)
 {
-    dontPassLose.bump(); dontPassWins.disarm();
     // Update stats on the number itself
-    PointCounts& pc = dontPassCounts[roll];
+    PointCounts& pc = dontPassPntCnts[roll];
     pc.lose.bump(); pc.wins.disarm();
 }
 
 //----------------------------------------------------------------
 
 void
-TableStats::countComeWins(unsigned point, unsigned roll)
+TableStats::countComePntWins(unsigned point, unsigned roll)
 {
-    if (comeCounts[roll].wins.pivot == roll)
+    if (comePntCnts[roll].wins.pivot == roll)
     {
-        comeWins.bump(); comeLose.disarm();
         // Update stats on the number itself
-        PointCounts& pc = comeCounts[roll];
+        PointCounts& pc = comePntCnts[roll];
         pc.wins.bump(); pc.lose.disarm();
         // pc.wins.pivot remains assigned so come bet is re-upped.
     }
@@ -413,13 +407,12 @@ TableStats::countComeWins(unsigned point, unsigned roll)
 // Is called for 4,5,6,8,9,10.
 //
 void
-TableStats::countComeLose(unsigned point, unsigned roll)
+TableStats::countComePntLose(unsigned point, unsigned roll)
 {
-    if (comeCounts[roll].lose.pivot == roll)
+    if (comePntCnts[roll].lose.pivot == roll)
     {
-        comeLose.bump(); comeWins.disarm();
         // Update stats on the number itself
-        PointCounts& pc = comeCounts[roll];
+        PointCounts& pc = comePntCnts[roll];
         pc.lose.bump(); pc.wins.disarm();
         // Unassign pivot, 7-out clears all come bets, no following come bet.
         pc.lose.pivot = 0;
@@ -432,13 +425,12 @@ TableStats::countComeLose(unsigned point, unsigned roll)
 // Is called for 4,5,6,8,9,10.
 //
 void
-TableStats::countDontComeWins(unsigned point, unsigned roll)
+TableStats::countDontComePntWins(unsigned point, unsigned roll)
 {
-    if (dontComeCounts[roll].wins.pivot == roll)
+    if (dontComePntCnts[roll].wins.pivot == roll)
     {
-        dontComeWins.bump(); dontComeLose.disarm();
         // Update stats on the number itself
-        PointCounts& pc = dontComeCounts[roll];
+        PointCounts& pc = dontComePntCnts[roll];
         pc.wins.bump(); pc.lose.disarm(); 
         // Unassign pivot, 7 clears all dontcome bets, no following bet.
         pc.wins.pivot = 0;
@@ -448,13 +440,12 @@ TableStats::countDontComeWins(unsigned point, unsigned roll)
 //----------------------------------------------------------------
 
 void
-TableStats::countDontComeLose(unsigned point, unsigned roll)
+TableStats::countDontComePntLose(unsigned point, unsigned roll)
 {
-    if (dontComeCounts[roll].lose.pivot == roll)
+    if (dontComePntCnts[roll].lose.pivot == roll)
     {
-        dontComeLose.bump(); dontComeWins.disarm();
         // Update stats on the number itself
-        PointCounts& pc = dontComeCounts[roll];
+        PointCounts& pc = dontComePntCnts[roll];
         pc.lose.bump(); pc.wins.disarm();
         // pc.lose.pivot remains assigned so dontcome bet is re-upped.
     }
@@ -586,7 +577,7 @@ TableStats::recordCommon(Gbl::Money amtBet)
     numBetsOneRoll.total++;
     numBetsOneRoll.current++;
     amtBetsOneRoll.current += amtBet;
-    maxAmtBetOneBet   = std::max(amtBet, maxAmtBetOneBet);
+    maxAmtBetOneBet    = std::max(amtBet, maxAmtBetOneBet);
     amtBetsOneRoll.max = std::max(amtBetsOneRoll.current, amtBetsOneRoll.max);
     numBetsOneRoll.max = std::max(numBetsOneRoll.current, numBetsOneRoll.max);
 }
@@ -598,10 +589,10 @@ TableStats::reset()
 {
     for (unsigned i = 4; i < 11; i++)
     {
-        passLineCounts[i].reset();
-        dontPassCounts[i].reset();
-        comeCounts[i].reset();
-        dontComeCounts[i].reset();
+        passPntCnts[i].reset();
+        dontPassPntCnts[i].reset();
+        comePntCnts[i].reset();
+        dontComePntCnts[i].reset();
         hardwayCounts[i].reset();
     }
     
@@ -631,14 +622,14 @@ TableStats::reset()
     numRolls = 0;
     comeOutRolls.reset();
     pointRolls.reset();
-    passLineWins.reset();
-    passLineLose.reset();
-    dontPassWins.reset();
-    dontPassLose.reset();
-    comeWins.reset();
-    comeLose.reset();
-    dontComeWins.reset();
-    dontComeLose.reset();
+    passWinsComeOut.reset();
+    passLoseComeOut.reset();
+    dontPassWinsComeOut.reset();
+    dontPassLoseComeOut.reset();
+    comeWinsComeOut.reset();
+    comeLoseComeOut.reset();
+    dontComeWinsComeOut.reset();
+    dontComeLoseComeOut.reset();
     fieldBetWins.reset();
     fieldBetLose.reset();
     sevenOuts.reset();
@@ -719,11 +710,11 @@ TableStats::Counter::disarm()
 void
 TableStats::Counter::reset()
 {
-    count_ = 0;
-    armed = false;
+    count_     = 0;
+    armed      = false;
     curRepeats = 0;
     maxRepeats = 0;
-    pivot   = 0;
+    pivot      = 0;
 }
 
 //-----------------------------------------------------------------

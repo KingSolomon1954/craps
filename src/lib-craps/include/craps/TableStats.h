@@ -66,12 +66,12 @@ public:
         Counter lose;
         void reset();
     };
-    
+
     std::array<Counter,     13> numberCounts   {};  // Index 2-12 used
-    std::array<PointCounts, 11> passLineCounts {};  // Index 4,5,6,8,9,10 used
-    std::array<PointCounts, 11> dontPassCounts {};  // Index 4,5,6,8,9,10 used
-    std::array<PointCounts, 11> comeCounts     {};  // Index 4,5,6,8,9,10 used
-    std::array<PointCounts, 11> dontComeCounts {};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> passPntCnts    {};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> comePntCnts    {};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> dontPassPntCnts{};  // Index 4,5,6,8,9,10 used
+    std::array<PointCounts, 11> dontComePntCnts{};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> hardwayCounts  {};  // Index 4,6,8,10 used
 
     // Betting Stats
@@ -138,14 +138,14 @@ public:
     unsigned numRolls = 0;
     Counter comeOutRolls;
     Counter pointRolls;
-    Counter passLineWins;
-    Counter passLineLose;
-    Counter dontPassWins;
-    Counter dontPassLose;
-    Counter comeWins;
-    Counter comeLose;
-    Counter dontComeWins;
-    Counter dontComeLose;
+    Counter passWinsComeOut;
+    Counter passLoseComeOut;
+    Counter comeWinsComeOut;
+    Counter comeLoseComeOut;
+    Counter dontPassWinsComeOut;
+    Counter dontPassLoseComeOut;
+    Counter dontComeWinsComeOut;
+    Counter dontComeLoseComeOut;
     Counter fieldBetWins;
     Counter fieldBetLose;
     Counter sevenOuts;
@@ -160,23 +160,23 @@ public:
 private:
     size_t rollHistorySize_ = 25;
     
-    void countDiceNumbers  (unsigned roll);
-    void countComeOutRolls (unsigned point);
-    void countPointRolls   (unsigned point, unsigned roll);
-    void countShooterRolls (unsigned point, unsigned roll);
-    void countFieldBetWins (unsigned roll);
-    void countFieldBetLose (unsigned roll);
-    void countHardwayWins  (unsigned point, unsigned d1, unsigned d2);
-    void countHardwayLose  (unsigned point, unsigned d1, unsigned d2);
-    void countPassLineWins (unsigned roll);
-    void countPassLineLose (unsigned roll);
-    void countDontPassWins (unsigned roll);
-    void countDontPassLose (unsigned roll);
-    void countComeWins     (unsigned point, unsigned roll);
-    void countComeLose     (unsigned point, unsigned roll);
-    void countDontComeWins (unsigned point, unsigned roll);
-    void countDontComeLose (unsigned point, unsigned roll);
-    void disarmSomeCounts  (unsigned point, unsigned roll);
+    void countDiceNumbers     (unsigned roll);
+    void countComeOutRolls    (unsigned point);
+    void countPointRolls      (unsigned point, unsigned roll);
+    void countShooterRolls    (unsigned point, unsigned roll);
+    void countFieldBetWins    (unsigned roll);
+    void countFieldBetLose    (unsigned roll);
+    void countHardwayWins     (unsigned point, unsigned d1, unsigned d2);
+    void countHardwayLose     (unsigned point, unsigned d1, unsigned d2);
+    void countPassLinePntWins (unsigned roll);
+    void countPassLinePntLose (unsigned roll);
+    void countDontPassPntWins (unsigned roll);
+    void countDontPassPntLose (unsigned roll);
+    void countComePntWins     (unsigned point, unsigned roll);
+    void countComePntLose     (unsigned point, unsigned roll);
+    void countDontComePntWins (unsigned point, unsigned roll);
+    void countDontComePntLose (unsigned point, unsigned roll);
+    void disarmSomeCounts     (unsigned point, unsigned roll);
     void resetRollCounts();  // Should be private, called only by CrapsTable
     
     void bumpHardwayWins(unsigned roll);
