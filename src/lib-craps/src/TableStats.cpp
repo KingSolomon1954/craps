@@ -420,7 +420,7 @@ TableStats::countComeLose(unsigned point, unsigned roll)
         comeLose.bump(); comeWins.disarm();
         // Update stats on the number itself
         PointCounts& pc = comeCounts[roll];
-        pc.lose.bump(); pc.lose.disarm();
+        pc.lose.bump(); pc.wins.disarm();
         // Unassign pivot, 7-out clears all come bets, no following come bet.
         pc.lose.pivot = 0;
     }

@@ -19,7 +19,7 @@ TEST_CASE("TableStats:diceroll:two")
     Dice dice;
     unsigned point = 0;
 
-    // Initial comeout roll, dice = 7,
+    // Initial comeout roll, dice = 4,
     // seq: 4
     point = 0; dice.set(2,2);
     ts.recordDiceRoll(point, dice);
@@ -299,7 +299,7 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
     CHECK(ts.crapsOnComeOutRoll.armed       == false);
 
-    // Comeout roll, dice = 5,
+    // Point roll, dice = 5,
     // seq: 4,5
     point = 4; dice.set(1,4);
     ts.recordDiceRoll(point, dice);
@@ -579,7 +579,7 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
     CHECK(ts.crapsOnComeOutRoll.armed       == false);
 
-    // Comeout roll, dice = 6,
+    // Point roll, dice = 6,
     // seq: 4,5,6
     point = 4; dice.set(3,3);
     ts.recordDiceRoll(point, dice);
@@ -859,7 +859,7 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
     CHECK(ts.crapsOnComeOutRoll.armed       == false);
 
-    // Comeout roll, dice = 8,
+    // Point roll, dice = 8,
     // seq: 4,5,6,8
     point = 4; dice.set(4,4);
     ts.recordDiceRoll(point, dice);
@@ -1139,7 +1139,7 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
     CHECK(ts.crapsOnComeOutRoll.armed       == false);
 
-    // Comeout roll, dice = 9,
+    // Point roll, dice = 9,
     // seq: 4,5,6,8,9
     point = 4; dice.set(4,5);
     ts.recordDiceRoll(point, dice);
@@ -1419,7 +1419,7 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
     CHECK(ts.crapsOnComeOutRoll.armed       == false);
 
-    // Comeout roll, dice = 10,
+    // Point roll, dice = 10,
     // seq: 4,5,6,8,9,10
     point = 4; dice.set(5,5);
     ts.recordDiceRoll(point, dice);
@@ -1699,7 +1699,7 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
     CHECK(ts.crapsOnComeOutRoll.armed       == false);
 
-    // Comeout roll, dice = 7,
+    // Poitn roll, dice = 7, seven out
     // seq: 4,5,6,8,9,10,7
     point = 4; dice.set(5,2);
     ts.recordDiceRoll(point, dice);
@@ -1863,19 +1863,19 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.comeCounts[4].lose.armed      == false);
     CHECK(ts.comeCounts[5].lose.count()    == 1);
     CHECK(ts.comeCounts[5].lose.repeats()  == 0);
-    CHECK(ts.comeCounts[5].lose.armed      == false);
+    CHECK(ts.comeCounts[5].lose.armed      == true);
     CHECK(ts.comeCounts[6].lose.count()    == 1);
     CHECK(ts.comeCounts[6].lose.repeats()  == 0);
-    CHECK(ts.comeCounts[6].lose.armed      == false);
+    CHECK(ts.comeCounts[6].lose.armed      == true);
     CHECK(ts.comeCounts[8].lose.count()    == 1);
     CHECK(ts.comeCounts[8].lose.repeats()  == 0);
-    CHECK(ts.comeCounts[8].lose.armed      == false);
+    CHECK(ts.comeCounts[8].lose.armed      == true);
     CHECK(ts.comeCounts[9].lose.count()    == 1);
     CHECK(ts.comeCounts[9].lose.repeats()  == 0);
-    CHECK(ts.comeCounts[9].lose.armed      == false);
+    CHECK(ts.comeCounts[9].lose.armed      == true);
     CHECK(ts.comeCounts[10].lose.count()   == 1);
     CHECK(ts.comeCounts[10].lose.repeats() == 0);
-    CHECK(ts.comeCounts[10].lose.armed     == false);
+    CHECK(ts.comeCounts[10].lose.armed     == true);
 
     CHECK(ts.dontComeWins.count()              == 5);
     CHECK(ts.dontComeWins.repeats()            == 4);
@@ -1978,5 +1978,7 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.crapsOnComeOutRoll.count()     == 0);
     CHECK(ts.crapsOnComeOutRoll.repeats()   == 0);
     CHECK(ts.crapsOnComeOutRoll.armed       == false);
-
 }
+
+//----------------------------------------------------------------
+
