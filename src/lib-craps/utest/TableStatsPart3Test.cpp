@@ -65,9 +65,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.pointRolls.repeats()   == 0);
     CHECK(ts.pointRolls.armed       == false);
 
-    CHECK(ts.passWinsComeOut.count()              == 0);
-    CHECK(ts.passWinsComeOut.repeats()            == 0);
-    CHECK(ts.passWinsComeOut.armed                == false);
+    CHECK(ts.passWinsComeOut.count()        == 0);
+    CHECK(ts.passWinsComeOut.repeats()      == 0);
+    CHECK(ts.passWinsComeOut.armed          == false);
     CHECK(ts.passPntCnts[4].wins.count()    == 0);
     CHECK(ts.passPntCnts[4].wins.repeats()  == 0);
     CHECK(ts.passPntCnts[4].wins.armed      == false);
@@ -87,9 +87,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.passPntCnts[10].wins.repeats() == 0);
     CHECK(ts.passPntCnts[10].wins.armed     == false);
 
-    CHECK(ts.passLoseComeOut.count()              == 0);
-    CHECK(ts.passLoseComeOut.repeats()            == 0);
-    CHECK(ts.passLoseComeOut.armed                == false);
+    CHECK(ts.passLoseComeOut.count()        == 0);
+    CHECK(ts.passLoseComeOut.repeats()      == 0);
+    CHECK(ts.passLoseComeOut.armed          == false);
     CHECK(ts.passPntCnts[4].lose.count()    == 0);
     CHECK(ts.passPntCnts[4].lose.repeats()  == 0);
     CHECK(ts.passPntCnts[4].lose.armed      == false);
@@ -109,9 +109,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.passPntCnts[10].lose.repeats() == 0);
     CHECK(ts.passPntCnts[10].lose.armed     == false);
 
-    CHECK(ts.dontPassWinsComeOut.count()              == 0);
-    CHECK(ts.dontPassWinsComeOut.repeats()            == 0);
-    CHECK(ts.dontPassWinsComeOut.armed                == false);
+    CHECK(ts.dontPassWinsComeOut.count()        == 0);
+    CHECK(ts.dontPassWinsComeOut.repeats()      == 0);
+    CHECK(ts.dontPassWinsComeOut.armed          == false);
     CHECK(ts.dontPassPntCnts[4].wins.count()    == 0);
     CHECK(ts.dontPassPntCnts[4].wins.repeats()  == 0);
     CHECK(ts.dontPassPntCnts[4].wins.armed      == false);
@@ -131,9 +131,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.dontPassPntCnts[10].wins.repeats() == 0);
     CHECK(ts.dontPassPntCnts[10].wins.armed     == false);
 
-    CHECK(ts.dontPassLoseComeOut.count()              == 0);
-    CHECK(ts.dontPassLoseComeOut.repeats()            == 0);
-    CHECK(ts.dontPassLoseComeOut.armed                == false);
+    CHECK(ts.dontPassLoseComeOut.count()        == 0);
+    CHECK(ts.dontPassLoseComeOut.repeats()      == 0);
+    CHECK(ts.dontPassLoseComeOut.armed          == false);
     CHECK(ts.dontPassPntCnts[4].lose.count()    == 0);
     CHECK(ts.dontPassPntCnts[4].lose.repeats()  == 0);
     CHECK(ts.dontPassPntCnts[4].lose.armed      == false);
@@ -153,9 +153,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.dontPassPntCnts[10].lose.repeats() == 0);
     CHECK(ts.dontPassPntCnts[10].lose.armed     == false);
 
-    CHECK(ts.comeWinsComeOut.count()              == 0);
-    CHECK(ts.comeWinsComeOut.repeats()            == 0);
-    CHECK(ts.comeWinsComeOut.armed                == false);
+    CHECK(ts.comeWinsComeOut.count()        == 0);
+    CHECK(ts.comeWinsComeOut.repeats()      == 0);
+    CHECK(ts.comeWinsComeOut.armed          == false);
     CHECK(ts.comePntCnts[4].wins.count()    == 0);
     CHECK(ts.comePntCnts[4].wins.repeats()  == 0);
     CHECK(ts.comePntCnts[4].wins.armed      == false);
@@ -175,9 +175,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.comePntCnts[10].wins.repeats() == 0);
     CHECK(ts.comePntCnts[10].wins.armed     == false);
 
-    CHECK(ts.comeLoseComeOut.count()              == 0);
-    CHECK(ts.comeLoseComeOut.repeats()            == 0);
-    CHECK(ts.comeLoseComeOut.armed                == false);
+    CHECK(ts.comeLoseComeOut.count()        == 0);
+    CHECK(ts.comeLoseComeOut.repeats()      == 0);
+    CHECK(ts.comeLoseComeOut.armed          == false);
     CHECK(ts.comePntCnts[4].lose.count()    == 0);
     CHECK(ts.comePntCnts[4].lose.repeats()  == 0);
     CHECK(ts.comePntCnts[4].lose.armed      == false);
@@ -197,9 +197,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.comePntCnts[10].lose.repeats() == 0);
     CHECK(ts.comePntCnts[10].lose.armed     == false);
 
-    CHECK(ts.dontComeWinsComeOut.count()              == 0);
-    CHECK(ts.dontComeWinsComeOut.repeats()            == 0);
-    CHECK(ts.dontComeWinsComeOut.armed                == false);
+    CHECK(ts.dontComeWinsComeOut.count()        == 0);
+    CHECK(ts.dontComeWinsComeOut.repeats()      == 0);
+    CHECK(ts.dontComeWinsComeOut.armed          == false);
     CHECK(ts.dontComePntCnts[4].wins.count()    == 0);
     CHECK(ts.dontComePntCnts[4].wins.repeats()  == 0);
     CHECK(ts.dontComePntCnts[4].wins.armed      == false);
@@ -219,9 +219,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.dontComePntCnts[10].wins.repeats() == 0);
     CHECK(ts.dontComePntCnts[10].wins.armed     == false);
 
-    CHECK(ts.dontComeLoseComeOut.count()              == 0);
-    CHECK(ts.dontComeLoseComeOut.repeats()            == 0);
-    CHECK(ts.dontComeLoseComeOut.armed                == false);
+    CHECK(ts.dontComeLoseComeOut.count()        == 0);
+    CHECK(ts.dontComeLoseComeOut.repeats()      == 0);
+    CHECK(ts.dontComeLoseComeOut.armed          == false);
     CHECK(ts.dontComePntCnts[4].lose.count()    == 0);
     CHECK(ts.dontComePntCnts[4].lose.repeats()  == 0);
     CHECK(ts.dontComePntCnts[4].lose.armed      == false);
@@ -345,9 +345,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.pointRolls.repeats()   == 0);
     CHECK(ts.pointRolls.armed       == true);
 
-    CHECK(ts.passWinsComeOut.count()              == 0);
-    CHECK(ts.passWinsComeOut.repeats()            == 0);
-    CHECK(ts.passWinsComeOut.armed                == false);
+    CHECK(ts.passWinsComeOut.count()        == 0);
+    CHECK(ts.passWinsComeOut.repeats()      == 0);
+    CHECK(ts.passWinsComeOut.armed          == false);
     CHECK(ts.passPntCnts[4].wins.count()    == 0);
     CHECK(ts.passPntCnts[4].wins.repeats()  == 0);
     CHECK(ts.passPntCnts[4].wins.armed      == false);
@@ -367,9 +367,9 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.passPntCnts[10].wins.repeats() == 0);
     CHECK(ts.passPntCnts[10].wins.armed     == false);
 
-    CHECK(ts.passLoseComeOut.count()              == 0);
-    CHECK(ts.passLoseComeOut.repeats()            == 0);
-    CHECK(ts.passLoseComeOut.armed                == false);
+    CHECK(ts.passLoseComeOut.count()        == 0);
+    CHECK(ts.passLoseComeOut.repeats()      == 0);
+    CHECK(ts.passLoseComeOut.armed          == false);
     CHECK(ts.passPntCnts[4].lose.count()    == 0);
     CHECK(ts.passPntCnts[4].lose.repeats()  == 0);
     CHECK(ts.passPntCnts[4].lose.armed      == false);
@@ -3917,7 +3917,7 @@ TEST_CASE("TableStats:diceroll:three")
     CHECK(ts.sevenOuts.count()              == 1);
     CHECK(ts.sevenOuts.repeats()            == 0);
     CHECK(ts.sevenOuts.armed                == true);
-    CHECK(ts.shooterCounts.count()          == 14);
+    CHECK(ts.shooterCounts.count()          == 0);
     CHECK(ts.shooterCounts.repeats()        == 13);
     CHECK(ts.shooterCounts.armed            == false);
     CHECK(ts.twosOnComeOutRoll.count()      == 0);

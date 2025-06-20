@@ -1846,7 +1846,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.fieldBetLose.repeats() == 2);
     CHECK(ts.sevenOuts.count() == 1);
     CHECK(ts.sevenOuts.repeats() == 0);
-    CHECK(ts.shooterCounts.count() == 16);
+    CHECK(ts.shooterCounts.count() == 0);
     CHECK(ts.shooterCounts.repeats() == 15);
     CHECK(ts.twosOnComeOutRoll.count() == 2);
     CHECK(ts.twosOnComeOutRoll.repeats() == 1);

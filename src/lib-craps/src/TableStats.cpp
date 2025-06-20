@@ -247,11 +247,11 @@ TableStats::update7(unsigned point)
     {
         countPassLinePntLose(point);
         countDontPassPntWins(point);
-        comeWinsComeOut.bump();      comeLoseComeOut.disarm();
-        dontComeLoseComeOut.bump();  dontComeWinsComeOut.disarm();
+        comeWinsComeOut.bump();     comeLoseComeOut.disarm();
+        dontComeLoseComeOut.bump(); dontComeWinsComeOut.disarm();
         
-        sevenOuts.bump();    // see disarmSomeCounts() 
-        shooterCounts.disarm();
+        sevenOuts.bump();           // see disarmSomeCounts() 
+        shooterCounts.disarm();     shooterCounts.count_ = 0;
     }
 
     countComePntLose(0, 4);
