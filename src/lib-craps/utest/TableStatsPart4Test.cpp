@@ -1142,3 +1142,81 @@ TEST_CASE("TableStats:diceroll:four")
 
 //----------------------------------------------------------------
 
+TEST_CASE("TableStats:diceroll:four")
+{
+    // seq 4,5,5,6,6,8,8,9,9,10,10,4,7
+    
+    TableStats ts("tableId-LasVegas");
+    Dice dice;
+    unsigned point = 0;
+
+    point = 0; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(3,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(3,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(5,1);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(5,1);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(6,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(6,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(6,3);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(6,3);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(6,4);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(6,4);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 0; dice.set(3,4);
+    ts.recordDiceRoll(point, dice);
+
+    CHECK(ts.numPointsEstablished == 1);
+    CHECK(ts.comeOutRolls.count() == 2);
+    CHECK(ts.pointRolls.count() == 11);
+    CHECK(ts.passWinsComeOut.count() == 1);
+    CHECK(ts.passLoseComeOut.count() == 0);
+    CHECK(ts.dontPassWinsComeOut.count() == 0);
+    CHECK(ts.dontPassLoseComeOut.count() == 1);
+    CHECK(ts.passPntCnts[4].wins.count() == 1);
+    CHECK(ts.dontPassPntCnts[4].lose.count() == 1);
+    
+    CHECK(ts.comeWinsComeOut.count() == 0);
+    CHECK(ts.comeLoseComeOut.count() == 0);
+    CHECK(ts.dontComeWinsComeOut.count() == 0);
+    CHECK(ts.dontComeLoseComeOut.count() == 0);
+
+    CHECK(ts.comePntCnts[5].wins.count() == 1);
+    CHECK(ts.comePntCnts[6].wins.count() == 1);
+    CHECK(ts.comePntCnts[8].wins.count() == 1);
+    CHECK(ts.comePntCnts[9].wins.count() == 1);
+    CHECK(ts.comePntCnts[10].wins.count() == 1);
+    
+    CHECK(ts.comePntCnts[5].lose.count() == 1);
+    CHECK(ts.comePntCnts[6].lose.count() == 1);
+    CHECK(ts.comePntCnts[8].lose.count() == 1);
+    CHECK(ts.comePntCnts[9].lose.count() == 1);
+    CHECK(ts.comePntCnts[10].lose.count() == 1);
+    
+    CHECK(ts.dontComePntCnts[5].lose.count() == 1);
+    CHECK(ts.dontComePntCnts[6].lose.count() == 1);
+    CHECK(ts.dontComePntCnts[8].lose.count() == 1);
+    CHECK(ts.dontComePntCnts[9].lose.count() == 1);
+    CHECK(ts.dontComePntCnts[10].lose.count() == 1);
+
+    CHECK(ts.dontComePntCnts[5].wins.count() == 1);
+    CHECK(ts.dontComePntCnts[6].wins.count() == 1);
+    CHECK(ts.dontComePntCnts[8].wins.count() == 1);
+    CHECK(ts.dontComePntCnts[9].wins.count() == 1);
+    CHECK(ts.dontComePntCnts[10].wins.count() == 1);
+
+    CHECK(ts.sevenOuts.count() == 0);
+}
+
+//----------------------------------------------------------------

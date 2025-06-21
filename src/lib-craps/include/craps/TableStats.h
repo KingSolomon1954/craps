@@ -68,6 +68,7 @@ public:
     };
 
     std::array<Counter,     13> numberCounts   {};  // Index 2-12 used
+    std::array<Counter,     11> anyEstPntCnts  {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> passPntCnts    {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> comePntCnts    {};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> dontPassPntCnts{};  // Index 4,5,6,8,9,10 used
@@ -136,6 +137,7 @@ public:
 
     // Dice Roll Stats
     unsigned numRolls = 0;
+    unsigned numPointsEstablished = 0;
     Counter comeOutRolls;
     Counter pointRolls;
     Counter passWinsComeOut;
@@ -161,6 +163,7 @@ private:
     size_t rollHistorySize_ = 25;
     
     void countDiceNumbers     (unsigned roll);
+    void countAllPoints       (unsigned roll);
     void countComeOutRolls    (unsigned point);
     void countPointRolls      (unsigned point, unsigned roll);
     void countShooterRolls    (unsigned point, unsigned roll);

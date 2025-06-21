@@ -70,6 +70,23 @@ TableStats::countDiceNumbers(unsigned roll)
         {
             numberCounts[i].disarm();
         }
+        
+    }
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::countAllPoints(unsigned roll)
+{
+    numPointsEstablished++;
+    anyEstPntCnts[roll].bump();
+    for (unsigned i = 4; i < 11; i++)
+    {
+        if (i != roll)
+        {
+            anyEstPntCnts[i].disarm();
+        }
     }
 }
 
@@ -163,7 +180,8 @@ TableStats::countHardwayLose(unsigned point, unsigned d1, unsigned d2)
 
 //-----------------------------------------------------------------
 //
-// Based on roll, some counters need to cancel their arm'ing.
+// Based on roll, some single throw counters need to cancel
+// their arm'ing.
 //
 void
 TableStats::disarmSomeCounts(unsigned point, unsigned roll)
@@ -319,6 +337,10 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
     }
     countComePntWins(point, roll);
     countDontComePntLose(point, roll);
+    if (point == 0)
+    {
+        countAllPoints(roll);
+    }
     if (point != 0)
     {
         // Establish new come and dont come bets
@@ -594,8 +616,14 @@ TableStats::reset()
         comePntCnts[i].reset();
         dontComePntCnts[i].reset();
         hardwayCounts[i].reset();
+        anyEstPntCnts[i].reset();
     }
     
+    for (unsigned i = 2; i < 12; i++)
+    {
+        numberCounts[i].reset();
+    }
+
     // Betting Stats
     totNumBetsAllBets = 0;
     totNumWinsAllBets = 0;
@@ -620,6 +648,7 @@ TableStats::reset()
 
     // Dice Roll Stats
     numRolls = 0;
+    numPointsEstablished = 0;
     comeOutRolls.reset();
     pointRolls.reset();
     passWinsComeOut.reset();
