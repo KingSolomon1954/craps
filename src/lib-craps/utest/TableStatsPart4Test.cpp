@@ -1142,7 +1142,7 @@ TEST_CASE("TableStats:diceroll:four")
 
 //----------------------------------------------------------------
 
-TEST_CASE("TableStats:diceroll:four")
+TEST_CASE("TableStats:diceroll:five")
 {
     // seq 4,5,5,6,6,8,8,9,9,10,10,4,7
     
@@ -1217,6 +1217,134 @@ TEST_CASE("TableStats:diceroll:four")
     CHECK(ts.dontComePntCnts[10].wins.count() == 1);
 
     CHECK(ts.sevenOuts.count() == 0);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("TableStats:diceroll:six")
+{
+    // seq 4,4,4,4
+    
+    TableStats ts("tableId-LasVegas");
+    Dice dice;
+    unsigned point = 0;
+
+    point = 0; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 0; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+
+    CHECK(ts.numPointsEstablished == 2);
+    CHECK(ts.comeOutRolls.count() == 2);
+    CHECK(ts.pointRolls.count() == 2);
+    CHECK(ts.passWinsComeOut.count() == 0);
+    CHECK(ts.passLoseComeOut.count() == 0);
+    CHECK(ts.dontPassWinsComeOut.count() == 0);
+    CHECK(ts.dontPassLoseComeOut.count() == 0);
+    CHECK(ts.passPntCnts[4].wins.count() == 2);
+    CHECK(ts.passPntCnts[4].wins.repeats() == 1);
+    CHECK(ts.dontPassPntCnts[4].lose.count() == 2);
+    CHECK(ts.dontPassPntCnts[4].lose.repeats() == 1);
+    
+    CHECK(ts.comeWinsComeOut.count() == 0);
+    CHECK(ts.comeLoseComeOut.count() == 0);
+    CHECK(ts.dontComeWinsComeOut.count() == 0);
+    CHECK(ts.dontComeLoseComeOut.count() == 0);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("TableStats:diceroll:seven")
+{
+    // seq 4,5,5,5,5
+    
+    TableStats ts("tableId-LasVegas");
+    Dice dice;
+    unsigned point = 0;
+
+    point = 0; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(3,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(3,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(3,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(3,2);
+    ts.recordDiceRoll(point, dice);
+
+    CHECK(ts.numPointsEstablished == 1);
+    CHECK(ts.comeOutRolls.count() == 1);
+    CHECK(ts.pointRolls.count() == 4);
+    CHECK(ts.passWinsComeOut.count() == 0);
+    CHECK(ts.passLoseComeOut.count() == 0);
+    CHECK(ts.dontPassWinsComeOut.count() == 0);
+    CHECK(ts.dontPassLoseComeOut.count() == 0);
+    CHECK(ts.passPntCnts[4].wins.count() == 0);
+    CHECK(ts.passPntCnts[4].wins.repeats() == 0);
+    CHECK(ts.dontPassPntCnts[4].lose.count() == 0);
+    CHECK(ts.dontPassPntCnts[4].lose.repeats() == 0);
+    
+    CHECK(ts.comeWinsComeOut.count() == 0);
+    CHECK(ts.comeLoseComeOut.count() == 0);
+    CHECK(ts.dontComeWinsComeOut.count() == 0);
+    CHECK(ts.dontComeLoseComeOut.count() == 0);
+
+    CHECK(ts.comePntCnts[5].wins.count() == 3);
+    CHECK(ts.comePntCnts[5].wins.repeats() == 2);
+    CHECK(ts.dontComePntCnts[5].lose.count() == 3);
+    CHECK(ts.dontComePntCnts[5].lose.repeats() == 2);
+
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("TableStats:diceroll:eight")
+{
+    // seq 4,4,4,4,4,4
+    
+    TableStats ts("tableId-LasVegas");
+    Dice dice;
+    unsigned point = 0;
+
+    point = 0; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 0; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 0; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+    point = 4; dice.set(2,2);
+    ts.recordDiceRoll(point, dice);
+
+    CHECK(ts.numPointsEstablished == 3);
+    CHECK(ts.comeOutRolls.count() == 3);
+    CHECK(ts.pointRolls.count() == 3);
+    CHECK(ts.passWinsComeOut.count() == 0);
+    CHECK(ts.passLoseComeOut.count() == 0);
+    CHECK(ts.dontPassWinsComeOut.count() == 0);
+    CHECK(ts.dontPassLoseComeOut.count() == 0);
+    CHECK(ts.passPntCnts[4].wins.count() == 3);
+    CHECK(ts.passPntCnts[4].wins.repeats() == 2);
+    CHECK(ts.dontPassPntCnts[4].lose.count() == 3);
+    CHECK(ts.dontPassPntCnts[4].lose.repeats() == 2);
+    
+    CHECK(ts.comeWinsComeOut.count() == 0);
+    CHECK(ts.comeLoseComeOut.count() == 0);
+    CHECK(ts.dontComeWinsComeOut.count() == 0);
+    CHECK(ts.dontComeLoseComeOut.count() == 0);
+
+    CHECK(ts.comePntCnts[4].wins.count() == 4);
+    CHECK(ts.comePntCnts[4].wins.repeats() == 3);
+    CHECK(ts.dontComePntCnts[4].lose.count() == 4);
+    CHECK(ts.dontComePntCnts[4].lose.repeats() == 3);
 }
 
 //----------------------------------------------------------------

@@ -17,11 +17,11 @@ design EventQueue and Events
 stats TableStats unit test add tests for betting stats
 stats TableStats serializes, deserializes
 stats TableStats reads, modifies, wrties alltime stats
-stats CrapsTable returns TableStats
 stats CrapsTable creates Session summaries
 stats CrapsTable returns Session summaries
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 
+(Done) CrapsTable returns TableStats
 (Done) TableStats unit test add tests for dice rolls
 (Done) TableStats needs fencing around recordWin/Lose/Keep rolls
 (Done) TableStats implement "n" back dice roll history

@@ -816,6 +816,14 @@ CrapsTable::getAmountOnTable() const
 
 //----------------------------------------------------------------
 
+const TableStats&
+CrapsTable::getStats() const
+{
+    return stats_;
+}
+
+//----------------------------------------------------------------
+
 bool
 CrapsTable::isComeOutRoll() const
 {

@@ -74,6 +74,7 @@ public:
     bool isBettingOpen()                       const;
     Gbl::Money getAmountOnTable()              const;
     unsigned getNumBetsOnTable()               const;
+    const TableStats& getStats()               const;
     bool haveBet(const BetIntfcPtr bet)        const;
     bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
     /// @}
