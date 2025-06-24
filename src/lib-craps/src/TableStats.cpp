@@ -488,6 +488,25 @@ TableStats::resetRollCounts()
     amtBetsKeepOneRoll.current = 0;
 }
 
+//----------------------------------------------------------------
+//
+// Helper function to expand bet names with their pivot.
+//
+// PassLine --> PassLine6
+// Come     --> Come8
+// Hardway  --> Hardway4
+//
+std::string
+TableStats::expandBetName(const CrapsBetIntfc& bet) const
+{
+    std::string betName = EnumBetName::toString(bet.betName());
+    if (bet.pivot() != 0)
+    {
+        betName += std::to_string(bet.pivot());
+    }
+    return betName;
+}
+
 /*-----------------------------------------------------------*//**
 
 Record a winning bet.
@@ -496,14 +515,14 @@ Record a winning bet.
 void
 TableStats::recordWin(CrapsBetIntfc* bet, Gbl::Money amtWin)
 {
-    namespace e = EnumBetName;
-    BetName betName = bet->betName();
-    unsigned distance = bet->distance();
-    betsWinLose.wins[e::toString(betName)].count++;
-    betsWinLose.wins[e::toString(betName)].distance += distance;
-    
     unsigned amtBet = bet->contractAmount() + bet->oddsAmount();
     recordCommon(amtBet);
+
+    std::string betName = expandBetName(*bet);
+    betsWinLose.wins[betName].count++;
+    betsWinLose.wins[betName].amountBet   += amtBet;
+    betsWinLose.wins[betName].amount      += amtWin;
+    betsWinLose.wins[betName].totDistance += bet->distance();
     
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;
@@ -531,14 +550,14 @@ Record a losing bet.
 void
 TableStats::recordLose(CrapsBetIntfc* bet, Gbl::Money amtLose)
 {
-    namespace e = EnumBetName;
-    BetName betName = bet->betName();
-    unsigned distance = bet->distance();
-    betsWinLose.lose[e::toString(betName)].count++;
-    betsWinLose.lose[e::toString(betName)].distance += distance;
-    
     unsigned amtBet = bet->contractAmount() + bet->oddsAmount();
     recordCommon(amtBet);
+    
+    std::string betName = expandBetName(*bet);
+    betsWinLose.lose[betName].count++;
+    betsWinLose.lose[betName].amountBet   += amtBet;
+    betsWinLose.lose[betName].amount      += amtLose;
+    betsWinLose.lose[betName].totDistance += bet->distance();
     
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;

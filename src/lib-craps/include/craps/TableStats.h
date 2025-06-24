@@ -80,7 +80,9 @@ public:
     struct BetStat
     {
         unsigned count = 0;
-        unsigned distance = 0;
+        unsigned totDistance = 0;
+        Gbl::Money amount;
+        Gbl::Money amountBet;
     };
     
     struct BetTypesWinLose
@@ -193,6 +195,7 @@ private:
     void updatePointRoll(unsigned point, unsigned roll);
     void recordCommon(Gbl::Money amtBet);
     void bumpRecentRolls(const Dice& dice);
+    std::string expandBetName(const CrapsBetIntfc& bet) const;
 };
 
 /*-----------------------------------------------------------*//**

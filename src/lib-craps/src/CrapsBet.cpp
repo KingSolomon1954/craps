@@ -955,13 +955,18 @@ CrapsBet::evalField(
     Decision dcn = Keep;
     unsigned d = dice.value();  // cache value once
     
+    // For field bets, in additon to win/lose we also set the pivot. 
+    // Allows us to keeps stats on field bet win/lose per number.
+
     if (d == 5 || d == 6 || d == 7 || d == 8) 
     {
         dcn = Lose;
+        pivot_ = d;
     }
     else
     {
         dcn = Win;
+        pivot_ = d;
     }
         
     if (dcn == Win)
