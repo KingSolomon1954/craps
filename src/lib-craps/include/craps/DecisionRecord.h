@@ -34,6 +34,17 @@ struct DecisionRecord
                commission == other.commission &&
                playerId == other.playerId;
     }
+    void reset()
+    {
+        betId = 0;
+        decision = false;
+        pivotAssigned = false;
+        win = 0;
+        lose = 0;
+        returnToPlayer = 0;
+        commission = 0;
+        playerId = "";
+    }
 };
 
 /*-----------------------------------------------------------*//**

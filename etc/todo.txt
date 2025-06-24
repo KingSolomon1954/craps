@@ -14,6 +14,7 @@ load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
 
+stats TableStats signature recordWin takes a reference not a pointer
 stats TableStats unit test add tests for betting stats
 stats TableStats serializes, deserializes
 stats TableStats reads, modifies, wrties alltime stats
