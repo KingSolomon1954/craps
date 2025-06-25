@@ -14,14 +14,14 @@ load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
 
-stats TableStats signature recordWin takes a reference not a pointer
-stats TableStats unit test add tests for betting stats
 stats TableStats serializes, deserializes
-stats TableStats reads, modifies, wrties alltime stats
+stats TableStats reads, modifies, writes alltime stats
 stats CrapsTable creates Session summaries
 stats CrapsTable returns Session summaries
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 
+(Done) TableStats unit test add tests for betting stats
+(Done) TableStats signature recordWin takes a reference not a pointer
 (Done) CrapsTable returns TableStats
 (Done) TableStats unit test add tests for dice rolls
 (Done) TableStats needs fencing around recordWin/Lose/Keep rolls

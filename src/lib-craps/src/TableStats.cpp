@@ -31,7 +31,7 @@ TableStats::recordDiceRoll(unsigned point, const Dice& dice)
     unsigned d2   = dice.d2();
 
     bumpRecentRolls(dice);
-    
+
     disarmSomeCounts (point, roll);
     countDiceNumbers (roll);
     countComeOutRolls(point);
@@ -41,7 +41,7 @@ TableStats::recordDiceRoll(unsigned point, const Dice& dice)
     countFieldBetLose(roll);
     countHardwayWins (point, d1, d2);
     countHardwayLose (point, d1, d2);
-    
+
     switch(roll)
     {
         case 2:  update2 (point);  break;
@@ -70,7 +70,7 @@ TableStats::countDiceNumbers(unsigned roll)
         {
             numberCounts[i].disarm();
         }
-        
+
     }
 }
 
@@ -148,7 +148,7 @@ void
 TableStats::countHardwayWins(unsigned point, unsigned d1, unsigned d2)
 {
     if (point == 0) return;  // Assume no hardways bet on come out rolls
-    
+
     const unsigned roll = d1 + d2;
     if (d1 == d2 && CrapsBet::hardwayNums_.contains(roll))
     {
@@ -171,7 +171,7 @@ TableStats::countHardwayLose(unsigned point, unsigned d1, unsigned d2)
         bumpHardwayLose(8);
         bumpHardwayLose(10);
     }
-    
+
     if (d1 != d2 && CrapsBet::hardwayNums_.contains(roll))
     {
         bumpHardwayLose(roll);
@@ -219,8 +219,8 @@ TableStats::update2(unsigned point)
 {
     if (point == 0)
     {
-        twosOnComeOutRoll.bump();  // see disarmSomeCounts() 
-        crapsOnComeOutRoll.bump(); // see disarmSomeCounts() 
+        twosOnComeOutRoll.bump();  // see disarmSomeCounts()
+        crapsOnComeOutRoll.bump(); // see disarmSomeCounts()
         passLoseComeOut.bump(); passWinsComeOut.disarm();
         dontPassWinsComeOut.bump(); dontPassLoseComeOut.disarm();
     }
@@ -238,8 +238,8 @@ TableStats::update3(unsigned point)
 {
     if (point == 0)
     {
-        threesOnComeOutRoll.bump(); // see disarmSomeCounts() 
-        crapsOnComeOutRoll.bump();  // see disarmSomeCounts() 
+        threesOnComeOutRoll.bump(); // see disarmSomeCounts()
+        crapsOnComeOutRoll.bump();  // see disarmSomeCounts()
         passLoseComeOut.bump(); passWinsComeOut.disarm();
         dontPassWinsComeOut.bump(); dontPassLoseComeOut.disarm();
     }
@@ -259,7 +259,7 @@ TableStats::update7(unsigned point)
     {
         passWinsComeOut.bump();     passLoseComeOut.disarm();
         dontPassLoseComeOut.bump(); dontPassWinsComeOut.disarm();
-        sevensOnComeOutRoll.bump(); // see disarmSomeCounts() 
+        sevensOnComeOutRoll.bump(); // see disarmSomeCounts()
     }
     else
     {
@@ -267,8 +267,8 @@ TableStats::update7(unsigned point)
         countDontPassPntWins(point);
         comeWinsComeOut.bump();     comeLoseComeOut.disarm();
         dontComeLoseComeOut.bump(); dontComeWinsComeOut.disarm();
-        
-        sevenOuts.bump();           // see disarmSomeCounts() 
+
+        sevenOuts.bump();           // see disarmSomeCounts()
         shooterCounts.disarm();     shooterCounts.count_ = 0;
     }
 
@@ -453,7 +453,7 @@ TableStats::countDontComePntWins(unsigned point, unsigned roll)
     {
         // Update stats on the number itself
         PointCounts& pc = dontComePntCnts[roll];
-        pc.wins.bump(); pc.lose.disarm(); 
+        pc.wins.bump(); pc.lose.disarm();
         // Unassign pivot, 7 clears all dontcome bets, no following bet.
         pc.wins.pivot = 0;
     }
@@ -513,30 +513,30 @@ Record a winning bet.
 
 */
 void
-TableStats::recordWin(CrapsBetIntfc* bet, Gbl::Money amtWin)
+TableStats::recordWin(const CrapsBetIntfc& bet, Gbl::Money amtWin)
 {
-    unsigned amtBet = bet->contractAmount() + bet->oddsAmount();
+    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
 
-    std::string betName = expandBetName(*bet);
+    std::string betName = expandBetName(bet);
     betsWinLose.wins[betName].count++;
     betsWinLose.wins[betName].amountBet   += amtBet;
     betsWinLose.wins[betName].amount      += amtWin;
-    betsWinLose.wins[betName].totDistance += bet->distance();
-    
+    betsWinLose.wins[betName].totDistance += bet.distance();
+
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;
-    
+
     totNumWinsAllBets++;
     numBetsWinOneRoll.total++;
-    
+
     totAmtWinsAllBets += amtWin;
     amtBetsWinOneRoll.total += amtWin;
-    
+
     numBetsWinOneRoll.current++;
-    
+
     amtBetsWinOneRoll.current += amtWin;
-    
+
     maxAmtWinOneBet       = std::max(amtWin, maxAmtWinOneBet);
     amtBetsWinOneRoll.max = std::max(amtBetsWinOneRoll.current, amtBetsWinOneRoll.max);
     numBetsWinOneRoll.max = std::max(numBetsWinOneRoll.current, numBetsWinOneRoll.max);
@@ -548,28 +548,28 @@ Record a losing bet.
 
 */
 void
-TableStats::recordLose(CrapsBetIntfc* bet, Gbl::Money amtLose)
+TableStats::recordLose(const CrapsBetIntfc& bet, Gbl::Money amtLose)
 {
-    unsigned amtBet = bet->contractAmount() + bet->oddsAmount();
+    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
-    
-    std::string betName = expandBetName(*bet);
+
+    std::string betName = expandBetName(bet);
     betsWinLose.lose[betName].count++;
     betsWinLose.lose[betName].amountBet   += amtBet;
     betsWinLose.lose[betName].amount      += amtLose;
-    betsWinLose.lose[betName].totDistance += bet->distance();
-    
+    betsWinLose.lose[betName].totDistance += bet.distance();
+
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;
-    
+
     totNumLoseAllBets++;
     numBetsLoseOneRoll.total++;
 
     totAmtLoseAllBets += amtLose;
     amtBetsLoseOneRoll.total += amtLose;
-    
+
     numBetsLoseOneRoll.current++;
-        
+
     amtBetsLoseOneRoll.current += amtLose;
 
     maxAmtLoseOneBet       = std::max(amtLose, maxAmtLoseOneBet);
@@ -586,21 +586,21 @@ But might want to track avg number of keeps per roll.
 
 */
 void
-TableStats::recordKeep(CrapsBetIntfc* bet)
+TableStats::recordKeep(const CrapsBetIntfc& bet)
 {
-    unsigned amtBet = bet->contractAmount() + bet->oddsAmount();
+    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
-    
+
     // totNumBetsAllBets++;      // Don't incr here, counted when win/lose
     // totAmtAllBets += amtBet;  // Don't incr here, counted when win/lose
     totNumKeepAllBets++;
     numBetsKeepOneRoll.total++;
-    
+
     totAmtKeepAllBets += amtBet;
     amtBetsKeepOneRoll.total += amtBet;
-    
+
     numBetsKeepOneRoll.current++;
-    
+
     amtBetsKeepOneRoll.current += amtBet;
 
     maxAmtKeepOneBet       = std::max(amtBet, maxAmtKeepOneBet);
@@ -637,7 +637,7 @@ TableStats::reset()
         hardwayCounts[i].reset();
         anyEstPntCnts[i].reset();
     }
-    
+
     for (unsigned i = 2; i < 12; i++)
     {
         numberCounts[i].reset();
@@ -701,7 +701,7 @@ TableStats::bumpRecentRolls(const Dice& dice)
     }
     recentRolls.push_back(dice);
 }
-    
+
 //-----------------------------------------------------------------
 
 void
@@ -792,7 +792,7 @@ TableStats::AmtBets::reset()
     current = 0;
     max     = 0;
     total   = 0;
-   
+
 }
 
 //-----------------------------------------------------------------

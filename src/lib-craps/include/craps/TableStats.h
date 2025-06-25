@@ -27,9 +27,9 @@ public:
 
     /// @name Modifiers
     /// @{
-    void recordWin (CrapsBetIntfc* bet, Gbl::Money amtWin);
-    void recordLose(CrapsBetIntfc* bet, Gbl::Money amtLose);
-    void recordKeep(CrapsBetIntfc* bet);
+    void recordWin (const CrapsBetIntfc& bet, Gbl::Money amtWin);
+    void recordLose(const CrapsBetIntfc& bet, Gbl::Money amtLose);
+    void recordKeep(const CrapsBetIntfc& bet);
     void recordDiceRoll(unsigned point, const Dice& curRoll);
     void reset();
     void setRollHistorySize(size_t rollHistorySize);
@@ -43,9 +43,9 @@ public:
     std::string tableId;
     Gen::Timepoint sessionStart;
     Gen::Timepoint sessionEnd;
-    
+
     std::deque<Dice> recentRolls;  // Front element is oldest roll
-    
+
     struct Counter
     {
         unsigned count_ = 0;
@@ -59,7 +59,7 @@ public:
         void disarm();
         void reset();
     };
-    
+
     struct PointCounts
     {
         Counter wins;
@@ -84,14 +84,14 @@ public:
         Gbl::Money amount;
         Gbl::Money amountBet;
     };
-    
+
     struct BetTypesWinLose
     {
         std::map<std::string, BetStat> wins;
         std::map<std::string, BetStat> lose;
     };
     BetTypesWinLose betsWinLose;
-    
+
     unsigned totNumBetsAllBets = 0;
     unsigned totNumWinsAllBets = 0;
     unsigned totNumLoseAllBets = 0;
@@ -118,12 +118,12 @@ public:
         unsigned total   = 0;
         void reset();
     };
-    
+
     NumBets numBetsOneRoll;
     NumBets numBetsWinOneRoll;
     NumBets numBetsLoseOneRoll;
     NumBets numBetsKeepOneRoll;
-    
+
     struct AmtBets
     {
         Gbl::Money current = 0;
@@ -160,10 +160,10 @@ public:
     Counter elevensOnComeOutRoll;
     Counter twelvesOnComeOutRoll;
     Counter crapsOnComeOutRoll;
-    
+
 private:
     size_t rollHistorySize_ = 25;
-    
+
     void countDiceNumbers     (unsigned roll);
     void countAllPoints       (unsigned roll);
     void countComeOutRolls    (unsigned point);
@@ -183,10 +183,10 @@ private:
     void countDontComePntLose (unsigned point, unsigned roll);
     void disarmSomeCounts     (unsigned point, unsigned roll);
     void resetRollCounts();  // Should be private, called only by CrapsTable
-    
+
     void bumpHardwayWins(unsigned roll);
     void bumpHardwayLose(unsigned roll);
-    
+
     void update2 (unsigned point);
     void update3 (unsigned point);
     void update7 (unsigned point);

@@ -555,7 +555,7 @@ CrapsTable::disbursePlayerWins()
             Gbl::pPlayerMgr->disburseWin(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            stats_.recordWin(b, r.win);
+            stats_.recordWin(*b, r.win);
         }
     }
 }
@@ -572,7 +572,7 @@ CrapsTable::disbursePlayerLoses()
             Gbl::pPlayerMgr->disburseLose(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            stats_.recordLose(b, r.lose);
+            stats_.recordLose(*b, r.lose);
         }
     }
 }
@@ -589,7 +589,7 @@ CrapsTable::disbursePlayerKeeps()
             Gbl::pPlayerMgr->disburseKeep(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            stats_.recordKeep(b);
+            stats_.recordKeep(*b);
         }
     }
 }
