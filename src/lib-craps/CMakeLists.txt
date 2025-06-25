@@ -9,11 +9,13 @@ find_package(yaml-cpp REQUIRED)
 
 add_library(craps STATIC
     src/Bank.cpp
+    src/BetStatsStruct.cpp
     src/CrapsBet.cpp
     src/CrapsTable.cpp
     src/Dice.cpp
     src/EnumBetName.cpp
     src/Player.cpp
+    src/RollStatsStruct.cpp
     src/TableConfig.cpp
     src/TableStats.cpp
 )

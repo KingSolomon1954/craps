@@ -25,7 +25,7 @@ void
 TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 {
     resetRollCounts();  // Clear some counters from previous roll
-    numRolls++;
+    rollStats.numRolls++;
     unsigned roll = dice.value();
     unsigned d1   = dice.d1();
     unsigned d2   = dice.d2();
@@ -63,12 +63,12 @@ TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 void
 TableStats::countDiceNumbers(unsigned roll)
 {
-    numberCounts[roll].bump();
+    rollStats.numberCounts[roll].bump();
     for (unsigned i = 2; i < 13; i++)
     {
         if (i != roll)
         {
-            numberCounts[i].disarm();
+            rollStats.numberCounts[i].disarm();
         }
 
     }
@@ -79,13 +79,13 @@ TableStats::countDiceNumbers(unsigned roll)
 void
 TableStats::countAllPoints(unsigned roll)
 {
-    numPointsEstablished++;
-    anyEstPntCnts[roll].bump();
+    rollStats.numPointsEstablished++;
+    rollStats.anyEstPntCnts[roll].bump();
     for (unsigned i = 4; i < 11; i++)
     {
         if (i != roll)
         {
-            anyEstPntCnts[i].disarm();
+            rollStats.anyEstPntCnts[i].disarm();
         }
     }
 }
@@ -97,7 +97,7 @@ TableStats::countComeOutRolls(unsigned point)
 {
     if (point == 0)
     {
-        comeOutRolls.bump(); pointRolls.disarm();
+        rollStats.comeOutRolls.bump(); rollStats.pointRolls.disarm();
     }
 }
 
@@ -108,7 +108,7 @@ TableStats::countPointRolls(unsigned point, unsigned roll)
 {
     if (point != 0)
     {
-        pointRolls.bump(); comeOutRolls.disarm();
+        rollStats.pointRolls.bump(); rollStats.comeOutRolls.disarm();
     }
 }
 
@@ -117,7 +117,7 @@ TableStats::countPointRolls(unsigned point, unsigned roll)
 void
 TableStats::countShooterRolls(unsigned point, unsigned roll)
 {
-    shooterCounts.bump();  // see update7 for shooterCounts.disarm()
+    rollStats.shooterCounts.bump();  // see update7 for shooterCounts.disarm()
 }
 
 //-----------------------------------------------------------------
@@ -127,7 +127,7 @@ TableStats::countFieldBetWins(unsigned roll)
 {
     if (CrapsBet::fieldNums_.contains(roll))
     {
-        fieldBetWins.bump(); fieldBetLose.disarm();
+        rollStats.fieldBetWins.bump(); rollStats.fieldBetLose.disarm();
     }
 }
 
@@ -138,7 +138,7 @@ TableStats::countFieldBetLose(unsigned roll)
 {
     if (!CrapsBet::fieldNums_.contains(roll))
     {
-        fieldBetLose.bump(); fieldBetWins.disarm();
+        rollStats.fieldBetLose.bump(); rollStats.fieldBetWins.disarm();
     }
 }
 
@@ -188,27 +188,27 @@ TableStats::disarmSomeCounts(unsigned point, unsigned roll)
 {
     if (roll != 2)
     {
-        twosOnComeOutRoll.disarm();
+        rollStats.twosOnComeOutRoll.disarm();
     }
     if (roll != 3)
     {
-        threesOnComeOutRoll.disarm();
+        rollStats.threesOnComeOutRoll.disarm();
     }
     if (roll != 7)
     {
-        sevensOnComeOutRoll.disarm();
+        rollStats.sevensOnComeOutRoll.disarm();
     }
     if (roll != 11)
     {
-        elevensOnComeOutRoll.disarm();
+        rollStats.elevensOnComeOutRoll.disarm();
     }
     if (roll != 12)
     {
-        twelvesOnComeOutRoll.disarm();
+        rollStats.twelvesOnComeOutRoll.disarm();
     }
     if (!CrapsBet::crapsNums_.contains(roll))
     {
-        crapsOnComeOutRoll.disarm();
+        rollStats.crapsOnComeOutRoll.disarm();
     }
 }
 
@@ -219,15 +219,15 @@ TableStats::update2(unsigned point)
 {
     if (point == 0)
     {
-        twosOnComeOutRoll.bump();  // see disarmSomeCounts()
-        crapsOnComeOutRoll.bump(); // see disarmSomeCounts()
-        passLoseComeOut.bump(); passWinsComeOut.disarm();
-        dontPassWinsComeOut.bump(); dontPassLoseComeOut.disarm();
+        rollStats.twosOnComeOutRoll.bump();  // see disarmSomeCounts()
+        rollStats.crapsOnComeOutRoll.bump(); // see disarmSomeCounts()
+        rollStats.passLoseComeOut.bump(); rollStats.passWinsComeOut.disarm();
+        rollStats.dontPassWinsComeOut.bump(); rollStats.dontPassLoseComeOut.disarm();
     }
     else
     {
-        comeLoseComeOut.bump(); comeWinsComeOut.disarm();
-        dontComeWinsComeOut.bump(); dontComeLoseComeOut.disarm();
+        rollStats.comeLoseComeOut.bump(); rollStats.comeWinsComeOut.disarm();
+        rollStats.dontComeWinsComeOut.bump(); rollStats.dontComeLoseComeOut.disarm();
     }
 }
 
@@ -238,15 +238,15 @@ TableStats::update3(unsigned point)
 {
     if (point == 0)
     {
-        threesOnComeOutRoll.bump(); // see disarmSomeCounts()
-        crapsOnComeOutRoll.bump();  // see disarmSomeCounts()
-        passLoseComeOut.bump(); passWinsComeOut.disarm();
-        dontPassWinsComeOut.bump(); dontPassLoseComeOut.disarm();
+        rollStats.threesOnComeOutRoll.bump(); // see disarmSomeCounts()
+        rollStats.crapsOnComeOutRoll.bump();  // see disarmSomeCounts()
+        rollStats.passLoseComeOut.bump(); rollStats.passWinsComeOut.disarm();
+        rollStats.dontPassWinsComeOut.bump(); rollStats.dontPassLoseComeOut.disarm();
     }
     else
     {
-        comeLoseComeOut.bump(); comeWinsComeOut.disarm();
-        dontComeWinsComeOut.bump(); dontComeLoseComeOut.disarm();
+        rollStats.comeLoseComeOut.bump(); rollStats.comeWinsComeOut.disarm();
+        rollStats.dontComeWinsComeOut.bump(); rollStats.dontComeLoseComeOut.disarm();
     }
 }
 
@@ -257,19 +257,19 @@ TableStats::update7(unsigned point)
 {
     if (point == 0)
     {
-        passWinsComeOut.bump();     passLoseComeOut.disarm();
-        dontPassLoseComeOut.bump(); dontPassWinsComeOut.disarm();
-        sevensOnComeOutRoll.bump(); // see disarmSomeCounts()
+        rollStats.passWinsComeOut.bump();     rollStats.passLoseComeOut.disarm();
+        rollStats.dontPassLoseComeOut.bump(); rollStats.dontPassWinsComeOut.disarm();
+        rollStats.sevensOnComeOutRoll.bump(); // see disarmSomeCounts()
     }
     else
     {
         countPassLinePntLose(point);
         countDontPassPntWins(point);
-        comeWinsComeOut.bump();     comeLoseComeOut.disarm();
-        dontComeLoseComeOut.bump(); dontComeWinsComeOut.disarm();
+        rollStats.comeWinsComeOut.bump();     rollStats.comeLoseComeOut.disarm();
+        rollStats.dontComeLoseComeOut.bump(); rollStats.dontComeWinsComeOut.disarm();
 
-        sevenOuts.bump();           // see disarmSomeCounts()
-        shooterCounts.disarm();     shooterCounts.count_ = 0;
+        rollStats.sevenOuts.bump();           // see disarmSomeCounts()
+        rollStats.shooterCounts.disarm();     rollStats.shooterCounts.count_ = 0;
     }
 
     countComePntLose(0, 4);
@@ -294,14 +294,14 @@ TableStats::update11(unsigned point)
 {
     if (point == 0)
     {
-        elevensOnComeOutRoll.bump();  // see disarmSomeCounts()
-        passWinsComeOut.bump(); passLoseComeOut.disarm();
-        dontPassLoseComeOut.bump(); dontPassWinsComeOut.disarm();
+        rollStats.elevensOnComeOutRoll.bump();  // see disarmSomeCounts()
+        rollStats.passWinsComeOut.bump(); rollStats.passLoseComeOut.disarm();
+        rollStats.dontPassLoseComeOut.bump(); rollStats.dontPassWinsComeOut.disarm();
     }
     else
     {
-        comeWinsComeOut.bump(); comeLoseComeOut.disarm();
-        dontComeLoseComeOut.bump(); dontComeWinsComeOut.disarm();
+        rollStats.comeWinsComeOut.bump(); rollStats.comeLoseComeOut.disarm();
+        rollStats.dontComeLoseComeOut.bump(); rollStats.dontComeWinsComeOut.disarm();
     }
 }
 
@@ -312,15 +312,15 @@ TableStats::update12(unsigned point)
 {
     if (point == 0)
     {
-        twelvesOnComeOutRoll.bump(); // see disarmSomeCounts()
-        crapsOnComeOutRoll.bump();   // see disarmSomeCounts()
-        passLoseComeOut.bump(); passWinsComeOut.disarm();
-        dontPassLoseComeOut.disarm(); // dontPassWin.bump();  // push
+        rollStats.twelvesOnComeOutRoll.bump(); // see disarmSomeCounts()
+        rollStats.crapsOnComeOutRoll.bump();   // see disarmSomeCounts()
+        rollStats.passLoseComeOut.bump(); rollStats.passWinsComeOut.disarm();
+        rollStats.dontPassLoseComeOut.disarm(); // dontPassWin.bump();  // push
     }
     else
     {
-        comeLoseComeOut.bump(); comeWinsComeOut.disarm();
-        dontComeLoseComeOut.disarm(); // dontComeWinsComeOut.bump(); // push
+        rollStats.comeLoseComeOut.bump(); rollStats.comeWinsComeOut.disarm();
+        rollStats.dontComeLoseComeOut.disarm(); // rollStats.dontComeWinsComeOut.bump(); // push
     }
 }
 
@@ -333,7 +333,7 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
     {
         countPassLinePntWins(roll);
         countDontPassPntLose(roll);
-        sevenOuts.disarm();
+        rollStats.sevenOuts.disarm();
     }
     countComePntWins(point, roll);
     countDontComePntLose(point, roll);
@@ -344,10 +344,10 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
     if (point != 0)
     {
         // Establish new come and dont come bets
-        comePntCnts[roll].wins.pivot     = roll;
-        comePntCnts[roll].lose.pivot     = roll;
-        dontComePntCnts[roll].wins.pivot = roll;
-        dontComePntCnts[roll].lose.pivot = roll;
+        rollStats.comePntCnts[roll].wins.pivot     = roll;
+        rollStats.comePntCnts[roll].lose.pivot     = roll;
+        rollStats.dontComePntCnts[roll].wins.pivot = roll;
+        rollStats.dontComePntCnts[roll].lose.pivot = roll;
     }
 }
 
@@ -356,7 +356,7 @@ TableStats::updatePointRoll(unsigned point, unsigned roll)
 void
 TableStats::bumpHardwayWins(unsigned roll)
 {
-    PointCounts& pc = hardwayCounts[roll];
+    PointCounts& pc = rollStats.hardwayCounts[roll];
     pc.wins.bump(); pc.lose.disarm();
 }
 
@@ -365,7 +365,7 @@ TableStats::bumpHardwayWins(unsigned roll)
 void
 TableStats::bumpHardwayLose(unsigned roll)
 {
-    PointCounts& pc = hardwayCounts[roll];
+    PointCounts& pc = rollStats.hardwayCounts[roll];
     pc.lose.bump(); pc.wins.disarm();
 }
 
@@ -375,7 +375,7 @@ void
 TableStats::countPassLinePntWins(unsigned roll)
 {
     // Update stats on the number itself
-    PointCounts& pc = passPntCnts[roll];
+    PointCounts& pc = rollStats.passPntCnts[roll];
     pc.wins.bump(); pc.lose.disarm();
 }
 
@@ -385,7 +385,7 @@ void
 TableStats::countPassLinePntLose(unsigned roll)
 {
     // Update stats on the number itself
-    PointCounts& pc = passPntCnts[roll];
+    PointCounts& pc = rollStats.passPntCnts[roll];
     pc.lose.bump(); pc.wins.disarm();
 }
 
@@ -395,7 +395,7 @@ void
 TableStats::countDontPassPntWins(unsigned roll)
 {
     // Update stats on the number itself
-    PointCounts& pc = dontPassPntCnts[roll];
+    PointCounts& pc = rollStats.dontPassPntCnts[roll];
     pc.wins.bump(); pc.lose.disarm();
 }
 
@@ -405,7 +405,7 @@ void
 TableStats::countDontPassPntLose(unsigned roll)
 {
     // Update stats on the number itself
-    PointCounts& pc = dontPassPntCnts[roll];
+    PointCounts& pc = rollStats.dontPassPntCnts[roll];
     pc.lose.bump(); pc.wins.disarm();
 }
 
@@ -414,10 +414,10 @@ TableStats::countDontPassPntLose(unsigned roll)
 void
 TableStats::countComePntWins(unsigned point, unsigned roll)
 {
-    if (comePntCnts[roll].wins.pivot == roll)
+    if (rollStats.comePntCnts[roll].wins.pivot == roll)
     {
         // Update stats on the number itself
-        PointCounts& pc = comePntCnts[roll];
+        PointCounts& pc = rollStats.comePntCnts[roll];
         pc.wins.bump(); pc.lose.disarm();
         // pc.wins.pivot remains assigned so come bet is re-upped.
     }
@@ -431,10 +431,10 @@ TableStats::countComePntWins(unsigned point, unsigned roll)
 void
 TableStats::countComePntLose(unsigned point, unsigned roll)
 {
-    if (comePntCnts[roll].lose.pivot == roll)
+    if (rollStats.comePntCnts[roll].lose.pivot == roll)
     {
         // Update stats on the number itself
-        PointCounts& pc = comePntCnts[roll];
+        PointCounts& pc = rollStats.comePntCnts[roll];
         pc.lose.bump(); pc.wins.disarm();
         // Unassign pivot, 7-out clears all come bets, no following come bet.
         pc.lose.pivot = 0;
@@ -449,10 +449,10 @@ TableStats::countComePntLose(unsigned point, unsigned roll)
 void
 TableStats::countDontComePntWins(unsigned point, unsigned roll)
 {
-    if (dontComePntCnts[roll].wins.pivot == roll)
+    if (rollStats.dontComePntCnts[roll].wins.pivot == roll)
     {
         // Update stats on the number itself
-        PointCounts& pc = dontComePntCnts[roll];
+        PointCounts& pc = rollStats.dontComePntCnts[roll];
         pc.wins.bump(); pc.lose.disarm();
         // Unassign pivot, 7 clears all dontcome bets, no following bet.
         pc.wins.pivot = 0;
@@ -464,10 +464,10 @@ TableStats::countDontComePntWins(unsigned point, unsigned roll)
 void
 TableStats::countDontComePntLose(unsigned point, unsigned roll)
 {
-    if (dontComePntCnts[roll].lose.pivot == roll)
+    if (rollStats.dontComePntCnts[roll].lose.pivot == roll)
     {
         // Update stats on the number itself
-        PointCounts& pc = dontComePntCnts[roll];
+        PointCounts& pc = rollStats.dontComePntCnts[roll];
         pc.lose.bump(); pc.wins.disarm();
         // pc.lose.pivot remains assigned so dontcome bet is re-upped.
     }
@@ -478,33 +478,14 @@ TableStats::countDontComePntLose(unsigned point, unsigned roll)
 void
 TableStats::resetRollCounts()
 {
-    numBetsOneRoll.current     = 0;
-    numBetsWinOneRoll.current  = 0;
-    numBetsLoseOneRoll.current = 0;
-    numBetsKeepOneRoll.current = 0;
-    amtBetsOneRoll.current     = 0;
-    amtBetsWinOneRoll.current  = 0;
-    amtBetsLoseOneRoll.current = 0;
-    amtBetsKeepOneRoll.current = 0;
-}
-
-//----------------------------------------------------------------
-//
-// Helper function to expand bet names with their pivot.
-//
-// PassLine --> PassLine6
-// Come     --> Come8
-// Hardway  --> Hardway4
-//
-std::string
-TableStats::expandBetName(const CrapsBetIntfc& bet) const
-{
-    std::string betName = EnumBetName::toString(bet.betName());
-    if (bet.pivot() != 0)
-    {
-        betName += std::to_string(bet.pivot());
-    }
-    return betName;
+    betStats.numBetsOneRoll.current     = 0;
+    betStats.numBetsWinOneRoll.current  = 0;
+    betStats.numBetsLoseOneRoll.current = 0;
+    betStats.numBetsKeepOneRoll.current = 0;
+    betStats.amtBetsOneRoll.current     = 0;
+    betStats.amtBetsWinOneRoll.current  = 0;
+    betStats.amtBetsLoseOneRoll.current = 0;
+    betStats.amtBetsKeepOneRoll.current = 0;
 }
 
 /*-----------------------------------------------------------*//**
@@ -518,28 +499,28 @@ TableStats::recordWin(const CrapsBetIntfc& bet, Gbl::Money amtWin)
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
 
-    std::string betName = expandBetName(bet);
-    betsWinLose.wins[betName].count++;
-    betsWinLose.wins[betName].amountBet   += amtBet;
-    betsWinLose.wins[betName].amount      += amtWin;
-    betsWinLose.wins[betName].totDistance += bet.distance();
+    std::string betName = betStats.expandBetName(bet);
+    betStats.betTypeStats.wins[betName].count++;
+    betStats.betTypeStats.wins[betName].amountBet   += amtBet;
+    betStats.betTypeStats.wins[betName].amount      += amtWin;
+    betStats.betTypeStats.wins[betName].totDistance += bet.distance();
 
-    totNumBetsAllBets++;
-    totAmtAllBets += amtBet;
+    betStats.totNumBetsAllBets++;
+    betStats.totAmtAllBets += amtBet;
 
-    totNumWinsAllBets++;
-    numBetsWinOneRoll.total++;
+    betStats.totNumWinsAllBets++;
+    betStats.numBetsWinOneRoll.total++;
 
-    totAmtWinsAllBets += amtWin;
-    amtBetsWinOneRoll.total += amtWin;
+    betStats.totAmtWinsAllBets += amtWin;
+    betStats.amtBetsWinOneRoll.total += amtWin;
 
-    numBetsWinOneRoll.current++;
+    betStats.numBetsWinOneRoll.current++;
 
-    amtBetsWinOneRoll.current += amtWin;
+    betStats.amtBetsWinOneRoll.current += amtWin;
 
-    maxAmtWinOneBet       = std::max(amtWin, maxAmtWinOneBet);
-    amtBetsWinOneRoll.max = std::max(amtBetsWinOneRoll.current, amtBetsWinOneRoll.max);
-    numBetsWinOneRoll.max = std::max(numBetsWinOneRoll.current, numBetsWinOneRoll.max);
+    betStats.maxAmtWinOneBet       = std::max(amtWin, betStats.maxAmtWinOneBet);
+    betStats.amtBetsWinOneRoll.max = std::max(betStats.amtBetsWinOneRoll.current, betStats.amtBetsWinOneRoll.max);
+    betStats.numBetsWinOneRoll.max = std::max(betStats.numBetsWinOneRoll.current, betStats.numBetsWinOneRoll.max);
 }
 
 /*-----------------------------------------------------------*//**
@@ -553,28 +534,28 @@ TableStats::recordLose(const CrapsBetIntfc& bet, Gbl::Money amtLose)
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
 
-    std::string betName = expandBetName(bet);
-    betsWinLose.lose[betName].count++;
-    betsWinLose.lose[betName].amountBet   += amtBet;
-    betsWinLose.lose[betName].amount      += amtLose;
-    betsWinLose.lose[betName].totDistance += bet.distance();
+    std::string betName = betStats.expandBetName(bet);
+    betStats.betTypeStats.lose[betName].count++;
+    betStats.betTypeStats.lose[betName].amountBet   += amtBet;
+    betStats.betTypeStats.lose[betName].amount      += amtLose;
+    betStats.betTypeStats.lose[betName].totDistance += bet.distance();
 
-    totNumBetsAllBets++;
-    totAmtAllBets += amtBet;
+    betStats.totNumBetsAllBets++;
+    betStats.totAmtAllBets += amtBet;
 
-    totNumLoseAllBets++;
-    numBetsLoseOneRoll.total++;
+    betStats.totNumLoseAllBets++;
+    betStats.numBetsLoseOneRoll.total++;
 
-    totAmtLoseAllBets += amtLose;
-    amtBetsLoseOneRoll.total += amtLose;
+    betStats.totAmtLoseAllBets += amtLose;
+    betStats.amtBetsLoseOneRoll.total += amtLose;
 
-    numBetsLoseOneRoll.current++;
+    betStats.numBetsLoseOneRoll.current++;
 
-    amtBetsLoseOneRoll.current += amtLose;
+    betStats.amtBetsLoseOneRoll.current += amtLose;
 
-    maxAmtLoseOneBet       = std::max(amtLose, maxAmtLoseOneBet);
-    amtBetsLoseOneRoll.max = std::max(amtBetsLoseOneRoll.current, amtBetsLoseOneRoll.max);
-    numBetsLoseOneRoll.max = std::max(numBetsLoseOneRoll.current, numBetsLoseOneRoll.max);
+    betStats.maxAmtLoseOneBet       = std::max(amtLose, betStats.maxAmtLoseOneBet);
+    betStats.amtBetsLoseOneRoll.max = std::max(betStats.amtBetsLoseOneRoll.current, betStats.amtBetsLoseOneRoll.max);
+    betStats.numBetsLoseOneRoll.max = std::max(betStats.numBetsLoseOneRoll.current, betStats.numBetsLoseOneRoll.max);
 }
 
 /*-----------------------------------------------------------*//**
@@ -591,21 +572,21 @@ TableStats::recordKeep(const CrapsBetIntfc& bet)
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
 
-    // totNumBetsAllBets++;      // Don't incr here, counted when win/lose
-    // totAmtAllBets += amtBet;  // Don't incr here, counted when win/lose
-    totNumKeepAllBets++;
-    numBetsKeepOneRoll.total++;
+    // betStats.totNumBetsAllBets++;      // Don't incr here, counted when win/lose
+    // betStats.totAmtAllBets += amtBet;  // Don't incr here, counted when win/lose
+    betStats.totNumKeepAllBets++;
+    betStats.numBetsKeepOneRoll.total++;
 
-    totAmtKeepAllBets += amtBet;
-    amtBetsKeepOneRoll.total += amtBet;
+    betStats.totAmtKeepAllBets += amtBet;
+    betStats.amtBetsKeepOneRoll.total += amtBet;
 
-    numBetsKeepOneRoll.current++;
+    betStats.numBetsKeepOneRoll.current++;
 
-    amtBetsKeepOneRoll.current += amtBet;
+    betStats.amtBetsKeepOneRoll.current += amtBet;
 
-    maxAmtKeepOneBet       = std::max(amtBet, maxAmtKeepOneBet);
-    amtBetsKeepOneRoll.max = std::max(amtBetsKeepOneRoll.current, amtBetsKeepOneRoll.max);
-    numBetsKeepOneRoll.max = std::max(numBetsKeepOneRoll.current, numBetsKeepOneRoll.max);
+    betStats.maxAmtKeepOneBet       = std::max(amtBet, betStats.maxAmtKeepOneBet);
+    betStats.amtBetsKeepOneRoll.max = std::max(betStats.amtBetsKeepOneRoll.current, betStats.amtBetsKeepOneRoll.max);
+    betStats.numBetsKeepOneRoll.max = std::max(betStats.numBetsKeepOneRoll.current, betStats.numBetsKeepOneRoll.max);
 }
 
 //-----------------------------------------------------------------
@@ -615,12 +596,12 @@ TableStats::recordKeep(const CrapsBetIntfc& bet)
 void
 TableStats::recordCommon(Gbl::Money amtBet)
 {
-    numBetsOneRoll.total++;
-    numBetsOneRoll.current++;
-    amtBetsOneRoll.current += amtBet;
-    maxAmtBetOneBet    = std::max(amtBet, maxAmtBetOneBet);
-    amtBetsOneRoll.max = std::max(amtBetsOneRoll.current, amtBetsOneRoll.max);
-    numBetsOneRoll.max = std::max(numBetsOneRoll.current, numBetsOneRoll.max);
+    betStats.numBetsOneRoll.total++;
+    betStats.numBetsOneRoll.current++;
+    betStats.amtBetsOneRoll.current += amtBet;
+    betStats.maxAmtBetOneBet    = std::max(amtBet, betStats.maxAmtBetOneBet);
+    betStats.amtBetsOneRoll.max = std::max(betStats.amtBetsOneRoll.current, betStats.amtBetsOneRoll.max);
+    betStats.numBetsOneRoll.max = std::max(betStats.numBetsOneRoll.current, betStats.numBetsOneRoll.max);
 }
 
 //-----------------------------------------------------------------
@@ -628,66 +609,9 @@ TableStats::recordCommon(Gbl::Money amtBet)
 void
 TableStats::reset()
 {
-    for (unsigned i = 4; i < 11; i++)
-    {
-        passPntCnts[i].reset();
-        dontPassPntCnts[i].reset();
-        comePntCnts[i].reset();
-        dontComePntCnts[i].reset();
-        hardwayCounts[i].reset();
-        anyEstPntCnts[i].reset();
-    }
-
-    for (unsigned i = 2; i < 12; i++)
-    {
-        numberCounts[i].reset();
-    }
-
-    // Betting Stats
-    totNumBetsAllBets = 0;
-    totNumWinsAllBets = 0;
-    totNumLoseAllBets = 0;
-    totNumKeepAllBets = 0;
-    totAmtAllBets     = 0;
-    totAmtWinsAllBets = 0;
-    totAmtLoseAllBets = 0;
-    totAmtKeepAllBets = 0;
-    maxAmtBetOneBet   = 0;
-    maxAmtWinOneBet   = 0;
-    maxAmtLoseOneBet  = 0;
-    maxAmtKeepOneBet  = 0;
-    numBetsOneRoll.reset();
-    numBetsWinOneRoll.reset();
-    numBetsLoseOneRoll.reset();
-    numBetsKeepOneRoll.reset();
-    amtBetsOneRoll.reset();
-    amtBetsWinOneRoll.reset();
-    amtBetsLoseOneRoll.reset();
-    amtBetsKeepOneRoll.reset();
-
-    // Dice Roll Stats
-    numRolls = 0;
-    numPointsEstablished = 0;
-    comeOutRolls.reset();
-    pointRolls.reset();
-    passWinsComeOut.reset();
-    passLoseComeOut.reset();
-    dontPassWinsComeOut.reset();
-    dontPassLoseComeOut.reset();
-    comeWinsComeOut.reset();
-    comeLoseComeOut.reset();
-    dontComeWinsComeOut.reset();
-    dontComeLoseComeOut.reset();
-    fieldBetWins.reset();
-    fieldBetLose.reset();
-    sevenOuts.reset();
-    shooterCounts.reset();
-    twosOnComeOutRoll.reset();
-    threesOnComeOutRoll.reset();
-    sevensOnComeOutRoll.reset();
-    elevensOnComeOutRoll.reset();
-    twelvesOnComeOutRoll.reset();
-    crapsOnComeOutRoll.reset();
+    betStats.reset();
+    rollStats.reset();
+    recentRolls.clear();
 }
 
 //-----------------------------------------------------------------
@@ -716,83 +640,6 @@ size_t
 TableStats::getRollHistorySize() const
 {
     return rollHistorySize_;
-}
-
-//-----------------------------------------------------------------
-
-unsigned
-TableStats::Counter::count() const
-{
-    return count_;
-}
-
-//-----------------------------------------------------------------
-
-unsigned
-TableStats::Counter::repeats() const
-{
-    return maxRepeats;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::Counter::bump()
-{
-    count_++;
-    armed ? curRepeats++ : armed = true;
-    maxRepeats = std::max(curRepeats, maxRepeats);
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::Counter::disarm()
-{
-    armed = false;
-    curRepeats = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::Counter::reset()
-{
-    count_     = 0;
-    armed      = false;
-    curRepeats = 0;
-    maxRepeats = 0;
-    pivot      = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::PointCounts::reset()
-{
-    wins.reset();
-    lose.reset();
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::NumBets::reset()
-{
-    current = 0;
-    max     = 0;
-    total   = 0;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::AmtBets::reset()
-{
-    current = 0;
-    max     = 0;
-    total   = 0;
-
 }
 
 //-----------------------------------------------------------------
