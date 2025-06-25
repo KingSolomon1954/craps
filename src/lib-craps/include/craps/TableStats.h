@@ -33,6 +33,7 @@ public:
     void recordDiceRoll(unsigned point, const Dice& curRoll);
     void setRollHistorySize(size_t rollHistorySize);
     void reset();
+    void merge(const TableStats& session);
     /// @}
 
     /// @name Observers

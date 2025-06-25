@@ -74,7 +74,8 @@ public:
     bool isBettingOpen()                       const;
     Gbl::Money getAmountOnTable()              const;
     unsigned getNumBetsOnTable()               const;
-    const TableStats& getStats()               const;
+    const TableStats& getSessionStats()        const;
+    const TableStats& getAlltimeStats()        const;
     bool haveBet(const BetIntfcPtr bet)        const;
     bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
     /// @}
@@ -96,7 +97,8 @@ private:
     bool bettingOpen_ = true;
     bool isTestRoll_ = false;
     Dice testRollDice_;
-    TableStats stats_;
+    TableStats sessionStats_;
+    TableStats alltimeStats_;
 
     CrapsTable();  // private ctor 
     

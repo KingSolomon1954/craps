@@ -617,6 +617,15 @@ TableStats::reset()
 //-----------------------------------------------------------------
 
 void
+TableStats::merge(const TableStats& session)
+{
+    betStats.merge(session.betStats);
+    rollStats.merge(session.rollStats);
+}
+
+//-----------------------------------------------------------------
+
+void
 TableStats::bumpRecentRolls(const Dice& dice)
 {
     if (recentRolls.size() >= rollHistorySize_)

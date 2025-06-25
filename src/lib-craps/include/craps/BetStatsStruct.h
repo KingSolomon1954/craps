@@ -17,12 +17,16 @@ struct BetStat
     unsigned totDistance = 0;
     Gbl::Money amount;
     Gbl::Money amountBet;
+    void reset();
+    void merge(const BetStat& session);
 };
 
 struct BetTypeStats
 {
     std::map<std::string, BetStat> wins;
     std::map<std::string, BetStat> lose;
+    void reset();
+    void merge(const BetTypeStats& bts);
 };
 
 struct NumBets
@@ -31,6 +35,7 @@ struct NumBets
     unsigned max     = 0;
     unsigned total   = 0;
     void reset();
+    void merge(const NumBets& session);
 };
 
 struct AmtBets
@@ -39,6 +44,7 @@ struct AmtBets
     Gbl::Money max     = 0;
     Gbl::Money total   = 0;
     void reset();
+    void merge(const AmtBets& session);
 };
 
 //----------------------------------------------------------------
@@ -77,6 +83,7 @@ public:
 
     std::string expandBetName(const CrapsBetIntfc& bet) const;
     void reset();
+    void merge(const BetStats& session);
 };
 
 } // namespace Craps

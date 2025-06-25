@@ -21,7 +21,8 @@ Private Constructor.
 
 */
 CrapsTable::CrapsTable()
-    : stats_(tableId_)
+    : sessionStats_(tableId_)
+    , alltimeStats_(tableId_)
 {
 }
 
@@ -39,7 +40,8 @@ CrapsTable::fromConfig(const TableId& tableId, const TableConfig& config)
     ct->tableId_   = config.tableId;
     ct->tableName_ = config.tableName;
     ct->houseBank_ = config.houseBank;
-    ct->stats_.tableId = config.tableId;
+    ct->sessionStats_.tableId = config.tableId;
+    ct->alltimeStats_.tableId = config.tableId;
     return ct;
 }
 
@@ -60,7 +62,8 @@ CrapsTable::fromFile(const TableId& tableId)
     ct->tableId_ = tc.tableId;
     ct->tableName_ = tc.tableName;
     ct->houseBank_ = tc.houseBank;
-    ct->stats_.tableId = tc.tableId;
+    ct->sessionStats_.tableId = tc.tableId;
+    ct->alltimeStats_.tableId = tc.tableId;
     return ct;
 }
 
@@ -359,7 +362,7 @@ CrapsTable::rollDice()
     throwDice();
     resolveBets();
     advanceState();      // Update point, update shooter
-    stats_.recordDiceRoll(point_, dice_);
+    sessionStats_.recordDiceRoll(point_, dice_);
     declareBettingOpen();
 }
 
@@ -555,7 +558,7 @@ CrapsTable::disbursePlayerWins()
             Gbl::pPlayerMgr->disburseWin(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            stats_.recordWin(*b, r.win);
+            sessionStats_.recordWin(*b, r.win);
         }
     }
 }
@@ -572,7 +575,7 @@ CrapsTable::disbursePlayerLoses()
             Gbl::pPlayerMgr->disburseLose(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            stats_.recordLose(*b, r.lose);
+            sessionStats_.recordLose(*b, r.lose);
         }
     }
 }
@@ -589,7 +592,7 @@ CrapsTable::disbursePlayerKeeps()
             Gbl::pPlayerMgr->disburseKeep(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            stats_.recordKeep(*b);
+            sessionStats_.recordKeep(*b);
         }
     }
 }
@@ -814,12 +817,34 @@ CrapsTable::getAmountOnTable() const
     return amount;
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Returns read-only access to current session table stats.
+
+@return current session table stats (read-only)
+
+*/
 const TableStats&
-CrapsTable::getStats() const
+CrapsTable::getSessionStats() const
 {
-    return stats_;
+    return sessionStats_;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns read-only access to all-time stats.
+
+All-time stats are an aggregation of all sessions played on this table.
+
+Note that all-time stats are only updated when the current session ends.
+
+@return all-time table stats (read-only)
+
+*/
+const TableStats&
+CrapsTable::getAlltimeStats() const
+{
+    return alltimeStats_;
 }
 
 //----------------------------------------------------------------

@@ -24,6 +24,7 @@ struct Counter
     void bump();
     void disarm();
     void reset();
+    void merge(const Counter& session);
 };
 
 struct PointCounts
@@ -31,6 +32,7 @@ struct PointCounts
     Counter wins;
     Counter lose;
     void reset();
+    void merge(const PointCounts& session);
 };
 
 //----------------------------------------------------------------
@@ -69,6 +71,7 @@ public:
     Counter twelvesOnComeOutRoll;
     Counter crapsOnComeOutRoll;
     void reset();
+    void merge(const RollStats& session);
 };
     
 } // namespace Craps

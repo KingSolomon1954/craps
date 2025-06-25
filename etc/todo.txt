@@ -20,6 +20,7 @@ stats CrapsTable creates Session summaries
 stats CrapsTable returns Session summaries
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 
+(Done) TableStats implemented TableStats::merge(sessionStats)
 (Done) TableStats unit test add tests for betting stats
 (Done) TableStats signature recordWin takes a reference not a pointer
 (Done) CrapsTable returns TableStats
