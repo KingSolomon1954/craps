@@ -8,6 +8,7 @@
 
 #include <map>
 #include <controller/Globals.h>
+#include <yaml-cpp/yaml.h>
 
 namespace Craps {
 
@@ -19,6 +20,8 @@ struct BetStat
     Gbl::Money amountBet;
     void reset();
     void merge(const BetStat& session);
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
 };
 
 struct BetTypeStats
@@ -27,6 +30,8 @@ struct BetTypeStats
     std::map<std::string, BetStat> lose;
     void reset();
     void merge(const BetTypeStats& bts);
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
 };
 
 struct NumBets
@@ -36,6 +41,8 @@ struct NumBets
     unsigned total   = 0;
     void reset();
     void merge(const NumBets& session);
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
 };
 
 struct AmtBets
@@ -45,6 +52,8 @@ struct AmtBets
     Gbl::Money total   = 0;
     void reset();
     void merge(const AmtBets& session);
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
 };
 
 //----------------------------------------------------------------
@@ -84,6 +93,8 @@ public:
     std::string expandBetName(const CrapsBetIntfc& bet) const;
     void reset();
     void merge(const BetStats& session);
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
 };
 
 } // namespace Craps

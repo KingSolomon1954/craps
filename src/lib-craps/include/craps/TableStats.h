@@ -14,6 +14,7 @@
 #include <craps/RollStatsStruct.h>
 #include <controller/Globals.h>
 #include <gen/Timepoint.h>
+#include <yaml-cpp/yaml.h>
 
 namespace Craps {
 
@@ -81,6 +82,11 @@ private:
     void update12(unsigned point);
     void updatePointRoll(unsigned point, unsigned roll);
     void recordCommon(Gbl::Money amtBet);
+
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
+    void saveAlltime(const std::string& dir) const;
+    void loadAlltime(const std::string& dir);
 };
 
 /*-----------------------------------------------------------*//**

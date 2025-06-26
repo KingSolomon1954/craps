@@ -28,7 +28,7 @@ target_link_libraries(craps
     PUBLIC gen
     PUBLIC controller
     PUBLIC nlohmann_json::nlohmann_json
-    PRIVATE yaml-cpp::yaml-cpp
+    PUBLIC yaml-cpp::yaml-cpp
 )
 
 target_compile_definitions(craps

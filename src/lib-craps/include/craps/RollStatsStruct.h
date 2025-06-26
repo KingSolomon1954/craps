@@ -8,6 +8,7 @@
 
 #include <array>
 #include <map>
+#include <yaml-cpp/yaml.h>
 
 namespace Craps {
 
@@ -25,6 +26,8 @@ struct Counter
     void disarm();
     void reset();
     void merge(const Counter& session);
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
 };
 
 struct PointCounts
@@ -33,6 +36,8 @@ struct PointCounts
     Counter lose;
     void reset();
     void merge(const PointCounts& session);
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
 };
 
 //----------------------------------------------------------------
@@ -72,6 +77,16 @@ public:
     Counter crapsOnComeOutRoll;
     void reset();
     void merge(const RollStats& session);
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
+
+private:    
+    void numberCountsToYAML(YAML::Node& node) const;
+    void pointCountsToYAML (YAML::Node& node) const;
+    void singleCountsToYAML(YAML::Node& node) const;
+    void numberCountsFromYAML(const YAML::Node& node);
+    void pointCountsFromYAML (const YAML::Node& node);
+    void singleCountsFromYAML(const YAML::Node& node);
 };
     
 } // namespace Craps

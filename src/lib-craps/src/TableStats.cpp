@@ -8,6 +8,8 @@
 #include <craps/CrapsBet.h>
 #include <craps/EnumBetName.h>
 #include <algorithm>
+#include <filesystem>
+#include <fstream>
 
 using namespace Craps;
 
@@ -649,6 +651,62 @@ size_t
 TableStats::getRollHistorySize() const
 {
     return rollHistorySize_;
+}
+
+//-----------------------------------------------------------------
+
+YAML::Node 
+TableStats::toYAML() const
+{
+    YAML::Node node;
+    node["BetStats"]  = betStats.toYAML();
+    node["RollStats"] = rollStats.toYAML();
+    return node;
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::fromYAML(const YAML::Node& node)
+{
+    betStats.fromYAML(node);
+    rollStats.fromYAML(node);
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::saveAlltime(const std::string& dir) const
+{
+    namespace fs = std::filesystem;
+    
+    fs::path path = fs::path(dir) / ("alltime-" + tableId + ".yaml");
+    std::ofstream fout(path);
+    fout << toYAML();
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::loadAlltime(const std::string& dir)
+{
+    namespace fs = std::filesystem;
+
+    fs::path path = fs::path(dir) / ("alltime-" + tableId + ".yaml");
+
+    if (!fs::exists(path))
+    {
+        throw std::runtime_error("Stats file does not exist: " + path.string());
+    }
+    
+    std::ifstream fin(path);
+    if (!fin.is_open())
+    {
+        throw std::runtime_error("Failed to open YAML file: " + path.string());
+    }
+
+    YAML::Node root = YAML::Load(fin);
+    fromYAML(root);
 }
 
 //-----------------------------------------------------------------
