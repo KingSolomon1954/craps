@@ -28,6 +28,7 @@ public:
     unsigned value() const;
     unsigned d1() const;
     unsigned d2() const;
+    bool operator==(const Dice&) const = default;  // Only generates ==
     /// @}
 
 private:

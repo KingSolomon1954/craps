@@ -349,7 +349,7 @@ BetStats::fromYAML(const YAML::Node& node)
     if (node["totAmtLoseAllBets"])  totAmtLoseAllBets = node["totAmtLoseAllBets"].as<unsigned>();
     if (node["totAmtKeepAllBets"])  totAmtKeepAllBets = node["totAmtKeepAllBets"].as<unsigned>();
     if (node["maxAmtBetOneBet"])    maxAmtBetOneBet   = node["maxAmtBetOneBet"].as<unsigned>();
-    if (node["maxAmtBetOneBet"])    maxAmtWinOneBet   = node["maxAmtWinOneBet"].as<unsigned>();
+    if (node["maxAmtWinOneBet"])    maxAmtWinOneBet   = node["maxAmtWinOneBet"].as<unsigned>();
     if (node["maxAmtLoseOneBet"])   maxAmtLoseOneBet  = node["maxAmtLoseOneBet"].as<unsigned>();
     if (node["maxAmtKeepOneBet"])   maxAmtKeepOneBet  = node["maxAmtKeepOneBet"].as<unsigned>();
     

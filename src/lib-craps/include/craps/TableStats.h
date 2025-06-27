@@ -40,6 +40,7 @@ public:
     /// @name Observers
     /// @{
     size_t getRollHistorySize() const;
+    bool operator==(const TableStats&) const = default;  // Only generates ==
     /// @}
 
     std::string      tableId;
@@ -85,8 +86,8 @@ private:
 
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
-    void saveAlltime(const std::string& dir) const;
-    void loadAlltime(const std::string& dir);
+    void saveFile(const std::string& dir) const;
+    void loadFile(const std::string& dir);
 };
 
 /*-----------------------------------------------------------*//**

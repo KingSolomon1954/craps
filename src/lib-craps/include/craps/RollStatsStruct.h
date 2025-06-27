@@ -28,6 +28,7 @@ struct Counter
     void merge(const Counter& session);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const Counter&) const = default;  // Only generates ==
 };
 
 struct PointCounts
@@ -38,6 +39,7 @@ struct PointCounts
     void merge(const PointCounts& session);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const PointCounts&) const = default;  // Only generates ==
 };
 
 //----------------------------------------------------------------
@@ -79,6 +81,7 @@ public:
     void merge(const RollStats& session);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const RollStats&) const = default;  // Only generates ==
 
 private:    
     void numberCountsToYAML(YAML::Node& node) const;

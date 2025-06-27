@@ -22,6 +22,7 @@ struct BetStat
     void merge(const BetStat& session);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const BetStat&) const = default;  // Only generates ==
 };
 
 struct BetTypeStats
@@ -32,6 +33,7 @@ struct BetTypeStats
     void merge(const BetTypeStats& bts);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const BetTypeStats&) const = default;  // Only generates ==
 };
 
 struct NumBets
@@ -43,6 +45,7 @@ struct NumBets
     void merge(const NumBets& session);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const NumBets&) const = default;  // Only generates ==
 };
 
 struct AmtBets
@@ -54,6 +57,7 @@ struct AmtBets
     void merge(const AmtBets& session);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const AmtBets&) const = default;  // Only generates ==
 };
 
 //----------------------------------------------------------------
@@ -95,6 +99,7 @@ public:
     void merge(const BetStats& session);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const BetStats&) const = default;  // Only generates ==
 };
 
 } // namespace Craps

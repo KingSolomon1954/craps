@@ -110,6 +110,34 @@ TEST_CASE("TableStats:counter")
     CHECK(c1.count() == 4);
     CHECK(c1.armed == false);
     CHECK(c1.repeats() == 2);
+
+    Counter c2, c3;
+    CHECK(c2 == c3);
+
+    PointCounts pc1, pc2;
+    CHECK(pc1 == pc2);
+
+    BetStat bs1, bs2;
+    CHECK(bs1 == bs2);
+    
+    NumBets nb1, nb2;
+    CHECK(nb1 == nb2);
+
+    AmtBets ab1, ab2;
+    CHECK(ab1 == ab2);
+
+    BetTypeStats bt1, bt2;
+    CHECK(bt1 == bt2);
+
+    BetStats bss1, bss2;
+    CHECK(bss1 == bss2);
+
+    RollStats rs1, rs2;
+    CHECK(rs1 == rs2);
+
+    TableStats ts1("id1");
+    TableStats ts2("id2");
+    CHECK(ts1 != ts2);  // session start time will be different
 }
 
 //----------------------------------------------------------------

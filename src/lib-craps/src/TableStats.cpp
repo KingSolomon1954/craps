@@ -669,18 +669,18 @@ TableStats::toYAML() const
 void
 TableStats::fromYAML(const YAML::Node& node)
 {
-    betStats.fromYAML(node);
-    rollStats.fromYAML(node);
+    betStats.fromYAML(node["BetStats"]);
+    rollStats.fromYAML(node["RollStats"]);
 }
 
 //-----------------------------------------------------------------
 
 void
-TableStats::saveAlltime(const std::string& dir) const
+TableStats::saveFile(const std::string& dir) const
 {
     namespace fs = std::filesystem;
     
-    fs::path path = fs::path(dir) / ("alltime-" + tableId + ".yaml");
+    fs::path path = fs::path(dir) / ("TableStats-" + tableId + ".yaml");
     std::ofstream fout(path);
     fout << toYAML();
 }
@@ -688,11 +688,11 @@ TableStats::saveAlltime(const std::string& dir) const
 //-----------------------------------------------------------------
 
 void
-TableStats::loadAlltime(const std::string& dir)
+TableStats::loadFile(const std::string& dir)
 {
     namespace fs = std::filesystem;
 
-    fs::path path = fs::path(dir) / ("alltime-" + tableId + ".yaml");
+    fs::path path = fs::path(dir) / ("TableStats-" + tableId + ".yaml");
 
     if (!fs::exists(path))
     {
