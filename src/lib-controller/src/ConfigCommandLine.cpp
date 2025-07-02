@@ -43,7 +43,10 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
     setAppPath(argv, cfg);
     cxxopts::Options options(Gbl::appNameExec, Gbl::appNameScreen + ": A multiplayer dice game");
 
-    std::string sysSharedDir = multiConfig.getString(ConfigManager::KeyDirsSysShared).value();
+    std::string sysSharedDir = multiConfig.getString(
+        ConfigManager::KeyDirsSysShared).value();
+    std::string usrConfigDir = multiConfig.getString(
+        ConfigManager::KeyDirsUsrConfig).value();
     
     options.add_options()
         ("cli", "run as command line program",
@@ -57,8 +60,11 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         ("b,bar", "Param bar",
          cxxopts::value<std::string>())
 
-        ("sys-config-dir", "System Config Directory",
+        ("sys-config-dir", "System Config Directory instead of default",
          cxxopts::value<std::string>()->default_value(sysSharedDir))
+        
+        ("usr-config-dir", "User Config Directory instead of default",
+         cxxopts::value<std::string>()->default_value(usrConfigDir))
         
         ("d,debug", "Enable debugging",
          cxxopts::value<bool>()->default_value("false"))
@@ -101,6 +107,12 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
     {
         std::string sysSharedStr = result["sys-config-dir"].as<std::string>();
         setSysConfigDir(sysSharedStr, cfg);
+    }
+        
+    if (result.count("usr-config-dir"))
+    {
+        std::string usrConfigStr = result["usr-config-dir"].as<std::string>();
+        cfg.set(ConfigManager::KeyDirsUsrConfig, usrConfigStr);
     }
         
     bool debug = result["debug"].as<bool>();

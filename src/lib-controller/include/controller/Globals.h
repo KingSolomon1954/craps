@@ -12,6 +12,7 @@
 
 namespace Gen {
     class BuildInfo;       // fwd    
+    class Logger;          // fwd    
 }
 
 namespace Craps {
@@ -34,6 +35,7 @@ public:
     using Money = unsigned;
 
     static Gen::BuildInfo*       pBuildInfo;
+    static Gen::Logger*          pLogger;
     static Ctrl::ConfigManager*  pConfigMgr;
     static Craps::CrapsTable*    pTable;
     static Ctrl::EventLoop*      pEventLoop;

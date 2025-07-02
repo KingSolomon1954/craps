@@ -6,6 +6,7 @@
 
 #include <controller/ConfigManager.h>
 #include <iostream>
+#include <map>
 #include <stdexcept>
 #include <controller/ConfigCommandLine.h>
 #include <controller/ConfigDefaults.h>
@@ -42,8 +43,8 @@ ConfigManager::ConfigManager(int argc, char* argv[])
         ConfigDefaults::processDefaults(*this);
         ConfigCommandLine::processCmdLine(argc, argv, *this);
         ConfigEnv::processEnv(*this);
-        dumpConfig();
         ConfigFiles::processFiles(*this); // last since file locations are overridable
+        dumpConfig();
     }
     catch(const std::exception& e)
     {
@@ -54,15 +55,19 @@ ConfigManager::ConfigManager(int argc, char* argv[])
 
 //----------------------------------------------------------------
 
-void
-ConfigManager::dumpConfig()
+void ConfigManager::dumpConfig()
 {
     auto finalConfig = exportResolved();
+
+    // Copy to a std::map to get sorted keys
+    std::map<std::string, std::string> sortedConfig(
+        finalConfig.begin(), finalConfig.end());
+
     std::cout << "\nResolved Config:\n";
-    for (const auto& [key, value] : finalConfig)
+    for (const auto& [key, value] : sortedConfig)
     {
         std::cout << key << " = " << value << '\n';
     }
 }
-    
+
 //----------------------------------------------------------------

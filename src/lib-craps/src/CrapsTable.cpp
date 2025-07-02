@@ -7,6 +7,7 @@
 #include <craps/CrapsTable.h>
 #include <iostream>
 #include <cassert>
+#include <controller/ConfigManager.h>
 #include <controller/Events.h>
 #include <controller/EventManager.h>
 #include <controller/PlayerManager.h>
@@ -59,11 +60,19 @@ CrapsTable::fromFile(const TableId& tableId)
     TableConfig tc = TableConfig::loadTableConfigFromYamlFile(filePath);
 
     CrapsTable* ct = new CrapsTable();
-    ct->tableId_ = tc.tableId;
+    ct->tableId_ = tableId;
     ct->tableName_ = tc.tableName;
     ct->houseBank_ = tc.houseBank;
-    ct->sessionStats_.tableId = tc.tableId;
-    ct->alltimeStats_.tableId = tc.tableId;
+    ct->sessionStats_.tableId = tableId;
+    ct->alltimeStats_.tableId = tableId;
+    
+    // Session stats are fresh in-memory.
+
+    // Alltime stats come from file. Load alltime stats.
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysTables).value();
+    ct->alltimeStats_.loadFile(dir);
+    
     return ct;
 }
 
@@ -864,11 +873,19 @@ CrapsTable::isBettingOpen() const
 }
 
 //----------------------------------------------------------------
+//
+//  Save to files, disable timers, etc
+//
+void
+CrapsTable::prepareForShutdown()
+{
+    // Update alltime stats with current session, then save.
+    alltimeStats_.merge(sessionStats_);
 
-
-
-
-
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysTables).value();
+    alltimeStats_.saveFile(dir);
+}
 
 //----------------------------------------------------------------
 //

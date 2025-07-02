@@ -32,11 +32,11 @@ ConfigFiles::processFiles(Gen::MultiLayerConfig& multiConfig)
     checkSystemDirs(multiConfig);
     createUserDirs(multiConfig);
 
-    // Work with layer directly
+    // Work with layer directly from here on.
     auto& cfg = multiConfig.getLayer(ConfigManager::LayerNameFiles);
     
-    loadSystemConfig(multiConfig, cfg);
-    loadUserConfig(multiConfig, cfg);
+    loadSystemConfig(multiConfig, cfg);  // Load the packaged config
+    loadUserConfig(multiConfig, cfg);    // Overrides packaged config
 }
 
 //----------------------------------------------------------------
@@ -95,7 +95,7 @@ ConfigFiles::loadSystemConfig(
     Gen::ConfigLayer& cfg)
 {
     const std::string& filename =
-        multiConfig.getString(ConfigManager::KeyDirsSysConfig).value() + "/config.yaml";
+        multiConfig.getString(ConfigManager::KeyDirsSysConfig).value() + "/sys-config.yaml";
     existsOrThrow(filename);
     loadNamedConfig(filename, cfg);
 }

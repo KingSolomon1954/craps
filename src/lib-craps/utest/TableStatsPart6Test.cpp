@@ -19,7 +19,7 @@ using namespace Craps;
 
 //----------------------------------------------------------------
 
-TEST_CASE("TableStats:allstats:file1")
+TEST_CASE("TableStats:savefile")
 {
     namespace fs = std::filesystem;
     

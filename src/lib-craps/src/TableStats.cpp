@@ -5,11 +5,14 @@
 //----------------------------------------------------------------
 
 #include <craps/TableStats.h>
-#include <craps/CrapsBet.h>
-#include <craps/EnumBetName.h>
+
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
+#include <craps/CrapsBet.h>
+#include <craps/EnumBetName.h>
+#include <gen/Logger.h>
 
 using namespace Craps;
 
@@ -678,11 +681,12 @@ TableStats::fromYAML(const YAML::Node& node)
 void
 TableStats::saveFile(const std::string& dir) const
 {
+
     namespace fs = std::filesystem;
-    
     fs::path path = fs::path(dir) / ("TableStats-" + tableId + ".yaml");
     std::ofstream fout(path);
     fout << toYAML();
+    Gbl::pLogger->logDebug("TableStats::saveFile(" + path.string()  + ")");
 }
 
 //-----------------------------------------------------------------

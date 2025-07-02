@@ -8,6 +8,7 @@
 #include <iostream>
 #include <rang.hpp>
 #include <gen/BuildInfo.h>
+#include <gen/Logger.h>
 #include <controller/ConfigManager.h>
 #include <controller/EventLoop.h>
 #include <controller/EventManager.h>
@@ -32,9 +33,10 @@ Constructor
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
-//  std::unique_ptr<Gen::Logger>          pLogger(initLogger());               (void) pLogger;
+    std::unique_ptr<Gen::Logger>          pLogger(initLogger());               (void) pLogger;
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
     std::unique_ptr<Ctrl::ConfigManager>  pCfg(initConfigManager(argc, argv)); (void) pCfg;
+    enableFileLogging();
     std::unique_ptr<Ctrl::EventManager>   pEventMgr(initEventManager());       (void) pEventMgr;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Craps::CrapsTable>    pTable(initCrapsTable());            (void) pTable;
@@ -43,15 +45,30 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
     std::unique_ptr<Ctrl::EventLoop>      pEventLoop(initEventLoop());         (void) pEventLoop;
     
-#if 0    
-    // Setup the chosen view IAW cmdline option.
-    std::shared_ptr<ViewIntfc> pView = getView();
+    pView->run();  // Doesn't return until exiting
+    
+    pTable->prepareForShutdown();
+}
 
-    // Bring in GameController associated with the selected view.
-    GameController controller(pView);
+//----------------------------------------------------------------
 
-#endif    
-    pView->run();
+Gen::Logger*
+CrapsGame::initLogger()
+{
+    auto p = new Gen::Logger();
+    Gbl::pLogger = p;
+    return p;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsGame::enableFileLogging()
+{
+    std::string d = Gbl::pConfigMgr->getString(ConfigManager::KeyDirsUsrLog).value();
+    std::string f = "/" + Gbl::appNameExec + ".log";
+    Gbl::pLogger->setOutputFile(d + f);
+    Gbl::pLogger->logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
 }
 
 //----------------------------------------------------------------
@@ -100,7 +117,7 @@ Craps::CrapsTable*
 CrapsGame::initCrapsTable()
 {
     auto p = Gbl::pTableMgr->loadStartingCrapsTable();
-    Gbl::pTable =p;
+    Gbl::pTable = p;
     return p;
 }
 
@@ -163,26 +180,5 @@ CrapsGame::getView()
     throw std::invalid_argument(diag);
     return nullptr;
 }
-
-#if 0
-std::shared_ptr<ViewIntfc>
-CrapsGame::getView()
-{
-    std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();
-    if (v == "console") return std::make_shared<Cui::ConsoleView>();
-    
-//  if (v == "cmdline") return std::make_shared<Cli::CmdLineView>();
-//  if (v == "graphical") return std::make_shared<Gui::GuiView>();
-
-    std::string diag = "Invalid value for config parameter:\"" +
-        std::string(ConfigManager::KeyViewType) +
-        "\". At this time only console (--con), the default, is available. "
-        "Future options for GUI and CmdLine are not implemented yet.";
-        
-    throw std::invalid_argument(diag);
-    return nullptr;
-}
-
-#endif
 
 //----------------------------------------------------------------

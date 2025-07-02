@@ -31,7 +31,6 @@ public:
     /// @{
     using TableId = std::string;
     
-//    CrapsTable(const TableId& tableId);
     static CrapsTable* fromConfig(const TableId& tableId, const TableConfig& config);
     static CrapsTable* fromFile(const TableId& tableId);
     
@@ -60,6 +59,7 @@ public:
     void rollDice();
     void testRollDice(unsigned d1, unsigned d2);
     void testSetState(unsigned point, unsigned d1, unsigned d2);
+    void prepareForShutdown();
     /// @}
 
     /// @name Observers

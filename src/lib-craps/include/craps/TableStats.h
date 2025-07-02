@@ -35,6 +35,8 @@ public:
     void setRollHistorySize(size_t rollHistorySize);
     void reset();
     void merge(const TableStats& session);
+    void saveFile(const std::string& dir) const;
+    void loadFile(const std::string& dir);
     /// @}
 
     /// @name Observers
@@ -86,8 +88,6 @@ private:
 
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
-    void saveFile(const std::string& dir) const;
-    void loadFile(const std::string& dir);
 };
 
 /*-----------------------------------------------------------*//**

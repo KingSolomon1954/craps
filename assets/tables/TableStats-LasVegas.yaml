@@ -1,0 +1,354 @@
+BetStats:
+  betTypeStats:
+    wins: ~
+    lose: ~
+  totNumBetsAllBets: 999
+  totNumWinsAllBets: 0
+  totNumLoseAllBets: 0
+  totNumKeepAllBets: 0
+  totAmtAllBets: 0
+  totAmtWinsAllBets: 0
+  totAmtLoseAllBets: 0
+  totAmtKeepAllBets: 0
+  maxAmtBetOneBet: 0
+  maxAmtLoseOneBet: 0
+  maxAmtKeepOneBet: 0
+  numBetsOneRoll:
+    total: 0
+    max: 0
+  numBetsWinOneRoll:
+    total: 0
+    max: 0
+  numBetsLoseOneRoll:
+    total: 0
+    max: 0
+  numBetsKeepOneRoll:
+    total: 0
+    max: 0
+  amtBetsOneRoll:
+    total: 0
+    max: 0
+  amtBetsWinOneRoll:
+    total: 0
+    max: 0
+  amtBetsLoseOneRoll:
+    total: 0
+    max: 0
+  amtBetsKeepOneRoll:
+    total: 0
+    max: 0
+RollStats:
+  numberCounts:
+    2:
+      count: 0
+      maxRepeats: 0
+    3:
+      count: 0
+      maxRepeats: 0
+    4:
+      count: 0
+      maxRepeats: 0
+    5:
+      count: 0
+      maxRepeats: 0
+    6:
+      count: 0
+      maxRepeats: 0
+    7:
+      count: 0
+      maxRepeats: 0
+    8:
+      count: 0
+      maxRepeats: 0
+    9:
+      count: 0
+      maxRepeats: 0
+    10:
+      count: 998
+      maxRepeats: 0
+    11:
+      count: 0
+      maxRepeats: 0
+    12:
+      count: 0
+      maxRepeats: 0
+  anyEstPntCnts:
+    4:
+      count: 0
+      maxRepeats: 0
+    5:
+      count: 0
+      maxRepeats: 0
+    6:
+      count: 0
+      maxRepeats: 0
+    8:
+      count: 0
+      maxRepeats: 0
+    9:
+      count: 0
+      maxRepeats: 0
+    10:
+      count: 0
+      maxRepeats: 0
+  passPntCnts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    5:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    9:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  dontPassPntCnts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    5:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    9:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  comePntCnts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    5:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    9:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  dontComePntCnts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    5:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    9:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  hardwayCounts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  comeOutRolls:
+    count: 0
+    maxRepeats: 0
+  pointRolls:
+    count: 0
+    maxRepeats: 0
+  passWinsComeOut:
+    count: 0
+    maxRepeats: 0
+  passLoseComeOut:
+    count: 0
+    maxRepeats: 0
+  comeWinsComeOut:
+    count: 0
+    maxRepeats: 0
+  comeLoseComeOut:
+    count: 0
+    maxRepeats: 0
+  dontPassWinsComeOut:
+    count: 0
+    maxRepeats: 0
+  dontPassLoseComeOut:
+    count: 0
+    maxRepeats: 0
+  dontComeWinsComeOut:
+    count: 0
+    maxRepeats: 0
+  dontComeLoseComeOut:
+    count: 0
+    maxRepeats: 0
+  fieldBetWins:
+    count: 0
+    maxRepeats: 0
+  fieldBetLose:
+    count: 0
+    maxRepeats: 0
+  sevenOuts:
+    count: 0
+    maxRepeats: 0
+  shooterCounts:
+    count: 0
+    maxRepeats: 0
+  twosOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  threesOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  sevensOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  elevensOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  twelvesOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  crapsOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
