@@ -12,6 +12,7 @@
 #include <iostream>
 #include <craps/CrapsBet.h>
 #include <craps/EnumBetName.h>
+#include <gen/Debug.h>
 #include <gen/Logger.h>
 
 using namespace Craps;
@@ -681,12 +682,11 @@ TableStats::fromYAML(const YAML::Node& node)
 void
 TableStats::saveFile(const std::string& dir) const
 {
-
     namespace fs = std::filesystem;
     fs::path path = fs::path(dir) / ("TableStats-" + tableId + ".yaml");
+    LOG_DEBUG(lgr, "TableStats::saveFile(" + path.string()  + ")");
     std::ofstream fout(path);
     fout << toYAML();
-    Gbl::pLogger->logDebug("TableStats::saveFile(" + path.string()  + ")");
 }
 
 //-----------------------------------------------------------------
@@ -700,13 +700,13 @@ TableStats::loadFile(const std::string& dir)
 
     if (!fs::exists(path))
     {
-        throw std::runtime_error("Stats file does not exist: " + path.string());
+        throw std::runtime_error("TableStats::loadFile() Stats file does not exist: " + path.string());
     }
     
     std::ifstream fin(path);
     if (!fin.is_open())
     {
-        throw std::runtime_error("Failed to open YAML file: " + path.string());
+        throw std::runtime_error("TableStats::loadFile() Failed to open YAML file: " + path.string());
     }
 
     YAML::Node root = YAML::Load(fin);

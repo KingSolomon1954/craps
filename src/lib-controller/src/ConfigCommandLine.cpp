@@ -66,8 +66,17 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         ("usr-config-dir", "User Config Directory instead of default",
          cxxopts::value<std::string>()->default_value(usrConfigDir))
         
-        ("d,debug", "Enable debugging",
+        ("debug", "Enable debug logging",
+         cxxopts::value<bool>()->default_value("true"))
+        
+        ("no-debug", "Disable debug logging",
          cxxopts::value<bool>()->default_value("false"))
+        
+        ("trace", "Enable trace logging",
+         cxxopts::value<bool>()->default_value("false"))
+        
+        ("no-trace", "Disable trace logging",
+         cxxopts::value<bool>()->default_value("true"))
         
         ("v,version", "Print version info then exit")
         
@@ -114,9 +123,26 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         std::string usrConfigStr = result["usr-config-dir"].as<std::string>();
         cfg.set(ConfigManager::KeyDirsUsrConfig, usrConfigStr);
     }
-        
-    bool debug = result["debug"].as<bool>();
-    (void)debug;  // suppress compiler warning
+
+    // Explicitly set these if given on command line even if default.
+    // Allows overriding values if coming from env or file.
+    //
+    if (result.count("debug"))
+    {
+        cfg.set(ConfigManager::KeyDebugLogging, "true"); // Enable debug logging
+    }
+    if (result.count("no-debug"))
+    {
+        cfg.set(ConfigManager::KeyDebugLogging, "false"); // Disable debug logging
+    }
+    if (result.count("trace"))
+    {
+        cfg.set(ConfigManager::KeyTraceLogging, "true"); // Enable trace logging
+    }
+    if (result.count("no-trace"))
+    {
+        cfg.set(ConfigManager::KeyTraceLogging, "false"); // Disable trace logging
+    }
     
     int foo = result["foo"].as<int>();    
     (void)foo;  // suppress compiler warning

@@ -24,7 +24,21 @@ Logger::setOutputFile(const std::string& filename)
 void
 Logger::logDebug(const std::string& msg)
 {
-    log(Level::Debug, msg);
+    if (debugOn_)
+    {
+        log(Level::Debug, msg);
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+Logger::logTrace(const std::string& msg)
+{
+    if (traceOn_)
+    {
+        log(Level::Trace, msg);
+    }
 }
 
 //----------------------------------------------------------------
@@ -106,6 +120,7 @@ Logger::levelToString(Level level) const
     switch (level)
     {
         case Level::Debug: return "DEBUG";
+        case Level::Trace: return "TRACE";
         case Level::Info:  return "INFO";
         case Level::Warn:  return "WARN";
         case Level::Error: return "ERROR";
@@ -121,11 +136,28 @@ Logger::levelColor(Level level) const
     using namespace rang;
     switch (level) {
         case Level::Debug: return fg::cyan;
+        case Level::Trace: return fg::cyan;
         case Level::Info:  return fg::green;
         case Level::Warn:  return fg::yellow;
         case Level::Error: return fg::red;
     }
     return fg::gray;
+}
+
+//----------------------------------------------------------------
+
+void
+Logger::setDebugLevel(bool onOff)
+{
+    debugOn_ = (onOff == true);
+}
+
+//----------------------------------------------------------------
+
+void
+Logger::setTraceLevel(bool onOff)
+{
+    traceOn_ = (onOff == true);
 }
 
 //----------------------------------------------------------------

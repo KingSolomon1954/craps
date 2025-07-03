@@ -65,6 +65,8 @@ public:
     static constexpr auto KeyViewType       = "screen.viewType";
     static constexpr auto KeySoundEnabled   = "sound.enabled";
     static constexpr auto KeySoundVolume    = "sound.volume";
+    static constexpr auto KeyDebugLogging   = "log.debug";
+    static constexpr auto KeyTraceLogging   = "log.trace";
     
     // Table Setup
     static constexpr auto KeyTableStart          = "tbl.startId";

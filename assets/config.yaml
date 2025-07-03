@@ -1,1 +1,3 @@
-# tbl.startId: "HowieLasVegas"
+# tbl.startId: "LasVegas"
+# log.debug: true
+# log.trace: false

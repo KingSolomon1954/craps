@@ -21,7 +21,12 @@ set(PROJ_COMPILE_OPTIONS
     -Wall -Wextra -Werror -Werror=format-security
     -fstack-protector-strong
     -O3
-)
+  )
+
+# Define DEBUG macro in Debug builds
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG)
+endif()  
 
 set(PROJECT_TOP ${PROJECT_SOURCE_DIR}/..)
 

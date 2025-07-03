@@ -4,10 +4,11 @@ Load Player from yaml file
 Save Player to yaml file
 Load Table from yaml file (CrapsTable.cpp)
 Save Table from yaml file (CrapsTable.cpp)
-Load Config to yaml file
 Save Config to yaml file
 Write unit test MultiLayerConfigTest
 Write unit test ConfigManagerTest
+
+Save/load bank to TableStats
 
 load Table choices by reading dir
 load Player choices by reading dir
@@ -18,6 +19,8 @@ stats CrapsTable creates Session summaries
 stats CrapsTable returns Session summaries
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 
+(Done) Able to read/load from config.yaml
+(Done) Added Debug macros, beefed up logging
 (Done) Added logging class
 (Done) TableStats reads, modifies, writes alltime stats
 (Done) Starting tableId comes from config file

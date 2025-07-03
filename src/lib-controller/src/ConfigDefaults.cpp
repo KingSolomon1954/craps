@@ -147,6 +147,8 @@ ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
     cfg.set(ConfigManager::KeyViewType,     "console");
     cfg.set(ConfigManager::KeySoundEnabled, "true");
     cfg.set(ConfigManager::KeySoundVolume,  "50");
+    cfg.set(ConfigManager::KeyDebugLogging,  "true");
+    cfg.set(ConfigManager::KeyTraceLogging,  "false");
 
     Gen::Timepoint tp;
     cfg.set(ConfigManager::KeySessionStart,        tp.toString());

@@ -9,6 +9,7 @@
 #include <rang.hpp>
 #include <gen/BuildInfo.h>
 #include <gen/Logger.h>
+#include <gen/Debug.h>
 #include <controller/ConfigManager.h>
 #include <controller/EventLoop.h>
 #include <controller/EventManager.h>
@@ -68,6 +69,20 @@ CrapsGame::enableFileLogging()
     std::string d = Gbl::pConfigMgr->getString(ConfigManager::KeyDirsUsrLog).value();
     std::string f = "/" + Gbl::appNameExec + ".log";
     Gbl::pLogger->setOutputFile(d + f);
+
+    bool debug = Gbl::pConfigMgr->getBool(ConfigManager::KeyDebugLogging).value();
+    if (!debug)
+    {
+        Gbl::pLogger->setDebugLevel(false);
+    }
+    
+    bool trace = Gbl::pConfigMgr->getBool(ConfigManager::KeyTraceLogging).value();
+    if (trace)
+    {
+DOUT("howie setting trace level");
+        Gbl::pLogger->setTraceLevel(true);
+    }
+    
     Gbl::pLogger->logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
 }
 

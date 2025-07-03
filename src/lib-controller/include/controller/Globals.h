@@ -49,4 +49,6 @@ public:
     static const std::string appNameExec;
 };
     
+#define lgr (*(Gbl::pLogger))  // Simplify accessing the logger
+
 //----------------------------------------------------------------
