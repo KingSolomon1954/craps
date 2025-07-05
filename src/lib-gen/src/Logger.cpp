@@ -65,7 +65,12 @@ Logger::logError(const std::string& msg)
 }
 
 //----------------------------------------------------------------
-
+//
+// Formatting looks like this:
+//
+// 2025-07-05 15:10:04.004 [INFO]  Starting Royal Craps v0.0.1-1751567802
+// 2025-07-05 15:10:06.586 [DEBUG] TableStats::saveFile(/work/craps.log)
+//
 void
 Logger::log(Level level, const std::string& message)
 {
@@ -75,14 +80,14 @@ Logger::log(Level level, const std::string& message)
     if (out_.is_open())
     {
         // Write to file (no color)
-        out_ << ts << std::setw(9) <<label << message << '\n';
+        out_ << ts << std::left << std::setw(9) <<label << message << '\n';
     }
     else
     {
         // Write to console with color
         std::ostream& stream = std::cerr;
         stream << ts << levelColor(level)
-               << std::setw(9) << label
+               << std::left << std::setw(9) << label
                << rang::style::reset << message << '\n';
     }
 }
