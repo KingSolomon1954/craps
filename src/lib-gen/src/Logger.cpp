@@ -70,21 +70,20 @@ void
 Logger::log(Level level, const std::string& message)
 {
     std::string ts = timestamp();
-    std::string label = levelToString(level);
+    std::string label = " [" + levelToString(level) + "] ";
 
-    // Write to file (no color)
     if (out_.is_open())
     {
-        out_ << ts << " [" << label << "] " << message << '\n';
+        // Write to file (no color)
+        out_ << ts << std::setw(9) <<label << message << '\n';
     }
     else
     {
         // Write to console with color
         std::ostream& stream = std::cerr;
-
-        stream << ts << " [";
-        stream << levelColor(level) << label << rang::style::reset;
-        stream << "] " << message << '\n';
+        stream << ts << levelColor(level)
+               << std::setw(9) << label
+               << rang::style::reset << message << '\n';
     }
 }
 

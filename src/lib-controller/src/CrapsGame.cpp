@@ -66,10 +66,13 @@ CrapsGame::initLogger()
 void
 CrapsGame::enableFileLogging()
 {
+    // Setup log file name.
     std::string d = Gbl::pConfigMgr->getString(ConfigManager::KeyDirsUsrLog).value();
     std::string f = "/" + Gbl::appNameExec + ".log";
+    // After this, all logging will be seen only in file.
     Gbl::pLogger->setOutputFile(d + f);
 
+    // Set up logging filters IAW config.
     bool debug = Gbl::pConfigMgr->getBool(ConfigManager::KeyDebugLogging).value();
     if (!debug)
     {
@@ -79,10 +82,10 @@ CrapsGame::enableFileLogging()
     bool trace = Gbl::pConfigMgr->getBool(ConfigManager::KeyTraceLogging).value();
     if (trace)
     {
-DOUT("howie setting trace level");
         Gbl::pLogger->setTraceLevel(true);
     }
-    
+
+    // First logging entry in file.
     Gbl::pLogger->logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
 }
 
