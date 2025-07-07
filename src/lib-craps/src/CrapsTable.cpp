@@ -24,6 +24,7 @@ Private Constructor.
 CrapsTable::CrapsTable()
     : sessionStats_(tableId_)
     , alltimeStats_(tableId_)
+    , houseBank_(1000000, 500000, 500000)
 {
 }
 
@@ -40,7 +41,8 @@ CrapsTable::fromConfig(const TableId& tableId, const TableConfig& config)
     CrapsTable* ct = new CrapsTable();
     ct->tableId_   = config.tableId;
     ct->tableName_ = config.tableName;
-    ct->houseBank_ = config.houseBank;
+    Bank b(1000000, 500000, 500000);
+    ct->houseBank_ = b;             // TODO
     ct->sessionStats_.tableId = config.tableId;
     ct->alltimeStats_.tableId = config.tableId;
     return ct;
@@ -58,11 +60,12 @@ CrapsTable::fromFile(const TableId& tableId)
 {
     std::string filePath = "CrapsTable-" + tableId + ".yaml";
     TableConfig tc = TableConfig::loadTableConfigFromYamlFile(filePath);
-
+    
     CrapsTable* ct = new CrapsTable();
     ct->tableId_ = tableId;
     ct->tableName_ = tc.tableName;
-    ct->houseBank_ = tc.houseBank;
+    Bank b(1000000, 500000, 500000);
+    ct->houseBank_ = b;            // TODO
     ct->sessionStats_.tableId = tableId;
     ct->alltimeStats_.tableId = tableId;
     

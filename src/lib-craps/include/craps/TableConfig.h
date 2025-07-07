@@ -11,6 +11,7 @@
 #include <string>
 #include <controller/Globals.h>
 #include <craps/CrapsTable.h>
+#include <craps/Bank.h>
 
 namespace Craps {
 
@@ -18,10 +19,11 @@ struct TableConfig
 {
     Craps::CrapsTable::TableId tableId;
     std::string tableName;
-    Gbl::Money houseBank;
     
-    static TableConfig loadTableConfigFromYamlFile(
-        const std::string& filepath);
+//    TableConfig(const TableConfig&) = default;  // copy ctor explicit request
+//    TableConfig& operator=(const TableConfig&) = default;
+//    TableConfig& operator=(TableConfig&&) = default;
+    static TableConfig loadTableConfigFromYamlFile(const std::string& filepath);
 };
 
 /*-----------------------------------------------------------*//**

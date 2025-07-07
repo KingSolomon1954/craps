@@ -9,6 +9,7 @@ find_package(yaml-cpp REQUIRED)
 
 add_library(craps STATIC
     src/Bank.cpp
+    src/BankStatsStruct.cpp
     src/BetStatsStruct.cpp
     src/CrapsBet.cpp
     src/CrapsTable.cpp

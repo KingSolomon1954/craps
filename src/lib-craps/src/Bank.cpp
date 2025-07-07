@@ -10,42 +10,57 @@ using namespace Craps;
 
 //----------------------------------------------------------------
 
-Bank::Bank(Gbl::Money initialBalance)
-    : balance_(initialBalance)
+Bank::Bank()
 {
-    history_.push_back({ TransactionType::Refill, initialBalance, "Initial Balance" });
+}
+
+//----------------------------------------------------------------
+
+Bank::Bank(
+    Gbl::Money initialBalance,
+    Gbl::Money refillThreshold,
+    Gbl::Money refillAmount)
+    : initialBalance_(initialBalance)
+    , refillThreshold_(refillThreshold)
+    , refillAmount_(refillAmount)
+{
+
 }
 
 //----------------------------------------------------------------
 
 bool
-Bank::deposit(Gbl::Money amount, const std::string& note)
+Bank::deposit(Gbl::Money amount)
 {
     if (amount <= 0) return false;
-    balance_ += amount;
-    history_.push_back({ TransactionType::Deposit, amount, note });
+    amtDeposited_ += amount;
     return true;
 }
 
 //----------------------------------------------------------------
 
 bool
-Bank::withdraw(Gbl::Money amount, const std::string& note)
+Bank::withdraw(Gbl::Money amount)
 {
-    if (amount <= 0 || amount > balance_) return false;
-    balance_ -= amount;
-    history_.push_back({ TransactionType::Withdraw, amount, note });
+    if (amount <= 0 || amount > getBalance()) return false;
+    amtWithdrawn_ += amount;
+    refill();
     return true;
+
+    sessionStats_.amtWithdrawn += amount;
+
 }
 
 //----------------------------------------------------------------
 
 void
-Bank::refill(Gbl::Money amount, const std::string& note)
+Bank::refill()
 {
-    if (amount <= 0) return;
-    balance_ += amount;
-    history_.push_back({ TransactionType::Refill, amount, note });
+    if (getBalance() <= refillThreshold_)
+    {
+        amtRefilled_ += refillAmount_;
+        numRefills_++;
+    }
 }
 
 //----------------------------------------------------------------
@@ -53,48 +68,39 @@ Bank::refill(Gbl::Money amount, const std::string& note)
 Gbl::Money
 Bank::getBalance() const
 {
-    return balance_;
-}
-
-//----------------------------------------------------------------
-
-const std::vector<Bank::Transaction>&
-Bank::getHistory() const
-{
-    return history_;
+    return initialBalance_ + amtDeposited_ + amtRefilled_ - amtWithdrawn_; 
 }
 
 //----------------------------------------------------------------
 
 Gbl::Money
-Bank::totalDeposited() const
+Bank::getAmtDeposited() const
 {
-    Gbl::Money total = 0;
-    for (const auto& tx : history_)
-    {
-        if (tx.type == TransactionType::Deposit)
-        {
-            total += tx.amount;
-        }
-    }
-    return total;
+    return amtDeposited_;
 }
 
 //----------------------------------------------------------------
 
 Gbl::Money
-Bank::totalWithdrawn() const
+Bank::getAmtWithdrawn() const
 {
-    Gbl::Money total = 0;
-    for (const auto& tx : history_)
-    {
-        if (tx.type == TransactionType::Withdraw)
-        {
-            total += tx.amount;
-        }
-    }
-    return total;
+    return amtWithdrawn_;
 }
 
 //----------------------------------------------------------------
 
+BankStats
+Bank::getSessionStats() const
+{
+    return sessionStats_;
+}
+
+//----------------------------------------------------------------
+
+BankStats
+Bank::getAlltimeStats() const
+{
+    return alltimeStats_;
+}
+
+//----------------------------------------------------------------

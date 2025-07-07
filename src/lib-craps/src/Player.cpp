@@ -36,7 +36,7 @@ Player::Player(
     unsigned startingBalance)
     : uuid_(Gen::generateUuid())
     , name_(name)
-    , wallet_(startingBalance)
+    , wallet_(startingBalance, 500, 500)  // TODO
 {
     setupSubscriptions();
 }
@@ -51,7 +51,7 @@ Player::Player(
     unsigned startingBalance)
     : uuid_(uuid)
     , name_(name)
-    , wallet_(startingBalance)
+    , wallet_(startingBalance, 500, 500) // TODO)
 {
     setupSubscriptions();
 }

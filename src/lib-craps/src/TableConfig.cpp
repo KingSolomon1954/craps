@@ -28,7 +28,6 @@ TableConfig::loadTableConfigFromYamlFile(
     TableConfig config;
     config.tableId = "1";
     config.tableName = "Las Vegas";
-    config.houseBank = 1000;
     return config;
 }
 
@@ -39,8 +38,7 @@ operator<< (std::ostream& out, const TableConfig& tc)
 {
     out <<
     "       tableId: " << tc.tableId   << std::endl <<
-    "     tableName: " << tc.tableName << std::endl <<
-    "     houseBank: " << tc.houseBank << std::endl;
+    "     tableName: " << tc.tableName << std::endl;
     return out;
 }
 
