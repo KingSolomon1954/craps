@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: BetStatsStruct.cpp
+// File: BetStats.cpp
 //
 //----------------------------------------------------------------
 
-#include <craps/BetStatsStruct.h>
+#include <craps/BetStats.h>
 #include <craps/CrapsBetIntfc.h>
 
 using namespace Craps;

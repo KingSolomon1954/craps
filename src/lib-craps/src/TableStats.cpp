@@ -613,10 +613,38 @@ TableStats::recordCommon(Gbl::Money amtBet)
 //-----------------------------------------------------------------
 
 void
+TableStats::recordDeposit(Gbl::Money amount)
+{
+    moneyStats.amtWithdrawn += amount;
+    moneyStats.numWithdrawals++;
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::recordWithdrawal(Gbl::Money amount)
+{
+    moneyStats.amtWithdrawn += amount;
+    moneyStats.numWithdrawals++;
+}
+
+//-----------------------------------------------------------------
+
+void
+TableStats::recordRefill(Gbl::Money amount)
+{
+    moneyStats.amtRefilled += amount;
+    moneyStats.numRefills++;
+}
+
+//-----------------------------------------------------------------
+
+void
 TableStats::reset()
 {
     betStats.reset();
     rollStats.reset();
+    moneyStats.reset();
     recentRolls.clear();
 }
 
@@ -627,6 +655,7 @@ TableStats::merge(const TableStats& session)
 {
     betStats.merge(session.betStats);
     rollStats.merge(session.rollStats);
+    moneyStats.merge(session.moneyStats);
 }
 
 //-----------------------------------------------------------------
@@ -663,8 +692,9 @@ YAML::Node
 TableStats::toYAML() const
 {
     YAML::Node node;
-    node["BetStats"]  = betStats.toYAML();
-    node["RollStats"] = rollStats.toYAML();
+    node["BetStats"]   = betStats.toYAML();
+    node["RollStats"]  = rollStats.toYAML();
+    node["MoneyStats"] = moneyStats.toYAML();
     return node;
 }
 
@@ -673,8 +703,9 @@ TableStats::toYAML() const
 void
 TableStats::fromYAML(const YAML::Node& node)
 {
-    betStats.fromYAML(node["BetStats"]);
-    rollStats.fromYAML(node["RollStats"]);
+    betStats.fromYAML  (node["BetStats"]);
+    rollStats.fromYAML (node["RollStats"]);
+    moneyStats.fromYAML(node["MoneyStats"]);
 }
 
 //-----------------------------------------------------------------

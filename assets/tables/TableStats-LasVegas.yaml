@@ -352,3 +352,11 @@ RollStats:
   crapsOnComeOutRoll:
     count: 0
     maxRepeats: 0
+MoneyStats:
+  initialStartingBalance: 1000000
+  numDeposits: 0
+  amtDeposited: 0
+  numWithdrawals: 0
+  amtWithdrawn: 0
+  numRefills: 0
+  amtRefilled: 0

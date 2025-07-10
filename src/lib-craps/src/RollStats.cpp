@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: RollStatsStruct.cpp
+// File: RollStats.cpp
 //
 //----------------------------------------------------------------
 
-#include <craps/RollStatsStruct.h>
+#include <craps/RollStats.h>
 
 using namespace Craps;
 

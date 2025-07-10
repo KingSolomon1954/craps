@@ -39,28 +39,26 @@ Bank::deposit(Gbl::Money amount)
 
 //----------------------------------------------------------------
 
-bool
+Gbl::Money
 Bank::withdraw(Gbl::Money amount)
 {
     if (amount <= 0 || amount > getBalance()) return false;
     amtWithdrawn_ += amount;
-    refill();
-    return true;
-
-    sessionStats_.amtWithdrawn += amount;
-
+    return refill();
 }
 
 //----------------------------------------------------------------
 
-void
+Gbl::Money
 Bank::refill()
 {
     if (getBalance() <= refillThreshold_)
     {
         amtRefilled_ += refillAmount_;
         numRefills_++;
+        return refillAmount_;
     }
+    return 0;
 }
 
 //----------------------------------------------------------------
@@ -85,22 +83,6 @@ Gbl::Money
 Bank::getAmtWithdrawn() const
 {
     return amtWithdrawn_;
-}
-
-//----------------------------------------------------------------
-
-BankStats
-Bank::getSessionStats() const
-{
-    return sessionStats_;
-}
-
-//----------------------------------------------------------------
-
-BankStats
-Bank::getAlltimeStats() const
-{
-    return alltimeStats_;
 }
 
 //----------------------------------------------------------------

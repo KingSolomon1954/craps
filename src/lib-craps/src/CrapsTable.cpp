@@ -12,7 +12,6 @@
 #include <controller/EventManager.h>
 #include <controller/PlayerManager.h>
 #include <craps/CrapsBet.h>
-#include <craps/TableConfig.h>
 
 using namespace Craps;
 
@@ -36,15 +35,13 @@ Throws upon error.
 
 */
 CrapsTable*
-CrapsTable::fromConfig(const TableId& tableId, const TableConfig& config)
+CrapsTable::fromConfig(const TableId& tableId)
 {
+    // Not yet implemented
+    //
+    // see loadFromStrings at end of file
+    
     CrapsTable* ct = new CrapsTable();
-    ct->tableId_   = config.tableId;
-    ct->tableName_ = config.tableName;
-    Bank b(1000000, 500000, 500000);
-    ct->houseBank_ = b;             // TODO
-    ct->sessionStats_.tableId = config.tableId;
-    ct->alltimeStats_.tableId = config.tableId;
     return ct;
 }
 
@@ -59,23 +56,28 @@ CrapsTable*
 CrapsTable::fromFile(const TableId& tableId)
 {
     std::string filePath = "CrapsTable-" + tableId + ".yaml";
-    TableConfig tc = TableConfig::loadTableConfigFromYamlFile(filePath);
-    
-    CrapsTable* ct = new CrapsTable();
-    ct->tableId_ = tableId;
-    ct->tableName_ = tc.tableName;
-    Bank b(1000000, 500000, 500000);
-    ct->houseBank_ = b;            // TODO
-    ct->sessionStats_.tableId = tableId;
-    ct->alltimeStats_.tableId = tableId;
-    
-    // Session stats are fresh in-memory.
 
-    // Alltime stats come from file. Load alltime stats.
-    std::string dir = Gbl::pConfigMgr->getString(
+    CrapsTable* ct = new CrapsTable();
+    ct->tableId_ = tableId;  
+    ct->alltimeStats_.tableId = tableId;  // must be set before loading stats
+    ct->sessionStats_.tableId = tableId;
+
+    // Load alltime stats. Alltime stats come from file. 
+    // (BTW, current session stats are in-memory only and inited to zero).
+    std::string dir =Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
     ct->alltimeStats_.loadFile(dir);
-    
+
+    // Starting table balance picks up where we left off.
+    Gbl::Money startingBalance =
+        ct->alltimeStats_.moneyStats.initialStartingBalance +
+        ct->alltimeStats_.moneyStats.amtDeposited           +
+        ct->alltimeStats_.moneyStats.amtRefilled            -
+        ct->alltimeStats_.moneyStats.amtWithdrawn;
+        
+    Bank b(startingBalance, RefillThreshold_, RefillAmount_);
+    ct->houseBank_ = b;  // Override default ctor bank values
+    ct->tableName_ = "NoName";  // TODO get rid of this. tableId = name
     return ct;
 }
 
@@ -543,13 +545,19 @@ CrapsTable::disburseHouseResults()
 {
     for (const auto& r : drl_)
     {
-        if (r.lose > 0)
+        if (r.lose > 0)  // player loses, house wins
         {
             houseBank_.deposit(r.lose);
+            sessionStats_.recordDeposit(r.lose);
         }
-        if (r.win > 0)
+        if (r.win > 0)  // player wins, house loses
         {
-            houseBank_.withdraw(r.win);
+            sessionStats_.recordWithdrawal(r.win);
+            Gbl::Money amtRefill = houseBank_.withdraw(r.win);
+            if (amtRefill > 0)
+            {
+                sessionStats_.recordRefill(amtRefill);
+            }
         }
         if (r.commission > 0)
         {
@@ -951,4 +959,50 @@ CrapsTable::resolveBetsOld()
         b->pivot();
     }
 }
+#endif
+
+//----------------------------------------------------------------
+//
+// Shows how to load yaml config from strings
+//
+// loadFromStrings
+//
+#if 0
+
+#include <yaml-cpp/yaml.h>
+#include <string>
+
+int main() {
+    std::string input = R"(
+config:
+  level: debug
+  retries: 3
+  enabled: true
+)";
+
+    YAML::Node root = YAML::Load(input);
+
+    std::cout << "Level: " << root["config"]["level"].as<std::string>() << "\n";
+    std::cout << "Retries: " << root["config"]["retries"].as<int>() << "\n";
+    std::cout << "Enabled: " << root["config"]["enabled"].as<bool>() << "\n";
+}
+
+TEST_CASE("Config loads correctly from string") {
+    std::string yaml = R"(
+db:
+  host: localhost
+  port: 5432
+)";
+    YAML::Node root = YAML::Load(yaml);
+    REQUIRE(root["db"]["port"].as<int>() == 5432);
+}
+
+// Build it programmatically
+YAML::Node node;
+node["name"] = "craps";
+node["version"] = 1.0;
+
+std::cout << node << "\n";
+
+
 #endif

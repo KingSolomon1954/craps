@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: BankStatsStruct.h
+// File: BankStats.h
 //
 //----------------------------------------------------------------
 
@@ -16,7 +16,7 @@ namespace Craps {
 class BankStats
 {
 public:
-    Gbl::Money balance        = 0;
+    Gbl::Money initialStartingBalance = 0;
     unsigned   numDeposits    = 0;
     Gbl::Money amtDeposited   = 0;
     unsigned   numWithdrawals = 0;

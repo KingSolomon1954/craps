@@ -8,10 +8,11 @@
 
 #include <deque>
 #include <string>
-#include <craps/BetStatsStruct.h>
+#include <craps/BetStats.h>
 #include <craps/CrapsBetIntfc.h>
 #include <craps/Dice.h>
-#include <craps/RollStatsStruct.h>
+#include <craps/BankStats.h>
+#include <craps/RollStats.h>
 #include <controller/Globals.h>
 #include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
@@ -32,11 +33,14 @@ public:
     void recordLose(const CrapsBetIntfc& bet, Gbl::Money amtLose);
     void recordKeep(const CrapsBetIntfc& bet);
     void recordDiceRoll(unsigned point, const Dice& curRoll);
+    void recordWithdrawal(Gbl::Money amount);
+    void recordDeposit   (Gbl::Money amount);
+    void recordRefill    (Gbl::Money amount);
     void setRollHistorySize(size_t rollHistorySize);
-    void reset();
     void merge(const TableStats& session);
     void saveFile(const std::string& dir) const;
     void loadFile(const std::string& dir);
+    void reset();
     /// @}
 
     /// @name Observers
@@ -51,6 +55,7 @@ public:
     std::deque<Dice> recentRolls;  // Roll history. Front element is oldest roll
     BetStats         betStats;     // Betting Stats
     RollStats        rollStats;    // Dice Roll Stats
+    BankStats        moneyStats;   // Money Stats
 
 private:
     size_t rollHistorySize_ = 25;
