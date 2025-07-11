@@ -23,7 +23,7 @@ Private Constructor.
 CrapsTable::CrapsTable()
     : sessionStats_(tableId_)
     , alltimeStats_(tableId_)
-    , houseBank_(1000000, 500000, 500000)
+    , houseBank_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
 }
 
@@ -40,7 +40,7 @@ CrapsTable::fromConfig(const TableId& tableId)
     // Not yet implemented
     //
     // see loadFromStrings at end of file
-    
+
     CrapsTable* ct = new CrapsTable();
     return ct;
 }
@@ -58,11 +58,11 @@ CrapsTable::fromFile(const TableId& tableId)
     std::string filePath = "CrapsTable-" + tableId + ".yaml";
 
     CrapsTable* ct = new CrapsTable();
-    ct->tableId_ = tableId;  
+    ct->tableId_ = tableId;
     ct->alltimeStats_.tableId = tableId;  // must be set before loading stats
     ct->sessionStats_.tableId = tableId;
 
-    // Load alltime stats. Alltime stats come from file. 
+    // Load alltime stats. Alltime stats come from file.
     // (BTW, current session stats are in-memory only and inited to zero).
     std::string dir =Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
@@ -74,7 +74,7 @@ CrapsTable::fromFile(const TableId& tableId)
         ct->alltimeStats_.moneyStats.amtDeposited           +
         ct->alltimeStats_.moneyStats.amtRefilled            -
         ct->alltimeStats_.moneyStats.amtWithdrawn;
-        
+
     Bank b(startingBalance, RefillThreshold_, RefillAmount_);
     ct->houseBank_ = b;  // Override default ctor bank values
     ct->tableName_ = "NoName";  // TODO get rid of this. tableId = name
@@ -340,7 +340,7 @@ CrapsTable::findBetById(unsigned betId) const
                 return b.get();
             }
         }
-    }        
+    }
     return nullptr;
 }
 
@@ -446,9 +446,9 @@ void
 CrapsTable::advanceShooter()
 {
     if (players_.empty()) return;
-    
+
     Gen::Uuid prev = currentShooterId_;
-    
+
     auto it = std::find(players_.begin(), players_.end(), currentShooterId_);
 
     // If not found or at the end, start from beginning
@@ -683,7 +683,7 @@ CrapsTable::removePlayerBets(const Gen::Uuid& playerId)
 // Part 2 of removePlayerBets, this part traverses the
 // std::list of bets and removes it if it matches playerId.
 // Claims bet money for the house bank.
-// 
+//
 void
 CrapsTable::removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId)
 {

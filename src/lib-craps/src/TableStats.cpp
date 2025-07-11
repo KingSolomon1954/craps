@@ -653,6 +653,9 @@ TableStats::reset()
 void
 TableStats::merge(const TableStats& session)
 {
+    numSessions++;
+    lastSessionDate.setToNow();
+    lastSessionDuration = sessionStartDate.sinceNow();
     betStats.merge(session.betStats);
     rollStats.merge(session.rollStats);
     moneyStats.merge(session.moneyStats);
@@ -688,13 +691,16 @@ TableStats::getRollHistorySize() const
 
 //-----------------------------------------------------------------
 
-YAML::Node 
+YAML::Node
 TableStats::toYAML() const
 {
     YAML::Node node;
-    node["BetStats"]   = betStats.toYAML();
-    node["RollStats"]  = rollStats.toYAML();
-    node["MoneyStats"] = moneyStats.toYAML();
+    node["tableName"]       = tableId;
+    node["numSessions"]     = numSessions;
+    node["lastSessionDate"] = lastSessionDate.toString(); // As ISO date/time
+    node["BetStats"]        = betStats.toYAML();
+    node["RollStats"]       = rollStats.toYAML();
+    node["MoneyStats"]      = moneyStats.toYAML();
     return node;
 }
 
@@ -703,6 +709,10 @@ TableStats::toYAML() const
 void
 TableStats::fromYAML(const YAML::Node& node)
 {
+    if (node["tableId"])         tableId         = node["tableId"].as<std::string>();
+    if (node["numSessions"])     numSessions     = node["numSessions"].as<unsigned>();
+    if (node["lastSessionDate"]) lastSessionDate = node["lastSessionDate"].as<std::string>();
+
     betStats.fromYAML  (node["BetStats"]);
     rollStats.fromYAML (node["RollStats"]);
     moneyStats.fromYAML(node["MoneyStats"]);
@@ -733,7 +743,7 @@ TableStats::loadFile(const std::string& dir)
     {
         throw std::runtime_error("TableStats::loadFile() Stats file does not exist: " + path.string());
     }
-    
+
     std::ifstream fin(path);
     if (!fin.is_open())
     {

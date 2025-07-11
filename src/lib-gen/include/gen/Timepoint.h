@@ -25,6 +25,10 @@ public:
     Timepoint(Duration offsetFromNow);                // now + duration
     explicit Timepoint(const std::string& iso8601);   // from string, throws on bad format
 
+    // Assignment
+    Timepoint& operator=(const std::string& str);
+    Timepoint& operator=(const Timepoint& other) = default;
+    
     // Resets
     void setTo(TimePoint tp);
     void setToNow();
@@ -55,6 +59,8 @@ public:
 
 private:
     TimePoint tp_;
+    
+    void fromString(const std::string& iso8601);
 };
 
 /*-----------------------------------------------------------*//**

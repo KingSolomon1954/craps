@@ -25,11 +25,11 @@ public:
     // Runtime toggling of debug and trace logging.
     void setDebugLevel(bool onOff);  // on enables debug output, def = on
     void setTraceLevel(bool onOff);  // on enables trace output, def = off
-    
+
 private:
     bool debugOn_ = true;
     bool traceOn_ = false;
-    
+
     enum class Level
     {
         Debug,
@@ -59,4 +59,3 @@ private:
 } // namespace Gen
 
 //----------------------------------------------------------------
-

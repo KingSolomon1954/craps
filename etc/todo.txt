@@ -19,6 +19,8 @@ stats CrapsTable creates Session summaries
 stats CrapsTable returns Session summaries
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 
+Timepoint gets duration with days, needed by YAML files
+
 (Done) Able to read/load from config.yaml
 (Done) Added Debug macros, beefed up logging
 (Done) Added logging class

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <controller/Globals.h>
+#include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Craps {
@@ -23,7 +24,12 @@ public:
     Gbl::Money amtWithdrawn   = 0;
     unsigned   numRefills     = 0;
     Gbl::Money amtRefilled    = 0;
-        
+
+    Gbl::Money maxAmtDepositedSession = 0;
+    Gbl::Money maxAmtWithdrawnSession = 0;
+    Gen::Timepoint maxAmtDepositedSessionDate;
+    Gen::Timepoint maxAmtWithdrawnSessionDate;
+    
     void reset();
     void merge(const BankStats& session);
     YAML::Node toYAML() const;

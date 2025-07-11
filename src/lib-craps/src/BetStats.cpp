@@ -249,8 +249,6 @@ BetStats::expandBetName(const CrapsBetIntfc& bet) const
 void
 BetStats::reset()
 {
-    betTypeStats.reset();
-    
     totNumBetsAllBets = 0;
     totNumWinsAllBets = 0;
     totNumLoseAllBets = 0;
@@ -263,6 +261,7 @@ BetStats::reset()
     maxAmtWinOneBet   = 0;
     maxAmtLoseOneBet  = 0;
     maxAmtKeepOneBet  = 0;
+    betTypeStats.reset();
     numBetsOneRoll.reset();
     numBetsWinOneRoll.reset();
     numBetsLoseOneRoll.reset();
@@ -278,8 +277,6 @@ BetStats::reset()
 void
 BetStats::merge(const BetStats& session)
 {
-    betTypeStats.merge(session.betTypeStats);
-    
     totNumBetsAllBets += session.totNumBetsAllBets;
     totNumWinsAllBets += session.totNumWinsAllBets;
     totNumLoseAllBets += session.totNumLoseAllBets;
@@ -292,6 +289,9 @@ BetStats::merge(const BetStats& session)
     maxAmtWinOneBet   = std::max(maxAmtWinOneBet,  session.maxAmtWinOneBet);
     maxAmtLoseOneBet  = std::max(maxAmtLoseOneBet, session.maxAmtLoseOneBet);
     maxAmtKeepOneBet  = std::max(maxAmtLoseOneBet, session.maxAmtKeepOneBet);
+
+    betTypeStats.merge(session.betTypeStats);
+    
     numBetsOneRoll.merge    (session.numBetsOneRoll);
     numBetsWinOneRoll.merge (session.numBetsWinOneRoll);
     numBetsLoseOneRoll.merge(session.numBetsLoseOneRoll);
@@ -308,7 +308,6 @@ YAML::Node
 BetStats::toYAML() const
 {
     YAML::Node node;
-    node["betTypeStats"]       = betTypeStats.toYAML();
     
     node["totNumBetsAllBets"]  = totNumBetsAllBets;
     node["totNumWinsAllBets"]  = totNumWinsAllBets;
@@ -322,6 +321,9 @@ BetStats::toYAML() const
     node["maxAmtBetOneBet"]    = maxAmtWinOneBet;
     node["maxAmtLoseOneBet"]   = maxAmtLoseOneBet;
     node["maxAmtKeepOneBet"]   = maxAmtKeepOneBet;
+
+    node["betTypeStats"]       = betTypeStats.toYAML();
+    
     node["numBetsOneRoll"]     = numBetsOneRoll.toYAML();
     node["numBetsWinOneRoll"]  = numBetsWinOneRoll.toYAML();
     node["numBetsLoseOneRoll"] = numBetsLoseOneRoll.toYAML();
@@ -338,8 +340,6 @@ BetStats::toYAML() const
 void
 BetStats::fromYAML(const YAML::Node& node)
 {
-    if (node["betTypeStats"]) betTypeStats.fromYAML(node["betTypeStats"]);
-
     if (node["totNumBetsAllBets"])  totNumBetsAllBets = node["totNumBetsAllBets"].as<unsigned>();
     if (node["totNumWinsAllBets"])  totNumWinsAllBets = node["totNumWinsAllBets"].as<unsigned>();
     if (node["totNumLoseAllBets"])  totNumLoseAllBets = node["totNumLoseAllBets"].as<unsigned>();
@@ -353,6 +353,8 @@ BetStats::fromYAML(const YAML::Node& node)
     if (node["maxAmtLoseOneBet"])   maxAmtLoseOneBet  = node["maxAmtLoseOneBet"].as<unsigned>();
     if (node["maxAmtKeepOneBet"])   maxAmtKeepOneBet  = node["maxAmtKeepOneBet"].as<unsigned>();
     
+    if (node["betTypeStats"]) betTypeStats.fromYAML(node["betTypeStats"]);
+
     if (node["numBetsOneRoll"])     numBetsOneRoll.fromYAML    (node["numBetsOneRoll"]);
     if (node["numBetsWinOneRoll"])  numBetsWinOneRoll.fromYAML (node["numBetsWinOneRoll"]);
     if (node["numBetsLoseOneRoll"]) numBetsLoseOneRoll.fromYAML(node["numBetsLoseOneRoll"]);

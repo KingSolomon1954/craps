@@ -100,12 +100,11 @@ private:
     TableStats sessionStats_;
     TableStats alltimeStats_;
 
-
+    CrapsTable();  // private ctor
+    
     static constexpr unsigned InitialStartingBankBalance_ = 1000000;
     static constexpr unsigned RefillThreshold_            = 500000;
     static constexpr unsigned RefillAmount_               = 500000;
-    
-    CrapsTable();  // private ctor 
     
     // Players must join table in order to play.  We only hold the
     // player's UUID here in a std::list container and rely on the

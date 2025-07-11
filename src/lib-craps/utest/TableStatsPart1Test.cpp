@@ -39,11 +39,11 @@ TEST_CASE("TableStats:ctor")
     TableStats ts("tableId-LasVegas");
     CHECK(!ts.tableId.empty());
     Gen::Timepoint tp;
-    CHECK(ts.sessionStart < tp);
+    CHECK(ts.lastSessionDate < tp);
     CHECK(ts.rollStats.numRolls == 0);
 
     TableStats copy = ts;
-    CHECK(copy.sessionStart == ts.sessionStart);
+    CHECK(copy.lastSessionDate == ts.lastSessionDate);
 
     for (unsigned i = 2; i < 13; i++)
     {

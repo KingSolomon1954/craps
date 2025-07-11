@@ -49,13 +49,18 @@ public:
     bool operator==(const TableStats&) const = default;  // Only generates ==
     /// @}
 
+    // All these saved and read from TableStats file.
     std::string      tableId;
-    Gen::Timepoint   sessionStart;
-    Gen::Timepoint   sessionEnd;
-    std::deque<Dice> recentRolls;  // Roll history. Front element is oldest roll
+    unsigned         numSessions = 0;
+    Gen::Timepoint   lastSessionDate;
     BetStats         betStats;     // Betting Stats
     RollStats        rollStats;    // Dice Roll Stats
     BankStats        moneyStats;   // Money Stats
+    Gen::Timepoint::Duration lastSessionDuration;
+
+    // These not saved to TableStats file.
+    std::deque<Dice> recentRolls;  // Roll history. Front element is oldest roll
+    Gen::Timepoint   sessionStartDate;
 
 private:
     size_t rollHistorySize_ = 25;
