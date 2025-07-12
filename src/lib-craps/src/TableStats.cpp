@@ -754,7 +754,7 @@ TableStats::loadFile(const std::string& dir)
 
     if (!fs::exists(path))
     {
-        throw std::runtime_error("TableStats::loadFile() Stats file does not exist: " + path.string());
+        throw std::runtime_error("TableStats::loadFile() file does not exist: " + path.string());
     }
 
     std::ifstream fin(path);

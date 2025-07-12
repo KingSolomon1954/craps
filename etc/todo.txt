@@ -8,19 +8,21 @@ Save Config to yaml file
 Write unit test MultiLayerConfigTest
 Write unit test ConfigManagerTest
 
-Save/load bank to TableStats
-
 load Table choices by reading dir
 load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
 
-stats CrapsTable creates Session summaries
 stats CrapsTable returns Session summaries
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
+change TableStats::lastSessionDate --> sessionDate (better yet eliminate)
+unit test for SessionHistory class
 
-Timepoint gets duration with days, needed by YAML files
-
+(Done) CrapsTable creates Session summaries
+(Done) Create session history class
+(Done) TableStats saves/loads bank/money
+(Done) TableStats add lastSessionDate, lastSessionDuration, maxSessionDuration
+(Done) Timepoint gets duration with days conversions, needed by YAML files
 (Done) Able to read/load from config.yaml
 (Done) Added Debug macros, beefed up logging
 (Done) Added logging class
@@ -609,78 +611,11 @@ The standard runtime directories for royalcraps are:
 
 
 
+Session History
+---------------
 
+Date                Duration    Bets   Intake   Payout  Balance Players
+-----------------   ----------- ------ -------- ------- ------- -------
+2025-07-12T09:29:56 0d 01:33:08 112    246222   334577  +88355  6
+2025-05-12T08:05:44 0d 00:22:11 24     1009     950     +59     6
 
-
-CrapsTable
-    Stats session_;
-    Stats alltime_;
-
-
-
-CrapsTable
-    Stats stats_;
-
-
-
-
-CrapsTable
-{
-    BettingStats sessionBettingStats_;
-    BettingStats alltimeBettingStats_;
-    DiceRollStats sessionDiceRollStats_;
-    DiceRollStats alltimeDiceRollStats_;
-    SessionHistory sessionHistory_;
-};
-
-BettingStats CrapsTable::getSessionBettingStats();
-DiceRollStats CrapsTable::getSessionDiceRollStats();
-BettingStats CrapsTable::getAlltimeBettingStats();
-DiceRollStats CrapsTable::getAlltimeDiceRollStats();
-
-SessionHistory CrapsTable::getSessionHistory();
-
-PlayerStats
-{
-    PlayerHistory playerHistory;
-    BettingStats  sessionBettingStats;
-    BettingStats  alltimeBettingStats;
-}
-
-
-BettingStats
-{
-    unsigned numBetsMade = 0;
-    unsigned numBetsWin = 0;
-    unsigned numBetsLose = 0;
-    unsigned numBetsPush = 0;
-
-    double winPctg =  (numBetsWin  / numBetsMade) * 100
-    double losePctg = (numBetsLose / numBetsMade) * 100
-    double pushPctg = (numBetsPush / numBetsMade) * 100
-
-    Gbl::Money maxAmtOneBet = 0;
-    Gbl::Money totAmtAllBets = 0;
-    double avgAmtPerBet     = 0.0;
-
-    unsigned maxNumBetsPerRoll  = 0;
-    unsigned totNumBetsPerRoll  = 0;
-    double avgNumBetsPerRoll = 0.0;
-
-    Gbl::Money maxAmtBetOneRoll = 0;
-    Gbl::Money totAmtBetPerRoll = 0;
-    double avgAmtBetPerRoll     = 0.0;
-
-    Gbl::Money maxAmtWinOneRoll = 0;
-    Gbl::Money totAmtWinPerRoll = 0;
-    double avgAmtWinPerRoll     = 0.0;
-
-    Gbl::Money maxAmtLoseOneRoll = 0;
-    Gbl::Money totAmtLosePerRoll = 0;
-    double avgAmtLosePerRoll     = 0.0;
-};
-
-DiceRollStats
-{
-
-};

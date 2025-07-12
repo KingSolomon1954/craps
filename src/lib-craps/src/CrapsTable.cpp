@@ -896,6 +896,16 @@ CrapsTable::prepareForShutdown()
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
     alltimeStats_.saveFile(dir);
+
+    // Update session history with current session summary
+    sessionHistory_.addNewSummary(
+        players_.size(),
+        sessionStats_.moneyStats.amtDeposited,
+        sessionStats_.moneyStats.amtWithdrawn,
+        Gbl::pConfigMgr->getString(
+            Ctrl::ConfigManager::KeySessionStart).value(),
+        sessionStats_.lastSessionDuration);    
+    sessionHistory_.saveFile(dir, tableId_);
 }
 
 //----------------------------------------------------------------
