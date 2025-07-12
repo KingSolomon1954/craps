@@ -53,10 +53,11 @@ public:
     std::string      tableId;
     unsigned         numSessions = 0;
     Gen::Timepoint   lastSessionDate;
+    Gen::Timepoint::Duration lastSessionDuration;
+    Gen::Timepoint::Duration maxSessionDuration;
     BetStats         betStats;     // Betting Stats
     RollStats        rollStats;    // Dice Roll Stats
     BankStats        moneyStats;   // Money Stats
-    Gen::Timepoint::Duration lastSessionDuration;
 
     // These not saved to TableStats file.
     std::deque<Dice> recentRolls;  // Roll history. Front element is oldest roll

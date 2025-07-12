@@ -9,6 +9,7 @@
 #include <format>
 #include <sstream>
 #include <iomanip>
+#include <regex>
 #include <stdexcept>
 
 using namespace Gen;
@@ -113,7 +114,7 @@ Timepoint::operator-(const Timepoint& other) const
 Timepoint::Duration
 Timepoint::sinceNow() const
 {
-    return tp_ - Clock::now();
+    return Clock::now() - tp_;
 }
 
 //----------------------------------------------------------------
@@ -158,7 +159,7 @@ Timepoint::TimePoint Timepoint::raw() const
 //----------------------------------------------------------------
 //
 // Set to given time point.
-// 
+//
 void
 Timepoint::setTo(TimePoint tp)
 {
@@ -168,7 +169,7 @@ Timepoint::setTo(TimePoint tp)
 //----------------------------------------------------------------
 //
 // Set to now.
-// 
+//
 void
 Timepoint::setToNow()
 {
@@ -178,7 +179,7 @@ Timepoint::setToNow()
 //----------------------------------------------------------------
 //
 // Set to now plus an offset.
-// 
+//
 void
 Timepoint::setToNow(Duration offsetFromNow)
 {
@@ -195,65 +196,110 @@ operator<< (std::ostream& os, const Gen::Timepoint& tp)
     return os << tp.toString();
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
-#if 0
+Parse a custom string like "2d 03:01:55" into a duration
 
-#include <chrono>
-#include <string>
-#include <sstream>
-#include <regex>
-#include <stdexcept>
+@param[in] input
+    A formatted string in the form of "2d 03:01:55".
+    Optional leading zero(s) accepted e.g. "02d 03:01:55".
 
-std::chrono::system_clock::duration parseDurationWithDays(const std::string& input) {
+@return
+    a chrono Duration 
+
+@throws
+    std::invalid_argument if expected time format is bad.
+    
+@throws
+    std::runtime_error if passes regex but time format is still bad.
+    
+@internal
+
+General approach:
+
+* Split the days portion from the time string.
+* Parse both parts manually or with std::chrono::parse.
+
+Regex Breakdown:
+
+* \s* — optional whitespace at start
+* (\d+) — 1 or more digits for the days (✅ accepts 0, 09, 23, 999, etc.)
+* d — literal 'd' character
+* \s+ — at least one space between d and the time
+* (\d{2}:\d{2}:\d{2}) — fixed 2-digit HH:MM:SS time format
+* \s* — optional whitespace at end
+
+Example usage:
+@code
+    auto dur = parseDurationWithDays("2d 03:01:55");
+    std::cout << "Total seconds: " << duration_cast<seconds>(dur).count() << '\n';  // 183715
+@endcode
+*/
+std::chrono::system_clock::duration
+Timepoint::parseDurationWithDays(const std::string& input)
+{
     using namespace std::chrono;
 
     std::regex re(R"(^\s*(\d+)d\s+(\d{2}:\d{2}:\d{2})\s*$)");
     std::smatch match;
 
-    if (!std::regex_match(input, match, re) || match.size() != 3) {
-        throw std::invalid_argument("Invalid format. Expected 'Nd HH:MM:SS'");
+    if (!std::regex_match(input, match, re) || match.size() != 3)
+    {
+        std::string diag("Timepoint::parseDurationWithDays() Invalid "
+                         "format. Expected 'Nd HH:MM:SS' got ");
+        throw std::invalid_argument(diag + input);
     }
 
     int daysCount = std::stoi(match[1].str());
     std::string timePart = match[2].str();
 
-    // Parse the time portion
     std::istringstream timeStream(timePart);
-    std::chrono::hours h;
-    std::chrono::minutes m;
-    std::chrono::seconds s;
-    std::chrono::time_point<system_clock, seconds> tp;
-
-    timeStream >> std::chrono::parse("%T", tp);
-    if (timeStream.fail()) {
-        throw std::runtime_error("Failed to parse time portion");
+    std::chrono::seconds hms{};  // parse into duration
+    timeStream >> std::chrono::parse("%T", hms);
+    if (timeStream.fail())
+    {
+        std::string diag("Timepoint::parseDurationWithDays() Invalid "
+                         "format. Expected 'HH:MM:SS' got ");
+        throw std::runtime_error(diag + timePart);
     }
 
-    // Return combined duration
-    return days(daysCount) + tp.time_since_epoch();
+    return days(daysCount) + hms;  // Return combined duration
 }
 
+/*-----------------------------------------------------------*//**
 
-int main() {
-    using namespace std::chrono;
+Turns a chrono duration into a string formatted as "Nd HH:MM:SS"
 
-    auto dur = parseDurationWithDays("2d 03:01:55");
-    std::cout << "Total seconds: " << duration_cast<seconds>(dur).count() << '\n';  // 183715
-}
+Example output: "2d 03:01:55"
 
+@param[in] dur
+    Duration
 
-#include <chrono>
-#include <format>
-#include <string>
+@return
+    Formatted string
 
-std::string formatDurationWithDays(std::chrono::system_clock::duration dur) {
+@internal
+
+* %T formats as HH:MM:SS.
+* Instead could have used std::format("{:%H:%M:%S}", tp) to be explicit.
+* Assumes the duration is non-negative.
+
+Example usage:
+@code
+    auto d = days(2) + hours(3) + minutes(1) + seconds(55);
+    std::string out = formatDurationWithDays(d);
+    std::cout << out << "\n";  // Output: "2d 03:01:55"
+@endcode
+*/
+std::string
+Timepoint::formatDurationWithDays(std::chrono::system_clock::duration dur)
+{
     using namespace std::chrono;
 
     // Extract whole days and remainder
     auto totalSeconds = duration_cast<seconds>(dur);
-    auto daysPart = duration_cast<days>(totalSeconds);
-    auto timePart = totalSeconds - daysPart;
+    auto daysPart     = duration_cast<days>(totalSeconds);
+    auto timePart     = totalSeconds - daysPart;
 
     // Convert remainder to a time_point so we can format it
     auto tp = time_point<system_clock, seconds>(timePart);
@@ -261,16 +307,4 @@ std::string formatDurationWithDays(std::chrono::system_clock::duration dur) {
     return std::format("{}d {:%T}", daysPart.count(), tp);  // %T = HH:MM:SS
 }
 
-
-#include <iostream>
-
-int main() {
-    using namespace std::chrono;
-
-    auto d = days(2) + hours(3) + minutes(1) + seconds(55);
-    std::string out = formatDurationWithDays(d);
-    std::cout << out << "\n";  // Output: "2d 03:01:55"
-}
-
-
-#endif
+//----------------------------------------------------------------

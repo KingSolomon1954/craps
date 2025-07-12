@@ -1,6 +1,8 @@
 tableName: LasVegas
-numSessions: 2
-lastSessionDate: 2025-07-11T17:58:19.965709561
+numSessions: 7
+lastSessionDate: 2025-07-12T09:29:56.016400886
+lastSessionDuration: 0d 00:00:08
+maxSessionDuration: 0d 00:00:08
 BetStats:
   totNumBetsAllBets: 0
   totNumWinsAllBets: 0

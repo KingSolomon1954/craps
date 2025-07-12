@@ -26,14 +26,14 @@ public:
     explicit Timepoint(const std::string& iso8601);   // from string, throws on bad format
 
     // Assignment
-    Timepoint& operator=(const std::string& str);
+    Timepoint& operator=(const std::string& iso8601);
     Timepoint& operator=(const Timepoint& other) = default;
-    
+
     // Resets
     void setTo(TimePoint tp);
     void setToNow();
     void setToNow(Duration offsetFromNow);
-    
+
     // Conversion
     std::string toString() const;
     operator std::string() const;
@@ -57,9 +57,15 @@ public:
     // Accessor
     TimePoint raw() const;
 
+    // Duration parsing and formatting
+    static std::chrono::system_clock::duration parseDurationWithDays(
+        const std::string& input);
+    static std::string formatDurationWithDays(
+        std::chrono::system_clock::duration dur);
+
 private:
     TimePoint tp_;
-    
+
     void fromString(const std::string& iso8601);
 };
 
