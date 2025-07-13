@@ -49,10 +49,10 @@ BetStat::toYAML() const
 void
 BetStat::fromYAML(const YAML::Node& node)
 {
-    if (node["count"])       count       = node["count"].as<unsigned>();
-    if (node["totDistance"]) totDistance = node["totDistance"].as<unsigned>();
-    if (node["amount"])      amount      = node["amount"].as<unsigned>();
-    if (node["amountBet"])   amountBet   = node["amountBet"].as<unsigned>();
+    count       = node["count"].as<unsigned>();
+    totDistance = node["totDistance"].as<unsigned>();
+    amount      = node["amount"].as<unsigned>();
+    amountBet   = node["amountBet"].as<unsigned>();
 }
 
 //-----------------------------------------------------------------
@@ -180,8 +180,8 @@ NumBets::toYAML() const
 void
 NumBets::fromYAML(const YAML::Node& node)
 {
-    if (node["max"])   max   = node["max"].as<unsigned>();
-    if (node["total"]) total = node["total"].as<unsigned>();
+    max   = node["max"].as<unsigned>();
+    total = node["total"].as<unsigned>();
     current = 0;
 }
 
@@ -220,8 +220,8 @@ AmtBets::toYAML() const
 void
 AmtBets::fromYAML(const YAML::Node& node)
 {
-    if (node["max"])   max   = node["max"].as<unsigned>();
-    if (node["total"]) total = node["total"].as<unsigned>();
+    max   = node["max"].as<unsigned>();
+    total = node["total"].as<unsigned>();
     current = 0;
 }
 
@@ -319,6 +319,7 @@ BetStats::toYAML() const
     node["totAmtKeepAllBets"]  = totAmtKeepAllBets;
     node["maxAmtBetOneBet"]    = maxAmtBetOneBet;
     node["maxAmtBetOneBet"]    = maxAmtWinOneBet;
+    node["maxAmtWinOneBet"]    = maxAmtWinOneBet;
     node["maxAmtLoseOneBet"]   = maxAmtLoseOneBet;
     node["maxAmtKeepOneBet"]   = maxAmtKeepOneBet;
 
@@ -340,29 +341,29 @@ BetStats::toYAML() const
 void
 BetStats::fromYAML(const YAML::Node& node)
 {
-    if (node["totNumBetsAllBets"])  totNumBetsAllBets = node["totNumBetsAllBets"].as<unsigned>();
-    if (node["totNumWinsAllBets"])  totNumWinsAllBets = node["totNumWinsAllBets"].as<unsigned>();
-    if (node["totNumLoseAllBets"])  totNumLoseAllBets = node["totNumLoseAllBets"].as<unsigned>();
-    if (node["totNumKeepAllBets"])  totNumKeepAllBets = node["totNumKeepAllBets"].as<unsigned>();
-    if (node["totAmtAllBets"])      totAmtAllBets     = node["totAmtAllBets"].as<unsigned>();
-    if (node["totAmtWinsAllBets"])  totAmtWinsAllBets = node["totAmtWinsAllBets"].as<unsigned>();
-    if (node["totAmtLoseAllBets"])  totAmtLoseAllBets = node["totAmtLoseAllBets"].as<unsigned>();
-    if (node["totAmtKeepAllBets"])  totAmtKeepAllBets = node["totAmtKeepAllBets"].as<unsigned>();
-    if (node["maxAmtBetOneBet"])    maxAmtBetOneBet   = node["maxAmtBetOneBet"].as<unsigned>();
-    if (node["maxAmtWinOneBet"])    maxAmtWinOneBet   = node["maxAmtWinOneBet"].as<unsigned>();
-    if (node["maxAmtLoseOneBet"])   maxAmtLoseOneBet  = node["maxAmtLoseOneBet"].as<unsigned>();
-    if (node["maxAmtKeepOneBet"])   maxAmtKeepOneBet  = node["maxAmtKeepOneBet"].as<unsigned>();
+    totNumBetsAllBets = node["totNumBetsAllBets"].as<unsigned>();
+    totNumWinsAllBets = node["totNumWinsAllBets"].as<unsigned>();
+    totNumLoseAllBets = node["totNumLoseAllBets"].as<unsigned>();
+    totNumKeepAllBets = node["totNumKeepAllBets"].as<unsigned>();
+    totAmtAllBets     = node["totAmtAllBets"].as<unsigned>();
+    totAmtWinsAllBets = node["totAmtWinsAllBets"].as<unsigned>();
+    totAmtLoseAllBets = node["totAmtLoseAllBets"].as<unsigned>();
+    totAmtKeepAllBets = node["totAmtKeepAllBets"].as<unsigned>();
+    maxAmtBetOneBet   = node["maxAmtBetOneBet"].as<unsigned>();
+    maxAmtWinOneBet   = node["maxAmtWinOneBet"].as<unsigned>();
+    maxAmtLoseOneBet  = node["maxAmtLoseOneBet"].as<unsigned>();
+    maxAmtKeepOneBet  = node["maxAmtKeepOneBet"].as<unsigned>();
     
-    if (node["betTypeStats"]) betTypeStats.fromYAML(node["betTypeStats"]);
+    betTypeStats.fromYAML(node["betTypeStats"]);
 
-    if (node["numBetsOneRoll"])     numBetsOneRoll.fromYAML    (node["numBetsOneRoll"]);
-    if (node["numBetsWinOneRoll"])  numBetsWinOneRoll.fromYAML (node["numBetsWinOneRoll"]);
-    if (node["numBetsLoseOneRoll"]) numBetsLoseOneRoll.fromYAML(node["numBetsLoseOneRoll"]);
-    if (node["numBetsKeepOneRoll"]) numBetsKeepOneRoll.fromYAML(node["numBetsKeepOneRoll"]);
-    if (node["amtBetsOneRoll"])     amtBetsOneRoll.fromYAML    (node["amtBetsOneRoll"]);
-    if (node["amtBetsWinOneRoll"])  amtBetsWinOneRoll.fromYAML (node["amtBetsWinOneRoll"]);
-    if (node["amtBetsLoseOneRoll"]) amtBetsLoseOneRoll.fromYAML(node["amtBetsLoseOneRoll"]);
-    if (node["amtBetsKeepOneRoll"]) amtBetsKeepOneRoll.fromYAML(node["amtBetsKeepOneRoll"]);
+    numBetsOneRoll.fromYAML    (node["numBetsOneRoll"]);
+    numBetsWinOneRoll.fromYAML (node["numBetsWinOneRoll"]);
+    numBetsLoseOneRoll.fromYAML(node["numBetsLoseOneRoll"]);
+    numBetsKeepOneRoll.fromYAML(node["numBetsKeepOneRoll"]);
+    amtBetsOneRoll.fromYAML    (node["amtBetsOneRoll"]);
+    amtBetsWinOneRoll.fromYAML (node["amtBetsWinOneRoll"]);
+    amtBetsLoseOneRoll.fromYAML(node["amtBetsLoseOneRoll"]);
+    amtBetsKeepOneRoll.fromYAML(node["amtBetsKeepOneRoll"]);
 }
 
 //-----------------------------------------------------------------

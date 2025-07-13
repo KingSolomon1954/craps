@@ -75,17 +75,17 @@ BankStats::toYAML() const
 void
 BankStats::fromYAML(const YAML::Node& node)
 {
-    if (node["initialStartingBalance"])     initialStartingBalance     = node["initialStartingBalance"].as<unsigned>();
-    if (node["numDeposits"])                numDeposits                = node["numDeposits"].as<unsigned>();
-    if (node["amtDeposited"])               amtDeposited               = node["amtDeposited"].as<unsigned>();
-    if (node["numWithdrawals"])             numWithdrawals             = node["numWithdrawals"].as<unsigned>();
-    if (node["amtWithdrawn"])               amtWithdrawn               = node["amtWithdrawn"].as<unsigned>();
-    if (node["numRefills"])                 numRefills                 = node["numRefills"].as<unsigned>();
-    if (node["amtRefilled"])                amtRefilled                = node["amtRefilled"].as<unsigned>();
-    if (node["maxAmtDepositedSession"])     maxAmtDepositedSession     = node["maxAmtDepositedSession"].as<unsigned>();
-    if (node["maxAmtWithdrawnSession"])     maxAmtWithdrawnSession     = node["maxAmtWithdrawnSession"].as<unsigned>();
-    if (node["maxAmtDepositedSessionDate"]) maxAmtDepositedSessionDate = node["maxAmtDepositedSessionDate"].as<std::string>();
-    if (node["maxAmtWithdrawnSessionDate"]) maxAmtWithdrawnSessionDate = node["maxAmtWithdrawnSessionDate"].as<std::string>();
+    initialStartingBalance     = node["initialStartingBalance"].as<unsigned>();
+    numDeposits                = node["numDeposits"].as<unsigned>();
+    amtDeposited               = node["amtDeposited"].as<unsigned>();
+    numWithdrawals             = node["numWithdrawals"].as<unsigned>();
+    amtWithdrawn               = node["amtWithdrawn"].as<unsigned>();
+    numRefills                 = node["numRefills"].as<unsigned>();
+    amtRefilled                = node["amtRefilled"].as<unsigned>();
+    maxAmtDepositedSession     = node["maxAmtDepositedSession"].as<unsigned>();
+    maxAmtWithdrawnSession     = node["maxAmtWithdrawnSession"].as<unsigned>();
+    maxAmtDepositedSessionDate = node["maxAmtDepositedSessionDate"].as<std::string>();
+    maxAmtWithdrawnSessionDate = node["maxAmtWithdrawnSessionDate"].as<std::string>();
 }
 
 //-----------------------------------------------------------------

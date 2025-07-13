@@ -18,7 +18,6 @@
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
 #include <craps/Player.h>
-#include <craps/SessionHistory.h>
 #include <craps/TableStats.h>
 
 namespace Craps {
@@ -75,7 +74,7 @@ public:
     bool isBettingOpen()                       const;
     Gbl::Money getAmountOnTable()              const;
     unsigned getNumBetsOnTable()               const;
-    const TableStats& getSessionStats()        const;
+    const TableStats& getTableStats()          const;
     const TableStats& getAlltimeStats()        const;
     bool haveBet(const BetIntfcPtr bet)        const;
     bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
@@ -98,9 +97,8 @@ private:
     bool bettingOpen_ = true;
     bool isTestRoll_ = false;
     Dice testRollDice_;
-    TableStats sessionStats_;
+    TableStats tableStats_;
     TableStats alltimeStats_;
-    SessionHistory sessionHistory_;
 
     CrapsTable();  // private ctor
     

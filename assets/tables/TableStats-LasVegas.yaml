@@ -1,8 +1,4 @@
 tableName: LasVegas
-numSessions: 7
-lastSessionDate: 2025-07-12T09:29:56.016400886
-lastSessionDuration: 0d 00:00:08
-maxSessionDuration: 0d 00:00:08
 BetStats:
   totNumBetsAllBets: 0
   totNumWinsAllBets: 0
@@ -13,6 +9,7 @@ BetStats:
   totAmtLoseAllBets: 0
   totAmtKeepAllBets: 0
   maxAmtBetOneBet: 0
+  maxAmtWinOneBet: 0
   maxAmtLoseOneBet: 0
   maxAmtKeepOneBet: 0
   betTypeStats:
@@ -369,3 +366,20 @@ MoneyStats:
   maxAmtWithdrawnSession: 0
   maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
   maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
+SessionStats:
+  numSessionsAlltime: 3
+  firstSessionDate: 2025-06-25T14:30:00.000000000
+  longestSessionAlltime: 0d 00:00:08
+  history:
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-06-25T14:30:00.000000000
+      duration: 0d 00:00:08
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-08-25T15:22:00.000000000
+      duration: 0d 00:00:30

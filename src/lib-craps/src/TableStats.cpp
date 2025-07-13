@@ -646,6 +646,7 @@ TableStats::reset()
     rollStats.reset();
     moneyStats.reset();
     recentRolls.clear();
+    // No sessionHistory.clear()
 }
 
 //-----------------------------------------------------------------
@@ -653,13 +654,10 @@ TableStats::reset()
 void
 TableStats::merge(const TableStats& session)
 {
-    numSessions++;
-    lastSessionDate.setToNow();
-    lastSessionDuration = sessionStartDate.sinceNow();
-    maxSessionDuration = std::max(maxSessionDuration, lastSessionDuration);
     betStats.merge(session.betStats);
     rollStats.merge(session.rollStats);
     moneyStats.merge(session.moneyStats);
+    // No sessionHistory.merge()
 }
 
 //-----------------------------------------------------------------
@@ -696,14 +694,11 @@ YAML::Node
 TableStats::toYAML() const
 {
     YAML::Node node;
-    node["tableName"]           = tableId;
-    node["numSessions"]         = numSessions;
-    node["lastSessionDate"]     = lastSessionDate.toString(); // As ISO date/time
-    node["lastSessionDuration"] = Gen::Timepoint::formatDurationWithDays(lastSessionDuration);
-    node["maxSessionDuration"]  = Gen::Timepoint::formatDurationWithDays(maxSessionDuration);
-    node["BetStats"]            = betStats.toYAML();
-    node["RollStats"]           = rollStats.toYAML();
-    node["MoneyStats"]          = moneyStats.toYAML();
+    node["tableName"]    = tableId;
+    node["BetStats"]     = betStats.toYAML();
+    node["RollStats"]    = rollStats.toYAML();
+    node["MoneyStats"]   = moneyStats.toYAML();
+    node["SessionStats"] = sessionHistory.toYAML();
     return node;
 }
 
@@ -712,23 +707,11 @@ TableStats::toYAML() const
 void
 TableStats::fromYAML(const YAML::Node& node)
 {
-    if (node["tableId"])         tableId         = node["tableId"].as<std::string>();
-    if (node["numSessions"])     numSessions     = node["numSessions"].as<unsigned>();
-    if (node["lastSessionDate"]) lastSessionDate = node["lastSessionDate"].as<std::string>();
-    if (node["lastSessionDuration"])
-    {
-        std::string s = node["lastSessionDuration"].as<std::string>();
-        lastSessionDuration = Gen::Timepoint::parseDurationWithDays(s);
-    }
-    if (node["maxSessionDuration"])
-    {
-        std::string s = node["maxSessionDuration"].as<std::string>();
-        maxSessionDuration = Gen::Timepoint::parseDurationWithDays(s);
-    }
-
-    betStats.fromYAML  (node["BetStats"]);
-    rollStats.fromYAML (node["RollStats"]);
-    moneyStats.fromYAML(node["MoneyStats"]);
+    if (node["tableId"]) tableId = node["tableId"].as<std::string>();
+    betStats.fromYAML      (node["BetStats"]);
+    rollStats.fromYAML     (node["RollStats"]);
+    moneyStats.fromYAML    (node["MoneyStats"]);
+    sessionHistory.fromYAML(node["SessionStats"]);
 }
 
 //-----------------------------------------------------------------

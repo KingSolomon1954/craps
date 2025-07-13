@@ -21,7 +21,7 @@ Private Constructor.
 
 */
 CrapsTable::CrapsTable()
-    : sessionStats_(tableId_)
+    : tableStats_(tableId_)
     , alltimeStats_(tableId_)
     , houseBank_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
@@ -60,7 +60,7 @@ CrapsTable::fromFile(const TableId& tableId)
     CrapsTable* ct = new CrapsTable();
     ct->tableId_ = tableId;
     ct->alltimeStats_.tableId = tableId;  // must be set before loading stats
-    ct->sessionStats_.tableId = tableId;
+    ct->tableStats_.tableId = tableId;
 
     // Load alltime stats. Alltime stats come from file.
     // (BTW, current session stats are in-memory only and inited to zero).
@@ -376,7 +376,7 @@ CrapsTable::rollDice()
     throwDice();
     resolveBets();
     advanceState();      // Update point, update shooter
-    sessionStats_.recordDiceRoll(point_, dice_);
+    tableStats_.recordDiceRoll(point_, dice_);
     declareBettingOpen();
 }
 
@@ -548,15 +548,15 @@ CrapsTable::disburseHouseResults()
         if (r.lose > 0)  // player loses, house wins
         {
             houseBank_.deposit(r.lose);
-            sessionStats_.recordDeposit(r.lose);
+            tableStats_.recordDeposit(r.lose);
         }
         if (r.win > 0)  // player wins, house loses
         {
-            sessionStats_.recordWithdrawal(r.win);
+            tableStats_.recordWithdrawal(r.win);
             Gbl::Money amtRefill = houseBank_.withdraw(r.win);
             if (amtRefill > 0)
             {
-                sessionStats_.recordRefill(amtRefill);
+                tableStats_.recordRefill(amtRefill);
             }
         }
         if (r.commission > 0)
@@ -578,7 +578,7 @@ CrapsTable::disbursePlayerWins()
             Gbl::pPlayerMgr->disburseWin(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            sessionStats_.recordWin(*b, r.win);
+            tableStats_.recordWin(*b, r.win);
         }
     }
 }
@@ -595,7 +595,7 @@ CrapsTable::disbursePlayerLoses()
             Gbl::pPlayerMgr->disburseLose(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            sessionStats_.recordLose(*b, r.lose);
+            tableStats_.recordLose(*b, r.lose);
         }
     }
 }
@@ -612,7 +612,7 @@ CrapsTable::disbursePlayerKeeps()
             Gbl::pPlayerMgr->disburseKeep(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            sessionStats_.recordKeep(*b);
+            tableStats_.recordKeep(*b);
         }
     }
 }
@@ -845,9 +845,9 @@ Returns read-only access to current session table stats.
 
 */
 const TableStats&
-CrapsTable::getSessionStats() const
+CrapsTable::getTableStats() const
 {
-    return sessionStats_;
+    return tableStats_;
 }
 
 /*-----------------------------------------------------------*//**
@@ -890,22 +890,16 @@ CrapsTable::isBettingOpen() const
 void
 CrapsTable::prepareForShutdown()
 {
-    // Update alltime stats with current session, then save.
-    alltimeStats_.merge(sessionStats_);
+    // Create entry for today's session.
+    tableStats_.sessionHistory.addNewSummary();
+    
+    // Merge alltime stats with today's session, then save.
+    alltimeStats_.merge(tableStats_);
 
+    // Directory where to read/write table stats.
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
     alltimeStats_.saveFile(dir);
-
-    // Update session history with current session summary
-    sessionHistory_.addNewSummary(
-        players_.size(),
-        sessionStats_.moneyStats.amtDeposited,
-        sessionStats_.moneyStats.amtWithdrawn,
-        Gbl::pConfigMgr->getString(
-            Ctrl::ConfigManager::KeySessionStart).value(),
-        sessionStats_.lastSessionDuration);    
-    sessionHistory_.saveFile(dir, tableId_);
 }
 
 //----------------------------------------------------------------

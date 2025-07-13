@@ -120,8 +120,8 @@ YAML::Node PointCounts::toYAML() const
 void
 PointCounts::fromYAML(const YAML::Node& node)
 {
-    if (node["wins"]) wins.fromYAML(node["wins"]);
-    if (node["lose"]) lose.fromYAML(node["lose"]);
+    wins.fromYAML(node["wins"]);
+    lose.fromYAML(node["lose"]);
 }
 
 //-----------------------------------------------------------------
@@ -379,10 +379,10 @@ RollStats::pointCountsFromYAML (const YAML::Node& node)
         }
     };
 
-    if (node["passPntCnts"])     loadPointCounts(node["passPntCnts"],     passPntCnts);
-    if (node["dontPassPntCnts"]) loadPointCounts(node["dontPassPntCnts"], dontPassPntCnts);
-    if (node["comePntCnts"])     loadPointCounts(node["comePntCnts"],     comePntCnts);
-    if (node["dontComePntCnts"]) loadPointCounts(node["dontComePntCnts"], dontComePntCnts);
+    loadPointCounts(node["passPntCnts"],     passPntCnts);
+    loadPointCounts(node["dontPassPntCnts"], dontPassPntCnts);
+    loadPointCounts(node["comePntCnts"],     comePntCnts);
+    loadPointCounts(node["dontComePntCnts"], dontComePntCnts);
 
     // Similar for hardways
     auto loadHardwayCounts = [&](const YAML::Node& groupNode, std::array<PointCounts, 11>& arr)
@@ -391,10 +391,7 @@ RollStats::pointCountsFromYAML (const YAML::Node& node)
         for (unsigned pt : points)
         {
             std::string key = std::to_string(pt);
-            if (groupNode[key])
-            {
-                arr[pt].fromYAML(groupNode[key]);
-            }
+            arr[pt].fromYAML(groupNode[key]);
         }
     };
 
@@ -406,26 +403,26 @@ RollStats::pointCountsFromYAML (const YAML::Node& node)
 void
 RollStats::singleCountsFromYAML(const YAML::Node& node)
 {
-    if (node["comeOutRolls"])         comeOutRolls.fromYAML        (node["comeOutRolls"]);
-    if (node["pointRolls"])           pointRolls.fromYAML          (node["pointRolls"]);
-    if (node["passWinsComeOut"])      passWinsComeOut.fromYAML     (node["passWinsComeOut"]);
-    if (node["passLoseComeOut"])      passLoseComeOut.fromYAML     (node["passLoseComeOut"]);
-    if (node["comeWinsComeOut"])      comeWinsComeOut.fromYAML     (node["comeWinsComeOut"]);
-    if (node["comeLoseComeOut"])      comeLoseComeOut.fromYAML     (node["comeLoseComeOut"]);
-    if (node["dontPassWinsComeOut"])  dontPassWinsComeOut.fromYAML (node["dontPassWinsComeOut"]);
-    if (node["dontPassLoseComeOut"])  dontPassLoseComeOut.fromYAML (node["dontPassLoseComeOut"]);
-    if (node["dontComeWinsComeOut"])  dontComeWinsComeOut.fromYAML (node["dontComeWinsComeOut"]);
-    if (node["dontComeLoseComeOut"])  dontComeLoseComeOut.fromYAML (node["dontComeLoseComeOut"]);
-    if (node["fieldBetWins"])         fieldBetWins.fromYAML        (node["fieldBetWins"]);
-    if (node["fieldBetLose"])         fieldBetLose.fromYAML        (node["fieldBetLose"]);
-    if (node["sevenOuts"])            sevenOuts.fromYAML           (node["sevenOuts"]);
-    if (node["shooterCounts"])        shooterCounts.fromYAML       (node["shooterCounts"]);
-    if (node["twosOnComeOutRoll"])    twosOnComeOutRoll.fromYAML   (node["twosOnComeOutRoll"]);
-    if (node["threesOnComeOutRoll"])  threesOnComeOutRoll.fromYAML (node["threesOnComeOutRoll"]);
-    if (node["sevensOnComeOutRoll"])  sevensOnComeOutRoll.fromYAML (node["sevensOnComeOutRoll"]);
-    if (node["elevensOnComeOutRoll"]) elevensOnComeOutRoll.fromYAML(node["elevensOnComeOutRoll"]);
-    if (node["twelvesOnComeOutRoll"]) twelvesOnComeOutRoll.fromYAML(node["twelvesOnComeOutRoll"]);
-    if (node["crapsOnComeOutRoll"])   crapsOnComeOutRoll.fromYAML  (node["crapsOnComeOutRoll"]);
+    comeOutRolls.fromYAML        (node["comeOutRolls"]);
+    pointRolls.fromYAML          (node["pointRolls"]);
+    passWinsComeOut.fromYAML     (node["passWinsComeOut"]);
+    passLoseComeOut.fromYAML     (node["passLoseComeOut"]);
+    comeWinsComeOut.fromYAML     (node["comeWinsComeOut"]);
+    comeLoseComeOut.fromYAML     (node["comeLoseComeOut"]);
+    dontPassWinsComeOut.fromYAML (node["dontPassWinsComeOut"]);
+    dontPassLoseComeOut.fromYAML (node["dontPassLoseComeOut"]);
+    dontComeWinsComeOut.fromYAML (node["dontComeWinsComeOut"]);
+    dontComeLoseComeOut.fromYAML (node["dontComeLoseComeOut"]);
+    fieldBetWins.fromYAML        (node["fieldBetWins"]);
+    fieldBetLose.fromYAML        (node["fieldBetLose"]);
+    sevenOuts.fromYAML           (node["sevenOuts"]);
+    shooterCounts.fromYAML       (node["shooterCounts"]);
+    twosOnComeOutRoll.fromYAML   (node["twosOnComeOutRoll"]);
+    threesOnComeOutRoll.fromYAML (node["threesOnComeOutRoll"]);
+    sevensOnComeOutRoll.fromYAML (node["sevensOnComeOutRoll"]);
+    elevensOnComeOutRoll.fromYAML(node["elevensOnComeOutRoll"]);
+    twelvesOnComeOutRoll.fromYAML(node["twelvesOnComeOutRoll"]);
+    crapsOnComeOutRoll.fromYAML  (node["crapsOnComeOutRoll"]);
 }
 
 //-----------------------------------------------------------------

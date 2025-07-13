@@ -13,6 +13,7 @@
 #include <craps/Dice.h>
 #include <craps/BankStats.h>
 #include <craps/RollStats.h>
+#include <craps/SessionHistory.h>
 #include <controller/Globals.h>
 #include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
@@ -29,10 +30,10 @@ public:
 
     /// @name Modifiers
     /// @{
-    void recordWin (const CrapsBetIntfc& bet, Gbl::Money amtWin);
-    void recordLose(const CrapsBetIntfc& bet, Gbl::Money amtLose);
-    void recordKeep(const CrapsBetIntfc& bet);
-    void recordDiceRoll(unsigned point, const Dice& curRoll);
+    void recordWin       (const CrapsBetIntfc& bet, Gbl::Money amtWin);
+    void recordLose      (const CrapsBetIntfc& bet, Gbl::Money amtLose);
+    void recordKeep      (const CrapsBetIntfc& bet);
+    void recordDiceRoll  (unsigned point, const Dice& curRoll);
     void recordWithdrawal(Gbl::Money amount);
     void recordDeposit   (Gbl::Money amount);
     void recordRefill    (Gbl::Money amount);
@@ -51,13 +52,10 @@ public:
 
     // All these saved and read from TableStats file.
     std::string      tableId;
-    unsigned         numSessions = 0;
-    Gen::Timepoint   lastSessionDate;
-    Gen::Timepoint::Duration lastSessionDuration;
-    Gen::Timepoint::Duration maxSessionDuration;
-    BetStats         betStats;     // Betting Stats
-    RollStats        rollStats;    // Dice Roll Stats
-    BankStats        moneyStats;   // Money Stats
+    BetStats         betStats;
+    RollStats        rollStats;
+    BankStats        moneyStats;
+    SessionHistory   sessionHistory;
 
     // These not saved to TableStats file.
     std::deque<Dice> recentRolls;  // Roll history. Front element is oldest roll

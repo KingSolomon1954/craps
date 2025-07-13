@@ -11,8 +11,43 @@
 #include <iostream>
 #include <stdexcept>
 #include <gen/Logger.h>
+#include <craps/CrapsTable.h>
+#include <craps/TableStats.h>
+#include <gen/Debug.h>
 
 using namespace Craps;
+
+//----------------------------------------------------------------
+
+unsigned
+SessionHistory::getNumSessionsAlltime() const
+{
+    return numSessionsAlltime_;
+}
+
+//----------------------------------------------------------------
+
+Gen::Timepoint
+SessionHistory::getCurSessionStartTime() const
+{
+    return curSessionStartTime_;
+}
+
+//----------------------------------------------------------------
+
+Gen::Timepoint
+SessionHistory::getFirstSessionDate() const
+{
+    return firstSessionDate_;
+}
+
+//----------------------------------------------------------------
+
+Gen::Timepoint::Duration
+SessionHistory::getLongestSessionAlltime() const
+{
+    return longestSessionAlltime_;
+}
 
 //----------------------------------------------------------------
 
@@ -22,64 +57,29 @@ SessionHistory::getSessionHistory() const
     return sessions_;
 }
 
-//----------------------------------------------------------------
-//
-// Creates and appends a new summary record to SessionHistory.
-// This is meant to be called before saving the history file.
-//
-void
-SessionHistory::addNewSummary(
-    unsigned numPlayers,
-    Gbl::Money amtDeposited,
-    Gbl::Money amtWithdrawn,
-    const std::string& sessionStartStr,
-    Gen::Timepoint::Duration duration)
-{
-    Summary sum;
-    sum.amtIntake = amtDeposited;
-    sum.amtPayout = amtWithdrawn;
-    sum.duration  = duration;
-    Gen::Timepoint tp(sessionStartStr);
-    sum.date      = tp;
-}
-
-//----------------------------------------------------------------
-
-void
-SessionHistory::saveFile(const std::string& dir,
-                         const std::string& tableId) const
-{
-    namespace fs = std::filesystem;
-    fs::path path = fs::path(dir) / ("SessionHistory-" + tableId + ".yaml");
-    LOG_DEBUG(lgr, "SessionHistory::saveFile(" + path.string()  + ")");
-    std::ofstream fout(path);
-    fout << toYAML();
-}
-
 //-----------------------------------------------------------------
-
+//
+// Creates and writes new entry for current session.
+//
+// Call this before saving to file as program is known to be exiting.
+// 
 void
-SessionHistory::loadFile(const std::string& dir,
-                         const std::string& tableId)
+SessionHistory::addNewSummary()
 {
-    namespace fs = std::filesystem;
+DOUT("Howie 0.1 size of sessions_" << sessions_.size());        
+    const TableStats& ts = Gbl::pTable->getTableStats();
+    Summary sum;
+    sum.numBets    = ts.betStats.totNumBetsAllBets;
+    sum.amtIntake  = ts.moneyStats.amtDeposited;
+    sum.amtPayout  = ts.moneyStats.amtWithdrawn;
+    sum.numPlayers = Gbl::pTable->getNumPlayers();
+    sum.date       = curSessionStartTime_;
+    sum.duration   = curSessionStartTime_.sinceNow();
+    sessions_.push_back(std::move(sum));
+    
+DOUT("Howie 0.2 size of sessions_" << sessions_.size());        
 
-    fs::path path = fs::path(dir) / ("SessionHistory-" + tableId + ".yaml");
-
-    if (!fs::exists(path))
-    {
-        throw std::runtime_error("SessionHistory::loadFile() file does not exist: " + path.string());
-    }
-
-    std::ifstream fin(path);
-    if (!fin.is_open())
-    {
-        throw std::runtime_error("SessionHistory::loadFile() Failed to open YAML file: " + path.string());
-    }
-
-    YAML::Node root = YAML::Load(fin);
-    fromYAML(root);
-
+    longestSessionAlltime_ = std::max(sum.duration, longestSessionAlltime_);
 }
 
 //-----------------------------------------------------------------
@@ -102,19 +102,34 @@ SessionHistory::Summary::toYAML() const
 void
 SessionHistory::Summary::fromYAML(const YAML::Node& node)
 {
-    if (node["numBets"])    numBets    = node["numBets"].as<unsigned>();
-    if (node["amtIntake"])  amtIntake  = node["amtIntake"].as<unsigned>();
-    if (node["amtPayout"])  amtPayout  = node["amtPayout"].as<unsigned>();
-    if (node["numPlayers"]) numPlayers = node["numPlayers"].as<unsigned>();
-    if (node["date"])
+    date        = Gen::Timepoint(node["date"].as<std::string>());
+    duration    = Gen::Timepoint::parseDurationWithDays(node["duration"].as<std::string>());
+    numBets     = node["numBets"].as<unsigned>(0);
+    numPlayers  = node["numPlayers"].as<unsigned>(0);
+    amtIntake   = node["amtIntake"].as<Gbl::Money>(0);
+    amtPayout   = node["amtPayout"].as<Gbl::Money>(0);
+}
+
+//-----------------------------------------------------------------
+
+void
+SessionHistory::fromYAML(const YAML::Node& node)
+{
+    sessions_.clear();
+
+    numSessionsAlltime_     = node["numSessionsAlltime"].as<unsigned>(0);
+    firstSessionDate_       = Gen::Timepoint(node["firstSessionDate"].as<std::string>());
+    longestSessionAlltime_  = Gen::Timepoint::parseDurationWithDays(node["longestSessionAlltime"].as<std::string>());
+
+    const YAML::Node& hist = node["history"];
+    if (hist && hist.IsSequence())
     {
-        std::string s = node["date"].as<std::string>();
-        date = Gen::Timepoint::parseDurationWithDays(s);
-    }
-    if (node["duration"])
-    {
-        std::string s = node["duration"].as<std::string>();
-        duration = Gen::Timepoint::parseDurationWithDays(s);
+        for (const auto& entry : hist)
+        {
+            Summary s;
+            s.fromYAML(entry);
+            sessions_.push_back(std::move(s));
+        }
     }
 }
 
@@ -124,33 +139,21 @@ YAML::Node
 SessionHistory::toYAML() const
 {
     YAML::Node node;
-    for (const auto& session : sessions_)
+
+    node["numSessionsAlltime"]    = numSessionsAlltime_ + 1;
+    node["firstSessionDate"]      = firstSessionDate_.toString();
+    node["longestSessionAlltime"] = Gen::Timepoint::formatDurationWithDays(longestSessionAlltime_);
+
+DOUT("Howie 1 size of sessions_" << sessions_.size());        
+    YAML::Node hist;
+    for (const auto& s : sessions_)
     {
-        node.push_back(session.toYAML());
+DOUT("Howie 2");        
+        hist.push_back(s.toYAML());
     }
+
+    node["history"] = hist;
     return node;
 }
 
 //-----------------------------------------------------------------
-//
-// Repeatedly read summary records from file
-//
-void
-SessionHistory::fromYAML(const YAML::Node& node)
-{
-    sessions_.clear();
-
-    if (!node || !node.IsSequence())
-    {
-        throw std::runtime_error("SessionHistory::fromYAML: Expected a YAML sequence");
-    }
-
-    for (const auto& entry : node)
-    {
-        SessionHistory::Summary summary;
-        summary.fromYAML(entry);
-        sessions_.push_back(std::move(summary));
-    }
-}
-
-//----------------------------------------------------------------

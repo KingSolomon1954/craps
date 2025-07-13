@@ -25,27 +25,34 @@ public:
         unsigned numPlayers  = 0;
         Gen::Timepoint date; 
         Gen::Timepoint::Duration duration;
-        
         YAML::Node toYAML() const;
         void fromYAML(const YAML::Node& node);
+        bool operator==(const Summary&) const = default;  // Only generates ==
     };
 
+    // Oldest summary in first position. Most recent summary in last.
     using Sessions = std::vector<Summary>;
 
-    void addNewSummary(unsigned numPlayers,
-                       Gbl::Money amtDeposited,
-                       Gbl::Money amtWithdrawn,
-                       const std::string& sessionStartStr,
-                       Gen::Timepoint::Duration duration);
-    void saveFile(const std::string& dir, const std::string& tableId) const;
-    void loadFile(const std::string& dir, const std::string& tableId);
-    const Sessions& getSessionHistory() const;
+    // Getters
+    unsigned                 getNumSessionsAlltime()    const;
+    Gen::Timepoint           getFirstSessionDate()      const;
+    Gen::Timepoint::Duration getLongestSessionAlltime() const;
+    Gen::Timepoint           getCurSessionStartTime()   const;
+    const Sessions&          getSessionHistory()        const;
+
+    void addNewSummary();
     
-private:
-    Sessions sessions_;
-    
+    // YAML operations
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
+    bool operator==(const SessionHistory&) const = default;  // Only generates ==
+    
+private:
+    unsigned numSessionsAlltime_ = 0;
+    Gen::Timepoint curSessionStartTime_;
+    Gen::Timepoint firstSessionDate_;
+    Gen::Timepoint::Duration longestSessionAlltime_;
+    Sessions sessions_;
 };
 
 /*-----------------------------------------------------------*//**
@@ -57,8 +64,8 @@ private:
 Goal is to make possible a user display similar to this:
 
 @code
-Session History
----------------
+Las Vegas Table Session History   or Lefty the Gambler Session History
+-------------------------------      ---------------------------------
 
 Date                Duration    Bets   Intake   Payout  Balance Players
 -----------------   ----------- ------ -------- ------- ------- -------

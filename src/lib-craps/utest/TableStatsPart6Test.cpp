@@ -46,12 +46,6 @@ TEST_CASE("TableStats:savefile")
 //  ts2.tableId = "LasVegas";    // Restore original name
     CHECK(ts2.betStats.totNumBetsAllBets == 999);
     CHECK(ts2.rollStats.numberCounts[10].count_ == 998);
-
-    // Force session timestamps to agree.
-    Gen::Timepoint mark;
-    ts.lastSessionDate = mark;
-    ts2.lastSessionDate = mark;
-
     CHECK(ts == ts2);
 }
 
