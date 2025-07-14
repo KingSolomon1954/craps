@@ -9,7 +9,7 @@
 #pragma once
 
 #include <map>
-#include <controller/Globals.h>
+#include <gen/MoneyType.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Craps {
@@ -18,8 +18,8 @@ struct BetStat
 {
     unsigned count = 0;
     unsigned totDistance = 0;
-    Gbl::Money amount;
-    Gbl::Money amountBet;
+    Gen::Money amount;
+    Gen::Money amountBet;
     void reset();
     void merge(const BetStat& session);
     YAML::Node toYAML() const;
@@ -53,9 +53,9 @@ struct NumBets
 
 struct AmtBets
 {
-    Gbl::Money current = 0;
-    Gbl::Money max     = 0;
-    Gbl::Money total   = 0;
+    Gen::Money current = 0;
+    Gen::Money max     = 0;
+    Gen::Money total   = 0;
     void reset();
     void merge(const AmtBets& session);
     YAML::Node toYAML() const;
@@ -77,15 +77,15 @@ public:
     unsigned totNumLoseAllBets = 0;
     unsigned totNumKeepAllBets = 0;
 
-    Gbl::Money totAmtAllBets     = 0;
-    Gbl::Money totAmtWinsAllBets = 0;
-    Gbl::Money totAmtLoseAllBets = 0;
-    Gbl::Money totAmtKeepAllBets = 0;
+    Gen::Money totAmtAllBets     = 0;
+    Gen::Money totAmtWinsAllBets = 0;
+    Gen::Money totAmtLoseAllBets = 0;
+    Gen::Money totAmtKeepAllBets = 0;
 
-    Gbl::Money maxAmtBetOneBet  = 0;
-    Gbl::Money maxAmtWinOneBet  = 0;
-    Gbl::Money maxAmtLoseOneBet = 0;
-    Gbl::Money maxAmtKeepOneBet = 0;
+    Gen::Money maxAmtBetOneBet  = 0;
+    Gen::Money maxAmtWinOneBet  = 0;
+    Gen::Money maxAmtLoseOneBet = 0;
+    Gen::Money maxAmtKeepOneBet = 0;
 
     NumBets numBetsOneRoll;
     NumBets numBetsWinOneRoll;

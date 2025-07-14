@@ -11,8 +11,8 @@
 #include <string>
 #include <unordered_set>
 #include <craps/CrapsBetIntfc.h>
-#include <controller/Globals.h>
 #include <craps/OddsTables.h>
+#include <gen/MoneyType.h>
 #include <gen/ReturnCode.h>
 
 namespace Gen {
@@ -30,7 +30,7 @@ public:
     /// @name Lifecycle
     /// @{
     CrapsBet(const Gen::Uuid& playerId, BetName name,
-             Gbl::Money contractAmount, unsigned pivot = 0);
+             Gen::Money contractAmount, unsigned pivot = 0);
     /// @}
 
     /// @name Modifiers
@@ -40,8 +40,8 @@ public:
     void setHardwayOff()     override;  // intfc
     void setHardwayOn()      override;  // intfc
     
-    Gen::ReturnCode setContractAmount(Gbl::Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount    (Gbl::Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setContractAmount(Gen::Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount    (Gen::Money amount, Gen::ErrorPass& ep);
     
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
@@ -126,8 +126,8 @@ private:
     unsigned betId_ = 0;
     BetName betName_ = BetName::Invalid;
     unsigned pivot_ = 0;
-    Gbl::Money contractAmount_ = 0;
-    Gbl::Money oddsAmount_ = 0;
+    Gen::Money contractAmount_ = 0;
+    Gen::Money oddsAmount_ = 0;
     bool offComeOutRoll_ = true;
     unsigned distance_ = 0;  // num rolls until decision
     Gen::Timepoint whenCreated_;

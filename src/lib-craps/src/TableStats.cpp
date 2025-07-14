@@ -14,6 +14,7 @@
 #include <craps/EnumBetName.h>
 #include <gen/Debug.h>
 #include <gen/Logger.h>
+#include <controller/Globals.h>
 
 using namespace Craps;
 
@@ -500,7 +501,7 @@ Record a winning bet.
 
 */
 void
-TableStats::recordWin(const CrapsBetIntfc& bet, Gbl::Money amtWin)
+TableStats::recordWin(const CrapsBetIntfc& bet, Gen::Money amtWin)
 {
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
@@ -535,7 +536,7 @@ Record a losing bet.
 
 */
 void
-TableStats::recordLose(const CrapsBetIntfc& bet, Gbl::Money amtLose)
+TableStats::recordLose(const CrapsBetIntfc& bet, Gen::Money amtLose)
 {
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
@@ -600,7 +601,7 @@ TableStats::recordKeep(const CrapsBetIntfc& bet)
 // Helper function to update common stats between recordWin/Lose/Keep
 //
 void
-TableStats::recordCommon(Gbl::Money amtBet)
+TableStats::recordCommon(Gen::Money amtBet)
 {
     betStats.numBetsOneRoll.total++;
     betStats.numBetsOneRoll.current++;
@@ -613,7 +614,7 @@ TableStats::recordCommon(Gbl::Money amtBet)
 //-----------------------------------------------------------------
 
 void
-TableStats::recordDeposit(Gbl::Money amount)
+TableStats::recordDeposit(Gen::Money amount)
 {
     moneyStats.amtWithdrawn += amount;
     moneyStats.numWithdrawals++;
@@ -622,7 +623,7 @@ TableStats::recordDeposit(Gbl::Money amount)
 //-----------------------------------------------------------------
 
 void
-TableStats::recordWithdrawal(Gbl::Money amount)
+TableStats::recordWithdrawal(Gen::Money amount)
 {
     moneyStats.amtWithdrawn += amount;
     moneyStats.numWithdrawals++;
@@ -631,7 +632,7 @@ TableStats::recordWithdrawal(Gbl::Money amount)
 //-----------------------------------------------------------------
 
 void
-TableStats::recordRefill(Gbl::Money amount)
+TableStats::recordRefill(Gen::Money amount)
 {
     moneyStats.amtRefilled += amount;
     moneyStats.numRefills++;

@@ -10,10 +10,8 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
-#include <gen/Logger.h>
-#include <craps/CrapsTable.h>
-#include <craps/TableStats.h>
 #include <gen/Debug.h>
+#include <gen/Logger.h>
 
 using namespace Craps;
 
@@ -52,7 +50,7 @@ SessionHistory::getLongestSessionAlltime() const
 //----------------------------------------------------------------
 
 const SessionHistory::Sessions&
-SessionHistory::getSessionHistory() const
+SessionHistory::getSessions() const
 {
     return sessions_;
 }
@@ -64,14 +62,17 @@ SessionHistory::getSessionHistory() const
 // Call this before saving to file as program is known to be exiting.
 // 
 void
-SessionHistory::addNewSummary()
+SessionHistory::addSessionSummary(
+    unsigned numPlayers,
+    unsigned numBets,
+    Gen::Money amtDeposited,
+    Gen::Money amtWithdrawn)
 {
-    const TableStats& ts = Gbl::pTable->getTableStats();
     Summary sum;
-    sum.numBets    = ts.betStats.totNumBetsAllBets;
-    sum.amtIntake  = ts.moneyStats.amtDeposited;
-    sum.amtPayout  = ts.moneyStats.amtWithdrawn;
-    sum.numPlayers = Gbl::pTable->getNumPlayers();
+    sum.numPlayers = numPlayers;
+    sum.numBets    = numBets;
+    sum.amtIntake  = amtDeposited;
+    sum.amtPayout  = amtWithdrawn;
     sum.date       = curSessionStartTime_;
     sum.duration   = curSessionStartTime_.sinceNow();
     sessions_.push_back(std::move(sum));
@@ -103,8 +104,8 @@ SessionHistory::Summary::fromYAML(const YAML::Node& node)
     duration    = Gen::Timepoint::parseDurationWithDays(node["duration"].as<std::string>());
     numBets     = node["numBets"].as<unsigned>(0);
     numPlayers  = node["numPlayers"].as<unsigned>(0);
-    amtIntake   = node["amtIntake"].as<Gbl::Money>(0);
-    amtPayout   = node["amtPayout"].as<Gbl::Money>(0);
+    amtIntake   = node["amtIntake"].as<Gen::Money>(0);
+    amtPayout   = node["amtPayout"].as<Gen::Money>(0);
 }
 
 //-----------------------------------------------------------------

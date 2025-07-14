@@ -69,7 +69,7 @@ CrapsTable::fromFile(const TableId& tableId)
     ct->alltimeStats_.loadFile(dir);
 
     // Starting table balance picks up where we left off.
-    Gbl::Money startingBalance =
+    Gen::Money startingBalance =
         ct->alltimeStats_.moneyStats.initialStartingBalance +
         ct->alltimeStats_.moneyStats.amtDeposited           +
         ct->alltimeStats_.moneyStats.amtRefilled            -
@@ -136,7 +136,7 @@ CrapsTable::BetIntfcPtr
 CrapsTable::addBet(
     const Gen::Uuid& playerId,
     BetName betName,
-    Gbl::Money contractAmount,
+    Gen::Money contractAmount,
     unsigned pivot,
     Gen::ErrorPass& ep)
 {
@@ -553,7 +553,7 @@ CrapsTable::disburseHouseResults()
         if (r.win > 0)  // player wins, house loses
         {
             tableStats_.recordWithdrawal(r.win);
-            Gbl::Money amtRefill = houseBank_.withdraw(r.win);
+            Gen::Money amtRefill = houseBank_.withdraw(r.win);
             if (amtRefill > 0)
             {
                 tableStats_.recordRefill(amtRefill);
@@ -821,7 +821,7 @@ CrapsTable::getNumBetsOnTable() const
 //
 // Returns the amount of money currently bet on the table.
 //
-Gbl::Money
+Gen::Money
 CrapsTable::getAmountOnTable() const
 {
     unsigned amount = 0;
@@ -890,8 +890,14 @@ CrapsTable::isBettingOpen() const
 void
 CrapsTable::prepareForShutdown()
 {
-    // Create entry for today's session.
-    alltimeStats_.sessionHistory.addNewSummary();
+    // Create entry for today's session. CrapsTable is the only class
+    // with visibility to players, current tableStats_ and alltimeStats_.
+    //
+    alltimeStats_.sessionHistory.addSessionSummary(
+        players_.size(),
+        tableStats_.betStats.totNumBetsAllBets,
+        tableStats_.moneyStats.amtDeposited,
+        tableStats_.moneyStats.amtWithdrawn);
     
     // Merge alltime stats with today's session, then save.
     alltimeStats_.merge(tableStats_);

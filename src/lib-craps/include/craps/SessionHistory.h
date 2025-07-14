@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <yaml-cpp/yaml.h>
-#include <controller/Globals.h>
+#include <gen/MoneyType.h>
 #include <gen/Timepoint.h>
 
 namespace Craps {
@@ -19,10 +19,10 @@ class SessionHistory
 public:
     struct Summary
     {
-        unsigned numBets     = 0;
-        Gbl::Money amtIntake = 0;
-        Gbl::Money amtPayout = 0;
         unsigned numPlayers  = 0;
+        unsigned numBets     = 0;
+        Gen::Money amtIntake = 0;
+        Gen::Money amtPayout = 0;
         Gen::Timepoint date; 
         Gen::Timepoint::Duration duration;
         YAML::Node toYAML() const;
@@ -38,9 +38,13 @@ public:
     Gen::Timepoint           getFirstSessionDate()      const;
     Gen::Timepoint::Duration getLongestSessionAlltime() const;
     Gen::Timepoint           getCurSessionStartTime()   const;
-    const Sessions&          getSessionHistory()        const;
+    const Sessions&          getSessions()              const;
 
-    void addNewSummary();
+    void addSessionSummary(
+        unsigned numPlayers,
+        unsigned numBets,
+        Gen::Money amtDeposited,
+        Gen::Money amtWithdrawn);
     
     // YAML operations
     YAML::Node toYAML() const;
@@ -51,7 +55,7 @@ private:
     unsigned numSessionsAlltime_ = 0;
     Gen::Timepoint curSessionStartTime_;
     Gen::Timepoint firstSessionDate_;
-    Gen::Timepoint::Duration longestSessionAlltime_;
+    Gen::Timepoint::Duration longestSessionAlltime_ = std::chrono::seconds::zero();
     Sessions sessions_;
 };
 

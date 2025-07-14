@@ -80,7 +80,7 @@ CrapsTable, allowing the application better freedom of design.
 CrapsBet::CrapsBet(
     const Gen::Uuid& playerId,
     BetName name,
-    Gbl::Money contractAmount,
+    Gen::Money contractAmount,
     unsigned pivot)
     : playerId_(playerId)
     , betId_(++idCounter_)
@@ -193,7 +193,7 @@ Sets the contract bet to the new amount.
 
 */
 Gen::ReturnCode
-CrapsBet::setContractAmount(Gbl::Money amount, Gen::ErrorPass& ep)
+CrapsBet::setContractAmount(Gen::Money amount, Gen::ErrorPass& ep)
 {
     if (amount == 0)
     {
@@ -256,7 +256,7 @@ amount of the contract bet.
 */
 
 Gen::ReturnCode
-CrapsBet::setOddsAmount(Gbl::Money newAmount, Gen::ErrorPass& ep)
+CrapsBet::setOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
 {
     if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
         betName_ != BetName::Come     && betName_ != BetName::DontCome)

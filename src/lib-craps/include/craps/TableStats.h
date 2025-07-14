@@ -14,7 +14,7 @@
 #include <craps/BankStats.h>
 #include <craps/RollStats.h>
 #include <craps/SessionHistory.h>
-#include <controller/Globals.h>
+#include <gen/MoneyType.h>
 #include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
 
@@ -30,13 +30,13 @@ public:
 
     /// @name Modifiers
     /// @{
-    void recordWin       (const CrapsBetIntfc& bet, Gbl::Money amtWin);
-    void recordLose      (const CrapsBetIntfc& bet, Gbl::Money amtLose);
+    void recordWin       (const CrapsBetIntfc& bet, Gen::Money amtWin);
+    void recordLose      (const CrapsBetIntfc& bet, Gen::Money amtLose);
     void recordKeep      (const CrapsBetIntfc& bet);
     void recordDiceRoll  (unsigned point, const Dice& curRoll);
-    void recordWithdrawal(Gbl::Money amount);
-    void recordDeposit   (Gbl::Money amount);
-    void recordRefill    (Gbl::Money amount);
+    void recordWithdrawal(Gen::Money amount);
+    void recordDeposit   (Gen::Money amount);
+    void recordRefill    (Gen::Money amount);
     void setRollHistorySize(size_t rollHistorySize);
     void merge(const TableStats& session);
     void saveFile(const std::string& dir) const;
@@ -93,7 +93,7 @@ private:
     void update11(unsigned point);
     void update12(unsigned point);
     void updatePointRoll(unsigned point, unsigned roll);
-    void recordCommon(Gbl::Money amtBet);
+    void recordCommon(Gen::Money amtBet);
 
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);

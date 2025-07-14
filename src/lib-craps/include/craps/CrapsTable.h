@@ -10,6 +10,7 @@
 #include <list>
 #include <memory>
 #include <gen/ErrorPass.h>
+#include <gen/MoneyType.h>
 #include <gen/ReturnCode.h>
 #include <gen/Uuid.h>
 #include <craps/Bank.h>
@@ -49,12 +50,12 @@ public:
     using BetIntfcPtr = std::shared_ptr<class CrapsBetIntfc>;
     BetIntfcPtr addBet(const Gen::Uuid& playerId,
                        BetName betName,
-                       Gbl::Money contractAmount,
+                       Gen::Money contractAmount,
                        unsigned pivot,
                        Gen::ErrorPass& ep);
     Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOdds         (BetIntfcPtr bet, Gbl::Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOdds         (BetIntfcPtr bet, Gen::Money amount, Gen::ErrorPass& ep);
 
     void rollDice();
     void testRollDice(unsigned d1, unsigned d2);
@@ -72,7 +73,7 @@ public:
     Dice getCurRoll()                          const;
     bool isComeOutRoll()                       const;
     bool isBettingOpen()                       const;
-    Gbl::Money getAmountOnTable()              const;
+    Gen::Money getAmountOnTable()              const;
     unsigned getNumBetsOnTable()               const;
     const TableStats& getTableStats()          const;
     const TableStats& getAlltimeStats()        const;
