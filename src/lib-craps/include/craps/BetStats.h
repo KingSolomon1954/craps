@@ -29,6 +29,7 @@ struct BetStat
 
 struct BetTypeStats
 {
+    BetTypeStats();
     std::map<std::string, BetStat> wins;
     std::map<std::string, BetStat> lose;
     void reset();
