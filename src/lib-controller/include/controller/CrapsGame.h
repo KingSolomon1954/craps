@@ -8,7 +8,6 @@
 
 namespace Gen {
     class BuildInfo;  // fwd
-    class Logger;     // fwd
 }
 
 namespace Craps {
@@ -44,7 +43,6 @@ public:
 
 private:
     Gen::BuildInfo*        initBuildInfo();
-    Gen::Logger*           initLogger();
     Ctrl::ConfigManager*   initConfigManager(int argc, char* argv[]);
     Ctrl::EventManager*    initEventManager();
     Ctrl::TableManager*    initTableManager();

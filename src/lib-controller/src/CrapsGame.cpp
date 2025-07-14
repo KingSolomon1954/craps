@@ -34,10 +34,9 @@ Constructor
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
-    std::unique_ptr<Gen::Logger>          pLogger(initLogger());               (void) pLogger;
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
     std::unique_ptr<Ctrl::ConfigManager>  pCfg(initConfigManager(argc, argv)); (void) pCfg;
-    enableFileLogging();
+    enableFileLogging();                  // Only after config manager.
     std::unique_ptr<Ctrl::EventManager>   pEventMgr(initEventManager());       (void) pEventMgr;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Craps::CrapsTable>    pTable(initCrapsTable());            (void) pTable;
@@ -53,40 +52,33 @@ CrapsGame::CrapsGame(int argc, char* argv[])
 
 //----------------------------------------------------------------
 
-Gen::Logger*
-CrapsGame::initLogger()
-{
-    auto p = new Gen::Logger();
-    Gbl::pLogger = p;
-    return p;
-}
-
-//----------------------------------------------------------------
-
 void
 CrapsGame::enableFileLogging()
 {
+    assert(Gbl::pConfigMgr != nullptr);
+    
     // Setup log file name.
     std::string d = Gbl::pConfigMgr->getString(ConfigManager::KeyDirsUsrLog).value();
     std::string f = "/" + Gbl::appNameExec + ".log";
-    // After this, all logging will be seen only in file.
-    Gbl::pLogger->setOutputFile(d + f);
+    
+    // After next statement, all logging will be seen only in file.
+    Gen::Logger::instance().setOutputFile(d + f);
 
     // Set up logging filters IAW config.
     bool debug = Gbl::pConfigMgr->getBool(ConfigManager::KeyDebugLogging).value();
     if (!debug)
     {
-        Gbl::pLogger->setDebugLevel(false);
+        Gen::Logger::instance().setDebugLevel(false);
     }
     
     bool trace = Gbl::pConfigMgr->getBool(ConfigManager::KeyTraceLogging).value();
     if (trace)
     {
-        Gbl::pLogger->setTraceLevel(true);
+        Gen::Logger::instance().setTraceLevel(true);
     }
 
     // First logging entry in file.
-    Gbl::pLogger->logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
+    Gen::Logger::instance().logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
 }
 
 //----------------------------------------------------------------

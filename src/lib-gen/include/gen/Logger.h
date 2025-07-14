@@ -15,6 +15,8 @@ namespace Gen {
 class Logger
 {
 public:
+    static Logger& instance();
+    
     void setOutputFile(const std::string& filename);
     void logDebug(const std::string& msg);
     void logTrace(const std::string& msg);
@@ -49,13 +51,16 @@ private:
 
 // Compile time toggling of debug and trace logging.
 #ifdef DEBUG
-#define LOG_DEBUG(logger, msg) logger.logDebug(msg);
-#define LOG_TRACE(logger, msg) logger.logTrace(msg);
+#define LOG_DEBUG(msg) Gen::Logger::instance().logDebug(msg);
+#define LOG_TRACE(msg) Gen::Logger::instance().logTrace(msg);
 #else
-#define LOG_DEBUG(logger, msg) do {} while(0)
-#define LOG_TRACE(logger, msg) do {} while(0)
+#define LOG_DEBUG(msg) do {} while(0)
+#define LOG_TRACE(msg) do {} while(0)
 #endif
 
+// #define LOG_DEBUG(logger, msg) logger.logDebug(msg);
+
+    
 } // namespace Gen
 
 //----------------------------------------------------------------

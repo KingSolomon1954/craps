@@ -13,6 +13,15 @@ using namespace Gen;
 
 //----------------------------------------------------------------
 
+Logger&
+Logger::instance()
+{
+    static Logger instance;
+    return instance;
+}
+
+//----------------------------------------------------------------
+
 void
 Logger::setOutputFile(const std::string& filename)
 {

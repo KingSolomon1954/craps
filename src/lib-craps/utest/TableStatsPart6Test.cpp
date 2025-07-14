@@ -6,8 +6,6 @@
 
 #include <doctest/doctest.h>
 #include <filesystem>
-#include <controller/Globals.h>
-#include <gen/Logger.h>
 
 #define private public
 #define protected public
@@ -24,9 +22,6 @@ using namespace Craps;
 TEST_CASE("TableStats:savefile")
 {
     namespace fs = std::filesystem;
-    Gen::Logger log;
-    Gbl::pLogger = &log;
-
     TableStats ts("LasVegas");
 
     // Set a stat or two in there to something non zero.

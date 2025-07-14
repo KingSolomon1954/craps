@@ -14,7 +14,6 @@
 #include <craps/EnumBetName.h>
 #include <gen/Debug.h>
 #include <gen/Logger.h>
-#include <controller/Globals.h>
 
 using namespace Craps;
 
@@ -722,7 +721,7 @@ TableStats::saveFile(const std::string& dir) const
 {
     namespace fs = std::filesystem;
     fs::path path = fs::path(dir) / ("TableStats-" + tableId + ".yaml");
-    LOG_DEBUG(lgr, "TableStats::saveFile(" + path.string()  + ")");
+    LOG_DEBUG("TableStats::saveFile(" + path.string()  + ")");
     std::ofstream fout(path);
     fout << toYAML();
 }

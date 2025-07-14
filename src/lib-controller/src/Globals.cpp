@@ -14,10 +14,8 @@
 #include <controller/ViewIntfc.h>
 #include <craps/CrapsTable.h>
 #include <gen/BuildInfo.h>
-#include <gen/Logger.h>
 
 Gen::BuildInfo*        Gbl::pBuildInfo = nullptr;
-Gen::Logger*           Gbl::pLogger    = nullptr;
 Ctrl::ConfigManager*   Gbl::pConfigMgr = nullptr;
 Craps::CrapsTable*     Gbl::pTable     = nullptr;
 Ctrl::EventLoop*       Gbl::pEventLoop = nullptr;
