@@ -891,7 +891,7 @@ void
 CrapsTable::prepareForShutdown()
 {
     // Create entry for today's session.
-    tableStats_.sessionHistory.addNewSummary();
+    alltimeStats_.sessionHistory.addNewSummary();
     
     // Merge alltime stats with today's session, then save.
     alltimeStats_.merge(tableStats_);

@@ -66,7 +66,6 @@ SessionHistory::getSessionHistory() const
 void
 SessionHistory::addNewSummary()
 {
-DOUT("Howie 0.1 size of sessions_" << sessions_.size());        
     const TableStats& ts = Gbl::pTable->getTableStats();
     Summary sum;
     sum.numBets    = ts.betStats.totNumBetsAllBets;
@@ -77,8 +76,6 @@ DOUT("Howie 0.1 size of sessions_" << sessions_.size());
     sum.duration   = curSessionStartTime_.sinceNow();
     sessions_.push_back(std::move(sum));
     
-DOUT("Howie 0.2 size of sessions_" << sessions_.size());        
-
     longestSessionAlltime_ = std::max(sum.duration, longestSessionAlltime_);
 }
 
@@ -144,11 +141,9 @@ SessionHistory::toYAML() const
     node["firstSessionDate"]      = firstSessionDate_.toString();
     node["longestSessionAlltime"] = Gen::Timepoint::formatDurationWithDays(longestSessionAlltime_);
 
-DOUT("Howie 1 size of sessions_" << sessions_.size());        
     YAML::Node hist;
     for (const auto& s : sessions_)
     {
-DOUT("Howie 2");        
         hist.push_back(s.toYAML());
     }
 

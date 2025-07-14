@@ -120,28 +120,22 @@ BetTypeStats::fromYAML(const YAML::Node& node)
     wins.clear();
     lose.clear();
 
-    if (node["wins"])
+    const YAML::Node& winsNode = node["wins"];
+    for (auto it = winsNode.begin(); it != winsNode.end(); ++it)
     {
-        const YAML::Node& winsNode = node["wins"];
-        for (auto it = winsNode.begin(); it != winsNode.end(); ++it)
-        {
-            std::string key = it->first.as<std::string>();
-            BetStat stat;
-            stat.fromYAML(it->second);
-            wins[key] = stat;
-        }
+        std::string key = it->first.as<std::string>();
+        BetStat stat;
+        stat.fromYAML(it->second);
+        wins[key] = stat;
     }
 
-    if (node["lose"])
+    const YAML::Node& loseNode = node["lose"];
+    for (auto it = loseNode.begin(); it != loseNode.end(); ++it)
     {
-        const YAML::Node& loseNode = node["lose"];
-        for (auto it = loseNode.begin(); it != loseNode.end(); ++it)
-        {
-            std::string key = it->first.as<std::string>();
-            BetStat stat;
-            stat.fromYAML(it->second);
-            lose[key] = stat;
-        }
+        std::string key = it->first.as<std::string>();
+        BetStat stat;
+        stat.fromYAML(it->second);
+        lose[key] = stat;
     }
 }
 
