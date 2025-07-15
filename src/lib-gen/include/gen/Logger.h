@@ -57,9 +57,6 @@ private:
 #define LOG_DEBUG(msg) do {} while(0)
 #define LOG_TRACE(msg) do {} while(0)
 #endif
-
-// #define LOG_DEBUG(logger, msg) logger.logDebug(msg);
-
     
 } // namespace Gen
 

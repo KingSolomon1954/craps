@@ -6,11 +6,13 @@
 
 find_package(Boost REQUIRED COMPONENTS asio)
 find_package(rang REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 add_library(gen STATIC
     src/BuildInfo.cpp
     src/ErrorPass.cpp
     src/Logger.cpp
+    src/Money.cpp
     src/MultiLayerConfig.cpp
     src/StringUtils.cpp
     src/TimerManager.cpp
@@ -28,6 +30,7 @@ target_include_directories(gen
 target_link_libraries(gen
     PRIVATE boost::boost
     PUBLIC rang::rang
+    PUBLIC yaml-cpp::yaml-cpp
 )
 
 target_compile_definitions(gen
