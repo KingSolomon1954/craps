@@ -13,6 +13,7 @@ add_library(gen STATIC
     src/ErrorPass.cpp
     src/Logger.cpp
     src/Money.cpp
+    src/MoneyUtil.cpp
     src/MultiLayerConfig.cpp
     src/StringUtils.cpp
     src/TimerManager.cpp
