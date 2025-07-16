@@ -429,8 +429,8 @@ TEST_CASE("CrapsTable:roll dice")
         CHECK(john->joinTable(ep) == Gen::ReturnCode::Success);
         CHECK(jane->joinTable(ep) == Gen::ReturnCode::Success);
         CHECK(t->getNumPlayers() == 2);
-        Gbl::Money johnBalance = john->getBalance();
-        Gbl::Money janeBalance = jane->getBalance();
+        Gen::Money johnBalance = john->getBalance();
+        Gen::Money janeBalance = jane->getBalance();
 
         // come out roll, roll a 7, pass line win, dont pass lose
         CHECK(john->makeBet(BetName::PassLine, 10, 0, ep) == Gen::ReturnCode::Success);

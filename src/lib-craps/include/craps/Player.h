@@ -10,13 +10,12 @@
 #include <memory>
 #include <list>
 #include <nlohmann/json.hpp>
-#include <controller/Globals.h>
-#include "controller/Events.h"
-#include "craps/Bank.h"
-#include "craps/EnumBetName.h"
-// #include "gen/ErrorPass.h"
-#include "gen/ReturnCode.h"
-#include "gen/Uuid.h"
+#include <controller/Events.h>
+#include <craps/Bank.h>
+#include <craps/EnumBetName.h>
+#include <gen/ReturnCode.h>
+#include <gen/MoneyUtil.h>
+#include <gen/Uuid.h>
 
 using json = nlohmann::json;
 
@@ -80,10 +79,10 @@ class CrapsInterface
     static BetId placeBet(TableId tableId,
                           PlayerId playerId,
                           BetNameStr betName,
-                          Gbl::Money contractAmount,
+                          Gen::Money contractAmount,
                           Gen::ErrorPass& ep);
     static ReturnCode removeBet(TableId tableId, BetId bet, Gen::ErrorPass& ep);
-    static ReturnCode setOdds(TableId tableId, BetId bet, Gbl::Money oddsAmount, Gen::ErrorPass& ep);
+    static ReturnCode setOdds(TableId tableId, BetId bet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
     static ReturnCode changeBetAmount(TableId tableId, BetId bet, int delta, Gen::ErrorPass& ep);
     static void rollDice(TalbeId tableId);
     
@@ -95,7 +94,7 @@ class CrapsInterface
     /// @{
     Gen::ReturnCode joinTable(Gen::ErrorPass& ep);
     Gen::ReturnCode makeBet(BetName betName,
-                            Gbl::Money contractAmount,
+                            Gen::Money contractAmount,
                             unsigned pivot,
                             Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(BetName betName,
@@ -111,9 +110,9 @@ class CrapsInterface
     /// @{
     const Gen::Uuid& getUuid()   const;
     const std::string& getName() const;
-    Gbl::Money getAmountOnTable()     const;
+    Gen::Money getAmountOnTable()const;
     unsigned getNumBetsOnTable() const;
-    Gbl::Money getBalance()           const;
+    Gen::Money getBalance()      const;
     json toJson()                const;
     /// @}
 

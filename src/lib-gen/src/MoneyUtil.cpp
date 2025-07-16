@@ -43,6 +43,34 @@ MoneyUtil::toString(Money amount, bool showDollar, bool withCommas)
 }
 
 //----------------------------------------------------------------
+
+std::string
+MoneyUtil::toStringNoCommas(Money amount)
+{
+    constexpr bool showDollar = true;
+    constexpr bool showCommas = false;
+    return MoneyUtil::toString(amount, showDollar, showCommas);
+}
+
+//----------------------------------------------------------------
+
+std::string
+MoneyUtil::toStringNoDollar(Money amount)
+{
+    constexpr bool showDollar = false;
+    constexpr bool showCommas = true;
+    return MoneyUtil::toString(amount, showDollar, showCommas);
+}
+
+//----------------------------------------------------------------
+
+std::string
+MoneyUtil::toStringPlain(Money amount)
+{
+    return std::to_string(amount);
+}
+
+//----------------------------------------------------------------
 //
 // Convert string to Money
 //

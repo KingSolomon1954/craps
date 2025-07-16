@@ -51,8 +51,8 @@ BetStat::fromYAML(const YAML::Node& node)
 {
     count       = node["count"].as<unsigned>();
     totDistance = node["totDistance"].as<unsigned>();
-    amount      = node["amount"].as<unsigned>();
-    amountBet   = node["amountBet"].as<unsigned>();
+    amount      = node["amount"].as<Gen::Money>();
+    amountBet   = node["amountBet"].as<Gen::Money>();
 }
 
 //-----------------------------------------------------------------
@@ -405,14 +405,14 @@ BetStats::fromYAML(const YAML::Node& node)
     totNumWinsAllBets = node["totNumWinsAllBets"].as<unsigned>();
     totNumLoseAllBets = node["totNumLoseAllBets"].as<unsigned>();
     totNumKeepAllBets = node["totNumKeepAllBets"].as<unsigned>();
-    totAmtAllBets     = node["totAmtAllBets"].as<unsigned>();
-    totAmtWinsAllBets = node["totAmtWinsAllBets"].as<unsigned>();
-    totAmtLoseAllBets = node["totAmtLoseAllBets"].as<unsigned>();
-    totAmtKeepAllBets = node["totAmtKeepAllBets"].as<unsigned>();
-    maxAmtBetOneBet   = node["maxAmtBetOneBet"].as<unsigned>();
-    maxAmtWinOneBet   = node["maxAmtWinOneBet"].as<unsigned>();
-    maxAmtLoseOneBet  = node["maxAmtLoseOneBet"].as<unsigned>();
-    maxAmtKeepOneBet  = node["maxAmtKeepOneBet"].as<unsigned>();
+    totAmtAllBets     = node["totAmtAllBets"].as<Gen::Money>();
+    totAmtWinsAllBets = node["totAmtWinsAllBets"].as<Gen::Money>();
+    totAmtLoseAllBets = node["totAmtLoseAllBets"].as<Gen::Money>();
+    totAmtKeepAllBets = node["totAmtKeepAllBets"].as<Gen::Money>();
+    maxAmtBetOneBet   = node["maxAmtBetOneBet"].as<Gen::Money>();
+    maxAmtWinOneBet   = node["maxAmtWinOneBet"].as<Gen::Money>();
+    maxAmtLoseOneBet  = node["maxAmtLoseOneBet"].as<Gen::Money>();
+    maxAmtKeepOneBet  = node["maxAmtKeepOneBet"].as<Gen::Money>();
 
     betTypeStats.fromYAML(node["betTypeStats"]);
 

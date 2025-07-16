@@ -9,7 +9,7 @@
 #pragma once
 
 #include <map>
-#include <gen/MoneyType.h>
+#include <gen/MoneyUtil.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Craps {

@@ -56,15 +56,15 @@ YAML::Node
 BankStats::toYAML() const
 {
     YAML::Node node;
-    node["initialStartingBalance"] = initialStartingBalance;
-    node["numDeposits"]            = numDeposits;
-    node["amtDeposited"]           = amtDeposited;
-    node["numWithdrawals"]         = numWithdrawals;
-    node["amtWithdrawn"]           = amtWithdrawn;
-    node["numRefills"]             = numRefills;
-    node["amtRefilled"]            = amtRefilled;
-    node["maxAmtDepositedSession"] = maxAmtDepositedSession;
-    node["maxAmtWithdrawnSession"] = maxAmtWithdrawnSession;
+    node["initialStartingBalance"]     = initialStartingBalance;
+    node["numDeposits"]                = numDeposits;
+    node["amtDeposited"]               = amtDeposited;
+    node["numWithdrawals"]             = numWithdrawals;
+    node["amtWithdrawn"]               = amtWithdrawn;
+    node["numRefills"]                 = numRefills;
+    node["amtRefilled"]                = amtRefilled;
+    node["maxAmtDepositedSession"]     = maxAmtDepositedSession;
+    node["maxAmtWithdrawnSession"]     = maxAmtWithdrawnSession;
     node["maxAmtDepositedSessionDate"] = maxAmtWithdrawnSessionDate.toString();
     node["maxAmtWithdrawnSessionDate"] = maxAmtWithdrawnSessionDate.toString();
     return node;
@@ -75,15 +75,15 @@ BankStats::toYAML() const
 void
 BankStats::fromYAML(const YAML::Node& node)
 {
-    initialStartingBalance     = node["initialStartingBalance"].as<unsigned>();
+    initialStartingBalance     = node["initialStartingBalance"].as<Gen::Money>();
     numDeposits                = node["numDeposits"].as<unsigned>();
-    amtDeposited               = node["amtDeposited"].as<unsigned>();
-    numWithdrawals             = node["numWithdrawals"].as<unsigned>();
-    amtWithdrawn               = node["amtWithdrawn"].as<unsigned>();
+    amtDeposited               = node["amtDeposited"].as<Gen::Money>();
+    numWithdrawals             = node["numWithdrawals"].as<Gen::Money>();
+    amtWithdrawn               = node["amtWithdrawn"].as<Gen::Money>();
     numRefills                 = node["numRefills"].as<unsigned>();
     amtRefilled                = node["amtRefilled"].as<unsigned>();
-    maxAmtDepositedSession     = node["maxAmtDepositedSession"].as<unsigned>();
-    maxAmtWithdrawnSession     = node["maxAmtWithdrawnSession"].as<unsigned>();
+    maxAmtDepositedSession     = node["maxAmtDepositedSession"].as<Gen::Money>();
+    maxAmtWithdrawnSession     = node["maxAmtWithdrawnSession"].as<Gen::Money>();
     maxAmtDepositedSessionDate = node["maxAmtDepositedSessionDate"].as<std::string>();
     maxAmtWithdrawnSessionDate = node["maxAmtWithdrawnSessionDate"].as<std::string>();
 }

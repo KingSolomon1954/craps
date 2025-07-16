@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <gen/MoneyType.h>
+#include <gen/MoneyUtil.h>
 #include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
 
@@ -18,12 +18,12 @@ class BankStats
 {
 public:
     Gen::Money initialStartingBalance = 0;
-    unsigned   numDeposits    = 0;
-    Gen::Money amtDeposited   = 0;
-    unsigned   numWithdrawals = 0;
-    Gen::Money amtWithdrawn   = 0;
-    unsigned   numRefills     = 0;
-    Gen::Money amtRefilled    = 0;
+    unsigned   numDeposits            = 0;
+    Gen::Money amtDeposited           = 0;
+    unsigned   numWithdrawals         = 0;
+    Gen::Money amtWithdrawn           = 0;
+    unsigned   numRefills             = 0;
+    Gen::Money amtRefilled            = 0;
 
     Gen::Money maxAmtDepositedSession = 0;
     Gen::Money maxAmtWithdrawnSession = 0;

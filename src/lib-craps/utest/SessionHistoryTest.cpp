@@ -47,3 +47,28 @@ TEST_CASE("SessionHistory:ctor")
 }
 
 //----------------------------------------------------------------
+
+TEST_CASE("SessionHistory:yaml roundtrip")
+{
+    SessionHistory sh;
+    auto ss = sh.getSessions();
+    CHECK(ss.size() == 0);
+    
+    unsigned numPlayers      = 6;
+    unsigned numBets         = 100;
+    Gen::Money amtDeposited  = 10000;
+    Gen::Money amtWithdrawn  = 12000;
+    sh.addSessionSummary(numPlayers, numBets, amtDeposited, amtWithdrawn);
+    
+    ss = sh.getSessions();
+    CHECK(ss.size() == 1);
+    
+#if 0
+    unsigned numPlayers,
+    unsigned numBets,
+    Gen::Money amtDeposited,
+    Gen::Money amtWithdrawn)
+#endif
+    }
+
+//----------------------------------------------------------------

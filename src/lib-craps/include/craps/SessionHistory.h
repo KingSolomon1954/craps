@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <yaml-cpp/yaml.h>
-#include <gen/MoneyType.h>
+#include <gen/MoneyUtil.h>
 #include <gen/Timepoint.h>
 
 namespace Craps {

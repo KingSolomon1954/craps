@@ -121,6 +121,8 @@ private:
                          bool returnOdds,
                          const OddsTables::OddsEntry table[]) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
+    std::string diagTooSmall(Gen::Money amount, Gen::Money min,
+                             BetName betName, unsigned pivot);
 
     Gen::Uuid playerId_;
     unsigned betId_ = 0;

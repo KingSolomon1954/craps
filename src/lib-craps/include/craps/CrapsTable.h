@@ -10,11 +10,10 @@
 #include <list>
 #include <memory>
 #include <gen/ErrorPass.h>
-#include <gen/MoneyType.h>
+#include <gen/MoneyUtil.h>
 #include <gen/ReturnCode.h>
 #include <gen/Uuid.h>
 #include <craps/Bank.h>
-#include <controller/Globals.h>
 #include <craps/CrapsBet.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>

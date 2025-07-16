@@ -14,7 +14,7 @@
 #include <craps/BankStats.h>
 #include <craps/RollStats.h>
 #include <craps/SessionHistory.h>
-#include <gen/MoneyType.h>
+#include <gen/MoneyUtil.h>
 #include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
 
@@ -50,7 +50,7 @@ public:
     bool operator==(const TableStats&) const = default;  // Only generates ==
     /// @}
 
-    // All these saved and read from TableStats file.
+    // All these are saved and read from TableStats file.
     std::string      tableId;
     BetStats         betStats;
     RollStats        rollStats;

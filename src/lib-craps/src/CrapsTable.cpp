@@ -7,6 +7,7 @@
 #include <craps/CrapsTable.h>
 #include <iostream>
 #include <cassert>
+#include <controller/Globals.h>
 #include <controller/ConfigManager.h>
 #include <controller/Events.h>
 #include <controller/EventManager.h>
@@ -890,8 +891,8 @@ CrapsTable::isBettingOpen() const
 void
 CrapsTable::prepareForShutdown()
 {
-    // Create entry for today's session. CrapsTable is the only class
-    // with visibility to players, current tableStats_ and alltimeStats_.
+    // Create an entry for today's session. CrapsTable is the only class
+    // with visibility to alltimeStats_, players and current tableStats_.
     //
     alltimeStats_.sessionHistory.addSessionSummary(
         players_.size(),

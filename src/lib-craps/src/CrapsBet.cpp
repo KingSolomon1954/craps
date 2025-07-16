@@ -159,15 +159,14 @@ CrapsBet::validArgsCtor()
     {
         throw std::invalid_argument(
             "CrapsBet()::ctor C&E bet(" +
-            std::to_string(contractAmount_) +
+            Gen::MoneyUtil::toString(contractAmount_) +
             ") is not a multiple of 2. Min amount is 2");
     }
     if (betName_ == BetName::Horn && (contractAmount_ % 4 != 0))
     {
-// howie        
         throw std::invalid_argument(
             "CrapsBet()::ctor Horn bet(" +
-            std::to_string(contractAmount_) +
+            Gen::MoneyUtil::toString(contractAmount_) +
             ") is not a multiple of 4. Min amount is 4");
     }
 }
@@ -295,13 +294,9 @@ CrapsBet::setOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
     {
         if (newAmount < OddsTables::oddsPass[pivot_].denominator)
         {
-// howie            
-            std::string s("Odds bet amount of ");
-            s += std::to_string(newAmount) + " is too small. "
-                "Minimum odds bet for a " + EnumBetName::toString(betName_) +
-                "(" + std::to_string(pivot_) + ") is " +
-                std::to_string(OddsTables::oddsPass[pivot_].denominator) + ".";
-            ep.diag = s;
+            ep.diag = diagTooSmall(newAmount,
+                OddsTables::oddsPass[pivot_].denominator,
+                betName_, pivot_);
             return Gen::ReturnCode::Fail;
         }
     }
@@ -309,17 +304,31 @@ CrapsBet::setOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
     {
         if (newAmount < OddsTables::oddsDont[pivot_].denominator)
         {
-            std::string s("Odds bet amount of ");
-            s += std::to_string(newAmount) + " is too small. "
-                "Minimum odds bet for a " + EnumBetName::toString(betName_) +
-                "(" + std::to_string(pivot_) + ") is " +
-                std::to_string(OddsTables::oddsDont[pivot_].denominator) + ".";
-            ep.diag = s;
+            ep.diag = diagTooSmall(newAmount,
+                OddsTables::oddsDont[pivot_].denominator,
+                betName_, pivot_);
             return Gen::ReturnCode::Fail;
         }
     }
     oddsAmount_ = newAmount;
     return Gen::ReturnCode::Success;    
+}
+
+//----------------------------------------------------------------
+//
+// Helper to form error diag.
+//
+std::string
+CrapsBet::diagTooSmall(Gen::Money amount, Gen::Money min,
+                        BetName betName, unsigned pivot)
+{
+    std::string s("Odds bet amount of ");
+    s += Gen::MoneyUtil::toStringNoCommas(amount) + 
+        " is too small. Minimum odds bet for a " +
+        EnumBetName::toString(betName_) +
+        "(" + std::to_string(pivot) + ") is " +
+        std::to_string(min) +  ".";
+    return s;
 }
 
 /*-----------------------------------------------------------*//**

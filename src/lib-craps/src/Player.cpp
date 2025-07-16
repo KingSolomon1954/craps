@@ -15,6 +15,7 @@
 #include <craps/CrapsBetIntfc.h>
 #include <craps/CrapsTable.h>
 #include <craps/DecisionRecord.h>
+#include <gen/ErrorPass.h>
 
 using namespace Craps;
 
@@ -126,7 +127,7 @@ Player::joinTable(Gen::ErrorPass& ep)
 
 Gen::ReturnCode
 Player::makeBet(BetName betName,
-                Gbl::Money contractAmount,
+                Gen::Money contractAmount,
                 unsigned pivot,
                 Gen::ErrorPass& ep)
 {
@@ -410,7 +411,7 @@ Player::getName() const
 
 //----------------------------------------------------------------
 
-Gbl::Money
+Gen::Money
 Player::getBalance() const
 {
     return wallet_.getBalance();

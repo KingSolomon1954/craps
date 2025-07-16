@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include "craps/Bank.h"
+#include <craps/Bank.h>
 
 using namespace Craps;
 
@@ -17,9 +17,9 @@ Bank::Bank()
 //----------------------------------------------------------------
 
 Bank::Bank(
-    Gbl::Money initialBalance,
-    Gbl::Money refillThreshold,
-    Gbl::Money refillAmount)
+    Gen::Money initialBalance,
+    Gen::Money refillThreshold,
+    Gen::Money refillAmount)
     : initialBalance_(initialBalance)
     , refillThreshold_(refillThreshold)
     , refillAmount_(refillAmount)
@@ -30,7 +30,7 @@ Bank::Bank(
 //----------------------------------------------------------------
 
 bool
-Bank::deposit(Gbl::Money amount)
+Bank::deposit(Gen::Money amount)
 {
     if (amount <= 0) return false;
     amtDeposited_ += amount;
@@ -39,8 +39,8 @@ Bank::deposit(Gbl::Money amount)
 
 //----------------------------------------------------------------
 
-Gbl::Money
-Bank::withdraw(Gbl::Money amount)
+Gen::Money
+Bank::withdraw(Gen::Money amount)
 {
     if (amount <= 0 || amount > getBalance()) return false;
     amtWithdrawn_ += amount;
@@ -49,7 +49,7 @@ Bank::withdraw(Gbl::Money amount)
 
 //----------------------------------------------------------------
 
-Gbl::Money
+Gen::Money
 Bank::refill()
 {
     if (getBalance() <= refillThreshold_)
@@ -63,7 +63,7 @@ Bank::refill()
 
 //----------------------------------------------------------------
 
-Gbl::Money
+Gen::Money
 Bank::getBalance() const
 {
     return initialBalance_ + amtDeposited_ + amtRefilled_ - amtWithdrawn_; 
@@ -71,7 +71,7 @@ Bank::getBalance() const
 
 //----------------------------------------------------------------
 
-Gbl::Money
+Gen::Money
 Bank::getAmtDeposited() const
 {
     return amtDeposited_;
@@ -79,7 +79,7 @@ Bank::getAmtDeposited() const
 
 //----------------------------------------------------------------
 
-Gbl::Money
+Gen::Money
 Bank::getAmtWithdrawn() const
 {
     return amtWithdrawn_;
