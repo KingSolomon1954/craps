@@ -6,8 +6,9 @@
 
 #pragma once
 
-#include <gen/Uuid.h>
+#include <gen/MoneyUtil.h>
 #include <gen/Timepoint.h>
+#include <gen/Uuid.h>
 #include <craps/EnumBetName.h>
 
 namespace Craps {
@@ -33,8 +34,8 @@ public:
     virtual unsigned betId()             const = 0;
     virtual BetName betName()            const = 0;
     virtual unsigned pivot()             const = 0;
-    virtual unsigned contractAmount()    const = 0;
-    virtual unsigned oddsAmount()        const = 0;
+    virtual Gen::Money contractAmount()  const = 0;
+    virtual Gen::Money oddsAmount()      const = 0;
     virtual bool offComeOutRoll()        const = 0;
     virtual bool hardwayWorking()        const = 0;
     virtual unsigned distance()          const = 0;

@@ -164,6 +164,7 @@ CrapsBet::validArgsCtor()
     }
     if (betName_ == BetName::Horn && (contractAmount_ % 4 != 0))
     {
+// howie        
         throw std::invalid_argument(
             "CrapsBet()::ctor Horn bet(" +
             std::to_string(contractAmount_) +
@@ -294,6 +295,7 @@ CrapsBet::setOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
     {
         if (newAmount < OddsTables::oddsPass[pivot_].denominator)
         {
+// howie            
             std::string s("Odds bet amount of ");
             s += std::to_string(newAmount) + " is too small. "
                 "Minimum odds bet for a " + EnumBetName::toString(betName_) +

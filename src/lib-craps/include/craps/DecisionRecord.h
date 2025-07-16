@@ -8,6 +8,7 @@
 
 #include <ostream>
 #include <controller/Globals.h>
+#include <gen/MoneyUtil.h>
 #include <gen/Uuid.h>
 
 namespace Craps {
@@ -17,10 +18,10 @@ struct DecisionRecord
     unsigned betId = 0;
     bool decision = false;
     bool pivotAssigned = false;
-    Gbl::Money win = 0;
-    Gbl::Money lose = 0;
-    Gbl::Money returnToPlayer = 0;
-    Gbl::Money commission = 0;
+    Gen::Money win = 0;
+    Gen::Money lose = 0;
+    Gen::Money returnToPlayer = 0;
+    Gen::Money commission = 0;
     Gen::Uuid playerId;
 
     bool operator==(const DecisionRecord& other) const

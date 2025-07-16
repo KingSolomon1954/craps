@@ -12,7 +12,7 @@
 #include <unordered_set>
 #include <craps/CrapsBetIntfc.h>
 #include <craps/OddsTables.h>
-#include <gen/MoneyType.h>
+#include <gen/MoneyUtil.h>
 #include <gen/ReturnCode.h>
 
 namespace Gen {

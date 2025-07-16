@@ -18,6 +18,11 @@ using Money = unsigned;
 
 namespace MoneyUtil {
 
+    std::string toString(Money amount,
+                         bool showDollar = true,
+                         bool withCommas = true);
+
+#if 0    
 // Convert Money to string with formatting options
 inline std::string toString(Money amount, bool showDollar = true, bool withCommas = true)
 {
@@ -48,49 +53,13 @@ inline std::string toString(Money amount, bool showDollar = true, bool withComma
 
     return oss.str();
 }
+#endif
 
-// Convert string to Money
-inline Money fromString(const std::string& str)
-{
-    std::string clean = str;
+    Money fromString(const std::string& str);
 
-    // Strip dollar sign and commas
-    clean.erase(std::remove(clean.begin(), clean.end(), '$'), clean.end());
-    clean.erase(std::remove(clean.begin(), clean.end(), ','), clean.end());
 
-    try
-    {
-        size_t idx = 0;
-        unsigned long long value = std::stoull(clean, &idx);
-        if (idx != clean.size())
-            throw std::invalid_argument("Trailing characters");
-
-        if (value > std::numeric_limits<Money>::max())
-            throw std::out_of_range("Money value too large");
-
-        return static_cast<Money>(value);
-    }
-    catch (const std::exception& e)
-    {
-        throw std::invalid_argument("Invalid money string: \"" + str + "\"");
-    }
-}
-
-// YAML support
-inline YAML::Node toYAML(Money value)
-{
-    YAML::Node node;
-    node = value;
-    return node;
-}
-
-inline Money fromYAML(const YAML::Node& node)
-{
-    if (!node.IsScalar())
-        throw std::runtime_error("Money YAML node must be scalar");
-
-    return node.as<Money>();
-}
+    YAML::Node toYAML(Money value);
+    Money fromYAML(const YAML::Node& node);
 
 }}  // namespace Gen::MoneyUtil
 
