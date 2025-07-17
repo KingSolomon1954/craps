@@ -77,6 +77,7 @@ public:
     static constexpr auto KeyTablePlayer4        = "tbl.plyr4";
     static constexpr auto KeyTablePlayer5        = "tbl.plyr5";
     static constexpr auto KeyTablePlayer6        = "tbl.plyr6";
+    static constexpr auto KeyTableMaxSessions    = "tbl.maxSessions";
         
 private:
 };

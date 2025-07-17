@@ -39,7 +39,10 @@ public:
     Gen::Timepoint::Duration getLongestSessionAlltime() const;
     Gen::Timepoint           getCurSessionStartTime()   const;
     const Sessions&          getSessions()              const;
+    size_t                   getSessionCount()          const;
+    size_t                   getMaxSessions()           const;
 
+    void setMaxSessions(size_t maxSessions);
     void addSessionSummary(
         unsigned numPlayers,
         unsigned numBets,
@@ -57,6 +60,9 @@ private:
     Gen::Timepoint firstSessionDate_;
     Gen::Timepoint::Duration longestSessionAlltime_ = std::chrono::seconds::zero();
     Sessions sessions_;
+    size_t maxSessions_ = 50;
+    
+    void trimToMaxSessions();
 };
 
 /*-----------------------------------------------------------*//**

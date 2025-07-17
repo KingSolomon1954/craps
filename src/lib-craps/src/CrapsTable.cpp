@@ -56,30 +56,60 @@ Throws upon error.
 CrapsTable*
 CrapsTable::fromFile(const TableId& tableId)
 {
-    std::string filePath = "CrapsTable-" + tableId + ".yaml";
-
     CrapsTable* ct = new CrapsTable();
-    ct->tableId_ = tableId;
-    ct->alltimeStats_.tableId = tableId;  // must be set before loading stats
-    ct->tableStats_.tableId = tableId;
-
-    // Load alltime stats. Alltime stats come from file.
-    // (BTW, current session stats are in-memory only and inited to zero).
-    std::string dir =Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysTables).value();
-    ct->alltimeStats_.loadFile(dir);
-
-    // Starting table balance picks up where we left off.
-    Gen::Money startingBalance =
-        ct->alltimeStats_.moneyStats.initialStartingBalance +
-        ct->alltimeStats_.moneyStats.amtDeposited           +
-        ct->alltimeStats_.moneyStats.amtRefilled            -
-        ct->alltimeStats_.moneyStats.amtWithdrawn;
-
-    Bank b(startingBalance, RefillThreshold_, RefillAmount_);
-    ct->houseBank_ = b;  // Override default ctor bank values
+    ct->tableId_ = tableId;                            // table name
+    ct->tableStats_.tableId = tableId;                 // current session
+    ct->alltimeStats_.tableId = tableId;               // before loading stats
+    setMaxSessions(ct->alltimeStats_);                 // before loading stats
+    loadStats     (ct->alltimeStats_);                 // load YAML file
+    setHouseBank  (ct->alltimeStats_, ct->houseBank_); // set starting balance
+    
     ct->tableName_ = "NoName";  // TODO get rid of this. tableId = name
     return ct;
+}
+        
+//----------------------------------------------------------------
+//
+// Helper function, simplify fromFile()
+//
+void
+CrapsTable::setMaxSessions(TableStats& alltimeStats)
+{
+    size_t maxSessions = Gbl::pConfigMgr->getInt(
+        Ctrl::ConfigManager::KeyTableMaxSessions).value();
+    alltimeStats.sessionHistory.setMaxSessions(maxSessions);
+}
+
+//----------------------------------------------------------------
+//
+// Helper function, simplify fromFile()
+//
+void
+CrapsTable::loadStats(TableStats& alltimeStats)
+{
+    // Load alltime stats. Alltime stats come from file.
+    // (BTW, current session stats are in-memory only and inited to zero).
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysTables).value();
+    alltimeStats.loadFile(dir);
+}    
+
+//----------------------------------------------------------------
+//
+// Helper function, simplify fromFile()
+//
+void
+CrapsTable::setHouseBank(TableStats& alltimeStats, Bank& houseBank)
+{
+    // Starting table balance picks up where we left off.
+    Gen::Money startingBalance =
+        alltimeStats.moneyStats.initialStartingBalance +
+        alltimeStats.moneyStats.amtDeposited           +
+        alltimeStats.moneyStats.amtRefilled            -
+        alltimeStats.moneyStats.amtWithdrawn;
+
+    Bank b(startingBalance, RefillThreshold_, RefillAmount_);
+    houseBank = b;  // Override default ctor bank values
 }
 
 //----------------------------------------------------------------

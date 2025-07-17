@@ -17,6 +17,30 @@ using namespace Craps;
 
 //----------------------------------------------------------------
 
+void
+SessionHistory::setMaxSessions(size_t maxSessions)
+{
+    maxSessions_ = maxSessions;
+}
+
+//----------------------------------------------------------------
+
+size_t
+SessionHistory::getMaxSessions() const
+{
+    return maxSessions_;
+}
+
+//----------------------------------------------------------------
+
+size_t
+SessionHistory::getSessionCount() const
+{
+    return sessions_.size();
+}
+
+//----------------------------------------------------------------
+
 unsigned
 SessionHistory::getNumSessionsAlltime() const
 {
@@ -78,6 +102,7 @@ SessionHistory::addSessionSummary(
     sessions_.push_back(std::move(sum));
     
     longestSessionAlltime_ = std::max(sum.duration, longestSessionAlltime_);
+    trimToMaxSessions();
 }
 
 //-----------------------------------------------------------------
@@ -129,6 +154,7 @@ SessionHistory::fromYAML(const YAML::Node& node)
             sessions_.push_back(std::move(s));
         }
     }
+    trimToMaxSessions();
 }
 
 //-----------------------------------------------------------------
@@ -150,6 +176,18 @@ SessionHistory::toYAML() const
 
     node["history"] = hist;
     return node;
+}
+
+//-----------------------------------------------------------------
+
+void
+SessionHistory::trimToMaxSessions()
+{
+    if (sessions_.size() > maxSessions_)
+    {
+        const size_t surplus = sessions_.size() - maxSessions_;
+        sessions_.erase(sessions_.begin(), sessions_.begin() + surplus);
+    }
 }
 
 //-----------------------------------------------------------------

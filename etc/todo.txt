@@ -12,13 +12,14 @@ load Table choices by reading dir
 load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
+stats PlayerStats
 
 eliminate TableId or TableName, not both
 stats CrapsTable returns Session summaries
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
-stats Cap SessionHistory to a max number. Roll out oldest.
-unit test for SessionHistory class
 
+(Done) unit test for SessionHistory class
+(Done) Cap SessionHistory to a max number. Roll out oldest.
 (Done) change TableStats::lastSessionDate --> sessionDate (better yet eliminate)
 (Done) CrapsTable creates Session summaries
 (Done) Create session history class

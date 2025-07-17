@@ -162,6 +162,10 @@ private:
     void disbursePlayerWins();
     void disbursePlayerLoses();
     void disbursePlayerKeeps();
+
+    static void setMaxSessions(TableStats& alltimeStats);
+    static void loadStats     (TableStats& alltimeStats);
+    static void setHouseBank  (TableStats& alltimeStats, Bank& houseBank);
 };
 
 /*-----------------------------------------------------------*//**

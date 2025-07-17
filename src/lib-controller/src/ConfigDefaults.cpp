@@ -154,6 +154,7 @@ ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
     cfg.set(ConfigManager::KeySessionStart,        tp.toString());
     cfg.set(ConfigManager::KeyTableStart,          "LasVegas");
     cfg.set(ConfigManager::KeyTableStartLastPlyrs, "true");
+    cfg.set(ConfigManager::KeyTableMaxSessions,    "50");
     // TODO more ...
 }
 
