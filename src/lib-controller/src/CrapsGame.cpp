@@ -31,6 +31,11 @@ Constructor
 
 @param[in] argv
     Array of command line args.
+
+@internal
+
+All these unique_ptr's on the stack manage the lifetime of globals.
+
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
@@ -39,7 +44,6 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     enableFileLogging();                  // Only after config manager.
     std::unique_ptr<Ctrl::EventManager>   pEventMgr(initEventManager());       (void) pEventMgr;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
-    std::unique_ptr<Craps::CrapsTable>    pTable(initCrapsTable());            (void) pTable;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
     std::unique_ptr<Ctrl::ViewIntfc>      pView(initView());                   (void) pView;
     std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
@@ -47,7 +51,7 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     
     pView->run();  // Doesn't return until exiting
     
-    pTable->prepareForShutdown();
+    Gbl::pTable->prepareForShutdown();
 }
 
 //----------------------------------------------------------------
@@ -116,18 +120,8 @@ CrapsGame::initEventManager()
 TableManager*
 CrapsGame::initTableManager()
 {
-    auto p = new TableManager();
+    auto p = new TableManager();  // And creates initial CrapsTable
     Gbl::pTableMgr = p;
-    return p;
-}
-
-//----------------------------------------------------------------
-
-Craps::CrapsTable*
-CrapsGame::initCrapsTable()
-{
-    auto p = Gbl::pTableMgr->loadStartingCrapsTable();
-    Gbl::pTable = p;
     return p;
 }
 

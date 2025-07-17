@@ -928,10 +928,13 @@ CrapsTable::isBettingOpen() const
 
 //----------------------------------------------------------------
 //
-//  Save to files, disable timers, etc
+// Save to files, disable timers, etc
+//
+// Called when user decides to switch tables, so this one ends.
+// Called when exiting program.
 //
 void
-CrapsTable::prepareForShutdown()
+CrapsTable::close()
 {
     // Create an entry for today's session. CrapsTable is the only class
     // with visibility to alltimeStats_, players and current tableStats_.
@@ -949,6 +952,16 @@ CrapsTable::prepareForShutdown()
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
     alltimeStats_.saveFile(dir);
+}
+
+//----------------------------------------------------------------
+//
+//  Save to files, disable timers, etc
+//
+void
+CrapsTable::prepareForShutdown()
+{
+    close();
 }
 
 //----------------------------------------------------------------

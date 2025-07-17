@@ -46,7 +46,6 @@ private:
     Ctrl::ConfigManager*   initConfigManager(int argc, char* argv[]);
     Ctrl::EventManager*    initEventManager();
     Ctrl::TableManager*    initTableManager();
-    Craps::CrapsTable*     initCrapsTable();
     Ctrl::PlayerManager*   initPlayerManager();
     Ctrl::ViewIntfc*       initView();
     Ctrl::GameController*  initGameController();

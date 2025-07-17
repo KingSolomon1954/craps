@@ -59,6 +59,7 @@ public:
     void rollDice();
     void testRollDice(unsigned d1, unsigned d2);
     void testSetState(unsigned point, unsigned d1, unsigned d2);
+    void close();  // Shutdown table, no longer in-use, soon to destruct.
     void prepareForShutdown();
     /// @}
 
