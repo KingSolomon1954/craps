@@ -51,11 +51,11 @@ public:
     /// @}
 
     // All these are saved and read from TableStats file.
-    std::string      tableId;
-    BetStats         betStats;
-    RollStats        rollStats;
-    BankStats        moneyStats;
-    SessionHistory   sessionHistory;
+    std::string    tableId;
+    BetStats       betStats;
+    RollStats      rollStats;
+    BankStats      moneyStats;
+    SessionHistory sessionHistory;
 
     // These not saved to TableStats file.
     std::deque<Dice> recentRolls;  // Roll history. Front element is oldest roll

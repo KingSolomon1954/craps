@@ -76,6 +76,7 @@ public:
     unsigned getNumBetsOnTable()               const;
     const TableStats& getTableStats()          const;
     const TableStats& getAlltimeStats()        const;
+    const SessionHistory::Sessions& getSessionHistory() const;
     bool haveBet(const BetIntfcPtr bet)        const;
     bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
     /// @}

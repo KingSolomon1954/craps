@@ -899,6 +899,18 @@ CrapsTable::getAlltimeStats() const
 }
 
 //----------------------------------------------------------------
+//
+// Return session history.
+//
+// This is just a relay function for convenience.
+//
+const SessionHistory::Sessions&
+CrapsTable::getSessionHistory() const
+{
+    return alltimeStats_.sessionHistory.getSessions();
+}
+
+//----------------------------------------------------------------
 
 bool
 CrapsTable::isComeOutRoll() const

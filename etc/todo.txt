@@ -15,9 +15,9 @@ design EventQueue and Events
 stats PlayerStats
 
 eliminate TableId or TableName, not both
-stats CrapsTable returns Session summaries
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 
+(Done) stats CrapsTable returns Session summaries
 (Done) unit test for SessionHistory class
 (Done) Cap SessionHistory to a max number. Roll out oldest.
 (Done) change TableStats::lastSessionDate --> sessionDate (better yet eliminate)
