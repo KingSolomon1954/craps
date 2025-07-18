@@ -69,7 +69,7 @@ public:
     static constexpr auto KeyTraceLogging   = "log.trace";
     
     // Table Setup
-    static constexpr auto KeyTableStart          = "tbl.startId";
+    static constexpr auto KeyTableStartId        = "tbl.startId";
     static constexpr auto KeyTableStartLastPlyrs = "tbl.startLastPlyrs";
     static constexpr auto KeyTablePlayer1        = "tbl.plyr1";
     static constexpr auto KeyTablePlayer2        = "tbl.plyr2";

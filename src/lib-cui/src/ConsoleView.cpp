@@ -47,7 +47,7 @@ ConsoleView::promptUserToSelectTable(
     std::cout << "Available Tables:\n";
     for (size_t i = 0; i < tds.size(); ++i)
     {
-        std::cout << i << ") " << tds[i].name << "\n";
+        std::cout << i << ") " << tds[i].tableName << "\n";
     }
     std::cout << "Select table index: ";
     int choice = 0;

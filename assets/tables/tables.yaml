@@ -1,0 +1,27 @@
+#
+# Available Craps tables.
+#
+tables:
+  - id: Table-1
+    name: Las Vegas
+    shortDescription: A standard table with 3x odds and conservative limits.
+    fullDescription: To be supplied.
+    file: Table-1.yaml
+  
+  - id: Table-2
+    name: Classic Table
+    shortDescription: A standard table with 3x odds and conservative limits.
+    fullDescription: To be supplied.
+    file: Table-2.yaml
+
+  - id: Table-3
+    name: High Roller
+    shortDescription: Big limits, 100x odds, and fast action.
+    fullDescription: To be supplied.
+    file: Table-3.yaml
+
+  - id: Table-4
+    name: Beginner Mode
+    shortDescription: Great for new players learning the game.
+    fullDescription: To be supplied.
+    file: Table-4.yaml

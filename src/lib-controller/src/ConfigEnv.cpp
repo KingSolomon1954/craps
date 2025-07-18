@@ -34,7 +34,7 @@ ConfigEnv::processEnv(Gen::MultiLayerConfig& multiConfig)
         const std::map<std::string, std::string> envToKey =
         {
             {"ROYALCRAPS_VIEW_TYPE",     ConfigManager::KeyViewType},
-            {"ROYALCRAPS_START_TABLE",   ConfigManager::KeyTableStart},
+            {"ROYALCRAPS_START_TABLE",   ConfigManager::KeyTableStartId},
             {"ROYALCRAPS_SOUND_ENABLED", ConfigManager::KeySoundEnabled},
             {"ROYALCRAPS_SOUND_VOLUME",  ConfigManager::KeySoundVolume}
         };
