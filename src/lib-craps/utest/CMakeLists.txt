@@ -16,7 +16,6 @@ add_executable(craps-ut
     TableStatsPart3Test.cpp
     TableStatsPart4Test.cpp
     TableStatsPart5Test.cpp
-    TableStatsPart6Test.cpp
 )
 
 target_link_libraries(craps-ut

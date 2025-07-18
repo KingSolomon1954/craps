@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <deque>
 #include <string>
 #include <craps/BetStats.h>
 #include <craps/CrapsBetIntfc.h>
@@ -15,7 +14,6 @@
 #include <craps/RollStats.h>
 #include <craps/SessionHistory.h>
 #include <gen/MoneyUtil.h>
-#include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Craps {
@@ -25,7 +23,7 @@ class TableStats
 public:
     /// @name Lifecycle
     /// @{
-    explicit TableStats(const std::string& tableId);
+    TableStats() = default;
     /// @}
 
     /// @name Modifiers
@@ -37,33 +35,26 @@ public:
     void recordWithdrawal(Gen::Money amount);
     void recordDeposit   (Gen::Money amount);
     void recordRefill    (Gen::Money amount);
-    void setRollHistorySize(size_t rollHistorySize);
-    void merge(const TableStats& session);
-    void saveFile(const std::string& dir) const;
-    void loadFile(const std::string& dir);
+    void merge           (const TableStats& session);
     void reset();
     /// @}
 
     /// @name Observers
     /// @{
-    size_t getRollHistorySize() const;
     bool operator==(const TableStats&) const = default;  // Only generates ==
     /// @}
 
-    // All these are saved and read from TableStats file.
-    std::string    tableId;
+    // YAML operations
+    void toYAML(YAML::Node& node) const;
+    void fromYAML(const YAML::Node& node);
+
+    // These are saved and read from YAML file.
     BetStats       betStats;
     RollStats      rollStats;
     BankStats      moneyStats;
     SessionHistory sessionHistory;
 
-    // These not saved to TableStats file.
-    std::deque<Dice> recentRolls;  // Roll history. Front element is oldest roll
-    Gen::Timepoint   sessionStartDate;
-
 private:
-    size_t rollHistorySize_ = 25;
-
     void countDiceNumbers     (unsigned roll);
     void countAllPoints       (unsigned roll);
     void countComeOutRolls    (unsigned point);
@@ -95,8 +86,6 @@ private:
     void updatePointRoll(unsigned point, unsigned roll);
     void recordCommon(Gen::Money amtBet);
 
-    YAML::Node toYAML() const;
-    void fromYAML(const YAML::Node& node);
 };
 
 /*-----------------------------------------------------------*//**

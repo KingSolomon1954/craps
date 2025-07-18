@@ -152,9 +152,10 @@ ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
 
     Gen::Timepoint tp;
     cfg.set(ConfigManager::KeySessionStart,        tp.toString());
-    cfg.set(ConfigManager::KeyTableStart,          "LasVegas");
+    cfg.set(ConfigManager::KeyTableStart,          "Table-1");
     cfg.set(ConfigManager::KeyTableStartLastPlyrs, "true");
     cfg.set(ConfigManager::KeyTableMaxSessions,    "50");
+    cfg.set(ConfigManager::KeyTableMaxRecentRolls, "25");
     // TODO more ...
 }
 

@@ -14,9 +14,11 @@ write script to copy files/assets to install locations
 design EventQueue and Events
 stats PlayerStats
 
-eliminate TableId or TableName, not both
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
+tables.yaml manifest
 
+(Done) eliminate TableId or TableName, not both
+(Done) single CrapsTable yaml file, includes stats
 (Done) stats CrapsTable returns Session summaries
 (Done) unit test for SessionHistory class
 (Done) Cap SessionHistory to a max number. Roll out oldest.

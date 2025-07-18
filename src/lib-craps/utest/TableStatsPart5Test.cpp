@@ -19,7 +19,7 @@ using namespace Craps;
 TEST_CASE("TableStats:betstats:win1")
 {
     Gen::ErrorPass ep;
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
     DecisionRecord dr1, dr2;
@@ -68,7 +68,7 @@ TEST_CASE("TableStats:betstats:win1")
 TEST_CASE("TableStats:betstats:win2")
 {
     Gen::ErrorPass ep;
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
     DecisionRecord dr1, dr2;
@@ -204,7 +204,7 @@ TEST_CASE("TableStats:betstats:win2")
 TEST_CASE("TableStats:betstats:win3")
 {
     Gen::ErrorPass ep;
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
     DecisionRecord dr1, dr2;
@@ -254,7 +254,7 @@ TEST_CASE("TableStats:betstats:win3")
 TEST_CASE("TableStats:betstats:lose1")
 {
     Gen::ErrorPass ep;
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
     DecisionRecord dr1, dr2;
@@ -304,7 +304,7 @@ TEST_CASE("TableStats:betstats:lose1")
 TEST_CASE("TableStats:betstats:lose3")
 {
     Gen::ErrorPass ep;
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
     DecisionRecord dr1, dr2;

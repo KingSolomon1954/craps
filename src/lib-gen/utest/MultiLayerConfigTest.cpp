@@ -14,7 +14,7 @@ using namespace Gen;
 
 //----------------------------------------------------------------
 
-TEST_CASE("MultiLayerConfig::one")
+TEST_CASE("MultiLayerConfig:layering")
 {
     MultiLayerConfig cfg;
 

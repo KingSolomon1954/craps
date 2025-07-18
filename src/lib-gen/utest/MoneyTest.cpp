@@ -33,7 +33,7 @@ std::string formatMoney(const Money& m,
 
 //----------------------------------------------------------------
 
-TEST_CASE("Money::ctor")
+TEST_CASE("Money:ctor")
 {
     Money m1 = Money::fromDollars(12.34);
     CHECK(m1.toCents() == 1234);
@@ -88,7 +88,7 @@ TEST_CASE("Money::ctor")
 
 //----------------------------------------------------------------
 
-TEST_CASE("Money::arithmetic and comparison")
+TEST_CASE("Money:arithmeticAndComparison")
 {
     Money a = Money::fromDollars(50.25);
     Money b = Money::fromDollars(10.75);
@@ -110,7 +110,7 @@ TEST_CASE("Money::arithmetic and comparison")
 
 //----------------------------------------------------------------
 
-TEST_CASE("Money::string parsing")
+TEST_CASE("Money:stringParsing")
 {
     CHECK(Money::fromString("$123.45").toCents() == 12345);
     CHECK(Money::fromString("1,000.00").toCents() == 100000);
@@ -120,7 +120,7 @@ TEST_CASE("Money::string parsing")
 
 //----------------------------------------------------------------
 
-TEST_CASE("Money::toString")
+TEST_CASE("Money:toString")
 {
     Money m = Money::fromDollars(1234.56);
     CHECK(m.toString() == "$1,234.56");
@@ -132,7 +132,7 @@ TEST_CASE("Money::toString")
 
 //----------------------------------------------------------------
 
-TEST_CASE("Money::formatted output")
+TEST_CASE("Money:formattedOutput")
 {
     Money m = Money::fromDollars(1234.56);
     std::ostringstream oss;
@@ -150,7 +150,7 @@ TEST_CASE("Money::formatted output")
 
 //----------------------------------------------------------------
 
-TEST_CASE("Money::YAML roundtrip")
+TEST_CASE("Money:roundTripYAML")
 {
     Money m = Money::fromDollars(78.90);
     YAML::Node node = m.toYAML();

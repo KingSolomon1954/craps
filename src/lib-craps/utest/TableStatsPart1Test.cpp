@@ -36,12 +36,16 @@ initCheckPointCounts(const PointCounts& pc)
 
 TEST_CASE("TableStats:ctor")
 {
-    TableStats ts("tableId-LasVegas");
-    CHECK(!ts.tableId.empty());
+    TableStats ts;
     CHECK(ts.rollStats.numRolls == 0);
 
-    TableStats copy = ts;
-    CHECK(copy.tableId == ts.tableId);
+    TableStats copy;
+    CHECK(copy.sessionHistory.getCurSessionStartTime() !=
+          ts.sessionHistory.getCurSessionStartTime());
+
+    copy = ts;
+    CHECK(copy.sessionHistory.getCurSessionStartTime() ==
+          ts.sessionHistory.getCurSessionStartTime());
 
     for (unsigned i = 2; i < 13; i++)
     {
@@ -132,53 +136,6 @@ TEST_CASE("TableStats:counter")
 
     RollStats rs1, rs2;
     CHECK(rs1 == rs2);
-
-    TableStats ts1("id1");
-    TableStats ts2("id2");
-    CHECK(ts1 != ts2);  // session start time will be different
-}
-
-//----------------------------------------------------------------
-
-void
-seqHelper(TableStats& ts, unsigned d1, unsigned d2)
-{
-    unsigned point = 0;
-    Dice dice; dice.set(d1,d2);
-    ts.recordDiceRoll(point, dice);
-}
-
-TEST_CASE("TableStats:recentrolls")
-{
-    TableStats ts("tableId-LasVegas");
-    Dice dice;
-    unsigned point = 0;
-
-    for (unsigned roll = 2; roll < 13; roll++)
-    {
-        unsigned d1; unsigned d2;
-        switch(roll)
-        {
-            case 2:  d1 = 1; d2 = 1; break;
-            case 3:  d1 = 1; d2 = 2; break;
-            case 4:  d1 = 2; d2 = 2; break;
-            case 5:  d1 = 2; d2 = 3; break;
-            case 6:  d1 = 3; d2 = 3; break;
-            case 7:  d1 = 3; d2 = 4; break;
-            case 8:  d1 = 4; d2 = 4; break;
-            case 9:  d1 = 5; d2 = 4; break;
-            case 10: d1 = 6; d2 = 4; break;
-            case 11: d1 = 6; d2 = 5; break;
-            case 12: d1 = 6; d2 = 6; break;
-        }
-        seqHelper(ts, d1, d2);
-    }
-
-    unsigned expectedRoll = 2;
-    for (const auto roll : ts.recentRolls)
-    {
-        CHECK(roll.value() == expectedRoll++);
-    }
 }
 
 //----------------------------------------------------------------
@@ -187,7 +144,7 @@ TEST_CASE("TableStats:diceroll:allsevens")
 {
     // seq: 7,7
     
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
 
@@ -710,7 +667,7 @@ TEST_CASE("TableStats:diceroll:one")
 {
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12,7,6,7
     
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
 

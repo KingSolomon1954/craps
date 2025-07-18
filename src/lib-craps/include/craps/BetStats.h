@@ -16,10 +16,10 @@ namespace Craps {
 
 struct BetStat
 {
-    unsigned count = 0;
+    unsigned count       = 0;
     unsigned totDistance = 0;
-    Gen::Money amount;
-    Gen::Money amountBet;
+    Gen::Money amount    = 0;
+    Gen::Money amountBet = 0;
     void reset();
     void merge(const BetStat& session);
     YAML::Node toYAML() const;

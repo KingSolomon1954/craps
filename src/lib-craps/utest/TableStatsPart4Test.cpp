@@ -15,7 +15,7 @@ TEST_CASE("TableStats:diceroll:four")
 {
     // seq 4,7,5,7
     
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
 
@@ -1146,7 +1146,7 @@ TEST_CASE("TableStats:diceroll:five")
 {
     // seq 4,5,5,6,6,8,8,9,9,10,10,4,7
     
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
 
@@ -1225,7 +1225,7 @@ TEST_CASE("TableStats:diceroll:six")
 {
     // seq 4,4,4,4
     
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
 
@@ -1262,7 +1262,7 @@ TEST_CASE("TableStats:diceroll:seven")
 {
     // seq 4,5,5,5,5
     
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
 
@@ -1307,7 +1307,7 @@ TEST_CASE("TableStats:diceroll:eight")
 {
     // seq 4,4,4,4,4,4
     
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
 

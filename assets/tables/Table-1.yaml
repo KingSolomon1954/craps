@@ -1,7 +1,7 @@
-tableId: "Table-1"
-tableName: "Las Vegas"
-shortDescription: "Las Vegas craps table and rules"
-fullDescription: "need to fill this out."
+tableId: Table-1
+tableName: Las Vegas
+shortDescription: Las Vegas craps table and rules
+fullDescription: need to fill this out.
 BetStats:
   totNumBetsAllBets: 0
   totNumWinsAllBets: 0
@@ -920,7 +920,7 @@ MoneyStats:
   maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
   maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
 SessionStats:
-  numSessionsAlltime: 14
+  numSessionsAlltime: 15
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 00:01:04
   history:
@@ -954,3 +954,9 @@ SessionStats:
       numPlayers: 0
       date: 2025-07-17T17:36:19.458805202
       duration: 0d 00:00:06
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-17T22:22:19.714978989
+      duration: 0d 00:00:59

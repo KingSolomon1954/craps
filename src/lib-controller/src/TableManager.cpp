@@ -69,13 +69,21 @@ TableManager::loadStartingCrapsTable()
 Gen::ReturnCode
 TableManager::switchCrapsTable(const TableId& toTableId, Gen::ErrorPass& ep)
 {
-    // TODO try/catch
-    auto p = loadCrapsTable(toTableId);  // Create new CrapsTable
-    Gbl::pTable->close();                // Close current table
-    delete pCurrentCrapsTable_;          // Clean up its memory
-    Gbl::pTable = p;                     // New table accssible in globals
-    pCurrentCrapsTable_ = p;             // Manage it's memory
-    return Gen::ReturnCode::Success;
+    try
+    {
+        auto p = loadCrapsTable(toTableId);  // Create new CrapsTable, throws
+        Gbl::pTable->close();                // Close current table
+        delete pCurrentCrapsTable_;          // Clean up its memory
+        Gbl::pTable = p;                     // New table accssible in globals
+        pCurrentCrapsTable_ = p;             // Manage it's memory
+        return Gen::ReturnCode::Success;
+    }
+    catch (const std::runtime_error& e)
+    {
+        ep.diag = "TableManager::switchCrapsTable(): ";
+        ep.append(e.what());
+        return Gen::ReturnCode::Fail;
+    }
 }
 
 //----------------------------------------------------------------

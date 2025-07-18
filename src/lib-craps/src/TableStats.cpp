@@ -5,22 +5,10 @@
 //----------------------------------------------------------------
 
 #include <craps/TableStats.h>
-
-#include <algorithm>
-#include <filesystem>
-#include <fstream>
-#include <iostream>
 #include <craps/CrapsBet.h>
 #include <craps/EnumBetName.h>
-#include <gen/Debug.h>
-#include <gen/Logger.h>
 
 using namespace Craps;
-
-TableStats::TableStats(const std::string& tableIdArg)
-    : tableId(tableIdArg)
-{
-}
 
 /*-----------------------------------------------------------*//**
 
@@ -35,8 +23,6 @@ TableStats::recordDiceRoll(unsigned point, const Dice& dice)
     unsigned roll = dice.value();
     unsigned d1   = dice.d1();
     unsigned d2   = dice.d2();
-
-    bumpRecentRolls(dice);
 
     disarmSomeCounts (point, roll);
     countDiceNumbers (roll);
@@ -76,7 +62,6 @@ TableStats::countDiceNumbers(unsigned roll)
         {
             rollStats.numberCounts[i].disarm();
         }
-
     }
 }
 
@@ -645,7 +630,6 @@ TableStats::reset()
     betStats.reset();
     rollStats.reset();
     moneyStats.reset();
-    recentRolls.clear();
     // No sessionHistory.clear()
 }
 
@@ -663,43 +647,12 @@ TableStats::merge(const TableStats& session)
 //-----------------------------------------------------------------
 
 void
-TableStats::bumpRecentRolls(const Dice& dice)
+TableStats::toYAML(YAML::Node& node) const
 {
-    if (recentRolls.size() >= rollHistorySize_)
-    {
-        recentRolls.pop_front();
-    }
-    recentRolls.push_back(dice);
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::setRollHistorySize(size_t rollHistorySize)
-{
-    rollHistorySize_ = rollHistorySize;
-}
-
-//-----------------------------------------------------------------
-
-size_t
-TableStats::getRollHistorySize() const
-{
-    return rollHistorySize_;
-}
-
-//-----------------------------------------------------------------
-
-YAML::Node
-TableStats::toYAML() const
-{
-    YAML::Node node;
-    node["tableName"]    = tableId;
     node["BetStats"]     = betStats.toYAML();
     node["RollStats"]    = rollStats.toYAML();
     node["MoneyStats"]   = moneyStats.toYAML();
     node["SessionStats"] = sessionHistory.toYAML();
-    return node;
 }
 
 //-----------------------------------------------------------------
@@ -707,47 +660,10 @@ TableStats::toYAML() const
 void
 TableStats::fromYAML(const YAML::Node& node)
 {
-    if (node["tableId"]) tableId = node["tableId"].as<std::string>();
     betStats.fromYAML      (node["BetStats"]);
     rollStats.fromYAML     (node["RollStats"]);
     moneyStats.fromYAML    (node["MoneyStats"]);
     sessionHistory.fromYAML(node["SessionStats"]);
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::saveFile(const std::string& dir) const
-{
-    namespace fs = std::filesystem;
-    fs::path path = fs::path(dir) / ("TableStats-" + tableId + ".yaml");
-    LOG_DEBUG("TableStats::saveFile(" + path.string()  + ")");
-    std::ofstream fout(path);
-    fout << toYAML();
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::loadFile(const std::string& dir)
-{
-    namespace fs = std::filesystem;
-
-    fs::path path = fs::path(dir) / ("TableStats-" + tableId + ".yaml");
-
-    if (!fs::exists(path))
-    {
-        throw std::runtime_error("TableStats::loadFile() file does not exist: " + path.string());
-    }
-
-    std::ifstream fin(path);
-    if (!fin.is_open())
-    {
-        throw std::runtime_error("TableStats::loadFile() Failed to open YAML file: " + path.string());
-    }
-
-    YAML::Node root = YAML::Load(fin);
-    fromYAML(root);
 }
 
 //-----------------------------------------------------------------

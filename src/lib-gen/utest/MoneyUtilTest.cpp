@@ -11,7 +11,7 @@ using namespace Gen;
 
 //----------------------------------------------------------------
 
-TEST_CASE("MoneyUtil::toString basic formatting")
+TEST_CASE("MoneyUtil:toStringBasicFormatting")
 {
     Money value = 123456;
 
@@ -31,7 +31,7 @@ TEST_CASE("MoneyUtil::toString basic formatting")
 
 //----------------------------------------------------------------
 
-TEST_CASE("MoneyUtil::fromString parsing")
+TEST_CASE("MoneyUtil:fromStringParsing")
 {
     CHECK(MoneyUtil::fromString("$123,456") == 123456);
     CHECK(MoneyUtil::fromString("123456") == 123456);
@@ -45,7 +45,7 @@ TEST_CASE("MoneyUtil::fromString parsing")
 
 //----------------------------------------------------------------
 
-TEST_CASE("MoneyUtil::YAML round-trip")
+TEST_CASE("MoneyUtil:RoundTripYAML")
 {
     Money original = 123456;
 

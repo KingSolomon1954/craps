@@ -5,14 +5,18 @@
 //----------------------------------------------------------------
 
 #include <craps/CrapsTable.h>
+#include <cassert>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <cassert>
-#include <controller/Globals.h>
 #include <controller/ConfigManager.h>
 #include <controller/Events.h>
 #include <controller/EventManager.h>
+#include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <craps/CrapsBet.h>
+#include <gen/Logger.h>
 
 using namespace Craps;
 
@@ -21,11 +25,21 @@ using namespace Craps;
 Private Constructor.
 
 */
-CrapsTable::CrapsTable()
-    : tableStats_(tableId_)
-    , alltimeStats_(tableId_)
+CrapsTable::CrapsTable(const TableId& tableId)
+    : tableId_(tableId)
     , houseBank_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
+    assert(Gbl::pConfigMgr != nullptr);
+    
+    // setMaxSessions from MultilayerConfig
+    size_t maxSessions = Gbl::pConfigMgr->getInt(
+        Ctrl::ConfigManager::KeyTableMaxSessions).value();
+    alltimeStats_.sessionHistory.setMaxSessions(maxSessions);
+
+    // setMaxRecentRolls from MultilayerConfig
+    size_t maxRecentRolls = Gbl::pConfigMgr->getInt(
+        Ctrl::ConfigManager::KeyTableMaxRecentRolls).value();
+    recentRollsMaxSize_ = maxRecentRolls;
 }
 
 /*-----------------------------------------------------------*//**
@@ -42,13 +56,13 @@ CrapsTable::fromConfig(const TableId& tableId)
     //
     // see loadFromStrings at end of file
 
-    CrapsTable* ct = new CrapsTable();
+    CrapsTable* ct = new CrapsTable(tableId);
     return ct;
 }
 
 /*-----------------------------------------------------------*//**
 
-Construct Table from file.
+Construct Craps table from file.
 
 Throws upon error.
 
@@ -56,60 +70,155 @@ Throws upon error.
 CrapsTable*
 CrapsTable::fromFile(const TableId& tableId)
 {
-    CrapsTable* ct = new CrapsTable();
-    ct->tableId_ = tableId;                            // table name
-    ct->tableStats_.tableId = tableId;                 // current session
-    ct->alltimeStats_.tableId = tableId;               // before loading stats
-    setMaxSessions(ct->alltimeStats_);                 // before loading stats
-    loadStats     (ct->alltimeStats_);                 // load YAML file
-    setHouseBank  (ct->alltimeStats_, ct->houseBank_); // set starting balance
-    
-    ct->tableName_ = "NoName";  // TODO get rid of this. tableId = name
+    CrapsTable* ct = new CrapsTable(tableId);
+    ct->setMaxSessions();      // before loading YAML
+    ct->loadFile(tableId);
+    ct->setHouseBank();        // after loading file
     return ct;
 }
-        
+
+//-----------------------------------------------------------------
+
+void
+CrapsTable::saveFile(const std::string& dir) const
+{
+    namespace fs = std::filesystem;
+    fs::path path = fs::path(dir) / (tableId_ + ".yaml");
+    LOG_DEBUG("CrapsTable::saveFile(" + path.string()  + ")");
+    std::ofstream fout(path);
+    fout << toYAML();
+}
+
+//-----------------------------------------------------------------
+
+void
+CrapsTable::loadFile(const TableId& tableId)
+{
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysTables).value();
+
+    namespace fs = std::filesystem;
+    fs::path path = fs::path(dir) / (tableId + ".yaml");
+
+    try
+    {
+        checkPath(path);                      // throws
+        std::ifstream fin(path);
+        checkOpen(fin);                       // throws
+        YAML::Node root = YAML::Load(fin);
+        fromYAML(root);                       // throws
+    }
+    catch (const std::runtime_error& e)
+    {
+        std::string diag("CrapsTable::loadFile(): \"" + path.string() + "\"; ");
+        throw std::runtime_error(diag + e.what());
+    }
+}
+
+//-----------------------------------------------------------------
+
+YAML::Node
+CrapsTable::toYAML() const
+{
+    YAML::Node node;
+    node["tableId"]          = tableId_;
+    node["tableName"]        = tableName_;
+    node["shortDescription"] = shortDescription_;
+    node["fullDescription"]  = fullDescription_;
+
+    alltimeStats_.toYAML(node);
+    return node;
+}
+
+//-----------------------------------------------------------------
+
+void
+CrapsTable::fromYAML(const YAML::Node& node)
+{
+    tableName_        = node["tableName"].as<std::string>();
+    shortDescription_ = node["shortDescription"].as<std::string>();
+    fullDescription_  = node["fullDescription"].as<std::string>();
+
+    auto idInFile     = node["tableId"].as<std::string>();
+    if (idInFile != tableId_)
+    {
+        throw std::runtime_error("Table ID mismatch: expected " +
+                                 tableId_ + ", found " + idInFile);
+    }
+    
+    alltimeStats_.fromYAML(node);
+}
+
 //----------------------------------------------------------------
 //
-// Helper function, simplify fromFile()
+// Save to files, disable timers, etc
+//
+// Called when user decides to switch tables, so this one ends.
+// Called when exiting program.
 //
 void
-CrapsTable::setMaxSessions(TableStats& alltimeStats)
+CrapsTable::close()
+{
+    // Create an entry for today's session. CrapsTable is the only class
+    // with visibility to alltimeStats_, players and currentStats_.
+    //
+    alltimeStats_.sessionHistory.addSessionSummary(
+        players_.size(),
+        currentStats_.betStats.totNumBetsAllBets,
+        currentStats_.moneyStats.amtDeposited,
+        currentStats_.moneyStats.amtWithdrawn);
+    
+    // Merge alltime stats with today's session, then save.
+    alltimeStats_.merge(currentStats_);
+
+    // Directory where to read/write table stats.
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysTables).value();
+
+    saveFile(dir);
+}
+
+//----------------------------------------------------------------
+//
+//  Save to files, disable timers, etc
+//
+void
+CrapsTable::prepareForShutdown()
+{
+    close();
+}
+
+//----------------------------------------------------------------
+//
+// Helper function, simplify fromFile().
+//
+// Set maxSessions to the Multilayer configured value before reading
+// from file so that session history gets trimmed to the right size.
+// 
+void
+CrapsTable::setMaxSessions()
 {
     size_t maxSessions = Gbl::pConfigMgr->getInt(
         Ctrl::ConfigManager::KeyTableMaxSessions).value();
-    alltimeStats.sessionHistory.setMaxSessions(maxSessions);
+    alltimeStats_.sessionHistory.setMaxSessions(maxSessions);
 }
 
 //----------------------------------------------------------------
 //
-// Helper function, simplify fromFile()
+// Starting balance picks up where we left off, which is
+// only known after reading file.
 //
 void
-CrapsTable::loadStats(TableStats& alltimeStats)
+CrapsTable::setHouseBank()
 {
-    // Load alltime stats. Alltime stats come from file.
-    // (BTW, current session stats are in-memory only and inited to zero).
-    std::string dir = Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysTables).value();
-    alltimeStats.loadFile(dir);
-}    
-
-//----------------------------------------------------------------
-//
-// Helper function, simplify fromFile()
-//
-void
-CrapsTable::setHouseBank(TableStats& alltimeStats, Bank& houseBank)
-{
-    // Starting table balance picks up where we left off.
     Gen::Money startingBalance =
-        alltimeStats.moneyStats.initialStartingBalance +
-        alltimeStats.moneyStats.amtDeposited           +
-        alltimeStats.moneyStats.amtRefilled            -
-        alltimeStats.moneyStats.amtWithdrawn;
+        alltimeStats_.moneyStats.initialStartingBalance +
+        alltimeStats_.moneyStats.amtDeposited           +
+        alltimeStats_.moneyStats.amtRefilled            -
+        alltimeStats_.moneyStats.amtWithdrawn;
 
     Bank b(startingBalance, RefillThreshold_, RefillAmount_);
-    houseBank = b;  // Override default ctor bank values
+    houseBank_ = b;  // Override default ctor bank values
 }
 
 //----------------------------------------------------------------
@@ -171,7 +280,7 @@ CrapsTable::addBet(
     unsigned pivot,
     Gen::ErrorPass& ep)
 {
-    std::string diag = "Unable to add bet. ";
+    std::string diag = "CrapsTable::addBet(): Unable to add bet. ";
     if (!betAllowed(playerId, betName, pivot, ep))
     {
         ep.prepend(diag);
@@ -406,8 +515,9 @@ CrapsTable::rollDice()
     declareBettingClosed();
     throwDice();
     resolveBets();
-    advanceState();      // Update point, update shooter
-    tableStats_.recordDiceRoll(point_, dice_);
+    advanceState();            // Updates point, updates shooter
+    bumpRecentRolls(dice_);
+    currentStats_.recordDiceRoll(point_, dice_);
     declareBettingOpen();
 }
 
@@ -579,15 +689,15 @@ CrapsTable::disburseHouseResults()
         if (r.lose > 0)  // player loses, house wins
         {
             houseBank_.deposit(r.lose);
-            tableStats_.recordDeposit(r.lose);
+            currentStats_.recordDeposit(r.lose);
         }
         if (r.win > 0)  // player wins, house loses
         {
-            tableStats_.recordWithdrawal(r.win);
+            currentStats_.recordWithdrawal(r.win);
             Gen::Money amtRefill = houseBank_.withdraw(r.win);
             if (amtRefill > 0)
             {
-                tableStats_.recordRefill(amtRefill);
+                currentStats_.recordRefill(amtRefill);
             }
         }
         if (r.commission > 0)
@@ -609,7 +719,7 @@ CrapsTable::disbursePlayerWins()
             Gbl::pPlayerMgr->disburseWin(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            tableStats_.recordWin(*b, r.win);
+            currentStats_.recordWin(*b, r.win);
         }
     }
 }
@@ -626,7 +736,7 @@ CrapsTable::disbursePlayerLoses()
             Gbl::pPlayerMgr->disburseLose(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            tableStats_.recordLose(*b, r.lose);
+            currentStats_.recordLose(*b, r.lose);
         }
     }
 }
@@ -643,7 +753,7 @@ CrapsTable::disbursePlayerKeeps()
             Gbl::pPlayerMgr->disburseKeep(r);
             CrapsBetIntfc* b = findBetById(r.betId);
             assert(b != nullptr);
-            tableStats_.recordKeep(*b);
+            currentStats_.recordKeep(*b);
         }
     }
 }
@@ -786,6 +896,15 @@ CrapsTable::updatePlayerId(const Gen::Uuid& oldId,
 
 //----------------------------------------------------------------
 
+void
+CrapsTable::resetStats()
+{
+    recentRolls_.clear();
+    currentStats_.reset();
+}
+
+//----------------------------------------------------------------
+
 std::vector<Gen::Uuid>
 CrapsTable::getPlayers() const
 {
@@ -829,6 +948,14 @@ Dice
 CrapsTable::getCurRoll() const
 {
     return dice_;
+}
+
+//----------------------------------------------------------------
+
+const std::deque<Dice>&
+CrapsTable::getRecentRolls() const
+{
+    return recentRolls_;
 }
 
 //----------------------------------------------------------------
@@ -876,9 +1003,9 @@ Returns read-only access to current session table stats.
 
 */
 const TableStats&
-CrapsTable::getTableStats() const
+CrapsTable::getCurrentStats() const
 {
-    return tableStats_;
+    return currentStats_;
 }
 
 /*-----------------------------------------------------------*//**
@@ -926,42 +1053,40 @@ CrapsTable::isBettingOpen() const
     return bettingOpen_;
 }
 
-//----------------------------------------------------------------
-//
-// Save to files, disable timers, etc
-//
-// Called when user decides to switch tables, so this one ends.
-// Called when exiting program.
-//
-void
-CrapsTable::close()
-{
-    // Create an entry for today's session. CrapsTable is the only class
-    // with visibility to alltimeStats_, players and current tableStats_.
-    //
-    alltimeStats_.sessionHistory.addSessionSummary(
-        players_.size(),
-        tableStats_.betStats.totNumBetsAllBets,
-        tableStats_.moneyStats.amtDeposited,
-        tableStats_.moneyStats.amtWithdrawn);
-    
-    // Merge alltime stats with today's session, then save.
-    alltimeStats_.merge(tableStats_);
+//-----------------------------------------------------------------
 
-    // Directory where to read/write table stats.
-    std::string dir = Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysTables).value();
-    alltimeStats_.saveFile(dir);
+void
+CrapsTable::bumpRecentRolls(const Dice& dice)
+{
+    if (recentRolls_.size() >= recentRollsMaxSize_)
+    {
+        recentRolls_.pop_front();
+    }
+    recentRolls_.push_back(dice);
 }
 
-//----------------------------------------------------------------
-//
-//  Save to files, disable timers, etc
-//
-void
-CrapsTable::prepareForShutdown()
+//-----------------------------------------------------------------
+
+void 
+CrapsTable::checkPath(std::filesystem::path& path)
 {
-    close();
+    namespace fs = std::filesystem;
+    if (!fs::exists(path))
+    {
+        throw std::runtime_error("File does not exist.");
+    }
+}
+
+//-----------------------------------------------------------------
+
+void 
+CrapsTable::checkOpen(std::ifstream& fin)
+{
+    namespace fs = std::filesystem;
+    if (!fin.is_open())
+    {
+        throw std::runtime_error("Failed to open YAML file.");
+    }
 }
 
 //----------------------------------------------------------------

@@ -15,7 +15,7 @@ TEST_CASE("TableStats:diceroll:three")
 {
     // seq 4,5,6,8,9,10,5,6,8,9,10,4,7
     
-    TableStats ts("tableId-LasVegas");
+    TableStats ts;
     Dice dice;
     unsigned point = 0;
 

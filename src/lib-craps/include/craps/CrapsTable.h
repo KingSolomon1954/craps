@@ -7,11 +7,13 @@
 #pragma once
 
 #include <array>
+#include <deque>
 #include <list>
 #include <memory>
 #include <gen/ErrorPass.h>
 #include <gen/MoneyUtil.h>
 #include <gen/ReturnCode.h>
+#include <gen/Timepoint.h>
 #include <gen/Uuid.h>
 #include <craps/Bank.h>
 #include <craps/CrapsBet.h>
@@ -22,24 +24,21 @@
 
 namespace Craps {
 
-class TableConfig;  // fwd
-    
 class CrapsTable
 {
 public:
-    /// @name Lifecycle
-    /// @{
     using TableId = std::string;
     
+    /// @name Lifecycle
+    /// @{
+    CrapsTable(const TableId& tableId);
+   ~CrapsTable() = default;
     static CrapsTable* fromConfig(const TableId& tableId);
     static CrapsTable* fromFile  (const TableId& tableId);
-    
-   ~CrapsTable() = default;
     /// @}
 
     /// @name Modifiers
     /// @{
-    // void resetTable();
     Gen::ReturnCode addPlayer   (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
     Gen::ReturnCode removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep);
     Gen::ReturnCode updatePlayerId(const Gen::Uuid& oldId,
@@ -59,26 +58,28 @@ public:
     void rollDice();
     void testRollDice(unsigned d1, unsigned d2);
     void testSetState(unsigned point, unsigned d1, unsigned d2);
-    void close();  // Shutdown table, no longer in-use, soon to destruct.
+    void resetStats();
+    void close();  // Shutdown table, soon to destruct.
     void prepareForShutdown();
     /// @}
 
     /// @name Observers
     /// @{
-    bool havePlayer(const Gen::Uuid& playerId) const;
-    unsigned getNumPlayers()                   const;
-    std::vector<Gen::Uuid> getPlayers()        const;
-    unsigned getPoint()                        const;
-    Gen::Uuid getShooterId()                   const;
-    Dice getCurRoll()                          const;
-    bool isComeOutRoll()                       const;
-    bool isBettingOpen()                       const;
-    Gen::Money getAmountOnTable()              const;
-    unsigned getNumBetsOnTable()               const;
-    const TableStats& getTableStats()          const;
-    const TableStats& getAlltimeStats()        const;
+    unsigned                getNumPlayers()     const;
+    unsigned                getPoint()          const;
+    Dice                    getCurRoll()        const;
+    Gen::Money              getAmountOnTable()  const;
+    unsigned                getNumBetsOnTable() const;
+    std::vector<Gen::Uuid>  getPlayers()        const;
+    Gen::Uuid               getShooterId()      const;
+    const std::deque<Dice>& getRecentRolls()    const;
+    const TableStats&       getCurrentStats()   const;
+    const TableStats&       getAlltimeStats()   const;
     const SessionHistory::Sessions& getSessionHistory() const;
-    bool haveBet(const BetIntfcPtr bet)        const;
+    bool isComeOutRoll()                        const;
+    bool isBettingOpen()                        const;
+    bool havePlayer(const Gen::Uuid& playerId)  const;
+    bool haveBet(const BetIntfcPtr bet)         const;
     bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
     /// @}
 
@@ -92,6 +93,8 @@ public:
 private:
     TableId tableId_;
     std::string tableName_;
+    std::string shortDescription_;
+    std::string fullDescription_;
     Bank houseBank_;
     Dice dice_;
     unsigned point_ = 0;
@@ -99,8 +102,10 @@ private:
     bool bettingOpen_ = true;
     bool isTestRoll_ = false;
     Dice testRollDice_;
-    TableStats tableStats_;
+    TableStats currentStats_;
     TableStats alltimeStats_;
+    std::deque<Dice> recentRolls_;  // Roll history. Front element is oldest roll
+    size_t recentRollsMaxSize_ = 25;
 
     CrapsTable();  // private ctor
     
@@ -139,7 +144,7 @@ private:
     void removePlayerBets(const Gen::Uuid& playerId);
     void removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId);
 
-// Turn bet name enums into size_t to avoid casting each time.
+    // Turn bet name enums into size_t to avoid casting each time.
     // Used when directly indexing into tableBets_;
     // TODO might not need this - remove later.
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
@@ -151,6 +156,7 @@ private:
     void resolveBets();
     void advanceState();
     void advanceShooter();
+    void bumpRecentRolls(const Dice& dice);
     void declareBettingOpen();
     void evaluateBets();
     void dispenseResults();
@@ -165,9 +171,15 @@ private:
     void disbursePlayerLoses();
     void disbursePlayerKeeps();
 
-    static void setMaxSessions(TableStats& alltimeStats);
-    static void loadStats     (TableStats& alltimeStats);
-    static void setHouseBank  (TableStats& alltimeStats, Bank& houseBank);
+    void saveFile(const std::string& dir) const;
+    void loadFile(const std::string& dir);
+    void setMaxSessions();
+    void setHouseBank  ();
+
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
+    void checkPath(std::filesystem::path& path);
+    void checkOpen(std::ifstream& fin);
 };
 
 /*-----------------------------------------------------------*//**
