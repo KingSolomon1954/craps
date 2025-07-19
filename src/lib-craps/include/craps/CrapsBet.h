@@ -41,7 +41,8 @@ public:
     void setHardwayOn()      override;  // intfc
     
     Gen::ReturnCode setContractAmount(Gen::Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount    (Gen::Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount    (Gen::Money amount, unsigned maxOdds,
+                                      Gen::ErrorPass& ep);
     
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);

@@ -59,8 +59,8 @@ public:
     void testRollDice(unsigned d1, unsigned d2);
     void testSetState(unsigned point, unsigned d1, unsigned d2);
     void resetStats();
-    void close();  // Shutdown table, soon to destruct.
-    void prepareForShutdown();
+    void close();               // Shutdown table, soon to switch out.
+    void prepareForShutdown();  // Shutdown table, soon to destruct.
     /// @}
 
     /// @name Observers
@@ -75,12 +75,16 @@ public:
     const std::deque<Dice>& getRecentRolls()    const;
     const TableStats&       getCurrentStats()   const;
     const TableStats&       getAlltimeStats()   const;
+    unsigned                getMinLineBet()     const;
+    unsigned                getMaxLineBet()     const;
+    unsigned                getMaxOdds()        const;
+    bool                    isComeOutRoll()     const;
+    bool                    isBettingOpen()     const;
+    bool                    havePlayer(const Gen::Uuid& playerId) const;
+    bool                    haveBet(const BetIntfcPtr bet)        const;
+    bool                    haveBet(const Gen::Uuid& playerId,
+                                    BetName betName, unsigned pivot) const;
     const SessionHistory::Sessions& getSessionHistory() const;
-    bool isComeOutRoll()                        const;
-    bool isBettingOpen()                        const;
-    bool havePlayer(const Gen::Uuid& playerId)  const;
-    bool haveBet(const BetIntfcPtr bet)         const;
-    bool haveBet(const Gen::Uuid& playerId, BetName betName, unsigned pivot) const;
     /// @}
 
 #if 0
@@ -95,7 +99,10 @@ private:
     std::string tableName_;
     std::string shortDescription_;
     std::string fullDescription_;
-    Bank houseBank_;
+    unsigned minLineBet_ = 5;           // overriden by yaml
+    unsigned maxLineBet_ = 1000;        // overriden by yaml
+    unsigned maxOdds_    = 5;           // overriden by yaml
+    Bank houseBank_;                    // overriden by yaml
     Dice dice_;
     unsigned point_ = 0;
     Gen::Uuid currentShooterId_;
@@ -109,9 +116,9 @@ private:
 
     CrapsTable();  // private ctor
     
-    static constexpr unsigned InitialStartingBankBalance_ = 1000000;
-    static constexpr unsigned RefillThreshold_            = 500000;
-    static constexpr unsigned RefillAmount_               = 500000;
+    static constexpr unsigned InitialStartingBankBalance_ = 3000000;
+    static constexpr unsigned RefillThreshold_            = 1000000;
+    static constexpr unsigned RefillAmount_               = 2000000;
     
     // Players must join table in order to play.  We only hold the
     // player's UUID here in a std::list container and rely on the
@@ -150,7 +157,10 @@ private:
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
 
     bool betAllowed(const Gen::Uuid& playerId, BetName betName,
-                    unsigned& pivot, Gen::ErrorPass& ep) const;
+                    Gen::Money contractAmount, unsigned& pivot,
+                    Gen::ErrorPass& ep) const;
+    bool withinTableLimits(BetName betName, Gen::Money contractAmount,
+                           Gen::ErrorPass& ep) const;
     void declareBettingClosed();
     void throwDice();
     void resolveBets();
@@ -177,7 +187,9 @@ private:
     void setHouseBank  ();
 
     YAML::Node toYAML() const;
+    YAML::Node rulesToYAML() const;
     void fromYAML(const YAML::Node& node);
+    void rulesFromYAML(const YAML::Node& node);
 };
 
 /*-----------------------------------------------------------*//**

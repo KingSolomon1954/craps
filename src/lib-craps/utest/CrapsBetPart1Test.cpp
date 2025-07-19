@@ -376,6 +376,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Point of 4 wins (pivot == 0)
         CrapsBet b41("Player1", BetName::PassLine, 100);
@@ -393,7 +394,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 4 wins (pivot == 4)
         CrapsBet b42("Player1", BetName::PassLine, 100, 4);
-        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(2,2);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -422,7 +423,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 5 wins (pivot == 5)
         CrapsBet b52("Player1", BetName::PassLine, 100, 5);
-        CHECK(b52.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b52.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,2);
         CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -451,7 +452,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 6 wins (pivot == 6)
         CrapsBet b62("Player1", BetName::PassLine, 100, 6);
-        CHECK(b62.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b62.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,3);
         CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -480,7 +481,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 8 wins (pivot == 6)
         CrapsBet b82("Player1", BetName::PassLine, 100, 8);
-        CHECK(b82.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b82.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 8;
         dice.set(4,4);
         CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -509,7 +510,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 9 wins (pivot == 9)
         CrapsBet b92("Player1", BetName::PassLine, 100, 9);
-        CHECK(b92.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b92.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(6,3);
         CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -538,7 +539,7 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 10 wins (pivot == 10)
         CrapsBet b102("Player1", BetName::PassLine, 100, 10);
-        CHECK(b102.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b102.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 10;
         dice.set(6,4);
         CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -843,10 +844,11 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Point of 4 wins, min contract, min odds 
         CrapsBet b41("Player1", BetName::PassLine, 1, 4);
-        CHECK(b41.setOddsAmount(1, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(1, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(2,2);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -860,8 +862,8 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 5 wins, min contract, min odds 
         CrapsBet b51("Player1", BetName::PassLine, 1, 5);
-        CHECK(b51.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
-        CHECK(b51.setOddsAmount(2, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(1, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(2, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,2);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -875,8 +877,8 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
         // Point of 6 wins, min contract, min odds 
         CrapsBet b61("Player1", BetName::PassLine, 1, 6);
-        CHECK(b61.setOddsAmount(3, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(5, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(3, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(5, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,3);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1057,6 +1059,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Point of 4 (pivot == 0) illegal bet
         CrapsBet b41("Player1", BetName::DontPass, 100);
@@ -1066,7 +1069,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         
         // Point of 4 loses (pivot == 4)
         CrapsBet b42("Player1", BetName::DontPass, 100, 4);
-        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(2,2);
         CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1087,7 +1090,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 5 loses (pivot == 5)
         CrapsBet b52("Player1", BetName::DontPass, 100, 5);
-        CHECK(b52.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b52.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,2);
         CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1108,7 +1111,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 6 loses (pivot == 6)
         CrapsBet b62("Player1", BetName::DontPass, 100, 6);
-        CHECK(b62.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b62.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,3);
         CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1129,7 +1132,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 8 loses (pivot == 6)
         CrapsBet b82("Player1", BetName::DontPass, 100, 8);
-        CHECK(b82.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b82.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 8;
         dice.set(4,4);
         CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1150,7 +1153,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 9 loses (pivot == 9)
         CrapsBet b92("Player1", BetName::DontPass, 100, 9);
-        CHECK(b92.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b92.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(6,3);
         CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1171,7 +1174,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 10 loses (pivot == 10)
         CrapsBet b102("Player1", BetName::DontPass, 100, 10);
-        CHECK(b102.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b102.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 10;
         dice.set(6,4);
         CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1191,10 +1194,11 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Point of 4, dice = 7, wins
         CrapsBet b41("Player1", BetName::DontPass, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,4);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1208,7 +1212,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 5, dice = 7, wins
         CrapsBet b51("Player1", BetName::DontPass, 100, 5);
-        CHECK(b51.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,4);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1222,7 +1226,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 6, dice = 7, wins
         CrapsBet b61("Player1", BetName::DontPass, 100, 6);
-        CHECK(b61.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,4);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1236,7 +1240,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 8, dice = 7, wins
         CrapsBet b81("Player1", BetName::DontPass, 100, 8);
-        CHECK(b81.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b81.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 8;
         dice.set(3,4);
         CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1250,7 +1254,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 9, dice = 7, wins
         CrapsBet b91("Player1", BetName::DontPass, 100, 9);
-        CHECK(b91.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(3,4);
         CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1264,7 +1268,7 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 10, dice = 7, wins
         CrapsBet b101("Player1", BetName::DontPass, 100, 10);
-        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b101.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 10;
         dice.set(3,4);
         CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1481,15 +1485,16 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         Gen::ErrorPass ep;
         DecisionRecord dr;
         Dice dice;
+        unsigned maxOdds = 5;
 
         // Bad time for odds bet, no point established 
         CrapsBet b40("Player1", BetName::DontPass, 100, 0);
-        CHECK(b40.setOddsAmount(200, ep) == Gen::ReturnCode::Fail);
+        CHECK(b40.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Fail);
         // std::cout << ep.diag << std::endl;
         
         // Bad type of bet for odds bet
         CrapsBet b41("Player1", BetName::Place, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Fail);
+        CHECK(b41.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Fail);
         // std::cout << ep.diag << std::endl;
     }
 
@@ -1499,11 +1504,12 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Point of 4, 7 out, wins, min contract, min odds 
         CrapsBet b41("Player1", BetName::DontPass, 1, 4);
-        CHECK(b41.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
-        CHECK(b41.setOddsAmount(2, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(1, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b41.setOddsAmount(2, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(6,1);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1517,9 +1523,9 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 5, 7 out,  wins, min contract, min odds 
         CrapsBet b51("Player1", BetName::DontPass, 1, 5);
-        CHECK(b51.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
-        CHECK(b51.setOddsAmount(2, ep) == Gen::ReturnCode::Fail);
-        CHECK(b51.setOddsAmount(3, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(1, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(2, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(3, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,4);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1533,12 +1539,12 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
         // Point of 6, 7 out, wins, min contract, min odds 
         CrapsBet b61("Player1", BetName::DontPass, 1, 6);
-        CHECK(b61.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(2, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(3, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(4, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(5, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(6, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(1, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(2, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(3, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(4, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(5, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(6,       6, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,4);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1725,10 +1731,11 @@ TEST_CASE("CrapsBet:evaluate:Come")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Number 4 wins
         CrapsBet b41("Player1", BetName::Come, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(2,2);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1743,7 +1750,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number 5 wins
         CrapsBet b51("Player1", BetName::Come, 100, 5);
-        CHECK(b51.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,2);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1758,7 +1765,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number 6 wins
         CrapsBet b61("Player1", BetName::Come, 100, 6);
-        CHECK(b61.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,3);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1773,7 +1780,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number 8 wins
         CrapsBet b81("Player1", BetName::Come, 100, 8);
-        CHECK(b81.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b81.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(4,4);
         CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1788,7 +1795,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number 9 wins
         CrapsBet b91("Player1", BetName::Come, 100, 9);
-        CHECK(b91.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(6,3);
         CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1803,7 +1810,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number 10 wins
         CrapsBet b101("Player1", BetName::Come, 100, 10);
-        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b101.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(6,4);
         CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1823,10 +1830,11 @@ TEST_CASE("CrapsBet:evaluate:Come")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Number is 4, dice = 7, loses
         CrapsBet b41("Player1", BetName::Come, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,4);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1840,7 +1848,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number is 5, dice = 7, loses
         CrapsBet b51("Player1", BetName::Come, 100, 5);
-        CHECK(b51.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,4);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1854,7 +1862,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number is 6, dice = 7, loses
         CrapsBet b61("Player1", BetName::Come, 100, 6);
-        CHECK(b61.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,4);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1868,7 +1876,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number is 8, dice = 7, loses
         CrapsBet b81("Player1", BetName::Come, 100, 8);
-        CHECK(b81.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b81.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 8;
         dice.set(3,4);
         CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1882,7 +1890,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number is 9, dice = 7, loses
         CrapsBet b91("Player1", BetName::Come, 100, 9);
-        CHECK(b91.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(3,4);
         CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -1896,7 +1904,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Number is 10, dice = 7, loses
         CrapsBet b101("Player1", BetName::Come, 100, 10);
-        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b101.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 10;
         dice.set(3,4);
         CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2066,10 +2074,11 @@ TEST_CASE("CrapsBet:evaluate:Come")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Number hits on Come out roll, wins and returns odds
         CrapsBet b41("Player1", BetName::Come, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 0;
         dice.set(2,2);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2084,7 +2093,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
         // Same as previous, but enable odds working on come out roll
         // Number hits on Come out roll, wins with odds
         CrapsBet b42("Player1", BetName::Come, 100, 4);
-        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         b42.setOnComeOutRoll();
         point = 0;
         dice.set(2,2);
@@ -2099,7 +2108,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // 7 repeats before Number Come out roll, loses and returns odds
         CrapsBet b43("Player1", BetName::Come, 100, 4);
-        CHECK(b43.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b43.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 0;
         dice.set(6,1);
         CHECK(b43.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2114,7 +2123,7 @@ TEST_CASE("CrapsBet:evaluate:Come")
         // Same as previous, but enable odds working on come out roll
         // 7 repeats before Number Come out roll, loses odds too
         CrapsBet b44("Player1", BetName::Come, 100, 4);
-        CHECK(b44.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b44.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         b44.setOnComeOutRoll();
         point = 0;
         dice.set(6,1);
@@ -2134,10 +2143,11 @@ TEST_CASE("CrapsBet:evaluate:Come")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Point of 4 wins, min contract, min odds 
         CrapsBet b41("Player1", BetName::Come, 1, 4);
-        CHECK(b41.setOddsAmount(1, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(1, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(2,2);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2151,8 +2161,8 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Point of 5 wins, min contract, min odds 
         CrapsBet b51("Player1", BetName::Come, 1, 5);
-        CHECK(b51.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
-        CHECK(b51.setOddsAmount(2, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(1, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(2, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,2);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2166,8 +2176,8 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
         // Point of 6 wins, min contract, min odds 
         CrapsBet b61("Player1", BetName::Come, 1, 6);
-        CHECK(b61.setOddsAmount(3, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(5, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(3, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(5, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,3);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2354,10 +2364,11 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
-
+        unsigned maxOdds = 5;
+        
         // Number 4 loses
         CrapsBet b41("Player1", BetName::DontCome, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(2,2);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2372,7 +2383,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number 5 loses
         CrapsBet b51("Player1", BetName::DontCome, 100, 5);
-        CHECK(b51.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,2);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2387,7 +2398,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number 6 loses
         CrapsBet b61("Player1", BetName::DontCome, 100, 6);
-        CHECK(b61.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,3);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2402,7 +2413,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number 8 loses
         CrapsBet b81("Player1", BetName::DontCome, 100, 8);
-        CHECK(b81.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b81.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(4,4);
         CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2417,7 +2428,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number 9 loses
         CrapsBet b91("Player1", BetName::DontCome, 100, 9);
-        CHECK(b91.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(6,3);
         CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2432,7 +2443,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number 10 loses
         CrapsBet b101("Player1", BetName::DontCome, 100, 10);
-        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b101.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(6,4);
         CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2452,10 +2463,11 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Number is 4, dice = 7, wins
         CrapsBet b41("Player1", BetName::DontCome, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,4);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2469,7 +2481,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number is 5, dice = 7, wins
         CrapsBet b51("Player1", BetName::DontCome, 100, 5);
-        CHECK(b51.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,4);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2483,7 +2495,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number is 6, dice = 7, wins
         CrapsBet b61("Player1", BetName::DontCome, 100, 6);
-        CHECK(b61.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,4);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2497,7 +2509,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number is 8, dice = 7, wins
         CrapsBet b81("Player1", BetName::DontCome, 100, 8);
-        CHECK(b81.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b81.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 8;
         dice.set(3,4);
         CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2511,7 +2523,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number is 9, dice = 7, wins
         CrapsBet b91("Player1", BetName::DontCome, 100, 9);
-        CHECK(b91.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 9;
         dice.set(3,4);
         CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2525,7 +2537,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Number is 10, dice = 7, loses
         CrapsBet b101("Player1", BetName::DontCome, 100, 10);
-        CHECK(b101.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b101.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 10;
         dice.set(3,4);
         CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2695,10 +2707,11 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Number hits on Come out roll, loses and returns odds
         CrapsBet b41("Player1", BetName::DontCome, 100, 4);
-        CHECK(b41.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 0;
         dice.set(2,2);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2713,7 +2726,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
         // Same as previous, but enable odds working on come out roll
         // Number hits on Come out roll, loses with odds
         CrapsBet b42("Player1", BetName::DontCome, 100, 4);
-        CHECK(b42.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         b42.setOnComeOutRoll();
         point = 0;
         dice.set(2,2);
@@ -2728,7 +2741,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // 7 repeats before Number Come out roll, wins and returns odds
         CrapsBet b43("Player1", BetName::DontCome, 100, 4);
-        CHECK(b43.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b43.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 0;
         dice.set(6,1);
         CHECK(b43.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2743,7 +2756,7 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
         // Same as previous, but enable odds working on come out roll
         // 7 repeats before Number Come out roll, loses odds too
         CrapsBet b44("Player1", BetName::DontCome, 100, 4);
-        CHECK(b44.setOddsAmount(200, ep) == Gen::ReturnCode::Success);
+        CHECK(b44.setOddsAmount(200, maxOdds, ep) == Gen::ReturnCode::Success);
         b44.setOnComeOutRoll();
         point = 0;
         dice.set(6,1);
@@ -2763,10 +2776,11 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
         DecisionRecord dr;
         Dice dice;
         unsigned point = 0;
+        unsigned maxOdds = 5;
 
         // Dont 4 wins, min contract, min odds 
         CrapsBet b41("Player1", BetName::DontCome, 1, 4);
-        CHECK(b41.setOddsAmount(2, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.setOddsAmount(2, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 4;
         dice.set(3,4);
         CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2780,9 +2794,9 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Dont 5 wins, min contract, min odds 
         CrapsBet b51("Player1", BetName::DontCome, 1, 5);
-        CHECK(b51.setOddsAmount(1, ep) == Gen::ReturnCode::Fail);
-        CHECK(b51.setOddsAmount(2, ep) == Gen::ReturnCode::Fail);
-        CHECK(b51.setOddsAmount(3, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.setOddsAmount(1, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(2, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b51.setOddsAmount(3, maxOdds, ep) == Gen::ReturnCode::Success);
         point = 5;
         dice.set(3,4);
         CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
@@ -2796,10 +2810,10 @@ TEST_CASE("CrapsBet:evaluate:DontCome")
 
         // Dont 6 wins, min contract, min odds 
         CrapsBet b61("Player1", BetName::DontCome, 1, 6);
-        CHECK(b61.setOddsAmount(3, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(4, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(4, ep) == Gen::ReturnCode::Fail);
-        CHECK(b61.setOddsAmount(6, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.setOddsAmount(3, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(4, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(5, maxOdds, ep) == Gen::ReturnCode::Fail);
+        CHECK(b61.setOddsAmount(6,       6, ep) == Gen::ReturnCode::Success);
         point = 6;
         dice.set(3,4);
         CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);

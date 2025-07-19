@@ -2,20 +2,21 @@
 Fix Player startup/init
 Load Player from yaml file 
 Save Player to yaml file
-Load Table from yaml file (CrapsTable.cpp)
-Save Table from yaml file (CrapsTable.cpp)
 Save Config to yaml file
 Write unit test MultiLayerConfigTest
 Write unit test ConfigManagerTest
 
-load Table choices by reading dir
 load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
 stats PlayerStats
 
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
+update CrapBet unit-test, for any bet and setOdds exceeding table limit
 
+(Done) Rules for CrapsTables (10x odds, limits, automation)
+(Done) Load Table from yaml file (CrapsTable.cpp)
+(Done) Save Table from yaml file (CrapsTable.cpp)
 (Done) tables.yaml manifest
 (Done) eliminate TableId or TableName, not both
 (Done) single CrapsTable yaml file, includes stats
@@ -52,8 +53,8 @@ stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 (Done) Implement minimal game loop
 (Done) Add getBool() to MultiLayerManager
 
-Formats to display throw history
---------------------------------
+Formats to display roll history
+-------------------------------
 7(3,4) 8(4,4) 6(3,3) 
 7(34) 8(44) 6(33) 
 7,8,6

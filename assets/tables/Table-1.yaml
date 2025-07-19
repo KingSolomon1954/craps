@@ -1,7 +1,11 @@
 tableId: Table-1
-tableName: Las Vegas
-shortDescription: Las Vegas craps table and rules
-fullDescription: need to fill this out.
+tableName: Las Vegas Strip
+shortDescription: A typical table with 5x odds, min $10, max $10,000.
+fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
+Rules:
+  minLineBet: 10
+  maxLineBet: 10000
+  maxOdds: 5
 BetStats:
   totNumBetsAllBets: 0
   totNumWinsAllBets: 0
@@ -908,7 +912,7 @@ RollStats:
     count: 0
     maxRepeats: 0
 MoneyStats:
-  initialStartingBalance: 1000000
+  initialStartingBalance: 3000000
   numDeposits: 0
   amtDeposited: 0
   numWithdrawals: 0
@@ -920,7 +924,7 @@ MoneyStats:
   maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
   maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
 SessionStats:
-  numSessionsAlltime: 16
+  numSessionsAlltime: 17
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 00:01:04
   history:
@@ -934,35 +938,11 @@ SessionStats:
       amtIntake: 0
       amtPayout: 0
       numPlayers: 0
-      date: 2025-07-14T03:57:11.059969354
-      duration: 0d 00:00:03
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2025-07-14T17:11:29.847895372
-      duration: 0d 00:00:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2025-07-17T09:01:04.244221592
-      duration: 0d 00:00:32
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2025-07-17T17:36:19.458805202
-      duration: 0d 00:00:06
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2025-07-17T22:22:19.714978989
-      duration: 0d 00:00:59
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
       date: 2025-07-19T06:43:48.772112647
       duration: 0d 00:00:09
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-19T18:06:31.146327267
+      duration: 0d 00:00:04

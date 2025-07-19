@@ -245,6 +245,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         CHECK(b4->pivot() == 4);
         CHECK(t.getNumBetsOnTable() == 5);
         // std::cout << ep.diag << std::endl;
+
+        // Add a bet outside the table limits
+        CHECK(t.addBet(p1.getUuid(), BetName::PassLine,
+                       t.getMinLineBet() - 1, 0, ep) == nullptr);
+        CHECK(t.addBet(p1.getUuid(), BetName::PassLine,
+                       t.getMaxLineBet() + 1, 0, ep) == nullptr);
     }
 
     SUBCASE("changeBets")

@@ -160,18 +160,3 @@ ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
 }
 
 //----------------------------------------------------------------
-
-#if 0
-
-/usr/share/craps/
-//    ├── tables/
-//    │   ├── vegas_rules.yaml
-//    │   ├── atlantic_city.yaml
-//    ├── players/
-//    │   ├── demo_player1.yaml
-//    │   ├── demo_player2.yaml
-//    ├── themes/
-//    │   └── default_theme.yaml
-//    
-
-#endif

@@ -125,6 +125,7 @@ CrapsTable::toYAML() const
     node["shortDescription"] = shortDescription_;
     node["fullDescription"]  = fullDescription_;
 
+    node["Rules"] = rulesToYAML();
     alltimeStats_.toYAML(node);
     return node;
 }
@@ -144,8 +145,31 @@ CrapsTable::fromYAML(const YAML::Node& node)
         throw std::runtime_error("Table ID mismatch: expected " +
                                  tableId_ + ", found " + idInFile);
     }
-    
+
+    rulesFromYAML(node["Rules"]);
     alltimeStats_.fromYAML(node);
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::rulesFromYAML(const YAML::Node& node)
+{
+    minLineBet_ = node["minLineBet"].as<unsigned>();
+    maxLineBet_ = node["maxLineBet"].as<unsigned>();
+    maxOdds_    = node["maxOdds"].as<unsigned>();
+}
+
+//----------------------------------------------------------------
+
+YAML::Node
+CrapsTable::rulesToYAML() const
+{
+    YAML::Node node;
+    node["minLineBet"] = minLineBet_;
+    node["maxLineBet"] = maxLineBet_;
+    node["maxOdds"]    = maxOdds_;
+    return node;
 }
 
 //----------------------------------------------------------------
@@ -263,6 +287,7 @@ CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 Creates a bet and adds it to the table.
 
 It is an error if the same bet name already exists for this plapyer.
+Use changeBetAmount() to add or subtract from existing bet.
 
 @param playerId
 @param betName
@@ -279,8 +304,10 @@ CrapsTable::addBet(
     unsigned pivot,
     Gen::ErrorPass& ep)
 {
-    std::string diag = "CrapsTable::addBet(): Unable to add bet. ";
-    if (!betAllowed(playerId, betName, pivot, ep))
+    std::string diag = "CrapsTable::addBet(): Unable to add " +
+        EnumBetName::toString(betName) + " bet; ";
+    
+    if (!betAllowed(playerId, betName, contractAmount, pivot, ep))
     {
         ep.prepend(diag);
         return nullptr;
@@ -303,6 +330,7 @@ CrapsTable::addBet(
 bool
 CrapsTable::betAllowed(const Gen::Uuid& playerId,
                        BetName betName,
+                       Gen::Money contractAmount,
                        unsigned& pivot,
                        Gen::ErrorPass& ep) const
 {
@@ -320,13 +348,15 @@ CrapsTable::betAllowed(const Gen::Uuid& playerId,
     {
         if (point_ == 0)
         {
-            ep.diag = "Betting Come or DontCome is not allowed during come out roll.";
+            ep.diag = "Betting " + EnumBetName::toString(betName) +
+                " is not allowed during come out roll.";
             return false;
         }
     }
     if (betName == BetName::DontPass && point_ != 0)
     {
-        ep.diag = "DontPass is not allowed while there is already a point.";
+        ep.diag = EnumBetName::toString(betName) +
+            " is not allowed while there is already a point.";
         return false;
     }
     if (haveBet(playerId, betName, pivot))
@@ -334,11 +364,44 @@ CrapsTable::betAllowed(const Gen::Uuid& playerId,
         ep.diag = "Player XXX has already made this bet.";
         return false;
     }
+    if (!withinTableLimits(betName, contractAmount, ep))
+    {
+        return false;
+    }
     if (betName == BetName::PassLine && point_ != 0)
     {
         // Player made PassLine bet after point already established.
         // Silently coerce the pivot to agree with the point.
         pivot = point_;
+    }
+    
+    return true;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsTable::withinTableLimits(BetName betName, Gen::Money contractAmount,
+                              Gen::ErrorPass& ep) const
+{
+    if (betName == BetName::PassLine ||
+        betName == BetName::Come     ||     
+        betName == BetName::DontPass ||
+        betName == BetName::DontCome ||
+        betName == BetName::Place    ||
+        betName == BetName::Buy      ||
+        betName == BetName::Lay)
+    {
+        if (contractAmount < minLineBet_ ||
+            contractAmount > maxLineBet_)
+        {
+            std::string amt = std::to_string(contractAmount);
+            std::string min = std::to_string(minLineBet_);
+            std::string max = std::to_string(maxLineBet_);
+            ep.diag = "Bad line bet amount:$" + amt +
+            " is outside of table limit(min:" + min + ",max:" + max + ").";
+            return false;
+        }
     }
     return true;
 }
@@ -392,7 +455,7 @@ CrapsTable::removeBet(BetIntfcPtr pBet, Gen::ErrorPass& ep)
 Gen::ReturnCode
 CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
 {
-    std::string diag = "Unable to make odds bet. ";
+    std::string diag = "CrapsTable::setOdds(): Unable to make odds bet. ";
     if (!bettingOpen_)
     {
         ep.diag = diag +  "Betting is closed at the moment.";
@@ -408,10 +471,10 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
         ep.diag = diag + "This bet instance is not on the table.";
         return Gen::ReturnCode::Fail;
     }
-
-    // Downcast to concrete class.
+    // Downcast to concrete CrapsBet class.
     std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
-    if (pConcrete->setOddsAmount(newAmount, ep) == Gen::ReturnCode::Fail)
+    if (pConcrete->setOddsAmount(newAmount, maxOdds_, ep) ==
+        Gen::ReturnCode::Fail)
     {
         ep.prepend(diag);
         return Gen::ReturnCode::Fail;
@@ -947,6 +1010,30 @@ Dice
 CrapsTable::getCurRoll() const
 {
     return dice_;
+}
+
+//----------------------------------------------------------------
+
+unsigned
+CrapsTable::getMinLineBet() const
+{
+    return minLineBet_;
+}
+
+//----------------------------------------------------------------
+
+unsigned
+CrapsTable::getMaxLineBet() const
+{
+    return maxLineBet_;
+}
+
+//----------------------------------------------------------------
+
+unsigned
+CrapsTable::getMaxOdds() const
+{
+    return maxOdds_;
 }
 
 //----------------------------------------------------------------

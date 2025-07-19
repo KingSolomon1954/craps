@@ -256,7 +256,8 @@ amount of the contract bet.
 */
 
 Gen::ReturnCode
-CrapsBet::setOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
+CrapsBet::setOddsAmount(Gen::Money newAmount, unsigned maxOdds,
+                        Gen::ErrorPass& ep)
 {
     if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
         betName_ != BetName::Come     && betName_ != BetName::DontCome)
@@ -310,6 +311,18 @@ CrapsBet::setOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
             return Gen::ReturnCode::Fail;
         }
     }
+
+    if (newAmount > (contractAmount_ * maxOdds))
+    {
+        ep.diag = "Odds bet for " + EnumBetName::toString(betName_) +
+            "(" + std::to_string(pivot_) + ") exceeds table limit of "    +
+            std::to_string(maxOdds) + "x odds; "
+            "Contract amount is $" + std::to_string(contractAmount_)      +
+            " which allows max odds amount of $"                          +
+            std::to_string(contractAmount_ * maxOdds) +  ".";
+        return Gen::ReturnCode::Fail;
+    }
+        
     oddsAmount_ = newAmount;
     return Gen::ReturnCode::Success;    
 }

@@ -3,21 +3,21 @@
 #
 tables:
   - tableId: Table-1
-    tableName: Las Vegas
-    shortDescription: A standard table with 3x odds and conservative limits.
-    fullDescription: To be supplied.
+    tableName: Las Vegas Strip
+    shortDescription: A typical table with 5x odds, min $10, max $10,000.
+    fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
     fileName: Table-1.yaml
   
   - tableId: Table-2
-    tableName: Classic Table
-    shortDescription: A standard table with 3x odds and conservative limits.
-    fullDescription: To be supplied.
+    tableName: High Roller
+    shortDescription: Big limits, 10x odds, min $100, max $25,000.
+    fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
     fileName: Table-2.yaml
 
   - tableId: Table-3
-    tableName: High Roller
-    shortDescription: Big limits, 100x odds, and fast action.
-    fullDescription: To be supplied.
+    tableName: Morning Table
+    shortDescription: Lower limits, 3x odds, min $5, max $1,000.
+    fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
     fileName: Table-3.yaml
 
   - tableId: Table-4
