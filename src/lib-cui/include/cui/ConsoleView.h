@@ -22,7 +22,7 @@ public:
     /// @{
     void displayMessage(const std::string& msg) override;
     void displayAboutCraps() override;
-    Ctrl::TableManager::TableId promptUserToSelectTable(
+    Craps::CrapsTable::TableId promptUserToSelectTable(
         const Ctrl::TableManager::TableDescriptions& tds) override;
     std::vector<Ctrl::PlayerManager::PlayerId> promptUserToSelectPlayers(
         const Ctrl::PlayerManager::PlayerDescriptions& pds) override;

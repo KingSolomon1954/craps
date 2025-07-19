@@ -40,7 +40,7 @@ ConsoleView::displayAboutCraps()
 
 //----------------------------------------------------------------
 
-Ctrl::TableManager::TableId
+Craps::CrapsTable::TableId
 ConsoleView::promptUserToSelectTable(
     const Ctrl::TableManager::TableDescriptions& tds)
 {

@@ -178,8 +178,6 @@ private:
 
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
-    void checkPath(std::filesystem::path& path);
-    void checkOpen(std::ifstream& fin);
 };
 
 /*-----------------------------------------------------------*//**

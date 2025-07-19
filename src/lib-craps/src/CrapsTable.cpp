@@ -16,6 +16,7 @@
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <craps/CrapsBet.h>
+#include <gen/FileUtils.h>
 #include <gen/Logger.h>
 
 using namespace Craps;
@@ -102,11 +103,9 @@ CrapsTable::loadFile(const TableId& tableId)
 
     try
     {
-        checkPath(path);                      // throws
-        std::ifstream fin(path);
-        checkOpen(fin);                       // throws
+        std::ifstream fin = Gen::FileUtils::openOrThrow(path);  // throws
         YAML::Node root = YAML::Load(fin);
-        fromYAML(root);                       // throws
+        fromYAML(root);                                         // throws
     }
     catch (const std::runtime_error& e)
     {
@@ -1063,30 +1062,6 @@ CrapsTable::bumpRecentRolls(const Dice& dice)
         recentRolls_.pop_front();
     }
     recentRolls_.push_back(dice);
-}
-
-//-----------------------------------------------------------------
-
-void 
-CrapsTable::checkPath(std::filesystem::path& path)
-{
-    namespace fs = std::filesystem;
-    if (!fs::exists(path))
-    {
-        throw std::runtime_error("File does not exist.");
-    }
-}
-
-//-----------------------------------------------------------------
-
-void 
-CrapsTable::checkOpen(std::ifstream& fin)
-{
-    namespace fs = std::filesystem;
-    if (!fin.is_open())
-    {
-        throw std::runtime_error("Failed to open YAML file.");
-    }
 }
 
 //----------------------------------------------------------------

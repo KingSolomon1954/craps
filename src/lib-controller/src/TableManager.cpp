@@ -25,6 +25,8 @@ TableManager::TableManager()
 {
     pCurrentCrapsTable_ = loadStartingCrapsTable();
     Gbl::pTable = pCurrentCrapsTable_;  // Make it accessible via globals
+    
+    manifest_.loadFromFile();  // Load tables.yaml manifest
 }
 
 //----------------------------------------------------------------
@@ -36,21 +38,16 @@ TableManager::~TableManager()
 
 //----------------------------------------------------------------
 
-TableManager::TableDescriptions
-TableManager::loadTableChoices()
+const TableManager::TableDescriptions&
+TableManager::getTableChoices() const
 {
-    // TODO: read directory and build up table choices
-    return {
-        { "Table-1", "Standard Table",   "short desc", "full desc" },
-        { "Table-1", "No 7-Out Table",   "short desc", "full desc" },
-        { "Table-1", "Fast-Paced Table", "short desc", "full desc" },
-    };
+    return manifest_.getTables();
 }
 
 //----------------------------------------------------------------
 
 Craps::CrapsTable*
-TableManager::loadCrapsTable(const TableId& tableId)
+TableManager::loadCrapsTable(const Craps::CrapsTable::TableId& tableId)
 {
     return Craps::CrapsTable::fromFile(tableId);
 }
@@ -60,7 +57,7 @@ TableManager::loadCrapsTable(const TableId& tableId)
 Craps::CrapsTable*
 TableManager::loadStartingCrapsTable()
 {
-    TableId tid =
+    Craps::CrapsTable::TableId tid =
         Gbl::pConfigMgr->getString(ConfigManager::KeyTableStartId).value();
     return loadCrapsTable(tid);
 }
@@ -68,7 +65,8 @@ TableManager::loadStartingCrapsTable()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-TableManager::switchCrapsTable(const TableId& toTableId, Gen::ErrorPass& ep)
+TableManager::switchCrapsTable(
+    const Craps::CrapsTable::TableId& toTableId, Gen::ErrorPass& ep)
 {
     try
     {

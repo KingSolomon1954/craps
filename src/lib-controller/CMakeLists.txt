@@ -21,6 +21,7 @@ add_library(controller STATIC
     src/PlayerManager.cpp
     src/Properties.cpp
     src/TableManager.cpp
+    src/TableManifest.cpp
 )
 
 target_include_directories(controller

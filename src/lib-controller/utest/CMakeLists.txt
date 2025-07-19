@@ -7,6 +7,7 @@
 add_executable(controller-ut
     utest-controller-main.cpp
     ConfigManagerTest.cpp
+    TableManifestTest.cpp
 )
 
 target_link_libraries(controller-ut

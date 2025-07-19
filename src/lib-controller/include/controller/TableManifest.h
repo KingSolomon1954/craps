@@ -10,16 +10,12 @@
 #include <craps/CrapsTable.h>
 #include <yaml-cpp/yaml.h>
 
-namespace Gen {
-    class ErrorPass;  // fwd
-}
-
 namespace Ctrl {
 
 class TableManifest
 {
 public:
-    struct ManifestRecord
+    struct TableInfo
     {
         Craps::CrapsTable::TableId tableId;
         std::string tableName;
@@ -31,37 +27,19 @@ public:
         void fromYAML(const YAML::Node& node);
     };
     
-    /// @name Lifecycle
-    /// @{
-    /// @}
-
-    /// @name Modifiers
-    /// @{
-    /// @}
-
-    /// @name Observers
-    /// @{
-    const std::vector<ManifestRecord>& getManifest(Gen::ErrorPass& ep);
-    /// @}
+    void loadFromFile();  // throws
+    const std::vector<TableManifest::TableInfo>& getTables() const;
+    void fromYAML(const YAML::Node& node);
 
 private:
-    std::vector<ManifestRecord> records_;
-    
-    void loadFile(dir);
-    YAML::Node toYAML() const;
-    void fromYAML(const YAML::Node& node);
+    std::vector<TableInfo> tables_;
 };
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsGame
+@class TableManifest
 
-@brief Craps Game Top Level class.
-
-Responsibiities:
-
-* initialize Configuration
-* initializes Globals
+@brief Reads in table.yaml, populates tables_ vector.
 
 */
 

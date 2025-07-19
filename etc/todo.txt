@@ -15,8 +15,8 @@ design EventQueue and Events
 stats PlayerStats
 
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
-tables.yaml manifest
 
+(Done) tables.yaml manifest
 (Done) eliminate TableId or TableName, not both
 (Done) single CrapsTable yaml file, includes stats
 (Done) stats CrapsTable returns Session summaries

@@ -8,26 +8,23 @@
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
 #include <gen/ErrorPass.h>
+#include <gen/FileUtils.h>
+#include <fstream>
 
 using namespace Ctrl;
 
 //----------------------------------------------------------------
 
-const std::vector<ManifestRecord>&
-TableManifest::getManifest(Gen::ErrorPass& ep)
+const std::vector<TableManifest::TableInfo>&
+TableManifest::getTables() const
 {
-    std::vector<ManifestRecord> tmpRecords;
-    // read file
-    loadFile();
-    // freshly populate vector
-    // return to user
-    return records_;
+    return tables_;
 }
 
 //----------------------------------------------------------------
 
 void
-CrapsTable::loadFile(const TableId& tableId)
+TableManifest::loadFromFile()
 {
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
@@ -37,15 +34,13 @@ CrapsTable::loadFile(const TableId& tableId)
 
     try
     {
-        checkPath(path);                      // throws
-        std::ifstream fin(path);
-        checkOpen(fin);                       // throws
+        std::ifstream fin = Gen::FileUtils::openOrThrow(path);
         YAML::Node root = YAML::Load(fin);
-        fromYAML(root["tables"]);             // throws
+        fromYAML(root["tables"]);
     }
     catch (const std::runtime_error& e)
     {
-        std::string diag("CrapsTable::loadFile(): \"" + path.string() + "\"; ");
+        std::string diag("TableManifest::loadFromFile(): \"" + path.string() + "\"; ");
         throw std::runtime_error(diag + e.what());
     }
 }
@@ -53,14 +48,47 @@ CrapsTable::loadFile(const TableId& tableId)
 //-----------------------------------------------------------------
 
 void
-CrapsTable::fromYAML(const YAML::Node& node)
+TableManifest::fromYAML(const YAML::Node& node)
 {
-    // need for loop
-    for (i     )
+    tables_.clear();
+
+    if (!node || !node.IsSequence())
     {
-        vector[i].fromYAML();
+        throw std::runtime_error("TableManifest::fromYAML(): expected a sequence node");
+    }
+
+    for (const auto& tableNode : node)
+    {
+        TableInfo info;
+        info.fromYAML(tableNode);
+        tables_.emplace_back(std::move(info));
     }
 }
 
 //-----------------------------------------------------------------
 
+void
+TableManifest::TableInfo::fromYAML(const YAML::Node& node)
+{
+    tableId          = node["tableId"].as<Craps::CrapsTable::TableId>();
+    tableName        = node["tableName"].as<std::string>();
+    shortDescription = node["shortDescription"].as<std::string>();
+    fullDescription  = node["fullDescription"].as<std::string>();
+    fileName         = node["fileName"].as<std::string>();
+}
+
+//-----------------------------------------------------------------
+
+YAML::Node
+TableManifest::TableInfo::toYAML() const
+{
+    YAML::Node node;
+    node["tableId"]          = tableId;
+    node["tableName"]        = tableName;
+    node["shortDescription"] = shortDescription;
+    node["fullDescription"]  = fullDescription;
+    node["fileName"]         = fileName;
+    return node;
+}
+
+//-----------------------------------------------------------------

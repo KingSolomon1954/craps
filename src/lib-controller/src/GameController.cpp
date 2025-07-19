@@ -52,18 +52,6 @@ GameController::onUserInputLine(GameEvent* pBase)
 //----------------------------------------------------------------
 //
 // Not used.
-// Pursue different design for choosing table
-//
-void
-GameController::userSelectsTable()
-{
-    auto tds = Gbl::pTableMgr->loadTableChoices();
-    auto tid = Gbl::pView->promptUserToSelectTable(tds);
-}
-
-//----------------------------------------------------------------
-//
-// Not used.
 // Pursue different design for choosing players
 //
 void
