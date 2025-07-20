@@ -229,40 +229,59 @@ CrapsBet::operator==(const CrapsBet& other) const
 
 /*-----------------------------------------------------------*//**
 
-Sets the contract bet to the new amount.
+Sets the contract bet to the given amount.
 
+@param amount
+    Sets the bet amount to amount
+
+@param ep
+    Holds reason for error
+
+@return
+    Success if amount has been changed, otherwise Fail and ep has reason
 */
 Gen::ReturnCode
 CrapsBet::changeContractAmount(Gen::Money amount, Gen::ErrorPass& ep)
 {
+    std::string diag = "CrapsBet::changeContractAmount: "
+                       "Unable to change contract amount; ";
     if (amount == 0)
     {
-        ep.diag = "New contract amount would be zero or less. "
-            "Use removeBet() if intent is to pull the bet.";
+        ep.diag = diag + "New contract amount cannot be zero. "
+            "Use CrapsTable::removeBet() if intent is to pull the bet.";
         return Gen::ReturnCode::Fail;
     }
     
-    if (betName_ == BetName::PassLine ||
-        betName_ == BetName::Come)
+    if (betName_ == BetName::PassLine || betName_ == BetName::Come)
     {
         if (pivot_ != 0 && amount < contractAmount_)
         {
-            ep.diag = "Cannot reduce contract amount for PassLine/Come "
-                      "bets after point is established.";
+            ep.diag = diag + "Cannot reduce contract amount for "
+                "PassLine/Come bets after point is established.";
             return Gen::ReturnCode::Fail;
         }
     }
 
-    if (betName_ == BetName::DontPass ||
-        betName_ == BetName::DontCome)
+    if (betName_ == BetName::DontPass || betName_ == BetName::DontCome)
     {
         if (pivot_ != 0 && amount > contractAmount_)
         {
-            ep.diag = "Cannot increase contract amount for DontPass/DontCome "
-                      "bets after point is established.";
+            ep.diag = diag + "Cannot increase contract amount for "
+                "DontPass/DontCome bets after point is established.";
             return Gen::ReturnCode::Fail;
         }
     }
+
+    // Check for exceeding table limits
+    if (pTable_ != nullptr)  // Might not have placed the bet yet
+    {
+        if (!pTable_->withinTableLimits(betName_, amount, ep))
+        {
+            ep.prepend(diag);
+            return Gen::ReturnCode::Fail;
+        }
+    }
+    
     contractAmount_ = amount;
     return Gen::ReturnCode::Success;
 }
@@ -296,8 +315,31 @@ amount of the contract bet.
 */
 
 Gen::ReturnCode
-CrapsBet::changeOddsAmount(Gen::Money newAmount, unsigned maxOdds,
-                           Gen::ErrorPass& ep)
+CrapsBet::changeOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
+{
+    if (!coaCheckBetType(ep))             return Gen::ReturnCode::Fail;
+    if (!coaCheckNoTable(ep))             return Gen::ReturnCode::Fail;
+    if (!coaCheckBettingOpen(ep))         return Gen::ReturnCode::Fail;
+    if (!coaCheckPivot(ep))               return Gen::ReturnCode::Fail;
+    if (!coaCheckTooSmall(newAmount, ep)) return Gen::ReturnCode::Fail;
+    if (!coaCheckMaxOdds(newAmount, ep))  return Gen::ReturnCode::Fail;
+    
+    oddsAmount_ = newAmount;
+    return Gen::ReturnCode::Success;    
+}
+
+//----------------------------------------------------------------
+
+std::string
+CrapsBet::coaPrefix() const
+{
+    return "CrapsBet::changeOddsAmount(): Unable to make odds bet; ";
+}    
+
+//----------------------------------------------------------------
+
+bool
+CrapsBet::coaCheckBetType(Gen::ErrorPass& ep) const
 {
     if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
         betName_ != BetName::Come     && betName_ != BetName::DontCome)
@@ -306,31 +348,61 @@ CrapsBet::changeOddsAmount(Gen::Money newAmount, unsigned maxOdds,
             "PassLine|Come|DontPass|DontCome bets. Current bet is betId:");
         s += std::to_string(betId_) + " betName:" +
             EnumBetName::toString(betName_) + ". ";
-        ep.diag = s;
-        return Gen::ReturnCode::Fail;
+        ep.diag = coaPrefix() + s;
+        return false;
     }
+    return true;
+}
 
-    // OK to remove odds bet anytime.
-//  if (amount == 0 && oddsAmount_ > 0)
-    if (newAmount == 0)
+//----------------------------------------------------------------
+
+bool
+CrapsBet::coaCheckNoTable(Gen::ErrorPass& ep) const
+{
+    if (pTable_ == nullptr)
     {
-        oddsAmount_ = 0;
-        return Gen::ReturnCode::Success;
+        ep.diag = coaPrefix() + "Bet has not yet been placed on a table.";
+        return false;
     }
+    return true;
+}
 
-    // Otherwise, caller is adding or changing amount
+//----------------------------------------------------------------
 
+bool
+CrapsBet::coaCheckBettingOpen(Gen::ErrorPass& ep) const
+{
+    if (!pTable_->isBettingOpen())
+    {
+        ep.diag = + "Betting is closed at the moment - dice roll is underway.";
+        return false;
+    }
+    return true;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsBet::coaCheckPivot(Gen::ErrorPass& ep) const
+{
     if (pivot_ == 0)
     {
-        std::string s("Odds bet is not allowed. "
-            "Need a point to be established for this bet. ");
+        std::string s("Odds bet is only allowed after a "
+            "point has been established for this bet; ");
         s += "betId:" + std::to_string(betId_) + " betName:" +
             EnumBetName::toString(betName_) + " pivot:" +
             std::to_string(pivot_) + ".";
-        ep.diag = s;
-        return Gen::ReturnCode::Fail;
+        ep.diag = coaPrefix() + s;
+        return false;
     }
+    return true;
+}
 
+//----------------------------------------------------------------
+
+bool
+CrapsBet::coaCheckTooSmall(Gen::Money newAmount, Gen::ErrorPass& ep) const
+{
     if (betName_ == BetName::PassLine || betName_ == BetName::Come)
     {
         if (newAmount < OddsTables::oddsPass[pivot_].denominator)
@@ -338,7 +410,7 @@ CrapsBet::changeOddsAmount(Gen::Money newAmount, unsigned maxOdds,
             ep.diag = diagTooSmall(newAmount,
                 OddsTables::oddsPass[pivot_].denominator,
                 betName_, pivot_);
-            return Gen::ReturnCode::Fail;
+            return false;
         }
     }
     if (betName_ == BetName::DontPass || betName_ == BetName::DontCome)
@@ -348,32 +420,38 @@ CrapsBet::changeOddsAmount(Gen::Money newAmount, unsigned maxOdds,
             ep.diag = diagTooSmall(newAmount,
                 OddsTables::oddsDont[pivot_].denominator,
                 betName_, pivot_);
-            return Gen::ReturnCode::Fail;
+            return false;
         }
     }
-
-    if (newAmount > (contractAmount_ * maxOdds))
-    {
-        ep.diag = "Odds bet for " + EnumBetName::toString(betName_) +
-            "(" + std::to_string(pivot_) + ") exceeds table limit of "    +
-            std::to_string(maxOdds) + "x odds; "
-            "Contract amount is $" + std::to_string(contractAmount_)      +
-            " which allows max odds amount of $"                          +
-            std::to_string(contractAmount_ * maxOdds) +  ".";
-        return Gen::ReturnCode::Fail;
-    }
-        
-    oddsAmount_ = newAmount;
-    return Gen::ReturnCode::Success;    
+    return true;
 }
 
+//----------------------------------------------------------------
+
+bool
+CrapsBet::coaCheckMaxOdds(Gen::Money newAmount, Gen::ErrorPass& ep) const
+{
+    if (newAmount > (contractAmount_ * pTable_->getMaxOdds()))
+    {
+        ep.diag = coaPrefix() + "Odds bet for " +
+            EnumBetName::toString(betName_) +
+            "(" + std::to_string(pivot_) + ") exceeds table limit of "    +
+            std::to_string(pTable_->getMaxOdds()) + "x odds; "
+            "Contract amount is $" + std::to_string(contractAmount_)      +
+            " which allows max odds amount of $"                          +
+            std::to_string(contractAmount_ * pTable_->getMaxOdds()) +  ".";
+        return false;
+    }
+    return true;
+}
+        
 //----------------------------------------------------------------
 //
 // Helper to form error diag.
 //
 std::string
 CrapsBet::diagTooSmall(Gen::Money amount, Gen::Money min,
-                        BetName betName, unsigned pivot)
+                        BetName betName, unsigned pivot) const
 {
     std::string s("Odds bet amount of ");
     s += Gen::MoneyUtil::toStringNoCommas(amount) + 
@@ -381,7 +459,7 @@ CrapsBet::diagTooSmall(Gen::Money amount, Gen::Money min,
         EnumBetName::toString(betName_) +
         "(" + std::to_string(pivot) + ") is " +
         std::to_string(min) +  ".";
-    return s;
+    return coaPrefix() + s;
 }
 
 /*-----------------------------------------------------------*//**

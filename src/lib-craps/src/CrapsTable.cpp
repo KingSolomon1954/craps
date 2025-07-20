@@ -284,66 +284,54 @@ CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 
 /*-----------------------------------------------------------*//**
 
-Creates a bet and adds it to the table.
+Adds the bet to the table.
 
-It is an error if the same bet name already exists for this plapyer.
-Use changeBetAmount() to add or subtract from existing bet.
+It is an error if the same bet name already exists for this player.
+Use changeBetAmount() if you need to change the bet amount.
 
-@param playerId
-@param betName
-@param contractAmount
+@param pBet
+    the bet of interest
 @param ep
-@return Interface pointer to the CrapsBet
-
+    if error, ep has the reason
+@return
+    Success if accepted, otherwise Fail and ep has the reason
 */
-CrapsTable::BetIntfcPtr
-CrapsTable::addBet(
-    const Gen::Uuid& playerId,
-    BetName betName,
-    Gen::Money contractAmount,
-    unsigned pivot,
-    Gen::ErrorPass& ep)
+Gen::ReturnCode
+CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 {
-    std::string diag = "CrapsTable::addBet(): Unable to add " +
-        EnumBetName::toString(betName) + " bet; ";
-    
-    if (!betAllowed(playerId, betName, contractAmount, pivot, ep))
+    if (!betAllowed(*pBet, ep))
     {
+        std::string diag = "CrapsTable::addBet(): Unable to add " +
+            EnumBetName::toString(pBet->betName()) + " bet; ";
         ep.prepend(diag);
-        return nullptr;
+        return Gen::ReturnCode::Fail;
     }
-    try
-    {
-        BetIntfcPtr b = std::make_shared<CrapsBet>(playerId, betName, contractAmount, pivot);
-        tableBets_[static_cast<size_t>(betName)].push_back(b);
-        return b;
-    }
-    catch (const std::invalid_argument& e)
-    {
-        ep.diag = diag + e.what();
-        return nullptr;
-    }
+    tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
 bool
-CrapsTable::betAllowed(const Gen::Uuid& playerId,
-                       BetName betName,
-                       Gen::Money contractAmount,
-                       unsigned& pivot,
-                       Gen::ErrorPass& ep) const
+CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
 {
     if (!bettingOpen_)
     {
         ep.diag = "Betting is closed at the moment - dice roll is underway.";
         return false;
     }
-    if (!havePlayer(playerId))
+    if (!havePlayer(bet.playerId()))
     {
         ep.diag = "Player is not joined with this table.";
         return false;
     }
+    if (haveBet(bet.playerId(), bet.betName(), bet.pivot()))
+    {
+        ep.diag = "Player XXX has already made this bet.";
+        return false;
+    }
+
+    BetName betName = bet.betName();  // short hand convenience.
     if (betName == BetName::Come || betName == BetName::DontCome)
     {
         if (point_ == 0)
@@ -359,12 +347,8 @@ CrapsTable::betAllowed(const Gen::Uuid& playerId,
             " is not allowed while there is already a point.";
         return false;
     }
-    if (haveBet(playerId, betName, pivot))
-    {
-        ep.diag = "Player XXX has already made this bet.";
-        return false;
-    }
-    if (!withinTableLimits(betName, contractAmount, ep))
+
+    if (!withinTableLimits(betName, bet.contractAmount(), ep))
     {
         return false;
     }
@@ -372,10 +356,20 @@ CrapsTable::betAllowed(const Gen::Uuid& playerId,
     {
         // Player made PassLine bet after point already established.
         // Silently coerce the pivot to agree with the point.
-        pivot = point_;
+        bet.pivot_ = point_;
     }
     
     return true;
+}
+
+
+//----------------------------------------------------------------
+
+std::string
+CrapsTable::diagLimits(Gen::Money amt) const
+{
+    return "Bad bet amount:$" + std::to_string(amt) +
+        " is outside of table limit ";
 }
 
 //----------------------------------------------------------------
@@ -392,45 +386,33 @@ CrapsTable::withinTableLimits(BetName betName, Gen::Money contractAmount,
         betName == BetName::Buy      ||
         betName == BetName::Lay)
     {
-        if (contractAmount < minLineBet_ ||
-            contractAmount > maxLineBet_)
+        if (contractAmount < minLineBet_ || contractAmount > maxLineBet_)
         {
-            std::string amt = std::to_string(contractAmount);
             std::string min = std::to_string(minLineBet_);
             std::string max = std::to_string(maxLineBet_);
-            ep.diag = "Bad line bet amount:$" + amt +
-            " is outside of table limit(min:" + min + ",max:" + max + ").";
+            ep.diag = diagLimits(contractAmount) +
+              "(min:" + min + ",max:" + max + ").";
             return false;
+        }
+    }
+    else  // One shot bets
+    {
+        // Min is 1 dollar. No need to check. Checks elsewhere cover it.
+        if (contractAmount > maxLineBet_)
+        {
+            std::string max = std::to_string(maxLineBet_);
+            ep.diag = diagLimits(contractAmount) + " (max:" + max + ").";
         }
     }
     return true;
 }
 
 //----------------------------------------------------------------
-//
-// Change the contract amount of the bet by +/- delta.
-//
-Gen::ReturnCode
-CrapsTable::changeBetAmount(BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep)
-{
-    int newAmount = pBet->contractAmount() + delta;
-    newAmount = std::max(newAmount, 0);
-    // Downcast to concrete class.
-    std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
-    if (pConcrete->setContractAmount(newAmount, ep) == Gen::ReturnCode::Fail)
-    {
-        ep.prepend("Unable to change contract bet amount. ");
-        return Gen::ReturnCode::Fail;
-    }
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::removeBet(BetIntfcPtr pBet, Gen::ErrorPass& ep)
+CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
 {
-    std::string diag = "Unable to remove bet. ";
+    std::string diag = "CrapsTable::removeBet(): Unable to remove bet. ";
     if (!haveBet(pBet))
     {
         ep.diag = diag + "This bet instance is not on the table.";
@@ -451,8 +433,29 @@ CrapsTable::removeBet(BetIntfcPtr pBet, Gen::ErrorPass& ep)
 }
 
 //----------------------------------------------------------------
+//
+// Change the contract amount of the bet by +/- delta.
+//
+#if 0
+Gen::ReturnCode
+CrapsTable::changeBetAmount(BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep)
+{
+    int newAmount = pBet->contractAmount() + delta;
+    newAmount = std::max(newAmount, 0);
+    // Downcast to concrete class.
+    std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
+    if (pConcrete->setContractAmount(newAmount, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("Unable to change contract bet amount. ");
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
+}
+#endif
 
+//----------------------------------------------------------------
 
+#if 0
 
 Gen::ReturnCode
 CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
@@ -460,13 +463,13 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
     std::string diag = "CrapsTable::setOdds(): Unable to make odds bet. ";
     if (!bettingOpen_)
     {
-        ep.diag = diag +  "Betting is closed at the moment.";
-        return Gen::ReturnCode::Fail;
+        ep.diag = "Betting is closed at the moment - dice roll is underway.";
+        return true;
     }
-    if (!havePlayer(pBet->playerId()))
+    if (!havePlayer(playerId))
     {
-        ep.diag = diag + "Player is not joined with this table.";
-        return Gen::ReturnCode::Fail;
+        ep.diag = "Player is not joined with this table.";
+        return false;
     }
     if (!haveBet(pBet))
     {
@@ -484,13 +487,15 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
     return Gen::ReturnCode::Success;
 }
 
+#endif
+
 //----------------------------------------------------------------
 //
 // Given a BetIntfcPtr, determine if we already have the given
 // bet on the table.
 //
 bool
-CrapsTable::haveBet(const BetIntfcPtr bet) const
+CrapsTable::haveBet(const BetPtr bet) const
 {
     // Process all bets
     for (size_t i = 0; i < tableBets_.size(); ++i)
@@ -517,8 +522,8 @@ CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
     for (auto& b : bets)
     {
         if (playerId == b->playerId() &&
-            betName == b->betName() &&
-            pivot == b->pivot())
+            betName  == b->betName()  &&
+            pivot    == b->pivot())
         {
             return true;
         }
@@ -530,7 +535,7 @@ CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
 //
 // Find a bet by ID.
 //
-CrapsBetIntfc*
+CrapsBet*
 CrapsTable::findBetById(unsigned betId) const
 
 {
@@ -710,7 +715,7 @@ CrapsTable::evaluateBets()
 // Creates a decision record for the given bet and adds it to the DRL.
 //
 void
-CrapsTable::evalOneBet(const BetIntfcPtr pBet)
+CrapsTable::evalOneBet(const BetPtr pBet)
 {
     DecisionRecord dr;
     Gen::ErrorPass ep;
@@ -781,7 +786,7 @@ CrapsTable::disbursePlayerWins()
         if (r.win > 0)
         {
             Gbl::pPlayerMgr->disburseWin(r);
-            CrapsBetIntfc* b = findBetById(r.betId);
+            auto b = findBetById(r.betId);
             assert(b != nullptr);
             currentStats_.recordWin(*b, r.win);
         }
@@ -798,7 +803,7 @@ CrapsTable::disbursePlayerLoses()
         if (r.lose > 0)
         {
             Gbl::pPlayerMgr->disburseLose(r);
-            CrapsBetIntfc* b = findBetById(r.betId);
+            auto b = findBetById(r.betId);
             assert(b != nullptr);
             currentStats_.recordLose(*b, r.lose);
         }
@@ -815,7 +820,7 @@ CrapsTable::disbursePlayerKeeps()
         if (!r.decision)
         {
             Gbl::pPlayerMgr->disburseKeep(r);
-            CrapsBetIntfc* b = findBetById(r.betId);
+            auto b = findBetById(r.betId);
             assert(b != nullptr);
             currentStats_.recordKeep(*b);
         }
@@ -830,7 +835,7 @@ CrapsTable::disbursePlayerKeeps()
 // when player processes a decision record. A player implementation
 // might not be holding their bet pointers, yet still want to access
 // the bet. It should be valid for player to lookup bet by id while
-// processing decision record.
+// player is processing decision record.
 //
 void
 CrapsTable::trimTableBets()
@@ -856,7 +861,7 @@ bool
 CrapsTable::removeMatchingBetId(BetList& bets, unsigned betId)
 {
     auto it = std::remove_if(bets.begin(), bets.end(),
-                   [betId](const BetIntfcPtr& b)
+                   [betId](const BetPtr& b)
                    {
                        return b->betId() == betId;
                    });
@@ -896,7 +901,7 @@ CrapsTable::removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId)
     {
         if (*it && (*it)->playerId() == playerId)
         {
-            BetIntfcPtr p = *it;
+            BetPtr p = *it;
             houseBank_.deposit(p->contractAmount());
             houseBank_.deposit(p->oddsAmount());
             it = bets.erase(it);

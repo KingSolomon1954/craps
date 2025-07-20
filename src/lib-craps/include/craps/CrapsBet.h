@@ -39,8 +39,7 @@ public:
     /// @name Modifiers
     /// @{
     Gen::ReturnCode changeContractAmount(Gen::Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode changeOddsAmount    (Gen::Money amount, unsigned maxOdds,
-                                         Gen::ErrorPass& ep);
+    Gen::ReturnCode changeOddsAmount    (Gen::Money amount, Gen::ErrorPass& ep);
     void setOffComeOutRoll();
     void setOnComeOutRoll();
     void setHardwayOff();
@@ -151,8 +150,16 @@ private:
                          bool returnOdds,
                          const OddsTables::OddsEntry table[]) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
+
+    std::string coaPrefix()                      const;
+    bool coaCheckBetType    (Gen::ErrorPass& ep) const;
+    bool coaCheckNoTable    (Gen::ErrorPass& ep) const;
+    bool coaCheckBettingOpen(Gen::ErrorPass& ep) const;
+    bool coaCheckPivot      (Gen::ErrorPass& ep) const;
+    bool coaCheckTooSmall   (Gen::Money newAmount, Gen::ErrorPass& ep) const;
+    bool coaCheckMaxOdds    (Gen::Money newAmount, Gen::ErrorPass& ep) const;
     std::string diagTooSmall(Gen::Money amount, Gen::Money min,
-                             BetName betName, unsigned pivot);
+                             BetName betName, unsigned pivot) const;
 
     friend class CrapsTable;
     friend class TableStats;

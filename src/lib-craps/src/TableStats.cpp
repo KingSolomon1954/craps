@@ -485,7 +485,7 @@ Record a winning bet.
 
 */
 void
-TableStats::recordWin(const CrapsBetIntfc& bet, Gen::Money amtWin)
+TableStats::recordWin(const CrapsBet& bet, Gen::Money amtWin)
 {
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
@@ -520,7 +520,7 @@ Record a losing bet.
 
 */
 void
-TableStats::recordLose(const CrapsBetIntfc& bet, Gen::Money amtLose)
+TableStats::recordLose(const CrapsBet& bet, Gen::Money amtLose)
 {
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
@@ -558,7 +558,7 @@ But might want to track avg number of keeps per roll.
 
 */
 void
-TableStats::recordKeep(const CrapsBetIntfc& bet)
+TableStats::recordKeep(const CrapsBet& bet)
 {
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);

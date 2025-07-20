@@ -28,6 +28,7 @@ class CrapsTable
 {
 public:
     using TableId = std::string;
+    using BetPtr = std::shared_ptr<class CrapsBet>;
     
     /// @name Lifecycle
     /// @{
@@ -44,17 +45,21 @@ public:
     Gen::ReturnCode updatePlayerId(const Gen::Uuid& oldId,
                                    const Gen::Uuid& newId,
                                    Gen::ErrorPass& ep);
+    Gen::ReturnCode addBet   (BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet(BetPtr pBet, Gen::ErrorPass& ep);
 
-    using BetIntfcPtr = std::shared_ptr<class CrapsBetIntfc>;
+#if 0    
     BetIntfcPtr addBet(const Gen::Uuid& playerId,
                        BetName betName,
                        Gen::Money contractAmount,
                        unsigned pivot,
                        Gen::ErrorPass& ep);
+    
     Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
     Gen::ReturnCode setOdds         (BetIntfcPtr bet, Gen::Money amount, Gen::ErrorPass& ep);
-
+#endif
+    
     void rollDice();
     void testRollDice(unsigned d1, unsigned d2);
     void testSetState(unsigned point, unsigned d1, unsigned d2);
@@ -81,9 +86,13 @@ public:
     bool                    isComeOutRoll()     const;
     bool                    isBettingOpen()     const;
     bool                    havePlayer(const Gen::Uuid& playerId) const;
-    bool                    haveBet(const BetIntfcPtr bet)        const;
+    bool                    haveBet(const BetPtr bet)             const;
     bool                    haveBet(const Gen::Uuid& playerId,
-                                    BetName betName, unsigned pivot) const;
+                                    BetName betName,
+                                    unsigned pivot) const;
+    bool                    withinTableLimits(BetName betName,
+                                              Gen::Money contractAmount,
+                                              Gen::ErrorPass& ep) const;
     const SessionHistory::Sessions& getSessionHistory() const;
     /// @}
 
@@ -139,7 +148,7 @@ private:
     // collects losing bets in a certain order followed by payouts of
     // winning bets in a certain order.
     //
-    using BetList = std::list<BetIntfcPtr>;
+    using BetList = std::list<BetPtr>;
     using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
     BetTable tableBets_;
 
@@ -156,11 +165,7 @@ private:
     // TODO might not need this - remove later.
     static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
 
-    bool betAllowed(const Gen::Uuid& playerId, BetName betName,
-                    Gen::Money contractAmount, unsigned& pivot,
-                    Gen::ErrorPass& ep) const;
-    bool withinTableLimits(BetName betName, Gen::Money contractAmount,
-                           Gen::ErrorPass& ep) const;
+    bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
     void declareBettingClosed();
     void throwDice();
     void resolveBets();
@@ -172,9 +177,10 @@ private:
     void dispenseResults();
     void trimTableBets();
     void clearDrl();
-    void evalOneBet(const BetIntfcPtr pBet);
+    void evalOneBet(const BetPtr pBet);
     bool removeMatchingBetId(BetList& bets, unsigned betId);
-    CrapsBetIntfc* findBetById(unsigned betId) const;
+    CrapsBet* findBetById(unsigned betId) const;
+    std::string diagLimits(Gen::Money amt) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();

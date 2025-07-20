@@ -8,7 +8,7 @@
 
 #include <string>
 #include <craps/BetStats.h>
-#include <craps/CrapsBetIntfc.h>
+#include <craps/CrapsBet.h>
 #include <craps/Dice.h>
 #include <craps/BankStats.h>
 #include <craps/RollStats.h>
@@ -28,9 +28,9 @@ public:
 
     /// @name Modifiers
     /// @{
-    void recordWin       (const CrapsBetIntfc& bet, Gen::Money amtWin);
-    void recordLose      (const CrapsBetIntfc& bet, Gen::Money amtLose);
-    void recordKeep      (const CrapsBetIntfc& bet);
+    void recordWin       (const CrapsBet& bet, Gen::Money amtWin);
+    void recordLose      (const CrapsBet& bet, Gen::Money amtLose);
+    void recordKeep      (const CrapsBet& bet);
     void recordDiceRoll  (unsigned point, const Dice& curRoll);
     void recordWithdrawal(Gen::Money amount);
     void recordDeposit   (Gen::Money amount);
