@@ -323,10 +323,7 @@ Example formatted output looks like this:
 std::string
 BuildInfo::shortInfo() const
 {
-    std::ostringstream sstr;
-    sstr << appName_ << " v"
-         << quadlet_ << std::endl;
-    return sstr.str();
+    return appName_ + " v" + quadlet_;
 }
 
 /*-----------------------------------------------------------*//**

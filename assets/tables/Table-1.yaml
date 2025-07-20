@@ -1,0 +1,948 @@
+tableId: Table-1
+tableName: Las Vegas Strip
+shortDescription: A typical table with 5x odds, min $10, max $10,000.
+fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
+Rules:
+  minLineBet: 10
+  maxLineBet: 10000
+  maxOdds: 5
+BetStats:
+  totNumBetsAllBets: 0
+  totNumWinsAllBets: 0
+  totNumLoseAllBets: 0
+  totNumKeepAllBets: 0
+  totAmtAllBets: 0
+  totAmtWinsAllBets: 0
+  totAmtLoseAllBets: 0
+  totAmtKeepAllBets: 0
+  maxAmtBetOneBet: 0
+  maxAmtWinOneBet: 0
+  maxAmtLoseOneBet: 0
+  maxAmtKeepOneBet: 0
+  betTypeStats:
+    wins:
+      AnyCraps:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      AnySeven:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      CandE:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Field:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Horn:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+    lose:
+      AnyCraps:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      AnySeven:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      CandE:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Field:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Horn:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+  numBetsOneRoll:
+    total: 0
+    max: 0
+  numBetsWinOneRoll:
+    total: 0
+    max: 0
+  numBetsLoseOneRoll:
+    total: 0
+    max: 0
+  numBetsKeepOneRoll:
+    total: 0
+    max: 0
+  amtBetsOneRoll:
+    total: 0
+    max: 0
+  amtBetsWinOneRoll:
+    total: 0
+    max: 0
+  amtBetsLoseOneRoll:
+    total: 0
+    max: 0
+  amtBetsKeepOneRoll:
+    total: 0
+    max: 0
+RollStats:
+  numberCounts:
+    2:
+      count: 0
+      maxRepeats: 0
+    3:
+      count: 0
+      maxRepeats: 0
+    4:
+      count: 0
+      maxRepeats: 0
+    5:
+      count: 0
+      maxRepeats: 0
+    6:
+      count: 0
+      maxRepeats: 0
+    7:
+      count: 0
+      maxRepeats: 0
+    8:
+      count: 0
+      maxRepeats: 0
+    9:
+      count: 0
+      maxRepeats: 0
+    10:
+      count: 998
+      maxRepeats: 0
+    11:
+      count: 0
+      maxRepeats: 0
+    12:
+      count: 0
+      maxRepeats: 0
+  anyEstPntCnts:
+    4:
+      count: 0
+      maxRepeats: 0
+    5:
+      count: 0
+      maxRepeats: 0
+    6:
+      count: 0
+      maxRepeats: 0
+    8:
+      count: 0
+      maxRepeats: 0
+    9:
+      count: 0
+      maxRepeats: 0
+    10:
+      count: 0
+      maxRepeats: 0
+  passPntCnts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    5:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    9:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  dontPassPntCnts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    5:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    9:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  comePntCnts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    5:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    9:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  dontComePntCnts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    5:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    9:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  hardwayCounts:
+    4:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    6:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    8:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+    10:
+      wins:
+        count: 0
+        maxRepeats: 0
+      lose:
+        count: 0
+        maxRepeats: 0
+  comeOutRolls:
+    count: 0
+    maxRepeats: 0
+  pointRolls:
+    count: 0
+    maxRepeats: 0
+  passWinsComeOut:
+    count: 0
+    maxRepeats: 0
+  passLoseComeOut:
+    count: 0
+    maxRepeats: 0
+  comeWinsComeOut:
+    count: 0
+    maxRepeats: 0
+  comeLoseComeOut:
+    count: 0
+    maxRepeats: 0
+  dontPassWinsComeOut:
+    count: 0
+    maxRepeats: 0
+  dontPassLoseComeOut:
+    count: 0
+    maxRepeats: 0
+  dontComeWinsComeOut:
+    count: 0
+    maxRepeats: 0
+  dontComeLoseComeOut:
+    count: 0
+    maxRepeats: 0
+  fieldBetWins:
+    count: 0
+    maxRepeats: 0
+  fieldBetLose:
+    count: 0
+    maxRepeats: 0
+  sevenOuts:
+    count: 0
+    maxRepeats: 0
+  shooterCounts:
+    count: 0
+    maxRepeats: 0
+  twosOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  threesOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  sevensOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  elevensOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  twelvesOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+  crapsOnComeOutRoll:
+    count: 0
+    maxRepeats: 0
+MoneyStats:
+  initialStartingBalance: 3000000
+  numDeposits: 0
+  amtDeposited: 0
+  numWithdrawals: 0
+  amtWithdrawn: 0
+  numRefills: 0
+  amtRefilled: 0
+  maxAmtDepositedSession: 0
+  maxAmtWithdrawnSession: 0
+  maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
+  maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
+SessionStats:
+  numSessionsAlltime: 17
+  firstSessionDate: 2025-06-25T14:30:00.000000000
+  longestSessionAlltime: 0d 00:01:04
+  history:
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-06-25T14:30:00.000000000
+      duration: 0d 00:00:08
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-19T06:43:48.772112647
+      duration: 0d 00:00:09
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-19T18:06:31.146327267
+      duration: 0d 00:00:04

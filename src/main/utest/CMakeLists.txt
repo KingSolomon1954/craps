@@ -4,17 +4,14 @@
 #
 # -----------------------------------------------------------------
 
-add_executable(RoyalCraps-ut
+add_executable(royalcraps-ut
     utest-main.cpp
-    RoyalCrapsTest.cpp
-    PropertiesTest.cpp
 )
 
-target_link_libraries(RoyalCraps-ut
-    PRIVATE main
+target_link_libraries(royalcraps-ut
     PRIVATE doctest::doctest
 )
 
-doctest_discover_tests(RoyalCraps-ut)
+doctest_discover_tests(royalcraps-ut)
 
 # -----------------------------------------------------------------

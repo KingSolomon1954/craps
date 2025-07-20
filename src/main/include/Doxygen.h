@@ -18,7 +18,9 @@ Add description of RoyalCraps
 
 @li @ref App
 @li @ref Gen
-@li @ref Codec
+@li @ref Ctrl
+@li @ref Cui
+@li @ref Gui
 @li @ref free
 
 */

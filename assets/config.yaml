@@ -1,0 +1,5 @@
+# tbl.startId: "Table-1"
+# log.debug: true
+# log.trace: false
+# tbl.maxSessions: 50
+# tbl.maxRecentRolls: 25

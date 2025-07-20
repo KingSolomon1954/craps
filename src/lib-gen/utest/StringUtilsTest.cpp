@@ -15,7 +15,7 @@ using std::string;
 
 //----------------------------------------------------------------
 
-TEST_CASE("Gen::StringUtilsTest: all")
+TEST_CASE("StringUtilsTest:all")
 {
     const std::string src("aragorn is the king");
     

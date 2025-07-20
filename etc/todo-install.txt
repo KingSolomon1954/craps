@@ -1,0 +1,71 @@
+Installer Guidance
+
+To ensure system directories are created during installation, include the following in your package’s installation scripts (e.g., for a Debian package). Below is a sample postinst script for a .deb package:
+bash
+#!/bin/sh
+set -e
+
+# Create system directories
+mkdir -p /etc/royalcraps
+mkdir -p /usr/share/royalcraps/tables
+mkdir -p /usr/share/royalcraps/players
+mkdir -p /var/games/royalcraps
+
+# Set ownership and permissions
+chown root:root /etc/royalcraps
+chmod 755 /etc/royalcraps
+chown root:root /usr/share/royalcraps
+chmod 755 /usr/share/royalcraps
+chown root:root /usr/share/royalcraps/tables
+chmod 755 /usr/share/royalcraps/tables
+chown root:root /usr/share/royalcraps/players
+chmod 755 /usr/share/royalcraps/players
+chown root:games /var/games/royalcraps
+chmod 775 /var/games/royalcraps
+
+# Ensure executable permissions
+chown root:games /usr/games/royalcraps
+chmod 2755 /usr/games/royalcraps
+
+exit 0
+
+Steps to Include in Packaging:
+
+    Debian Package:
+        Add the above script to debian/postinst.
+        Include directory creation in debian/install or debian/dirs:
+        text
+
+    etc/royalcraps
+    usr/share/royalcraps/tables
+    usr/share/royalcraps/players
+    var/games/royalcraps
+    Install the executable to /usr/games/royalcraps.
+
+RPM Package:
+
+    Use a %post script in the .spec file:
+    rpm
+
+    %post
+    mkdir -p /etc/royalcraps /usr/share/royalcraps/{tables,players} /var/games/royalcraps
+    chown root:root /etc/royalcraps /usr/share/royalcraps /usr/share/royalcraps/{tables,players}
+    chmod 755 /etc/royalcraps /usr/share/royalcraps /usr/share/royalcraps/{tables,players}
+    chown root:games /var/games/royalcraps
+    chmod 775 /var/games/royalcraps
+    chown root:games /usr/games/royalcraps
+    chmod 2755 /usr/games/royalcraps
+
+Manual Installation:
+
+    Provide a Makefile or install script:
+    bash
+
+        sudo mkdir -p /etc/royalcraps /usr/share/royalcraps/{tables,players} /var/games/royalcraps
+        sudo chown root:root /etc/royalcraps /usr/share/royalcraps /usr/share/royalcraps/{tables,players}
+        sudo chmod 755 /etc/royalcraps /usr/share/royalcraps /usr/share/royalcraps/{tables,players}
+        sudo chown root:games /var/games/royalcraps
+        sudo chmod 775 /var/games/royalcraps
+        sudo cp royalcraps /usr/games/
+        sudo chown root:games /usr/games/royalcraps
+        sudo chmod 2755 /usr/games/royalcraps

@@ -12,7 +12,7 @@ using std::string;
 
 //----------------------------------------------------------------
 
-TEST_CASE("Gen::BuildInfoTest: all")
+TEST_CASE("BuildInfoTest:all")
 {
     std::string name("C++Starter");
     BuildInfo b(name);

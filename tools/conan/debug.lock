@@ -1,9 +1,12 @@
 {
     "version": "0.5",
     "requires": [
+        "yaml-cpp/0.8.0#720ad361689101a838b2c703a49e9c26%1698652271.741",
         "rang/3.2#59ed4601f856325fb467bbec56183016%1679252415.349",
+        "nlohmann_json/3.12.0#2d634ab0ec8d9f56353e5ccef6d6612c%1744735883.94",
         "doctest/2.4.11#a4211dfc329a16ba9f280f9574025659%1681601797.282",
-        "cxxopts/3.2.0#8026d4f53938b476b36288e5d006bcfb%1707978559.524"
+        "cxxopts/3.2.0#8026d4f53938b476b36288e5d006bcfb%1707978559.524",
+        "boost/1.84.0#a73b3f530f8f544883bcb07fa9859c40%1728027203.371"
     ],
     "build_requires": [],
     "python_requires": [],

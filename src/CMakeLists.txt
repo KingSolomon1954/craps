@@ -1,7 +1,5 @@
 # --------------------------------------------------------
 #
-# King Solomon Project: C++ Bootstrap
-#
 # File: CMakeLists.txt
 #
 # Copyright (c) 2024 KingSolomon1954
@@ -16,14 +14,19 @@ project("RoyalCraps"
     DESCRIPTION "Multiplayer dice game"
 )
   
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(PROJ_COMPILE_OPTIONS
     -Wall -Wextra -Werror -Werror=format-security
     -fstack-protector-strong
     -O3
-)
+  )
+
+# Define DEBUG macro in Debug builds
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG)
+endif()  
 
 set(PROJECT_TOP ${PROJECT_SOURCE_DIR}/..)
 
@@ -35,8 +38,14 @@ include(gen)
 
 add_subdirectory(lib-gen)
 add_subdirectory(lib-gen/utest)
-add_subdirectory(lib-codec)
-add_subdirectory(lib-codec/utest)
+add_subdirectory(lib-craps)
+add_subdirectory(lib-craps/utest)
+add_subdirectory(lib-controller)
+add_subdirectory(lib-controller/utest)
+add_subdirectory(lib-cui)
+add_subdirectory(lib-cui/utest)
+add_subdirectory(lib-gui)
+add_subdirectory(lib-gui/utest)
 add_subdirectory(main)
 add_subdirectory(main/utest)
 
