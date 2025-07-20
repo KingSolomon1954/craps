@@ -8,6 +8,7 @@
 
 #include <stdexcept> // for std::invalid_argument
 #include <iostream>
+#include <craps/CrapsTable.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
 #include <gen/ErrorPass.h>
@@ -87,32 +88,50 @@ CrapsBet::CrapsBet(
     , betName_(name)
     , pivot_(pivot)
     , contractAmount_(contractAmount)
-    , oddsAmount_(0)
-    , offComeOutRoll_(true)
-    , distance_(0)
 {
-    validArgsCtor(); // Throws if bad args
+    try
+    {
+        checkBetName();         // throws
+        checkContractAmount();  // throws
+        checkLinePivot();       // throws
+        checkPlacePivot();      // throws
+        checkHardwayPivot();    // throws
+        checkSideBets();        // throws
+    }
+    catch(std::invalid_argument& e)
+    {
+        std::string s = "CrapsBet()::ctor ";
+        throw std::invalid_argument(s + e.what());
+    }
 }
 
-/*-----------------------------------------------------------*//**
-
-Determine if the bet is suitable for processing.
-
-For example Place bets must have the pivot set to 
-4,5,6,8,9 or 10 and the contractAmount must be non-zero.
-
-*/
+//----------------------------------------------------------------
+    
 void
-CrapsBet::validArgsCtor()
+CrapsBet::checkBetName()
 {
     if (betName_ == BetName::Invalid)
     {
-        throw std::invalid_argument("CrapsBet()::ctor Bad \"betName\": cannot be \"BetName::Invalid\".");
+        throw std::invalid_argument("Bad \"betName\": cannot be \"BetName::Invalid\".");
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkContractAmount()
+{
     if (contractAmount_ == 0)
     {
-        throw std::invalid_argument("CrapsBet()::ctor Bad \"contractAmount\": must be > 0.");
+        throw std::invalid_argument("Bad \"contractAmount\":0 must be > 0.");
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkLinePivot()
+{
     if (betName_ == BetName::PassLine ||
         betName_ == BetName::Come     ||     
         betName_ == BetName::DontPass ||
@@ -120,33 +139,55 @@ CrapsBet::validArgsCtor()
     {
         if (!pointNums_.contains(pivot_) && pivot_ != 0)
         {
-            throw std::invalid_argument(
-                "CrapsBet()::ctor Bad \"pivot\": for "
-                "PassLine|Come|DontPass|Dontcome bet, pivot must "
-                "be 0,4,5,6,8,9 or 10.");
+            std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
+                " for PassLine|Come|DontPass|Dontcome bet; "
+                "pivot must be 0,4,5,6,8,9 or 10.";
+            throw std::invalid_argument(diag);
         }
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkPlacePivot()
+{
     if (betName_ == BetName::Place ||
         betName_ == BetName::Lay   ||
         betName_ == BetName::Buy)
     {
         if (!pointNums_.contains(pivot_))
         {
-            throw std::invalid_argument(
-                "CrapsBet()::ctor Bad \"pivot\": for a Place, Buy, or Lay "
-                "bet, pivot must be one of 4,5,6,8,9,10");
+            std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
+                " for a Place, Buy, or Lay bet; "
+                "pivot must be 0,4,5,6,8,9 or 10.";
+            throw std::invalid_argument(diag);
         }
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkHardwayPivot()
+{
     if (betName_ == BetName::Hardway)
     {
         offComeOutRoll_ = false;  // For hardways, default is  always working
         if (!hardwayNums_.contains(pivot_))
         {
-            throw std::invalid_argument(
-                "CrapsBet()::ctor Bad \"pivot\": for Hardway "
-                "bet, pivot must be one of 4,6,8,10");
+            std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
+                " for a Hardway bet; pivot must be one of 4,6,8,10";
+            throw std::invalid_argument(diag);
         }
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkSideBets()
+{
     if (betName_ == BetName::Field    ||
         betName_ == BetName::AnyCraps ||
         betName_ == BetName::AnySeven ||
@@ -158,15 +199,13 @@ CrapsBet::validArgsCtor()
     if (betName_ == BetName::CandE && (contractAmount_ % 2 != 0))
     {
         throw std::invalid_argument(
-            "CrapsBet()::ctor C&E bet(" +
-            Gen::MoneyUtil::toString(contractAmount_) +
+            "C&E bet(" + Gen::MoneyUtil::toString(contractAmount_) +
             ") is not a multiple of 2. Min amount is 2");
     }
     if (betName_ == BetName::Horn && (contractAmount_ % 4 != 0))
     {
         throw std::invalid_argument(
-            "CrapsBet()::ctor Horn bet(" +
-            Gen::MoneyUtil::toString(contractAmount_) +
+            "Horn bet(" + Gen::MoneyUtil::toString(contractAmount_) +
             ") is not a multiple of 4. Min amount is 4");
     }
 }
@@ -184,7 +223,8 @@ CrapsBet::operator==(const CrapsBet& other) const
            offComeOutRoll_ == other.offComeOutRoll_ &&
            distance_       == other.distance_       &&
            whenCreated_    == other.whenCreated_    &&
-           whenDecided_    == other.whenDecided_;    
+           whenDecided_    == other.whenDecided_    &&
+           pTable_         == other.pTable_;
 } 
 
 /*-----------------------------------------------------------*//**
@@ -193,7 +233,7 @@ Sets the contract bet to the new amount.
 
 */
 Gen::ReturnCode
-CrapsBet::setContractAmount(Gen::Money amount, Gen::ErrorPass& ep)
+CrapsBet::changeContractAmount(Gen::Money amount, Gen::ErrorPass& ep)
 {
     if (amount == 0)
     {
@@ -256,8 +296,8 @@ amount of the contract bet.
 */
 
 Gen::ReturnCode
-CrapsBet::setOddsAmount(Gen::Money newAmount, unsigned maxOdds,
-                        Gen::ErrorPass& ep)
+CrapsBet::changeOddsAmount(Gen::Money newAmount, unsigned maxOdds,
+                           Gen::ErrorPass& ep)
 {
     if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
         betName_ != BetName::Come     && betName_ != BetName::DontCome)
@@ -1150,6 +1190,14 @@ CrapsBet::evalHorn(
     }
     dr.decision = true;
     return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::setCrapsTablePtr(CrapsTable* pTable)
+{
+    pTable_ = pTable;
 }
 
 /*-----------------------------------------------------------*//**

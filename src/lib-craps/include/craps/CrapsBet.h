@@ -10,10 +10,12 @@
 #include <ostream>
 #include <string>
 #include <unordered_set>
-#include <craps/CrapsBetIntfc.h>
 #include <craps/OddsTables.h>
+#include <craps/EnumBetName.h>
 #include <gen/MoneyUtil.h>
 #include <gen/ReturnCode.h>
+#include <gen/Timepoint.h>
+#include <gen/Uuid.h>
 
 namespace Gen {
     class ErrorPass;  // fwd
@@ -21,10 +23,11 @@ namespace Gen {
 
 namespace Craps {
 
+class CrapsTable;      //fwd
 class Dice;            // fwd
 class DecisionRecord;  // fwd
     
-class CrapsBet : public CrapsBetIntfc
+class CrapsBet
 {
 public:
     /// @name Lifecycle
@@ -35,14 +38,13 @@ public:
 
     /// @name Modifiers
     /// @{
-    void setOffComeOutRoll() override;  // intfc
-    void setOnComeOutRoll()  override;  // intfc
-    void setHardwayOff()     override;  // intfc
-    void setHardwayOn()      override;  // intfc
-    
-    Gen::ReturnCode setContractAmount(Gen::Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount    (Gen::Money amount, unsigned maxOdds,
-                                      Gen::ErrorPass& ep);
+    Gen::ReturnCode changeContractAmount(Gen::Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode changeOddsAmount    (Gen::Money amount, unsigned maxOdds,
+                                         Gen::ErrorPass& ep);
+    void setOffComeOutRoll();
+    void setOnComeOutRoll();
+    void setHardwayOff();
+    void setHardwayOn();
     
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
@@ -50,22 +52,44 @@ public:
 
     /// @name Observers
     /// @{
-    const Gen::Uuid& playerId()  const override;  // intfc
-    unsigned betId()             const override;  // intfc
-    BetName betName()            const override;  // intfc
-    unsigned pivot()             const override;  // intfc
-    unsigned contractAmount()    const override;  // intfc
-    unsigned oddsAmount()        const override;  // intfc
-    bool offComeOutRoll()        const override;  // intfc
-    bool hardwayWorking()        const override;  // intfc
-    unsigned distance()          const override;  // intfc
-    Gen::Timepoint whenCreated() const override;  // intfc
-    Gen::Timepoint whenDecided() const override;  // intfc
+    const Gen::Uuid& playerId()       const;
+    unsigned         betId()          const;
+    BetName          betName()        const;
+    unsigned         pivot()          const;
+    unsigned         contractAmount() const;
+    unsigned         oddsAmount()     const;
+    bool             offComeOutRoll() const;
+    bool             hardwayWorking() const;
+    unsigned         distance()       const;
+    Gen::Timepoint   whenCreated()    const;
+    Gen::Timepoint   whenDecided()    const;
     
     bool operator==(const CrapsBet&) const;
     /// @}
 
 private:
+    // Order matters, in initializer list
+    Gen::Uuid playerId_;
+    unsigned betId_            = 0;
+    BetName betName_           = BetName::Invalid;
+    unsigned pivot_            = 0;
+    Gen::Money contractAmount_ = 0;
+
+    // Order doesn't matter
+    Gen::Money oddsAmount_     = 0;
+    bool offComeOutRoll_       = true;
+    unsigned distance_         = 0;  // num rolls until decision
+    Gen::Timepoint whenCreated_;
+    Gen::Timepoint whenDecided_;
+    CrapsTable* pTable_;
+    
+    static unsigned idCounter_;
+    static const std::unordered_set<unsigned> pointNums_;
+    static const std::unordered_set<unsigned> fieldNums_;
+    static const std::unordered_set<unsigned> crapsNums_;
+    static const std::unordered_set<unsigned> bookEnds_;
+    static const std::unordered_set<unsigned> hardwayNums_;
+
     enum Decision
     {
         Win,
@@ -73,8 +97,13 @@ private:
         Keep
     };
 
-    static unsigned idCounter_;
-    void validArgsCtor();
+    void setCrapsTablePtr(CrapsTable* pTable);
+    void checkBetName();
+    void checkContractAmount();
+    void checkLinePivot();
+    void checkPlacePivot();
+    void checkHardwayPivot();
+    void checkSideBets();
     bool validArgsEval(unsigned point, Gen::ErrorPass& ep) const;
     Gen::ReturnCode evalPassLine(
         unsigned point, const Dice& dice,
@@ -124,23 +153,6 @@ private:
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
     std::string diagTooSmall(Gen::Money amount, Gen::Money min,
                              BetName betName, unsigned pivot);
-
-    Gen::Uuid playerId_;
-    unsigned betId_ = 0;
-    BetName betName_ = BetName::Invalid;
-    unsigned pivot_ = 0;
-    Gen::Money contractAmount_ = 0;
-    Gen::Money oddsAmount_ = 0;
-    bool offComeOutRoll_ = true;
-    unsigned distance_ = 0;  // num rolls until decision
-    Gen::Timepoint whenCreated_;
-    Gen::Timepoint whenDecided_;
-
-    static const std::unordered_set<unsigned> pointNums_;
-    static const std::unordered_set<unsigned> fieldNums_;
-    static const std::unordered_set<unsigned> crapsNums_;
-    static const std::unordered_set<unsigned> bookEnds_;
-    static const std::unordered_set<unsigned> hardwayNums_;
 
     friend class CrapsTable;
     friend class TableStats;
