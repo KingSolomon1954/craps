@@ -307,6 +307,7 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
+    pBet->attachCrapsTable(this);
     return Gen::ReturnCode::Success;
 }
 
@@ -429,6 +430,7 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
         }
     }
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
+    pBet->detachCrapsTable(this);
     return Gen::ReturnCode::Success;
 }
 

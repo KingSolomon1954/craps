@@ -9,6 +9,7 @@
 #pragma once
 
 #include <map>
+#include <craps/CrapsBet.h>
 #include <gen/MoneyUtil.h>
 #include <yaml-cpp/yaml.h>
 
@@ -65,8 +66,6 @@ struct AmtBets
 
 //----------------------------------------------------------------
 
-class CrapsBetIntfc; // fwd
-
 class BetStats
 {
 public:
@@ -97,7 +96,7 @@ public:
     AmtBets amtBetsLoseOneRoll;
     AmtBets amtBetsKeepOneRoll;
 
-    std::string expandBetName(const CrapsBetIntfc& bet) const;
+    std::string expandBetName(const CrapsBet& bet) const;
     void reset();
     void merge(const BetStats& session);
     YAML::Node toYAML() const;

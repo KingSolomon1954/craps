@@ -5,7 +5,6 @@
 //----------------------------------------------------------------
 
 #include <craps/BetStats.h>
-#include <craps/CrapsBetIntfc.h>
 
 using namespace Craps;
 
@@ -294,7 +293,7 @@ AmtBets::fromYAML(const YAML::Node& node)
 // Hardway  --> Hardway4
 //
 std::string
-BetStats::expandBetName(const CrapsBetIntfc& bet) const
+BetStats::expandBetName(const CrapsBet& bet) const
 {
     std::string betName = EnumBetName::toString(bet.betName());
     if (bet.pivot() != 0)

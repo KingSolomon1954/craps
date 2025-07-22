@@ -5,7 +5,6 @@
 //----------------------------------------------------------------
 
 #include <craps/TableStats.h>
-#include <craps/CrapsBet.h>
 #include <craps/EnumBetName.h>
 
 using namespace Craps;

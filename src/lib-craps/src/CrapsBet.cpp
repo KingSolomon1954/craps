@@ -231,59 +231,117 @@ CrapsBet::operator==(const CrapsBet& other) const
 
 Sets the contract bet to the given amount.
 
+Overwrites any previous value.
+
 @param amount
-    Sets the bet amount to amount
+    Sets the contract bet amount to amount
 
 @param ep
     Holds reason for error
 
 @return
     Success if amount has been changed, otherwise Fail and ep has reason
+
+@internal
+    cca prefix means "change contract amount"
 */
 Gen::ReturnCode
 CrapsBet::changeContractAmount(Gen::Money amount, Gen::ErrorPass& ep)
 {
-    std::string diag = "CrapsBet::changeContractAmount: "
-                       "Unable to change contract amount; ";
+    if (amount == contractAmount_)           return Gen::ReturnCode::Success;
+    if (!ccaCheckZero(amount, ep))           return Gen::ReturnCode::Fail;
+    if (!ccaCheckPassLineChange(amount, ep)) return Gen::ReturnCode::Fail;
+    if (!ccaCheckDontPassChange(amount, ep)) return Gen::ReturnCode::Fail;
+    if (!ccaCheckTableLimit(amount, ep))     return Gen::ReturnCode::Fail;
+    
+    contractAmount_ = amount;
+    return Gen::ReturnCode::Success;
+}
+    
+//----------------------------------------------------------------
+
+std::string
+CrapsBet::ccaPrefix() const
+{
+    return "CrapsBet::changeContractAmount(): Unable to change contract amount; ";
+}    
+
+//----------------------------------------------------------------
+
+bool
+CrapsBet::ccaCheckZero(Gen::Money amount, Gen::ErrorPass& ep) const
+{
     if (amount == 0)
     {
-        ep.diag = diag + "New contract amount cannot be zero. "
+        ep.diag = ccaPrefix() + "New contract amount cannot be zero. "
             "Use CrapsTable::removeBet() if intent is to pull the bet.";
-        return Gen::ReturnCode::Fail;
+        return false;
     }
+    return true;
+}
     
+//----------------------------------------------------------------
+
+bool
+CrapsBet::ccaCheckPassLineChange(Gen::Money amount, Gen::ErrorPass& ep) const
+{
     if (betName_ == BetName::PassLine || betName_ == BetName::Come)
     {
         if (pivot_ != 0 && amount < contractAmount_)
         {
-            ep.diag = diag + "Cannot reduce contract amount for "
+            ep.diag = ccaPrefix() + "Cannot reduce contract amount for "
                 "PassLine/Come bets after point is established.";
-            return Gen::ReturnCode::Fail;
+            return false;
         }
     }
+    return true;
+}
 
+//----------------------------------------------------------------
+
+bool
+CrapsBet::ccaCheckDontPassChange(Gen::Money amount, Gen::ErrorPass& ep) const
+{
     if (betName_ == BetName::DontPass || betName_ == BetName::DontCome)
     {
-        if (pivot_ != 0 && amount > contractAmount_)
+        if (pivot_ != 0)
         {
-            ep.diag = diag + "Cannot increase contract amount for "
-                "DontPass/DontCome bets after point is established.";
-            return Gen::ReturnCode::Fail;
+            if (amount > contractAmount_)
+            {
+                ep.diag = ccaPrefix() + "Cannot increase contract amount "
+                    "for DontPass/DontCome bets after point is established.";
+                return false;
+            }
+            else
+            {
+                // OK to reduce bet - but have to deal with odds
+                if (oddsAmount_ > (amount  * pTable_->getMaxOdds()))
+                {
+                    ep.diag = ccaPrefix() + "Need to reduce odds amount "
+                        "first before reducing contract amount, otherwise "
+                        "odds bet would exceed table limits.";
+                    return false;
+                }
+            }
         }
     }
+    return true;
+}
 
-    // Check for exceeding table limits
-    if (pTable_ != nullptr)  // Might not have placed the bet yet
+//----------------------------------------------------------------
+
+bool
+CrapsBet::ccaCheckTableLimit(Gen::Money amount, Gen::ErrorPass& ep) const
+{
+    if (pTable_ != nullptr)  // Bet might not have been placed on table yet
     {
         if (!pTable_->withinTableLimits(betName_, amount, ep))
         {
-            ep.prepend(diag);
-            return Gen::ReturnCode::Fail;
+            ep.prepend(ccaPrefix());
+            return false;
         }
     }
-    
-    contractAmount_ = amount;
-    return Gen::ReturnCode::Success;
+    return true;
 }
 
 /*-----------------------------------------------------------*//**
@@ -312,6 +370,9 @@ amount of the contract bet.
 @returns
     Success if the bet was accepted, otherwise Fail and ep has
     the reason.
+
+@internal
+    coa prefix means "change odds amount"
 */
 
 Gen::ReturnCode
@@ -320,7 +381,7 @@ CrapsBet::changeOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
     if (!coaCheckBetType(ep))             return Gen::ReturnCode::Fail;
     if (!coaCheckNoTable(ep))             return Gen::ReturnCode::Fail;
     if (!coaCheckBettingOpen(ep))         return Gen::ReturnCode::Fail;
-    if (!coaCheckPivot(ep))               return Gen::ReturnCode::Fail;
+    if (!coaCheckHavePivot(ep))           return Gen::ReturnCode::Fail;
     if (!coaCheckTooSmall(newAmount, ep)) return Gen::ReturnCode::Fail;
     if (!coaCheckMaxOdds(newAmount, ep))  return Gen::ReturnCode::Fail;
     
@@ -383,7 +444,7 @@ CrapsBet::coaCheckBettingOpen(Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 bool
-CrapsBet::coaCheckPivot(Gen::ErrorPass& ep) const
+CrapsBet::coaCheckHavePivot(Gen::ErrorPass& ep) const
 {
     if (pivot_ == 0)
     {
@@ -1273,9 +1334,19 @@ CrapsBet::evalHorn(
 //----------------------------------------------------------------
 
 void
-CrapsBet::setCrapsTablePtr(CrapsTable* pTable)
+CrapsBet::attachCrapsTable(CrapsTable* pTable)
 {
+    assert(pTable_ == nullptr);  // Maybe make this a runtime warning
     pTable_ = pTable;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::detachCrapsTable(CrapsTable* pTable)
+{
+    assert(pTable_ == pTable);  // Maybe make this a runtime warning
+    pTable_ = nullptr;
 }
 
 /*-----------------------------------------------------------*//**

@@ -96,7 +96,8 @@ private:
         Keep
     };
 
-    void setCrapsTablePtr(CrapsTable* pTable);
+    void attachCrapsTable(CrapsTable* pTable);
+    void detachCrapsTable(CrapsTable* pTable);
     void checkBetName();
     void checkContractAmount();
     void checkLinePivot();
@@ -151,14 +152,19 @@ private:
                          const OddsTables::OddsEntry table[]) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
 
-    std::string coaPrefix()                      const;
-    bool coaCheckBetType    (Gen::ErrorPass& ep) const;
-    bool coaCheckNoTable    (Gen::ErrorPass& ep) const;
-    bool coaCheckBettingOpen(Gen::ErrorPass& ep) const;
-    bool coaCheckPivot      (Gen::ErrorPass& ep) const;
-    bool coaCheckTooSmall   (Gen::Money newAmount, Gen::ErrorPass& ep) const;
-    bool coaCheckMaxOdds    (Gen::Money newAmount, Gen::ErrorPass& ep) const;
-    std::string diagTooSmall(Gen::Money amount, Gen::Money min,
+    std::string ccaPrefix() const;
+    std::string coaPrefix() const;
+    bool ccaCheckZero(          Gen::Money amount, Gen::ErrorPass& ep)  const;
+    bool ccaCheckPassLineChange(Gen::Money amount, Gen::ErrorPass& ep)  const;
+    bool ccaCheckDontPassChange(Gen::Money amount, Gen::ErrorPass& ep)  const;
+    bool ccaCheckTableLimit    (Gen::Money amount, Gen::ErrorPass& ep)  const;
+    bool coaCheckBetType       (Gen::ErrorPass& ep) const;
+    bool coaCheckNoTable       (Gen::ErrorPass& ep) const;
+    bool coaCheckBettingOpen   (Gen::ErrorPass& ep) const;
+    bool coaCheckHavePivot     (Gen::ErrorPass& ep) const;
+    bool coaCheckTooSmall      (Gen::Money newAmount, Gen::ErrorPass& ep) const;
+    bool coaCheckMaxOdds       (Gen::Money newAmount, Gen::ErrorPass& ep) const;
+    std::string diagTooSmall   (Gen::Money amount, Gen::Money min,
                              BetName betName, unsigned pivot) const;
 
     friend class CrapsTable;
