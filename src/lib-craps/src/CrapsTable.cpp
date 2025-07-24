@@ -313,19 +313,32 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 
 //----------------------------------------------------------------
 
+std::string
+abPrefix(CrapsBet& bet)
+{
+    std::string diag = "CrapsTable::addBet(): Unable to add " +
+            EnumBetName::toString(bet.name()) + " bet; ";
+}
+
+//----------------------------------------------------------------
+
 bool
 CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
 {
-    if (!bettingOpen_)
-    {
-        ep.diag = "Betting is closed at the moment - dice roll is underway.";
-        return false;
-    }
+    if (!abCheckBettinOpen(ep) return false;
+    if (!abCheckHavePlayer(ep) return false;
+
+bool
+CrapsTable::abCheckHavePlayer(const CrapsBet& bet, Gen::ErrorPass& ep) const
+{        
     if (!havePlayer(bet.playerId()))
     {
         ep.diag = "Player is not joined with this table.";
         return false;
     }
+    return true;
+}
+        
     if (haveBet(bet.playerId(), bet.betName(), bet.pivot()))
     {
         ep.diag = "Player XXX has already made this bet.";
@@ -363,7 +376,19 @@ CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
     return true;
 }
 
+//----------------------------------------------------------------
 
+bool
+CrapsTable::abCheckBettinOpen(Gen::ErrorPass& ep) const
+{
+    if (!bettingOpen_)
+    {
+        ep.diag = "Betting is closed at the moment - dice roll is underway.";
+        return false;
+    }
+    return true;
+}
+        
 //----------------------------------------------------------------
 
 std::string
@@ -398,7 +423,9 @@ CrapsTable::withinTableLimits(BetName betName, Gen::Money contractAmount,
     }
     else  // One shot bets
     {
-        // Min is 1 dollar. No need to check. Checks elsewhere cover it.
+        // Min is 1 dollar. No need to check for min since previous
+        // checks covered that.
+        
         if (contractAmount > maxLineBet_)
         {
             std::string max = std::to_string(maxLineBet_);
