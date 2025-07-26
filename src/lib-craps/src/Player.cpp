@@ -12,7 +12,6 @@
 #include <controller/Events.h>
 #include <controller/EventManager.h>
 #include <controller/PlayerManager.h>
-#include <craps/CrapsBetIntfc.h>
 #include <craps/CrapsTable.h>
 #include <craps/DecisionRecord.h>
 #include <gen/ErrorPass.h>
@@ -125,21 +124,27 @@ Player::joinTable(Gen::ErrorPass& ep)
 
 //----------------------------------------------------------------
 
-Gen::ReturnCode
+CrapsBet::BetPtr
 Player::makeBet(BetName betName,
                 Gen::Money contractAmount,
                 unsigned pivot,
                 Gen::ErrorPass& ep)
 {
-    // TODO check sufficient funds first 
-    auto pBet = Gbl::pTable->addBet(uuid_, betName, contractAmount, pivot, ep);
-    if (pBet == nullptr)
+    // TODO check sufficient funds first
+    try
     {
-        return Gen::ReturnCode::Fail;
+        auto betPtr = std::make_shared<CrapsBet>
+            (uuid_, betName, contractAmount, pivot);
+        assert(betPtr != nullptr);   // In case we miss an exception
+        
+        wallet_.withdraw(contractAmount);
+        bets_.push_back(betPtr);
+        return betPtr;
     }
-    wallet_.withdraw(contractAmount);
-    bets_.push_back(pBet);
-    return Gen::ReturnCode::Success;
+    catch(std::invalid_argument& e)
+    {
+        return nullptr;
+    }
 }
 
 //----------------------------------------------------------------
@@ -240,11 +245,11 @@ Player::diagBadBetId(const std::string& funcName, unsigned betId) const
 //
 // Search for a bet by ID
 //
-Player::BetIntfcPtr
+CrapsBet::BetPtr
 Player::findBetById(unsigned betId) const
 {
     auto it = std::find_if(bets_.begin(), bets_.end(),
-                   [betId](const BetIntfcPtr& b)
+                   [betId](const CrapsBet::BetPtr& b)
                    {
                        return b->betId() == betId;
                    });
@@ -258,7 +263,7 @@ Player::findBetById(unsigned betId) const
 //----------------------------------------------------------------
 
 bool
-Player::removeBetByPtr(BetIntfcPtr& b)
+Player::removeBetByPtr(CrapsBet::BetPtr& b)
 {
     auto it = std::find(bets_.begin(), bets_.end(), b);
     if (it != bets_.end())
@@ -277,7 +282,7 @@ Gen::ReturnCode
 Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
 {
     auto it = std::remove_if(bets_.begin(), bets_.end(),
-        [betName, pivot](const BetIntfcPtr& b)
+        [betName, pivot](const CrapsBet::BetPtr& b)
         {
             return (b->betName() == betName) && (b->pivot() == pivot);
         });
@@ -347,9 +352,7 @@ Player::removeBetById(unsigned betId)
 bool
 Player::saveToFile(const std::string& path) const
 {
-    std::ofstream out(path);
-    if (!out) return false;
-    out << toJson().dump(2);
+    // TODO    
     return true;
 }
 
@@ -360,36 +363,29 @@ Player::saveToFile(const std::string& path) const
 bool
 Player::loadFromFile(const std::string& path)
 {
-    std::ifstream in(path);
-    if (!in) return false;
-    json j;
-    in >> j;
-    fromJson(j);
     return true;
 }
 
 //----------------------------------------------------------------
 //
-// Convert Player to JSON
+// Convert Player to YAML
 //
-json Player::toJson() const
+YAML::Node
+Player::toYAML() const
 {
-    return json{
-        {"uuid", uuid_},
-        {"name", name_},
-        {"balance", wallet_.getBalance()}
-    };
+    // TODO
+    YAML::Node node;
+    return node;
 }
 
 //----------------------------------------------------------------
 //
-// Convert JSON to Player
+// Convert YAML to Player
 //
 void
-Player::fromJson(const json& j)
+Player::fromYAML(const YAML::Node& node)
 {
-    uuid_ = j.at("uuid").get<std::string>();
-    name_ = j.at("name").get<std::string>();
+    // TODO
     // TODO wallet_.balance = j.at("balance").get<int64_t>();
 }
 

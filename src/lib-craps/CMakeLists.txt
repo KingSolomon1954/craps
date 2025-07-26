@@ -4,7 +4,6 @@
 #
 # --------------------------------------------------------
 
-find_package(nlohmann_json REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
 add_library(craps STATIC
@@ -28,7 +27,6 @@ target_include_directories(craps
 target_link_libraries(craps
     PUBLIC gen
     PUBLIC controller
-    PUBLIC nlohmann_json::nlohmann_json
     PUBLIC yaml-cpp::yaml-cpp
 )
 

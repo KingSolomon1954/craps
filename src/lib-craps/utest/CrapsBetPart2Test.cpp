@@ -38,7 +38,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b21("Player1", BetName::Place, 100, 4);
         point = 0;
         dice.set(1,1);
-        CHECK(b21.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b21.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -51,7 +51,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b31("Player1", BetName::Place, 100, 4);
         point = 0;
         dice.set(2,1);
-        CHECK(b31.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b31.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -64,7 +64,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b41("Player1", BetName::Place, 100, 4);
         point = 0;
         dice.set(3,1);
-        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -79,7 +79,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         b42.setOnComeOutRoll();
         point = 0;
         dice.set(3,1);
-        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 180);
@@ -93,7 +93,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b51("Player1", BetName::Place, 100, 5);
         point = 0;
         dice.set(4,1);
-        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -108,7 +108,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         b52.setOnComeOutRoll();
         point = 0;
         dice.set(4,1);
-        CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b52.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 140);
@@ -122,7 +122,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b61("Player1", BetName::Place, 100, 6);
         point = 0;
         dice.set(5,1);
-        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -137,7 +137,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         b62.setOnComeOutRoll();
         point = 0;
         dice.set(5,1);
-        CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b62.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 116);
@@ -151,7 +151,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b71("Player1", BetName::Place, 100, 6);
         point = 0;
         dice.set(3,4);
-        CHECK(b71.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b71.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -165,7 +165,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         b72.setOnComeOutRoll();
         point = 0;
         dice.set(3,4);
-        CHECK(b72.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b72.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -178,7 +178,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b81("Player1", BetName::Place, 100, 8);
         point = 0;
         dice.set(4,4);
-        CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b81.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -193,7 +193,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         b82.setOnComeOutRoll();
         point = 0;
         dice.set(4,4);
-        CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b82.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 116);
@@ -207,7 +207,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b91("Player1", BetName::Place, 100, 9);
         point = 0;
         dice.set(4,5);
-        CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -222,7 +222,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         b92.setOnComeOutRoll();
         point = 0;
         dice.set(4,5);
-        CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b92.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 140);
@@ -236,7 +236,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b101("Player1", BetName::Place, 100, 10);
         point = 0;
         dice.set(5,5);
-        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b101.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -251,7 +251,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         b102.setOnComeOutRoll();
         point = 0;
         dice.set(5,5);
-        CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b102.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 180);
@@ -265,7 +265,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b111("Player1", BetName::Place, 100, 4);
         point = 0;
         dice.set(6,5);
-        CHECK(b111.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b111.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -278,7 +278,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b121("Player1", BetName::Place, 100, 4);
         point = 0;
         dice.set(6,6);
-        CHECK(b121.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b121.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -299,7 +299,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b41("Player1", BetName::Place, 100, 4);
         point = 10;
         dice.set(2,2);
-        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 180);
@@ -313,7 +313,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b42("Player1", BetName::Place, 100, 4);
         point = 10;
         dice.set(3,4);
-        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -327,7 +327,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b51("Player1", BetName::Place, 100, 5);
         point = 10;
         dice.set(3,2);
-        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 140);
@@ -341,7 +341,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b52("Player1", BetName::Place, 100, 5);
         point = 10;
         dice.set(3,4);
-        CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b52.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -355,7 +355,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b61("Player1", BetName::Place, 100, 6);
         point = 10;
         dice.set(3,3);
-        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 116);
@@ -369,7 +369,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b62("Player1", BetName::Place, 100, 6);
         point = 10;
         dice.set(3,4);
-        CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b62.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -383,7 +383,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b81("Player1", BetName::Place, 100, 8);
         point = 10;
         dice.set(4,4);
-        CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b81.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 116);
@@ -397,7 +397,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b82("Player1", BetName::Place, 100, 8);
         point = 10;
         dice.set(4,3);
-        CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b82.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -411,7 +411,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b91("Player1", BetName::Place, 100, 9);
         point = 9;
         dice.set(6,3);
-        CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 140);
@@ -425,7 +425,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b92("Player1", BetName::Place, 100, 9);
         point = 10;
         dice.set(6,1);
-        CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b92.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -439,7 +439,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b101("Player1", BetName::Place, 100, 10);
         point = 10;
         dice.set(6,4);
-        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b101.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 180);
@@ -453,7 +453,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b102("Player1", BetName::Place, 100, 10);
         point = 10;
         dice.set(6,1);
-        CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b102.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -479,10 +479,10 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         for (unsigned i = 1; i <= 10; ++i)
         {
-            CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+            CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         }
         dice.set(3,1);
-        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 180);
@@ -499,10 +499,10 @@ TEST_CASE("CrapsBet:evaluate:Place")
 
         for (unsigned i = 1; i <= 10; ++i)
         {
-            CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+            CHECK(b42.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         }
         dice.set(3,4);
-        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -523,7 +523,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b41("Player1", BetName::Place, 1, 4);
         point = 4;
         dice.set(2,2);
-        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 1);
@@ -536,7 +536,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b51("Player1", BetName::Place, 1, 5);
         point = 5;
         dice.set(3,2);
-        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 1);
@@ -549,7 +549,7 @@ TEST_CASE("CrapsBet:evaluate:Place")
         CrapsBet b61("Player1", BetName::Place, 1, 6);
         point = 6;
         dice.set(3,3);
-        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 1);
@@ -575,7 +575,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b21("Player1", BetName::Buy, 100, 4);
         point = 0;
         dice.set(1,1);
-        CHECK(b21.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b21.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -588,7 +588,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b31("Player1", BetName::Buy, 100, 4);
         point = 0;
         dice.set(2,1);
-        CHECK(b31.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b31.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -601,7 +601,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b41("Player1", BetName::Buy, 100, 4);
         point = 0;
         dice.set(3,1);
-        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -616,7 +616,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         b42.setOnComeOutRoll();
         point = 0;
         dice.set(3,1);
-        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == (200 - 5));
@@ -630,7 +630,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b51("Player1", BetName::Buy, 100, 5);
         point = 0;
         dice.set(4,1);
-        CHECK(b51.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b51.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -645,7 +645,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         b52.setOnComeOutRoll();
         point = 0;
         dice.set(4,1);
-        CHECK(b52.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b52.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == (150 -5));
@@ -659,7 +659,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b61("Player1", BetName::Buy, 100, 6);
         point = 0;
         dice.set(5,1);
-        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -674,7 +674,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         b62.setOnComeOutRoll();
         point = 0;
         dice.set(5,1);
-        CHECK(b62.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b62.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == (120 - 5));
@@ -688,7 +688,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b71("Player1", BetName::Buy, 100, 6);
         point = 0;
         dice.set(3,4);
-        CHECK(b71.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b71.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -702,7 +702,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         b72.setOnComeOutRoll();
         point = 0;
         dice.set(3,4);
-        CHECK(b72.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b72.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -715,7 +715,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b81("Player1", BetName::Buy, 100, 8);
         point = 0;
         dice.set(4,4);
-        CHECK(b81.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b81.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -730,7 +730,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         b82.setOnComeOutRoll();
         point = 0;
         dice.set(4,4);
-        CHECK(b82.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b82.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == (120 - 5));
@@ -744,7 +744,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b91("Player1", BetName::Buy, 100, 9);
         point = 0;
         dice.set(4,5);
-        CHECK(b91.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b91.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -759,7 +759,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         b92.setOnComeOutRoll();
         point = 0;
         dice.set(4,5);
-        CHECK(b92.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b92.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == (150 - 5));
@@ -773,7 +773,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b101("Player1", BetName::Buy, 100, 10);
         point = 0;
         dice.set(5,5);
-        CHECK(b101.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b101.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -788,7 +788,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         b102.setOnComeOutRoll();
         point = 0;
         dice.set(5,5);
-        CHECK(b102.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b102.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == (200 - 5));
@@ -802,7 +802,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b111("Player1", BetName::Buy, 100, 4);
         point = 0;
         dice.set(6,5);
-        CHECK(b111.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b111.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -815,7 +815,7 @@ TEST_CASE("CrapsBet:evaluate:Buy")
         CrapsBet b121("Player1", BetName::Buy, 100, 4);
         point = 0;
         dice.set(6,6);
-        CHECK(b121.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b121.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == false);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -835,7 +835,7 @@ void lay1(unsigned point, unsigned num, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Lay, 100, num);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == false);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);
@@ -853,7 +853,7 @@ void lay2(unsigned point, unsigned num, unsigned d1, unsigned d2)
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Lay, 100, num);
     b.setOnComeOutRoll();
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);
@@ -871,7 +871,7 @@ void lay3(unsigned point, unsigned num, unsigned d1, unsigned d2)
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Lay, 100, num);
     b.setOnComeOutRoll();
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     if (b.pivot() == 4 || b.pivot() == 10)
@@ -970,7 +970,7 @@ void hard1(unsigned point, unsigned num, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Hardway, 100, num);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);
@@ -987,7 +987,7 @@ void hard2(unsigned point, unsigned num, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Hardway, 100, num);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     if (b.pivot() == 4 || b.pivot() == 10)
@@ -1007,7 +1007,7 @@ void hard3(unsigned point, unsigned num, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Hardway, 100, num);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == false);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);
@@ -1105,10 +1105,10 @@ TEST_CASE("CrapsBet:evaluate:Hardway")
 
         for (unsigned i = 1; i <= 10; ++i)
         {
-            CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+            CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         }
         dice.set(2,2);
-        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 700);
@@ -1125,10 +1125,10 @@ TEST_CASE("CrapsBet:evaluate:Hardway")
 
         for (unsigned i = 1; i <= 10; ++i)
         {
-            CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+            CHECK(b42.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         }
         dice.set(3,4);
-        CHECK(b42.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b42.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 0);
@@ -1149,7 +1149,7 @@ TEST_CASE("CrapsBet:evaluate:Hardway")
         CrapsBet b41("Player1", BetName::Hardway, 1, 4);
         point = 4;
         dice.set(2,2);
-        CHECK(b41.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b41.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 7);
@@ -1162,7 +1162,7 @@ TEST_CASE("CrapsBet:evaluate:Hardway")
         CrapsBet b61("Player1", BetName::Hardway, 1, 6);
         point = 6;
         dice.set(3,3);
-        CHECK(b61.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b61.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 9);
@@ -1182,7 +1182,7 @@ void field1(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Field, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     if (dice.value() == 2 || dice.value() == 12)
@@ -1202,7 +1202,7 @@ void field2(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Field, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);
@@ -1246,7 +1246,7 @@ void anyCraps1(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::AnyCraps, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 700);
@@ -1263,7 +1263,7 @@ void anyCraps2(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::AnyCraps, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);
@@ -1306,7 +1306,7 @@ void anySeven1(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::AnySeven, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);
@@ -1351,7 +1351,7 @@ TEST_CASE("CrapsBet:evaluate:AnySeven")
 
         Dice dice; dice.set(3,4);
         CrapsBet b("Player1", BetName::AnySeven, 100);
-        CHECK(b.evaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(b.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
         CHECK(dr.decision == true);
         CHECK(dr.pivotAssigned == false);
         CHECK(dr.win == 400);
@@ -1371,7 +1371,7 @@ void cAndE1(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::CandE, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     if (dice.value() == 11) CHECK(dr.win == 750);
@@ -1390,7 +1390,7 @@ void cAndE2(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::CandE, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);
@@ -1450,7 +1450,7 @@ void horn1(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Horn, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     if (dice.value() == 2 || dice.value() == 12) CHECK(dr.win == 750);
@@ -1468,7 +1468,7 @@ void horn2(unsigned point, unsigned d1, unsigned d2)
 
     Dice dice; dice.set(d1,d2);
     CrapsBet b("Player1", BetName::Horn, 100);
-    CHECK(b.evaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
     CHECK(dr.win == 0);

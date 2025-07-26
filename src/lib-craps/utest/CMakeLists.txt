@@ -24,6 +24,8 @@ target_link_libraries(craps-ut
     PRIVATE doctest::doctest
 )
 
+target_compile_definitions(craps-ut PRIVATE UNIT_TEST)
+
 doctest_discover_tests(craps-ut)
 
 # -----------------------------------------------------------------

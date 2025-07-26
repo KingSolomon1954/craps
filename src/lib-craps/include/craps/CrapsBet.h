@@ -23,13 +23,15 @@ namespace Gen {
 
 namespace Craps {
 
-class CrapsTable;      //fwd
+class CrapsTable;      // fwd
 class Dice;            // fwd
 class DecisionRecord;  // fwd
     
 class CrapsBet
 {
 public:
+    using BetPtr = std::shared_ptr<class CrapsBet>;
+    
     /// @name Lifecycle
     /// @{
     CrapsBet(const Gen::Uuid& playerId, BetName name,
@@ -38,15 +40,12 @@ public:
 
     /// @name Modifiers
     /// @{
-    Gen::ReturnCode changeContractAmount(Gen::Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode changeOddsAmount    (Gen::Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setContractAmount(Gen::Money amount, Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount    (Gen::Money amount, Gen::ErrorPass& ep);
     void setOffComeOutRoll();
     void setOnComeOutRoll();
     void setHardwayOff();
     void setHardwayOn();
-    
-    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
-                             DecisionRecord& dr, Gen::ErrorPass& ep);
     /// @}
 
     /// @name Observers
@@ -78,9 +77,9 @@ private:
     Gen::Money oddsAmount_     = 0;
     bool offComeOutRoll_       = true;
     unsigned distance_         = 0;  // num rolls until decision
+    CrapsTable* pTable_        = nullptr;
     Gen::Timepoint whenCreated_;
     Gen::Timepoint whenDecided_;
-    CrapsTable* pTable_;
     
     static unsigned idCounter_;
     static const std::unordered_set<unsigned> pointNums_;
@@ -96,6 +95,8 @@ private:
         Keep
     };
 
+    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
+                             DecisionRecord& dr, Gen::ErrorPass& ep);
     void attachCrapsTable(CrapsTable* pTable);
     void detachCrapsTable(CrapsTable* pTable);
     void checkBetName();
@@ -152,24 +153,38 @@ private:
                          const OddsTables::OddsEntry table[]) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
 
-    std::string ccaPrefix() const;
-    std::string coaPrefix() const;
-    bool ccaCheckZero(          Gen::Money amount, Gen::ErrorPass& ep)  const;
-    bool ccaCheckPassLineChange(Gen::Money amount, Gen::ErrorPass& ep)  const;
-    bool ccaCheckDontPassChange(Gen::Money amount, Gen::ErrorPass& ep)  const;
-    bool ccaCheckTableLimit    (Gen::Money amount, Gen::ErrorPass& ep)  const;
-    bool coaCheckBetType       (Gen::ErrorPass& ep) const;
-    bool coaCheckNoTable       (Gen::ErrorPass& ep) const;
-    bool coaCheckBettingOpen   (Gen::ErrorPass& ep) const;
-    bool coaCheckHavePivot     (Gen::ErrorPass& ep) const;
-    bool coaCheckTooSmall      (Gen::Money newAmount, Gen::ErrorPass& ep) const;
-    bool coaCheckMaxOdds       (Gen::Money newAmount, Gen::ErrorPass& ep) const;
+    std::string scaPrefix() const;
+    std::string soaPrefix() const;
+    bool scaCheckZero(          Gen::Money amount, Gen::ErrorPass& ep)  const;
+    bool scaCheckPassLineChange(Gen::Money amount, Gen::ErrorPass& ep)  const;
+    bool scaCheckDontPassChange(Gen::Money amount, Gen::ErrorPass& ep)  const;
+    bool scaCheckTableLimit    (Gen::Money amount, Gen::ErrorPass& ep)  const;
+    bool soaCheckBetType       (Gen::ErrorPass& ep) const;
+    bool soaCheckNoTable       (Gen::ErrorPass& ep) const;
+    bool soaCheckBettingOpen   (Gen::ErrorPass& ep) const;
+    bool soaCheckHavePivot     (Gen::ErrorPass& ep) const;
+    bool soaCheckTooSmall      (Gen::Money newAmount, Gen::ErrorPass& ep) const;
+    bool soaCheckMaxOdds       (Gen::Money newAmount, Gen::ErrorPass& ep) const;
     std::string diagTooSmall   (Gen::Money amount, Gen::Money min,
                              BetName betName, unsigned pivot) const;
+    std::string diagCurrentBet() const;
 
     friend class CrapsTable;
     friend class TableStats;
-};
+
+    // Unit test access points
+#ifdef UNIT_TEST
+public:
+    void testAttachCrapsTable(CrapsTable* pTable)
+    { attachCrapsTable(pTable); }
+    void testDetachCrapsTable(CrapsTable* pTable)
+    { detachCrapsTable(pTable); }
+    Gen::ReturnCode testEvaluate(unsigned point, const Dice& dice,
+                                 DecisionRecord& dr, Gen::ErrorPass& ep)
+    { return evaluate(point, dice, dr, ep); }
+#endif
+    
+};  // class CrapsBet
 
 /*-----------------------------------------------------------*//**
 

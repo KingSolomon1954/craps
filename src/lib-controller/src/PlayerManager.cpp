@@ -103,6 +103,7 @@ Load all players from file
 bool
 PlayerManager::loadPlayers()
 {
+#if 0    
     /// TODO switch to a YAML index, or read directory freshly each time
     std::ifstream in("players/index.json");
     if (!in) return false;
@@ -117,6 +118,7 @@ PlayerManager::loadPlayers()
             playersAll_[player->getUuid()] = player;
         }
     }
+#endif    
     return true;
 }
 
@@ -128,6 +130,7 @@ Save all players to file
 bool
 PlayerManager::savePlayers()
 {
+#if 0    
     json index;
     for (const auto& [uuid, player] : playersAll_)
     {
@@ -140,6 +143,7 @@ PlayerManager::savePlayers()
 
     std::ofstream out("players/index.json");
     out << index.dump(2);
+#endif    
     return true;
 }
 

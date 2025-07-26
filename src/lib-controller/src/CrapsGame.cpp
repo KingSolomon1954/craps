@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <controller/CrapsGame.h>
+#include <cassert>
 #include <iostream>
 #include <rang.hpp>
 #include <gen/BuildInfo.h>

@@ -21,6 +21,7 @@
 #include <craps/Dice.h>
 #include <craps/Player.h>
 #include <craps/TableStats.h>
+#include <yaml-cpp/yaml.h>
 
 namespace Craps {
 
@@ -28,7 +29,6 @@ class CrapsTable
 {
 public:
     using TableId = std::string;
-    using BetPtr = std::shared_ptr<class CrapsBet>;
     
     /// @name Lifecycle
     /// @{
@@ -45,8 +45,8 @@ public:
     Gen::ReturnCode updatePlayerId(const Gen::Uuid& oldId,
                                    const Gen::Uuid& newId,
                                    Gen::ErrorPass& ep);
-    Gen::ReturnCode addBet   (BetPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode addBet   (CrapsBet::BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep);
 
 #if 0    
     BetIntfcPtr addBet(const Gen::Uuid& playerId,
@@ -86,10 +86,7 @@ public:
     bool                    isComeOutRoll()     const;
     bool                    isBettingOpen()     const;
     bool                    havePlayer(const Gen::Uuid& playerId) const;
-    bool                    haveBet(const BetPtr bet)             const;
-    bool                    haveBet(const Gen::Uuid& playerId,
-                                    BetName betName,
-                                    unsigned pivot) const;
+    bool                    haveBet(const CrapsBet& bet) const;
     bool                    withinTableLimits(BetName betName,
                                               Gen::Money contractAmount,
                                               Gen::ErrorPass& ep) const;
@@ -148,7 +145,7 @@ private:
     // collects losing bets in a certain order followed by payouts of
     // winning bets in a certain order.
     //
-    using BetList = std::list<BetPtr>;
+    using BetList = std::list<CrapsBet::BetPtr>;
     using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
     BetTable tableBets_;
 
@@ -177,9 +174,16 @@ private:
     void dispenseResults();
     void trimTableBets();
     void clearDrl();
-    void evalOneBet(const BetPtr pBet);
+    void evalOneBet(CrapsBet& bet);
     bool removeMatchingBetId(BetList& bets, unsigned betId);
-    CrapsBet* findBetById(unsigned betId) const;
+    CrapsBet::BetPtr findBetById(unsigned betId) const;
+    std::string abPrefix  (const CrapsBet& bet) const;
+    bool abCheckBettinOpen(const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool abCheckHavePlayer(const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool abCheckHaveBet   (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool abCheckPassLine  (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool abCheckDontPass  (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool abCheckLimits    (const CrapsBet& bet, Gen::ErrorPass& ep) const;
     std::string diagLimits(Gen::Money amt) const;
 
     void disburseHouseResults();

@@ -9,15 +9,14 @@
 #include <string>
 #include <memory>
 #include <list>
-#include <nlohmann/json.hpp>
 #include <controller/Events.h>
 #include <craps/Bank.h>
+#include <craps/CrapsBet.h>
 #include <craps/EnumBetName.h>
 #include <gen/ReturnCode.h>
 #include <gen/MoneyUtil.h>
 #include <gen/Uuid.h>
-
-using json = nlohmann::json;
+#include <yaml-cpp/yaml.h>
 
 namespace Gen {
     class ErrorPass;    // fwd
@@ -25,7 +24,6 @@ namespace Gen {
 
 namespace Craps {
 
-class CrapsBetIntfc;    // fwd
 class DecisionRecord;   // fwd
 
 class Player
@@ -42,9 +40,6 @@ public:
 
     bool saveToFile(const std::string& path) const;
     bool loadFromFile(const std::string& path);
-
-//    static Player deserialize(const std::string& line);
-//    std::string serialize() const;
     /// @}
 
 #if 0
@@ -89,21 +84,19 @@ class CrapsInterface
 };    
 #endif
     
-    
     /// @name Modifiers
     /// @{
     Gen::ReturnCode joinTable(Gen::ErrorPass& ep);
-    Gen::ReturnCode makeBet(BetName betName,
-                            Gen::Money contractAmount,
-                            unsigned pivot,
-                            Gen::ErrorPass& ep);
+    CrapsBet::BetPtr makeBet(BetName betName,
+                             Gen::Money contractAmount,
+                             unsigned pivot,
+                             Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(BetName betName,
                               unsigned pivot,
                               Gen::ErrorPass& ep);
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
-    void fromJson(const json& j);
     /// @}
 
     /// @name Observers
@@ -113,18 +106,19 @@ class CrapsInterface
     Gen::Money getAmountOnTable()const;
     unsigned getNumBetsOnTable() const;
     Gen::Money getBalance()      const;
-    json toJson()                const;
+    
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
     /// @}
 
 private:
     Gen::Uuid uuid_;
     std::string name_;
     Bank wallet_;
-    using BetIntfcPtr = std::shared_ptr<class CrapsBetIntfc>;
-    std::list<BetIntfcPtr> bets_;
+    std::list<CrapsBet::BetPtr> bets_;
 
-    bool removeBetByPtr(BetIntfcPtr& pBet);
-    BetIntfcPtr findBetById(unsigned betId) const;
+    bool removeBetByPtr(CrapsBet::BetPtr& pBet);
+    CrapsBet::BetPtr findBetById(unsigned betId) const;
     void diagBadBetId(const std::string& funcName, unsigned betId) const;
     void setupSubscriptions();
     void onBettingClosed();
@@ -152,7 +146,7 @@ Player Responsibilities:
 
 @li Know how to read/write its own data
 
-@li Export a to_json() and from_json() method
+@li Exports toYAML() and reads fromYAML()
 
 */
 

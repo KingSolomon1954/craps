@@ -14,8 +14,20 @@ stats PlayerStats
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 update CrapBet unit-test, for any bet and setOdds exceeding table limit
 
+Refund on quit - unresolved bets back to player's bank
+Allow odds bets less than contract bet - pay even money
+Allow a clear/undo last bet capability
+    void commitStagedAmounts(); // called by CrapsTable during roll
+    void discardStagedAmounts(); // if needed
+    MoneyAmount stagedContractAmount_;
+    MoneyAmount stagedOddsAmount_;
+    bool lineBetLocked_ = false;    
+make a static CrapsBet function that creates a shared_ptr craps bet
+
 Design change, CrapsTable accepts CrapsBets. eliminate CrapsBetIntfc
 
+(Done) change changeOddsAmount() -> setOddsAmount()
+(Done) change changeContractAmount() -> setContractAmount()
 (Done) Rules for CrapsTables (10x odds, limits, automation)
 (Done) Load Table from yaml file (CrapsTable.cpp)
 (Done) Save Table from yaml file (CrapsTable.cpp)
