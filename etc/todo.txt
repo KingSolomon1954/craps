@@ -34,8 +34,9 @@ Allow a clear/undo last bet capability
     enum BetStats { New, Actvie, Staged, Resolved };
 make a static CrapsBet function that creates a shared_ptr craps bet
 
-Design change, CrapsTable accepts CrapsBets. eliminate CrapsBetIntfc
+Money calculation uses multiples and pays 1:1 odds on leftover
 
+(Done) Design change, CrapsTable accepts CrapsBets. eliminate CrapsBetIntfc
 (Done) change changeOddsAmount() -> setOddsAmount()
 (Done) change changeContractAmount() -> setContractAmount()
 (Done) Rules for CrapsTables (10x odds, limits, automation)

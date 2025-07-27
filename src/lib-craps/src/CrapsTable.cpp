@@ -292,9 +292,9 @@ It is an error if the same bet name already exists for this player.
 Use setContractAmount() or setOddsAmount() if you need to change the 
 bet amount or odds.
 
-@param pBet
+@param[in] pBet
     the bet of interest
-@param ep
+@param[in,out] ep
     if error, ep has the reason
 @return
     Success if accepted, otherwise Fail and ep has the reason
@@ -321,15 +321,15 @@ CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
     if (fifZeroAmount        (bet, bet.contractAmount(), 1, ep)) return false;
     if (fifComeDisallowed    (bet, ep)) return false;
     if (fifDontPassDisallowed(bet, ep)) return false;
-    if (fifBadMinMaxLineBets (bet, ep)) return false;
-    if (fifBadMinMaxSideBets (bet, ep)) return false;
-    if (fifBadMultiples      (bet, ep)) return false;
+    if (fifBadMinMaxLineBets (bet, bet.contractAmount(), 1, ep)) return false;
+    if (fifBadMinMaxSideBets (bet, bet.contractAmount(), 1, ep)) return false;
+    if (fifBadMultiples      (bet, bet.contractAmount(), 1, ep)) return false;
 
     if (bet.betName() == BetName::PassLine && point_ != 0)
     {
         // Player made PassLine bet after point already established.
         // Silently coerce the pivot to agree with the point.
-        bet.pivot_ = point_;
+        bet.setPivotInternal(point_);
     }
     return true;
 }
@@ -367,13 +367,13 @@ The bet must already exist on the table.
 Overwrites the previous amount. 
 Validates the change against table rules.
 
-@param [in,out] pBet
+@param[in,out] pBet
     The bet of interest.
 
-@param [in] newAmount
+@param[in] newAmount
     Sets the contract bet amount to newAmount
 
-@param [in,out] ep
+@param[in,out] ep
     Holds reason for error
 
 @return
@@ -394,12 +394,11 @@ CrapsTable::setContractAmount(CrapsBet::BetPtr pBet,
     if (fifZeroAmount       (*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
     if (fifBadPassLineChange(*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
     if (fifBadDontPassChange(*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
-//    if (fifExceedLimitsSca     (bet, newAmount, ep)) return false;
-//    if (fifBadMinMaxLineBetsSca(bet, newAmount, ep)  return false;
-//    if (fifBadMinMaxSideBetsSca(bet, newAmount, ep)  return false;
-//    if (fifBadMultiplesSca     (bet, newAmount, ep)  return false;
-//
-//    bet.setContractAmount(newAmount);
+    if (fifBadMinMaxLineBets(*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
+    if (fifBadMinMaxSideBets(*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
+    if (fifBadMultiples     (*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
+
+//    bet.setContractAmountInternal(newAmount);
     
     return Gen::ReturnCode::Success;
 }
@@ -419,13 +418,13 @@ conditions are true:
 @li the bet has an assigned pivot (point) (i.e, pivot is non-zero)
 @li the new amount is subject to table limits min/max odds
 
-@param [in,out] pBet
+@param[in,out] pBet
     The bet of interest.
 
-@param [in] amount
+@param[in] amount
     The amount to set it to. Clobbers any previous setting.
 
-@param [in,out] ep
+@param[in,out] ep
     Holds reason for error
 
 @returns
@@ -443,16 +442,13 @@ CrapsTable::setOddsAmount(CrapsBet::BetPtr pBet,
                           Gen::Money oddsAmount,
                           Gen::ErrorPass& ep)
 {
-    if (fifBettingClosed  (*pBet, 3, ep))            return Gen::ReturnCode::Fail;
-    if (fifMissingBet     (*pBet, 3, ep))            return Gen::ReturnCode::Fail;
-//    if (!soaCheckBetType     (bet, ep))             return Gen::ReturnCode::Fail;
-//    if (!soaCheckNoTable     (ep))             return Gen::ReturnCode::Fail;
-//    if (!soaCheckBettingOpen (ep))         return Gen::ReturnCode::Fail;
-//    if (!soaCheckHavePivot   (ep))           return Gen::ReturnCode::Fail;
-//    if (!soaCheckTooSmall    (newAmount, ep)) return Gen::ReturnCode::Fail;
-//    if (!soaCheckMaxOdds     (newAmount, ep))  return Gen::ReturnCode::Fail;
+    if (fifBettingClosed    (*pBet, 3, ep))          return Gen::ReturnCode::Fail;
+    if (fifMissingBet       (*pBet, 3, ep))          return Gen::ReturnCode::Fail;
+    if (fifBadBetTypeForOdds(*pBet, ep))             return Gen::ReturnCode::Fail;
+    if (fifZeroPivotForOdds (*pBet, ep))             return Gen::ReturnCode::Fail;
+    if (fifBadMinMaxForOdds (*pBet, oddsAmount, ep)) return Gen::ReturnCode::Fail;
 
-//    bet.setOddsAmount(oddsAmount);
+//    bet.setOddsAmountInternal(oddsAmount);
     return Gen::ReturnCode::Success;    
 }
 

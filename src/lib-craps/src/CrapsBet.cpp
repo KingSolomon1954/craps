@@ -224,313 +224,55 @@ CrapsBet::operator==(const CrapsBet& other) const
            offComeOutRoll_ == other.offComeOutRoll_ &&
            distance_       == other.distance_       &&
            whenCreated_    == other.whenCreated_    &&
-           whenDecided_    == other.whenDecided_    &&
-           pTable_         == other.pTable_;
+           whenDecided_    == other.whenDecided_;
 } 
 
 /*-----------------------------------------------------------*//**
 
 Sets the contract bet to the given amount.
 
-Overwrites any previous value.
+Private function called by CrapsTable. CrapsTable is trusted
+so just overwrites value. No checks needed.
 
-@param amount
+@param[in] amount
     Sets the contract bet amount to amount
-
-@param ep
-    Holds reason for error
-
-@return
-    Success if amount has been changed, otherwise Fail and ep has reason
-
-@internal
-    sca prefix means "set contract amount"
 */
-Gen::ReturnCode
-CrapsBet::setContractAmount(Gen::Money amount, Gen::ErrorPass& ep)
+void
+CrapsBet::setContractAmountInternal(Gen::Money amount)
 {
-    if (amount == contractAmount_)           return Gen::ReturnCode::Success;
-    if (!scaCheckZero(amount, ep))           return Gen::ReturnCode::Fail;
-    if (!scaCheckPassLineChange(amount, ep)) return Gen::ReturnCode::Fail;
-    if (!scaCheckDontPassChange(amount, ep)) return Gen::ReturnCode::Fail;
-    if (!scaCheckTableLimit(amount, ep))     return Gen::ReturnCode::Fail;
-    
     contractAmount_ = amount;
-    return Gen::ReturnCode::Success;
 }
     
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
-std::string
-CrapsBet::scaPrefix() const
+Sets the odds amount to the given amount.
+
+Private function called by CrapsTable. CrapsTable is trusted
+so just overwrites value. No checks needed.
+
+@param[in] amount
+    Sets the odds amount to amount
+*/
+void
+CrapsBet::setOddsAmountInternal(Gen::Money newAmount)
 {
-    return "CrapsBet::setContractAmount(): Unable to change contract amount; ";
-}    
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::scaCheckZero(Gen::Money amount, Gen::ErrorPass& ep) const
-{
-    if (amount == 0)
-    {
-        ep.diag = scaPrefix() + "New contract amount cannot be zero. "
-            "Use CrapsTable::removeBet() if intent is to pull the bet.";
-        return false;
-    }
-    return true;
-}
-    
-//----------------------------------------------------------------
-
-bool
-CrapsBet::scaCheckPassLineChange(Gen::Money amount, Gen::ErrorPass& ep) const
-{
-    if (betName_ == BetName::PassLine || betName_ == BetName::Come)
-    {
-        if (pivot_ != 0 && amount < contractAmount_)
-        {
-            ep.diag = scaPrefix() + "Cannot reduce contract amount for "
-                "PassLine/Come bets after point is established.";
-            return false;
-        }
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::scaCheckDontPassChange(Gen::Money amount, Gen::ErrorPass& ep) const
-{
-    if (betName_ == BetName::DontPass || betName_ == BetName::DontCome)
-    {
-        if (pivot_ != 0)
-        {
-            if (amount > contractAmount_)
-            {
-                ep.diag = scaPrefix() + "Cannot increase contract amount "
-                    "for DontPass/DontCome bets after point is established.";
-                return false;
-            }
-            else
-            {
-                // OK to reduce bet - but have to deal with odds
-                if (oddsAmount_ > (amount  * pTable_->getMaxOdds()))
-                {
-                    ep.diag = scaPrefix() + "Need to reduce odds amount "
-                        "first before reducing contract amount, otherwise "
-                        "odds bet would exceed table limits.";
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::scaCheckTableLimit(Gen::Money amount, Gen::ErrorPass& ep) const
-{
-    if (pTable_ != nullptr)  // Bet might not have been placed on table yet
-    {
-        if (!pTable_->withinTableLimits(betName_, amount, ep))
-        {
-            ep.prepend(scaPrefix());
-            return false;
-        }
-    }
-    return true;
+    oddsAmount_ = newAmount;
 }
 
 /*-----------------------------------------------------------*//**
 
-Set, change, or remove the amount for an odds bet.
+Sets the pivot to the given point.
 
-It is only permissable to set an odds amount if the following
-conditions are true:
+Private function called by CrapsTable. CrapsTable is trusted
+so just overwrites value. No checks needed.
 
-@li the bet is a PassLine, DontPass, Come, DontCome bet
-@li the bet has already been assigned its pivot (point) (i.e, pivot
-    is non-zero)
-@li subject to checking house limits for max odds
-@li minimum bet is given by house rules or the actual dice odds 
-    whichever is higher
-
-TODO: Also the house limits the amount of the odds bet to 10x the
-amount of the contract bet.
-
-@param [in] amount
-    The amount to set it to. Clobbers any previous setting.
-
-@returns
-    Success if the bet was accepted, otherwise Fail and ep has
-    the reason.
-
-@internal
-    soa prefix means "set odds amount"
-    diagnostic messages look like this:
-    CrapsBet::setOddsAmount(): Unable to set odds bet; Current bet(betId:157, betName:DontPass(4)). Odds bet amount of $1 is too small. Minimum odds for this bet is 2.
-    CrapsBet::setOddsAmount(): Unable to set odds bet; Current bet(betId:159, betName:DontPass(6)). Exceeds table limit of 5x odds; Contract amount is $1 which allows max odds amount of $5.
+@param[in] pivot
+    Sets the pivot to point
 */
-Gen::ReturnCode
-CrapsBet::setOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
+void
+CrapsBet::setPivotInternal(unsigned pivot)
 {
-    if (!soaCheckBetType(ep))             return Gen::ReturnCode::Fail;
-    if (!soaCheckNoTable(ep))             return Gen::ReturnCode::Fail;
-    if (!soaCheckBettingOpen(ep))         return Gen::ReturnCode::Fail;
-    if (!soaCheckHavePivot(ep))           return Gen::ReturnCode::Fail;
-    if (!soaCheckTooSmall(newAmount, ep)) return Gen::ReturnCode::Fail;
-    if (!soaCheckMaxOdds(newAmount, ep))  return Gen::ReturnCode::Fail;
-    
-    oddsAmount_ = newAmount;
-    return Gen::ReturnCode::Success;    
-}
-
-//----------------------------------------------------------------
-
-std::string
-CrapsBet::diagBetId() const
-{
-    std::string s = "bet(betId:" + std::to_string(betId_) +
-        ", betName:" + EnumBetName::toString(betName_);
-
-    if (pivot_ != 0)
-    {
-        s += "(" + std::to_string(pivot_) + ")";
-    }
-
-    s += ").";
-    return s;
-}
-
-//----------------------------------------------------------------
-
-std::string
-CrapsBet::soaPrefix() const
-{
-    return "CrapsBet::setOddsAmount(): Unable to set odds bet; " +
-            diagCurrentBet();
-}    
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::soaCheckBetType(Gen::ErrorPass& ep) const
-{
-    if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
-        betName_ != BetName::Come     && betName_ != BetName::DontCome)
-    {
-        std::string s(" Odds bet is only available for "
-                      "PassLine|Come|DontPass|DontCome bets.");
-        ep.diag = soaPrefix() + s;
-        return false;
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::soaCheckNoTable(Gen::ErrorPass& ep) const
-{
-    if (pTable_ == nullptr)
-    {
-        ep.diag = soaPrefix() + " Bet has not yet been placed on a table.";
-        return false;
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::soaCheckBettingOpen(Gen::ErrorPass& ep) const
-{
-    if (!pTable_->isBettingOpen())
-    {
-        ep.diag = soaPrefix() + " Betting is closed at the moment - "
-                                "dice roll is underway.";
-        return false;
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::soaCheckHavePivot(Gen::ErrorPass& ep) const
-{
-    if (pivot_ == 0)
-    {
-        std::string s(" Odds bet is only allowed after a "
-            "point has been established for this bet; ");
-        ep.diag = soaPrefix() + s;
-        return false;
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::soaCheckTooSmall(Gen::Money newAmount, Gen::ErrorPass& ep) const
-{
-    if (betName_ == BetName::PassLine || betName_ == BetName::Come)
-    {
-        if (newAmount > 0 && newAmount < OddsTables::oddsPass[pivot_].denominator)
-        {
-            ep.diag = diagTooSmall(newAmount,
-                OddsTables::oddsPass[pivot_].denominator,
-                betName_, pivot_);
-            return false;
-        }
-    }
-    if (betName_ == BetName::DontPass || betName_ == BetName::DontCome)
-    {
-        if (newAmount > 0 && newAmount < OddsTables::oddsDont[pivot_].denominator)
-        {
-            ep.diag = diagTooSmall(newAmount,
-                OddsTables::oddsDont[pivot_].denominator,
-                betName_, pivot_);
-            return false;
-        }
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsBet::soaCheckMaxOdds(Gen::Money newAmount, Gen::ErrorPass& ep) const
-{
-    if (newAmount > (contractAmount_ * pTable_->getMaxOdds()))
-    {
-        ep.diag = soaPrefix() + " Exceeds table limit of "    +
-            std::to_string(pTable_->getMaxOdds()) + "x odds; "
-            "Contract amount is $" + std::to_string(contractAmount_) +
-            " which allows max odds amount of $"                     +
-            std::to_string(contractAmount_ * pTable_->getMaxOdds())  +  ".";
-        return false;
-    }
-    return true;
-}
-        
-//----------------------------------------------------------------
-//
-// Helper to form error diag.
-//
-std::string
-CrapsBet::diagTooSmall(Gen::Money amount, Gen::Money min,
-                        BetName betName, unsigned pivot) const
-{
-    std::string s(" Odds bet amount of ");
-    s += Gen::MoneyUtil::toStringNoCommas(amount) + 
-        " is too small. Minimum odds for this bet is " +
-        std::to_string(min) +  ".";
-    return soaPrefix() + s;
+    pivot_ = pivot;
 }
 
 /*-----------------------------------------------------------*//**
@@ -695,7 +437,14 @@ CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
 }
 
 //----------------------------------------------------------------
-
+// 
+// Strategy:
+// 
+// * Odds payout only on even multiples of the true odds.
+// * Uneven remainders should pay 1:1 for any leftover amount above a
+//   full multiple.
+// * Amounts below a full multiple get paid 1:1 only.
+//
 void
 CrapsBet::calcWinPointBet(
     unsigned d,
@@ -704,17 +453,27 @@ CrapsBet::calcWinPointBet(
     const OddsTables::OddsEntry table[]) const
 {
     dr.win = contractAmount_;
+
     if (oddsAmount_ == 0) return;
+
     if (offComeOutRoll_ && returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
+        return;
     }
-    else
-    {
-        dr.win += (oddsAmount_ * table[d].numerator) / table[d].denominator;
-    }
-}
 
+    const auto& odds = table[d];
+    unsigned numer = odds.numerator;
+    unsigned denom = odds.denominator;
+
+    // This works whether odds are favorable (3:2) or reversed (2:3)
+    unsigned fullUnits = oddsAmount_ / denom;
+    unsigned remainder = oddsAmount_ % denom;
+
+    unsigned oddsPayout = fullUnits * numer + remainder;
+
+    dr.win += oddsPayout;
+}
 //----------------------------------------------------------------
 
 void
@@ -1339,24 +1098,6 @@ CrapsBet::evalHorn(
     }
     dr.decision = true;
     return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-
-void
-CrapsBet::attachCrapsTable(CrapsTable* pTable)
-{
-    assert(pTable_ == nullptr);  // Maybe make this a runtime warning
-    pTable_ = pTable;
-}
-
-//----------------------------------------------------------------
-
-void
-CrapsBet::detachCrapsTable(CrapsTable* pTable)
-{
-    assert(pTable_ == pTable);  // Maybe make this a runtime warning
-    pTable_ = nullptr;
 }
 
 /*-----------------------------------------------------------*//**

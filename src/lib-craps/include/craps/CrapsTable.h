@@ -176,32 +176,6 @@ private:
     void evalOneBet(CrapsBet& bet);
     bool removeMatchingBetId(BetList& bets, unsigned betId);
     CrapsBet::BetPtr findBetById(unsigned betId) const;
-    std::string diagPrefix    (size_t idx, const CrapsBet& bet) const;
-    bool fifBettingClosed     (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
-    bool fifMissingPlayer     (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifHaveBet           (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifMissingBet        (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
-    bool fifComeDisallowed    (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifDontPassDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifBadMinMaxLineBets (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifBadMinMaxSideBets (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifBadMultiples      (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifZeroAmount        (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool fifBadPassLineChange (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool fifBadDontPassChange (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool withinMinMaxLineBets(BetName betName,
-                              Gen::Money contractAmount,
-                              Gen::ErrorPass& ep) const;
-    bool withinMinMaxSideBets(BetName betName,
-                              Gen::Money contractAmount,
-                              Gen::ErrorPass& ep) const;
-    bool goodMultiples       (BetName betName,
-                              Gen::Money amt,
-                              Gen::ErrorPass& ep) const;
-    std::string diagLimits   (Gen::Money amt) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();
@@ -217,6 +191,41 @@ private:
     YAML::Node rulesToYAML() const;
     void fromYAML(const YAML::Node& node);
     void rulesFromYAML(const YAML::Node& node);
+
+    // Validity checks, in CrapsTablePart2.cpp
+    std::string diagPrefix    (size_t idx, const CrapsBet& bet) const;
+    bool fifBettingClosed     (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifMissingBet        (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifMissingPlayer     (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifHaveBet           (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifComeDisallowed    (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifDontPassDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifBadBetTypeForOdds (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifZeroPivotForOdds  (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxLineBets (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxSideBets (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifZeroAmount        (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadPassLineChange (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadDontPassChange (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMultiples      (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxForOdds  (const CrapsBet& bet, Gen::Money amt,
+                               Gen::ErrorPass& ep) const;
+    bool withinMinMaxLineBets(BetName betName,
+                              Gen::Money contractAmount,
+                              Gen::ErrorPass& ep) const;
+    bool withinMinMaxSideBets(BetName betName,
+                              Gen::Money contractAmount,
+                              Gen::ErrorPass& ep) const;
+    bool goodMultiplesSideBets(BetName betName,
+                              Gen::Money amt,
+                              Gen::ErrorPass& ep) const;
+    std::string diagLimits   (Gen::Money amt) const;
 };
 
 /*-----------------------------------------------------------*//**

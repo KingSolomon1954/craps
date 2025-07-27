@@ -206,12 +206,13 @@ CrapsTable::fifBadDontPassChange(const CrapsBet& bet, Gen::Money amt,
 //----------------------------------------------------------------
 
 bool
-CrapsTable::fifBadMinMaxLineBets(const CrapsBet& bet, Gen::ErrorPass& ep) const
+CrapsTable::fifBadMinMaxLineBets(const CrapsBet& bet, Gen::Money amt,
+                                 size_t idx, Gen::ErrorPass& ep) const
 {
     // fault if exceeded limits and sets ep error diag
-    if (!withinMinMaxLineBets(bet.betName(), bet.contractAmount(), ep))
+    if (!withinMinMaxLineBets(bet.betName(), amt, ep))
     {
-        ep.prepend(diagPrefix(1, bet));
+        ep.prepend(diagPrefix(idx, bet));
         return true;
     }
     return false;
@@ -220,12 +221,13 @@ CrapsTable::fifBadMinMaxLineBets(const CrapsBet& bet, Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 bool
-CrapsTable::fifBadMinMaxSideBets(const CrapsBet& bet, Gen::ErrorPass& ep) const
+CrapsTable::fifBadMinMaxSideBets(const CrapsBet& bet, Gen::Money amt,
+                                 size_t idx, Gen::ErrorPass& ep) const
 {
     // fault if exceeded limits and sets ep error diag
     if (!withinMinMaxSideBets(bet.betName(), bet.contractAmount(), ep))
     {
-        ep.prepend(diagPrefix(1, bet));
+        ep.prepend(diagPrefix(idx, bet));
         return true;
     }
     return false;
@@ -234,17 +236,74 @@ CrapsTable::fifBadMinMaxSideBets(const CrapsBet& bet, Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 bool
-CrapsTable::fifBadMultiples(const CrapsBet& bet, Gen::ErrorPass& ep) const
+CrapsTable::fifBadMultiples(const CrapsBet& bet, Gen::Money amt,
+                            size_t idx, Gen::ErrorPass& ep) const
 {
     // fault if not a proper multiple and sets ep error diag
-    if (!goodMultiples(bet.betName(), bet.contractAmount(), ep))
+    if (!goodMultiplesSideBets(bet.betName(), amt, ep))
     {
-        ep.prepend(diagPrefix(1, bet));
+        ep.prepend(diagPrefix(idx, bet));
         return true;
     }
     return false;
 }
 
+//----------------------------------------------------------------
+
+bool
+CrapsTable::fifBadBetTypeForOdds(const CrapsBet& bet, Gen::ErrorPass& ep) const
+{
+    // fault if Odds bet not allowed for this bet type, sets up error diag
+    BetName betName = bet.betName();
+    if (betName != BetName::PassLine && betName != BetName::DontPass &&
+        betName != BetName::Come     && betName != BetName::DontCome)
+    {
+        std::string s("Odds bet is only available for "
+                      "PassLine|Come|DontPass|DontCome bets.");
+        ep.diag = diagPrefix(3, bet) + s;
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsTable::fifZeroPivotForOdds(const CrapsBet& bet, Gen::ErrorPass& ep) const
+{
+    // fault if zero pivot and sets ep error diag
+    if (bet.pivot() == 0)
+    {
+        std::string s(" Odds bet is only allowed after a "
+            "point has been established for this bet.");
+        ep.diag = diagPrefix(3, bet) + s;
+        return true;
+    }
+    return false;
+}
+        
+//----------------------------------------------------------------
+
+bool
+CrapsTable::fifBadMinMaxForOdds(const CrapsBet& bet, Gen::Money amt,
+                                Gen::ErrorPass& ep) const
+{
+    // fault if odds amount is out of range and sets ep error diag
+    
+    // Minimum odds is zero. But no need to test for that.
+    if (amt > (bet.contractAmount() * maxOdds_))
+    {
+        ep.diag = diagPrefix(3, bet) + " Exceeds table limit of "      +
+            std::to_string(maxOdds_) + "x odds; "
+            "Contract amount is "                                      +
+            Gen::MoneyUtil::toString(bet.contractAmount())             +
+            " which allows max odds amount of "                        +
+            Gen::MoneyUtil::toString(bet.contractAmount() * maxOdds_)  +  ".";
+        return true;
+    }
+    return false;
+}
+        
 //----------------------------------------------------------------
 
 bool
@@ -307,7 +366,7 @@ CrapsTable::withinMinMaxSideBets(BetName betName,
 //----------------------------------------------------------------
 
 bool
-CrapsTable::goodMultiples(BetName betName,
+CrapsTable::goodMultiplesSideBets(BetName betName,
                           Gen::Money amt,
                           Gen::ErrorPass& ep) const
 {

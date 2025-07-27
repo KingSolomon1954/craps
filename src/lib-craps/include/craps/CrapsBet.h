@@ -41,8 +41,6 @@ public:
 
     /// @name Modifiers
     /// @{
-    Gen::ReturnCode setContractAmount(Gen::Money amount, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount    (Gen::Money amount, Gen::ErrorPass& ep);
     void setOffComeOutRoll();
     void setOnComeOutRoll();
     void setHardwayOff();
@@ -151,21 +149,9 @@ private:
                          bool returnOdds,
                          const OddsTables::OddsEntry table[]) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
-
-    std::string scaPrefix() const;
-    std::string soaPrefix() const;
-    bool scaCheckZero(          Gen::Money amount, Gen::ErrorPass& ep)  const;
-    bool scaCheckPassLineChange(Gen::Money amount, Gen::ErrorPass& ep)  const;
-    bool scaCheckDontPassChange(Gen::Money amount, Gen::ErrorPass& ep)  const;
-    bool scaCheckTableLimit    (Gen::Money amount, Gen::ErrorPass& ep)  const;
-    bool soaCheckBetType       (Gen::ErrorPass& ep) const;
-    bool soaCheckNoTable       (Gen::ErrorPass& ep) const;
-    bool soaCheckBettingOpen   (Gen::ErrorPass& ep) const;
-    bool soaCheckHavePivot     (Gen::ErrorPass& ep) const;
-    bool soaCheckTooSmall      (Gen::Money newAmount, Gen::ErrorPass& ep) const;
-    bool soaCheckMaxOdds       (Gen::Money newAmount, Gen::ErrorPass& ep) const;
-    std::string diagTooSmall   (Gen::Money amount, Gen::Money min,
-                             BetName betName, unsigned pivot) const;
+    void setContractAmountInternal(Gen::Money amount);
+    void setOddsAmountInternal(Gen::Money amount);
+    void setPivotInternal(unsigned pivot);
 
     friend class CrapsTable;
     friend class TableStats;
@@ -173,10 +159,10 @@ private:
     // Unit test access points
 #ifdef UNIT_TEST
 public:
-    void testAttachCrapsTable(CrapsTable* pTable)
-    { attachCrapsTable(pTable); }
-    void testDetachCrapsTable(CrapsTable* pTable)
-    { detachCrapsTable(pTable); }
+    void testSetContractAmount(Gen::Money amount)
+    { setContractAmountInternal(amount); }
+    void testSetOddsAmount(Gen::Money amount)
+    { setOddsAmountInternal(amount); }
     Gen::ReturnCode testEvaluate(unsigned point, const Dice& dice,
                                  DecisionRecord& dr, Gen::ErrorPass& ep)
     { return evaluate(point, dice, dr, ep); }
