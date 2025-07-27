@@ -392,9 +392,9 @@ CrapsBet::setOddsAmount(Gen::Money newAmount, Gen::ErrorPass& ep)
 //----------------------------------------------------------------
 
 std::string
-CrapsBet::diagCurrentBet() const
+CrapsBet::diagBetId() const
 {
-    std::string s = "Current bet(betId:" + std::to_string(betId_) +
+    std::string s = "bet(betId:" + std::to_string(betId_) +
         ", betName:" + EnumBetName::toString(betName_);
 
     if (pivot_ != 0)

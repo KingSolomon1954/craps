@@ -12,6 +12,7 @@ add_library(craps STATIC
     src/BetStats.cpp
     src/CrapsBet.cpp
     src/CrapsTable.cpp
+    src/CrapsTablePart2.cpp
     src/Dice.cpp
     src/EnumBetName.cpp
     src/Player.cpp

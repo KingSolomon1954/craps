@@ -14,14 +14,24 @@ stats PlayerStats
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 update CrapBet unit-test, for any bet and setOdds exceeding table limit
 
+move testRollDice() under -DUNIT_TEST flag
+
 Refund on quit - unresolved bets back to player's bank
+  show a message like: “You left the table with active bets.
+  Your chips have been returned to your bank.”
+  When switching tables:
+  Add a warning like: “You have active bets. Are you sure
+  you want to quit and abandon them?”
+
 Allow odds bets less than contract bet - pay even money
 Allow a clear/undo last bet capability
     void commitStagedAmounts(); // called by CrapsTable during roll
     void discardStagedAmounts(); // if needed
     MoneyAmount stagedContractAmount_;
     MoneyAmount stagedOddsAmount_;
-    bool lineBetLocked_ = false;    
+    bool lineBetLocked_ = false;
+    CrapsBet::isLocked()
+    enum BetStats { New, Actvie, Staged, Resolved };
 make a static CrapsBet function that creates a shared_ptr craps bet
 
 Design change, CrapsTable accepts CrapsBets. eliminate CrapsBetIntfc
@@ -638,4 +648,8 @@ Date                Duration    Bets   Intake   Payout  Balance Players
 -----------------   ----------- ------ -------- ------- ------- -------
 2025-07-12T09:29:56 0d 01:33:08 112    246222   334577  +88355  6
 2025-05-12T08:05:44 0d 00:22:11 24     1009     950     +59     6
+
+addPlayer()
+removePlayer()  (abandon bets with confirmation)
+prepareForShutdown  (refundOnQuitting with notice of refund)
 

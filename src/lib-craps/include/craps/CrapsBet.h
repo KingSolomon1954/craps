@@ -23,7 +23,6 @@ namespace Gen {
 
 namespace Craps {
 
-class CrapsTable;      // fwd
 class Dice;            // fwd
 class DecisionRecord;  // fwd
     
@@ -34,8 +33,10 @@ public:
     
     /// @name Lifecycle
     /// @{
-    CrapsBet(const Gen::Uuid& playerId, BetName name,
-             Gen::Money contractAmount, unsigned pivot = 0);
+    CrapsBet(const Gen::Uuid& playerId,
+             BetName          name,
+             Gen::Money       contractAmount,
+             unsigned         pivot = 0);
     /// @}
 
     /// @name Modifiers
@@ -61,6 +62,7 @@ public:
     unsigned         distance()       const;
     Gen::Timepoint   whenCreated()    const;
     Gen::Timepoint   whenDecided()    const;
+    std::string      diagBetId()      const;  // "bet(betId:33, betName:DontCome(4))"
     
     bool operator==(const CrapsBet&) const;
     /// @}
@@ -77,7 +79,6 @@ private:
     Gen::Money oddsAmount_     = 0;
     bool offComeOutRoll_       = true;
     unsigned distance_         = 0;  // num rolls until decision
-    CrapsTable* pTable_        = nullptr;
     Gen::Timepoint whenCreated_;
     Gen::Timepoint whenDecided_;
     
@@ -97,8 +98,6 @@ private:
 
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
-    void attachCrapsTable(CrapsTable* pTable);
-    void detachCrapsTable(CrapsTable* pTable);
     void checkBetName();
     void checkContractAmount();
     void checkLinePivot();
@@ -167,7 +166,6 @@ private:
     bool soaCheckMaxOdds       (Gen::Money newAmount, Gen::ErrorPass& ep) const;
     std::string diagTooSmall   (Gen::Money amount, Gen::Money min,
                              BetName betName, unsigned pivot) const;
-    std::string diagCurrentBet() const;
 
     friend class CrapsTable;
     friend class TableStats;

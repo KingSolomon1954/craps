@@ -40,32 +40,28 @@ public:
 
     /// @name Modifiers
     /// @{
-    Gen::ReturnCode addPlayer   (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
-    Gen::ReturnCode removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep);
+    // Players
+    Gen::ReturnCode addPlayer     (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
+    Gen::ReturnCode removePlayer  (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
     Gen::ReturnCode updatePlayerId(const Gen::Uuid& oldId,
                                    const Gen::Uuid& newId,
                                    Gen::ErrorPass& ep);
+    // Bets
     Gen::ReturnCode addBet   (CrapsBet::BetPtr pBet, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep);
-
-#if 0    
-    BetIntfcPtr addBet(const Gen::Uuid& playerId,
-                       BetName betName,
-                       Gen::Money contractAmount,
-                       unsigned pivot,
-                       Gen::ErrorPass& ep);
-    
-    Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOdds         (BetIntfcPtr bet, Gen::Money amount, Gen::ErrorPass& ep);
-#endif
-    
+    Gen::ReturnCode setContractAmount(CrapsBet::BetPtr pBet,
+                                      Gen::Money newAmount,
+                                      Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount(CrapsBet::BetPtr pBet,
+                                  Gen::Money oddsAmount,
+                                  Gen::ErrorPass& ep);
+    // Table    
     void rollDice();
-    void testRollDice(unsigned d1, unsigned d2);
-    void testSetState(unsigned point, unsigned d1, unsigned d2);
+    void testRollDice(unsigned d1, unsigned d2);  // TODO: only for unit test
+    void testSetState(unsigned point, unsigned d1, unsigned d2);   // TODO: only for unit test
     void resetStats();
-    void close();               // Shutdown table, soon to switch out.
-    void prepareForShutdown();  // Shutdown table, soon to destruct.
+    void close();               // Shutdown table, switching to different table
+    void prepareForShutdown();  // Shutdown table, exiting program
     /// @}
 
     /// @name Observers
@@ -87,9 +83,6 @@ public:
     bool                    isBettingOpen()     const;
     bool                    havePlayer(const Gen::Uuid& playerId) const;
     bool                    haveBet(const CrapsBet& bet) const;
-    bool                    withinTableLimits(BetName betName,
-                                              Gen::Money contractAmount,
-                                              Gen::ErrorPass& ep) const;
     const SessionHistory::Sessions& getSessionHistory() const;
     /// @}
 
@@ -105,9 +98,15 @@ private:
     std::string tableName_;
     std::string shortDescription_;
     std::string fullDescription_;
-    unsigned minLineBet_ = 5;           // overriden by yaml
-    unsigned maxLineBet_ = 1000;        // overriden by yaml
-    unsigned maxOdds_    = 5;           // overriden by yaml
+    unsigned maxOdds_     = 5;          // overriden by yaml, use TableRules
+    unsigned minLineBet_  = 5;          // overriden by yaml, use TableRules
+    unsigned maxLineBet_  = 1000;       // overriden by yaml, use TableRules
+    unsigned minFieldBet_ = 1;          // TODO yaml, use TableRules
+    unsigned maxFieldBet_ = 1000;       // TODO yaml, use TableRules
+    unsigned minCandEBet_ = 1;          // TODO yaml, use TableRules
+    unsigned maxCandEBet_ = 1000;       // TODO yaml, use TableRules
+    unsigned minHornBet_  = 1;          // TODO yaml, use TableRules
+    unsigned maxHornBet_  = 1000;       // TODO yaml, use TableRules
     Bank houseBank_;                    // overriden by yaml
     Dice dice_;
     unsigned point_ = 0;
@@ -177,14 +176,32 @@ private:
     void evalOneBet(CrapsBet& bet);
     bool removeMatchingBetId(BetList& bets, unsigned betId);
     CrapsBet::BetPtr findBetById(unsigned betId) const;
-    std::string abPrefix  (const CrapsBet& bet) const;
-    bool abCheckBettinOpen(const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool abCheckHavePlayer(const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool abCheckHaveBet   (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool abCheckPassLine  (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool abCheckDontPass  (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool abCheckLimits    (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    std::string diagLimits(Gen::Money amt) const;
+    std::string diagPrefix    (size_t idx, const CrapsBet& bet) const;
+    bool fifBettingClosed     (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifMissingPlayer     (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifHaveBet           (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifMissingBet        (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifComeDisallowed    (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifDontPassDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxLineBets (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxSideBets (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifBadMultiples      (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifZeroAmount        (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadPassLineChange (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadDontPassChange (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool withinMinMaxLineBets(BetName betName,
+                              Gen::Money contractAmount,
+                              Gen::ErrorPass& ep) const;
+    bool withinMinMaxSideBets(BetName betName,
+                              Gen::Money contractAmount,
+                              Gen::ErrorPass& ep) const;
+    bool goodMultiples       (BetName betName,
+                              Gen::Money amt,
+                              Gen::ErrorPass& ep) const;
+    std::string diagLimits   (Gen::Money amt) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();

@@ -284,10 +284,13 @@ CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
 
 /*-----------------------------------------------------------*//**
 
-Adds the bet to the table.
+Places the bet on the table.
+
+If the bet passes table rules it is placed on the table.
 
 It is an error if the same bet name already exists for this player.
-Use changeBetAmount() if you need to change the bet amount.
+Use setContractAmount() or setOddsAmount() if you need to change the 
+bet amount or odds.
 
 @param pBet
     the bet of interest
@@ -302,7 +305,6 @@ CrapsTable::addBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep)
     if (!betAllowed(*pBet, ep)) return Gen::ReturnCode::Fail;
 
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
-    pBet->attachCrapsTable(this);
     return Gen::ReturnCode::Success;
 }
 
@@ -311,159 +313,23 @@ CrapsTable::addBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep)
 bool
 CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
 {
-    if (!abCheckBettinOpen(bet, ep)) return false;
-    if (!abCheckHavePlayer(bet, ep)) return false;
-    if (!abCheckHaveBet   (bet, ep)) return false;
-    if (!abCheckPassLine  (bet, ep)) return false;
-    if (!abCheckDontPass  (bet, ep)) return false;
-    if (!abCheckLimits    (bet, ep)) return false;
+    // fif prefix means "fault if"
+
+    if (fifBettingClosed     (bet, 1, ep)) return false;
+    if (fifMissingPlayer     (bet, ep)) return false;
+    if (fifHaveBet           (bet, ep)) return false;
+    if (fifZeroAmount        (bet, bet.contractAmount(), 1, ep)) return false;
+    if (fifComeDisallowed    (bet, ep)) return false;
+    if (fifDontPassDisallowed(bet, ep)) return false;
+    if (fifBadMinMaxLineBets (bet, ep)) return false;
+    if (fifBadMinMaxSideBets (bet, ep)) return false;
+    if (fifBadMultiples      (bet, ep)) return false;
 
     if (bet.betName() == BetName::PassLine && point_ != 0)
     {
         // Player made PassLine bet after point already established.
         // Silently coerce the pivot to agree with the point.
         bet.pivot_ = point_;
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-std::string
-CrapsTable::abPrefix(const CrapsBet& bet) const
-{
-    std::string diag = "CrapsTable::addBet(): Unable to add " +
-            EnumBetName::toString(bet.betName()) + " bet; ";
-    return diag;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsTable::abCheckBettinOpen(const CrapsBet& bet, Gen::ErrorPass& ep) const
-{
-    if (!bettingOpen_)
-    {
-        ep.diag = abPrefix(bet) + "Betting is closed at the moment - "
-                                  "dice roll is underway.";
-        return false;
-    }
-    return true;
-}
-        
-//----------------------------------------------------------------
-
-bool
-CrapsTable::abCheckHavePlayer(const CrapsBet& bet, Gen::ErrorPass& ep) const
-{        
-    if (!havePlayer(bet.playerId()))
-    {
-        ep.diag = abPrefix(bet) + "Player is not joined with this table.";
-        return false;
-    }
-    return true;
-}
-        
-//----------------------------------------------------------------
-
-bool
-CrapsTable::abCheckHaveBet(const CrapsBet& bet, Gen::ErrorPass& ep) const
-{
-    if (haveBet(bet))
-    {
-        ep.diag = abPrefix(bet) + "Player XXX has already made this bet.";
-        return false;
-    }
-    return true;
-}
-        
-//----------------------------------------------------------------
-
-bool
-CrapsTable::abCheckPassLine(const CrapsBet& bet, Gen::ErrorPass& ep) const
-{
-    if (bet.betName() == BetName::Come || bet.betName() == BetName::DontCome)
-    {
-        if (point_ == 0)
-        {
-            ep.diag = abPrefix(bet) + "Betting " +
-                EnumBetName::toString(bet.betName()) +
-                " is not allowed during come out roll.";
-            return false;
-        }
-    }
-    return true;
-}
-    
-//----------------------------------------------------------------
-
-bool
-CrapsTable::abCheckDontPass(const CrapsBet& bet, Gen::ErrorPass& ep) const
-{
-    if (bet.betName() == BetName::DontPass && point_ != 0)
-    {
-        ep.diag = abPrefix(bet) + EnumBetName::toString(bet.betName()) +
-            " is not allowed while there is already a point.";
-        return false;
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsTable::abCheckLimits(const CrapsBet& bet, Gen::ErrorPass& ep) const
-{
-    if (!withinTableLimits(bet.betName(), bet.contractAmount(), ep))
-    {
-        ep.prepend(abPrefix(bet));
-        return false;
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
-
-std::string
-CrapsTable::diagLimits(Gen::Money amt) const
-{
-    return "Bad bet amount:$" + std::to_string(amt) +
-        " is outside of table limit ";
-}
-
-//----------------------------------------------------------------
-
-bool
-CrapsTable::withinTableLimits(BetName betName, Gen::Money contractAmount,
-                              Gen::ErrorPass& ep) const
-{
-    if (betName == BetName::PassLine ||
-        betName == BetName::Come     ||     
-        betName == BetName::DontPass ||
-        betName == BetName::DontCome ||
-        betName == BetName::Place    ||
-        betName == BetName::Buy      ||
-        betName == BetName::Lay)
-    {
-        if (contractAmount < minLineBet_ || contractAmount > maxLineBet_)
-        {
-            std::string min = std::to_string(minLineBet_);
-            std::string max = std::to_string(maxLineBet_);
-            ep.diag = diagLimits(contractAmount) +
-              "(min:" + min + ",max:" + max + ").";
-            return false;
-        }
-    }
-    else  // One shot bets
-    {
-        // Min is 1 dollar. No need to check for min since previous
-        // checks covered that.
-        
-        if (contractAmount > maxLineBet_)
-        {
-            std::string max = std::to_string(maxLineBet_);
-            ep.diag = diagLimits(contractAmount) + " (max:" + max + ").";
-        }
     }
     return true;
 }
@@ -490,8 +356,104 @@ CrapsTable::removeBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep)
         }
     }
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
-    pBet->detachCrapsTable(this);
     return Gen::ReturnCode::Success;
+}
+
+/*-----------------------------------------------------------*//**
+
+Changes the contract amount of a bet on the table.
+
+The bet must already exist on the table.
+Overwrites the previous amount. 
+Validates the change against table rules.
+
+@param [in,out] pBet
+    The bet of interest.
+
+@param [in] newAmount
+    Sets the contract bet amount to newAmount
+
+@param [in,out] ep
+    Holds reason for error
+
+@return
+    Success if amount has been changed, otherwise Fail and ep has reason
+
+@internal
+@li fif prefix means "fault if"
+@li Sca suffix means "set contract amount"
+@li 2 is the index to select the right diagPrefix
+*/
+Gen::ReturnCode
+CrapsTable::setContractAmount(CrapsBet::BetPtr pBet,
+                              Gen::Money newAmount,
+                              Gen::ErrorPass& ep)
+{
+    if (fifBettingClosed    (*pBet, 2, ep))            return Gen::ReturnCode::Fail;
+    if (fifMissingBet       (*pBet, 2, ep))            return Gen::ReturnCode::Fail;
+    if (fifZeroAmount       (*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
+    if (fifBadPassLineChange(*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
+    if (fifBadDontPassChange(*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
+//    if (fifExceedLimitsSca     (bet, newAmount, ep)) return false;
+//    if (fifBadMinMaxLineBetsSca(bet, newAmount, ep)  return false;
+//    if (fifBadMinMaxSideBetsSca(bet, newAmount, ep)  return false;
+//    if (fifBadMultiplesSca     (bet, newAmount, ep)  return false;
+//
+//    bet.setContractAmount(newAmount);
+    
+    return Gen::ReturnCode::Success;
+}
+
+/*-----------------------------------------------------------*//**
+
+Sets, changes, or removes the amount for an odds bet.
+
+Overwrites the previous amount, if any. A value
+of zero removes it altogether.
+
+It is only permissable to set an odds amount if the following
+conditions are true:
+
+@li the bet is already on the table
+@li the bet is a PassLine, DontPass, Come, or DontCome bet
+@li the bet has an assigned pivot (point) (i.e, pivot is non-zero)
+@li the new amount is subject to table limits min/max odds
+
+@param [in,out] pBet
+    The bet of interest.
+
+@param [in] amount
+    The amount to set it to. Clobbers any previous setting.
+
+@param [in,out] ep
+    Holds reason for error
+
+@returns
+    Success if the bet was accepted, otherwise Fail and ep has
+    the reason.
+
+@internal
+    soa prefix means "set odds amount"  - need variants for 
+    diagnostic messages look like this:
+    CrapsBet::setOddsAmount(): Unable to set odds bet; bet(betId:157, betName:DontPass(4)). Odds bet amount of $1 is too small. Minimum odds for this bet is 2.
+    CrapsBet::setOddsAmount(): Unable to set odds bet; bet(betId:159, betName:DontPass(6)). Exceeds table limit of 5x odds; Contract amount is $1 which allows max odds amount of $5.
+*/
+Gen::ReturnCode
+CrapsTable::setOddsAmount(CrapsBet::BetPtr pBet,
+                          Gen::Money oddsAmount,
+                          Gen::ErrorPass& ep)
+{
+    if (fifBettingClosed  (*pBet, 3, ep))            return Gen::ReturnCode::Fail;
+    if (fifMissingBet     (*pBet, 3, ep))            return Gen::ReturnCode::Fail;
+//    if (!soaCheckBetType     (bet, ep))             return Gen::ReturnCode::Fail;
+//    if (!soaCheckNoTable     (ep))             return Gen::ReturnCode::Fail;
+//    if (!soaCheckBettingOpen (ep))         return Gen::ReturnCode::Fail;
+//    if (!soaCheckHavePivot   (ep))           return Gen::ReturnCode::Fail;
+//    if (!soaCheckTooSmall    (newAmount, ep)) return Gen::ReturnCode::Fail;
+//    if (!soaCheckMaxOdds     (newAmount, ep))  return Gen::ReturnCode::Fail;
+
+//    bet.setOddsAmount(oddsAmount);
+    return Gen::ReturnCode::Success;    
 }
 
 //----------------------------------------------------------------
