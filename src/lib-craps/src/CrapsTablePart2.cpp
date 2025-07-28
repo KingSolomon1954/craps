@@ -352,7 +352,7 @@ CrapsTable::withinMinMaxSideBets(BetName betName,
     {
         min = minHornBet_; max = maxHornBet_;
     }
-    if (min == 0 || max == 0)
+    if (min != 0 || max != 0)
     {
         std::string minStr = std::to_string(min);
         std::string maxStr = std::to_string(max);

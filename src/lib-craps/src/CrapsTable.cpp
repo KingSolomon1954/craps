@@ -398,8 +398,7 @@ CrapsTable::setContractAmount(CrapsBet::BetPtr pBet,
     if (fifBadMinMaxSideBets(*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
     if (fifBadMultiples     (*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
 
-//    bet.setContractAmountInternal(newAmount);
-    
+    pBet->setContractAmountInternal(newAmount);
     return Gen::ReturnCode::Success;
 }
 
@@ -448,7 +447,7 @@ CrapsTable::setOddsAmount(CrapsBet::BetPtr pBet,
     if (fifZeroPivotForOdds (*pBet, ep))             return Gen::ReturnCode::Fail;
     if (fifBadMinMaxForOdds (*pBet, oddsAmount, ep)) return Gen::ReturnCode::Fail;
 
-//    bet.setOddsAmountInternal(oddsAmount);
+    pBet->setOddsAmountInternal(oddsAmount);
     return Gen::ReturnCode::Success;    
 }
 

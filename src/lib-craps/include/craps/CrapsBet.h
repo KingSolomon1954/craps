@@ -144,14 +144,17 @@ private:
         DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
     Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
+    unsigned calculateOddsPayout(unsigned amount,
+                                 unsigned numerator,
+                                 unsigned denominator) const;
     void calcWinPointBet(unsigned diceVal,
                          DecisionRecord& dr,
                          bool returnOdds,
                          const OddsTables::OddsEntry table[]) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
-    void setContractAmountInternal(Gen::Money amount);
-    void setOddsAmountInternal(Gen::Money amount);
-    void setPivotInternal(unsigned pivot);
+    void setContractAmountInternal(Gen::Money amount); // called by CrapsTable
+    void setOddsAmountInternal    (Gen::Money amount); // called by CrapsTable
+    void setPivotInternal         (unsigned pivot);    // called by CrapsTable
 
     friend class CrapsTable;
     friend class TableStats;

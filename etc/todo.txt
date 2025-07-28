@@ -23,7 +23,6 @@ Refund on quit - unresolved bets back to player's bank
   Add a warning like: “You have active bets. Are you sure
   you want to quit and abandon them?”
 
-Allow odds bets less than contract bet - pay even money
 Allow a clear/undo last bet capability
     void commitStagedAmounts(); // called by CrapsTable during roll
     void discardStagedAmounts(); // if needed
@@ -34,8 +33,10 @@ Allow a clear/undo last bet capability
     enum BetStats { New, Actvie, Staged, Resolved };
 make a static CrapsBet function that creates a shared_ptr craps bet
 
-Money calculation uses multiples and pays 1:1 odds on leftover
-
+(Done) Need to add DontPlace bets to the game - abandoned
+(Done) Buy bets and Lay bets have wrong payouts - need updating
+(Done) Money calculation uses multiples and pays 1:1 odds on leftover
+(Done) Allow odds bets less than contract bet - pay even money
 (Done) Design change, CrapsTable accepts CrapsBets. eliminate CrapsBetIntfc
 (Done) change changeOddsAmount() -> setOddsAmount()
 (Done) change changeContractAmount() -> setContractAmount()

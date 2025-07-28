@@ -1429,15 +1429,6 @@ TEST_CASE("CrapsBet:evaluate:C&E")
         cAndE2(4, 6, 4);  // point roll, dice 10 lose
         cAndE1(4, 6, 5);  // point roll, dice 11 win
         cAndE1(4, 6, 6);  // point roll, dice 12 win
-
-        // Bad bet, below min
-        CHECK_THROWS_AS(CrapsBet b("Player1", BetName::CandE, 1),
-                                   std::invalid_argument);
-        // Bad bet, not a multiple of 2
-        CHECK_THROWS_AS(CrapsBet b("Player1", BetName::CandE, 3),
-                                   std::invalid_argument);
-
-        CrapsBet b("Player1", BetName::CandE, 2);  // good min bet
     }
 }
 
@@ -1507,22 +1498,6 @@ TEST_CASE("CrapsBet:evaluate:Horn")
         horn2(4, 6, 4);  // point roll, dice 10 lose
         horn1(4, 6, 5);  // point roll, dice 11 win
         horn1(4, 6, 6);  // point roll, dice 12 win
-
-        // Bad bet, below min
-        CHECK_THROWS_AS(CrapsBet b("Player1", BetName::Horn, 1),
-                                   std::invalid_argument);
-        // Bad bet, below min
-        CHECK_THROWS_AS(CrapsBet b("Player1", BetName::Horn, 2),
-                                   std::invalid_argument);
-        // Bad bet, below min
-        CHECK_THROWS_AS(CrapsBet b("Player1", BetName::Horn, 3),
-                                   std::invalid_argument);
-        // Good min bet
-        CrapsBet b("Player1", BetName::Horn, 4);
-        
-        // Bad bet, not a multiple of 4
-        CHECK_THROWS_AS(CrapsBet b("Player1", BetName::Horn, 5),
-                                   std::invalid_argument);
     }
 }
 
