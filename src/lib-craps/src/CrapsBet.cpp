@@ -271,6 +271,12 @@ Using the given point and the current dice roll, evaluate() determines
 whether this bet has won, lost or not yet reached a decision. The
 results of the evaluation are returned in a CrapsBet::DecisionRecord.
 
+Payout strategy:
+
+@li Pay full odds on the largest multiple of the payout unit
+@li Pay remaining amount at 1:1
+@li Rounds down in favor of house (like casinos)
+
 @param [in] point
     supply 0 to indicate a come out roll, otherwise the current point
     which must be one of 4,5,6,8,9 or 10. If not then an error is

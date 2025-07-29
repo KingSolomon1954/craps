@@ -12,9 +12,6 @@ design EventQueue and Events
 stats PlayerStats
 
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
-update CrapBet unit-test, for any bet and setOdds exceeding table limit
-
-move testRollDice() under -DUNIT_TEST flag
 
 Refund on quit - unresolved bets back to player's bank
   show a message like: “You left the table with active bets.
@@ -33,6 +30,8 @@ Allow a clear/undo last bet capability
     enum BetStats { New, Actvie, Staged, Resolved };
 make a static CrapsBet function that creates a shared_ptr craps bet
 
+(Done) Move testRollDice() under -DUNIT_TEST flag
+(Done) Update CrapBet unit-test, for any bet and setOdds exceeding table limit
 (Done) Need to add DontPlace bets to the game - abandoned
 (Done) Buy bets and Lay bets have wrong payouts - need updating
 (Done) Money calculation uses multiples and pays 1:1 odds on leftover

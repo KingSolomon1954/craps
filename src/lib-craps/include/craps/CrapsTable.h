@@ -57,8 +57,6 @@ public:
                                   Gen::ErrorPass& ep);
     // Table    
     void rollDice();
-    void testRollDice(unsigned d1, unsigned d2);  // TODO: only for unit test
-    void testSetState(unsigned point, unsigned d1, unsigned d2);   // TODO: only for unit test
     void resetStats();
     void close();               // Shutdown table, switching to different table
     void prepareForShutdown();  // Shutdown table, exiting program
@@ -88,9 +86,23 @@ public:
 
 #if 0
     void resetTable();
-    void startNewRound();         // Initiates come-out roll
     std::vector<CrapsBet> getBetsForPlayer(const std::string& playerName) const;
 
+#endif
+    // Unit test access points
+#ifdef UNIT_TEST
+public:
+    void testRollDice(unsigned d1, unsigned d2)
+    {
+        isTestRoll_ = true;
+        testRollDice_.set(d1, d2);
+        rollDice();
+    };
+    void testSetState(unsigned point, unsigned d1, unsigned d2)
+    {
+        point_ = point;
+        dice_.set(d1, d2);
+    }
 #endif
 
 private:
@@ -101,6 +113,8 @@ private:
     unsigned maxOdds_     = 5;          // overriden by yaml, use TableRules
     unsigned minLineBet_  = 5;          // overriden by yaml, use TableRules
     unsigned maxLineBet_  = 1000;       // overriden by yaml, use TableRules
+    unsigned minPlaceBet_ = 5;          // overriden by yaml, use TableRules
+    unsigned maxPlaceBet_ = 1000;       // overriden by yaml, use TableRules
     unsigned minFieldBet_ = 1;          // TODO yaml, use TableRules
     unsigned maxFieldBet_ = 1000;       // TODO yaml, use TableRules
     unsigned minCandEBet_ = 1;          // TODO yaml, use TableRules

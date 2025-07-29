@@ -31,7 +31,7 @@ CrapsTable::CrapsTable(const TableId& tableId)
     , houseBank_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
     assert(Gbl::pConfigMgr != nullptr);
-    
+
     // setMaxSessions from MultilayerConfig
     size_t maxSessions = Gbl::pConfigMgr->getInt(
         Ctrl::ConfigManager::KeyTableMaxSessions).value();
@@ -190,7 +190,7 @@ CrapsTable::close()
         currentStats_.betStats.totNumBetsAllBets,
         currentStats_.moneyStats.amtDeposited,
         currentStats_.moneyStats.amtWithdrawn);
-    
+
     // Merge alltime stats with today's session, then save.
     alltimeStats_.merge(currentStats_);
 
@@ -217,7 +217,7 @@ CrapsTable::prepareForShutdown()
 //
 // Set maxSessions to the Multilayer configured value before reading
 // from file so that session history gets trimmed to the right size.
-// 
+//
 void
 CrapsTable::setMaxSessions()
 {
@@ -289,7 +289,7 @@ Places the bet on the table.
 If the bet passes table rules it is placed on the table.
 
 It is an error if the same bet name already exists for this player.
-Use setContractAmount() or setOddsAmount() if you need to change the 
+Use setContractAmount() or setOddsAmount() if you need to change the
 bet amount or odds.
 
 @param[in] pBet
@@ -315,12 +315,12 @@ CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
 {
     // fif prefix means "fault if"
 
-    if (fifBettingClosed     (bet, 1, ep)) return false;
-    if (fifMissingPlayer     (bet, ep)) return false;
-    if (fifHaveBet           (bet, ep)) return false;
+    if (fifBettingClosed     (bet, 1, ep))                       return false;
+    if (fifMissingPlayer     (bet, ep))                          return false;
+    if (fifHaveBet           (bet, ep))                          return false;
     if (fifZeroAmount        (bet, bet.contractAmount(), 1, ep)) return false;
-    if (fifComeDisallowed    (bet, ep)) return false;
-    if (fifDontPassDisallowed(bet, ep)) return false;
+    if (fifComeDisallowed    (bet, ep))                          return false;
+    if (fifDontPassDisallowed(bet, ep))                          return false;
     if (fifBadMinMaxLineBets (bet, bet.contractAmount(), 1, ep)) return false;
     if (fifBadMinMaxSideBets (bet, bet.contractAmount(), 1, ep)) return false;
     if (fifBadMultiples      (bet, bet.contractAmount(), 1, ep)) return false;
@@ -364,7 +364,7 @@ CrapsTable::removeBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep)
 Changes the contract amount of a bet on the table.
 
 The bet must already exist on the table.
-Overwrites the previous amount. 
+Overwrites the previous amount.
 Validates the change against table rules.
 
 @param[in,out] pBet
@@ -431,7 +431,7 @@ conditions are true:
     the reason.
 
 @internal
-    soa prefix means "set odds amount"  - need variants for 
+    soa prefix means "set odds amount"  - need variants for
     diagnostic messages look like this:
     CrapsBet::setOddsAmount(): Unable to set odds bet; bet(betId:157, betName:DontPass(4)). Odds bet amount of $1 is too small. Minimum odds for this bet is 2.
     CrapsBet::setOddsAmount(): Unable to set odds bet; bet(betId:159, betName:DontPass(6)). Exceeds table limit of 5x odds; Contract amount is $1 which allows max odds amount of $5.
@@ -448,7 +448,7 @@ CrapsTable::setOddsAmount(CrapsBet::BetPtr pBet,
     if (fifBadMinMaxForOdds (*pBet, oddsAmount, ep)) return Gen::ReturnCode::Fail;
 
     pBet->setOddsAmountInternal(oddsAmount);
-    return Gen::ReturnCode::Success;    
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
@@ -484,29 +484,6 @@ CrapsTable::findBetById(unsigned betId) const
         }
     }
     return nullptr;
-}
-
-//----------------------------------------------------------------
-//
-// Suppports unit testing. Not meant for callers.
-//
-void
-CrapsTable::testRollDice(unsigned d1, unsigned d2)
-{
-    isTestRoll_ = true;
-    testRollDice_.set(d1, d2);
-    rollDice();
-}
-
-//----------------------------------------------------------------
-//
-// Suppports unit testing. Not meant for callers.
-//
-void
-CrapsTable::testSetState(unsigned point, unsigned d1, unsigned d2)
-{
-    point_ = point;
-    dice_.set(d1, d2);
 }
 
 //----------------------------------------------------------------
@@ -1213,7 +1190,7 @@ bool
 CrapsTable::haveBet(const CrapsBet::BetPtr bet) const
 {
     return findBetById(bet->betId()) != nullptr;
-    
+
     // Loop over all bets
     for (size_t i = 0; i < tableBets_.size(); ++i)
     {
@@ -1328,4 +1305,3 @@ CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
 }
 
 #endif
-

@@ -166,6 +166,8 @@ public:
     { setContractAmountInternal(amount); }
     void testSetOddsAmount(Gen::Money amount)
     { setOddsAmountInternal(amount); }
+    void testSetPivot(unsigned pivot)
+    { setPivotInternal(pivot); }
     Gen::ReturnCode testEvaluate(unsigned point, const Dice& dice,
                                  DecisionRecord& dr, Gen::ErrorPass& ep)
     { return evaluate(point, dice, dr, ep); }
