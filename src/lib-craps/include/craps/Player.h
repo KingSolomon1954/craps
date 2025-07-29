@@ -42,48 +42,6 @@ public:
     bool loadFromFile(const std::string& path);
     /// @}
 
-#if 0
-class CrapsInterface
-{
-    // Table related (TableManager)
-    using TableId = std::string;
-    using TableList = std::vector<TableId>;
-    static TableList getTableList() const;
-    static TablePickerView getTablePickerView(TableId tableId);
-    static TableGameView getTableGameView(TableId tableId);
-    static TableStatsView getTableStatsView(TableId tableId);
-
-    // Player related (PlayerManager)
-    using PlayerId = std::string;
-    using PlayerList = std::vector<PlayerId> ;
-    static PlayerList getPlayerList() const;
-    static PlayerPickerView getPlayerPickerView(PlayerId playerId);
-    static PlayerGameView getPlayerGameView(PlayerId playerId);
-    static PlayerStatsView getPlayerStatsView(TableId tableId);
-
-    static Gen::ReturnCode openTable(TableId tableId, PlayerList p);
-    static Gen::ReturnCode closeTable(TableId tableId);
-
-    using BetId = unsigned;
-    using BetList = std::list<BetId>;
-    using Money = unsigned;
-
-    static ReturnCode join(TableId tableId, PlayerId playerId, Gen::ErrorPass& ep);
-    static ReturnCode leave(TableId tableId, PlayerId playerId, Gen::ErrorPass& ep);
-    
-    static BetId placeBet(TableId tableId,
-                          PlayerId playerId,
-                          BetNameStr betName,
-                          Gen::Money contractAmount,
-                          Gen::ErrorPass& ep);
-    static ReturnCode removeBet(TableId tableId, BetId bet, Gen::ErrorPass& ep);
-    static ReturnCode setOdds(TableId tableId, BetId bet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
-    static ReturnCode changeBetAmount(TableId tableId, BetId bet, int delta, Gen::ErrorPass& ep);
-    static void rollDice(TalbeId tableId);
-    
-};    
-#endif
-    
     /// @name Modifiers
     /// @{
     Gen::ReturnCode joinTable(Gen::ErrorPass& ep);
@@ -91,6 +49,9 @@ class CrapsInterface
                              Gen::Money contractAmount,
                              unsigned pivot,
                              Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount(CrapsBet::BetPtr pBet,
+                                  Gen::Money amount,
+                                  Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(BetName betName,
                               unsigned pivot,
                               Gen::ErrorPass& ep);
@@ -153,3 +114,46 @@ Player Responsibilities:
 } // namespace Craps
 
 //----------------------------------------------------------------
+
+
+#if 0
+class CrapsInterface
+{
+    // Table related (TableManager)
+    using TableId = std::string;
+    using TableList = std::vector<TableId>;
+    static TableList getTableList() const;
+    static TablePickerView getTablePickerView(TableId tableId);
+    static TableGameView getTableGameView(TableId tableId);
+    static TableStatsView getTableStatsView(TableId tableId);
+
+    // Player related (PlayerManager)
+    using PlayerId = std::string;
+    using PlayerList = std::vector<PlayerId> ;
+    static PlayerList getPlayerList() const;
+    static PlayerPickerView getPlayerPickerView(PlayerId playerId);
+    static PlayerGameView getPlayerGameView(PlayerId playerId);
+    static PlayerStatsView getPlayerStatsView(TableId tableId);
+
+    static Gen::ReturnCode openTable(TableId tableId, PlayerList p);
+    static Gen::ReturnCode closeTable(TableId tableId);
+
+    using BetId = unsigned;
+    using BetList = std::list<BetId>;
+    using Money = unsigned;
+
+    static ReturnCode join(TableId tableId, PlayerId playerId, Gen::ErrorPass& ep);
+    static ReturnCode leave(TableId tableId, PlayerId playerId, Gen::ErrorPass& ep);
+    
+    static BetId placeBet(TableId tableId,
+                          PlayerId playerId,
+                          BetNameStr betName,
+                          Gen::Money contractAmount,
+                          Gen::ErrorPass& ep);
+    static ReturnCode removeBet(TableId tableId, BetId bet, Gen::ErrorPass& ep);
+    static ReturnCode setOdds(TableId tableId, BetId bet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
+    static ReturnCode changeBetAmount(TableId tableId, BetId bet, int delta, Gen::ErrorPass& ep);
+    static void rollDice(TalbeId tableId);
+    
+};    
+#endif

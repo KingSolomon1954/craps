@@ -133,18 +133,43 @@ Player::makeBet(BetName betName,
     // TODO check sufficient funds first
     try
     {
-        auto betPtr = std::make_shared<CrapsBet>
+        auto pBet = std::make_shared<CrapsBet>
             (uuid_, betName, contractAmount, pivot);
-        assert(betPtr != nullptr);   // In case we miss an exception
+        assert(pBet != nullptr);   // In case we miss an exception
+
+        // Add it to table
+        if (Gbl::pTable->addBet(pBet, ep) == Gen::ReturnCode::Fail)
+        {
+            // TODO add to diag
+            assert(false);
+            return nullptr;
+        }
         
         wallet_.withdraw(contractAmount);
-        bets_.push_back(betPtr);
-        return betPtr;
+        bets_.push_back(pBet);
+        return pBet;
     }
     catch(std::invalid_argument& e)
     {
         return nullptr;
     }
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+Player::setOddsAmount(CrapsBet::BetPtr pBet,
+                      Gen::Money oddsAmount,
+                      Gen::ErrorPass& ep)
+{
+    // TODO check sufficient funds first
+    if (Gbl::pTable->setOddsAmount(pBet, oddsAmount, ep) == Gen::ReturnCode::Fail)
+    {
+        // TODO diagnostics
+        return Gen::ReturnCode::Fail;
+    }
+    wallet_.withdraw(oddsAmount);
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

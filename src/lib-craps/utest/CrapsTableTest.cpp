@@ -483,47 +483,43 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
     SUBCASE("modifyBets")
     {
-        // std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
-        CrapsTable t("Table-1");
-        Gen::ErrorPass ep;
-        Player p1("p1", 1000);
-
-        CHECK(t.addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
+        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        REQUIRE(t->addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
 
         // Change contract bet after on table, no point yet.
         auto b1 = make_shared<CrapsBet>(p1.getUuid(), BetName::Field, 10, 0);
-        CHECK(t.addBet(b1, ep) == Gen::ReturnCode::Success);
-        CHECK(t.isComeOutRoll() == true);
-        CHECK(t.setContractAmount(b1, 20, ep) == Gen::ReturnCode::Success);
+        CHECK(t->addBet(b1, ep) == Gen::ReturnCode::Success);
+        CHECK(t->isComeOutRoll() == true);
+        CHECK(t->setContractAmount(b1, 20, ep) == Gen::ReturnCode::Success);
         CHECK(b1->contractAmount() == 20);
 
         // Reduce contract amount, no point yet
-        CHECK(t.setContractAmount(b1, 15, ep) == Gen::ReturnCode::Success);
+        CHECK(t->setContractAmount(b1, 15, ep) == Gen::ReturnCode::Success);
         CHECK(b1->contractAmount() == 15);
 
         // Change contract bet to zero
-        CHECK(t.setContractAmount(b1, 0, ep) == Gen::ReturnCode::Fail);
+        CHECK(t->setContractAmount(b1, 0, ep) == Gen::ReturnCode::Fail);
         CHECK(b1->contractAmount() == 15);
 
         // Change line bet contract amount, after point
-        t.testSetState(4,6,6);
+        t->testSetState(4,6,6);
         auto b2 = make_shared<CrapsBet>(p1.getUuid(), BetName::PassLine, 10, 4);
         REQUIRE(b2 != nullptr);
-        CHECK(t.addBet(b2, ep) == Gen::ReturnCode::Success);
+        CHECK(t->addBet(b2, ep) == Gen::ReturnCode::Success);
         // Increase pass line bet - OK
-        CHECK(t.setContractAmount(b2, 15, ep) == Gen::ReturnCode::Success);
+        CHECK(t->setContractAmount(b2, 15, ep) == Gen::ReturnCode::Success);
 
         // Decrease pass line bet - Not allowed
-        CHECK(t.setContractAmount(b2, 10, ep) == Gen::ReturnCode::Fail);
+        CHECK(t->setContractAmount(b2, 10, ep) == Gen::ReturnCode::Fail);
 
         auto b3 = make_shared<CrapsBet>(p1.getUuid(), BetName::DontPass, 10, 4);
         REQUIRE(b2 != nullptr);
         // Can't bet DontPass on table after point is known
-        CHECK(t.addBet(b3, ep) == Gen::ReturnCode::Fail);
+        CHECK(t->addBet(b3, ep) == Gen::ReturnCode::Fail);
 
         // TODO: add more Pass/Dont tests when table establishes a point.
         // std::cout << ep.diag << std::endl;
-        // t.testSetState(4, 6, 6);
+        // t->testSetState(4, 6, 6);
     }
 
     SUBCASE("amountOnTable")
@@ -752,7 +748,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(jane->getNumBetsOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
 
-        // come out roll, roll a 4, pass line kepp, dont pass keep
+        // come out roll, roll a 4, pass line keep, dont pass keep
         johnBalance = john->getBalance();  // reset
         janeBalance = jane->getBalance();  // reset
         auto johnBet6 = john->makeBet(BetName::PassLine, 10, 0, ep);
@@ -777,6 +773,122 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(jane->getAmountOnTable() == 10);
         CHECK(!t->isComeOutRoll());
         CHECK(t->getPoint() == 4);
+    }
+}
+
+//----------------------------------------------------------------
+
+enum class Action
+{
+    RollDice,
+    MakeBet,
+    SetOdds
+};
+
+struct AutoBet
+{
+    Action action;  // MakeBet, JustRoll, SetOdds
+    unsigned d1;
+    unsigned d2;
+    BetName betName;
+    unsigned pivot;
+    Gen::Money amount;
+};
+
+using LongRoll = std::vector<AutoBet>;
+
+void autoBetLoop(LongRoll& rolls, CrapsTable& t, Player& player)
+{
+    Gen::ErrorPass ep;
+    CrapsBet::BetPtr lastBet;
+    
+    for (const auto& r : rolls)
+    {
+        if (r.action == Action::RollDice)
+        {
+            t.testRollDice(r.d1, r.d2);
+        }
+        if (r.action == Action::MakeBet)
+        {
+            auto bet = player.makeBet(
+                r.betName, r.amount, r.pivot, ep);
+            lastBet = bet;
+        }
+        if (r.action == Action::SetOdds)
+        {
+            CHECK(player.setOddsAmount(lastBet, r.amount, ep) == Gen::ReturnCode::Success);
+        }
+    }
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
+{
+    std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+    Gbl::pTable = t.get();
+    Gen::ErrorPass ep;
+    Ctrl::PlayerManager::PlayerPtr sam = Gbl::pPlayerMgr->createPlayer("Sam");
+    REQUIRE(sam->joinTable(ep) == Gen::ReturnCode::Success);
+    
+    SUBCASE("shortRoll")
+    {
+        LongRoll longRoll_1 =
+        {
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
+            AutoBet{Action::RollDice, 2, 2, BetName::Invalid,  0,  0},
+            AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10},
+            AutoBet{Action::MakeBet,  0, 0, BetName::Place,    4, 10},
+            AutoBet{Action::RollDice, 2, 2, BetName::Invalid,  0,  0},
+        };
+
+        Gen::Money balance = sam->getBalance();
+
+        autoBetLoop(longRoll_1, *t, *sam);
+        CHECK(t->getAmountOnTable() ==  0);
+        CHECK(t->getNumBetsOnTable() == 0);
+        CHECK(t->getNumBetsOnTable() == 0);
+        CHECK(sam->getBalance() == balance + 30 + 18);
+    }
+
+    SUBCASE("longRollAscending")
+    {
+        LongRoll longRoll_1 =  // 2,3,4,5,6,7,8,9,10,11,12
+        {
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, 
+            AutoBet{Action::RollDice, 1, 1, BetName::Invalid,  0,  0}, // lose 10
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
+            AutoBet{Action::RollDice, 1, 2, BetName::Invalid,  0,  0}, // lose 10
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, // 
+            AutoBet{Action::RollDice, 2, 2, BetName::Invalid,  0,  0}, // point 4
+            AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
+            AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
+            AutoBet{Action::RollDice, 2, 3, BetName::Invalid,  0,  0}, // come 5
+            AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
+            AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
+            AutoBet{Action::RollDice, 3, 3, BetName::Invalid,  0,  0}, // come 6
+            AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
+            AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
+            AutoBet{Action::RollDice, 3, 4, BetName::Invalid,  0,  0}, // 7 out lose 80, win 20
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, 
+            AutoBet{Action::RollDice, 4, 4, BetName::Invalid,  0,  0}, // point 8
+            AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
+            AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
+            AutoBet{Action::RollDice, 4, 5, BetName::Invalid,  0,  0}, // come 9
+            AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
+            AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
+            AutoBet{Action::RollDice, 5, 5, BetName::Invalid,  0,  0}, // come 10
+            AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
+            AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
+            AutoBet{Action::RollDice, 5, 6, BetName::Invalid,  0,  0}, // lose 10
+            AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
+            AutoBet{Action::RollDice, 6, 6, BetName::Invalid,  0,  0}, // lose 10
+        };
+
+        Gen::Money balance = sam->getBalance();
+
+        autoBetLoop(longRoll_1, *t, *sam);
+        CHECK(t->getAmountOnTable() ==  60);
+        CHECK(t->getNumBetsOnTable() == 3);
+        CHECK(sam->getBalance() == balance - 80 + 10 - 60 + 10 - 10);
     }
 }
 
