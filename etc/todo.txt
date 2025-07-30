@@ -28,8 +28,10 @@ Allow a clear/undo last bet capability
     bool lineBetLocked_ = false;
     CrapsBet::isLocked()
     enum BetStats { New, Actvie, Staged, Resolved };
-make a static CrapsBet function that creates a shared_ptr craps bet
 
+maxFieldBet_ and friends need to read/write YAML()
+
+(Done) Not needed - make a static CrapsBet function that creates a shared_ptr
 (Done) Move testRollDice() under -DUNIT_TEST flag
 (Done) Update CrapBet unit-test, for any bet and setOdds exceeding table limit
 (Done) Need to add DontPlace bets to the game - abandoned

@@ -191,8 +191,8 @@ Player::processWin(const DecisionRecord& dr)
     wallet_.deposit(dr.returnToPlayer);
     wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
     
-    std::cout << name_ << ": processWin(" << pBet->betName() <<
-        ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
+    // std::cout << name_ << ": processWin(" << pBet->betName() <<
+    //     ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
 
     // TODO update win stats before removing bet
     // pBet->startTime - endTime ...
@@ -218,8 +218,8 @@ Player::processLose(const DecisionRecord& dr)
         return;
     }
 
-    std::cout << name_ << ": processLose(" << pBet->betName() <<
-        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
+//    std::cout << name_ << ": processLose(" << pBet->betName() <<
+//        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
 
     // TODO update lose stats before removing bet
     // pBet->startTime - endTime ...
@@ -241,9 +241,9 @@ Player::processKeep(const DecisionRecord& dr)
         return;
     }
 
-    std::cout << name_ << ": processKeep(" << pBet->betName() <<
-        ") lost:" << dr.lose << " won:" << dr.win
-        << " balance:" << wallet_.getBalance() << "\n";
+//    std::cout << name_ << ": processKeep(" << pBet->betName() <<
+//        ") lost:" << dr.lose << " won:" << dr.win
+//        << " balance:" << wallet_.getBalance() << "\n";
 
     assert(dr.lose == 0); assert(dr.win == 0);
     
@@ -444,7 +444,7 @@ void
 Player::onBettingClosed()
 {
     // TODO
-    std::cout << name_ << " acknowledges BettingClosed\n";
+    // std::cout << name_ << " acknowledges BettingClosed\n";
 }
 
 //----------------------------------------------------------------
@@ -453,7 +453,7 @@ void
 Player::onBettingOpened()
 {
     // TODO
-    std::cout << name_ << " acknowledges BettingOpen\n";
+    // std::cout << name_ << " acknowledges BettingOpen\n";
 }
 
 //----------------------------------------------------------------
@@ -462,7 +462,7 @@ void
 Player::onDiceThrowStart()
 {
     // TODO
-    std::cout << name_ << " acknowledges DiceThrowStart\n";
+    // std::cout << name_ << " acknowledges DiceThrowStart\n";
 }
 
 //----------------------------------------------------------------
@@ -471,7 +471,7 @@ void
 Player::onDiceThrowEnd()
 {
     // TODO
-    std::cout << name_ << " acknowledges DiceThrowEnd\n";
+    // std::cout << name_ << " acknowledges DiceThrowEnd\n";
 }
 
 //----------------------------------------------------------------
@@ -480,8 +480,8 @@ void
 Player::onAnnounceDiceNumber(const Ctrl::AnnounceDiceNumber& evt)
 {
     // TODO
-    std::cout << name_ << " acknowledges AnnounceDiceNumber " << evt.val
-              << "(" << evt.d1 << "," << evt.d2 << ")\n";
+    // std::cout << name_ << " acknowledges AnnounceDiceNumber " << evt.val
+    //           << "(" << evt.d1 << "," << evt.d2 << ")\n";
 }
 
 //----------------------------------------------------------------
@@ -490,7 +490,7 @@ void
 Player::onPointEstablished(const Ctrl::PointEstablished& evt)
 {
     // TODO
-    std::cout << name_ << " acknowledges PointEstablished " << evt.point << "\n";
+    // std::cout << name_ << " acknowledges PointEstablished " << evt.point << "\n";
 }
 
 //----------------------------------------------------------------
@@ -499,7 +499,7 @@ void
 Player::onSevenOut()
 {
     // TODO
-    std::cout << name_ << " acknowledges SevenOut\n";
+    // std::cout << name_ << " acknowledges SevenOut\n";
 }
 
 //----------------------------------------------------------------
@@ -508,7 +508,7 @@ void
 Player::onPassLineWinner()
 {
     // TODO
-    std::cout << name_ << " acknowledges PassLineWinner\n";
+    // std::cout << name_ << " acknowledges PassLineWinner\n";
 }
 
 //----------------------------------------------------------------
@@ -517,8 +517,8 @@ void
 Player::onNewShooter(const Ctrl::NewShooter& evt)
 {
     // TODO
-    std::cout << name_ << " acknowledges NewShooter " <<
-        Gbl::pPlayerMgr->getPlayer(evt.shooterId)->getName() << "\n";
+    // std::cout << name_ << " acknowledges NewShooter " <<
+    //      Gbl::pPlayerMgr->getPlayer(evt.shooterId)->getName() << "\n";
 }
 
 //----------------------------------------------------------------

@@ -526,8 +526,8 @@ CrapsTable::throwDice()
     Gbl::pEventMgr->publish(Ctrl::DiceThrowStart{});
 
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
-    std::cout << "point:" << point_ << " dice:" << dice_.value()
-              << "(" << dice_.d1() << "," << dice_.d2() << ")\n";
+//  std::cout << "point:" << point_ << " dice:" << dice_.value()
+//            << "(" << dice_.d1() << "," << dice_.d2() << ")\n";
     Gbl::pEventMgr->publish(Ctrl::DiceThrowEnd{});
     Gbl::pEventMgr->publish(Ctrl::AnnounceDiceNumber{dice_.value(), dice_.d1(), dice_.d2()});
 }
@@ -633,7 +633,7 @@ CrapsTable::evalOneBet(CrapsBet& bet)
     if (bet.evaluate(point_, dice_, dr, ep) == Gen::ReturnCode::Success)
     {
         drl_.push_back(dr);
-        std::cout << dr << std::endl;
+//      std::cout << dr << std::endl;
     }
     else
     {
