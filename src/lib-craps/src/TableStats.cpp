@@ -597,38 +597,10 @@ TableStats::recordCommon(Gen::Money amtBet)
 //-----------------------------------------------------------------
 
 void
-TableStats::recordDeposit(Gen::Money amount)
-{
-    moneyStats.amtWithdrawn += amount;
-    moneyStats.numWithdrawals++;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::recordWithdrawal(Gen::Money amount)
-{
-    moneyStats.amtWithdrawn += amount;
-    moneyStats.numWithdrawals++;
-}
-
-//-----------------------------------------------------------------
-
-void
-TableStats::recordRefill(Gen::Money amount)
-{
-    moneyStats.amtRefilled += amount;
-    moneyStats.numRefills++;
-}
-
-//-----------------------------------------------------------------
-
-void
 TableStats::reset()
 {
     betStats.reset();
     rollStats.reset();
-    moneyStats.reset();
     // No sessionHistory.clear()
 }
 
@@ -639,7 +611,6 @@ TableStats::merge(const TableStats& session)
 {
     betStats.merge(session.betStats);
     rollStats.merge(session.rollStats);
-    moneyStats.merge(session.moneyStats);
     // No sessionHistory.merge()
 }
 
@@ -650,7 +621,6 @@ TableStats::toYAML(YAML::Node& node) const
 {
     node["BetStats"]     = betStats.toYAML();
     node["RollStats"]    = rollStats.toYAML();
-    node["MoneyStats"]   = moneyStats.toYAML();
     node["SessionStats"] = sessionHistory.toYAML();
 }
 
@@ -661,7 +631,6 @@ TableStats::fromYAML(const YAML::Node& node)
 {
     betStats.fromYAML      (node["BetStats"]);
     rollStats.fromYAML     (node["RollStats"]);
-    moneyStats.fromYAML    (node["MoneyStats"]);
     sessionHistory.fromYAML(node["SessionStats"]);
 }
 

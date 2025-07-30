@@ -17,7 +17,6 @@ namespace Craps {
 class BankStats
 {
 public:
-    Gen::Money initialStartingBalance = 0;
     unsigned   numDeposits            = 0;
     Gen::Money amtDeposited           = 0;
     unsigned   numWithdrawals         = 0;

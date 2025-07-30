@@ -31,16 +31,8 @@ CrapsTable::CrapsTable(const TableId& tableId)
     , houseBank_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
     assert(Gbl::pConfigMgr != nullptr);
-
-    // setMaxSessions from MultilayerConfig
-    size_t maxSessions = Gbl::pConfigMgr->getInt(
-        Ctrl::ConfigManager::KeyTableMaxSessions).value();
-    alltimeStats_.sessionHistory.setMaxSessions(maxSessions);
-
-    // setMaxRecentRolls from MultilayerConfig
-    size_t maxRecentRolls = Gbl::pConfigMgr->getInt(
-        Ctrl::ConfigManager::KeyTableMaxRecentRolls).value();
-    recentRollsMaxSize_ = maxRecentRolls;
+    setMaxSessions();    // maxSessions    from MultilayerConfig
+    setMaxRecentRolls(); // maxRecentRolls from MultilayerConfig
 }
 
 /*-----------------------------------------------------------*//**
@@ -72,9 +64,7 @@ CrapsTable*
 CrapsTable::fromFile(const TableId& tableId)
 {
     CrapsTable* ct = new CrapsTable(tableId);
-    ct->setMaxSessions();      // before loading YAML
     ct->loadFile(tableId);
-    ct->setHouseBank();        // after loading file
     return ct;
 }
 
@@ -126,6 +116,7 @@ CrapsTable::toYAML() const
     node["fullDescription"]  = fullDescription_;
 
     node["Rules"] = rulesToYAML();
+    node["Bank"]  = houseBank_.toYAML();
     alltimeStats_.toYAML(node);
     return node;
 }
@@ -147,6 +138,7 @@ CrapsTable::fromYAML(const YAML::Node& node)
     }
 
     rulesFromYAML(node["Rules"]);
+    houseBank_.fromYAML(node["Bank"]);
     alltimeStats_.fromYAML(node);
 }
 
@@ -204,11 +196,12 @@ CrapsTable::close()
     alltimeStats_.sessionHistory.addSessionSummary(
         players_.size(),
         currentStats_.betStats.totNumBetsAllBets,
-        currentStats_.moneyStats.amtDeposited,
-        currentStats_.moneyStats.amtWithdrawn);
+        houseBank_.getAmtDeposited(),
+        houseBank_.getAmtWithdrawn());
 
     // Merge alltime stats with today's session, then save.
     alltimeStats_.merge(currentStats_);
+    houseBank_.mergeStats();
 
     // Directory where to read/write table stats.
     std::string dir = Gbl::pConfigMgr->getString(
@@ -243,21 +236,14 @@ CrapsTable::setMaxSessions()
 }
 
 //----------------------------------------------------------------
-//
-// Starting balance picks up where we left off, which is
-// only known after reading file.
-//
-void
-CrapsTable::setHouseBank()
-{
-    Gen::Money startingBalance =
-        alltimeStats_.moneyStats.initialStartingBalance +
-        alltimeStats_.moneyStats.amtDeposited           +
-        alltimeStats_.moneyStats.amtRefilled            -
-        alltimeStats_.moneyStats.amtWithdrawn;
 
-    Bank b(startingBalance, RefillThreshold_, RefillAmount_);
-    houseBank_ = b;  // Override default ctor bank values
+void    
+CrapsTable::setMaxRecentRolls()
+{
+    // setMaxRecentRolls from MultilayerConfig
+    size_t maxRecentRolls = Gbl::pConfigMgr->getInt(
+        Ctrl::ConfigManager::KeyTableMaxRecentRolls).value();
+    recentRollsMaxSize_ = maxRecentRolls;
 }
 
 //----------------------------------------------------------------
@@ -682,16 +668,10 @@ CrapsTable::disburseHouseResults()
         if (r.lose > 0)  // player loses, house wins
         {
             houseBank_.deposit(r.lose);
-            currentStats_.recordDeposit(r.lose);
         }
         if (r.win > 0)  // player wins, house loses
         {
-            currentStats_.recordWithdrawal(r.win);
-            Gen::Money amtRefill = houseBank_.withdraw(r.win);
-            if (amtRefill > 0)
-            {
-                currentStats_.recordRefill(amtRefill);
-            }
+            houseBank_.withdraw(r.win);
         }
         if (r.commission > 0)
         {

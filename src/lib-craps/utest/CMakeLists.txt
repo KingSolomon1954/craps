@@ -6,6 +6,7 @@
 
 add_executable(craps-ut
     utest-lib-craps.cpp
+    BankTest.cpp
     CrapsBetPart1Test.cpp
     CrapsBetPart2Test.cpp
     CrapsTableTest.cpp

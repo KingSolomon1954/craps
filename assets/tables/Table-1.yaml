@@ -14,6 +14,21 @@ Rules:
   maxCandEBet: 2000
   minHornBet: 4
   maxHornBet: 2000
+Bank:
+  initialStartingBalance: 3000000
+  refillThreshold: 1500000
+  refillAmount: 2000000
+  bankStats:
+    numDeposits: 0
+    amtDeposited: 0
+    numWithdrawals: 0
+    amtWithdrawn: 0
+    numRefills: 0
+    amtRefilled: 0
+    maxAmtDepositedSession: 0
+    maxAmtWithdrawnSession: 0
+    maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
+    maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
 BetStats:
   totNumBetsAllBets: 0
   totNumWinsAllBets: 0
@@ -919,22 +934,8 @@ RollStats:
   crapsOnComeOutRoll:
     count: 0
     maxRepeats: 0
-MoneyStats:
-  initialStartingBalance: 3000000
-  refillThreshold: 1000000
-  refillAmount: 2000000
-  numDeposits: 0
-  amtDeposited: 0
-  numWithdrawals: 0
-  amtWithdrawn: 0
-  numRefills: 0
-  amtRefilled: 0
-  maxAmtDepositedSession: 0
-  maxAmtWithdrawnSession: 0
-  maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
-  maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
 SessionStats:
-  numSessionsAlltime: 18
+  numSessionsAlltime: 21
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 00:01:04
   history:
@@ -961,4 +962,22 @@ SessionStats:
       amtPayout: 0
       numPlayers: 0
       date: 2025-07-30T16:36:08.326850458
+      duration: 0d 00:00:03
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-30T19:25:53.995263982
+      duration: 0d 00:00:17
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-30T19:27:17.656374587
+      duration: 0d 00:00:05
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-30T20:37:47.150580981
       duration: 0d 00:00:03

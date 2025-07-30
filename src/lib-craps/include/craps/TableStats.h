@@ -10,7 +10,6 @@
 #include <craps/BetStats.h>
 #include <craps/CrapsBet.h>
 #include <craps/Dice.h>
-#include <craps/BankStats.h>
 #include <craps/RollStats.h>
 #include <craps/SessionHistory.h>
 #include <gen/MoneyUtil.h>
@@ -32,9 +31,6 @@ public:
     void recordLose      (const CrapsBet& bet, Gen::Money amtLose);
     void recordKeep      (const CrapsBet& bet);
     void recordDiceRoll  (unsigned point, const Dice& curRoll);
-    void recordWithdrawal(Gen::Money amount);
-    void recordDeposit   (Gen::Money amount);
-    void recordRefill    (Gen::Money amount);
     void merge           (const TableStats& session);
     void reset();
     /// @}
@@ -51,7 +47,6 @@ public:
     // These are saved and read from YAML file.
     BetStats       betStats;
     RollStats      rollStats;
-    BankStats      moneyStats;
     SessionHistory sessionHistory;
 
 private:

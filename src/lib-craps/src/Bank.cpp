@@ -29,36 +29,41 @@ Bank::Bank(
 
 //----------------------------------------------------------------
 
-bool
+void
 Bank::deposit(Gen::Money amount)
 {
-    if (amount <= 0) return false;
     amtDeposited_ += amount;
-    return true;
+    numDeposits_++;
+    currentStats_.amtDeposited = amtDeposited_;
+    currentStats_.numDeposits = numDeposits_;
 }
 
 //----------------------------------------------------------------
 
-Gen::Money
+bool
 Bank::withdraw(Gen::Money amount)
 {
-    if (amount <= 0 || amount > getBalance()) return false;
     amtWithdrawn_ += amount;
+    numWithdrawals_++;
+    currentStats_.amtWithdrawn = amtWithdrawn_;
+    currentStats_.numWithdrawals = numWithdrawals_;
     return refill();
 }
 
 //----------------------------------------------------------------
 
-Gen::Money
+bool
 Bank::refill()
 {
     if (getBalance() <= refillThreshold_)
     {
         amtRefilled_ += refillAmount_;
         numRefills_++;
-        return refillAmount_;
+        currentStats_.amtRefilled = amtRefilled_;
+        currentStats_.numRefills = numRefills_;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 //----------------------------------------------------------------
@@ -83,6 +88,39 @@ Gen::Money
 Bank::getAmtWithdrawn() const
 {
     return amtWithdrawn_;
+}
+
+//-----------------------------------------------------------------
+
+void
+Bank::mergeStats()
+{
+    alltimeStats_.merge(currentStats_);
+}
+
+//-----------------------------------------------------------------
+
+YAML::Node
+Bank::toYAML() const
+{
+    YAML::Node node;
+    node["initialStartingBalance"] = initialStartingBalance_;
+    node["refillThreshold"]        = refillThreshold_;
+    node["refillAmount"]           = refillAmount_;
+    node["bankStats"]              = alltimeStats_.toYAML();
+    return node;
+}
+
+//-----------------------------------------------------------------
+
+void
+Bank::fromYAML(const YAML::Node& node)
+{
+    initialStartingBalance_ = node["initialStartingBalance"].as<Gen::Money>();
+    refillThreshold_        = node["refillThreshold"].as<Gen::Money>();
+    refillAmount_           = node["refillAmount"].as<Gen::Money>();
+
+    alltimeStats_.fromYAML(node["bankStats"]);
 }
 
 //----------------------------------------------------------------

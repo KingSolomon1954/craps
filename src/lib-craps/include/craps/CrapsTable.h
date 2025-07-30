@@ -110,18 +110,18 @@ private:
     std::string tableName_;
     std::string shortDescription_;
     std::string fullDescription_;
-    unsigned maxOdds_     = 5;          // overriden by yaml, use TableRules
-    unsigned minLineBet_  = 5;          // overriden by yaml, use TableRules
-    unsigned maxLineBet_  = 1000;       // overriden by yaml, use TableRules
-    unsigned minPlaceBet_ = 5;          // overriden by yaml, use TableRules
-    unsigned maxPlaceBet_ = 1000;       // overriden by yaml, use TableRules
-    unsigned minFieldBet_ = 1;          // TODO yaml, use TableRules
-    unsigned maxFieldBet_ = 1000;       // TODO yaml, use TableRules
-    unsigned minCandEBet_ = 2;          // TODO yaml, use TableRules
-    unsigned maxCandEBet_ = 1000;       // TODO yaml, use TableRules
-    unsigned minHornBet_  = 4;          // TODO yaml, use TableRules
-    unsigned maxHornBet_  = 1000;       // TODO yaml, use TableRules
-    Bank houseBank_;                    // overriden by yaml
+    unsigned maxOdds_     = 5;
+    unsigned minLineBet_  = 5;
+    unsigned maxLineBet_  = 1000;
+    unsigned minPlaceBet_ = 5;
+    unsigned maxPlaceBet_ = 1000;
+    unsigned minFieldBet_ = 1;
+    unsigned maxFieldBet_ = 1000;
+    unsigned minCandEBet_ = 2;
+    unsigned maxCandEBet_ = 1000;
+    unsigned minHornBet_  = 4;
+    unsigned maxHornBet_  = 1000;
+    Bank houseBank_;  // overriden by yaml
     Dice dice_;
     unsigned point_ = 0;
     Gen::Uuid currentShooterId_;
@@ -136,7 +136,7 @@ private:
     CrapsTable();  // private ctor
     
     static constexpr unsigned InitialStartingBankBalance_ = 3000000;
-    static constexpr unsigned RefillThreshold_            = 1000000;
+    static constexpr unsigned RefillThreshold_            = 1500000;
     static constexpr unsigned RefillAmount_               = 2000000;
     
     // Players must join table in order to play.  We only hold the
@@ -190,17 +190,17 @@ private:
     void evalOneBet(CrapsBet& bet);
     bool removeMatchingBetId(BetList& bets, unsigned betId);
     CrapsBet::BetPtr findBetById(unsigned betId) const;
+    void setMaxSessions();
+    void setMaxRecentRolls();
 
     void disburseHouseResults();
     void disbursePlayerWins();
     void disbursePlayerLoses();
     void disbursePlayerKeeps();
 
+    // File operations
     void saveFile(const std::string& dir) const;
     void loadFile(const std::string& dir);
-    void setMaxSessions();
-    void setHouseBank  ();
-
     YAML::Node toYAML() const;
     YAML::Node rulesToYAML() const;
     void fromYAML(const YAML::Node& node);

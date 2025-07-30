@@ -7,6 +7,8 @@
 #pragma once
 
 #include <gen/MoneyUtil.h>
+#include <craps/BankStats.h>
+#include <yaml-cpp/yaml.h>
 
 namespace Craps {
 
@@ -24,8 +26,9 @@ public:
 
     /// @name Modifiers
     /// @{
-    bool deposit (Gen::Money amount);
-    Gen::Money withdraw(Gen::Money amount);
+    void deposit (Gen::Money amount);
+    bool withdraw(Gen::Money amount);
+    void mergeStats();
     Bank& operator=(const Bank&) = default;  // assignment
     Bank& operator=(Bank&&)      = default;  // move
     /// @}
@@ -37,18 +40,27 @@ public:
     Gen::Money getAmtWithdrawn() const;
     /// @}
 
+    // @name YAML operations
+    /// @{
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
+    /// @}
+    
 private:
-    Gen::Money refill();
+    bool refill();
 
-    Gen::Money initialBalance_  = 0;
-    Gen::Money refillThreshold_ = 0;
-    Gen::Money refillAmount_    = 0;
-    Gen::Money amtDeposited_    = 0;
-    Gen::Money amtWithdrawn_    = 0;
-    Gen::Money amtRefilled_     = 0;
-    unsigned numDeposits_       = 0;
-    unsigned numWithdrawals_    = 0;
-    unsigned numRefills_        = 0;
+    Gen::Money initialStartingBalance_ = 0;
+    Gen::Money initialBalance_         = 0;
+    Gen::Money refillThreshold_        = 0;
+    Gen::Money refillAmount_           = 0;
+    Gen::Money amtDeposited_           = 0;
+    Gen::Money amtWithdrawn_           = 0;
+    Gen::Money amtRefilled_            = 0;
+    unsigned numDeposits_              = 0;
+    unsigned numWithdrawals_           = 0;
+    unsigned numRefills_               = 0;
+    BankStats currentStats_;
+    BankStats alltimeStats_;
 };
 
 /*-----------------------------------------------------------*//**

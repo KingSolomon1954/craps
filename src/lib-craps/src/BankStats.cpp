@@ -14,15 +14,14 @@ using namespace Craps;
 void
 BankStats::reset()
 {
-    // initialStartingBalance // does not get reset
     numDeposits    = 0;
     amtDeposited   = 0;
     numWithdrawals = 0;
     amtWithdrawn   = 0;
     numRefills     = 0;
     amtRefilled    = 0;
-    // maxAmtDepositedSession = 0;  // does not get reset
-    // maxAmtWithdrawnSession = 0;  // does not get reset
+    maxAmtDepositedSession = 0;
+    maxAmtWithdrawnSession = 0;
 }
 
 //-----------------------------------------------------------------
@@ -30,7 +29,6 @@ BankStats::reset()
 void
 BankStats::merge(const BankStats& session)
 {
-    // initialStartingBalance // does not get merged
     numDeposits    += session.numDeposits;
     amtDeposited   += session.amtDeposited;
     numWithdrawals += session.numWithdrawals;
@@ -56,7 +54,6 @@ YAML::Node
 BankStats::toYAML() const
 {
     YAML::Node node;
-    node["initialStartingBalance"]     = initialStartingBalance;
     node["numDeposits"]                = numDeposits;
     node["amtDeposited"]               = amtDeposited;
     node["numWithdrawals"]             = numWithdrawals;
@@ -75,7 +72,6 @@ BankStats::toYAML() const
 void
 BankStats::fromYAML(const YAML::Node& node)
 {
-    initialStartingBalance     = node["initialStartingBalance"].as<Gen::Money>();
     numDeposits                = node["numDeposits"].as<unsigned>();
     amtDeposited               = node["amtDeposited"].as<Gen::Money>();
     numWithdrawals             = node["numWithdrawals"].as<Gen::Money>();
