@@ -117,9 +117,9 @@ private:
     unsigned maxPlaceBet_ = 1000;       // overriden by yaml, use TableRules
     unsigned minFieldBet_ = 1;          // TODO yaml, use TableRules
     unsigned maxFieldBet_ = 1000;       // TODO yaml, use TableRules
-    unsigned minCandEBet_ = 1;          // TODO yaml, use TableRules
+    unsigned minCandEBet_ = 2;          // TODO yaml, use TableRules
     unsigned maxCandEBet_ = 1000;       // TODO yaml, use TableRules
-    unsigned minHornBet_  = 1;          // TODO yaml, use TableRules
+    unsigned minHornBet_  = 4;          // TODO yaml, use TableRules
     unsigned maxHornBet_  = 1000;       // TODO yaml, use TableRules
     Bank houseBank_;                    // overriden by yaml
     Dice dice_;

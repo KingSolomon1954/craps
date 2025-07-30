@@ -155,9 +155,17 @@ CrapsTable::fromYAML(const YAML::Node& node)
 void
 CrapsTable::rulesFromYAML(const YAML::Node& node)
 {
-    minLineBet_ = node["minLineBet"].as<unsigned>();
-    maxLineBet_ = node["maxLineBet"].as<unsigned>();
-    maxOdds_    = node["maxOdds"].as<unsigned>();
+    maxOdds_     = node["maxOdds"].as<unsigned>();
+    minLineBet_  = node["minLineBet"].as<unsigned>();
+    maxLineBet_  = node["maxLineBet"].as<unsigned>();
+    minPlaceBet_ = node["minPlaceBet"].as<unsigned>();
+    maxPlaceBet_ = node["maxPlaceBet"].as<unsigned>();
+    minFieldBet_ = node["minFieldBet"].as<unsigned>();
+    maxFieldBet_ = node["maxFieldBet"].as<unsigned>();
+    minCandEBet_ = node["minCandEBet"].as<unsigned>();
+    maxCandEBet_ = node["maxCandEBet"].as<unsigned>();
+    minHornBet_  = node["minHornBet"].as<unsigned>();
+    maxHornBet_  = node["maxHornBet"].as<unsigned>();
 }
 
 //----------------------------------------------------------------
@@ -166,9 +174,17 @@ YAML::Node
 CrapsTable::rulesToYAML() const
 {
     YAML::Node node;
-    node["minLineBet"] = minLineBet_;
-    node["maxLineBet"] = maxLineBet_;
-    node["maxOdds"]    = maxOdds_;
+    node["maxOdds"]     = maxOdds_;
+    node["minLineBet"]  = minLineBet_;
+    node["maxLineBet"]  = maxLineBet_;
+    node["minPlaceBet"] = minPlaceBet_;
+    node["maxPlaceBet"] = maxPlaceBet_;
+    node["minFieldBet"] = minFieldBet_;
+    node["maxFieldBet"] = maxFieldBet_;
+    node["minCandEBet"] = minCandEBet_;
+    node["maxCandEBet"] = maxCandEBet_;
+    node["minHornBet"]  = minHornBet_;
+    node["maxHornBet"]  = maxHornBet_;
     return node;
 }
 

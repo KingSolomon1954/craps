@@ -29,6 +29,10 @@ Allow a clear/undo last bet capability
     CrapsBet::isLocked()
     enum BetStats { New, Actvie, Staged, Resolved };
 
+Need unit test for continuation money session to session
+Need unit test for initial bank money
+Need unit test for bank refills
+
 maxFieldBet_ and friends need to read/write YAML()
 
 (Done) Not needed - make a static CrapsBet function that creates a shared_ptr
