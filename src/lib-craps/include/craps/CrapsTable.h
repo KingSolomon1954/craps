@@ -200,7 +200,7 @@ private:
 
     // File operations
     void saveFile(const std::string& dir) const;
-    void loadFile(const std::string& dir);
+    void loadFile();
     YAML::Node toYAML() const;
     YAML::Node rulesToYAML() const;
     void fromYAML(const YAML::Node& node);

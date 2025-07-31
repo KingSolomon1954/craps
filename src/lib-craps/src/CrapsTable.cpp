@@ -64,7 +64,7 @@ CrapsTable*
 CrapsTable::fromFile(const TableId& tableId)
 {
     CrapsTable* ct = new CrapsTable(tableId);
-    ct->loadFile(tableId);
+    ct->loadFile();
     return ct;
 }
 
@@ -83,13 +83,13 @@ CrapsTable::saveFile(const std::string& dir) const
 //-----------------------------------------------------------------
 
 void
-CrapsTable::loadFile(const TableId& tableId)
+CrapsTable::loadFile()
 {
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
 
     namespace fs = std::filesystem;
-    fs::path path = fs::path(dir) / (tableId + ".yaml");
+    fs::path path = fs::path(dir) / (tableId_ + ".yaml");
 
     try
     {
@@ -203,7 +203,7 @@ CrapsTable::close()
     alltimeStats_.merge(currentStats_);
     houseBank_.mergeStats();
 
-    // Directory where to read/write table stats.
+    // Directory where to read/write table YAML file.
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
 

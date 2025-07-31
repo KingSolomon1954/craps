@@ -12,6 +12,10 @@ design EventQueue and Events
 stats PlayerStats
 
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
+stats Streaks - count same number repeats before 7 for
+      example (4:1:57)  57 times, the 4 hit once before a 7
+      example (4:2:33)  33 times, the 4 hit twice before a 7
+      example (4:3:21)  21 times, the 4 hit three times before a 7
 
 Refund on quit - unresolved bets back to player's bank
   show a message like: “You left the table with active bets.
@@ -32,7 +36,11 @@ Allow a clear/undo last bet capability
 Need unit test for continuation bank/money session to session
 Need unit test for initial bank money
 Need unit test for bank refills
+Eliminate ConfigManager from CrapsTable.cpp
+Eliminate PlayerManager from CrapsTable.cpp
+Eliminate lib-controller from lib-craps
 
+(Done) Fix sessionStartBalance to continue session to session
 (Done) Redesign bankStats to fall under Bank class
 (Done) maxFieldBet_ and friends need to read/write YAML()
 (Done) Not needed - make a static CrapsBet function that creates a shared_ptr
@@ -536,21 +544,6 @@ ef bets_init():
         "C&E":0                 #craps-eleven, same as any craps plus 11, pays same as
 	} 
 
-
-CrapsTable::processBets(point, dice)
-{
-    for bet in Bets
-    {
-        winLose(bet, point, dice)
-        bank.winLose(bet)
-        player.winLose(bet)
-    }
-    // Remove bets that had a decision.
-    // These removed bets need screen updates
-    betListForUpdatedViews = pruneBetList();
-}
-
-
 oddsTable
 num   pass   dont    buy   lay     place    hardway
 0     0,0    0,0     0,0    0,0      0,0      0,0
@@ -575,31 +568,6 @@ Animation       Blender/Maya → FBX → Unreal Sequences
 UI              UMG (Unreal Motion Graphics)
 Audio           Unreal Sound Cues (dice rolls, chip sounds, dealer voice)
 VFX (Optional)  Niagara (for casino glow or excitement FX)
-
-
-
-CrapsTable.h
-    Controller
-        Dice
-        Point
-        Shooter
-        resolveBets
-    BetManager
-    Bank
-    Players
-    Rules
-        OddsTables.h
-        Min/Max bets
-        N x Odds
-    History
-    Statistics
-
-PlayerManager
-
-Player.h
-    Bank
-    History
-    Statistics
 
 
 Source Code Layout

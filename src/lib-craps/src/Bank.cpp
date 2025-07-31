@@ -17,10 +17,10 @@ Bank::Bank()
 //----------------------------------------------------------------
 
 Bank::Bank(
-    Gen::Money initialBalance,
+    Gen::Money sessionStartBalance,
     Gen::Money refillThreshold,
     Gen::Money refillAmount)
-    : initialBalance_(initialBalance)
+    : sessionStartBalance_(sessionStartBalance)
     , refillThreshold_(refillThreshold)
     , refillAmount_(refillAmount)
 {
@@ -71,7 +71,7 @@ Bank::refill()
 Gen::Money
 Bank::getBalance() const
 {
-    return initialBalance_ + amtDeposited_ + amtRefilled_ - amtWithdrawn_; 
+    return sessionStartBalance_ + amtDeposited_ + amtRefilled_ - amtWithdrawn_; 
 }
 
 //----------------------------------------------------------------
@@ -104,10 +104,11 @@ YAML::Node
 Bank::toYAML() const
 {
     YAML::Node node;
-    node["initialStartingBalance"] = initialStartingBalance_;
-    node["refillThreshold"]        = refillThreshold_;
-    node["refillAmount"]           = refillAmount_;
-    node["bankStats"]              = alltimeStats_.toYAML();
+    node["originalStartBalance"] = originalStartBalance_;
+    node["sessionStartBalance"]  = getBalance();
+    node["refillThreshold"]      = refillThreshold_;
+    node["refillAmount"]         = refillAmount_;
+    node["bankStats"]            = alltimeStats_.toYAML();
     return node;
 }
 
@@ -116,9 +117,10 @@ Bank::toYAML() const
 void
 Bank::fromYAML(const YAML::Node& node)
 {
-    initialStartingBalance_ = node["initialStartingBalance"].as<Gen::Money>();
-    refillThreshold_        = node["refillThreshold"].as<Gen::Money>();
-    refillAmount_           = node["refillAmount"].as<Gen::Money>();
+    originalStartBalance_ = node["originalStartBalance"].as<Gen::Money>();
+    sessionStartBalance_  = node["sessionStartBalance"].as<Gen::Money>();
+    refillThreshold_      = node["refillThreshold"].as<Gen::Money>();
+    refillAmount_         = node["refillAmount"].as<Gen::Money>();
 
     alltimeStats_.fromYAML(node["bankStats"]);
 }

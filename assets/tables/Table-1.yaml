@@ -1,6 +1,6 @@
 tableId: Table-1
 tableName: Las Vegas Strip
-shortDescription: A typical table with 5x odds, min $10, max $10,000.
+shortDescription: A typical table with 5x odds, min $10, max $2,000.
 fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
 Rules:
   maxOdds: 5
@@ -15,7 +15,8 @@ Rules:
   minHornBet: 4
   maxHornBet: 2000
 Bank:
-  initialStartingBalance: 3000000
+  originalStartBalance: 3000000
+  sessionStartBalance: 3000000
   refillThreshold: 1500000
   refillAmount: 2000000
   bankStats:
@@ -935,7 +936,7 @@ RollStats:
     count: 0
     maxRepeats: 0
 SessionStats:
-  numSessionsAlltime: 21
+  numSessionsAlltime: 23
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 00:01:04
   history:
@@ -949,35 +950,17 @@ SessionStats:
       amtIntake: 0
       amtPayout: 0
       numPlayers: 0
-      date: 2025-07-19T06:43:48.772112647
-      duration: 0d 00:00:09
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2025-07-19T18:06:31.146327267
-      duration: 0d 00:00:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2025-07-30T16:36:08.326850458
-      duration: 0d 00:00:03
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2025-07-30T19:25:53.995263982
-      duration: 0d 00:00:17
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2025-07-30T19:27:17.656374587
-      duration: 0d 00:00:05
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
       date: 2025-07-30T20:37:47.150580981
       duration: 0d 00:00:03
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-31T06:07:39.571833914
+      duration: 0d 00:00:07
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-07-31T06:30:08.195767625
+      duration: 0d 00:00:02

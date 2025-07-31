@@ -18,7 +18,7 @@ public:
     /// @name Lifecycle
     /// @{
     Bank();
-    Bank(Gen::Money initialBalance,
+    Bank(Gen::Money sessionStartBalance,
          Gen::Money refillThreshold,
          Gen::Money refillAmount);
     Bank(const Bank&) = default;  // copy ctor
@@ -48,17 +48,17 @@ public:
     
 private:
     bool refill();
-
-    Gen::Money initialStartingBalance_ = 0;
-    Gen::Money initialBalance_         = 0;
-    Gen::Money refillThreshold_        = 0;
-    Gen::Money refillAmount_           = 0;
-    Gen::Money amtDeposited_           = 0;
-    Gen::Money amtWithdrawn_           = 0;
-    Gen::Money amtRefilled_            = 0;
-    unsigned numDeposits_              = 0;
-    unsigned numWithdrawals_           = 0;
-    unsigned numRefills_               = 0;
+    
+    Gen::Money originalStartBalance_ = 0;
+    Gen::Money sessionStartBalance_  = 0;
+    Gen::Money refillThreshold_      = 0;
+    Gen::Money refillAmount_         = 0;
+    Gen::Money amtDeposited_         = 0;
+    Gen::Money amtWithdrawn_         = 0;
+    Gen::Money amtRefilled_          = 0;
+    unsigned numDeposits_            = 0;
+    unsigned numWithdrawals_         = 0;
+    unsigned numRefills_             = 0;
     BankStats currentStats_;
     BankStats alltimeStats_;
 };
