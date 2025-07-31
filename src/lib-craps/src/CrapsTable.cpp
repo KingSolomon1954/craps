@@ -6,11 +6,9 @@
 
 #include <craps/CrapsTable.h>
 #include <cassert>
-#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <cassert>
-#include <controller/ConfigManager.h>
 #include <controller/Events.h>
 #include <controller/EventManager.h>
 #include <controller/Globals.h>
@@ -26,13 +24,12 @@ using namespace Craps;
 Private Constructor.
 
 */
-CrapsTable::CrapsTable(const TableId& tableId)
+CrapsTable::CrapsTable(const TableId& tableId, const TableConfig& config)
     : tableId_(tableId)
+    , config_(config)
     , houseBank_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
-    assert(Gbl::pConfigMgr != nullptr);
-    setMaxSessions();    // maxSessions    from MultilayerConfig
-    setMaxRecentRolls(); // maxRecentRolls from MultilayerConfig
+    alltimeStats_.sessionHistory.setMaxSessions(config_.maxSessions);
 }
 
 /*-----------------------------------------------------------*//**
@@ -43,13 +40,13 @@ Throws upon error.
 
 */
 CrapsTable*
-CrapsTable::fromConfig(const TableId& tableId)
+CrapsTable::fromConfig(const TableId& tableId, const TableConfig& config)
 {
     // Not yet implemented
     //
     // see loadFromStrings at end of file
 
-    CrapsTable* ct = new CrapsTable(tableId);
+    CrapsTable* ct = new CrapsTable(tableId, config);
     return ct;
 }
 
@@ -61,9 +58,9 @@ Throws upon error.
 
 */
 CrapsTable*
-CrapsTable::fromFile(const TableId& tableId)
+CrapsTable::fromFile(const TableId& tableId, const TableConfig& config)
 {
-    CrapsTable* ct = new CrapsTable(tableId);
+    CrapsTable* ct = new CrapsTable(tableId, config);
     ct->loadFile();
     return ct;
 }
@@ -71,12 +68,16 @@ CrapsTable::fromFile(const TableId& tableId)
 //-----------------------------------------------------------------
 
 void
-CrapsTable::saveFile(const std::string& dir) const
+CrapsTable::saveFile() const
 {
-    namespace fs = std::filesystem;
-    fs::path path = fs::path(dir) / (tableId_ + ".yaml");
-    LOG_DEBUG("CrapsTable::saveFile(" + path.string()  + ")");
-    std::ofstream fout(path);
+    if (config_.tablePath.empty())
+    {
+        LOG_DEBUG("CrapsTable::saveFile() skipping; tablePath is empty");
+        return;
+    }
+    
+    LOG_DEBUG("CrapsTable::saveFile(" + config_.tablePath.string()  + ")");
+    std::ofstream fout(config_.tablePath);
     fout << toYAML();
 }
 
@@ -85,21 +86,17 @@ CrapsTable::saveFile(const std::string& dir) const
 void
 CrapsTable::loadFile()
 {
-    std::string dir = Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysTables).value();
-
-    namespace fs = std::filesystem;
-    fs::path path = fs::path(dir) / (tableId_ + ".yaml");
-
     try
     {
-        std::ifstream fin = Gen::FileUtils::openOrThrow(path);  // throws
+        std::ifstream fin =
+            Gen::FileUtils::openOrThrow(config_.tablePath);  // throws
         YAML::Node root = YAML::Load(fin);
-        fromYAML(root);                                         // throws
+        fromYAML(root);                                      // throws
     }
     catch (const std::runtime_error& e)
     {
-        std::string diag("CrapsTable::loadFile(): \"" + path.string() + "\"; ");
+        std::string diag("CrapsTable::loadFile(): \"" +
+                         config_.tablePath.string() + "\"; ");
         throw std::runtime_error(diag + e.what());
     }
 }
@@ -202,12 +199,7 @@ CrapsTable::close()
     // Merge alltime stats with today's session, then save.
     alltimeStats_.merge(currentStats_);
     houseBank_.mergeStats();
-
-    // Directory where to read/write table YAML file.
-    std::string dir = Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysTables).value();
-
-    saveFile(dir);
+    saveFile();
 }
 
 //----------------------------------------------------------------
@@ -218,32 +210,6 @@ void
 CrapsTable::prepareForShutdown()
 {
     close();
-}
-
-//----------------------------------------------------------------
-//
-// Helper function, simplify fromFile().
-//
-// Set maxSessions to the Multilayer configured value before reading
-// from file so that session history gets trimmed to the right size.
-//
-void
-CrapsTable::setMaxSessions()
-{
-    size_t maxSessions = Gbl::pConfigMgr->getInt(
-        Ctrl::ConfigManager::KeyTableMaxSessions).value();
-    alltimeStats_.sessionHistory.setMaxSessions(maxSessions);
-}
-
-//----------------------------------------------------------------
-
-void    
-CrapsTable::setMaxRecentRolls()
-{
-    // setMaxRecentRolls from MultilayerConfig
-    size_t maxRecentRolls = Gbl::pConfigMgr->getInt(
-        Ctrl::ConfigManager::KeyTableMaxRecentRolls).value();
-    recentRollsMaxSize_ = maxRecentRolls;
 }
 
 //----------------------------------------------------------------
@@ -469,7 +435,7 @@ CrapsTable::haveBet(const CrapsBet& bet) const
 //
 // CrapsBet*
 // CrapsTable::findBetById(unsigned betId) const
-
+//
 CrapsBet::BetPtr
 CrapsTable::findBetById(unsigned betId) const
 {
@@ -1056,7 +1022,7 @@ CrapsTable::isBettingOpen() const
 void
 CrapsTable::bumpRecentRolls(const Dice& dice)
 {
-    if (recentRolls_.size() >= recentRollsMaxSize_)
+    if (recentRolls_.size() >= config_.maxRecentRolls)
     {
         recentRolls_.pop_front();
     }
@@ -1240,64 +1206,6 @@ CrapsTable::haveBet(const CrapsBet& bet) const
         }
     }
     return false;
-}
-
-#endif
-
-
-//----------------------------------------------------------------
-//
-// Change the contract amount of the bet by +/- delta.
-//
-#if 0
-Gen::ReturnCode
-CrapsTable::changeBetAmount(BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep)
-{
-    int newAmount = pBet->contractAmount() + delta;
-    newAmount = std::max(newAmount, 0);
-    // Downcast to concrete class.
-    std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
-    if (pConcrete->setContractAmount(newAmount, ep) == Gen::ReturnCode::Fail)
-    {
-        ep.prepend("Unable to change contract bet amount. ");
-        return Gen::ReturnCode::Fail;
-    }
-    return Gen::ReturnCode::Success;
-}
-#endif
-
-//----------------------------------------------------------------
-
-#if 0
-
-Gen::ReturnCode
-CrapsTable::setOdds(BetIntfcPtr pBet, unsigned newAmount, Gen::ErrorPass& ep)
-{
-    std::string diag = "CrapsTable::setOdds(): Unable to make odds bet. ";
-    if (!bettingOpen_)
-    {
-        ep.diag = "Betting is closed at the moment - dice roll is underway.";
-        return true;
-    }
-    if (!havePlayer(playerId))
-    {
-        ep.diag = "Player is not joined with this table.";
-        return false;
-    }
-    if (!haveBet(pBet))
-    {
-        ep.diag = diag + "This bet instance is not on the table.";
-        return Gen::ReturnCode::Fail;
-    }
-    // Downcast to concrete CrapsBet class.
-    std::shared_ptr<CrapsBet> pConcrete = std::dynamic_pointer_cast<CrapsBet>(pBet);
-    if (pConcrete->setOddsAmount(newAmount, maxOdds_, ep) ==
-        Gen::ReturnCode::Fail)
-    {
-        ep.prepend(diag);
-        return Gen::ReturnCode::Fail;
-    }
-    return Gen::ReturnCode::Success;
 }
 
 #endif

@@ -20,6 +20,7 @@
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
 #include <craps/Player.h>
+#include <craps/TableConfig.h>
 #include <craps/TableStats.h>
 #include <yaml-cpp/yaml.h>
 
@@ -32,10 +33,10 @@ public:
     
     /// @name Lifecycle
     /// @{
-    CrapsTable(const TableId& tableId);
+    CrapsTable(const TableId& tableId, const TableConfig& config);
    ~CrapsTable() = default;
-    static CrapsTable* fromConfig(const TableId& tableId);
-    static CrapsTable* fromFile  (const TableId& tableId);
+    static CrapsTable* fromConfig(const TableId&, const TableConfig&);
+    static CrapsTable* fromFile  (const TableId&, const TableConfig&);
     /// @}
 
     /// @name Modifiers
@@ -107,6 +108,7 @@ public:
 
 private:
     TableId tableId_;
+    TableConfig config_;
     std::string tableName_;
     std::string shortDescription_;
     std::string fullDescription_;
@@ -130,14 +132,9 @@ private:
     Dice testRollDice_;
     TableStats currentStats_;
     TableStats alltimeStats_;
-    std::deque<Dice> recentRolls_;  // Roll history. Front element is oldest roll
-    size_t recentRollsMaxSize_ = 25;
+    std::deque<Dice> recentRolls_;  // Front element is oldest roll
 
     CrapsTable();  // private ctor
-    
-    static constexpr unsigned InitialStartingBankBalance_ = 3000000;
-    static constexpr unsigned RefillThreshold_            = 1500000;
-    static constexpr unsigned RefillAmount_               = 2000000;
     
     // Players must join table in order to play.  We only hold the
     // player's UUID here in a std::list container and rely on the
@@ -170,11 +167,6 @@ private:
     void removePlayerBets(const Gen::Uuid& playerId);
     void removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId);
 
-    // Turn bet name enums into size_t to avoid casting each time.
-    // Used when directly indexing into tableBets_;
-    // TODO might not need this - remove later.
-    static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
-
     bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
     void declareBettingClosed();
     void throwDice();
@@ -190,8 +182,6 @@ private:
     void evalOneBet(CrapsBet& bet);
     bool removeMatchingBetId(BetList& bets, unsigned betId);
     CrapsBet::BetPtr findBetById(unsigned betId) const;
-    void setMaxSessions();
-    void setMaxRecentRolls();
 
     void disburseHouseResults();
     void disbursePlayerWins();
@@ -199,7 +189,7 @@ private:
     void disbursePlayerKeeps();
 
     // File operations
-    void saveFile(const std::string& dir) const;
+    void saveFile() const;
     void loadFile();
     YAML::Node toYAML() const;
     YAML::Node rulesToYAML() const;
@@ -240,6 +230,11 @@ private:
                               Gen::Money amt,
                               Gen::ErrorPass& ep) const;
     std::string diagLimits   (Gen::Money amt) const;
+
+    // Default bank constants
+    static constexpr unsigned InitialStartingBankBalance_ = 3000000;
+    static constexpr unsigned RefillThreshold_            = 1500000;
+    static constexpr unsigned RefillAmount_               = 2000000;
 };
 
 /*-----------------------------------------------------------*//**

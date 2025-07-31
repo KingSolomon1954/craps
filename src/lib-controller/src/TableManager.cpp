@@ -4,6 +4,7 @@
 //
 //----------------------------------------------------------------
 
+#include <filesystem>
 #include <controller/TableManager.h>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
@@ -49,7 +50,12 @@ TableManager::getTableChoices() const
 Craps::CrapsTable*
 TableManager::loadCrapsTable(const Craps::CrapsTable::TableId& tableId)
 {
-    return Craps::CrapsTable::fromFile(tableId);
+    Craps::TableConfig config;
+    config.maxSessions    = TableManager::retrieveMaxSessions();
+    config.maxRecentRolls = TableManager::retrieveMaxRecentRolls();
+    config.tablePath      = TableManager::formTablePath(tableId);
+
+    return Craps::CrapsTable::fromFile(tableId, config);
 }
 
 //----------------------------------------------------------------
@@ -85,4 +91,35 @@ TableManager::switchCrapsTable(
     }
 }
 
+//----------------------------------------------------------------
+
+size_t
+TableManager::retrieveMaxSessions()
+{
+    return Gbl::pConfigMgr->getInt(
+        Ctrl::ConfigManager::KeyTableMaxSessions).value();
+}
+
+//----------------------------------------------------------------
+
+size_t
+TableManager::retrieveMaxRecentRolls()
+{
+    return Gbl::pConfigMgr->getInt(
+        Ctrl::ConfigManager::KeyTableMaxRecentRolls).value();
+}
+
+//----------------------------------------------------------------
+
+std::filesystem::path
+TableManager::formTablePath(const Craps::CrapsTable::TableId& tableId)
+{
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysTables).value();
+
+    namespace fs = std::filesystem;
+    fs::path path = fs::path(dir) / (tableId + ".yaml");
+    return path;
+}
+    
 //----------------------------------------------------------------

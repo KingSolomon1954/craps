@@ -24,6 +24,7 @@ struct CrapsTableFixture
     Ctrl::ConfigManager configMgr;
     Ctrl::EventManager  em;
     Ctrl::PlayerManager pm;
+    Craps::TableConfig config;
 
     CrapsTableFixture()
         : configMgr(5, std::vector<char*>{
@@ -37,6 +38,14 @@ struct CrapsTableFixture
         Gbl::pConfigMgr = &configMgr;
         Gbl::pEventMgr  = &em;
         Gbl::pPlayerMgr = &pm;
+        
+        config.maxSessions = 50;
+        config.maxRecentRolls = 25;
+        config.tablePath = "/work/craps/assets/tables/Table-1.yaml";
+        // Unit tests won't overwrite YAML file. CrapsTable dtor
+        // does not trigger save to filel Would have to call 
+        // prepareToShutdown() or close() to save YAML file.
+        // Therefore same TableConfig can be used everywhere.
     }
 
    ~CrapsTableFixture()
@@ -53,7 +62,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 {
     SUBCASE("normalCtor")
     {
-        CrapsTable t("Table-1");
+        CrapsTable t("Table-1", CrapsTableFixture::config);
         CHECK(t.getPoint() == 0);
         CHECK(t.getCurRoll().value() == 12);
         CHECK(t.isComeOutRoll());
@@ -64,7 +73,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 
     SUBCASE("fromConfig")
     {
-        auto* t = CrapsTable::fromConfig("Table-1");
+        auto* t = CrapsTable::fromConfig("Table-1", CrapsTableFixture::config);
         REQUIRE(t != nullptr);
         CHECK(t->getPoint() == 0);
         CHECK(t->getCurRoll().value() == 12);
@@ -77,7 +86,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 
     SUBCASE("fromFile:exists")
     {
-        CrapsTable* p = CrapsTable::fromFile("Table-1");
+        CrapsTable* p = CrapsTable::fromFile("Table-1", CrapsTableFixture::config);
         REQUIRE(p != nullptr);
         CHECK(p->getPoint() == 0);
         CHECK(p->getCurRoll().value() == 12);
@@ -90,8 +99,11 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 
     SUBCASE("fromFile:missing")
     {
-        // Use bad tableId so file won't be found.
-        CHECK_THROWS_AS(CrapsTable::fromFile("FakeTable-1"), std::runtime_error);
+        // Clobber path. Use bad tableId/path so file won't be found.
+        CrapsTableFixture::config.tablePath = "missing/FakeTable-1";
+        CHECK_THROWS_AS(CrapsTable::fromFile(
+                        "FakeTable-1", CrapsTableFixture::config),
+                        std::runtime_error);
     }
 }
 
@@ -101,7 +113,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
 {
     SUBCASE("addRemove")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         Player p1("p1", 1000);
         Player p2("p2", 1000);
         Player p3("p3", 1000);
@@ -186,7 +199,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
 
     SUBCASE("playerList")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         Player p1("p1", 1000);
         Player p2("p2", 1000);
         Player p3("p3", 1000);
@@ -223,7 +237,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     
     SUBCASE("general")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
 
         // Place a bet but player hasn't yet joined the table
         CHECK(t->getNumPlayers() == 0);
@@ -267,7 +282,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
     SUBCASE("betTiming")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         REQUIRE(t->addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
         REQUIRE(t->addPlayer(p2.getUuid(), ep) == Gen::ReturnCode::Success);
         REQUIRE(t->isComeOutRoll());
@@ -376,7 +392,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
     SUBCASE("minMaxLimits")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         REQUIRE(t->addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
         REQUIRE(t->addPlayer(p2.getUuid(), ep) == Gen::ReturnCode::Success);
         REQUIRE(t->isComeOutRoll());
@@ -445,7 +462,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
     SUBCASE("setOdds")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         REQUIRE(t->addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
         REQUIRE(t->addPlayer(p2.getUuid(), ep) == Gen::ReturnCode::Success);
 
@@ -483,7 +501,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
     SUBCASE("modifyBets")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         REQUIRE(t->addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
 
         // Change contract bet after on table, no point yet.
@@ -524,7 +543,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
     SUBCASE("amountOnTable")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         REQUIRE(t->getAmountOnTable() == 0);
         REQUIRE(t->addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
 
@@ -544,7 +564,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
     SUBCASE("removeBet")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         REQUIRE(t->getAmountOnTable() == 0);
         REQUIRE(t->addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
 
@@ -575,7 +596,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
     SUBCASE("removePlayerActiveBets")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
 
         REQUIRE(t->getAmountOnTable() == 0);
         REQUIRE(t->addPlayer(p1.getUuid(), ep) == Gen::ReturnCode::Success);
@@ -603,7 +625,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
 {
     SUBCASE("firstRoll")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+        std::unique_ptr<CrapsTable> t(
+            CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
         Gbl::pTable = t.get();
         Gen::ErrorPass ep;
 
@@ -813,7 +836,8 @@ void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
 {
-    std::unique_ptr<CrapsTable> t(CrapsTable::fromConfig("Table-1"));
+    std::unique_ptr<CrapsTable> t(
+        CrapsTable::fromConfig("Table-1", CrapsTableFixture::config));
     Gbl::pTable = t.get();
     Gen::ErrorPass ep;
     Ctrl::PlayerManager::PlayerPtr sam = Gbl::pPlayerMgr->createPlayer("Sam");
@@ -913,7 +937,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:recentRolls")
 {
-    CrapsTable t("Table-1");
+    CrapsTable t("Table-1", CrapsTableFixture::config);
     const std::deque<Dice>& recentRolls = t.getRecentRolls();
     CHECK(recentRolls.size() == 0);
 
