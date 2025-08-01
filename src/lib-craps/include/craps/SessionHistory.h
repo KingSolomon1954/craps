@@ -19,12 +19,13 @@ class SessionHistory
 public:
     struct Summary
     {
-        unsigned numPlayers  = 0;
-        unsigned numBets     = 0;
-        Gen::Money amtIntake = 0;
-        Gen::Money amtPayout = 0;
-        Gen::Timepoint date; 
+        unsigned                 numPlayers  = 0;
+        unsigned                 numBets     = 0;
+        Gen::Money               amtIntake = 0;
+        Gen::Money               amtPayout = 0;
+        Gen::Timepoint           date; 
         Gen::Timepoint::Duration duration;
+        
         YAML::Node toYAML() const;
         void fromYAML(const YAML::Node& node);
         bool operator==(const Summary&) const = default;  // Only generates ==
@@ -85,10 +86,8 @@ Date                Duration    Bets   Intake   Payout  Balance Players
 
 Responsibilities:
 
-@li SessionHistory file is YAML
-@li Located same place as (Table/Player)Stats file
-@li Write current session summary to file
-@li Read SessionHistory file
+@li Write current session summary YAML nodes
+@li Read SessionHistory from YAML nodes
 @li Make available a vector of session summaries
 
 */
