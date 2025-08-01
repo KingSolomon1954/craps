@@ -8,15 +8,40 @@
 #include <craps/DecisionRecord.h>
 #include <craps/CrapsBet.h>
 #include <craps/Dice.h>
+#include <craps/Player.h>
 #include <doctest/doctest.h>
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
+#include <controller/EventManager.h>
 
 using namespace Craps;
 
 //----------------------------------------------------------------
 
-TEST_CASE("TableStats:betstats:win1")
+struct TableStatsPart5Fixture
+{
+    Ctrl::EventManager  em;
+    Player* p1 = nullptr;
+    Player* p2 = nullptr;
+    
+    TableStatsPart5Fixture()
+    {
+        Gbl::pEventMgr  = &em;
+        p1 = new Player("Player1",1000);
+        p2 = new Player("Player2",1000);
+    }
+
+   ~TableStatsPart5Fixture()
+    {
+        Gbl::pEventMgr  = nullptr;
+        delete p1;
+        delete p2;
+    }
+};
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:win1")
 {
     Gen::ErrorPass ep;
     TableStats ts;
@@ -24,8 +49,8 @@ TEST_CASE("TableStats:betstats:win1")
     unsigned point = 0;
     DecisionRecord dr1, dr2;
 
-    CrapsBet b1("Player1", BetName::PassLine, 10);
-    CrapsBet b2("Player2", BetName::PassLine, 10);
+    CrapsBet b1(p1, BetName::PassLine, 10);
+    CrapsBet b2(p2, BetName::PassLine, 10);
     point = 0; dice.set(3,4);
     CHECK(b1.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
     CHECK(b2.testEvaluate(point, dice, dr2, ep) == Gen::ReturnCode::Success);
@@ -65,7 +90,7 @@ TEST_CASE("TableStats:betstats:win1")
 
 //----------------------------------------------------------------
 
-TEST_CASE("TableStats:betstats:win2")
+TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:win2")
 {
     Gen::ErrorPass ep;
     TableStats ts;
@@ -75,8 +100,8 @@ TEST_CASE("TableStats:betstats:win2")
 
     // seq: 4,5,5,11,6,6,4
 
-    CrapsBet p1b1("Player1", BetName::PassLine, 10);
-    CrapsBet p2b1("Player2", BetName::PassLine, 10);
+    CrapsBet p1b1(p1, BetName::PassLine, 10);
+    CrapsBet p2b1(p2, BetName::PassLine, 10);
     point = 0; dice.set(2,2);
     CHECK(p1b1.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
     CHECK(p2b1.testEvaluate(point, dice, dr2, ep) == Gen::ReturnCode::Success);
@@ -84,8 +109,8 @@ TEST_CASE("TableStats:betstats:win2")
     ts.recordKeep(p2b1);
     ts.recordDiceRoll(point, dice);
 
-    CrapsBet p1b2("Player1", BetName::Come, 10);
-    CrapsBet p2b2("Player2", BetName::Come, 10);
+    CrapsBet p1b2(p1, BetName::Come, 10);
+    CrapsBet p2b2(p2, BetName::Come, 10);
     point = 4; dice.set(2,3); dr1.reset(); dr2.reset();
     CHECK(p1b1.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
     CHECK(p2b1.testEvaluate(point, dice, dr2, ep) == Gen::ReturnCode::Success);
@@ -110,8 +135,8 @@ TEST_CASE("TableStats:betstats:win2")
     ts.recordWin(p2b2, p2b2.contractAmount() + p2b2.oddsAmount());
     ts.recordDiceRoll(point, dice);
 
-    CrapsBet p1b3("Player1", BetName::Come, 10);
-    CrapsBet p2b3("Player2", BetName::Come, 10);
+    CrapsBet p1b3(p1, BetName::Come, 10);
+    CrapsBet p2b3(p2, BetName::Come, 10);
     point = 4; dice.set(5,6); dr1.reset(); dr2.reset();
     CHECK(p1b2.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
     CHECK(p2b2.testEvaluate(point, dice, dr2, ep) == Gen::ReturnCode::Success);
@@ -124,8 +149,8 @@ TEST_CASE("TableStats:betstats:win2")
     ts.recordWin(p2b3, p2b3.contractAmount() + p2b3.oddsAmount());
     ts.recordDiceRoll(point, dice);
 
-    CrapsBet p1b4("Player1", BetName::Come, 10);
-    CrapsBet p2b4("Player2", BetName::Come, 10);
+    CrapsBet p1b4(p1, BetName::Come, 10);
+    CrapsBet p2b4(p2, BetName::Come, 10);
     point = 4; dice.set(3,3); dr1.reset(); dr2.reset();
     dr1.reset(); dr2.reset();
     CHECK(p1b3.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
@@ -201,7 +226,7 @@ TEST_CASE("TableStats:betstats:win2")
 
 //----------------------------------------------------------------
 
-TEST_CASE("TableStats:betstats:win3")
+TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:win3")
 {
     Gen::ErrorPass ep;
     TableStats ts;
@@ -209,8 +234,8 @@ TEST_CASE("TableStats:betstats:win3")
     unsigned point = 0;
     DecisionRecord dr1, dr2;
 
-    CrapsBet b1("Player1", BetName::Field, 10);
-    CrapsBet b2("Player2", BetName::Field, 10);
+    CrapsBet b1(p1, BetName::Field, 10);
+    CrapsBet b2(p2, BetName::Field, 10);
     point = 0; dice.set(1,1);
     CHECK(b1.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
     point = 0; dice.set(2,1);
@@ -251,7 +276,7 @@ TEST_CASE("TableStats:betstats:win3")
 
 //----------------------------------------------------------------
 
-TEST_CASE("TableStats:betstats:lose1")
+TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:lose1")
 {
     Gen::ErrorPass ep;
     TableStats ts;
@@ -259,8 +284,8 @@ TEST_CASE("TableStats:betstats:lose1")
     unsigned point = 0;
     DecisionRecord dr1, dr2;
 
-    CrapsBet b1("Player1", BetName::PassLine, 10);
-    CrapsBet b2("Player2", BetName::PassLine, 10);
+    CrapsBet b1(p1, BetName::PassLine, 10);
+    CrapsBet b2(p2, BetName::PassLine, 10);
     point = 0; dice.set(2,1);
     CHECK(b1.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
     point = 0; dice.set(6,6);
@@ -301,7 +326,7 @@ TEST_CASE("TableStats:betstats:lose1")
 
 //----------------------------------------------------------------
 
-TEST_CASE("TableStats:betstats:lose3")
+TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:lose3")
 {
     Gen::ErrorPass ep;
     TableStats ts;
@@ -309,8 +334,8 @@ TEST_CASE("TableStats:betstats:lose3")
     unsigned point = 0;
     DecisionRecord dr1, dr2;
 
-    CrapsBet b1("Player1", BetName::Field, 10);
-    CrapsBet b2("Player2", BetName::Field, 10);
+    CrapsBet b1(p1, BetName::Field, 10);
+    CrapsBet b2(p2, BetName::Field, 10);
     point = 0; dice.set(3,3);
     CHECK(b1.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
     CHECK(b2.testEvaluate(point, dice, dr2, ep) == Gen::ReturnCode::Success);
@@ -318,8 +343,8 @@ TEST_CASE("TableStats:betstats:lose3")
     ts.recordLose(b2, b2.contractAmount());
     ts.recordDiceRoll(point, dice);
 
-    CrapsBet b3("Player1", BetName::Field, 10);
-    CrapsBet b4("Player2", BetName::Field, 10);
+    CrapsBet b3(p1, BetName::Field, 10);
+    CrapsBet b4(p2, BetName::Field, 10);
     point = 6; dice.set(4,4); dr1.reset(); dr2.reset();
     CHECK(b3.testEvaluate(point, dice, dr1, ep) == Gen::ReturnCode::Success);
     CHECK(b4.testEvaluate(point, dice, dr2, ep) == Gen::ReturnCode::Success);

@@ -82,7 +82,7 @@ PlayerManager::loadStartingPlayers()
     for (auto pid : ids)  // Players join table
     {
         // TODO: check error return
-        Gbl::pTable->addPlayer(pid, ep);
+        // Gbl::pTable->addPlayer(pid, ep);
     }
 }
 
@@ -147,6 +147,7 @@ PlayerManager::savePlayers()
     return true;
 }
 
+#if 0
 /*-----------------------------------------------------------*//**
 
 Disburse WIN decision record to player.
@@ -207,6 +208,8 @@ PlayerManager::disburseKeep(const Craps::DecisionRecord& dr) const
     }
     pPlayer->processKeep(dr);
 }
+
+#endif
 
 //----------------------------------------------------------------
 

@@ -40,9 +40,10 @@ public:
     /// @name Observers
     /// @{
     PlayerPtr getPlayer(const Gen::Uuid& id) const;
-    void disburseWin (const Craps::DecisionRecord& dr) const;
-    void disburseLose(const Craps::DecisionRecord& dr) const;
-    void disburseKeep(const Craps::DecisionRecord& dr) const;
+    
+    // void disburseWin (const Craps::DecisionRecord& dr) const;
+    // void disburseLose(const Craps::DecisionRecord& dr) const;
+    // void disburseKeep(const Craps::DecisionRecord& dr) const;
     /// @}
 
     using PlayerDescriptions = std::vector<PlayerDescription>;

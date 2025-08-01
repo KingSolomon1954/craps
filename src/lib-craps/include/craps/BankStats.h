@@ -29,8 +29,8 @@ public:
     Gen::Timepoint maxAmtDepositedSessionDate;
     Gen::Timepoint maxAmtWithdrawnSessionDate;
     
-    void reset();
     void merge(const BankStats& session);
+    void reset();
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
     bool operator==(const BankStats&) const = default;  // Only generates ==

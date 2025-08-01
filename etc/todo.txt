@@ -33,13 +33,14 @@ Allow a clear/undo last bet capability
     CrapsBet::isLocked()
     enum BetStats { New, Actvie, Staged, Resolved };
 
-Eliminate ConfigManager from CrapsTable.cpp
-Eliminate PlayerManager from CrapsTable.cpp
 Move EventManager inside of CrapsTable.cpp
 Eliminate lib-controller from lib-craps
-CrapsTable unit test relies on a working Player - maybe mock Player
 Need unit test for initial bank money
 
+(Done) Add accessor for BankStats from CrapsTable
+(Done) Eliminate PlayerManager from CrapsTable.cpp
+(Done) Eliminate ConfigManager from CrapsTable.cpp
+(Done) CrapsTable unit test relies on a working Player - maybe mock Player
 (Done) Need unit test for bank refills
 (Done) Fix sessionStartBalance to continue session to session
 (Done) Redesign bankStats to fall under Bank class

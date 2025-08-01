@@ -12,7 +12,6 @@
 #include <controller/Events.h>
 #include <controller/EventManager.h>
 #include <controller/Globals.h>
-#include <controller/PlayerManager.h>
 #include <craps/CrapsBet.h>
 #include <gen/FileUtils.h>
 #include <gen/Logger.h>
@@ -215,38 +214,42 @@ CrapsTable::prepareForShutdown()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::addPlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
+CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
 {
-    const std::string diag1("Unable to add Player to table. ");
-    if (havePlayer(playerId))
+    assert(pPlayer != nullptr);
+    const std::string diag1("CrapsTable::addPlayer(): Unable to add "
+                            "Player " + pPlayer->getName() + " to table; ");
+    if (havePlayer(pPlayer))
     {
         ep.diag = diag1 + "Player is already joined.";
         return Gen::ReturnCode::Fail;
     }
     if (players_.size() == MaxPlayers)
     {
-        ep.diag = diag1 + "At max num players " + std::to_string(MaxPlayers) + ".";
+        ep.diag = diag1 + "At max num players " +
+            std::to_string(MaxPlayers) + ".";
         return Gen::ReturnCode::Fail;
     }
-    players_.push_back(playerId);
-    Gbl::pEventMgr->publish(Ctrl::PlayerJoinedTable{ playerId });
+    players_.push_back(pPlayer);
+    Gbl::pEventMgr->publish(Ctrl::PlayerJoinedTable{ pPlayer->getUuid() });
     return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep)
+CrapsTable::removePlayer(Player* pPlayer, Gen::ErrorPass& ep)
 {
-    if (removeUuid(playerId, ep) == Gen::ReturnCode::Fail)
+    if (removePlayerByPtr(pPlayer, ep) == Gen::ReturnCode::Fail)
     {
-        ep.prepend("Unable to remove player. ");
+        ep.prepend("CrapsTable::removePlayer(); Unable to remove player; " +
+                   pPlayer->getName() + ":" + pPlayer->getUuid() + "; ");
         return Gen::ReturnCode::Fail;
     }
 
     // Remove all bets by player, bet money given to the house bank.
-    removePlayerBets(playerId);
-    Gbl::pEventMgr->publish(Ctrl::PlayerLeftTable{ playerId });
+    removePlayerBets(pPlayer);
+    Gbl::pEventMgr->publish(Ctrl::PlayerLeftTable{ pPlayer->getUuid() });
     return Gen::ReturnCode::Success;
 }
 
@@ -535,23 +538,23 @@ CrapsTable::advanceShooter()
 {
     if (players_.empty()) return;
 
-    Gen::Uuid prev = currentShooterId_;
+    Player* prev = pCurrentShooter_;
 
-    auto it = std::find(players_.begin(), players_.end(), currentShooterId_);
+    auto it = std::find(players_.begin(), players_.end(), pCurrentShooter_);
 
     // If not found or at the end, start from beginning
     if (it == players_.end() || std::next(it) == players_.end())
     {
-        currentShooterId_ = players_.front();
+        pCurrentShooter_ = players_.front();
     }
     else
     {
-        currentShooterId_ = *std::next(it);
+        pCurrentShooter_ = *std::next(it);
     }
 
-    if (currentShooterId_ != prev)
+    if (pCurrentShooter_ != prev)
     {
-        Gbl::pEventMgr->publish(Ctrl::NewShooter{currentShooterId_});
+        Gbl::pEventMgr->publish(Ctrl::NewShooter{pCurrentShooter_->getUuid()});
     }
 }
 
@@ -655,10 +658,8 @@ CrapsTable::disbursePlayerWins()
     {
         if (r.win > 0)
         {
-            Gbl::pPlayerMgr->disburseWin(r);
-            auto b = findBetById(r.betId);
-            assert(b != nullptr);
-            currentStats_.recordWin(*b, r.win);
+            r.pBet->player().processWin(r);
+            currentStats_.recordWin(*(r.pBet), r.win);
         }
     }
 }
@@ -672,10 +673,8 @@ CrapsTable::disbursePlayerLoses()
     {
         if (r.lose > 0)
         {
-            Gbl::pPlayerMgr->disburseLose(r);
-            auto b = findBetById(r.betId);
-            assert(b != nullptr);
-            currentStats_.recordLose(*b, r.lose);
+            r.pBet->player().processLose(r);
+            currentStats_.recordLose(*(r.pBet), r.lose);
         }
     }
 }
@@ -689,10 +688,8 @@ CrapsTable::disbursePlayerKeeps()
     {
         if (!r.decision)
         {
-            Gbl::pPlayerMgr->disburseKeep(r);
-            auto b = findBetById(r.betId);
-            assert(b != nullptr);
-            currentStats_.recordKeep(*b);
+            r.pBet->player().processKeep(r);
+            currentStats_.recordKeep(*(r.pBet));
         }
     }
 }
@@ -717,7 +714,7 @@ CrapsTable::trimTableBets()
         for (size_t i = 0; i < tableBets_.size(); ++i)
         {
             auto& bets = tableBets_[i];
-            if (removeMatchingBetId(bets, dr.betId))
+            if (removeMatchingBet(bets, dr.pBet))
             {
                 break;
             }
@@ -728,12 +725,12 @@ CrapsTable::trimTableBets()
 //----------------------------------------------------------------
 
 bool
-CrapsTable::removeMatchingBetId(BetList& bets, unsigned betId)
+CrapsTable::removeMatchingBet(BetList& bets, CrapsBet* pBet)
 {
     auto it = std::find_if(bets.begin(), bets.end(),
-        [betId](const CrapsBet::BetPtr& b)
+        [pBet](const CrapsBet::BetPtr& b)
         {
-            return b->betId() == betId;
+            return b.get() == pBet;
         });
 
     if (it != bets.end())
@@ -751,11 +748,11 @@ CrapsTable::removeMatchingBetId(BetList& bets, unsigned betId)
 // is given to the house, as would occur in a real craps grame.
 //
 void
-CrapsTable::removePlayerBets(const Gen::Uuid& playerId)
+CrapsTable::removePlayerBets(Player* pPlayer)
 {
     for (size_t i = 0; i < tableBets_.size(); ++i)
     {
-        removeBetsByPlayerId(tableBets_[i], playerId);
+        removeBetsByPlayerPtr(tableBets_[i], pPlayer);
     }
 }
 
@@ -766,11 +763,11 @@ CrapsTable::removePlayerBets(const Gen::Uuid& playerId)
 // Claims bet money for the house bank.
 //
 void
-CrapsTable::removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId)
+CrapsTable::removeBetsByPlayerPtr(BetList& bets, Player* pPlayer)
 {
     for (auto it = bets.begin(); it != bets.end(); )
     {
-        if (*it && (*it)->playerId() == playerId)
+        if (*it && (*it)->pPlayer_ == pPlayer)
         {
             CrapsBet::BetPtr p = *it;
             houseBank_.deposit(p->contractAmount());
@@ -797,40 +794,23 @@ CrapsTable::clearDrl()
 //----------------------------------------------------------------
 
 bool
-CrapsTable::havePlayer(const Gen::Uuid& id) const
+CrapsTable::havePlayer(Player* pPlayer) const
 {
-    return std::find(players_.begin(), players_.end(), id) != players_.end();
+    return std::find(players_.begin(), players_.end(), pPlayer) != players_.end();
 }
 
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::removeUuid(const Gen::Uuid& id, Gen::ErrorPass& ep)
+CrapsTable::removePlayerByPtr(Player* pPlayer, Gen::ErrorPass& ep)
 {
-    auto it = std::find(players_.begin(), players_.end(), id);
+    auto it = std::find(players_.begin(), players_.end(), pPlayer);
     if (it != players_.end())
     {
         players_.erase(it);
         return Gen::ReturnCode::Success;
     }
-    ep.diag = "No player with UUID:\"" + id + "\".";
-    return Gen::ReturnCode::Fail;
-}
-
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsTable::updatePlayerId(const Gen::Uuid& oldId,
-                           const Gen::Uuid& newId,
-                           Gen::ErrorPass& ep)
-{
-    auto it = std::find(players_.begin(), players_.end(), oldId);
-    if (it != players_.end())
-    {
-        *it = newId;
-        return Gen::ReturnCode::Success;
-    }
-    ep.diag = "Unable to update playerId. No such ID:" + oldId;
+    ep.diag = "Player has not joined this table.";
     return Gen::ReturnCode::Fail;
 }
 
@@ -841,17 +821,18 @@ CrapsTable::resetStats()
 {
     recentRolls_.clear();
     currentStats_.reset();
+    houseBank_.resetStats();
 }
 
 //----------------------------------------------------------------
 
-std::vector<Gen::Uuid>
+std::vector<Player*>
 CrapsTable::getPlayers() const
 {
-    std::vector<Gen::Uuid> v;
-    for (const auto& id : players_)
+    std::vector<Player*> v;
+    for (const auto pPlayer : players_)
     {
-        v.push_back(id);
+        v.push_back(pPlayer);
     }
     return v;
 }
@@ -876,16 +857,16 @@ CrapsTable::getPoint() const
 
 //----------------------------------------------------------------
 
-Gen::Uuid
-CrapsTable::getShooterId() const
+Player*
+CrapsTable::getCurrentShooter() const
 {
-    return currentShooterId_;
+    return pCurrentShooter_;
 }
 
 //----------------------------------------------------------------
 
 Dice
-CrapsTable::getCurRoll() const
+CrapsTable::getCurrentRoll() const
 {
     return dice_;
 }
@@ -987,6 +968,22 @@ const TableStats&
 CrapsTable::getAlltimeStats() const
 {
     return alltimeStats_;
+}
+
+//----------------------------------------------------------------
+
+const BankStats&
+CrapsTable::getBankCurrentStats() const
+{
+    return houseBank_.getCurrentStats();
+}
+
+//----------------------------------------------------------------
+
+const BankStats&
+CrapsTable::getBankAlltimeStats() const
+{
+    return houseBank_.getAlltimeStats();
 }
 
 //----------------------------------------------------------------

@@ -100,6 +100,30 @@ Bank::mergeStats()
 
 //-----------------------------------------------------------------
 
+void
+Bank::resetStats()
+{
+    currentStats_.reset();
+}
+
+//-----------------------------------------------------------------
+
+const BankStats&
+Bank::getCurrentStats() const
+{
+    return currentStats_;
+}
+
+//-----------------------------------------------------------------
+
+const BankStats&
+Bank::getAlltimeStats() const
+{
+    return alltimeStats_;
+}
+
+//-----------------------------------------------------------------
+
 YAML::Node
 Bank::toYAML() const
 {

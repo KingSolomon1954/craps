@@ -64,7 +64,7 @@ GameController::userSelectsPlayers()
     for (auto pid : playerIds)  // Players join table
     {
         // TODO: check error return
-        Gbl::pTable->addPlayer(pid, ep);
+        // Gbl::pTable->addPlayer(pid, ep);
     }
 }
 

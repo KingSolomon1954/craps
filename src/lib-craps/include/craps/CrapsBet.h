@@ -25,6 +25,7 @@ namespace Craps {
 
 class Dice;            // fwd
 class DecisionRecord;  // fwd
+class Player;          // fwd
     
 class CrapsBet
 {
@@ -33,10 +34,10 @@ public:
     
     /// @name Lifecycle
     /// @{
-    CrapsBet(const Gen::Uuid& playerId,
-             BetName          name,
-             Gen::Money       contractAmount,
-             unsigned         pivot = 0);
+    CrapsBet(Player*    pPlayer,
+             BetName    name,
+             Gen::Money contractAmount,
+             unsigned   pivot = 0);
     /// @}
 
     /// @name Modifiers
@@ -49,25 +50,25 @@ public:
 
     /// @name Observers
     /// @{
-    const Gen::Uuid& playerId()       const;
-    unsigned         betId()          const;
-    BetName          betName()        const;
-    unsigned         pivot()          const;
-    unsigned         contractAmount() const;
-    unsigned         oddsAmount()     const;
-    bool             offComeOutRoll() const;
-    bool             hardwayWorking() const;
-    unsigned         distance()       const;
-    Gen::Timepoint   whenCreated()    const;
-    Gen::Timepoint   whenDecided()    const;
-    std::string      diagBetId()      const;  // "bet(betId:33, betName:DontCome(4))"
+    Player&        player()         const;
+    unsigned       betId()          const;
+    BetName        betName()        const;
+    unsigned       pivot()          const;
+    unsigned       contractAmount() const;
+    unsigned       oddsAmount()     const;
+    bool           offComeOutRoll() const;
+    bool           hardwayWorking() const;
+    unsigned       distance()       const;
+    Gen::Timepoint whenCreated()    const;
+    Gen::Timepoint whenDecided()    const;
+    std::string    diagBetId()      const;  // "bet(betId:33, betName:DontCome(4))"
     
     bool operator==(const CrapsBet&) const;
     /// @}
 
 private:
     // Order matters, in initializer list
-    Gen::Uuid playerId_;
+    Player* pPlayer_           = nullptr;
     unsigned betId_            = 0;
     BetName betName_           = BetName::Invalid;
     unsigned pivot_            = 0;

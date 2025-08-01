@@ -11,6 +11,7 @@
 #include <stdexcept> // for std::invalid_argument
 #include <craps/CrapsTable.h>
 #include <craps/DecisionRecord.h>
+#include <craps/Player.h>
 #include <craps/Dice.h>
 #include <gen/ErrorPass.h>
 #include <gen/StringUtils.h>
@@ -41,7 +42,7 @@ placed on a Craps table. CrapsBet is unaware of the state of any Craps
 table. This decouples the act of creating a bet from placing a bet on a
 CrapsTable, allowing the application better freedom of design.
 
-@param[in] playerId
+@param[in] pPlayer
     The player making this bet.
 
 @param[in] name
@@ -80,16 +81,17 @@ CrapsTable, allowing the application better freedom of design.
     made a PassLine bet after the point was established.
 */
 CrapsBet::CrapsBet(
-    const Gen::Uuid& playerId,
-    BetName name,
+    Player*    pPlayer,
+    BetName    name,
     Gen::Money contractAmount,
-    unsigned pivot)
-    : playerId_(playerId)
-    , betId_(++idCounter_)
+    unsigned   pivot)
+    : pPlayer_(pPlayer)
+    , betId_  (++idCounter_)
     , betName_(name)
-    , pivot_(pivot)
+    , pivot_  (pivot)
     , contractAmount_(contractAmount)
 {
+    assert(pPlayer != nullptr);
     try
     {
         checkBetName();         // throws
@@ -204,7 +206,7 @@ CrapsBet::checkSideBets()
 bool
 CrapsBet::operator==(const CrapsBet& other) const
 {
-    return playerId_       == other.playerId_       &&
+    return pPlayer_        == other.pPlayer_        &&
            betId_          == other.betId_          &&
            pivot_          == other.pivot_          &&
            contractAmount_ == other.contractAmount_ &&
@@ -269,7 +271,7 @@ Evaluates a CrapsBet for win/lose.
 
 Using the given point and the current dice roll, evaluate() determines
 whether this bet has won, lost or not yet reached a decision. The
-results of the evaluation are returned in a CrapsBet::DecisionRecord.
+results of the evaluation are returned in a DecisionRecord.
 
 Payout strategy:
 
@@ -297,61 +299,19 @@ Payout strategy:
 
 /*-----------------------------------------------------------*//**
 
-@struct CrapsBet::DecisionRecord
+Evaluates all bets to determine win/lose.
 
-The DecisionRecord contains the following fields to convey handling by
-the caller:
-
-@betId - the id of the bet associated with this result
-
-@decision -indicates that a decision has been reached for this bet.
-
-    When true, this bet has reached a decision, and one or more of the
-    win, lose, returnToPlayer fields in this record will have non-zero
-    values. It is the caller's responsibility to remove the bet from
-    the craps table.
-
-    When false, this bet has not reached a decision and should remain on
-    on the Craps table. The win, lose, retrunToPlayer fields will all be
-    zero. The distance field (in the CrapsBet) is incremented by one. On
-    come out rolls (i.e, the passed in point is zero) then the CrapsBet
-    pivot field, if zero, will be set to the dice value for
-    Pass/Come/DontPass/DontCome bets.
-
-@pivotAssigned - indicates whether a pivot for this bet has been freshly
-    established. For example, a Come bet has now been moved to the "6".
-
-    When true, the pivot has been assigned. Caller uses this
-    flag to move a come bet on the table to its box.
-
-    When evaluating PassLine bets, if somehow a pivot is zero and the
-    point has already been established, then the pivot is silently
-    assigned to the already established point, as if the player made a
-    PassLine bet after point was established.
-
-@win - if non-zero, then this bet has won the given amount.
-
-    The calculation includes odds winnings. The caller implementation
-    should take this win amount and add it with the original
-    contractAmount and oddsAmount to give back to the player.
-
-@lose - if non-zero, then this bet has lost the given amount.
-
-    The amount is the contractBet plus odds bet, if any. The caller
-    implementation should add this amount to the table's banking system
-    and subtract this amount from the player's wallet if not already
-    done so.
-
-@returnToPlayer - if non-zero then the given amount should be returned
-    to the player.
-
-    Note this is not a win or lose. This happens when a point-based bet
-    wins/loses during a come out roll and setOffComeOutRoll() is true.
-
-@commission - Lay and Buy bets require a 5% commission if they win.
-
-    This amount has been subtracted from the win amount.  The table's
-    banking system should deposit this amount if non-zero.
+@param [in] point
+    The point
+@param [in] dice
+    The dice roll
+@param [out] dr
+    Results returned in the given DecisionRecord
+@param [out] ep
+    Holds error description if an error is encountered
+@return
+    ReturnCode::Success and dr is filled out, otherwise
+    ReturnCode::Fail, dr is undefined and ep holds reason why
 */
 Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
@@ -363,7 +323,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         return diagEvalProcError(ep);
     }
 
-    dr = {betId_, false, 0,0,0,0, 0, playerId_};   // Prepare decision record
+    dr = {this, false, false, 0,0,0,0};   // Prepare decision record
     Gen::ReturnCode rc = Gen::ReturnCode::Fail;
     switch (betName_)
     {
@@ -1142,15 +1102,15 @@ CrapsBet::evalHorn(
 
 /*-----------------------------------------------------------*//**
 
-Returns the playerId.
+Returns the player associated with this bet.
 
 @return
-    The playerId
+    Pointer to the player
 */
-const Gen::Uuid&
-CrapsBet::playerId() const
+Player&
+CrapsBet::player() const
 {
-    return playerId_;
+    return *pPlayer_;
 }
 
 /*-----------------------------------------------------------*//**
@@ -1358,16 +1318,16 @@ std::ostream&
 operator<< (std::ostream& out, const CrapsBet& b)
 {
     out <<
-    "      playerId: " << b.playerId()       << std::endl <<
-    "         betId: " << b.betId()          << std::endl <<
-    "       betName: " << b.betName()        << std::endl <<
-    "         pivot: " << b.pivot()          << std::endl <<
-    "contractAmount: " << b.contractAmount() << std::endl <<
-    "    oddsAmount: " << b.oddsAmount()     << std::endl <<
-    "offComeOutRoll: " << b.offComeOutRoll() << std::endl <<
-    "      distance: " << b.distance()       << std::endl <<
-    "   whenCreated: " << b.whenCreated()    << std::endl <<
-    "   whenDecided: " << b.whenDecided()    << std::endl;
+    "        player: " << b.player().getName() << std::endl <<
+    "         betId: " << b.betId()            << std::endl <<
+    "       betName: " << b.betName()          << std::endl <<
+    "         pivot: " << b.pivot()            << std::endl <<
+    "contractAmount: " << b.contractAmount()   << std::endl <<
+    "    oddsAmount: " << b.oddsAmount()       << std::endl <<
+    "offComeOutRoll: " << b.offComeOutRoll()   << std::endl <<
+    "      distance: " << b.distance()         << std::endl <<
+    "   whenCreated: " << b.whenCreated()      << std::endl <<
+    "   whenDecided: " << b.whenDecided()      << std::endl;
     return out;
 }
 
@@ -1377,13 +1337,13 @@ std::ostream&
 operator<< (std::ostream& out, const DecisionRecord& dr)
 {
     out <<
-    "      playerId: " << dr.playerId       << std::endl <<
-    "         betId: " << dr.betId          << std::endl <<
-    "      decision: " << dr.decision       << std::endl <<
-    " pivotAssigned: " << dr.pivotAssigned  << std::endl <<
-    "           win: " << dr.win            << std::endl <<
-    "          lose: " << dr.lose           << std::endl <<
-    "returnToPlayer: " << dr.returnToPlayer << std::endl;
+    "        player: " << dr.pBet->player().getName() << std::endl <<
+    "         betId: " << dr.pBet->betId()            << std::endl <<
+    "      decision: " << dr.decision                 << std::endl <<
+    " pivotAssigned: " << dr.pivotAssigned            << std::endl <<
+    "           win: " << dr.win                      << std::endl <<
+    "          lose: " << dr.lose                     << std::endl <<
+    "returnToPlayer: " << dr.returnToPlayer           << std::endl;
     return out;
 }
 

@@ -42,11 +42,9 @@ public:
     /// @name Modifiers
     /// @{
     // Players
-    Gen::ReturnCode addPlayer     (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
-    Gen::ReturnCode removePlayer  (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
-    Gen::ReturnCode updatePlayerId(const Gen::Uuid& oldId,
-                                   const Gen::Uuid& newId,
-                                   Gen::ErrorPass& ep);
+    Gen::ReturnCode addPlayer   (Player* pPlayer, Gen::ErrorPass& ep);
+    Gen::ReturnCode removePlayer(Player* pPlayer, Gen::ErrorPass& ep);
+    
     // Bets
     Gen::ReturnCode addBet   (CrapsBet::BetPtr pBet, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep);
@@ -65,22 +63,24 @@ public:
 
     /// @name Observers
     /// @{
-    unsigned                getNumPlayers()     const;
-    unsigned                getPoint()          const;
-    Dice                    getCurRoll()        const;
-    Gen::Money              getAmountOnTable()  const;
-    unsigned                getNumBetsOnTable() const;
-    std::vector<Gen::Uuid>  getPlayers()        const;
-    Gen::Uuid               getShooterId()      const;
-    const std::deque<Dice>& getRecentRolls()    const;
-    const TableStats&       getCurrentStats()   const;
-    const TableStats&       getAlltimeStats()   const;
-    unsigned                getMinLineBet()     const;
-    unsigned                getMaxLineBet()     const;
-    unsigned                getMaxOdds()        const;
-    bool                    isComeOutRoll()     const;
-    bool                    isBettingOpen()     const;
-    bool                    havePlayer(const Gen::Uuid& playerId) const;
+    unsigned                getNumPlayers()       const;
+    unsigned                getPoint()            const;
+    Dice                    getCurrentRoll()      const;
+    Gen::Money              getAmountOnTable()    const;
+    unsigned                getNumBetsOnTable()   const;
+    std::vector<Player*>    getPlayers()          const;
+    Player*                 getCurrentShooter()   const;
+    const std::deque<Dice>& getRecentRolls()      const;
+    const TableStats&       getCurrentStats()     const;
+    const TableStats&       getAlltimeStats()     const;
+    const BankStats&        getBankCurrentStats() const;
+    const BankStats&        getBankAlltimeStats() const;
+    unsigned                getMinLineBet()       const;
+    unsigned                getMaxLineBet()       const;
+    unsigned                getMaxOdds()          const;
+    bool                    isComeOutRoll()       const;
+    bool                    isBettingOpen()       const;
+    bool                    havePlayer(Player* pPlayer) const;
     bool                    haveBet(const CrapsBet& bet) const;
     const SessionHistory::Sessions& getSessionHistory() const;
     /// @}
@@ -126,7 +126,7 @@ private:
     Bank houseBank_;  // overriden by yaml
     Dice dice_;
     unsigned point_ = 0;
-    Gen::Uuid currentShooterId_;
+    Player* pCurrentShooter_ = nullptr;
     bool bettingOpen_ = true;
     bool isTestRoll_ = false;
     Dice testRollDice_;
@@ -136,18 +136,11 @@ private:
 
     CrapsTable();  // private ctor
     
-    // Players must join table in order to play.  We only hold the
-    // player's UUID here in a std::list container and rely on the
-    // PlayerManager to interface with players.
-    //
+    // Players must join table in order to play.
     static inline constexpr size_t MaxPlayers = 6;
-    using PlayerList = std::list<Gen::Uuid>;
+    using PlayerList = std::list<Player*>;
     PlayerList players_;
-    Gen::ReturnCode removeUuid(const Gen::Uuid& id, Gen::ErrorPass& ep);
-    Gen::ReturnCode updateUuid(const Gen::Uuid& oldId,
-                               const Gen::Uuid& newId,
-                               Gen::ErrorPass& ep);
-
+    
     // Bets on the table are kept in a fixed sized array of lists, where
     // each array index equates to a bet type, and holds a list of bets
     // of that type. This allows easier traversals later that mimic real
@@ -164,9 +157,6 @@ private:
     using DecisionList = std::list<DecisionRecord>;
     DecisionList drl_;
 
-    void removePlayerBets(const Gen::Uuid& playerId);
-    void removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId);
-
     bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
     void declareBettingClosed();
     void throwDice();
@@ -180,8 +170,12 @@ private:
     void trimTableBets();
     void clearDrl();
     void evalOneBet(CrapsBet& bet);
-    bool removeMatchingBetId(BetList& bets, unsigned betId);
-    CrapsBet::BetPtr findBetById(unsigned betId) const;
+
+    Gen::ReturnCode removePlayerByPtr(Player* pPlayer, Gen::ErrorPass& ep);
+    void removePlayerBets            (Player* pPlayer);
+    void removeBetsByPlayerPtr       (BetList& bets, Player* pPlayer);
+    bool removeMatchingBet           (BetList& bets, CrapsBet* pBet);
+    CrapsBet::BetPtr findBetById     (unsigned betId) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();

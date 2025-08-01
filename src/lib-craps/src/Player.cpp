@@ -114,7 +114,7 @@ Gen::ReturnCode
 Player::joinTable(Gen::ErrorPass& ep)
 {
     // For now, using a single global craps table.
-    if (Gbl::pTable->addPlayer(uuid_, ep) == Gen::ReturnCode::Fail)
+    if (Gbl::pTable->addPlayer(this, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend("Player " + name_ + " joining table. ");
         return Gen::ReturnCode::Fail;
@@ -134,7 +134,7 @@ Player::makeBet(BetName betName,
     try
     {
         auto pBet = std::make_shared<CrapsBet>
-            (uuid_, betName, contractAmount, pivot);
+            (this, betName, contractAmount, pivot);
         assert(pBet != nullptr);   // In case we miss an exception
 
         // Add it to table
@@ -180,10 +180,10 @@ Player::processWin(const DecisionRecord& dr)
     assert(dr.win > 0);
 
     // Obtain pointer to our bet
-    auto pBet = findBetById(dr.betId);
+    auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
-        diagBadBetId("processWin() ", dr.betId);
+        diagBadBetId("processWin() ", dr.pBet->betId());
         assert(false);
         return;
     }
@@ -210,10 +210,10 @@ Player::processLose(const DecisionRecord& dr)
     // Money was already withdrawn from wallet when making the bet
 
     // Obtain pointer to the bet (for stats and stuff)
-    auto pBet = findBetById(dr.betId);
+    auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
-        diagBadBetId("processLose() ", dr.betId);
+        diagBadBetId("processLose() ", dr.pBet->betId());
         assert(false);
         return;
     }
@@ -233,10 +233,10 @@ void
 Player::processKeep(const DecisionRecord& dr)
 {
     // Obtain pointer to the bet (for stats and stuff)
-    auto pBet = findBetById(dr.betId);
+    auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
-        diagBadBetId("processKeep() ", dr.betId);
+        diagBadBetId("processKeep() ", dr.pBet->betId());
         assert(false);
         return;
     }

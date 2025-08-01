@@ -18,18 +18,23 @@
 #include <craps/CrapsBet.h>
 #include <craps/Dice.h>
 #include <craps/EnumBetName.h>
+#include <controller/EventManager.h>
 #include <craps/DecisionRecord.h>
+#include <craps/Player.h>
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
 
 using namespace Craps;
 
-std::string p1 = "Player1";
-
 //----------------------------------------------------------------
 
 TEST_CASE("CrapsBet:Constructor")
 {
+    Ctrl::EventManager em;
+    Gbl::pEventMgr = &em;
+    Player player1("Player1", 1000);
+    Player* p1 = &player1;
+
     SUBCASE("Good Args")
     {
         CrapsBet b(p1, BetName::PassLine, 100);
@@ -191,6 +196,11 @@ TEST_CASE("CrapsBet:Constructor")
 
 TEST_CASE("CrapsBet:evaluate:args")
 {
+    Ctrl::EventManager em;
+    Gbl::pEventMgr = &em;
+    Player player1("Player1", 1000);
+    Player* p1 = &player1;
+
     SUBCASE("Bad Args")
     {
         Gen::ErrorPass ep;
@@ -212,6 +222,11 @@ TEST_CASE("CrapsBet:evaluate:args")
 
 TEST_CASE("CrapsBet:evaluate:PassLine")
 {
+    Ctrl::EventManager em;
+    Gbl::pEventMgr = &em;
+    Player player1("Player1", 1000);
+    Player* p1 = &player1;
+
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
@@ -390,8 +405,6 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
         CHECK(b41.whenDecided() > b41.whenCreated());
         CHECK(b41.pivot() == 4);
         
-// std::cout << "howie1 " << ep.diag << std::endl;
-
         // Point of 4 wins (pivot == 4)
         CrapsBet b42(p1, BetName::PassLine, 100, 4);
         b42.testSetOddsAmount(200);
@@ -895,6 +908,11 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
 TEST_CASE("CrapsBet:evaluate:DontPass")
 {
+    Ctrl::EventManager em;
+    Gbl::pEventMgr = &em;
+    Player player1("Player1", 1000);
+    Player* p1 = &player1;
+
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
@@ -1567,6 +1585,11 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
 TEST_CASE("CrapsBet:evaluate:Come")
 {
+    Ctrl::EventManager em;
+    Gbl::pEventMgr = &em;
+    Player player1("Player1", 1000);
+    Player* p1 = &player1;
+
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
@@ -2194,6 +2217,11 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
 TEST_CASE("CrapsBet:evaluate:DontCome")
 {
+    Ctrl::EventManager em;
+    Gbl::pEventMgr = &em;
+    Player player1("Player1", 1000);
+    Player* p1 = &player1;
+
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;

@@ -29,15 +29,18 @@ public:
     void deposit (Gen::Money amount);
     bool withdraw(Gen::Money amount);
     void mergeStats();
+    void resetStats();
     Bank& operator=(const Bank&) = default;  // assignment
     Bank& operator=(Bank&&)      = default;  // move
     /// @}
 
     /// @name Observers
     /// @{
-    Gen::Money getBalance()      const;
-    Gen::Money getAmtDeposited() const;
-    Gen::Money getAmtWithdrawn() const;
+    Gen::Money getBalance()            const;
+    Gen::Money getAmtDeposited()       const;
+    Gen::Money getAmtWithdrawn()       const;
+    const BankStats& getCurrentStats() const;
+    const BankStats& getAlltimeStats() const;
     /// @}
 
     // @name YAML operations

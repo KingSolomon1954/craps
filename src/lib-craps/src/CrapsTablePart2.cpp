@@ -57,7 +57,7 @@ bool
 CrapsTable::fifMissingPlayer(const CrapsBet& bet, Gen::ErrorPass& ep) const
 {        
     // fault if player is missing and sets ep error diag
-    if (!havePlayer(bet.playerId()))
+    if (!havePlayer(&bet.player()))
     {
         ep.diag = diagPrefix(1, bet) + "Player XXX is not joined with this table.";
         return true;
