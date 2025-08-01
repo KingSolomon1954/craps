@@ -9,7 +9,7 @@
 #include <string>
 #include <memory>
 #include <list>
-#include <controller/Events.h>
+#include <craps/Events.h>
 #include <craps/Bank.h>
 #include <craps/CrapsBet.h>
 #include <craps/EnumBetName.h>
@@ -25,18 +25,21 @@ namespace Gen {
 namespace Craps {
 
 class DecisionRecord;   // fwd
+class EventManager;     // fwd
+class CrapsTable;       // fwd
 
 class Player
 {
 public:
     /// @name Lifecycle
     /// @{
-    Player();
     Player(const std::string& name,
-           unsigned startingBalance);
+           unsigned startingBalance,
+           EventManager& eventMgr);
     Player(const Gen::Uuid&,
            const std::string& name,
-           unsigned startingBalance);
+           unsigned startingBalance,
+           EventManager& eventMgr);
 
     bool saveToFile(const std::string& path) const;
     bool loadFromFile(const std::string& path);
@@ -44,7 +47,7 @@ public:
 
     /// @name Modifiers
     /// @{
-    Gen::ReturnCode joinTable(Gen::ErrorPass& ep);
+    Gen::ReturnCode joinTable(CrapsTable* pTable, Gen::ErrorPass& ep);
     CrapsBet::BetPtr makeBet(BetName betName,
                              Gen::Money contractAmount,
                              unsigned pivot,
@@ -76,7 +79,9 @@ private:
     Gen::Uuid uuid_;
     std::string name_;
     Bank wallet_;
+    EventManager& eventMgr_;
     std::list<CrapsBet::BetPtr> bets_;
+    CrapsTable* pTable_;
 
     bool removeBetByPtr(CrapsBet::BetPtr& pBet);
     CrapsBet::BetPtr findBetById(unsigned betId) const;
@@ -86,11 +91,11 @@ private:
     void onBettingOpened();
     void onDiceThrowStart();
     void onDiceThrowEnd();
-    void onAnnounceDiceNumber(const Ctrl::AnnounceDiceNumber& evt);
-    void onPointEstablished(const Ctrl::PointEstablished& evt);
+    void onAnnounceDiceNumber(const AnnounceDiceNumber& evt);
+    void onPointEstablished(const PointEstablished& evt);
     void onSevenOut();
     void onPassLineWinner();
-    void onNewShooter(const Ctrl::NewShooter& evt);
+    void onNewShooter(const NewShooter& evt);
 };
 
 /*-----------------------------------------------------------*//**

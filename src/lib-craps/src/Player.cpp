@@ -9,11 +9,9 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <controller/Events.h>
-#include <controller/EventManager.h>
-#include <controller/PlayerManager.h>
 #include <craps/CrapsTable.h>
 #include <craps/DecisionRecord.h>
+#include <craps/EventManager.h>
 #include <gen/ErrorPass.h>
 
 using namespace Craps;
@@ -22,10 +20,10 @@ using namespace Craps;
 //
 // Constructor.
 //
-Player::Player()
-{
-    setupSubscriptions();
-}
+// Player::Player()
+// {
+//     setupSubscriptions();
+// }
 
 //----------------------------------------------------------------
 //
@@ -33,12 +31,13 @@ Player::Player()
 //
 Player::Player(
     const std::string& name,
-    unsigned startingBalance)
+    unsigned startingBalance,
+    EventManager& eventMgr)
     : uuid_(Gen::generateUuid())
     , name_(name)
     , wallet_(startingBalance, 500, 500)  // TODO
+    , eventMgr_(eventMgr)
 {
-    setupSubscriptions();
 }
 
 //----------------------------------------------------------------
@@ -48,12 +47,13 @@ Player::Player(
 Player::Player(
     const Gen::Uuid& uuid,
     const std::string& name,
-    unsigned startingBalance)
+    unsigned startingBalance,
+    EventManager& eventMgr)
     : uuid_(uuid)
     , name_(name)
     , wallet_(startingBalance, 500, 500) // TODO)
+    , eventMgr_(eventMgr)
 {
-    setupSubscriptions();
 }
 
 //----------------------------------------------------------------
@@ -61,48 +61,48 @@ Player::Player(
 void
 Player::setupSubscriptions()
 {
-    Gbl::pEventMgr->subscribe<Ctrl::BettingClosed>(
-        [this](const Ctrl::BettingClosed&)
+    eventMgr_.subscribe<BettingClosed>(
+        [this](const BettingClosed&)
         {
             this->onBettingClosed();
         });
-    Gbl::pEventMgr->subscribe<Ctrl::BettingOpened>(
-        [this](const Ctrl::BettingOpened&)
+    eventMgr_.subscribe<BettingOpened>(
+        [this](const BettingOpened&)
         {
             this->onBettingOpened();
         });
-    Gbl::pEventMgr->subscribe<Ctrl::DiceThrowStart>(
-        [this](const Ctrl::DiceThrowStart&)
+    eventMgr_.subscribe<DiceThrowStart>(
+        [this](const DiceThrowStart&)
         {
             this->onDiceThrowStart();
         });
-    Gbl::pEventMgr->subscribe<Ctrl::DiceThrowEnd>(
-        [this](const Ctrl::DiceThrowEnd&)
+    eventMgr_.subscribe<DiceThrowEnd>(
+        [this](const DiceThrowEnd&)
         {
             this->onDiceThrowEnd();
         });
-    Gbl::pEventMgr->subscribe<Ctrl::AnnounceDiceNumber>(
-        [this](const Ctrl::AnnounceDiceNumber& evt)
+    eventMgr_.subscribe<AnnounceDiceNumber>(
+        [this](const AnnounceDiceNumber& evt)
         {
             this->onAnnounceDiceNumber(evt);
         });
-    Gbl::pEventMgr->subscribe<Ctrl::PointEstablished>(
-        [this](const Ctrl::PointEstablished& evt)
+    eventMgr_.subscribe<PointEstablished>(
+        [this](const PointEstablished& evt)
         {
             this->onPointEstablished(evt);
         });
-    Gbl::pEventMgr->subscribe<Ctrl::SevenOut>(
-        [this](const Ctrl::SevenOut&)
+    eventMgr_.subscribe<SevenOut>(
+        [this](const SevenOut&)
         {
             this->onSevenOut();
         });
-    Gbl::pEventMgr->subscribe<Ctrl::PassLineWinner>(
-        [this](const Ctrl::PassLineWinner&)
+    eventMgr_.subscribe<PassLineWinner>(
+        [this](const PassLineWinner&)
         {
             this->onPassLineWinner();
         });
-    Gbl::pEventMgr->subscribe<Ctrl::NewShooter>(
-        [this](const Ctrl::NewShooter& evt)
+    eventMgr_.subscribe<NewShooter>(
+        [this](const NewShooter& evt)
         {
             this->onNewShooter(evt);
         });
@@ -111,14 +111,18 @@ Player::setupSubscriptions()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-Player::joinTable(Gen::ErrorPass& ep)
+Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 {
-    // For now, using a single global craps table.
-    if (Gbl::pTable->addPlayer(this, ep) == Gen::ReturnCode::Fail)
+    assert(pTable != nullptr);
+    pTable_ = pTable;
+    
+    if (pTable_->addPlayer(this, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend("Player " + name_ + " joining table. ");
         return Gen::ReturnCode::Fail;
     }
+    setupSubscriptions();  // TODO maybe setupTableSubscriptions?
+
     return Gen::ReturnCode::Success;
 }
 
@@ -130,6 +134,12 @@ Player::makeBet(BetName betName,
                 unsigned pivot,
                 Gen::ErrorPass& ep)
 {
+    if (pTable_ == nullptr)
+    {
+        // TODO set ep
+        ep.diag = "Not joined a table";
+        return nullptr;
+    }
     // TODO check sufficient funds first
     try
     {
@@ -137,8 +147,8 @@ Player::makeBet(BetName betName,
             (this, betName, contractAmount, pivot);
         assert(pBet != nullptr);   // In case we miss an exception
 
-        // Add it to table
-        if (Gbl::pTable->addBet(pBet, ep) == Gen::ReturnCode::Fail)
+        // Place the bet
+        if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
         {
             // TODO add to diag
             assert(false);
@@ -162,8 +172,17 @@ Player::setOddsAmount(CrapsBet::BetPtr pBet,
                       Gen::Money oddsAmount,
                       Gen::ErrorPass& ep)
 {
+    // TODO check if player owns this bet
+
+    if (pTable_ == nullptr)
+    {
+        // TODO set ep
+        ep.diag = "Not joined a table";
+        return Gen::ReturnCode::Success;
+    }
+    
     // TODO check sufficient funds first
-    if (Gbl::pTable->setOddsAmount(pBet, oddsAmount, ep) == Gen::ReturnCode::Fail)
+    if (pTable_->setOddsAmount(pBet, oddsAmount, ep) == Gen::ReturnCode::Fail)
     {
         // TODO diagnostics
         return Gen::ReturnCode::Fail;
@@ -317,9 +336,19 @@ Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
 
-    if (Gbl::pTable->removeBet(*it, ep) == Gen::ReturnCode::Fail)
+    if (pTable_ == nullptr)
     {
-        ep.prepend("problem");
+        // Maybe this can't happen. look at makeBet(), see if bet is created
+        // before and part of our list before adding to table.
+        bets_.erase(it, bets_.end());  // remove from our list of bets
+        // TODO set ep
+        ep.diag = "removed bet locally but it was never placed on table";
+        return Gen::ReturnCode::Fail;
+    }
+    
+    if (pTable_->removeBet(*it, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("problem removing bet");
     }
     bets_.erase(it, bets_.end());  // remove from our list of bets
     return Gen::ReturnCode::Success;
@@ -477,7 +506,7 @@ Player::onDiceThrowEnd()
 //----------------------------------------------------------------
 
 void
-Player::onAnnounceDiceNumber(const Ctrl::AnnounceDiceNumber& evt)
+Player::onAnnounceDiceNumber(const AnnounceDiceNumber& evt)
 {
     // TODO
     // std::cout << name_ << " acknowledges AnnounceDiceNumber " << evt.val
@@ -487,7 +516,7 @@ Player::onAnnounceDiceNumber(const Ctrl::AnnounceDiceNumber& evt)
 //----------------------------------------------------------------
 
 void
-Player::onPointEstablished(const Ctrl::PointEstablished& evt)
+Player::onPointEstablished(const PointEstablished& evt)
 {
     // TODO
     // std::cout << name_ << " acknowledges PointEstablished " << evt.point << "\n";
@@ -514,7 +543,7 @@ Player::onPassLineWinner()
 //----------------------------------------------------------------
 
 void
-Player::onNewShooter(const Ctrl::NewShooter& evt)
+Player::onNewShooter(const NewShooter& evt)
 {
     // TODO
     // std::cout << name_ << " acknowledges NewShooter " <<

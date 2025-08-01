@@ -7,7 +7,6 @@
 #pragma once
 
 #include <ostream>
-#include <controller/Globals.h>
 #include <gen/MoneyUtil.h>
 #include <gen/Uuid.h>
 

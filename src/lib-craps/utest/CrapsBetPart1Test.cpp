@@ -18,8 +18,8 @@
 #include <craps/CrapsBet.h>
 #include <craps/Dice.h>
 #include <craps/EnumBetName.h>
-#include <controller/EventManager.h>
 #include <craps/DecisionRecord.h>
+#include <craps/EventManager.h>
 #include <craps/Player.h>
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
@@ -30,9 +30,8 @@ using namespace Craps;
 
 TEST_CASE("CrapsBet:Constructor")
 {
-    Ctrl::EventManager em;
-    Gbl::pEventMgr = &em;
-    Player player1("Player1", 1000);
+    EventManager em;
+    Player player1("Player1", 1000, em);
     Player* p1 = &player1;
 
     SUBCASE("Good Args")
@@ -196,9 +195,8 @@ TEST_CASE("CrapsBet:Constructor")
 
 TEST_CASE("CrapsBet:evaluate:args")
 {
-    Ctrl::EventManager em;
-    Gbl::pEventMgr = &em;
-    Player player1("Player1", 1000);
+    EventManager em;
+    Player player1("Player1", 1000, em);
     Player* p1 = &player1;
 
     SUBCASE("Bad Args")
@@ -222,9 +220,8 @@ TEST_CASE("CrapsBet:evaluate:args")
 
 TEST_CASE("CrapsBet:evaluate:PassLine")
 {
-    Ctrl::EventManager em;
-    Gbl::pEventMgr = &em;
-    Player player1("Player1", 1000);
+    EventManager em;
+    Player player1("Player1", 1000, em);
     Player* p1 = &player1;
 
     SUBCASE("Come Out Roll")
@@ -908,9 +905,8 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
 TEST_CASE("CrapsBet:evaluate:DontPass")
 {
-    Ctrl::EventManager em;
-    Gbl::pEventMgr = &em;
-    Player player1("Player1", 1000);
+    EventManager em;
+    Player player1("Player1", 1000, em);
     Player* p1 = &player1;
 
     SUBCASE("Come Out Roll")
@@ -1585,9 +1581,8 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
 TEST_CASE("CrapsBet:evaluate:Come")
 {
-    Ctrl::EventManager em;
-    Gbl::pEventMgr = &em;
-    Player player1("Player1", 1000);
+    EventManager em;
+    Player player1("Player1", 1000, em);
     Player* p1 = &player1;
 
     SUBCASE("Come Out Roll")
@@ -2217,9 +2212,8 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
 TEST_CASE("CrapsBet:evaluate:DontCome")
 {
-    Ctrl::EventManager em;
-    Gbl::pEventMgr = &em;
-    Player player1("Player1", 1000);
+    EventManager em;
+    Player player1("Player1", 1000, em);
     Player* p1 = &player1;
 
     SUBCASE("Come Out Roll")

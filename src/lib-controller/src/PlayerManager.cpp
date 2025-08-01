@@ -8,6 +8,7 @@
 #include <cassert>
 #include <fstream>
 #include <iostream>
+#include <controller/Globals.h>
 #include <craps/DecisionRecord.h>
 #include <craps/CrapsTable.h>
 #include <gen/ErrorPass.h>
@@ -32,7 +33,7 @@ Create a Player
 PlayerManager::PlayerPtr
 PlayerManager::createPlayer(const std::string& name)
 {
-    auto player = std::make_shared<Craps::Player>(name, 1000); // Default balance
+    auto player = std::make_shared<Craps::Player>(name, 1000, *Gbl::pEventMgr); // Default balance
     playersAll_[player->getUuid()] = player;
     return player;
 }
@@ -92,7 +93,7 @@ Craps::Player
 PlayerManager::loadPlayer(const PlayerId& playerId)
 {
     // TODO: read from file and create player
-    return Craps::Player();
+    return Craps::Player("John", 1000, *Gbl::pEventMgr);
 }
 
 /*-----------------------------------------------------------*//**

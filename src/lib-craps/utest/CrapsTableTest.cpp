@@ -8,22 +8,17 @@
 
 #include <iostream>
 #include <vector>
-#include <controller/ConfigManager.h>
-#include <controller/EventManager.h>
-#include <controller/PlayerManager.h>
 #include <craps/CrapsTable.h>
+#include <craps/EventManager.h>
 #include <craps/Player.h>
 
 using namespace Craps;
-using namespace Ctrl;
 
 //----------------------------------------------------------------
 
 struct CrapsTableFixture
 {
-    Ctrl::ConfigManager configMgr;
-    Ctrl::EventManager  em;
-    Ctrl::PlayerManager pm;
+    Craps::EventManager em;
     Craps::TableConfig  config;
     Player* p1 = nullptr;
     Player* p2 = nullptr;
@@ -34,24 +29,14 @@ struct CrapsTableFixture
     Player* p7 = nullptr;
 
     CrapsTableFixture()
-        : configMgr(5, std::vector<char*>{
-            const_cast<char*>("RoyalCraps"),
-            const_cast<char*>("--sys-config-dir"),
-            const_cast<char*>("/work/craps/assets/"),
-            const_cast<char*>("usr-config-dir"),
-            const_cast<char*>("/work/craps/assets/")
-        }.data())
     {
-        Gbl::pConfigMgr = &configMgr;
-        Gbl::pEventMgr  = &em;
-        Gbl::pPlayerMgr = &pm;
-        p1 = new Player("Player1",1000);
-        p2 = new Player("Player2",1000);
-        p3 = new Player("Player3",1000);
-        p4 = new Player("Player4",1000);
-        p5 = new Player("Player5",1000);
-        p6 = new Player("Player6",1000);
-        p7 = new Player("Player7",1000);
+        p1 = new Player("Player1",1000, em);
+        p2 = new Player("Player2",1000, em);
+        p3 = new Player("Player3",1000, em);
+        p4 = new Player("Player4",1000, em);
+        p5 = new Player("Player5",1000, em);
+        p6 = new Player("Player6",1000, em);
+        p7 = new Player("Player7",1000, em);
         
         config.maxSessions = 50;
         config.maxRecentRolls = 25;
@@ -64,9 +49,6 @@ struct CrapsTableFixture
 
    ~CrapsTableFixture()
     {
-        Gbl::pConfigMgr = nullptr;
-        Gbl::pEventMgr  = nullptr;
-        Gbl::pPlayerMgr = nullptr;
         delete p1;
         delete p2;
         delete p3;
@@ -83,7 +65,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 {
     SUBCASE("normalCtor")
     {
-        CrapsTable t("Table-1", config);
+        CrapsTable t("Table-1", config, em);
         CHECK(t.getPoint() == 0);
         CHECK(t.getCurrentRoll().value() == 12);
         CHECK(t.isComeOutRoll());
@@ -94,7 +76,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 
     SUBCASE("fromConfig")
     {
-        auto* t = CrapsTable::fromConfig("Table-1", config);
+        auto* t = CrapsTable::fromConfig("Table-1", config, em);
         REQUIRE(t != nullptr);
         CHECK(t->getPoint() == 0);
         CHECK(t->getCurrentRoll().value() == 12);
@@ -107,7 +89,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 
     SUBCASE("fromFile:exists")
     {
-        CrapsTable* p = CrapsTable::fromFile("Table-1", config);
+        CrapsTable* p = CrapsTable::fromFile("Table-1", config, em);
         REQUIRE(p != nullptr);
         CHECK(p->getPoint() == 0);
         CHECK(p->getCurrentRoll().value() == 12);
@@ -123,7 +105,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
         // Clobber path. Use bad tableId/path so file won't be found.
         CrapsTableFixture::config.tablePath = "missing/FakeTable-1";
         CHECK_THROWS_AS(CrapsTable::fromFile(
-                        "FakeTable-1", CrapsTableFixture::config),
+                            "FakeTable-1", CrapsTableFixture::config, em),
                         std::runtime_error);
     }
 }
@@ -135,7 +117,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
     SUBCASE("addRemove")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
         Gen::ErrorPass ep;
 
         CHECK(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
@@ -214,7 +196,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
     SUBCASE("playerList")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
         Gen::ErrorPass ep;
         
         REQUIRE(t->getNumPlayers() == 0);
@@ -247,7 +229,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("general")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
 
         // Place a bet but player hasn't yet joined the table
         CHECK(t->getNumPlayers() == 0);
@@ -292,7 +274,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("betTiming")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
         REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->isComeOutRoll());
@@ -402,7 +384,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("minMaxLimits")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
         REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->isComeOutRoll());
@@ -472,7 +454,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("setOdds")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
         REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
 
@@ -511,7 +493,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("modifyBets")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
         REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
 
         // Change contract bet after on table, no point yet.
@@ -553,7 +535,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("amountOnTable")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
         REQUIRE(t->getAmountOnTable() == 0);
         REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
 
@@ -574,7 +556,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("removeBet")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
         REQUIRE(t->getAmountOnTable() == 0);
         REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
 
@@ -606,7 +588,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("removePlayerActiveBets")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
+            CrapsTable::fromConfig("Table-1", config, em));
 
         REQUIRE(t->getAmountOnTable() == 0);
         REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
@@ -635,10 +617,9 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
     SUBCASE("firstRoll")
     {
         std::unique_ptr<CrapsTable> t(
-            CrapsTable::fromConfig("Table-1", config));
-        Gbl::pTable = t.get();
+            CrapsTable::fromConfig("Table-1", config, em));
         Gen::ErrorPass ep;
-
+        
         // First roll, no players, it's a come out roll.
         CHECK(t->isComeOutRoll());
         t->testRollDice(6,6);       // roll a 12, success is no crash
@@ -647,150 +628,147 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(t->getCurrentRoll().d1() == 6);
         CHECK(t->getCurrentRoll().d2() == 6);
 
-        // Create and add a couple of players
-        Ctrl::PlayerManager::PlayerPtr john = Gbl::pPlayerMgr->createPlayer("John");
-        Ctrl::PlayerManager::PlayerPtr jane = Gbl::pPlayerMgr->createPlayer("Jane");
-        CHECK(john->joinTable(ep) == Gen::ReturnCode::Success);
-        CHECK(jane->joinTable(ep) == Gen::ReturnCode::Success);
-        CHECK(t->getNumPlayers() == 2);
-        Gen::Money johnBalance = john->getBalance();
-        Gen::Money janeBalance = jane->getBalance();
+        REQUIRE(p1->joinTable(t.get(), ep) == Gen::ReturnCode::Success);
+        REQUIRE(p2->joinTable(t.get(), ep) == Gen::ReturnCode::Success);
+        REQUIRE(t->getNumPlayers() == 2);
+        Gen::Money johnBalance = p1->getBalance();
+        Gen::Money janeBalance = p2->getBalance();
 
         // come out roll, roll a 7, pass line win, dont pass lose
-        auto johnBet1 = john->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet1 = jane->makeBet(BetName::DontPass, 10, 0, ep);
+        auto johnBet1 = p1->makeBet(BetName::PassLine, 10, 0, ep);
+        auto janeBet1 = p2->makeBet(BetName::DontPass, 10, 0, ep);
         REQUIRE(johnBet1 != nullptr);
         REQUIRE(janeBet1 != nullptr);
-        CHECK(john->getBalance() == (johnBalance - 10));
-        CHECK(jane->getBalance() == (janeBalance - 10));
+        CHECK(p1->getBalance() == (johnBalance - 10));
+        CHECK(p2->getBalance() == (janeBalance - 10));
         std::cout << "John makes PassLine bet\n";
         std::cout << "Jane makes DontPass bet\n";
 
         t->testRollDice(3,4);
-        CHECK(john->getBalance() == (johnBalance + 10));
-        CHECK(jane->getBalance() == (janeBalance - 10));
+        CHECK(p1->getBalance() == (johnBalance + 10));
+        CHECK(p2->getBalance() == (janeBalance - 10));
         CHECK(t->getAmountOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(john->getNumBetsOnTable() == 0);
-        CHECK(john->getAmountOnTable() == 0);
-        CHECK(jane->getNumBetsOnTable() == 0);
-        CHECK(jane->getAmountOnTable() == 0);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getAmountOnTable() == 0);
+        CHECK(p2->getNumBetsOnTable() == 0);
+        CHECK(p2->getAmountOnTable() == 0);
         CHECK(t->isComeOutRoll());
 
         // come out roll, roll a 11, pass line win, dont pass lose
-        johnBalance = john->getBalance();  // reset
-        janeBalance = jane->getBalance();  // reset
-        auto johnBet2 = john->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet2 = jane->makeBet(BetName::DontPass, 10, 0, ep);
+        johnBalance = p1->getBalance();  // reset
+        janeBalance = p2->getBalance();  // reset
+        auto johnBet2 = p1->makeBet(BetName::PassLine, 10, 0, ep);
+        auto janeBet2 = p2->makeBet(BetName::DontPass, 10, 0, ep);
         REQUIRE(johnBet2 != nullptr);
         REQUIRE(janeBet2 != nullptr);
-        CHECK(john->getBalance() == (johnBalance - 10));
-        CHECK(jane->getBalance() == (janeBalance - 10));
+        CHECK(p1->getBalance() == (johnBalance - 10));
+        CHECK(p2->getBalance() == (janeBalance - 10));
         std::cout << "John makes PassLine bet\n";
         std::cout << "Jane makes DontPass bet\n";
 
         t->testRollDice(6,5);
-        CHECK(john->getBalance() == (johnBalance + 10));
-        CHECK(jane->getBalance() == (janeBalance - 10));
+        CHECK(p1->getBalance() == (johnBalance + 10));
+        CHECK(p2->getBalance() == (janeBalance - 10));
         CHECK(t->getAmountOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(john->getNumBetsOnTable() == 0);
-        CHECK(john->getAmountOnTable() == 0);
-        CHECK(jane->getNumBetsOnTable() == 0);
-        CHECK(jane->getAmountOnTable() == 0);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getAmountOnTable() == 0);
+        CHECK(p2->getNumBetsOnTable() == 0);
+        CHECK(p2->getAmountOnTable() == 0);
         CHECK(t->isComeOutRoll());
 
         // come out roll, roll a 2, pass line lose, dont pass win
-        johnBalance = john->getBalance();  // reset
-        janeBalance = jane->getBalance();  // reset
-        auto johnBet3 = john->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet3 = jane->makeBet(BetName::DontPass, 10, 0, ep);
+        johnBalance = p1->getBalance();  // reset
+        janeBalance = p2->getBalance();  // reset
+        auto johnBet3 = p1->makeBet(BetName::PassLine, 10, 0, ep);
+        auto janeBet3 = p2->makeBet(BetName::DontPass, 10, 0, ep);
         REQUIRE(johnBet3 != nullptr);
         REQUIRE(janeBet3 != nullptr);
-        CHECK(john->getBalance() == (johnBalance - 10));
-        CHECK(jane->getBalance() == (janeBalance - 10));
+        CHECK(p1->getBalance() == (johnBalance - 10));
+        CHECK(p2->getBalance() == (janeBalance - 10));
         std::cout << "John makes PassLine bet\n";
         std::cout << "Jane makes DontPass bet\n";
 
         t->testRollDice(1,1);
-        CHECK(john->getBalance() == (johnBalance - 10));
-        CHECK(jane->getBalance() == (janeBalance + 10));
+        CHECK(p1->getBalance() == (johnBalance - 10));
+        CHECK(p2->getBalance() == (janeBalance + 10));
         CHECK(t->getAmountOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(john->getNumBetsOnTable() == 0);
-        CHECK(jane->getNumBetsOnTable() == 0);
-        CHECK(john->getAmountOnTable() == 0);
-        CHECK(jane->getAmountOnTable() == 0);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p2->getNumBetsOnTable() == 0);
+        CHECK(p1->getAmountOnTable() == 0);
+        CHECK(p2->getAmountOnTable() == 0);
         CHECK(t->isComeOutRoll());
 
         // come out roll, roll a 3, pass line lose, dont pass win
-        johnBalance = john->getBalance();  // reset
-        janeBalance = jane->getBalance();  // reset
-        auto johnBet4 = john->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet4 = jane->makeBet(BetName::DontPass, 10, 0, ep);
+        johnBalance = p1->getBalance();  // reset
+        janeBalance = p2->getBalance();  // reset
+        auto johnBet4 = p1->makeBet(BetName::PassLine, 10, 0, ep);
+        auto janeBet4 = p2->makeBet(BetName::DontPass, 10, 0, ep);
         REQUIRE(johnBet4 != nullptr);
         REQUIRE(janeBet4 != nullptr);
         std::cout << "John makes PassLine bet\n";
         std::cout << "Jane makes DontPass bet\n";
 
         t->testRollDice(1,2);
-        CHECK(john->getBalance() == (johnBalance - 10));
-        CHECK(jane->getBalance() == (janeBalance + 10));
+        CHECK(p1->getBalance() == (johnBalance - 10));
+        CHECK(p2->getBalance() == (janeBalance + 10));
         CHECK(t->getAmountOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(john->getNumBetsOnTable() == 0);
-        CHECK(jane->getNumBetsOnTable() == 0);
-        CHECK(john->getAmountOnTable() == 0);
-        CHECK(jane->getAmountOnTable() == 0);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p2->getNumBetsOnTable() == 0);
+        CHECK(p1->getAmountOnTable() == 0);
+        CHECK(p2->getAmountOnTable() == 0);
         CHECK(t->isComeOutRoll());
         
         // come out roll, roll a 12, pass line lose, dont pass push
-        johnBalance = john->getBalance();  // reset
-        janeBalance = jane->getBalance();  // reset
-        auto johnBet5 = john->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet5 = jane->makeBet(BetName::DontPass, 10, 0, ep);
+        johnBalance = p1->getBalance();  // reset
+        janeBalance = p2->getBalance();  // reset
+        auto johnBet5 = p1->makeBet(BetName::PassLine, 10, 0, ep);
+        auto janeBet5 = p2->makeBet(BetName::DontPass, 10, 0, ep);
         REQUIRE(johnBet5 != nullptr);
         REQUIRE(janeBet5 != nullptr);
         std::cout << "John makes PassLine bet\n";
         std::cout << "Jane makes DontPass bet\n";
 
         t->testRollDice(6,6);
-        CHECK(john->getBalance() == (johnBalance - 10));
-        CHECK(jane->getBalance() == janeBalance - 10);
+        CHECK(p1->getBalance() == (johnBalance - 10));
+        CHECK(p2->getBalance() == (janeBalance - 10));
         CHECK(t->getAmountOnTable() == 10);
         CHECK(t->getNumBetsOnTable() == 1);
-        CHECK(john->getNumBetsOnTable() == 0);
-        CHECK(jane->getNumBetsOnTable() == 1);
-        CHECK(john->getAmountOnTable() == 0);
-        CHECK(jane->getAmountOnTable() == 10);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p2->getNumBetsOnTable() == 1);
+        CHECK(p1->getAmountOnTable() == 0);
+        CHECK(p2->getAmountOnTable() == 10);
         CHECK(t->isComeOutRoll());
 
         // Remove bet, allowed
-        jane->removeBet(BetName::DontPass, 0, ep);
-        CHECK(jane->getNumBetsOnTable() == 0);
+        p2->removeBet(BetName::DontPass, 0, ep);
+        CHECK(p2->getNumBetsOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
 
         // come out roll, roll a 4, pass line keep, dont pass keep
-        johnBalance = john->getBalance();  // reset
-        janeBalance = jane->getBalance();  // reset
-        auto johnBet6 = john->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet6 = jane->makeBet(BetName::DontPass, 10, 0, ep);
+        johnBalance = p1->getBalance();  // reset
+        janeBalance = p2->getBalance();  // reset
+        auto johnBet6 = p1->makeBet(BetName::PassLine, 10, 0, ep);
+        auto janeBet6 = p2->makeBet(BetName::DontPass, 10, 0, ep);
         REQUIRE(johnBet6 != nullptr);
         REQUIRE(janeBet6 != nullptr);
-        CHECK(john->getBalance() == johnBalance - 10);
-        CHECK(jane->getBalance() == janeBalance - 10);
+        CHECK(p1->getBalance() == (johnBalance - 10));
+        CHECK(p2->getBalance() == (janeBalance - 10));
         std::cout << "John makes PassLine bet\n";
         std::cout << "Jane makes DontPass bet\n";
 
         t->testRollDice(2,2);
-        CHECK(john->getBalance() == johnBalance - 10);
-        CHECK(jane->getBalance() == janeBalance - 10);
+        CHECK(p1->getBalance() == (johnBalance - 10));
+        CHECK(p2->getBalance() == (janeBalance - 10));
         CHECK(t->getAmountOnTable() == 20);
         CHECK(t->getNumBetsOnTable() == 2);
-        CHECK(john->getNumBetsOnTable() == 1);
-        CHECK(jane->getNumBetsOnTable() == 1);
-        CHECK(john->getAmountOnTable() == 10);
-        CHECK(jane->getAmountOnTable() == 10);
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(p2->getNumBetsOnTable() == 1);
+        CHECK(p1->getAmountOnTable() == 10);
+        CHECK(p2->getAmountOnTable() == 10);
         CHECK(!t->isComeOutRoll());
         CHECK(t->getPoint() == 4);
     }
@@ -846,11 +824,9 @@ void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
 {
     std::unique_ptr<CrapsTable> t(
-        CrapsTable::fromConfig("Table-1", config));
-    Gbl::pTable = t.get();
+        CrapsTable::fromConfig("Table-1", config, em));
     Gen::ErrorPass ep;
-    Ctrl::PlayerManager::PlayerPtr sam = Gbl::pPlayerMgr->createPlayer("Sam");
-    REQUIRE(sam->joinTable(ep) == Gen::ReturnCode::Success);
+    REQUIRE(p1->joinTable(t.get(), ep) == Gen::ReturnCode::Success);
     
     SUBCASE("shortRoll")
     {
@@ -863,13 +839,13 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
             AutoBet{Action::RollDice, 2, 2, BetName::Invalid,  0,  0},
         };
 
-        Gen::Money balance = sam->getBalance();
+        Gen::Money balance = p1->getBalance();
 
-        autoBetLoop(rolls, *t, *sam);
+        autoBetLoop(rolls, *t, *p1);
         CHECK(t->getAmountOnTable() ==  0);
         CHECK(t->getNumBetsOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(sam->getBalance() == balance + 30 + 18);
+        CHECK(p1->getBalance() == balance + 30 + 18);
     }
 
     SUBCASE("ascendingRoll")
@@ -906,12 +882,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
             AutoBet{Action::RollDice, 6, 6, BetName::Invalid,  0,  0}, // lose 10
         };
 
-        Gen::Money balance = sam->getBalance();
+        Gen::Money balance = p1->getBalance();
 
-        autoBetLoop(rolls, *t, *sam);
+        autoBetLoop(rolls, *t, *p1);
         CHECK(t->getAmountOnTable() ==  60);
         CHECK(t->getNumBetsOnTable() == 3);
-        CHECK(sam->getBalance() == balance - 80 + 10 - 60 + 10 - 10);
+        CHECK(p1->getBalance() == balance - 80 + 10 - 60 + 10 - 10);
     }
 
     SUBCASE("superLong")
@@ -928,17 +904,17 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
             AutoBet{Action::RollDice, 3, 4, BetName::Invalid,  0,  0}, // 7 out lost 6
         };
 
-        Gen::Money balance = sam->getBalance();
+        Gen::Money balance = p1->getBalance();
 
         constexpr unsigned loops = 100000;
         for (int i = 0; i < loops; i++)
         {
-            autoBetLoop(rolls, *t, *sam);
+            autoBetLoop(rolls, *t, *p1);
         }
         CHECK(t->getAmountOnTable() ==  0);
         CHECK(t->getNumBetsOnTable() == 0);
         int deltaOneLoop = -40 + 20 + 10 + 12;
-        CHECK(sam->getBalance() == balance + (loops * deltaOneLoop));
+        CHECK(p1->getBalance() == balance + (loops * deltaOneLoop));
     }
 }
 
@@ -946,7 +922,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:recentRolls")
 {
-    CrapsTable t("Table-1", config);
+    CrapsTable t("Table-1", config, em);
     const std::deque<Dice>& recentRolls = t.getRecentRolls();
     CHECK(recentRolls.size() == 0);
 

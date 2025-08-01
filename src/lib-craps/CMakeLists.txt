@@ -27,7 +27,6 @@ target_include_directories(craps
 
 target_link_libraries(craps
     PUBLIC gen
-    PUBLIC controller
     PUBLIC yaml-cpp::yaml-cpp
 )
 

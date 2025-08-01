@@ -8,11 +8,11 @@
 #include <craps/DecisionRecord.h>
 #include <craps/CrapsBet.h>
 #include <craps/Dice.h>
+#include <craps/EventManager.h>
 #include <craps/Player.h>
 #include <doctest/doctest.h>
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
-#include <controller/EventManager.h>
 
 using namespace Craps;
 
@@ -20,20 +20,18 @@ using namespace Craps;
 
 struct TableStatsPart5Fixture
 {
-    Ctrl::EventManager  em;
+    EventManager em;
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     
     TableStatsPart5Fixture()
     {
-        Gbl::pEventMgr  = &em;
-        p1 = new Player("Player1",1000);
-        p2 = new Player("Player2",1000);
+        p1 = new Player("Player1",1000, em);
+        p2 = new Player("Player2",1000, em);
     }
 
    ~TableStatsPart5Fixture()
     {
-        Gbl::pEventMgr  = nullptr;
         delete p1;
         delete p2;
     }

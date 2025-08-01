@@ -14,11 +14,11 @@
 #include <gen/MoneyUtil.h>
 #include <gen/ReturnCode.h>
 #include <gen/Timepoint.h>
-#include <gen/Uuid.h>
 #include <craps/Bank.h>
 #include <craps/CrapsBet.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
+#include <craps/EventManager.h>
 #include <craps/Player.h>
 #include <craps/TableConfig.h>
 #include <craps/TableStats.h>
@@ -33,10 +33,16 @@ public:
     
     /// @name Lifecycle
     /// @{
-    CrapsTable(const TableId& tableId, const TableConfig& config);
+    CrapsTable(const TableId& tableId,
+               const TableConfig& config,
+               EventManager& eventMgr);
    ~CrapsTable() = default;
-    static CrapsTable* fromConfig(const TableId&, const TableConfig&);
-    static CrapsTable* fromFile  (const TableId&, const TableConfig&);
+    static CrapsTable* fromConfig(const TableId& tableId,
+                                  const TableConfig& config,
+                                  EventManager& eventMgr);
+    static CrapsTable* fromFile  (const TableId& tableId,
+                                  const TableConfig& config,
+                                  EventManager& eventMgr);
     /// @}
 
     /// @name Modifiers
@@ -109,6 +115,7 @@ public:
 private:
     TableId tableId_;
     TableConfig config_;
+    EventManager& eventMgr_;
     std::string tableName_;
     std::string shortDescription_;
     std::string fullDescription_;

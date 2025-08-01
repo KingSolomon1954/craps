@@ -19,9 +19,9 @@
 #include <craps/CrapsBet.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
+#include <craps/EventManager.h>
 #include <craps/EnumBetName.h>
 #include <craps/Player.h>
-#include <controller/EventManager.h>
 
 using namespace Craps;
 
@@ -29,20 +29,18 @@ using namespace Craps;
 
 struct BetPart2Fixture
 {
-    Ctrl::EventManager  em;
+    EventManager em;
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     
     BetPart2Fixture()
     {
-        Gbl::pEventMgr  = &em;
-        p1 = new Player("Player1",1000);
-        p2 = new Player("Player2",1000);
+        p1 = new Player("Player1",1000, em);
+        p2 = new Player("Player2",1000, em);
     }
 
    ~BetPart2Fixture()
     {
-        Gbl::pEventMgr  = nullptr;
         delete p1;
         delete p2;
     }

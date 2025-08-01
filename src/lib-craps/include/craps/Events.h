@@ -7,7 +7,7 @@
 #pragma once
 #include <gen/Uuid.h>
 
-namespace Ctrl {
+namespace Craps {
     
 // Events
 struct BettingOpened      {};
@@ -24,6 +24,6 @@ struct NewShooter         {const Gen::Uuid& shooterId;};
 struct PlayerJoinedTable  {const Gen::Uuid& playerId;};
 struct PlayerLeftTable    {const Gen::Uuid& playerId;};
 
-} // namespace Ctrl
+} // namespace Craps
 
 //----------------------------------------------------------------

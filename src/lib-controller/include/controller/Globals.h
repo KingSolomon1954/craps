@@ -16,6 +16,7 @@ namespace Gen {
 
 namespace Craps {
     class CrapsTable;      // fwd    
+    class EventManager;    // fwd    
 }
 
 namespace Ctrl {
@@ -35,7 +36,7 @@ public:
     static Ctrl::ConfigManager*  pConfigMgr;
     static Craps::CrapsTable*    pTable;
     static Ctrl::EventLoop*      pEventLoop;
-    static Ctrl::EventManager*   pEventMgr;
+    static Craps::EventManager*  pEventMgr;
     static Ctrl::GameController* pGameCtrl;
     static Ctrl::PlayerManager*  pPlayerMgr;
     static Ctrl::TableManager*   pTableMgr;

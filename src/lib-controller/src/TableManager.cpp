@@ -7,7 +7,9 @@
 #include <filesystem>
 #include <controller/TableManager.h>
 #include <controller/ConfigManager.h>
+#include <controller/ConfigManager.h>
 #include <controller/Globals.h>
+#include <craps/EventManager.h>
 
 using namespace Ctrl;
 
@@ -55,7 +57,7 @@ TableManager::loadCrapsTable(const Craps::CrapsTable::TableId& tableId)
     config.maxRecentRolls = TableManager::retrieveMaxRecentRolls();
     config.tablePath      = TableManager::formTablePath(tableId);
 
-    return Craps::CrapsTable::fromFile(tableId, config);
+    return Craps::CrapsTable::fromFile(tableId, config, *Gbl::pEventMgr);
 }
 
 //----------------------------------------------------------------

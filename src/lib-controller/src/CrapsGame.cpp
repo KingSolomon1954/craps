@@ -13,12 +13,12 @@
 #include <gen/Debug.h>
 #include <controller/ConfigManager.h>
 #include <controller/EventLoop.h>
-#include <controller/EventManager.h>
 #include <controller/GameController.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/ViewIntfc.h>
 #include <craps/CrapsTable.h>
+#include <craps/EventManager.h>
 #include <cui/ConsoleView.h>
 
 using namespace Ctrl;
@@ -43,7 +43,7 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
     std::unique_ptr<Ctrl::ConfigManager>  pCfg(initConfigManager(argc, argv)); (void) pCfg;
     enableFileLogging();                  // Only after config manager.
-    std::unique_ptr<Ctrl::EventManager>   pEventMgr(initEventManager());       (void) pEventMgr;
+    std::unique_ptr<Craps::EventManager>  pEventMgr(initEventManager());       (void) pEventMgr;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
     std::unique_ptr<Ctrl::ViewIntfc>      pView(initView());                   (void) pView;
@@ -108,10 +108,10 @@ CrapsGame::initConfigManager(int argc, char* argv[])
 
 //----------------------------------------------------------------
 
-EventManager*
+Craps::EventManager*
 CrapsGame::initEventManager()
 {
-    auto p = new EventManager();
+    auto p = new Craps::EventManager();
     Gbl::pEventMgr = p;
     return p;
 }

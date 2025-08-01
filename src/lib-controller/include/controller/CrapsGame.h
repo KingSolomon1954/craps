@@ -11,14 +11,14 @@ namespace Gen {
 }
 
 namespace Craps {
-    class CrapsTable; // fwd
+    class CrapsTable;   // fwd
+    class EventManager; // fwd
 }
 
 namespace Ctrl {
 
 class ConfigManager;  // fwd
 class EventLoop;      // fwd
-class EventManager;   // fwd
 class GameController; // fwd
 class PlayerManager;  // fwd
 class TableManager;   // fwd
@@ -44,7 +44,7 @@ public:
 private:
     Gen::BuildInfo*        initBuildInfo();
     Ctrl::ConfigManager*   initConfigManager(int argc, char* argv[]);
-    Ctrl::EventManager*    initEventManager();
+    Craps::EventManager*   initEventManager();
     Ctrl::TableManager*    initTableManager();
     Ctrl::PlayerManager*   initPlayerManager();
     Ctrl::ViewIntfc*       initView();
