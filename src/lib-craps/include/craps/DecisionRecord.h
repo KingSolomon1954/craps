@@ -12,6 +12,8 @@
 
 namespace Craps {
 
+class CrapsBet;  // fwd
+
 struct DecisionRecord
 {
     CrapsBet* pBet            = nullptr;

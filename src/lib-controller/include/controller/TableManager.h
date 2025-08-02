@@ -7,11 +7,17 @@
 #pragma once
 
 #include <memory>
+#include <filesystem>
 #include <controller/TableManifest.h>
 #include <controller/TableDescription.h>
-#include <craps/CrapsTable.h>
+#include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>
+#include <gen/ReturnCode.h>
 
+namespace Craps {
+    class CrapsTable;  // fwd
+}
+    
 namespace Ctrl {
 
 class TableManager
@@ -28,12 +34,12 @@ public:
     
     // Table selection
     Gen::ReturnCode switchCrapsTable(
-        const Craps::CrapsTable::TableId& toTableId, Gen::ErrorPass& ep);
+        const Craps::TableId& toTableId, Gen::ErrorPass& ep);
     const TableDescriptions& getTableChoices() const;
 
     // Table instantiation
     static Craps::CrapsTable* loadCrapsTable(
-        const Craps::CrapsTable::TableId& tableId);
+        const Craps::TableId& tableId);
     static Craps::CrapsTable* loadStartingCrapsTable();
     
 private:
@@ -43,7 +49,7 @@ private:
     static size_t retrieveMaxSessions();
     static size_t retrieveMaxRecentRolls();
     static std::filesystem::path formTablePath(
-        const Craps::CrapsTable::TableId& tableId);
+        const Craps::TableId& tableId);
 };
 
 /*-----------------------------------------------------------*//**

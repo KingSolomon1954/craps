@@ -7,6 +7,7 @@
 #pragma once
 
 #include <controller/ViewIntfc.h>
+#include <craps/CrapsTypes.h>
 
 namespace Cui {
 
@@ -22,9 +23,9 @@ public:
     /// @{
     void displayMessage(const std::string& msg) override;
     void displayAboutCraps() override;
-    Craps::CrapsTable::TableId promptUserToSelectTable(
+    Craps::TableId promptUserToSelectTable(
         const Ctrl::TableManager::TableDescriptions& tds) override;
-    std::vector<Ctrl::PlayerManager::PlayerId> promptUserToSelectPlayers(
+    std::vector<Craps::PlayerId> promptUserToSelectPlayers(
         const Ctrl::PlayerManager::PlayerDescriptions& pds) override;
     /// @}
 

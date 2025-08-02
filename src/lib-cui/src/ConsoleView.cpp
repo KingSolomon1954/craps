@@ -40,7 +40,7 @@ ConsoleView::displayAboutCraps()
 
 //----------------------------------------------------------------
 
-Craps::CrapsTable::TableId
+Craps::TableId
 ConsoleView::promptUserToSelectTable(
     const Ctrl::TableManager::TableDescriptions& tds)
 {
@@ -57,7 +57,7 @@ ConsoleView::promptUserToSelectTable(
 
 //----------------------------------------------------------------
 
-std::vector<Ctrl::PlayerManager::PlayerId>
+std::vector<Craps::PlayerId>
 ConsoleView::promptUserToSelectPlayers(
     const Ctrl::PlayerManager::PlayerDescriptions& pds)
 {
@@ -71,7 +71,7 @@ ConsoleView::promptUserToSelectPlayers(
     std::string input;
     std::cin >> input;
 
-    std::vector<Ctrl::PlayerManager::PlayerId> selected;
+    std::vector<Craps::PlayerId> selected;
     size_t pos = 0;
     while ((pos = input.find(',')) != std::string::npos)
     {

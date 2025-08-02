@@ -12,10 +12,11 @@
 #include <craps/Events.h>
 #include <craps/Bank.h>
 #include <craps/CrapsBet.h>
+#include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
+#include <craps/PlayerConfig.h>
 #include <gen/ReturnCode.h>
 #include <gen/MoneyUtil.h>
-#include <gen/Uuid.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Gen {
@@ -33,16 +34,20 @@ class Player
 public:
     /// @name Lifecycle
     /// @{
-    Player(const std::string& name,
-           unsigned startingBalance,
-           EventManager& eventMgr);
-    Player(const Gen::Uuid&,
-           const std::string& name,
-           unsigned startingBalance,
-           EventManager& eventMgr);
+    Player(const Craps::PlayerId& playerId, // Existing playerId, name comes from file
+           const PlayerConfig&    config,
+           EventManager&          eventMgr);
 
-    bool saveToFile(const std::string& path) const;
-    bool loadFromFile(const std::string& path);
+    Player createPlayer(const std::string&  playerName,  // Will create a fresh PlayerId)
+                        const PlayerConfig& config,
+                        EventManager&       eventMgr);
+    
+    static Player* fromConfig(const Craps::PlayerId& playerId,
+                              const PlayerConfig&    config,
+                              EventManager&          eventMgr);
+    static Player* fromFile  (const Craps::PlayerId& playerId,
+                              const PlayerConfig&    config,
+                              EventManager&          eventMgr);
     /// @}
 
     /// @name Modifiers
@@ -65,23 +70,30 @@ public:
 
     /// @name Observers
     /// @{
-    const Gen::Uuid& getUuid()   const;
-    const std::string& getName() const;
-    Gen::Money getAmountOnTable()const;
-    unsigned getNumBetsOnTable() const;
-    Gen::Money getBalance()      const;
-    
+    const std::string&     getName()           const;
+    const Craps::PlayerId& getPlayerId()       const;
+    Gen::Money             getAmountOnTable()  const;
+    unsigned               getNumBetsOnTable() const;
+    Gen::Money             getBalance()        const;
+
+    // File operations
+    void saveFile() const;
+    void loadFile();
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
     /// @}
 
 private:
-    Gen::Uuid uuid_;
-    std::string name_;
-    Bank wallet_;
-    EventManager& eventMgr_;
+    // order matters
+    Craps::PlayerId             playerId_;
+    PlayerConfig                config_;
+    EventManager&               eventMgr_;
+    Bank                        wallet_;     // overriden by yaml
+
+    // order doesn't matter
+    std::string                 playerName_; // set by yaml or creation
     std::list<CrapsBet::BetPtr> bets_;
-    CrapsTable* pTable_;
+    CrapsTable*                 pTable_;
 
     bool removeBetByPtr(CrapsBet::BetPtr& pBet);
     CrapsBet::BetPtr findBetById(unsigned betId) const;
@@ -96,6 +108,12 @@ private:
     void onSevenOut();
     void onPassLineWinner();
     void onNewShooter(const NewShooter& evt);
+    void setName(const std::string& playerName);
+
+    // Default bank constants for player
+    static constexpr unsigned InitialStartingBankBalance_ = 30000;
+    static constexpr unsigned RefillThreshold_            = 15000;
+    static constexpr unsigned RefillAmount_               = 20000;
 };
 
 /*-----------------------------------------------------------*//**
@@ -119,46 +137,3 @@ Player Responsibilities:
 } // namespace Craps
 
 //----------------------------------------------------------------
-
-
-#if 0
-class CrapsInterface
-{
-    // Table related (TableManager)
-    using TableId = std::string;
-    using TableList = std::vector<TableId>;
-    static TableList getTableList() const;
-    static TablePickerView getTablePickerView(TableId tableId);
-    static TableGameView getTableGameView(TableId tableId);
-    static TableStatsView getTableStatsView(TableId tableId);
-
-    // Player related (PlayerManager)
-    using PlayerId = std::string;
-    using PlayerList = std::vector<PlayerId> ;
-    static PlayerList getPlayerList() const;
-    static PlayerPickerView getPlayerPickerView(PlayerId playerId);
-    static PlayerGameView getPlayerGameView(PlayerId playerId);
-    static PlayerStatsView getPlayerStatsView(TableId tableId);
-
-    static Gen::ReturnCode openTable(TableId tableId, PlayerList p);
-    static Gen::ReturnCode closeTable(TableId tableId);
-
-    using BetId = unsigned;
-    using BetList = std::list<BetId>;
-    using Money = unsigned;
-
-    static ReturnCode join(TableId tableId, PlayerId playerId, Gen::ErrorPass& ep);
-    static ReturnCode leave(TableId tableId, PlayerId playerId, Gen::ErrorPass& ep);
-    
-    static BetId placeBet(TableId tableId,
-                          PlayerId playerId,
-                          BetNameStr betName,
-                          Gen::Money contractAmount,
-                          Gen::ErrorPass& ep);
-    static ReturnCode removeBet(TableId tableId, BetId bet, Gen::ErrorPass& ep);
-    static ReturnCode setOdds(TableId tableId, BetId bet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
-    static ReturnCode changeBetAmount(TableId tableId, BetId bet, int delta, Gen::ErrorPass& ep);
-    static void rollDice(TalbeId tableId);
-    
-};    
-#endif

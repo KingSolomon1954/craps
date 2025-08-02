@@ -16,6 +16,7 @@
 #include <gen/Timepoint.h>
 #include <craps/Bank.h>
 #include <craps/CrapsBet.h>
+#include <craps/CrapsTypes.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
 #include <craps/EventManager.h>
@@ -29,8 +30,6 @@ namespace Craps {
 class CrapsTable
 {
 public:
-    using TableId = std::string;
-    
     /// @name Lifecycle
     /// @{
     CrapsTable(const TableId& tableId,
@@ -232,7 +231,7 @@ private:
                               Gen::ErrorPass& ep) const;
     std::string diagLimits   (Gen::Money amt) const;
 
-    // Default bank constants
+    // Default bank constants for table
     static constexpr unsigned InitialStartingBankBalance_ = 3000000;
     static constexpr unsigned RefillThreshold_            = 1500000;
     static constexpr unsigned RefillAmount_               = 2000000;

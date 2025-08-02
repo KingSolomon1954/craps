@@ -9,6 +9,7 @@
 #include <controller/ConfigManager.h>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
+#include <craps/CrapsTable.h>
 #include <craps/EventManager.h>
 
 using namespace Ctrl;
@@ -50,7 +51,7 @@ TableManager::getTableChoices() const
 //----------------------------------------------------------------
 
 Craps::CrapsTable*
-TableManager::loadCrapsTable(const Craps::CrapsTable::TableId& tableId)
+TableManager::loadCrapsTable(const Craps::TableId& tableId)
 {
     Craps::TableConfig config;
     config.maxSessions    = TableManager::retrieveMaxSessions();
@@ -65,7 +66,7 @@ TableManager::loadCrapsTable(const Craps::CrapsTable::TableId& tableId)
 Craps::CrapsTable*
 TableManager::loadStartingCrapsTable()
 {
-    Craps::CrapsTable::TableId tid =
+    Craps::TableId tid =
         Gbl::pConfigMgr->getString(ConfigManager::KeyTableStartId).value();
     return loadCrapsTable(tid);
 }
@@ -74,7 +75,7 @@ TableManager::loadStartingCrapsTable()
 
 Gen::ReturnCode
 TableManager::switchCrapsTable(
-    const Craps::CrapsTable::TableId& toTableId, Gen::ErrorPass& ep)
+    const Craps::TableId& toTableId, Gen::ErrorPass& ep)
 {
     try
     {
@@ -114,7 +115,7 @@ TableManager::retrieveMaxRecentRolls()
 //----------------------------------------------------------------
 
 std::filesystem::path
-TableManager::formTablePath(const Craps::CrapsTable::TableId& tableId)
+TableManager::formTablePath(const Craps::TableId& tableId)
 {
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();

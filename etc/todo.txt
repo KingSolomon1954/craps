@@ -34,8 +34,8 @@ Allow a clear/undo last bet capability
     enum BetStats { New, Actvie, Staged, Resolved };
 
 Need unit test for initial bank money
-Create initial unit-test for Player
 
+(Done) Create initial unit-test for Player
 (Done) Eliminate lib-controller from lib-craps
 (Done) Move EventManager inside of CrapsTable.cpp - went a different way
 (Done) Add accessor for BankStats from CrapsTable

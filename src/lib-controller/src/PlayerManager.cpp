@@ -33,8 +33,12 @@ Create a Player
 PlayerManager::PlayerPtr
 PlayerManager::createPlayer(const std::string& name)
 {
-    auto player = std::make_shared<Craps::Player>(name, 1000, *Gbl::pEventMgr); // Default balance
-    playersAll_[player->getUuid()] = player;
+    // TODO
+    Craps::PlayerConfig config;
+    
+    auto player = std::make_shared<Craps::Player>(
+        "1", config, *Gbl::pEventMgr);
+    playersAll_[player->getPlayerId()] = player;
     return player;
 }
 
@@ -44,9 +48,9 @@ Get Player by UUID
 
 */
 PlayerManager::PlayerPtr
-PlayerManager::getPlayer(const Gen::Uuid& uuid) const
+PlayerManager::getPlayer(const Craps::PlayerId& playerId) const
 {
-    auto it = playersAll_.find(uuid);
+    auto it = playersAll_.find(playerId);
     if (it != playersAll_.end()) return it->second;
     return nullptr;
 }
@@ -76,7 +80,7 @@ PlayerManager::loadStartingPlayers()
     
     // TODO read from mult layer config
     // Form list of the last player ids
-    std::vector<PlayerManager::PlayerId> ids;
+    std::vector<Craps::PlayerId> ids;
     
     // Add each player to table
     Gen::ErrorPass ep;
@@ -90,10 +94,12 @@ PlayerManager::loadStartingPlayers()
 //----------------------------------------------------------------
 
 Craps::Player
-PlayerManager::loadPlayer(const PlayerId& playerId)
+PlayerManager::loadPlayer(const Craps::PlayerId& playerId)
 {
     // TODO: read from file and create player
-    return Craps::Player("John", 1000, *Gbl::pEventMgr);
+
+    Craps::PlayerConfig config;
+    return Craps::Player("1", config, *Gbl::pEventMgr);
 }
 
 /*-----------------------------------------------------------*//**
@@ -216,7 +222,7 @@ PlayerManager::disburseKeep(const Craps::DecisionRecord& dr) const
 
 void
 PlayerManager::diagBadPlayerId(const std::string& funcName,
-                               const PlayerId& playerId) const
+                               const Craps::PlayerId& playerId) const
 {
     std::string diag =
         "Internal Error: Unable to process decision record. "

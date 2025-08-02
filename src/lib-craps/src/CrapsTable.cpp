@@ -236,7 +236,7 @@ CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
     players_.push_back(pPlayer);
-    eventMgr_.publish(PlayerJoinedTable{ pPlayer->getUuid() });
+    eventMgr_.publish(PlayerJoinedTable{ pPlayer->getPlayerId() });
     return Gen::ReturnCode::Success;
 }
 
@@ -248,13 +248,13 @@ CrapsTable::removePlayer(Player* pPlayer, Gen::ErrorPass& ep)
     if (removePlayerByPtr(pPlayer, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend("CrapsTable::removePlayer(); Unable to remove player; " +
-                   pPlayer->getName() + ":" + pPlayer->getUuid() + "; ");
+                   pPlayer->getName() + ":" + pPlayer->getPlayerId() + "; ");
         return Gen::ReturnCode::Fail;
     }
 
     // Remove all bets by player, bet money given to the house bank.
     removePlayerBets(pPlayer);
-    eventMgr_.publish(PlayerLeftTable{ pPlayer->getUuid() });
+    eventMgr_.publish(PlayerLeftTable{ pPlayer->getPlayerId() });
     return Gen::ReturnCode::Success;
 }
 
@@ -559,7 +559,7 @@ CrapsTable::advanceShooter()
 
     if (pCurrentShooter_ != prev)
     {
-        eventMgr_.publish(NewShooter{pCurrentShooter_->getUuid()});
+        eventMgr_.publish(NewShooter{pCurrentShooter_->getPlayerId()});
     }
 }
 
@@ -1173,7 +1173,7 @@ CrapsTable::haveBet(const CrapsBet::BetPtr bet) const
 // Determine if we already have the given bet on the table.
 //
 bool
-CrapsTable::haveBet(const Gen::Uuid& playerId, BetName betName,
+CrapsTable::haveBet(const PlayerId& playerId, BetName betName,
                     unsigned pivot) const
 {
     auto& bets = tableBets_[static_cast<size_t>(betName)];

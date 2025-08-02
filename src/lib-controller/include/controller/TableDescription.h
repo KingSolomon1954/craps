@@ -9,13 +9,13 @@
 #include <chrono>
 #include <string>
 #include <ostream>
-#include <craps/CrapsTable.h>
+#include <craps/CrapsTypes.h>
 
 namespace Ctrl {
 
 struct TableDescription
 {
-    Craps::CrapsTable::TableId tableId;
+    Craps::TableId tableId;
     std::string tableName;
     std::string shortDescription;
     std::string fullDescription;

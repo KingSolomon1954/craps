@@ -7,7 +7,7 @@
 #pragma once
 
 #include <vector>
-#include <craps/CrapsTable.h>
+#include <craps/CrapsTypes.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Ctrl {
@@ -17,7 +17,7 @@ class TableManifest
 public:
     struct TableInfo
     {
-        Craps::CrapsTable::TableId tableId;
+        Craps::TableId tableId;
         std::string tableName;
         std::string shortDescription;
         std::string fullDescription;

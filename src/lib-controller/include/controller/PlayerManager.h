@@ -8,12 +8,12 @@
 
 #include <memory>
 #include <unordered_map>
-#include <gen/Uuid.h>
 #include <controller/PlayerDescription.h>
-#include <craps/Player.h>
+#include <craps/CrapsTypes.h>
 
 namespace Craps {
-    struct DecisionRecord;  // fwd
+    struct DecisionRecord;  
+    class Player;           // fwd
 }
     
 namespace Ctrl {
@@ -32,14 +32,13 @@ public:
 
     /// @name Modifiers
     /// @{
-    using PlayerId = Gen::Uuid;
     using PlayerPtr = std::shared_ptr<class Craps::Player>;
     PlayerPtr createPlayer(const std::string& name);
     /// @}
 
     /// @name Observers
     /// @{
-    PlayerPtr getPlayer(const Gen::Uuid& id) const;
+    PlayerPtr getPlayer(const Craps::PlayerId& playerId) const;
     
     // void disburseWin (const Craps::DecisionRecord& dr) const;
     // void disburseLose(const Craps::DecisionRecord& dr) const;
@@ -48,14 +47,13 @@ public:
 
     using PlayerDescriptions = std::vector<PlayerDescription>;
     static PlayerDescriptions loadPlayerChoices();
-//    static Craps::Player loadPlayer(const Gen::Uuid& playerId);
-    static Craps::Player loadPlayer(const PlayerId& playerId);
+    static Craps::Player loadPlayer(const Craps::PlayerId& playerId);
 
 private:
-    std::unordered_map<Gen::Uuid, std::shared_ptr<Craps::Player>> playersAll_;
+    std::unordered_map<Craps::PlayerId, std::shared_ptr<Craps::Player>> playersAll_;
 
     void diagBadPlayerId(const std::string& funcName,
-                         const PlayerId& playerId) const;
+                         const Craps::PlayerId& playerId) const;
 };
 
 /*-----------------------------------------------------------*//**

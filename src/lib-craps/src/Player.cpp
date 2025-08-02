@@ -13,6 +13,7 @@
 #include <craps/DecisionRecord.h>
 #include <craps/EventManager.h>
 #include <gen/ErrorPass.h>
+#include <gen/Uuid.h>
 
 using namespace Craps;
 
@@ -20,42 +21,31 @@ using namespace Craps;
 //
 // Constructor.
 //
-// Player::Player()
-// {
-//     setupSubscriptions();
-// }
-
-//----------------------------------------------------------------
-//
-// Constructor.
-//
 Player::Player(
-    const std::string& name,
-    unsigned startingBalance,
-    EventManager& eventMgr)
-    : uuid_(Gen::generateUuid())
-    , name_(name)
-    , wallet_(startingBalance, 500, 500)  // TODO
+    const PlayerId&     playerId,
+    const PlayerConfig& config,
+    EventManager&       eventMgr)
+    : playerId_(playerId)
+    , config_(config)
     , eventMgr_(eventMgr)
+    , wallet_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
 }
 
 //----------------------------------------------------------------
 //
-// Constructor.
+// Will create a fresh PlayerId
 //
-Player::Player(
-    const Gen::Uuid& uuid,
-    const std::string& name,
-    unsigned startingBalance,
-    EventManager& eventMgr)
-    : uuid_(uuid)
-    , name_(name)
-    , wallet_(startingBalance, 500, 500) // TODO)
-    , eventMgr_(eventMgr)
+Player
+Player::createPlayer(const std::string&  playerName,
+                     const PlayerConfig& config,
+                     EventManager&       eventMgr)
 {
+    Player p(Gen::generateUuid(), config, eventMgr);
+    p.setName(playerName);
+    return p;
 }
-
+    
 //----------------------------------------------------------------
 
 void
@@ -108,6 +98,86 @@ Player::setupSubscriptions()
         });
 }
                 
+/*-----------------------------------------------------------*//**
+
+Construct Player from in-memory configuration.
+
+Throws upon error.
+
+Static function.
+*/
+Player*
+Player::fromConfig(const PlayerId&     playerId,
+                   const PlayerConfig& config,
+                   EventManager&       eventMgr)
+{
+    // Not yet implemented
+    unsigned startingBalance = 1000;
+    std::string playerName = "Player-1";
+    return new Player(playerId, config, eventMgr);
+}
+
+/*-----------------------------------------------------------*//**
+
+Construct Player from file.
+
+Throws upon error.
+
+Static function.
+*/
+Player*
+Player::fromFile(const PlayerId& playerId,
+                 const PlayerConfig& config,
+                 EventManager& eventMgr)
+{
+    Player* p = new Player(playerId, config, eventMgr);
+    p->loadFile();
+    return p;
+}
+
+//----------------------------------------------------------------
+//
+// Save Player to file
+//
+void
+Player::saveFile() const
+{
+
+}
+
+//----------------------------------------------------------------
+//
+// Load Player from file
+//
+void
+Player::loadFile()
+{
+
+}
+
+//----------------------------------------------------------------
+//
+// Convert Player to YAML
+//
+YAML::Node
+Player::toYAML() const
+{
+    // TODO
+    YAML::Node node;
+    return node;
+}
+
+//----------------------------------------------------------------
+//
+// Convert YAML to Player
+//
+void
+Player::fromYAML(const YAML::Node& node)
+{
+    // TODO
+    // TODO wallet_.balance = j.at("balance").get<int64_t>();
+}
+
 //----------------------------------------------------------------
 
 Gen::ReturnCode
@@ -118,7 +188,7 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
     
     if (pTable_->addPlayer(this, ep) == Gen::ReturnCode::Fail)
     {
-        ep.prepend("Player " + name_ + " joining table. ");
+        ep.prepend("Player " + playerName_ + " joining table. ");
         return Gen::ReturnCode::Fail;
     }
     setupSubscriptions();  // TODO maybe setupTableSubscriptions?
@@ -210,7 +280,7 @@ Player::processWin(const DecisionRecord& dr)
     wallet_.deposit(dr.returnToPlayer);
     wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
     
-    // std::cout << name_ << ": processWin(" << pBet->betName() <<
+    // std::cout << playerName_ << ": processWin(" << pBet->betName() <<
     //     ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
 
     // TODO update win stats before removing bet
@@ -237,7 +307,7 @@ Player::processLose(const DecisionRecord& dr)
         return;
     }
 
-//    std::cout << name_ << ": processLose(" << pBet->betName() <<
+//    std::cout << playerName_ << ": processLose(" << pBet->betName() <<
 //        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
 
     // TODO update lose stats before removing bet
@@ -260,7 +330,7 @@ Player::processKeep(const DecisionRecord& dr)
         return;
     }
 
-//    std::cout << name_ << ": processKeep(" << pBet->betName() <<
+//    std::cout << playerName_ << ": processKeep(" << pBet->betName() <<
 //        ") lost:" << dr.lose << " won:" << dr.win
 //        << " balance:" << wallet_.getBalance() << "\n";
 
@@ -400,55 +470,11 @@ Player::removeBetById(unsigned betId)
 #endif
 
 //----------------------------------------------------------------
-//
-// Save Player to file
-//
-bool
-Player::saveToFile(const std::string& path) const
-{
-    // TODO    
-    return true;
-}
 
-//----------------------------------------------------------------
-//
-// Load Player from file
-//
-bool
-Player::loadFromFile(const std::string& path)
+const Craps::PlayerId&
+Player::getPlayerId() const
 {
-    return true;
-}
-
-//----------------------------------------------------------------
-//
-// Convert Player to YAML
-//
-YAML::Node
-Player::toYAML() const
-{
-    // TODO
-    YAML::Node node;
-    return node;
-}
-
-//----------------------------------------------------------------
-//
-// Convert YAML to Player
-//
-void
-Player::fromYAML(const YAML::Node& node)
-{
-    // TODO
-    // TODO wallet_.balance = j.at("balance").get<int64_t>();
-}
-
-//----------------------------------------------------------------
-
-const Gen::Uuid&
-Player::getUuid() const
-{
-    return uuid_;
+    return playerId_;
 }
 
 //----------------------------------------------------------------
@@ -456,7 +482,15 @@ Player::getUuid() const
 const std::string&
 Player::getName() const
 {
-    return name_;
+    return playerName_;
+}
+
+//----------------------------------------------------------------
+
+void
+Player::setName(const std::string& playerName)
+{
+    playerName_ = playerName;
 }
 
 //----------------------------------------------------------------
@@ -473,7 +507,7 @@ void
 Player::onBettingClosed()
 {
     // TODO
-    // std::cout << name_ << " acknowledges BettingClosed\n";
+    // std::cout << playerName_ << " acknowledges BettingClosed\n";
 }
 
 //----------------------------------------------------------------
@@ -482,7 +516,7 @@ void
 Player::onBettingOpened()
 {
     // TODO
-    // std::cout << name_ << " acknowledges BettingOpen\n";
+    // std::cout << playerName_ << " acknowledges BettingOpen\n";
 }
 
 //----------------------------------------------------------------
@@ -491,7 +525,7 @@ void
 Player::onDiceThrowStart()
 {
     // TODO
-    // std::cout << name_ << " acknowledges DiceThrowStart\n";
+    // std::cout << playerName_ << " acknowledges DiceThrowStart\n";
 }
 
 //----------------------------------------------------------------
@@ -500,7 +534,7 @@ void
 Player::onDiceThrowEnd()
 {
     // TODO
-    // std::cout << name_ << " acknowledges DiceThrowEnd\n";
+    // std::cout << playerName_ << " acknowledges DiceThrowEnd\n";
 }
 
 //----------------------------------------------------------------
@@ -509,7 +543,7 @@ void
 Player::onAnnounceDiceNumber(const AnnounceDiceNumber& evt)
 {
     // TODO
-    // std::cout << name_ << " acknowledges AnnounceDiceNumber " << evt.val
+    // std::cout << playerName_ << " acknowledges AnnounceDiceNumber " << evt.val
     //           << "(" << evt.d1 << "," << evt.d2 << ")\n";
 }
 
@@ -519,7 +553,7 @@ void
 Player::onPointEstablished(const PointEstablished& evt)
 {
     // TODO
-    // std::cout << name_ << " acknowledges PointEstablished " << evt.point << "\n";
+    // std::cout << playerName_ << " acknowledges PointEstablished " << evt.point << "\n";
 }
 
 //----------------------------------------------------------------
@@ -528,7 +562,7 @@ void
 Player::onSevenOut()
 {
     // TODO
-    // std::cout << name_ << " acknowledges SevenOut\n";
+    // std::cout << playerName_ << " acknowledges SevenOut\n";
 }
 
 //----------------------------------------------------------------
@@ -537,7 +571,7 @@ void
 Player::onPassLineWinner()
 {
     // TODO
-    // std::cout << name_ << " acknowledges PassLineWinner\n";
+    // std::cout << playerName_ << " acknowledges PassLineWinner\n";
 }
 
 //----------------------------------------------------------------
@@ -546,7 +580,7 @@ void
 Player::onNewShooter(const NewShooter& evt)
 {
     // TODO
-    // std::cout << name_ << " acknowledges NewShooter " <<
+    // std::cout << playerName_ << " acknowledges NewShooter " <<
     //      Gbl::pPlayerMgr->getPlayer(evt.shooterId)->getName() << "\n";
 }
 

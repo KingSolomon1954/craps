@@ -70,7 +70,7 @@ TableManifest::fromYAML(const YAML::Node& node)
 void
 TableManifest::TableInfo::fromYAML(const YAML::Node& node)
 {
-    tableId          = node["tableId"].as<Craps::CrapsTable::TableId>();
+    tableId          = node["tableId"].as<Craps::TableId>();
     tableName        = node["tableName"].as<std::string>();
     shortDescription = node["shortDescription"].as<std::string>();
     fullDescription  = node["fullDescription"].as<std::string>();
