@@ -13,6 +13,8 @@
 #include <craps/DecisionRecord.h>
 #include <craps/EventManager.h>
 #include <gen/ErrorPass.h>
+#include <gen/FileUtils.h>
+#include <gen/Logger.h>
 #include <gen/Uuid.h>
 
 using namespace Craps;
@@ -142,7 +144,15 @@ Player::fromFile(const PlayerId& playerId,
 void
 Player::saveFile() const
 {
-
+    if (config_.playerPath.empty())
+    {
+        LOG_DEBUG("Player::saveFile() skipping; playerPath is empty");
+        return;
+    }
+    
+    LOG_DEBUG("Player::saveFile(" + config_.playerPath.string()  + ")");
+    std::ofstream fout(config_.playerPath);
+    fout << toYAML();
 }
 
 //----------------------------------------------------------------
@@ -152,7 +162,19 @@ Player::saveFile() const
 void
 Player::loadFile()
 {
-
+    try
+    {
+        std::ifstream fin =
+            Gen::FileUtils::openOrThrow(config_.playerPath);  // throws
+        YAML::Node root = YAML::Load(fin);
+        fromYAML(root);                                       // throws
+    }
+    catch (const std::runtime_error& e)
+    {
+        std::string diag("Player::loadFile(): \"" +
+                         config_.playerPath.string() + "\"; ");
+        throw std::runtime_error(diag + e.what());
+    }
 }
 
 //----------------------------------------------------------------
@@ -188,10 +210,11 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
     
     if (pTable_->addPlayer(this, ep) == Gen::ReturnCode::Fail)
     {
-        ep.prepend("Player " + playerName_ + " joining table. ");
+        ep.prepend("Player::joinTable(): " + playerName_ + 
+                   " failed to join table. ");
         return Gen::ReturnCode::Fail;
     }
-    setupSubscriptions();  // TODO maybe setupTableSubscriptions?
+    setupSubscriptions();
 
     return Gen::ReturnCode::Success;
 }
