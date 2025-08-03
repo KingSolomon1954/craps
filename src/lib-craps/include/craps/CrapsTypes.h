@@ -7,12 +7,18 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include <gen/Uuid.h>
 
 namespace Craps {
 
-using TableId  = std::string;
-using PlayerId = Gen::Uuid;
+class Player;    // fwd
+class CrapsBet;  // fwd
+    
+using TableId   = std::string;
+using PlayerId  = Gen::Uuid;
+using PlayerPtr = std::shared_ptr<class Player>;
+using BetPtr    = std::shared_ptr<class CrapsBet>;
     
 }
 

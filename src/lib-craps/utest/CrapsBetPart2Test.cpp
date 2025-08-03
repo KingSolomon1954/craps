@@ -27,19 +27,21 @@ using namespace Craps;
 
 //----------------------------------------------------------------
 
-struct BetPart2Fixture
+struct CrapsBetPart2Fixture
 {
     EventManager em;
+    PlayerConfig config { "playerFilesDirectory" };
+
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     
-    BetPart2Fixture()
+    CrapsBetPart2Fixture()
+        : p1(Player::createPlayer("Player1", config, em))
+        , p2(Player::createPlayer("Player2", config, em))
     {
-        p1 = new Player("Player1",1000, em);
-        p2 = new Player("Player2",1000, em);
     }
 
-   ~BetPart2Fixture()
+   ~CrapsBetPart2Fixture()
     {
         delete p1;
         delete p2;
@@ -48,7 +50,7 @@ struct BetPart2Fixture
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:Place")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Place")
 {
     SUBCASE("Come Out Roll")
     {
@@ -585,7 +587,7 @@ TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:Place")
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:Buy")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Buy")
 {
     SUBCASE("decisions")
     {
@@ -911,7 +913,7 @@ void lay3(Player* p1, unsigned point, unsigned num, unsigned d1, unsigned d2)
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:Lay")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Lay")
 {
     SUBCASE("decisions")
     {
@@ -1042,7 +1044,7 @@ void hard3(Player* p1, unsigned point, unsigned num, unsigned d1, unsigned d2)
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture,"CrapsBet:evaluate:Hardway")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture,"CrapsBet:evaluate:Hardway")
 {
     SUBCASE("decisions")
     {
@@ -1237,7 +1239,7 @@ void field2(Player* p1, unsigned point, unsigned d1, unsigned d2)
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:Field")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Field")
 {
     SUBCASE("decisions")
     {
@@ -1298,7 +1300,7 @@ void anyCraps2(Player* p1, unsigned point, unsigned d1, unsigned d2)
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:AnyCraps")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:AnyCraps")
 {
     SUBCASE("decisions")
     {
@@ -1341,7 +1343,7 @@ void anySeven1(Player* p1, unsigned point, unsigned d1, unsigned d2)
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:AnySeven")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:AnySeven")
 {
     SUBCASE("decisions")
     {
@@ -1425,7 +1427,7 @@ void cAndE2(Player* p1, unsigned point, unsigned d1, unsigned d2)
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:C&E")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:C&E")
 {
     SUBCASE("decisions")
     {
@@ -1494,7 +1496,7 @@ void horn2(Player* p1, unsigned point, unsigned d1, unsigned d2)
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(BetPart2Fixture, "CrapsBet:evaluate:Horn")
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Horn")
 {
     SUBCASE("decisions")
     {

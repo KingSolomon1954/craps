@@ -30,7 +30,7 @@ PlayerManager::PlayerManager()
 Create a Player
 
 */
-PlayerManager::PlayerPtr
+Craps::PlayerPtr
 PlayerManager::createPlayer(const std::string& name)
 {
     // TODO
@@ -38,7 +38,7 @@ PlayerManager::createPlayer(const std::string& name)
     
     auto player = std::make_shared<Craps::Player>(
         "1", config, *Gbl::pEventMgr);
-    playersAll_[player->getPlayerId()] = player;
+    players_[player->getPlayerId()] = player;
     return player;
 }
 
@@ -47,11 +47,11 @@ PlayerManager::createPlayer(const std::string& name)
 Get Player by UUID
 
 */
-PlayerManager::PlayerPtr
+Craps::PlayerPtr
 PlayerManager::getPlayer(const Craps::PlayerId& playerId) const
 {
-    auto it = playersAll_.find(playerId);
-    if (it != playersAll_.end()) return it->second;
+    auto it = players_.find(playerId);
+    if (it != players_.end()) return it->second;
     return nullptr;
 }
 
@@ -122,7 +122,7 @@ PlayerManager::loadPlayers()
         auto player = std::make_shared<Craps::Player>();
         if (player->loadFromFile("players/" + entry["uuid"].get<Gen::Uuid>() + ".json"))
         {
-            playersAll_[player->getUuid()] = player;
+            players_[player->getUuid()] = player;
         }
     }
 #endif    
@@ -139,7 +139,7 @@ PlayerManager::savePlayers()
 {
 #if 0    
     json index;
-    for (const auto& [uuid, player] : playersAll_)
+    for (const auto& [uuid, player] : players_)
     {
         player->saveToFile("players/" + uuid + ".json");
         index["players"].push_back({
@@ -152,85 +152,6 @@ PlayerManager::savePlayers()
     out << index.dump(2);
 #endif    
     return true;
-}
-
-#if 0
-/*-----------------------------------------------------------*//**
-
-Disburse WIN decision record to player.
-
-Called by CrapsTable to dish out a winning bet to a Player.
-
-*/
-void
-PlayerManager::disburseWin(const Craps::DecisionRecord& dr) const
-{
-    auto pPlayer = getPlayer(dr.playerId);
-    if (pPlayer == nullptr)
-    {
-        diagBadPlayerId("disburseWin() ", dr.playerId);
-        assert(false);
-        return;
-    }
-    pPlayer->processWin(dr);
-}
-
-/*-----------------------------------------------------------*//**
-
-Disburse LOSE decision record to player.
-
-Called by CrapsTable to dish out a losing bet to a Player.
-
-*/
-void
-PlayerManager::disburseLose(const Craps::DecisionRecord& dr) const
-{
-    auto pPlayer = getPlayer(dr.playerId);
-    if (pPlayer == nullptr)
-    {
-        diagBadPlayerId("disburseLose() ", dr.playerId);
-        assert(false);
-        return;
-    }
-    pPlayer->processLose(dr);
-}
-
-/*-----------------------------------------------------------*//**
-
-Disburse KEEP decision record to player.
-
-Called by CrapsTable to inform a Player about their bet that
-have no decision on the current roll of dice.
-
-*/
-void
-PlayerManager::disburseKeep(const Craps::DecisionRecord& dr) const
-{
-    auto pPlayer = getPlayer(dr.playerId);
-    if (pPlayer == nullptr)
-    {
-        diagBadPlayerId("disburseKeep() ", dr.playerId);
-        assert(false);
-        return;
-    }
-    pPlayer->processKeep(dr);
-}
-
-#endif
-
-//----------------------------------------------------------------
-
-void
-PlayerManager::diagBadPlayerId(const std::string& funcName,
-                               const Craps::PlayerId& playerId) const
-{
-    std::string diag =
-        "Internal Error: Unable to process decision record. "
-        "PlayerManager::" + funcName + "cant match "
-        "decision record playerId against any playerId in "
-        "playersAll list. Bad uuid:" + playerId;
-    // TODO: error manager
-    std::cerr << diag << std::endl;
 }
 
 //----------------------------------------------------------------

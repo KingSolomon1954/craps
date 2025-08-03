@@ -276,7 +276,7 @@ bet amount or odds.
     Success if accepted, otherwise Fail and ep has the reason
 */
 Gen::ReturnCode
-CrapsTable::addBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep)
+CrapsTable::addBet(Craps::BetPtr pBet, Gen::ErrorPass& ep)
 {
     if (!betAllowed(*pBet, ep)) return Gen::ReturnCode::Fail;
 
@@ -313,7 +313,7 @@ CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsTable::removeBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep)
+CrapsTable::removeBet(Craps::BetPtr pBet, Gen::ErrorPass& ep)
 {
     std::string diag = "CrapsTable::removeBet(): Unable to remove bet. ";
     if (!haveBet(*pBet))
@@ -361,7 +361,7 @@ Validates the change against table rules.
 @li 2 is the index to select the right diagPrefix
 */
 Gen::ReturnCode
-CrapsTable::setContractAmount(CrapsBet::BetPtr pBet,
+CrapsTable::setContractAmount(Craps::BetPtr pBet,
                               Gen::Money newAmount,
                               Gen::ErrorPass& ep)
 {
@@ -413,7 +413,7 @@ conditions are true:
     CrapsBet::setOddsAmount(): Unable to set odds bet; bet(betId:159, betName:DontPass(6)). Exceeds table limit of 5x odds; Contract amount is $1 which allows max odds amount of $5.
 */
 Gen::ReturnCode
-CrapsTable::setOddsAmount(CrapsBet::BetPtr pBet,
+CrapsTable::setOddsAmount(Craps::BetPtr pBet,
                           Gen::Money oddsAmount,
                           Gen::ErrorPass& ep)
 {
@@ -444,7 +444,7 @@ CrapsTable::haveBet(const CrapsBet& bet) const
 // CrapsBet*
 // CrapsTable::findBetById(unsigned betId) const
 //
-CrapsBet::BetPtr
+Craps::BetPtr
 CrapsTable::findBetById(unsigned betId) const
 {
     // Loop over all bets
@@ -733,7 +733,7 @@ bool
 CrapsTable::removeMatchingBet(BetList& bets, CrapsBet* pBet)
 {
     auto it = std::find_if(bets.begin(), bets.end(),
-        [pBet](const CrapsBet::BetPtr& b)
+        [pBet](const Craps::BetPtr& b)
         {
             return b.get() == pBet;
         });
@@ -774,7 +774,7 @@ CrapsTable::removeBetsByPlayerPtr(BetList& bets, Player* pPlayer)
     {
         if (*it && (*it)->pPlayer_ == pPlayer)
         {
-            CrapsBet::BetPtr p = *it;
+            Craps::BetPtr p = *it;
             houseBank_.deposit(p->contractAmount());
             houseBank_.deposit(p->oddsAmount());
             it = bets.erase(it);
@@ -1151,7 +1151,7 @@ std::cout << node << "\n";
 // Determine if we have the given bet on the table.
 //
 bool
-CrapsTable::haveBet(const CrapsBet::BetPtr bet) const
+CrapsTable::haveBet(const Craps::BetPtr bet) const
 {
     return findBetById(bet->betId()) != nullptr;
 

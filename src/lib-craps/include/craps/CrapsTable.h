@@ -51,12 +51,12 @@ public:
     Gen::ReturnCode removePlayer(Player* pPlayer, Gen::ErrorPass& ep);
     
     // Bets
-    Gen::ReturnCode addBet   (CrapsBet::BetPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(CrapsBet::BetPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode setContractAmount(CrapsBet::BetPtr pBet,
+    Gen::ReturnCode addBet   (Craps::BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet(Craps::BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode setContractAmount(Craps::BetPtr pBet,
                                       Gen::Money newAmount,
                                       Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount(CrapsBet::BetPtr pBet,
+    Gen::ReturnCode setOddsAmount(Craps::BetPtr pBet,
                                   Gen::Money oddsAmount,
                                   Gen::ErrorPass& ep);
     // Table    
@@ -154,7 +154,7 @@ private:
     // collects losing bets in a certain order followed by payouts of
     // winning bets in a certain order.
     //
-    using BetList = std::list<CrapsBet::BetPtr>;
+    using BetList = std::list<Craps::BetPtr>;
     using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
     BetTable tableBets_;
 
@@ -181,7 +181,7 @@ private:
     void removePlayerBets            (Player* pPlayer);
     void removeBetsByPlayerPtr       (BetList& bets, Player* pPlayer);
     bool removeMatchingBet           (BetList& bets, CrapsBet* pBet);
-    CrapsBet::BetPtr findBetById     (unsigned betId) const;
+    Craps::BetPtr findBetById        (unsigned betId) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();

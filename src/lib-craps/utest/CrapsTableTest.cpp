@@ -20,6 +20,7 @@ struct CrapsTableFixture
 {
     Craps::EventManager em;
     Craps::TableConfig  config;
+    
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     Player* p3 = nullptr;
@@ -30,13 +31,14 @@ struct CrapsTableFixture
 
     CrapsTableFixture()
     {
-        p1 = new Player("Player1",1000, em);
-        p2 = new Player("Player2",1000, em);
-        p3 = new Player("Player3",1000, em);
-        p4 = new Player("Player4",1000, em);
-        p5 = new Player("Player5",1000, em);
-        p6 = new Player("Player6",1000, em);
-        p7 = new Player("Player7",1000, em);
+        PlayerConfig playerConfig { "playerFilesDirectory" };
+        p1 = Player::createPlayer("Player1", playerConfig, em);
+        p2 = Player::createPlayer("Player2", playerConfig, em);
+        p3 = Player::createPlayer("Player3", playerConfig, em);
+        p4 = Player::createPlayer("Player4", playerConfig, em);
+        p5 = Player::createPlayer("Player5", playerConfig, em);
+        p6 = Player::createPlayer("Player6", playerConfig, em);
+        p7 = Player::createPlayer("Player7", playerConfig, em);
         
         config.maxSessions = 50;
         config.maxRecentRolls = 25;
@@ -798,7 +800,7 @@ using AutoRolls = std::vector<AutoBet>;
 void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
 {
     Gen::ErrorPass ep;
-    CrapsBet::BetPtr lastBet;
+    Craps::BetPtr lastBet;
     
     for (const auto& r : rolls)
     {

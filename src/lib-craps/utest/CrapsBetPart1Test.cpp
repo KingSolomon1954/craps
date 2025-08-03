@@ -15,6 +15,7 @@
 #include <stdexcept> // for std::invalid_argument
 #include <chrono>
 #include <iostream>
+#include <memory>
 #include <craps/CrapsBet.h>
 #include <craps/Dice.h>
 #include <craps/EnumBetName.h>
@@ -28,12 +29,31 @@ using namespace Craps;
 
 //----------------------------------------------------------------
 
-TEST_CASE("CrapsBet:Constructor")
+struct CrapsBetPart1Fixture
 {
     EventManager em;
-    Player player1("Player1", 1000, em);
-    Player* p1 = &player1;
+    PlayerConfig config { "playerFilesDirectory" };
 
+    Player* p1 = nullptr;
+    Player* p2 = nullptr;
+    
+    CrapsBetPart1Fixture()
+        : p1(Player::createPlayer("Player1", config, em))
+        , p2(Player::createPlayer("Player2", config, em))
+    {
+    }
+
+   ~CrapsBetPart1Fixture()
+    {
+        delete p1;
+        delete p2;
+    }
+};
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsBetPart1Fixture, "CrapsBet:Constructor")
+{
     SUBCASE("Good Args")
     {
         CrapsBet b(p1, BetName::PassLine, 100);
@@ -193,12 +213,8 @@ TEST_CASE("CrapsBet:Constructor")
 
 //----------------------------------------------------------------
 
-TEST_CASE("CrapsBet:evaluate:args")
+TEST_CASE_FIXTURE(CrapsBetPart1Fixture, "CrapsBet:evaluate:args")
 {
-    EventManager em;
-    Player player1("Player1", 1000, em);
-    Player* p1 = &player1;
-
     SUBCASE("Bad Args")
     {
         Gen::ErrorPass ep;
@@ -218,12 +234,8 @@ TEST_CASE("CrapsBet:evaluate:args")
 
 //----------------------------------------------------------------
 
-TEST_CASE("CrapsBet:evaluate:PassLine")
+TEST_CASE_FIXTURE(CrapsBetPart1Fixture, "CrapsBet:evaluate:PassLine")
 {
-    EventManager em;
-    Player player1("Player1", 1000, em);
-    Player* p1 = &player1;
-
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
@@ -903,12 +915,8 @@ TEST_CASE("CrapsBet:evaluate:PassLine")
 
 //----------------------------------------------------------------
 
-TEST_CASE("CrapsBet:evaluate:DontPass")
+TEST_CASE_FIXTURE(CrapsBetPart1Fixture, "CrapsBet:evaluate:DontPass")
 {
-    EventManager em;
-    Player player1("Player1", 1000, em);
-    Player* p1 = &player1;
-
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
@@ -1579,12 +1587,8 @@ TEST_CASE("CrapsBet:evaluate:DontPass")
 
 //----------------------------------------------------------------
 
-TEST_CASE("CrapsBet:evaluate:Come")
+TEST_CASE_FIXTURE(CrapsBetPart1Fixture, "CrapsBet:evaluate:Come")
 {
-    EventManager em;
-    Player player1("Player1", 1000, em);
-    Player* p1 = &player1;
-
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;
@@ -2210,12 +2214,8 @@ TEST_CASE("CrapsBet:evaluate:Come")
 
 //----------------------------------------------------------------
 
-TEST_CASE("CrapsBet:evaluate:DontCome")
+TEST_CASE_FIXTURE(CrapsBetPart1Fixture, "CrapsBet:evaluate:DontCome")
 {
-    EventManager em;
-    Player player1("Player1", 1000, em);
-    Player* p1 = &player1;
-
     SUBCASE("Come Out Roll")
     {
         Gen::ErrorPass ep;

@@ -25,6 +25,7 @@ public:
     /// @{
     PlayerManager();
    ~PlayerManager() = default;
+    
     void loadStartingPlayers();
     bool loadPlayers();
     bool savePlayers();
@@ -32,28 +33,21 @@ public:
 
     /// @name Modifiers
     /// @{
-    using PlayerPtr = std::shared_ptr<class Craps::Player>;
-    PlayerPtr createPlayer(const std::string& name);
+    Craps::PlayerPtr createPlayer(const std::string& name);
     /// @}
 
     /// @name Observers
     /// @{
-    PlayerPtr getPlayer(const Craps::PlayerId& playerId) const;
-    
-    // void disburseWin (const Craps::DecisionRecord& dr) const;
-    // void disburseLose(const Craps::DecisionRecord& dr) const;
-    // void disburseKeep(const Craps::DecisionRecord& dr) const;
+    Craps::PlayerPtr getPlayer(const Craps::PlayerId& playerId) const;
     /// @}
 
     using PlayerDescriptions = std::vector<PlayerDescription>;
+    
     static PlayerDescriptions loadPlayerChoices();
-    static Craps::Player loadPlayer(const Craps::PlayerId& playerId);
+    static Craps::Player      loadPlayer(const Craps::PlayerId& playerId);
 
 private:
-    std::unordered_map<Craps::PlayerId, std::shared_ptr<Craps::Player>> playersAll_;
-
-    void diagBadPlayerId(const std::string& funcName,
-                         const Craps::PlayerId& playerId) const;
+    std::unordered_map<Craps::PlayerId, Craps::PlayerPtr> players_;
 };
 
 /*-----------------------------------------------------------*//**

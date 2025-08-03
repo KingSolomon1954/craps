@@ -36,13 +36,13 @@ Player::Player(
 //
 // Will create a fresh PlayerId
 //
-Player
+Player*
 Player::createPlayer(const std::string&  playerName,
                      const PlayerConfig& config,
                      EventManager&       eventMgr)
 {
-    Player p(Gen::generateUuid(), config, eventMgr);
-    p.setName(playerName);
+    Player* p = new Player(Gen::generateUuid(), config, eventMgr);
+    p->setName(playerName);
     return p;
 }
     
@@ -198,7 +198,7 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 
 //----------------------------------------------------------------
 
-CrapsBet::BetPtr
+Craps::BetPtr
 Player::makeBet(BetName betName,
                 Gen::Money contractAmount,
                 unsigned pivot,
@@ -238,7 +238,7 @@ Player::makeBet(BetName betName,
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-Player::setOddsAmount(CrapsBet::BetPtr pBet,
+Player::setOddsAmount(Craps::BetPtr pBet,
                       Gen::Money oddsAmount,
                       Gen::ErrorPass& ep)
 {
@@ -261,8 +261,13 @@ Player::setOddsAmount(CrapsBet::BetPtr pBet,
     return Gen::ReturnCode::Success;
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Process WIN decision
+
+Called by CrapsTable to dish out a winning bet to a Player.
+
+*/
 void
 Player::processWin(const DecisionRecord& dr)
 {
@@ -289,8 +294,13 @@ Player::processWin(const DecisionRecord& dr)
     (void) removeBetByPtr(pBet);
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Process LOSE decision
+
+Called by CrapsTable to dish out a losing bet to a Player.
+
+*/
 void
 Player::processLose(const DecisionRecord& dr)
 {
@@ -316,8 +326,14 @@ Player::processLose(const DecisionRecord& dr)
     (void) removeBetByPtr(pBet);  // Done with this bet
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Process KEEP decision
+
+Called by CrapsTable to inform Player that the current roll of
+dice resulted in no decision for the assocated bet.
+
+*/
 void
 Player::processKeep(const DecisionRecord& dr)
 {
@@ -357,13 +373,13 @@ Player::diagBadBetId(const std::string& funcName, unsigned betId) const
 
 //----------------------------------------------------------------
 //
-// Search for a bet by ID
+// Search for bet by ID
 //
-CrapsBet::BetPtr
+Craps::BetPtr
 Player::findBetById(unsigned betId) const
 {
     auto it = std::find_if(bets_.begin(), bets_.end(),
-                   [betId](const CrapsBet::BetPtr& b)
+                   [betId](const Craps::BetPtr& b)
                    {
                        return b->betId() == betId;
                    });
@@ -377,7 +393,7 @@ Player::findBetById(unsigned betId) const
 //----------------------------------------------------------------
 
 bool
-Player::removeBetByPtr(CrapsBet::BetPtr& b)
+Player::removeBetByPtr(Craps::BetPtr& b)
 {
     auto it = std::find(bets_.begin(), bets_.end(), b);
     if (it != bets_.end())
@@ -396,7 +412,7 @@ Gen::ReturnCode
 Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
 {
     auto it = std::remove_if(bets_.begin(), bets_.end(),
-        [betName, pivot](const CrapsBet::BetPtr& b)
+        [betName, pivot](const Craps::BetPtr& b)
         {
             return (b->betName() == betName) && (b->pivot() == pivot);
         });

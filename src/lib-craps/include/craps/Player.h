@@ -34,13 +34,14 @@ class Player
 public:
     /// @name Lifecycle
     /// @{
-    Player(const Craps::PlayerId& playerId, // Existing playerId, name comes from file
-           const PlayerConfig&    config,
+    Player(const Craps::PlayerId& playerId, // Existing playerId, 
+           const PlayerConfig&    config,   // name will come from file
            EventManager&          eventMgr);
+   ~Player() = default;
 
-    Player createPlayer(const std::string&  playerName,  // Will create a fresh PlayerId)
-                        const PlayerConfig& config,
-                        EventManager&       eventMgr);
+    static Player* createPlayer(const std::string&  playerName,  // Creates
+                                const PlayerConfig& config,      // a fresh
+                                EventManager&       eventMgr);   // PlayerId
     
     static Player* fromConfig(const Craps::PlayerId& playerId,
                               const PlayerConfig&    config,
@@ -53,11 +54,11 @@ public:
     /// @name Modifiers
     /// @{
     Gen::ReturnCode joinTable(CrapsTable* pTable, Gen::ErrorPass& ep);
-    CrapsBet::BetPtr makeBet(BetName betName,
-                             Gen::Money contractAmount,
-                             unsigned pivot,
-                             Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount(CrapsBet::BetPtr pBet,
+    Craps::BetPtr makeBet(BetName betName,
+                          Gen::Money contractAmount,
+                          unsigned pivot,
+                          Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount(Craps::BetPtr pBet,
                                   Gen::Money amount,
                                   Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(BetName betName,
@@ -85,18 +86,18 @@ public:
 
 private:
     // order matters
-    Craps::PlayerId             playerId_;
-    PlayerConfig                config_;
-    EventManager&               eventMgr_;
-    Bank                        wallet_;     // overriden by yaml
+    Craps::PlayerId          playerId_;
+    PlayerConfig             config_;
+    EventManager&            eventMgr_;
+    Bank                     wallet_;     // overriden by yaml
 
     // order doesn't matter
-    std::string                 playerName_; // set by yaml or creation
-    std::list<CrapsBet::BetPtr> bets_;
-    CrapsTable*                 pTable_;
+    std::string              playerName_; // set by yaml or creation
+    std::list<Craps::BetPtr> bets_;
+    CrapsTable*              pTable_;
 
-    bool removeBetByPtr(CrapsBet::BetPtr& pBet);
-    CrapsBet::BetPtr findBetById(unsigned betId) const;
+    bool removeBetByPtr(Craps::BetPtr& pBet);
+    Craps::BetPtr findBetById(unsigned betId) const;
     void diagBadBetId(const std::string& funcName, unsigned betId) const;
     void setupSubscriptions();
     void onBettingClosed();

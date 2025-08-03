@@ -30,8 +30,6 @@ class Player;          // fwd
 class CrapsBet
 {
 public:
-    using BetPtr = std::shared_ptr<class CrapsBet>;
-    
     /// @name Lifecycle
     /// @{
     CrapsBet(Player*    pPlayer,
