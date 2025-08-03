@@ -221,7 +221,7 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 
 //----------------------------------------------------------------
 
-Craps::BetPtr
+BetPtr
 Player::makeBet(BetName betName,
                 Gen::Money contractAmount,
                 unsigned pivot,
@@ -261,7 +261,7 @@ Player::makeBet(BetName betName,
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-Player::setOddsAmount(Craps::BetPtr pBet,
+Player::setOddsAmount(BetPtr pBet,
                       Gen::Money oddsAmount,
                       Gen::ErrorPass& ep)
 {
@@ -296,7 +296,7 @@ Player::processWin(const DecisionRecord& dr)
 {
     assert(dr.win > 0);
 
-    // Obtain pointer to our bet
+    // Confirm we actually have the bet dr.pBet and Obtain pointer to our bet
     auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
@@ -383,7 +383,7 @@ Player::processKeep(const DecisionRecord& dr)
 //----------------------------------------------------------------
 
 void
-Player::diagBadBetId(const std::string& funcName, unsigned betId) const
+Player::diagBadBetId(const std::string& funcName, BetId betId) const
 {
     std::string diag =
         "Internal Error: Unable to process decision record. "
@@ -398,11 +398,11 @@ Player::diagBadBetId(const std::string& funcName, unsigned betId) const
 //
 // Search for bet by ID
 //
-Craps::BetPtr
-Player::findBetById(unsigned betId) const
+BetPtr
+Player::findBetById(BetId betId) const
 {
     auto it = std::find_if(bets_.begin(), bets_.end(),
-                   [betId](const Craps::BetPtr& b)
+                   [betId](const BetPtr& b)
                    {
                        return b->betId() == betId;
                    });
@@ -416,7 +416,7 @@ Player::findBetById(unsigned betId) const
 //----------------------------------------------------------------
 
 bool
-Player::removeBetByPtr(Craps::BetPtr& b)
+Player::removeBetByPtr(BetPtr& b)
 {
     auto it = std::find(bets_.begin(), bets_.end(), b);
     if (it != bets_.end())
@@ -435,7 +435,7 @@ Gen::ReturnCode
 Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
 {
     auto it = std::remove_if(bets_.begin(), bets_.end(),
-        [betName, pivot](const Craps::BetPtr& b)
+        [betName, pivot](const BetPtr& b)
         {
             return (b->betName() == betName) && (b->pivot() == pivot);
         });
@@ -510,7 +510,7 @@ Player::removeBetById(unsigned betId)
 
 //----------------------------------------------------------------
 
-const Craps::PlayerId&
+const PlayerId&
 Player::getPlayerId() const
 {
     return playerId_;

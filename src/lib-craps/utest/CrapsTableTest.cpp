@@ -106,8 +106,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
     {
         // Clobber path. Use bad tableId/path so file won't be found.
         CrapsTableFixture::config.tablePath = "missing/FakeTable-1";
-        CHECK_THROWS_AS(CrapsTable::fromFile(
-                            "FakeTable-1", CrapsTableFixture::config, em),
+        CHECK_THROWS_AS(CrapsTable::fromFile("FakeTable-1", config, em),
                         std::runtime_error);
     }
 }

@@ -18,6 +18,7 @@ class CrapsBet;  // fwd
 using TableId   = std::string;
 using PlayerId  = Gen::Uuid;
 using PlayerPtr = std::shared_ptr<class Player>;
+using BetId     = unsigned;
 using BetPtr    = std::shared_ptr<class CrapsBet>;
     
 }

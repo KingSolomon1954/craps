@@ -1120,7 +1120,7 @@ Returns the bet ID.
 @return
     The unique bet ID associated with this bet.
 */
-unsigned
+BetId
 CrapsBet::betId() const
 {
     return betId_;

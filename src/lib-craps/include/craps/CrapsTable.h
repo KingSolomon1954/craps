@@ -9,7 +9,6 @@
 #include <array>
 #include <deque>
 #include <list>
-#include <memory>
 #include <gen/ErrorPass.h>
 #include <gen/MoneyUtil.h>
 #include <gen/ReturnCode.h>
@@ -32,16 +31,16 @@ class CrapsTable
 public:
     /// @name Lifecycle
     /// @{
-    CrapsTable(const TableId& tableId,
+    CrapsTable(const TableId&     tableId,
                const TableConfig& config,
-               EventManager& eventMgr);
+               EventManager&      eventMgr);
    ~CrapsTable() = default;
-    static CrapsTable* fromConfig(const TableId& tableId,
+    static CrapsTable* fromConfig(const TableId&     tableId,
                                   const TableConfig& config,
-                                  EventManager& eventMgr);
-    static CrapsTable* fromFile  (const TableId& tableId,
+                                  EventManager&      eventMgr);
+    static CrapsTable* fromFile  (const TableId&     tableId,
                                   const TableConfig& config,
-                                  EventManager& eventMgr);
+                                  EventManager&      eventMgr);
     /// @}
 
     /// @name Modifiers
@@ -49,17 +48,17 @@ public:
     // Players
     Gen::ReturnCode addPlayer   (Player* pPlayer, Gen::ErrorPass& ep);
     Gen::ReturnCode removePlayer(Player* pPlayer, Gen::ErrorPass& ep);
-    
+
     // Bets
-    Gen::ReturnCode addBet   (Craps::BetPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(Craps::BetPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode setContractAmount(Craps::BetPtr pBet,
+    Gen::ReturnCode addBet   (BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet(BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode setContractAmount(BetPtr pBet,
                                       Gen::Money newAmount,
                                       Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount(Craps::BetPtr pBet,
+    Gen::ReturnCode setOddsAmount(BetPtr pBet,
                                   Gen::Money oddsAmount,
                                   Gen::ErrorPass& ep);
-    // Table    
+    // Table
     void rollDice();
     void resetStats();
     void close();               // Shutdown table, switching to different table
@@ -141,12 +140,12 @@ private:
     std::deque<Dice> recentRolls_;  // Front element is oldest roll
 
     CrapsTable();  // private ctor
-    
+
     // Players must join table in order to play.
     static inline constexpr size_t MaxPlayers = 6;
     using PlayerList = std::list<Player*>;
     PlayerList players_;
-    
+
     // Bets on the table are kept in a fixed sized array of lists, where
     // each array index equates to a bet type, and holds a list of bets
     // of that type. This allows easier traversals later that mimic real
@@ -154,7 +153,7 @@ private:
     // collects losing bets in a certain order followed by payouts of
     // winning bets in a certain order.
     //
-    using BetList = std::list<Craps::BetPtr>;
+    using BetList = std::list<BetPtr>;
     using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
     BetTable tableBets_;
 
@@ -181,7 +180,7 @@ private:
     void removePlayerBets            (Player* pPlayer);
     void removeBetsByPlayerPtr       (BetList& bets, Player* pPlayer);
     bool removeMatchingBet           (BetList& bets, CrapsBet* pBet);
-    Craps::BetPtr findBetById        (unsigned betId) const;
+    BetPtr findBetById               (BetId betId) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();

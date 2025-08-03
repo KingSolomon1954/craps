@@ -34,31 +34,31 @@ class Player
 public:
     /// @name Lifecycle
     /// @{
-    Player(const Craps::PlayerId& playerId, // Existing playerId, 
-           const PlayerConfig&    config,   // name will come from file
-           EventManager&          eventMgr);
+    Player(const PlayerId&     playerId, // Existing playerId, 
+           const PlayerConfig& config,   // name will come from file
+           EventManager&       eventMgr);
    ~Player() = default;
 
     static Player* createPlayer(const std::string&  playerName,  // Creates
                                 const PlayerConfig& config,      // a fresh
                                 EventManager&       eventMgr);   // PlayerId
     
-    static Player* fromConfig(const Craps::PlayerId& playerId,
-                              const PlayerConfig&    config,
-                              EventManager&          eventMgr);
-    static Player* fromFile  (const Craps::PlayerId& playerId,
-                              const PlayerConfig&    config,
-                              EventManager&          eventMgr);
+    static Player* fromConfig(const PlayerId&     playerId,
+                              const PlayerConfig& config,
+                              EventManager&       eventMgr);
+    static Player* fromFile  (const PlayerId&     playerId,
+                              const PlayerConfig& config,
+                              EventManager&       eventMgr);
     /// @}
 
     /// @name Modifiers
     /// @{
     Gen::ReturnCode joinTable(CrapsTable* pTable, Gen::ErrorPass& ep);
-    Craps::BetPtr makeBet(BetName betName,
+    BetPtr makeBet(BetName betName,
                           Gen::Money contractAmount,
                           unsigned pivot,
                           Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount(Craps::BetPtr pBet,
+    Gen::ReturnCode setOddsAmount(BetPtr pBet,
                                   Gen::Money amount,
                                   Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(BetName betName,
@@ -71,11 +71,11 @@ public:
 
     /// @name Observers
     /// @{
-    const std::string&     getName()           const;
-    const Craps::PlayerId& getPlayerId()       const;
-    Gen::Money             getAmountOnTable()  const;
-    unsigned               getNumBetsOnTable() const;
-    Gen::Money             getBalance()        const;
+    const std::string& getName()           const;
+    const PlayerId&    getPlayerId()       const;
+    Gen::Money         getAmountOnTable()  const;
+    unsigned           getNumBetsOnTable() const;
+    Gen::Money         getBalance()        const;
 
     // File operations
     void saveFile() const;
@@ -86,19 +86,19 @@ public:
 
 private:
     // order matters
-    Craps::PlayerId          playerId_;
-    PlayerConfig             config_;
-    EventManager&            eventMgr_;
-    Bank                     wallet_;     // overriden by yaml
+    PlayerId          playerId_;
+    PlayerConfig      config_;
+    EventManager&     eventMgr_;
+    Bank              wallet_;     // overriden by yaml
 
     // order doesn't matter
-    std::string              playerName_; // set by yaml or creation
-    std::list<Craps::BetPtr> bets_;
-    CrapsTable*              pTable_;
+    std::string       playerName_; // set by yaml or creation
+    std::list<BetPtr> bets_;
+    CrapsTable*       pTable_;
 
-    bool removeBetByPtr(Craps::BetPtr& pBet);
-    Craps::BetPtr findBetById(unsigned betId) const;
-    void diagBadBetId(const std::string& funcName, unsigned betId) const;
+    bool removeBetByPtr(BetPtr& pBet);
+    BetPtr findBetById(BetId betId) const;
+    void diagBadBetId(const std::string& funcName, BetId betId) const;
     void setupSubscriptions();
     void onBettingClosed();
     void onBettingOpened();
@@ -125,13 +125,12 @@ private:
 
 Player Responsibilities:
 
-@li maintains one file per player
-
-@li all player files in the players directory
-
+@li Maintains player's money
+@li Tracks player's bets 
 @li Know how to read/write its own data
-
 @li Exports toYAML() and reads fromYAML()
+@li Maintains one file per player
+@li All player files in the players directory
 
 */
 

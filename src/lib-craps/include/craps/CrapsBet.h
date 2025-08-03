@@ -10,8 +10,9 @@
 #include <ostream>
 #include <string>
 #include <unordered_set>
-#include <craps/OddsTables.h>
+#include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
+#include <craps/OddsTables.h>
 #include <gen/MoneyUtil.h>
 #include <gen/ReturnCode.h>
 #include <gen/Timepoint.h>
@@ -49,7 +50,7 @@ public:
     /// @name Observers
     /// @{
     Player&        player()         const;
-    unsigned       betId()          const;
+    BetId          betId()          const;
     BetName        betName()        const;
     unsigned       pivot()          const;
     unsigned       contractAmount() const;
@@ -66,10 +67,10 @@ public:
 
 private:
     // Order matters, in initializer list
-    Player* pPlayer_           = nullptr;
-    unsigned betId_            = 0;
-    BetName betName_           = BetName::Invalid;
-    unsigned pivot_            = 0;
+    Player*    pPlayer_        = nullptr;
+    BetId      betId_          = 0;
+    BetName    betName_        = BetName::Invalid;
+    unsigned   pivot_          = 0;
     Gen::Money contractAmount_ = 0;
 
     // Order doesn't matter
