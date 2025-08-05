@@ -34,21 +34,20 @@ CrapsTable::CrapsTable(const TableId&     tableId,
 
 /*-----------------------------------------------------------*//**
 
-Construct Table from in-memory configuration.
+Construct Table from in-memory YAML string.
 
 Throws upon error.
 
 */
 CrapsTable*
-CrapsTable::fromConfig(const TableId&     tableId,
+CrapsTable::fromString(std::string        yaml,
+                       const TableId&     tableId,
                        const TableConfig& config,
                        EventManager&      eventMgr)
 {
-    // Not yet implemented
-    //
-    // see loadFromStrings at end of file
-
     CrapsTable* ct = new CrapsTable(tableId, config, eventMgr);
+    YAML::Node root = YAML::Load(yaml);
+    ct->fromYAML(root);
     return ct;
 }
 

@@ -35,7 +35,8 @@ public:
                const TableConfig& config,
                EventManager&      eventMgr);
    ~CrapsTable() = default;
-    static CrapsTable* fromConfig(const TableId&     tableId,
+    static CrapsTable* fromString(std::string        yaml,
+                                  const TableId&     tableId,
                                   const TableConfig& config,
                                   EventManager&      eventMgr);
     static CrapsTable* fromFile  (const TableId&     tableId,
