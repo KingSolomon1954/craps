@@ -43,7 +43,8 @@ public:
                                 const PlayerConfig& config,      // a fresh
                                 EventManager&       eventMgr);   // PlayerId
     
-    static Player* fromConfig(const PlayerId&     playerId,
+    static Player* fromString(const std::string&  yaml,
+                              const PlayerId&     playerId,
                               const PlayerConfig& config,
                               EventManager&       eventMgr);
     static Player* fromFile  (const PlayerId&     playerId,

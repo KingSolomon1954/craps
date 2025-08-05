@@ -48,80 +48,29 @@ Player::createPlayer(const std::string&  playerName,
     return p;
 }
     
-//----------------------------------------------------------------
-
-void
-Player::setupSubscriptions()
-{
-    eventMgr_.subscribe<BettingClosed>(
-        [this](const BettingClosed&)
-        {
-            this->onBettingClosed();
-        });
-    eventMgr_.subscribe<BettingOpened>(
-        [this](const BettingOpened&)
-        {
-            this->onBettingOpened();
-        });
-    eventMgr_.subscribe<DiceThrowStart>(
-        [this](const DiceThrowStart&)
-        {
-            this->onDiceThrowStart();
-        });
-    eventMgr_.subscribe<DiceThrowEnd>(
-        [this](const DiceThrowEnd&)
-        {
-            this->onDiceThrowEnd();
-        });
-    eventMgr_.subscribe<AnnounceDiceNumber>(
-        [this](const AnnounceDiceNumber& evt)
-        {
-            this->onAnnounceDiceNumber(evt);
-        });
-    eventMgr_.subscribe<PointEstablished>(
-        [this](const PointEstablished& evt)
-        {
-            this->onPointEstablished(evt);
-        });
-    eventMgr_.subscribe<SevenOut>(
-        [this](const SevenOut&)
-        {
-            this->onSevenOut();
-        });
-    eventMgr_.subscribe<PassLineWinner>(
-        [this](const PassLineWinner&)
-        {
-            this->onPassLineWinner();
-        });
-    eventMgr_.subscribe<NewShooter>(
-        [this](const NewShooter& evt)
-        {
-            this->onNewShooter(evt);
-        });
-}
-                
 /*-----------------------------------------------------------*//**
 
-Construct Player from in-memory configuration.
+Construct Player from in-memory YAML node.
 
 Throws upon error.
 
 Static function.
 */
 Player*
-Player::fromConfig(const PlayerId&     playerId,
+Player::fromString(const std::string&  yaml,
+                   const PlayerId&     playerId,
                    const PlayerConfig& config,
                    EventManager&       eventMgr)
 {
-    // Not yet implemented
-    unsigned startingBalance = 1000;
-    std::string playerName = "Player-1";
-    return new Player(playerId, config, eventMgr);
+    Player* p = new Player(playerId, config, eventMgr);
+    YAML::Node root = YAML::Load(yaml);
+    p->fromYAML(root);
+    return p;
 }
 
 /*-----------------------------------------------------------*//**
 
-Construct Player from file.
+Construct Player from YAML file.
 
 Throws upon error.
 
@@ -200,6 +149,58 @@ Player::fromYAML(const YAML::Node& node)
     // TODO wallet_.balance = j.at("balance").get<int64_t>();
 }
 
+//----------------------------------------------------------------
+
+void
+Player::setupSubscriptions()
+{
+    eventMgr_.subscribe<BettingClosed>(
+        [this](const BettingClosed&)
+        {
+            this->onBettingClosed();
+        });
+    eventMgr_.subscribe<BettingOpened>(
+        [this](const BettingOpened&)
+        {
+            this->onBettingOpened();
+        });
+    eventMgr_.subscribe<DiceThrowStart>(
+        [this](const DiceThrowStart&)
+        {
+            this->onDiceThrowStart();
+        });
+    eventMgr_.subscribe<DiceThrowEnd>(
+        [this](const DiceThrowEnd&)
+        {
+            this->onDiceThrowEnd();
+        });
+    eventMgr_.subscribe<AnnounceDiceNumber>(
+        [this](const AnnounceDiceNumber& evt)
+        {
+            this->onAnnounceDiceNumber(evt);
+        });
+    eventMgr_.subscribe<PointEstablished>(
+        [this](const PointEstablished& evt)
+        {
+            this->onPointEstablished(evt);
+        });
+    eventMgr_.subscribe<SevenOut>(
+        [this](const SevenOut&)
+        {
+            this->onSevenOut();
+        });
+    eventMgr_.subscribe<PassLineWinner>(
+        [this](const PassLineWinner&)
+        {
+            this->onPassLineWinner();
+        });
+    eventMgr_.subscribe<NewShooter>(
+        [this](const NewShooter& evt)
+        {
+            this->onNewShooter(evt);
+        });
+}
+                
 //----------------------------------------------------------------
 
 Gen::ReturnCode
@@ -296,7 +297,9 @@ Player::processWin(const DecisionRecord& dr)
 {
     assert(dr.win > 0);
 
-    // Confirm we actually have the bet dr.pBet and Obtain pointer to our bet
+    // Confirm we actually own the bet in dr.pBet (raw pointer)
+    // Obtain shared_ptr to our bet
+    // 
     auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
@@ -328,10 +331,10 @@ void
 Player::processLose(const DecisionRecord& dr)
 {
     assert(dr.lose > 0);
-    wallet_.deposit(dr.returnToPlayer);
-    // Money was already withdrawn from wallet when making the bet
 
-    // Obtain pointer to the bet (for stats and stuff)
+    // Confirm we actually own the bet in dr.pBet (raw pointer)
+    // Obtain shared_ptr to our bet
+    // 
     auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
@@ -340,9 +343,16 @@ Player::processLose(const DecisionRecord& dr)
         return;
     }
 
+    // No need to update money. Money was withdrawn from wallet
+    // when making the bet. Just need hand return to player, if any.
+    // 
+    wallet_.deposit(dr.returnToPlayer);
+
+
 //    std::cout << playerName_ << ": processLose(" << pBet->betName() <<
 //        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
 
+    
     // TODO update lose stats before removing bet
     // pBet->startTime - endTime ...
 
@@ -360,7 +370,9 @@ dice resulted in no decision for the assocated bet.
 void
 Player::processKeep(const DecisionRecord& dr)
 {
-    // Obtain pointer to the bet (for stats and stuff)
+    // Confirm we actually own the bet in dr.pBet (raw pointer)
+    // Obtain shared_ptr to our bet
+    // 
     auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
