@@ -15,6 +15,7 @@
 #include <gen/ErrorPass.h>
 #include <gen/FileUtils.h>
 #include <gen/Logger.h>
+#include <gen/MoneyUtils.h>
 #include <gen/Uuid.h>
 
 using namespace Craps;
@@ -228,12 +229,68 @@ Player::makeBet(BetName betName,
                 unsigned pivot,
                 Gen::ErrorPass& ep)
 {
+    // fif prefix means "fault if"
+    
+    if (fifNoTable())           return nullptr;
+    if (fifInsufficientFunds()) return nullptr;
+    auto pBet = makeShared(betName, contractAmount, pivot, ep);
+    if (pBet == nullptr)        return nullptr;
+    if (!addBet(pBet, ep))      return nullptr;
+    wallet_.withdraw(contractAmount);
+    bets_.push_back(pBet);
+    return pBet;
+}
+
+std::string
+Player::diagPrefixMkBt()
+{
+    std::string diag("Player::makeBet(): Unable to make bet; ");
+    return diag;
+}
+
+bool
+Player::fifNoTable()
+{
     if (pTable_ == nullptr)
     {
-        // TODO set ep
-        ep.diag = "Not joined a table";
+        ep.diag = diagPrefixMkBt() + "Player " + playerName_ +
+            "has not yet joined a table";
+        return true;
+    }
+    return false;
+}
+
+bool
+Player::fifInsufficientFunds(Gen::Money amount)
+{
+    if (amount >= wallet_.getBalance())
+    {
+        ep.diag = diagPrefixMkBt() + "Player " + playerName_ +
+            "insufficient funds for a " + MoneyUtils::toString(amount) +
+            " bet; current balance:" + MoneyUtils::toString(getBalance());
+        return true;
+    }
+    return false;
+}
+
+
+makeShared(betName, contractAmount, pivot, ep)
+{
+    try
+    {
+        auto pBet = std::make_shared<CrapsBet>
+            (this, betName, contractAmount, pivot);
+        assert(pBet != nullptr);   // In case we miss an exception
+        return pBet;
+    }
+    catch(std::invalid_argument& e)
+    {
+        ep.diag = diagPrefixMkBt() + "make_shared(); " + e.what();
         return nullptr;
     }
+
+}
+
     // TODO check sufficient funds first
     try
     {
