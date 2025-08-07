@@ -14,7 +14,7 @@ add_library(gen STATIC
     src/FileUtils.cpp
     src/Logger.cpp
     src/Money.cpp
-    src/MoneyUtil.cpp
+    src/MoneyUtils.cpp
     src/MultiLayerConfig.cpp
     src/StringUtils.cpp
     src/TimerManager.cpp

@@ -296,9 +296,9 @@ CrapsTable::fifBadMinMaxForOdds(const CrapsBet& bet, Gen::Money amt,
         ep.diag = diagPrefix(3, bet) + " Exceeds table limit of "      +
             std::to_string(maxOdds_) + "x odds; "
             "Contract amount is "                                      +
-            Gen::MoneyUtil::toString(bet.contractAmount())             +
+            Gen::MoneyUtils::toString(bet.contractAmount())            +
             " which allows max odds amount of "                        +
-            Gen::MoneyUtil::toString(bet.contractAmount() * maxOdds_)  +  ".";
+            Gen::MoneyUtils::toString(bet.contractAmount() * maxOdds_) +  ".";
         return true;
     }
     return false;
@@ -373,14 +373,14 @@ CrapsTable::goodMultiplesSideBets(BetName betName,
     if (betName == BetName::CandE && (amt % 2 != 0))
     {
         ep.diag = "This bet must be a multiple of 2. " +
-                  Gen::MoneyUtil::toString(amt)        +
+                  Gen::MoneyUtils::toString(amt)        +
                   " is not a multiple of 2.";
         return false;
     }
     if (betName == BetName::Horn && (amt % 4 != 0))
     {
         ep.diag = "This bet must be a multiple of 4. " +
-                  Gen::MoneyUtil::toString(amt)        +
+                  Gen::MoneyUtils::toString(amt)        +
                   " is not a multiple of 4.";
         return false;
     }

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 #include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
 

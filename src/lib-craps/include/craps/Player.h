@@ -16,7 +16,7 @@
 #include <craps/EnumBetName.h>
 #include <craps/PlayerConfig.h>
 #include <gen/ReturnCode.h>
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Gen {
@@ -72,11 +72,12 @@ public:
 
     /// @name Observers
     /// @{
-    const std::string& getName()           const;
-    const PlayerId&    getPlayerId()       const;
-    Gen::Money         getAmountOnTable()  const;
-    unsigned           getNumBetsOnTable() const;
-    Gen::Money         getBalance()        const;
+    const std::string& getName()                    const;
+    const PlayerId&    getPlayerId()                const;
+    Gen::Money         getAmountOnTable()           const;
+    unsigned           getNumBetsOnTable()          const;
+    Gen::Money         getBalance()                 const;
+    bool               haveBet(const CrapsBet& bet) const;
 
     // File operations
     void saveFile() const;
@@ -97,9 +98,12 @@ private:
     std::list<BetPtr> bets_;
     CrapsTable*       pTable_;
 
+    BetPtr makeShared(BetName betName,
+                      Gen::Money contractAmount,
+                      unsigned pivot,
+                      Gen::ErrorPass& ep);
     bool removeBetByPtr(BetPtr& pBet);
     BetPtr findBetById(BetId betId) const;
-    void diagBadBetId(const std::string& funcName, BetId betId) const;
     void setupSubscriptions();
     void onBettingClosed();
     void onBettingOpened();
@@ -112,6 +116,16 @@ private:
     void onNewShooter(const NewShooter& evt);
     void setName(const std::string& playerName);
 
+    // Validity checks with diagnostics
+    void diagBadBetId(const std::string& funcName, BetId betId)      const;
+    std::string diagPrefix(size_t idx)                               const;
+    bool fifNoTable(size_t idx, Gen::ErrorPass& ep)                  const;
+    bool fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep)              const;
+    bool fifInsufficientFunds(BetPtr pBet,  Gen::Money amount,
+                              size_t idx, Gen::ErrorPass& ep)        const;
+    bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep);
+    bool fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
+    
     // Default bank constants for player
     static constexpr unsigned InitialStartingBankBalance_ = 30000;
     static constexpr unsigned RefillThreshold_            = 15000;
@@ -131,7 +145,7 @@ Player Responsibilities:
 @li Know how to read/write its own data
 @li Exports toYAML() and reads fromYAML()
 @li Maintains one file per player
-@li All player files in the players directory
+@li All player files located in the players directory
 
 */
 

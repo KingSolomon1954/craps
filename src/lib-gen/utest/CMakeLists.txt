@@ -10,7 +10,7 @@ add_executable(gen-ut
     utest-gen-main.cpp
     BuildInfoTest.cpp
     MoneyTest.cpp
-    MoneyUtilTest.cpp
+    MoneyUtilsTest.cpp
     MultiLayerConfigTest.cpp
     StringUtilsTest.cpp
     TimerManagerTest.cpp

@@ -10,7 +10,7 @@
 #include <deque>
 #include <list>
 #include <gen/ErrorPass.h>
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 #include <gen/ReturnCode.h>
 #include <gen/Timepoint.h>
 #include <craps/Bank.h>
@@ -196,7 +196,7 @@ private:
     void fromYAML(const YAML::Node& node);
     void rulesFromYAML(const YAML::Node& node);
 
-    // Validity checks, in CrapsTablePart2.cpp
+    // Validity checks with diagnostics, in CrapsTablePart2.cpp
     std::string diagPrefix    (size_t idx, const CrapsBet& bet) const;
     bool fifBettingClosed     (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
     bool fifMissingBet        (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;

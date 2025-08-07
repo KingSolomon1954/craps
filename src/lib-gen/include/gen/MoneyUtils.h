@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: MoneyUtil.h
+// File: MoneyUtils.h
 //
 //----------------------------------------------------------------
 
@@ -16,7 +16,7 @@ namespace Gen {
 
 using Money = unsigned;
 
-namespace MoneyUtil {
+namespace MoneyUtils {
 
 // String conversions
 std::string toString(Money amount,
@@ -31,6 +31,6 @@ Money fromString(const std::string& str);      // Accepts "$1,234", throws
 YAML::Node toYAML(Money value);
 Money fromYAML(const YAML::Node& node);
 
-}}  // namespace Gen::MoneyUtil
+}}  // namespace Gen::MoneyUtils
 
 //----------------------------------------------------------------

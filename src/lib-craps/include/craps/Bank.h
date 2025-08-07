@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 #include <craps/BankStats.h>
 #include <yaml-cpp/yaml.h>
 

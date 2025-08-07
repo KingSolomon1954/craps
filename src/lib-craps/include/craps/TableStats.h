@@ -12,7 +12,7 @@
 #include <craps/Dice.h>
 #include <craps/RollStats.h>
 #include <craps/SessionHistory.h>
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Craps {

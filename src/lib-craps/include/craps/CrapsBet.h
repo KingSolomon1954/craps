@@ -13,7 +13,7 @@
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/OddsTables.h>
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 #include <gen/ReturnCode.h>
 #include <gen/Timepoint.h>
 #include <gen/Uuid.h>

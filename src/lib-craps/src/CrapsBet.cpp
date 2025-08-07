@@ -14,6 +14,7 @@
 #include <craps/Player.h>
 #include <craps/Dice.h>
 #include <gen/ErrorPass.h>
+#include <gen/MoneyUtils.h>
 #include <gen/StringUtils.h>
 
 using namespace Craps;

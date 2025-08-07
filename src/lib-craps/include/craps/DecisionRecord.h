@@ -7,7 +7,7 @@
 #pragma once
 
 #include <ostream>
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 #include <gen/Uuid.h>
 
 namespace Craps {

@@ -338,9 +338,9 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
 
 Changes the contract amount of a bet on the table.
 
-The bet must already exist on the table.
-Overwrites the previous amount.
-Validates the change against table rules.
+@li The bet must already exist on the table.
+@li Overwrites the previous amount.
+@li Validates the change against table rules.
 
 @param[in,out] pBet
     The bet of interest.

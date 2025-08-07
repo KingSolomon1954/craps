@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 
 using namespace Gen;
 
@@ -13,7 +13,7 @@ using namespace Gen;
 // Convert Money to string with formatting options
 //
 std::string
-MoneyUtil::toString(Money amount, bool showDollar, bool withCommas)
+MoneyUtils::toString(Money amount, bool showDollar, bool withCommas)
 {
     std::ostringstream oss;
 
@@ -45,27 +45,27 @@ MoneyUtil::toString(Money amount, bool showDollar, bool withCommas)
 //----------------------------------------------------------------
 
 std::string
-MoneyUtil::toStringNoCommas(Money amount)
+MoneyUtils::toStringNoCommas(Money amount)
 {
     constexpr bool showDollar = true;
     constexpr bool showCommas = false;
-    return MoneyUtil::toString(amount, showDollar, showCommas);
+    return MoneyUtils::toString(amount, showDollar, showCommas);
 }
 
 //----------------------------------------------------------------
 
 std::string
-MoneyUtil::toStringNoDollar(Money amount)
+MoneyUtils::toStringNoDollar(Money amount)
 {
     constexpr bool showDollar = false;
     constexpr bool showCommas = true;
-    return MoneyUtil::toString(amount, showDollar, showCommas);
+    return MoneyUtils::toString(amount, showDollar, showCommas);
 }
 
 //----------------------------------------------------------------
 
 std::string
-MoneyUtil::toStringPlain(Money amount)
+MoneyUtils::toStringPlain(Money amount)
 {
     return std::to_string(amount);
 }
@@ -75,7 +75,7 @@ MoneyUtil::toStringPlain(Money amount)
 // Convert string to Money
 //
 Money
-MoneyUtil::fromString(const std::string& str)
+MoneyUtils::fromString(const std::string& str)
 {
     std::string clean = str;
 
@@ -104,7 +104,7 @@ MoneyUtil::fromString(const std::string& str)
 //----------------------------------------------------------------
 
 YAML::Node
-MoneyUtil::toYAML(Money value)
+MoneyUtils::toYAML(Money value)
 {
     YAML::Node node;
     node = value;
@@ -114,7 +114,7 @@ MoneyUtil::toYAML(Money value)
 //----------------------------------------------------------------
 
 Money
-MoneyUtil::fromYAML(const YAML::Node& node)
+MoneyUtils::fromYAML(const YAML::Node& node)
 {
     if (!node.IsScalar())
     {

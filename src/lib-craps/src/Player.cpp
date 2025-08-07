@@ -15,7 +15,6 @@
 #include <gen/ErrorPass.h>
 #include <gen/FileUtils.h>
 #include <gen/Logger.h>
-#include <gen/MoneyUtils.h>
 #include <gen/Uuid.h>
 
 using namespace Craps;
@@ -221,8 +220,32 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
     return Gen::ReturnCode::Success;
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Makes a bet on the table.
+
+@param[in] betName
+    the type of bet to make
+
+@param[in] contractAmount
+    the dollar amount to bet
+
+@param[in] the pivot
+    The number this bet is focused on. For example a Place bet must set
+    the pivot to 4,5,6,8,9 or 10. For PassLine/Come/DontPass/DontCome bets,
+    the caller sets the pivot to zero. Zero indicates the pivot number
+    needs to be set later. See CrapsBet::CrapsBet() constructor.
+
+@param[in,out] ep
+    If an error occurs, ep holds the reason
+
+@return
+    If successful, the shared pointer to the CrapsBet is returned, 
+    otherwise a nullptr and ep has the reason for failure
+
+@internal
+@li fif prefix means "fault if"
+*/
 BetPtr
 Player::makeBet(BetName betName,
                 Gen::Money contractAmount,
@@ -231,114 +254,90 @@ Player::makeBet(BetName betName,
 {
     // fif prefix means "fault if"
     
-    if (fifNoTable())           return nullptr;
-    if (fifInsufficientFunds()) return nullptr;
+    if (fifNoTable(1, ep))                                    return nullptr;
+    if (fifInsufficientFunds(nullptr, contractAmount, 1, ep)) return nullptr;
     auto pBet = makeShared(betName, contractAmount, pivot, ep);
-    if (pBet == nullptr)        return nullptr;
-    if (!addBet(pBet, ep))      return nullptr;
+    if (pBet == nullptr)                                      return nullptr;
+    if (fifBadAddBet(pBet, ep))                               return nullptr;
     wallet_.withdraw(contractAmount);
     bets_.push_back(pBet);
     return pBet;
 }
 
-std::string
-Player::diagPrefixMkBt()
-{
-    std::string diag("Player::makeBet(): Unable to make bet; ");
-    return diag;
-}
-
-bool
-Player::fifNoTable()
-{
-    if (pTable_ == nullptr)
-    {
-        ep.diag = diagPrefixMkBt() + "Player " + playerName_ +
-            "has not yet joined a table";
-        return true;
-    }
-    return false;
-}
-
-bool
-Player::fifInsufficientFunds(Gen::Money amount)
-{
-    if (amount >= wallet_.getBalance())
-    {
-        ep.diag = diagPrefixMkBt() + "Player " + playerName_ +
-            "insufficient funds for a " + MoneyUtils::toString(amount) +
-            " bet; current balance:" + MoneyUtils::toString(getBalance());
-        return true;
-    }
-    return false;
-}
-
-
-makeShared(betName, contractAmount, pivot, ep)
-{
-    try
-    {
-        auto pBet = std::make_shared<CrapsBet>
-            (this, betName, contractAmount, pivot);
-        assert(pBet != nullptr);   // In case we miss an exception
-        return pBet;
-    }
-    catch(std::invalid_argument& e)
-    {
-        ep.diag = diagPrefixMkBt() + "make_shared(); " + e.what();
-        return nullptr;
-    }
-
-}
-
-    // TODO check sufficient funds first
-    try
-    {
-        auto pBet = std::make_shared<CrapsBet>
-            (this, betName, contractAmount, pivot);
-        assert(pBet != nullptr);   // In case we miss an exception
-
-        // Place the bet
-        if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
-        {
-            // TODO add to diag
-            assert(false);
-            return nullptr;
-        }
-        
-        wallet_.withdraw(contractAmount);
-        bets_.push_back(pBet);
-        return pBet;
-    }
-    catch(std::invalid_argument& e)
-    {
-        return nullptr;
-    }
-}
-
 //----------------------------------------------------------------
+//
+// Purpose of this is to catch exception if any, switch to ErrorPass.
+//
+BetPtr
+Player::makeShared(BetName betName,
+                   Gen::Money contractAmount,
+                   unsigned pivot,
+                   Gen::ErrorPass& ep)
+{
+    try
+    {
+        return std::make_shared<CrapsBet>(this, betName,
+                                          contractAmount, pivot);
+    }
+    catch(std::invalid_argument& e)
+    {
+        ep.diag = diagPrefix(1) + e.what();
+        return nullptr;
+    }
+}
 
+/*-----------------------------------------------------------*//**
+
+Sets, changes, or removes the amount for an odds bet.
+
+Overwrites the previous amount, if any. A value
+of zero removes it altogether.
+
+It is only permissable to set an odds amount if the following
+conditions are true:
+
+@li the bet is already on the table
+@li the bet is a PassLine, DontPass, Come, or DontCome bet
+@li the bet has an assigned pivot (point) (i.e, pivot is non-zero)
+@li the new amount is subject to table limits min/max odds
+
+@param[in,out] pBet
+    The bet of interest.
+
+@param[in] oddsAmount
+    The amount to set it to. Clobbers any previous setting.
+
+@param[in,out] ep
+    If error occurs, ep holds the reason
+
+@returns
+    Success if the bet was accepted, otherwise Fail and ep has
+    the reason.
+
+@internal
+@li fif prefix means "fault if"
+*/
 Gen::ReturnCode
 Player::setOddsAmount(BetPtr pBet,
                       Gen::Money oddsAmount,
                       Gen::ErrorPass& ep)
 {
-    // TODO check if player owns this bet
-
-    if (pTable_ == nullptr)
-    {
-        // TODO set ep
-        ep.diag = "Not joined a table";
-        return Gen::ReturnCode::Success;
-    }
+    // fif prefix means "fault if"
     
-    // TODO check sufficient funds first
-    if (pTable_->setOddsAmount(pBet, oddsAmount, ep) == Gen::ReturnCode::Fail)
+    if (fifMissingBet(pBet, ep))                       return Gen::ReturnCode::Fail;
+    if (fifNoTable(2, ep))                             return Gen::ReturnCode::Fail;
+    if (fifInsufficientFunds(pBet, oddsAmount, 2, ep)) return Gen::ReturnCode::Fail;
+    if (fifBadSetOdds(pBet, oddsAmount, ep))           return Gen::ReturnCode::Fail;
+
+    // Adjust wallet. Handle increase or decrease in odds bet
+    if (oddsAmount < pBet->oddsAmount())
     {
-        // TODO diagnostics
-        return Gen::ReturnCode::Fail;
+        wallet_.deposit(pBet->oddsAmount() - oddsAmount);
     }
-    wallet_.withdraw(oddsAmount);
+    if (oddsAmount > pBet->oddsAmount())
+    {
+        wallet_.withdraw(oddsAmount - pBet->oddsAmount());
+    }
     return Gen::ReturnCode::Success;
 }
 
@@ -352,6 +351,7 @@ Called by CrapsTable to dish out a winning bet to a Player.
 void
 Player::processWin(const DecisionRecord& dr)
 {
+    assert(dr.pBet != nullptr);
     assert(dr.win > 0);
 
     // Confirm we actually own the bet in dr.pBet (raw pointer)
@@ -387,6 +387,7 @@ Called by CrapsTable to dish out a losing bet to a Player.
 void
 Player::processLose(const DecisionRecord& dr)
 {
+    assert(dr.pBet != nullptr);
     assert(dr.lose > 0);
 
     // Confirm we actually own the bet in dr.pBet (raw pointer)
@@ -427,6 +428,8 @@ dice resulted in no decision for the assocated bet.
 void
 Player::processKeep(const DecisionRecord& dr)
 {
+    assert(dr.pBet != nullptr);
+    
     // Confirm we actually own the bet in dr.pBet (raw pointer)
     // Obtain shared_ptr to our bet
     // 
@@ -483,7 +486,10 @@ Player::findBetById(BetId betId) const
 }
 
 //----------------------------------------------------------------
-
+//
+// Private function. Used to remove a bet from this player's
+// collection. Meant to be called after processing a bet result.
+//
 bool
 Player::removeBetByPtr(BetPtr& b)
 {
@@ -514,16 +520,6 @@ Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
 
-    if (pTable_ == nullptr)
-    {
-        // Maybe this can't happen. look at makeBet(), see if bet is created
-        // before and part of our list before adding to table.
-        bets_.erase(it, bets_.end());  // remove from our list of bets
-        // TODO set ep
-        ep.diag = "removed bet locally but it was never placed on table";
-        return Gen::ReturnCode::Fail;
-    }
-    
     if (pTable_->removeBet(*it, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend("problem removing bet");
@@ -556,26 +552,6 @@ Player::getNumBetsOnTable() const
 {
     return bets_.size();
 }
-
-//----------------------------------------------------------------
-
-#if 0
-bool
-Player::removeBetById(unsigned betId)
-{
-    auto it = std::remove_if(bets_.begin(), bets_.end(),
-                   [betId](const BetIntfcPtr& b)
-                   {
-                       return b->betId() == betId;
-                   });
-    if (it != bets_.end())
-    {
-        bets_.erase(it, bets_.end());
-        return true;
-    }
-    return false;
-}
-#endif
 
 //----------------------------------------------------------------
 
@@ -694,6 +670,123 @@ Player::onNewShooter(const NewShooter& evt)
 
 //----------------------------------------------------------------
 
+std::string
+Player::diagPrefix(size_t idx) const
+{
+    std::string diag("Player::");
+    if (idx == 1)
+    {
+        diag += "makeBet(): Unable to make bet; ";
+    }
+    if (idx == 2)
+    {
+        diag += "setOdds(): Unable to set odds; ";
+    }
+    if (idx > 2) assert(false);
+    return diag;
+}
+
+//----------------------------------------------------------------
+
+bool
+Player::fifNoTable(size_t idx, Gen::ErrorPass& ep) const
+{
+    // fault if player is not joined to a table and sets ep error diag
+    if (pTable_ == nullptr)
+    {
+        ep.diag = diagPrefix(idx) + "Player " + playerName_ +
+            "has not yet joined a table";
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+bool
+Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
+                             size_t idx, Gen::ErrorPass& ep) const
+{
+    // fault if insufficient funds and sets ep error diag
+    int diff = 0;
+    if (pBet == nullptr)
+    {
+        diff = amount;
+    }
+    else
+    {
+        diff = amount - pBet->oddsAmount();
+    }
+
+    if (diff <= 0)
+    {
+        return false;  // Reducing existing bet, always enough funds.
+    }
+    
+    if (diff > wallet_.getBalance())
+    {
+        ep.diag = diagPrefix(idx) + "Player " + playerName_ +
+            "insufficient funds for a " + Gen::MoneyUtils::toString(amount) +
+            " bet; current balance:" + Gen::MoneyUtils::toString(getBalance());
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+bool
+Player::fifBadAddBet(BetPtr pBet, Gen::ErrorPass& ep)
+{
+    // fault if can't add bet and sets ep error diag
+    assert(pBet != nullptr);
+    assert(pTable_ != nullptr);
+    
+    if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend(diagPrefix(1));
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+bool
+Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
+{
+    // fault if bet is not owned by this player and sets ep error diag
+    assert(pBet != nullptr);
+    
+    if (findBetById(pBet->betId()) == nullptr)
+    {
+        ep.diag = diagPrefix(2) +
+            "Player " + playerName_ + " does not own this bet; " +
+            pBet->diagBetId() + ".";
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+bool
+Player::fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount,
+                      Gen::ErrorPass& ep)
+{
+    assert(pBet != nullptr);
+    assert(pTable_ != nullptr);
+    
+    if (pTable_->setOddsAmount(pBet, oddsAmount, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend(diagPrefix(2));
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
 
 
 
@@ -727,3 +820,22 @@ Player::deserialize(const std::string& line)
 #endif
 
 //----------------------------------------------------------------
+
+#if 0
+bool
+Player::removeBetById(unsigned betId)
+{
+    auto it = std::remove_if(bets_.begin(), bets_.end(),
+                   [betId](const BetIntfcPtr& b)
+                   {
+                       return b->betId() == betId;
+                   });
+    if (it != bets_.end())
+    {
+        bets_.erase(it, bets_.end());
+        return true;
+    }
+    return false;
+}
+#endif
+

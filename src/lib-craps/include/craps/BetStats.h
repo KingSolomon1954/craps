@@ -10,7 +10,7 @@
 
 #include <map>
 #include <craps/CrapsBet.h>
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Craps {
