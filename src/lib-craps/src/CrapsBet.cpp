@@ -127,7 +127,7 @@ CrapsBet::checkContractAmount()
 {
     if (contractAmount_ == 0)
     {
-        throw std::invalid_argument("Bad \"contractAmount\":0 must be > 0.");
+        throw std::invalid_argument("Bad \"contractAmount\":$0 must be > $0.");
     }
 }
 

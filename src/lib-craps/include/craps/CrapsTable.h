@@ -112,12 +112,27 @@ public:
 #endif
 
 private:
-    TableId tableId_;
+    // order matters
+    TableId tableId_;  // Table-1, Table-2, ...
     TableConfig config_;
     EventManager& eventMgr_;
+    Bank houseBank_;  // overriden by yaml
+
+    // order doesn't matter
     std::string tableName_;
     std::string shortDescription_;
     std::string fullDescription_;
+    Dice dice_;
+    unsigned point_ = 0;
+    Player* pCurrentShooter_ = nullptr;
+    bool bettingOpen_ = true;
+    bool isTestRoll_ = false;
+    Dice testRollDice_;
+    TableStats currentStats_;
+    TableStats alltimeStats_;
+    std::deque<Dice> recentRolls_;  // Front element is oldest roll
+
+    // Move these to a rules struct 
     unsigned maxOdds_     = 5;
     unsigned minLineBet_  = 5;
     unsigned maxLineBet_  = 1000;
@@ -129,17 +144,7 @@ private:
     unsigned maxCandEBet_ = 1000;
     unsigned minHornBet_  = 4;
     unsigned maxHornBet_  = 1000;
-    Bank houseBank_;  // overriden by yaml
-    Dice dice_;
-    unsigned point_ = 0;
-    Player* pCurrentShooter_ = nullptr;
-    bool bettingOpen_ = true;
-    bool isTestRoll_ = false;
-    Dice testRollDice_;
-    TableStats currentStats_;
-    TableStats alltimeStats_;
-    std::deque<Dice> recentRolls_;  // Front element is oldest roll
-
+    
     CrapsTable();  // private ctor
 
     // Players must join table in order to play.

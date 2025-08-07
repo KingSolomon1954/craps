@@ -320,13 +320,13 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
         ep.diag = diag + "This bet instance is not on the table.";
         return Gen::ReturnCode::Fail;
     }
-    if (pBet->betName() == BetName::PassLine ||
-        pBet->betName() == BetName::Come)
+    if ((pBet->betName() == BetName::PassLine && pBet->distance() > 0) ||
+         pBet->betName() == BetName::Come)
     {
         if (pBet->pivot() != 0)  // This bet has a point.
         {
-            ep.diag = diag + "PassLine|Come bets must remain on table "
-                             "until a decision.";
+            ep.diag = diag + "PassLine|Come bets with points must remain "
+                             "on table until a decision.";
             return Gen::ReturnCode::Fail;
         }
     }

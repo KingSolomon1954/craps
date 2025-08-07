@@ -59,7 +59,8 @@ CrapsTable::fifMissingPlayer(const CrapsBet& bet, Gen::ErrorPass& ep) const
     // fault if player is missing and sets ep error diag
     if (!havePlayer(&bet.player()))
     {
-        ep.diag = diagPrefix(1, bet) + "Player XXX is not joined with this table.";
+        ep.diag = diagPrefix(1, bet) + "Player " +
+            bet.player().getName() + " is not joined with this table.";
         return true;
     }
     return false;
@@ -73,7 +74,8 @@ CrapsTable::fifHaveBet(const CrapsBet& bet, Gen::ErrorPass& ep) const
     // fault if already have bet and sets ep error diag
     if (haveBet(bet))
     {
-        ep.diag = diagPrefix(1, bet) + "Player XXX has already made this bet.";
+        ep.diag = diagPrefix(1, bet) + "Player " +
+            bet.player().getName() + " has already made this bet.";
         return true;
     }
     return false;

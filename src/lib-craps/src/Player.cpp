@@ -266,7 +266,8 @@ Player::makeBet(BetName betName,
 
 //----------------------------------------------------------------
 //
-// Purpose of this is to catch exception if any, switch to ErrorPass.
+// Purpose of this is to issue std::make_shared in try/catch block.
+// Convert exception to ErrorPass.
 //
 BetPtr
 Player::makeShared(BetName betName,
@@ -454,16 +455,10 @@ Player::processKeep(const DecisionRecord& dr)
 
 //----------------------------------------------------------------
 
-void
-Player::diagBadBetId(const std::string& funcName, BetId betId) const
+bool
+Player::haveBet(const CrapsBet& bet) const
 {
-    std::string diag =
-        "Internal Error: Unable to process decision record. "
-        "Player::" + funcName + "cant match "
-        "decision record betId against any betId held "
-        "in player betList. Bad betId" + std::to_string(betId);
-    // TODO: error manager
-    std::cerr << diag << std::endl;
+    return findBetById(bet.betId()) != nullptr;
 }
 
 //----------------------------------------------------------------
@@ -516,14 +511,22 @@ Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
         });
     if (it == bets_.end())
     {
-        ep.diag = "not found";
+        ep.diag = "Player::removeBet(): unable to remove bet; Player " +
+            playerName_ + " does not have such a bet(" +
+            EnumBetName::toString(betName) + ":" + std::to_string(pivot) + ").";
         return Gen::ReturnCode::Fail;
     }
 
+    // We have a bet, then we must have valid pTable. No need to check.
+    // We have a bet, then it must be on the table. See makeBet().
+    // If table can't remove it then player can't remove it.
     if (pTable_->removeBet(*it, ep) == Gen::ReturnCode::Fail)
     {
-        ep.prepend("problem removing bet");
+        ep.prepend("Player::removeBet(): ");
+        return Gen::ReturnCode::Fail;
     }
+
+    wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount());
     bets_.erase(it, bets_.end());  // remove from our list of bets
     return Gen::ReturnCode::Success;
 }
@@ -670,6 +673,20 @@ Player::onNewShooter(const NewShooter& evt)
 
 //----------------------------------------------------------------
 
+void
+Player::diagBadBetId(const std::string& funcName, BetId betId) const
+{
+    std::string diag =
+        "Internal Error: Unable to process decision record. "
+        "Player::" + funcName + "cant match "
+        "decision record betId against any betId held "
+        "in player betList. Bad betId" + std::to_string(betId);
+    // TODO: error manager
+    std::cerr << diag << std::endl;
+}
+
+//----------------------------------------------------------------
+
 std::string
 Player::diagPrefix(size_t idx) const
 {
@@ -695,7 +712,7 @@ Player::fifNoTable(size_t idx, Gen::ErrorPass& ep) const
     if (pTable_ == nullptr)
     {
         ep.diag = diagPrefix(idx) + "Player " + playerName_ +
-            "has not yet joined a table";
+            " has not yet joined a table.";
         return true;
     }
     return false;
@@ -726,8 +743,10 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
     if (diff > wallet_.getBalance())
     {
         ep.diag = diagPrefix(idx) + "Player " + playerName_ +
-            "insufficient funds for a " + Gen::MoneyUtils::toString(amount) +
-            " bet; current balance:" + Gen::MoneyUtils::toString(getBalance());
+            " has insufficient funds to make a " +
+            Gen::MoneyUtils::toString(amount)    +
+            " bet; current balance:"             +
+            Gen::MoneyUtils::toString(getBalance()) + ".";
         return true;
     }
     return false;
