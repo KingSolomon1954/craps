@@ -268,6 +268,22 @@ CrapsBet::setPivotInternal(unsigned pivot)
 
 /*-----------------------------------------------------------*//**
 
+Sets the distance to the given number.
+
+Private function called by unit tests
+so just overwrites value. No checks needed.
+
+@param[in] distance
+    Sets the distance
+*/
+void
+CrapsBet::setDistanceInternal(unsigned distance)
+{
+    distance_ = distance;
+}
+
+/*-----------------------------------------------------------*//**
+
 Evaluates a CrapsBet for win/lose.
 
 Using the given point and the current dice roll, evaluate() determines

@@ -572,14 +572,29 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         CHECK(t->removeBet(b2, ep) == Gen::ReturnCode::Fail);
         // std::cout << ep.diag << "\n";
 
-        // Can't remove PassLine bet after point established
+        // Can remove any bet before it participates in a roll
         t->testSetState(4, 6, 6);
         auto b3 = std::make_shared<CrapsBet>(p1, BetName::PassLine, 10, 0);
         REQUIRE(t->addBet(b3, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->getAmountOnTable() == 10);
         REQUIRE(t->getNumBetsOnTable() == 1);
-        CHECK(t->removeBet(b3, ep) == Gen::ReturnCode::Fail);
+        CHECK(t->removeBet(b3, ep) == Gen::ReturnCode::Success);
         // std::cout << ep.diag << "\n";
+        CHECK(t->getNumBetsOnTable() == 0);
+        CHECK(t->getAmountOnTable() == 0);
+
+        // Can't remove passline bet if it participated in a roll
+        Gen::ErrorPass ep;
+        t->testSetState(0, 6, 6);
+        auto b4 = std::make_shared<CrapsBet>(p1, BetName::PassLine, 10, 0);
+        REQUIRE(b4 != nullptr);
+        REQUIRE(t->addBet(b4, ep) == Gen::ReturnCode::Success);
+        REQUIRE(t->getAmountOnTable() == 10);
+        REQUIRE(t->getNumBetsOnTable() == 1);
+        t->testSetState(10, 6, 6);
+        b4->testSetPivot(10);  // avoid dice roll, setup bet to have a point
+        b4->testSetDistance(1);// set bet to have participated in a roll
+        CHECK(t->removeBet(b4, ep) == Gen::ReturnCode::Fail);
         CHECK(t->getNumBetsOnTable() == 1);
         CHECK(t->getAmountOnTable() == 10);
     }

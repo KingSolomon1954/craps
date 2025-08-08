@@ -326,7 +326,7 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
         if (pBet->pivot() != 0)  // This bet has a point.
         {
             ep.diag = diag + "PassLine|Come bets with points must remain "
-                             "on table until a decision.";
+                "on table until a decision; " + pBet->diagBetId() + ".";
             return Gen::ReturnCode::Fail;
         }
     }

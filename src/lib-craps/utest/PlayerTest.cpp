@@ -29,16 +29,16 @@ struct PlayerFixture
     PlayerId p1Id { "uuid1" };
     PlayerId p2Id { "uuid2" };
     CrapsTable* t;
-    CrapsTable* pf1;
 
     PlayerFixture()
     {
         TableConfig tableConfig;
         tableConfig.maxSessions = 50;
         tableConfig.maxRecentRolls = 25;
-        tableConfig.tablePath = "/dontcare.yaml";
+        tableConfig.tablePath = "tmp/dontcare.yaml";
 
         t = new CrapsTable("Table-1", tableConfig, em);
+        REQUIRE(t != nullptr);
     }
 
    ~PlayerFixture()
@@ -86,6 +86,32 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
         PlayerFixture::config.playerPath = "missing/FakePlayer-1";
         CHECK_THROWS_AS(Player::fromFile("uuid1", config, em),
                         std::runtime_error);
+    }
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
+{
+    SUBCASE("joinTable")
+    {
+        Gen::ErrorPass ep;
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        REQUIRE(p1 != nullptr);
+
+        // nullptr
+        CHECK(p1->joinTable(nullptr, ep) == Gen::ReturnCode::Fail);
+
+        // Join table success
+        CHECK(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+
+        // Join same table twice
+        CHECK(p1->joinTable(t, ep) == Gen::ReturnCode::Fail);
+    }
+    
+    SUBCASE("leaveTable")
+    {
+        // TODO
     }
 }
 
@@ -150,7 +176,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         // Remove bet that doesn't exist
         CHECK(p1->removeBet(BetName::Place, 6, ep) == Gen::ReturnCode::Fail);
 
-        // Remove bet, allowed to be removed before any roll
+        // Remove bet, any bet allowed can be removed before its first roll
         // Force table state to be point rolls
         t->testSetState(4, 5, 5);  // point 4, d1=5, d2=5
         // Put down a pass line bet after point already established
@@ -175,17 +201,114 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
 
 //----------------------------------------------------------------
 
-TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
+TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
 {
-    SUBCASE("processWins")
+    SUBCASE("goodBet")
     {
         Gen::ErrorPass ep;
-//      REQUIRE(t->getNumBetsOnTable() == 0);
         std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
-        // 
-//        DecisionRecord dr { };
-//        p1->processWin()
+        REQUIRE(t->isComeOutRoll());
+        Gen::Money bal = p1->getBalance();
+        
+        auto pBet = p1->makeBet(BetName::PassLine, 100, 0, ep);
+        REQUIRE(pBet != nullptr);
+        REQUIRE(pBet->oddsAmount() == 0);
+        t->testRollDice(5,5); // roll a 10, point is now 10
+        CHECK(pBet->oddsAmount() == 0);
+        CHECK(p1->setOddsAmount(pBet, 200, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->getBalance() == bal - 300);
+        CHECK(p1->getNumBetsOnTable() == 1);
+    }
+    
+    SUBCASE("badBets")
+    {
+        Gen::ErrorPass ep;
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config, em));
+
+        // nullptr
+        CHECK(p1->setOddsAmount(nullptr, 100, ep) == Gen::ReturnCode::Fail);
+
+        // Set odds on a bet that doesn't belong to player
+        auto pBet2 = std::make_shared<CrapsBet>(p2.get(), BetName::Place, 100, 6);
+        REQUIRE(pBet2 != nullptr);
+        CHECK(p1->setOddsAmount(pBet2, 100, ep) == Gen::ReturnCode::Fail);
+
+        // Set odds on a bet that belongs to player, but not joined, programmer error
+        auto pBet1 = std::make_shared<CrapsBet>(p1.get(), BetName::Place, 100, 6);
+        REQUIRE(pBet1 != nullptr);
+        CHECK(p1->setOddsAmount(pBet1, 100, ep) == Gen::ReturnCode::Fail);
+
+        // Bad bet type for setOdds
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        REQUIRE(p1->getNumBetsOnTable() == 0);
+        auto pBet3 = p1->makeBet(BetName::Place, 100, 6, ep);
+        REQUIRE(pBet3 != nullptr);
+        CHECK(p1->setOddsAmount(pBet3, 100, ep) == Gen::ReturnCode::Fail);
+        
+        // Insufficient funds
+        REQUIRE(t->isComeOutRoll());
+        auto pBet4 = p1->makeBet(BetName::PassLine, 100, 0, ep);
+        REQUIRE(pBet4 != nullptr);
+        t->testRollDice(5,5); // roll a 10, point is now 10 
+        Gen::Money bal = p1->getBalance();
+        CHECK(p1->setOddsAmount(pBet4, bal + 100, ep) == Gen::ReturnCode::Fail);
+
+        // Table rejects odds bet due to table limit
+        Gen::Money tooMuch = (t->getMaxOdds() +1) * 100;
+        CHECK(p1->setOddsAmount(pBet4, tooMuch, ep) == Gen::ReturnCode::Fail);
+        CHECK(pBet4->oddsAmount() == 0);
+    }
+        
+    SUBCASE("changeAmount")
+    {
+        Gen::ErrorPass ep;
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        REQUIRE(t->isComeOutRoll());
+        Gen::Money bal = p1->getBalance();
+
+        // Establish a good passline bet with $200 odds.
+        auto pBet = p1->makeBet(BetName::PassLine, 100, 0, ep);
+        REQUIRE(pBet != nullptr);
+        REQUIRE(pBet->oddsAmount() == 0);
+        t->testRollDice(5,5); // roll a 10, point is now 10
+        REQUIRE(pBet->oddsAmount() == 0);
+        REQUIRE(p1->setOddsAmount(pBet, 200, ep) == Gen::ReturnCode::Success);
+        REQUIRE(p1->getBalance() == bal - 300);
+        REQUIRE(p1->getNumBetsOnTable() == 1);
+
+        // Change odds amount to 0
+        CHECK(p1->setOddsAmount(pBet, 0, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->getBalance() == bal - 100);        
+
+        // Change odds amount to 400
+        CHECK(p1->setOddsAmount(pBet, 400, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->getBalance() == bal - 500);        
+
+        // Change odds amount to 100
+        CHECK(p1->setOddsAmount(pBet, 100, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->getBalance() == bal - 200);        
+
+        // Change odds amount to 1
+        CHECK(p1->setOddsAmount(pBet, 1, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->getBalance() == bal - 101);        
+    }
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
+{
+    SUBCASE("processWin")
+    {
+    }
+    SUBCASE("processLose")
+    {
+    }
+    SUBCASE("processKeep")
+    {
     }
 }
 

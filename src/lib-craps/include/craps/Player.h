@@ -55,6 +55,7 @@ public:
     /// @name Modifiers
     /// @{
     Gen::ReturnCode joinTable(CrapsTable* pTable, Gen::ErrorPass& ep);
+    Gen::ReturnCode leaveTable(Gen::ErrorPass& ep);  // TODO
     BetPtr makeBet(BetName betName,
                           Gen::Money contractAmount,
                           unsigned pivot,
@@ -79,7 +80,8 @@ public:
     Gen::Money         getBalance()                 const;
     bool               haveBet(const CrapsBet& bet) const;
 
-    // File operations
+    /// @name File operations
+    /// @{
     void saveFile() const;
     void loadFile();
     YAML::Node toYAML() const;

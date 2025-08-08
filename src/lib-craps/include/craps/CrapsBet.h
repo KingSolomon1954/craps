@@ -155,6 +155,7 @@ private:
     void setContractAmountInternal(Gen::Money amount); // called by CrapsTable
     void setOddsAmountInternal    (Gen::Money amount); // called by CrapsTable
     void setPivotInternal         (unsigned pivot);    // called by CrapsTable
+    void setDistanceInternal      (unsigned distance); // called by unit test
 
     friend class CrapsTable;
     friend class TableStats;
@@ -168,6 +169,8 @@ public:
     { setOddsAmountInternal(amount); }
     void testSetPivot(unsigned pivot)
     { setPivotInternal(pivot); }
+    void testSetDistance(unsigned distance)
+    { setDistanceInternal(distance); }
     Gen::ReturnCode testEvaluate(unsigned point, const Dice& dice,
                                  DecisionRecord& dr, Gen::ErrorPass& ep)
     { return evaluate(point, dice, dr, ep); }

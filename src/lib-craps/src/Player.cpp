@@ -206,15 +206,21 @@ Player::setupSubscriptions()
 Gen::ReturnCode
 Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 {
-    assert(pTable != nullptr);
-    pTable_ = pTable;
-    
-    if (pTable_->addPlayer(this, ep) == Gen::ReturnCode::Fail)
+    if (pTable == nullptr)
     {
-        ep.prepend("Player::joinTable(): " + playerName_ + 
-                   " failed to join table. ");
+        ep.diag = "Player::joinTable(): Player:" + playerName_ +
+            "; pTable is null.";
         return Gen::ReturnCode::Fail;
     }
+
+    if (pTable->addPlayer(this, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("Player::joinTable(): Player:" + playerName_ + 
+                   "; failed to join table. ");
+        return Gen::ReturnCode::Fail;
+    }
+    
+    pTable_ = pTable;
     setupSubscriptions();
 
     return Gen::ReturnCode::Success;
@@ -323,21 +329,29 @@ Player::setOddsAmount(BetPtr pBet,
                       Gen::Money oddsAmount,
                       Gen::ErrorPass& ep)
 {
+    if (pBet == nullptr)
+    {
+        ep.diag = "Player::setOddsAmount(): Player:" + playerName_ +
+            "; pBet is null.";
+        return Gen::ReturnCode::Fail;
+    }
+    
     // fif prefix means "fault if"
     
     if (fifMissingBet(pBet, ep))                       return Gen::ReturnCode::Fail;
     if (fifNoTable(2, ep))                             return Gen::ReturnCode::Fail;
     if (fifInsufficientFunds(pBet, oddsAmount, 2, ep)) return Gen::ReturnCode::Fail;
+    Gen::Money curOddsBet = pBet->oddsAmount();        // Remember current val
     if (fifBadSetOdds(pBet, oddsAmount, ep))           return Gen::ReturnCode::Fail;
 
     // Adjust wallet. Handle increase or decrease in odds bet
-    if (oddsAmount < pBet->oddsAmount())
+    if (oddsAmount < curOddsBet)
     {
-        wallet_.deposit(pBet->oddsAmount() - oddsAmount);
+        wallet_.deposit(curOddsBet - oddsAmount);
     }
-    if (oddsAmount > pBet->oddsAmount())
+    if (oddsAmount > curOddsBet)
     {
-        wallet_.withdraw(oddsAmount - pBet->oddsAmount());
+        wallet_.withdraw(oddsAmount - curOddsBet);
     }
     return Gen::ReturnCode::Success;
 }
@@ -693,11 +707,11 @@ Player::diagPrefix(size_t idx) const
     std::string diag("Player::");
     if (idx == 1)
     {
-        diag += "makeBet(): Unable to make bet; ";
+        diag += "makeBet(): Player:" + playerName_  + "; Unable to make bet; ";
     }
     if (idx == 2)
     {
-        diag += "setOdds(): Unable to set odds; ";
+        diag += "setOdds(): Player:" + playerName_  + "; Unable to set odds; ";
     }
     if (idx > 2) assert(false);
     return diag;
@@ -725,6 +739,10 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
                              size_t idx, Gen::ErrorPass& ep) const
 {
     // fault if insufficient funds and sets ep error diag
+    
+    // nullptr arg is expected when called from makeBet(), since a 
+    // bet has not been created.
+    
     int diff = 0;
     if (pBet == nullptr)
     {
@@ -779,9 +797,19 @@ Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
     
     if (findBetById(pBet->betId()) == nullptr)
     {
+        if (pBet->player().getPlayerId() == playerId_)
+        {
+            // bet was created outside of makeBet()
+            ep.diag = diagPrefix(2) +
+                "Player " + playerName_ + " does not have this bet in "
+                "its bet list; Programmer error; Must use Player::makeBet() "
+                "to make a bet; " + pBet->diagBetId() + ".";
+            return true;
+        }
         ep.diag = diagPrefix(2) +
             "Player " + playerName_ + " does not own this bet; " +
-            pBet->diagBetId() + ".";
+            pBet->diagBetId() + "; Owned by Player:" +
+            pBet->player().getName() + ".";
         return true;
     }
     return false;

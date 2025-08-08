@@ -276,7 +276,7 @@ CrapsTable::fifZeroPivotForOdds(const CrapsBet& bet, Gen::ErrorPass& ep) const
     // fault if zero pivot and sets ep error diag
     if (bet.pivot() == 0)
     {
-        std::string s(" Odds bet is only allowed after a "
+        std::string s("Odds bet is only allowed after a "
             "point has been established for this bet.");
         ep.diag = diagPrefix(3, bet) + s;
         return true;
@@ -295,9 +295,9 @@ CrapsTable::fifBadMinMaxForOdds(const CrapsBet& bet, Gen::Money amt,
     // Minimum odds is zero. But no need to test for that.
     if (amt > (bet.contractAmount() * maxOdds_))
     {
-        ep.diag = diagPrefix(3, bet) + " Exceeds table limit of "      +
-            std::to_string(maxOdds_) + "x odds; "
-            "Contract amount is "                                      +
+        ep.diag = diagPrefix(3, bet) + Gen::MoneyUtils::toString(amt)  +
+            " exceeds table limit of " + std::to_string(maxOdds_)      +
+            "x odds; Contract amount is "                              +
             Gen::MoneyUtils::toString(bet.contractAmount())            +
             " which allows max odds amount of "                        +
             Gen::MoneyUtils::toString(bet.contractAmount() * maxOdds_) +  ".";
