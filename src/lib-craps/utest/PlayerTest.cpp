@@ -303,12 +303,71 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 {
     SUBCASE("processWin")
     {
+        Gen::ErrorPass ep;
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        Gen::Money bal = p1->getBalance();
+        auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
+        REQUIRE(p1->getNumBetsOnTable() == 1);
+        DecisionRecord r1{b1.get(), true, false, 140, 0, 0, 0};
+        p1->processWin(r1);
+        CHECK(p1->getBalance() == bal + 140);
+        CHECK(p1->getNumBetsOnTable() == 0);
     }
+
     SUBCASE("processLose")
     {
+        Gen::ErrorPass ep;
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        Gen::Money bal = p1->getBalance();
+        auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
+        REQUIRE(p1->getNumBetsOnTable() == 1);
+        DecisionRecord r1{b1.get(), true, false, 0, 140, 0, 0};
+        p1->processLose(r1);
+        CHECK(p1->getBalance() == bal - 120);
+        CHECK(p1->getNumBetsOnTable() == 0);
     }
+
     SUBCASE("processKeep")
     {
+        Gen::ErrorPass ep;
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        Gen::Money bal = p1->getBalance();
+        auto b1 = p1->makeBet(BetName::PassLine, 100, 0, ep);
+        REQUIRE(p1->getNumBetsOnTable() == 1);
+        DecisionRecord r1{b1.get(), false, true, 0, 0, 0, 0};
+        p1->processKeep(r1);
+        CHECK(p1->getBalance() == bal - 100);
+        CHECK(p1->getNumBetsOnTable() == 1);
+    }
+
+    SUBCASE("commission")
+    {
+        // Buy bet subtracts commission from win
+        Gen::ErrorPass ep;
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        Gen::Money bal = p1->getBalance();
+        auto b1 = p1->makeBet(BetName::Buy, 100, 4, ep);
+        REQUIRE(p1->getNumBetsOnTable() == 1);
+        DecisionRecord r1{b1.get(), true, false, 195, 0, 0, 5};
+        p1->processWin(r1);
+        CHECK(p1->getBalance() == bal + 195);
+        CHECK(p1->getNumBetsOnTable() == 0);
+
+        // Come bets return odds money, make point then roll 7
+        bal = p1->getBalance();
+        t->testSetState(4, 5, 5);  // point 0, d1=5, d2=5
+        auto b2 = p1->makeBet(BetName::Come, 100, 0, ep);
+        REQUIRE(p1->getNumBetsOnTable() == 1);
+        b2->testSetPivot(10);  // avoid dice roll, setup bet to have a point
+        REQUIRE(p1->setOddsAmount(b2, 200, ep) == Gen::ReturnCode::Success);
+        DecisionRecord r2{b2.get(), true, false, 100, 0, 200, 0};
+        p1->processWin(r2);
+        CHECK(p1->getBalance() == bal + 100 + 200);
+        CHECK(p1->getNumBetsOnTable() == 0);
     }
 }
 
