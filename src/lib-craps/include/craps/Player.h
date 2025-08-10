@@ -15,6 +15,7 @@
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/PlayerConfig.h>
+#include <craps/PlayerStats.h>
 #include <gen/ReturnCode.h>
 #include <gen/MoneyUtils.h>
 #include <yaml-cpp/yaml.h>
@@ -69,6 +70,8 @@ public:
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
+    void resetStats();
+    void prepareForShutdown();  // Shutdown, exiting program
     /// @}
 
     /// @name Observers
@@ -78,7 +81,12 @@ public:
     Gen::Money         getAmountOnTable()           const;
     unsigned           getNumBetsOnTable()          const;
     Gen::Money         getBalance()                 const;
+    const PlayerStats& getCurrentStats()            const;
+    const PlayerStats& getAlltimeStats()            const;
+    const BankStats&   getBankCurrentStats()        const;
+    const BankStats&   getBankAlltimeStats()        const;
     bool               haveBet(const CrapsBet& bet) const;
+    const SessionHistory::Sessions& getSessionHistory() const;
 
     /// @name File operations
     /// @{
@@ -97,34 +105,38 @@ private:
 
     // order doesn't matter
     std::string       playerName_; // set by yaml or creation
+    std::string       shortDescription_;
+    std::string       fullDescription_;
     std::list<BetPtr> bets_;
     CrapsTable*       pTable_;
+    PlayerStats       currentStats_;
+    PlayerStats       alltimeStats_;
 
     BetPtr makeShared(BetName betName,
                       Gen::Money contractAmount,
                       unsigned pivot,
                       Gen::ErrorPass& ep);
-    bool removeBetByPtr(BetPtr& pBet);
     BetPtr findBetById(BetId betId) const;
+    bool removeBetByPtr(BetPtr& pBet);
     void setupSubscriptions();
     void onBettingClosed();
     void onBettingOpened();
     void onDiceThrowStart();
     void onDiceThrowEnd();
     void onAnnounceDiceNumber(const AnnounceDiceNumber& evt);
-    void onPointEstablished(const PointEstablished& evt);
+    void onPointEstablished  (const PointEstablished& evt);
     void onSevenOut();
     void onPassLineWinner();
     void onNewShooter(const NewShooter& evt);
     void setName(const std::string& playerName);
 
     // Validity checks with diagnostics
-    void diagBadBetId(const std::string& funcName, BetId betId)      const;
-    std::string diagPrefix(size_t idx)                               const;
-    bool fifNoTable(size_t idx, Gen::ErrorPass& ep)                  const;
-    bool fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep)              const;
+    void diagBadBetId(const std::string& funcName, BetId betId) const;
+    std::string diagPrefix(size_t idx)                          const;
+    bool fifNoTable(size_t idx, Gen::ErrorPass& ep)             const;
+    bool fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep)         const;
     bool fifInsufficientFunds(BetPtr pBet,  Gen::Money amount,
-                              size_t idx, Gen::ErrorPass& ep)        const;
+                              size_t idx, Gen::ErrorPass& ep)   const;
     bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep);
     bool fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
     

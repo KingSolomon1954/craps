@@ -133,8 +133,13 @@ Player::loadFile()
 YAML::Node
 Player::toYAML() const
 {
-    // TODO
     YAML::Node node;
+    node["playerId"]         = playerId_;
+    node["playerName"]       = playerName_;
+    node["shortDescription"] = shortDescription_;
+    node["fullDescription"]  = fullDescription_;
+    node["Bank"]             = wallet_.toYAML();
+    alltimeStats_.toYAML(node);
     return node;
 }
 
@@ -145,8 +150,42 @@ Player::toYAML() const
 void
 Player::fromYAML(const YAML::Node& node)
 {
-    // TODO
-    // TODO wallet_.balance = j.at("balance").get<int64_t>();
+    auto playerIdInFile = node["playerId"].as<std::string>();
+    playerName_         = node["playerName"].as<std::string>();
+    shortDescription_   = node["shortDescription"].as<std::string>();
+    fullDescription_    = node["fullDescription"].as<std::string>();
+
+    // YAML playerId must agree with id from ctor
+    if (playerIdInFile != playerId_)
+    {
+        throw std::runtime_error("Player ID mismatch: expected " +
+                                 playerId_ + ", found " + playerIdInFile);
+    }
+
+    wallet_.fromYAML(node["Bank"]);
+    alltimeStats_.fromYAML(node);
+}
+
+//----------------------------------------------------------------
+//
+//  Save to files, disable timers, etc
+//
+void
+Player::prepareForShutdown()
+{
+    // close();  TODO support leave table
+    
+    // Create an entry for today's session.
+    alltimeStats_.sessionHistory.addSessionSummary(
+        1, // num players
+        currentStats_.betStats.totNumBetsAllBets,
+        wallet_.getAmtDeposited(),
+        wallet_.getAmtWithdrawn());
+
+    // Merge alltime stats with today's session, then save.
+    alltimeStats_.merge(currentStats_);
+    wallet_.mergeStats();
+    saveFile();
 }
 
 //----------------------------------------------------------------
@@ -386,9 +425,7 @@ Player::processWin(const DecisionRecord& dr)
     // std::cout << playerName_ << ": processWin(" << pBet->betName() <<
     //     ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
 
-    // TODO update win stats before removing bet
-    // pBet->startTime - endTime ...
-
+    currentStats_.recordWin(*(dr.pBet), dr.win);
     (void) removeBetByPtr(pBet);
 }
 
@@ -424,10 +461,7 @@ Player::processLose(const DecisionRecord& dr)
 //    std::cout << playerName_ << ": processLose(" << pBet->betName() <<
 //        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
 
-    
-    // TODO update lose stats before removing bet
-    // pBet->startTime - endTime ...
-
+    currentStats_.recordLose(*(dr.pBet), dr.lose);
     (void) removeBetByPtr(pBet);  // Done with this bet
 }
 
@@ -460,10 +494,7 @@ Player::processKeep(const DecisionRecord& dr)
 //        << " balance:" << wallet_.getBalance() << "\n";
 
     assert(dr.lose == 0); assert(dr.win == 0);
-    
-    // TODO
-    // maybe the pivot was assigned, if so do auto odds?
-    // update stats
+    currentStats_.recordKeep(*(dr.pBet));
 }
 
 //----------------------------------------------------------------
@@ -547,6 +578,15 @@ Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
 }
 
 //----------------------------------------------------------------
+
+void
+Player::resetStats()
+{
+    currentStats_.reset();
+    wallet_.resetStats();
+}
+
+//----------------------------------------------------------------
 //
 // Returns the amount of money currently bet on the table.
 //
@@ -601,6 +641,64 @@ Gen::Money
 Player::getBalance() const
 {
     return wallet_.getBalance();
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns read-only access to current session player stats.
+
+@return current session player stats (read-only)
+
+*/
+const PlayerStats&
+Player::getCurrentStats() const
+{
+    return currentStats_;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns read-only access to all-time stats.
+
+All-time stats are an aggregation of all sessions for this player.
+
+Note that all-time stats are only updated when the current session ends.
+
+@return all-time table stats (read-only)
+
+*/
+const PlayerStats&
+Player::getAlltimeStats() const
+{
+    return alltimeStats_;
+}
+
+//----------------------------------------------------------------
+
+const BankStats&
+Player::getBankCurrentStats() const
+{
+    return wallet_.getCurrentStats();
+}
+
+//----------------------------------------------------------------
+
+const BankStats&
+Player::getBankAlltimeStats() const
+{
+    return wallet_.getAlltimeStats();
+}
+
+//----------------------------------------------------------------
+//
+// Return session history.
+//
+// This is just a relay function for convenience.
+//
+const SessionHistory::Sessions&
+Player::getSessionHistory() const
+{
+    return alltimeStats_.sessionHistory.getSessions();
 }
 
 //----------------------------------------------------------------

@@ -85,9 +85,9 @@ public:
     unsigned                getMaxOdds()          const;
     bool                    isComeOutRoll()       const;
     bool                    isBettingOpen()       const;
-    bool                    havePlayer(Player* pPlayer) const;
+    bool                    havePlayer(Player* pPlayer)  const;
     bool                    haveBet(const CrapsBet& bet) const;
-    const SessionHistory::Sessions& getSessionHistory() const;
+    const SessionHistory::Sessions& getSessionHistory()  const;
     /// @}
 
 #if 0

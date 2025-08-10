@@ -16,6 +16,7 @@ add_library(craps STATIC
     src/Dice.cpp
     src/EnumBetName.cpp
     src/Player.cpp
+    src/PlayerStats.cpp
     src/RollStats.cpp
     src/SessionHistory.cpp
     src/TableStats.cpp

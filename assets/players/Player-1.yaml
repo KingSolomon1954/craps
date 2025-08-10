@@ -1,0 +1,81 @@
+playerId: uuid1
+playerName: Elvis
+shortDescription: User can be this player
+fullDescription: Always plays Pass and automated Come.
+Bank:
+  originalStartBalance: 30000
+  sessionStartBalance: 30000
+  refillThreshold: 15000
+  refillAmount: 20000
+  bankStats:
+    numDeposits: 0
+    amtDeposited: 0
+    numWithdrawals: 0
+    amtWithdrawn: 0
+    numRefills: 0
+    amtRefilled: 0
+    maxAmtDepositedSession: 0
+    maxAmtWithdrawnSession: 0
+    maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
+    maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
+BetStats:
+  totNumBetsAllBets: 0
+  totNumWinsAllBets: 0
+  totNumLoseAllBets: 0
+  totNumKeepAllBets: 0
+  totAmtAllBets: 0
+  totAmtWinsAllBets: 0
+  totAmtLoseAllBets: 0
+  totAmtKeepAllBets: 0
+  maxAmtBetOneBet: 0
+  maxAmtWinOneBet: 0
+  maxAmtLoseOneBet: 0
+  maxAmtKeepOneBet: 0
+  numBetsOneRoll:
+    total: 0
+    max: 0
+  numBetsWinOneRoll:
+    total: 0
+    max: 0
+  numBetsLoseOneRoll:
+    total: 0
+    max: 0
+  numBetsKeepOneRoll:
+    total: 0
+    max: 0
+  amtBetsOneRoll:
+    total: 0
+    max: 0
+  amtBetsWinOneRoll:
+    total: 0
+    max: 0
+  amtBetsLoseOneRoll:
+    total: 0
+    max: 0
+  amtBetsKeepOneRoll:
+    total: 0
+    max: 0
+  betTypeStats:
+      wins:
+        AnyCraps:
+            count: 0
+            totDistance: 0
+            amount: 0
+            amountBet: 0
+      lose:
+        AnyCraps:
+            count: 0
+            totDistance: 0
+            amount: 0
+            amountBet: 0
+SessionStats:
+  numSessionsAlltime: 25
+  firstSessionDate: 2025-06-25T14:30:00.000000000
+  longestSessionAlltime: 0d 00:01:04
+  history:
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2025-06-25T14:30:00.000000000
+      duration: 0d 00:00:08

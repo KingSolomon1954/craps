@@ -63,21 +63,23 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
     {
         std::string yaml = getPlayerYamlStringUtest();
         std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id, config, em));
-        std::unique_ptr<Player> p2(Player::fromString(yaml, p2Id, config, em));
         CHECK(p1->getPlayerId() == "uuid1");
-        CHECK(p2->getPlayerId() == "uuid2");
-        // TODO check fields to matching YAML
+        CHECK(p1->getBalance() == 30000);
+        // TODO check more fields to matching YAML
     }
     
     SUBCASE("via fromFile()")
     {
-#if 0        
-        // TODO - need a player.yaml file
-        std::unique_ptr<Player> p1(Player::fromFile(p1Id, config, em));
-        std::unique_ptr<Player> p2(Player::fromFile(p2Id, config, em));
+        PlayerConfig pc { "/work/craps/assets/players/Player-1.yaml" };
+
+        // Good load
+        std::unique_ptr<Player> p1(Player::fromFile(p1Id, pc, em));
         CHECK(p1->getPlayerId() == "uuid1");
-        CHECK(p2->getPlayerId() == "uuid2");
-#endif        
+        CHECK(p1->getName() == "Elvis");
+        CHECK(p1->getBalance() == 30000);
+
+        // Mismatched player ID
+        CHECK_THROWS_AS(Player::fromFile(p2Id, pc, em), std::runtime_error);
     }
 
     SUBCASE("fromFile:missing")
@@ -380,12 +382,12 @@ getPlayerYamlStringUtest()
 playerId: uuid1
 playerName: Elvis
 shortDescription: User can be this player
-longDescription: Always plays Pass and automated Come.
+fullDescription: Always plays Pass and automated Come.
 Bank:
-  originalStartBalance: 3000000
-  sessionStartBalance: 3000000
-  refillThreshold: 1500000
-  refillAmount: 2000000
+  originalStartBalance: 30000
+  sessionStartBalance: 30000
+  refillThreshold: 15000
+  refillAmount: 20000
   bankStats:
     numDeposits: 0
     amtDeposited: 0

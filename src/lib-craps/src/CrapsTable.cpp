@@ -126,15 +126,16 @@ CrapsTable::toYAML() const
 void
 CrapsTable::fromYAML(const YAML::Node& node)
 {
-    tableName_        = node["tableName"].as<std::string>();
-    shortDescription_ = node["shortDescription"].as<std::string>();
-    fullDescription_  = node["fullDescription"].as<std::string>();
+    auto tableIdInFile = node["tableId"].as<std::string>();
+    tableName_         = node["tableName"].as<std::string>();
+    shortDescription_  = node["shortDescription"].as<std::string>();
+    fullDescription_   = node["fullDescription"].as<std::string>();
 
-    auto idInFile     = node["tableId"].as<std::string>();
-    if (idInFile != tableId_)
+    // YAML tableId must agree with id from ctor
+    if (tableIdInFile != tableId_)
     {
         throw std::runtime_error("Table ID mismatch: expected " +
-                                 tableId_ + ", found " + idInFile);
+                                 tableId_ + ", found " + tableIdInFile);
     }
 
     rulesFromYAML(node["Rules"]);
