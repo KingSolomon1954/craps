@@ -17,7 +17,8 @@ Update lots of stats after dice throw.
 void
 TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 {
-    resetRollCounts();  // Clear some counters from previous roll
+    betStats.resetRollCounts();  // Clear some counters from previous roll
+    
     rollStats.numRolls++;
     unsigned roll = dice.value();
     unsigned d1   = dice.d1();
@@ -463,21 +464,6 @@ TableStats::countDontComePntLose(unsigned point, unsigned roll)
     }
 }
 
-//----------------------------------------------------------------
-
-void
-TableStats::resetRollCounts()
-{
-    betStats.numBetsOneRoll.current     = 0;
-    betStats.numBetsWinOneRoll.current  = 0;
-    betStats.numBetsLoseOneRoll.current = 0;
-    betStats.numBetsKeepOneRoll.current = 0;
-    betStats.amtBetsOneRoll.current     = 0;
-    betStats.amtBetsWinOneRoll.current  = 0;
-    betStats.amtBetsLoseOneRoll.current = 0;
-    betStats.amtBetsKeepOneRoll.current = 0;
-}
-
 /*-----------------------------------------------------------*//**
 
 Record a winning bet.
@@ -486,31 +472,7 @@ Record a winning bet.
 void
 TableStats::recordWin(const CrapsBet& bet, Gen::Money amtWin)
 {
-    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
-    recordCommon(amtBet);
-
-    std::string betName = betStats.expandBetName(bet);
-    betStats.betTypeStats.wins[betName].count++;
-    betStats.betTypeStats.wins[betName].amountBet   += amtBet;
-    betStats.betTypeStats.wins[betName].amount      += amtWin;
-    betStats.betTypeStats.wins[betName].totDistance += bet.distance();
-
-    betStats.totNumBetsAllBets++;
-    betStats.totAmtAllBets += amtBet;
-
-    betStats.totNumWinsAllBets++;
-    betStats.numBetsWinOneRoll.total++;
-
-    betStats.totAmtWinsAllBets += amtWin;
-    betStats.amtBetsWinOneRoll.total += amtWin;
-
-    betStats.numBetsWinOneRoll.current++;
-
-    betStats.amtBetsWinOneRoll.current += amtWin;
-
-    betStats.maxAmtWinOneBet       = std::max(amtWin, betStats.maxAmtWinOneBet);
-    betStats.amtBetsWinOneRoll.max = std::max(betStats.amtBetsWinOneRoll.current, betStats.amtBetsWinOneRoll.max);
-    betStats.numBetsWinOneRoll.max = std::max(betStats.numBetsWinOneRoll.current, betStats.numBetsWinOneRoll.max);
+    betStats.recordWin(bet, amtWin);
 }
 
 /*-----------------------------------------------------------*//**
@@ -521,31 +483,7 @@ Record a losing bet.
 void
 TableStats::recordLose(const CrapsBet& bet, Gen::Money amtLose)
 {
-    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
-    recordCommon(amtBet);
-
-    std::string betName = betStats.expandBetName(bet);
-    betStats.betTypeStats.lose[betName].count++;
-    betStats.betTypeStats.lose[betName].amountBet   += amtBet;
-    betStats.betTypeStats.lose[betName].amount      += amtLose;
-    betStats.betTypeStats.lose[betName].totDistance += bet.distance();
-
-    betStats.totNumBetsAllBets++;
-    betStats.totAmtAllBets += amtBet;
-
-    betStats.totNumLoseAllBets++;
-    betStats.numBetsLoseOneRoll.total++;
-
-    betStats.totAmtLoseAllBets += amtLose;
-    betStats.amtBetsLoseOneRoll.total += amtLose;
-
-    betStats.numBetsLoseOneRoll.current++;
-
-    betStats.amtBetsLoseOneRoll.current += amtLose;
-
-    betStats.maxAmtLoseOneBet       = std::max(amtLose, betStats.maxAmtLoseOneBet);
-    betStats.amtBetsLoseOneRoll.max = std::max(betStats.amtBetsLoseOneRoll.current, betStats.amtBetsLoseOneRoll.max);
-    betStats.numBetsLoseOneRoll.max = std::max(betStats.numBetsLoseOneRoll.current, betStats.numBetsLoseOneRoll.max);
+    betStats.recordLose(bet, amtLose);
 }
 
 /*-----------------------------------------------------------*//**
@@ -559,39 +497,7 @@ But might want to track avg number of keeps per roll.
 void
 TableStats::recordKeep(const CrapsBet& bet)
 {
-    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
-    recordCommon(amtBet);
-
-    // betStats.totNumBetsAllBets++;      // Don't incr here, counted when win/lose
-    // betStats.totAmtAllBets += amtBet;  // Don't incr here, counted when win/lose
-    betStats.totNumKeepAllBets++;
-    betStats.numBetsKeepOneRoll.total++;
-
-    betStats.totAmtKeepAllBets += amtBet;
-    betStats.amtBetsKeepOneRoll.total += amtBet;
-
-    betStats.numBetsKeepOneRoll.current++;
-
-    betStats.amtBetsKeepOneRoll.current += amtBet;
-
-    betStats.maxAmtKeepOneBet       = std::max(amtBet, betStats.maxAmtKeepOneBet);
-    betStats.amtBetsKeepOneRoll.max = std::max(betStats.amtBetsKeepOneRoll.current, betStats.amtBetsKeepOneRoll.max);
-    betStats.numBetsKeepOneRoll.max = std::max(betStats.numBetsKeepOneRoll.current, betStats.numBetsKeepOneRoll.max);
-}
-
-//-----------------------------------------------------------------
-//
-// Helper function to update common stats between recordWin/Lose/Keep
-//
-void
-TableStats::recordCommon(Gen::Money amtBet)
-{
-    betStats.numBetsOneRoll.total++;
-    betStats.numBetsOneRoll.current++;
-    betStats.amtBetsOneRoll.current += amtBet;
-    betStats.maxAmtBetOneBet    = std::max(amtBet, betStats.maxAmtBetOneBet);
-    betStats.amtBetsOneRoll.max = std::max(betStats.amtBetsOneRoll.current, betStats.amtBetsOneRoll.max);
-    betStats.numBetsOneRoll.max = std::max(betStats.numBetsOneRoll.current, betStats.numBetsOneRoll.max);
+    betStats.recordKeep(bet);
 }
 
 //-----------------------------------------------------------------

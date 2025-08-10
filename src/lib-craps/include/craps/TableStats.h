@@ -27,11 +27,11 @@ public:
 
     /// @name Modifiers
     /// @{
-    void recordWin       (const CrapsBet& bet, Gen::Money amtWin);
-    void recordLose      (const CrapsBet& bet, Gen::Money amtLose);
-    void recordKeep      (const CrapsBet& bet);
-    void recordDiceRoll  (unsigned point, const Dice& curRoll);
-    void merge           (const TableStats& session);
+    void recordWin     (const CrapsBet& bet, Gen::Money amtWin);
+    void recordLose    (const CrapsBet& bet, Gen::Money amtLose);
+    void recordKeep    (const CrapsBet& bet);
+    void recordDiceRoll(unsigned point, const Dice& curRoll);
+    void merge         (const TableStats& session);
     void reset();
     /// @}
 
@@ -71,16 +71,13 @@ private:
     void bumpHardwayWins      (unsigned roll);
     void bumpHardwayLose      (unsigned roll);
     void bumpRecentRolls      (const Dice& dice);
-    void resetRollCounts();
-
+    
     void update2 (unsigned point);
     void update3 (unsigned point);
     void update7 (unsigned point);
     void update11(unsigned point);
     void update12(unsigned point);
     void updatePointRoll(unsigned point, unsigned roll);
-    void recordCommon(Gen::Money amtBet);
-
 };
 
 /*-----------------------------------------------------------*//**

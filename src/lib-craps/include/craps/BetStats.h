@@ -96,6 +96,11 @@ public:
     AmtBets amtBetsLoseOneRoll;
     AmtBets amtBetsKeepOneRoll;
 
+    void recordWin (const CrapsBet& bet, Gen::Money amtWin);
+    void recordLose(const CrapsBet& bet, Gen::Money amtLose);
+    void recordKeep(const CrapsBet& bet);
+    void recordCommon(Gen::Money amtBet);
+    void resetRollCounts();
     std::string expandBetName(const CrapsBet& bet) const;
     void reset();
     void merge(const BetStats& session);

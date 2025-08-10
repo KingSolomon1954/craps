@@ -8,6 +8,141 @@
 
 using namespace Craps;
 
+/*-----------------------------------------------------------*//**
+
+Record a winning bet.
+
+*/
+void
+BetStats::recordWin(const CrapsBet& bet, Gen::Money amtWin)
+{
+    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
+    recordCommon(amtBet);
+
+    std::string betName = expandBetName(bet);
+    betTypeStats.wins[betName].count++;
+    betTypeStats.wins[betName].amountBet   += amtBet;
+    betTypeStats.wins[betName].amount      += amtWin;
+    betTypeStats.wins[betName].totDistance += bet.distance();
+
+    totNumBetsAllBets++;
+    totAmtAllBets += amtBet;
+
+    totNumWinsAllBets++;
+    numBetsWinOneRoll.total++;
+
+    totAmtWinsAllBets += amtWin;
+    amtBetsWinOneRoll.total += amtWin;
+
+    numBetsWinOneRoll.current++;
+
+    amtBetsWinOneRoll.current += amtWin;
+
+    maxAmtWinOneBet       = std::max(amtWin, maxAmtWinOneBet);
+    amtBetsWinOneRoll.max = std::max(amtBetsWinOneRoll.current, amtBetsWinOneRoll.max);
+    numBetsWinOneRoll.max = std::max(numBetsWinOneRoll.current, numBetsWinOneRoll.max);
+}
+
+/*-----------------------------------------------------------*//**
+
+Record a losing bet.
+
+*/
+void
+BetStats::recordLose(const CrapsBet& bet, Gen::Money amtLose)
+{
+    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
+    recordCommon(amtBet);
+
+    std::string betName = expandBetName(bet);
+    betTypeStats.lose[betName].count++;
+    betTypeStats.lose[betName].amountBet   += amtBet;
+    betTypeStats.lose[betName].amount      += amtLose;
+    betTypeStats.lose[betName].totDistance += bet.distance();
+
+    totNumBetsAllBets++;
+    totAmtAllBets += amtBet;
+
+    totNumLoseAllBets++;
+    numBetsLoseOneRoll.total++;
+
+    totAmtLoseAllBets += amtLose;
+    amtBetsLoseOneRoll.total += amtLose;
+
+    numBetsLoseOneRoll.current++;
+
+    amtBetsLoseOneRoll.current += amtLose;
+
+    maxAmtLoseOneBet       = std::max(amtLose, maxAmtLoseOneBet);
+    amtBetsLoseOneRoll.max = std::max(amtBetsLoseOneRoll.current, amtBetsLoseOneRoll.max);
+    numBetsLoseOneRoll.max = std::max(numBetsLoseOneRoll.current, numBetsLoseOneRoll.max);
+}
+
+/*-----------------------------------------------------------*//**
+
+Record a keeping bet.
+
+No need to count keeps. They will eventually win or lose.
+But might want to track avg number of keeps per roll.
+
+*/
+void
+BetStats::recordKeep(const CrapsBet& bet)
+{
+    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
+    recordCommon(amtBet);
+
+    // totNumBetsAllBets++;      // Don't incr here, counted when win/lose
+    // totAmtAllBets += amtBet;  // Don't incr here, counted when win/lose
+    totNumKeepAllBets++;
+    numBetsKeepOneRoll.total++;
+
+    totAmtKeepAllBets += amtBet;
+    amtBetsKeepOneRoll.total += amtBet;
+
+    numBetsKeepOneRoll.current++;
+
+    amtBetsKeepOneRoll.current += amtBet;
+
+    maxAmtKeepOneBet       = std::max(amtBet, maxAmtKeepOneBet);
+    amtBetsKeepOneRoll.max = std::max(amtBetsKeepOneRoll.current, amtBetsKeepOneRoll.max);
+    numBetsKeepOneRoll.max = std::max(numBetsKeepOneRoll.current, numBetsKeepOneRoll.max);
+}
+
+//-----------------------------------------------------------------
+//
+// Helper function to update common stats between recordWin/Lose/Keep
+//
+void
+BetStats::recordCommon(Gen::Money amtBet)
+{
+    numBetsOneRoll.total++;
+    numBetsOneRoll.current++;
+    amtBetsOneRoll.current += amtBet;
+    maxAmtBetOneBet    = std::max(amtBet, maxAmtBetOneBet);
+    amtBetsOneRoll.max = std::max(amtBetsOneRoll.current, amtBetsOneRoll.max);
+    numBetsOneRoll.max = std::max(numBetsOneRoll.current, numBetsOneRoll.max);
+}
+
+//----------------------------------------------------------------
+//
+// Clear some counters from previous roll
+//
+// Called by TableStats when recording the current dice throw.
+//
+void
+BetStats::resetRollCounts()
+{
+    numBetsOneRoll.current     = 0;
+    numBetsWinOneRoll.current  = 0;
+    numBetsLoseOneRoll.current = 0;
+    numBetsKeepOneRoll.current = 0;
+    amtBetsOneRoll.current     = 0;
+    amtBetsWinOneRoll.current  = 0;
+    amtBetsLoseOneRoll.current = 0;
+    amtBetsKeepOneRoll.current = 0;
+}
+
 //-----------------------------------------------------------------
 
 void
@@ -58,9 +193,9 @@ BetStat::fromYAML(const YAML::Node& node)
 
 BetTypeStats::BetTypeStats()
 {
-    // Populate win/lose maps will all bets. Don't want any empty's.
-    // Stats are therefore accessible and zero, not empty.
-    // Avoid many "if" checks later.
+    // Populate win/lose maps with all bets. Don't want any empty slots.
+    // All these stats are therefore accessible any time, not empty.
+    // Avoids many "if" checks later.
 
     wins["PassLine"];      lose["PassLine"];
     wins["PassLine4"];     lose["PassLine4"];
@@ -288,9 +423,11 @@ AmtBets::fromYAML(const YAML::Node& node)
 //
 // Helper function to expand bet names with their pivot.
 //
-// PassLine --> PassLine6
-// Come     --> Come8
-// Hardway  --> Hardway4
+// Returns a bet name expanded with its pivot, if any, like this:
+// 
+//   PassLine --> PassLine6
+//   Come     --> Come8
+//   Hardway  --> Hardway4
 //
 std::string
 BetStats::expandBetName(const CrapsBet& bet) const

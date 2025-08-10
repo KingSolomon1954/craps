@@ -417,10 +417,9 @@ Player::processLose(const DecisionRecord& dr)
     }
 
     // No need to update money. Money was withdrawn from wallet
-    // when making the bet. Just need hand return to player, if any.
+    // when making the bet. Just deal with return to player, if any.
     // 
     wallet_.deposit(dr.returnToPlayer);
-
 
 //    std::cout << playerName_ << ": processLose(" << pBet->betName() <<
 //        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
@@ -514,6 +513,8 @@ Player::removeBetByPtr(BetPtr& b)
 //----------------------------------------------------------------
 //
 // Remove bet by name.
+//
+// Called by the UI to remove a bet from the table.
 //
 Gen::ReturnCode
 Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
