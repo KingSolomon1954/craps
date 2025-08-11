@@ -208,11 +208,25 @@ CrapsTable::close()
 
 //----------------------------------------------------------------
 //
-//  Save to files, disable timers, etc
+//  Clears out players and bets, save to files,
+//  disable timers, etc
 //
 void
 CrapsTable::prepareForShutdown()
 {
+    // First, clear out players
+    auto playersCopy = players_;      // copy of player list
+    for (auto& player : playersCopy)
+    {
+        // Give players opportunity to cleanup on their own
+        player->prepareForShutdown(); // will modify original players_
+    }
+
+    if (getNumBetsOnTable() > 0)
+    {
+        // boo boo problem, players did not clean up
+        assert(false);
+    }
     close();
 }
 
@@ -240,17 +254,37 @@ CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
     return Gen::ReturnCode::Success;
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Removes a player and his bets from the table.
+
+Any outstanding bets are abandoned meaning funds are claimed by the
+house bank and not returned to the player.  If that is not desired
+behavior then first remove player's bets with force
+(Player::removeBetForce()) ahead of this call.
+
+@param[in] pPlayer
+    the player of interest
+
+@param[in,out] ep
+    if error, ep has the reason
+
+@return
+    Success, otherwise fail and ep holds the reason.
+    Fails only if player is not joined to the table.
+*/
 Gen::ReturnCode
 CrapsTable::removePlayer(Player* pPlayer, Gen::ErrorPass& ep)
 {
-    if (removePlayerByPtr(pPlayer, ep) == Gen::ReturnCode::Fail)
+    if (!havePlayer(pPlayer))
     {
-        ep.prepend("CrapsTable::removePlayer(); Unable to remove player; " +
-                   pPlayer->getName() + ":" + pPlayer->getPlayerId() + "; ");
+        ep.diag = "CrapsTable::removePlayer(); Unable to remove player; " +
+                  pPlayer->getName() + ":" + pPlayer->getPlayerId()       +
+                  "; Player has not joined this table.";
         return Gen::ReturnCode::Fail;
     }
+    
+    (void) removePlayerByPtr(pPlayer, ep);  // ignore error if any
 
     // Remove all bets by player, bet money given to the house bank.
     removePlayerBets(pPlayer);
@@ -310,8 +344,22 @@ CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
     return true;
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Removes the bet from the table subject to craps table rules.
+
+If successful return, it is expected that Player recovers the bet amount
+back into their wallet.
+
+@param[in,out] pBet
+    The bet of interest.
+
+@param[in,out] ep
+    Holds reason for error
+
+@return
+    Success if bet is removed, otherwise Fail and ep has reason.
+*/
 Gen::ReturnCode
 CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
 {
@@ -330,6 +378,39 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
                 "on table until a decision; " + pBet->diagBetId() + ".";
             return Gen::ReturnCode::Fail;
         }
+    }
+    tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
+    return Gen::ReturnCode::Success;
+}
+
+/*-----------------------------------------------------------*//**
+
+Removes the bet from the table regardless of craps table rules.
+
+Funds associated with the bet are not claimed by the house bank. It is
+expected that Player recovers the bet amount into their wallet.  This is
+meant to be called upon program shutdown or when player switches table
+and player is allowed to recover their bets (instead of abandoning
+them).
+
+@param[in,out] pBet
+    The bet of interest.
+
+@param[in,out] ep
+    Holds reason for error
+
+@return
+    Success if bet is removed, otherwise Fail and ep has reason.
+    Fails only if bet is not found.
+*/
+Gen::ReturnCode
+CrapsTable::removeBetForce(BetPtr pBet, Gen::ErrorPass& ep)
+{
+    std::string diag = "CrapsTable::removeBetForce(): Unable to remove bet. ";
+    if (!haveBet(*pBet))
+    {
+        ep.diag = diag + "This bet instance is not on the table.";
+        return Gen::ReturnCode::Fail;
     }
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
     return Gen::ReturnCode::Success;
@@ -725,7 +806,9 @@ CrapsTable::trimTableBets()
 }
 
 //----------------------------------------------------------------
-
+//
+// Part of trimTableBets processing chain.
+// 
 bool
 CrapsTable::removeMatchingBet(BetList& bets, CrapsBet* pBet)
 {
@@ -746,7 +829,7 @@ CrapsTable::removeMatchingBet(BetList& bets, CrapsBet* pBet)
 //----------------------------------------------------------------
 //
 // Administrative function to clear out all bets owned by
-// a player becasue he left the table. Money for each bet found
+// a player because he left the table. Money for each bet found
 // is given to the house, as would occur in a real craps grame.
 //
 void
@@ -761,7 +844,7 @@ CrapsTable::removePlayerBets(Player* pPlayer)
 //----------------------------------------------------------------
 //
 // Part 2 of removePlayerBets, this part traverses the
-// std::list of bets and removes it if it matches playerId.
+// std::list of bets and removes bet if it matches playerId.
 // Claims bet money for the house bank.
 //
 void

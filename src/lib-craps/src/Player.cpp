@@ -173,7 +173,8 @@ Player::fromYAML(const YAML::Node& node)
 void
 Player::prepareForShutdown()
 {
-    // close();  TODO support leave table
+    Gen::ErrorPass ep;
+    (void) leaveTable(ep);
     
     // Create an entry for today's session.
     alltimeStats_.sessionHistory.addSessionSummary(
@@ -262,6 +263,49 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
     pTable_ = pTable;
     setupSubscriptions();
 
+    return Gen::ReturnCode::Success;
+}
+
+/*-----------------------------------------------------------*//**
+
+Player leaves the table.
+
+Any outstanding bets on the table are forcibly removed, meaning bets are
+pulled from the table and funds are returned to the player. This
+bypasses normal table checks that prevent removing bets due to table
+rules.
+
+UI should perform confirmation checks with users prior to leaving table.
+
+leaveTable is called upon program shutdown as well as
+when player switches tables.
+
+@param[in,out] ep
+    If an error occurs, ep holds the reason
+
+@return
+    Success, otherwsie Fail and ep has the reason for failure
+*/
+Gen::ReturnCode
+Player::leaveTable(Gen::ErrorPass& ep)
+{
+    // Not joined, so nothing to leave.
+    if (pTable_ == nullptr)
+    {
+        assert(getNumBetsOnTable() == 0);
+        return Gen::ReturnCode::Success;
+    }
+    
+    // Remove any outstanding bets from table, recover funds
+    // Manually increment iterator so we can erase while iterating
+    for (auto it = bets_.begin(); it != bets_.end(); ) // no increment here
+    {
+        auto pBet = *it;
+        pTable_->removeBetForce(pBet, ep);
+        wallet_.deposit(pBet->contractAmount() + pBet->oddsAmount());
+        it = bets_.erase(it); // returns next valid iterator
+    }
+    pTable_->removePlayer(this, ep);
     return Gen::ReturnCode::Success;
 }
 

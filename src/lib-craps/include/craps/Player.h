@@ -43,20 +43,19 @@ public:
     static Player* createPlayer(const std::string&  playerName,  // Creates
                                 const PlayerConfig& config,      // a fresh
                                 EventManager&       eventMgr);   // PlayerId
-    
-    static Player* fromString(const std::string&  yaml,
-                              const PlayerId&     playerId,
-                              const PlayerConfig& config,
-                              EventManager&       eventMgr);
-    static Player* fromFile  (const PlayerId&     playerId,
-                              const PlayerConfig& config,
-                              EventManager&       eventMgr);
+    static Player* fromString  (const std::string&  yaml,
+                                const PlayerId&     playerId,
+                                const PlayerConfig& config,
+                                EventManager&       eventMgr);
+    static Player* fromFile    (const PlayerId&     playerId,
+                                const PlayerConfig& config,
+                                EventManager&       eventMgr);
     /// @}
 
     /// @name Modifiers
     /// @{
     Gen::ReturnCode joinTable(CrapsTable* pTable, Gen::ErrorPass& ep);
-    Gen::ReturnCode leaveTable(Gen::ErrorPass& ep);  // TODO
+    Gen::ReturnCode leaveTable(Gen::ErrorPass& ep);
     BetPtr makeBet(BetName betName,
                           Gen::Money contractAmount,
                           unsigned pivot,

@@ -1,7 +1,4 @@
 
-Fix Player startup/init
-Load Player from yaml file 
-Save Player to yaml file
 Save Config to yaml file
 Write unit test MultiLayerConfigTest
 Write unit test ConfigManagerTest
@@ -9,7 +6,6 @@ Write unit test ConfigManagerTest
 load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
-stats PlayerStats
 
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 stats Streaks - count same number repeats before 7 for
@@ -34,7 +30,12 @@ Allow a clear/undo last bet capability
     enum BetStats { New, Actvie, Staged, Resolved };
 
 Need unit test for initial bank money
+Fix Player startup/init
 
+(Done) Load Player from yaml file 
+(Done) Save Player to yaml file
+(Done) stats PlayerStats
+(Done) Player::leaveTable(), refund on leave
 (Done) Create initial unit-test for Player
 (Done) Eliminate lib-controller from lib-craps
 (Done) Move EventManager inside of CrapsTable.cpp - went a different way
@@ -626,8 +627,4 @@ Date                Duration    Bets   Intake   Payout  Balance Players
 -----------------   ----------- ------ -------- ------- ------- -------
 2025-07-12T09:29:56 0d 01:33:08 112    246222   334577  +88355  6
 2025-05-12T08:05:44 0d 00:22:11 24     1009     950     +59     6
-
-addPlayer()
-removePlayer()  (abandon bets with confirmation)
-prepareForShutdown  (refundOnQuitting with notice of refund)
 

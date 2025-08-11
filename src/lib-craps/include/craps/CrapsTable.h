@@ -51,8 +51,9 @@ public:
     Gen::ReturnCode removePlayer(Player* pPlayer, Gen::ErrorPass& ep);
 
     // Bets
-    Gen::ReturnCode addBet   (BetPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode addBet        (BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet     (BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBetForce(BetPtr pBet, Gen::ErrorPass& ep);
     Gen::ReturnCode setContractAmount(BetPtr pBet,
                                       Gen::Money newAmount,
                                       Gen::ErrorPass& ep);

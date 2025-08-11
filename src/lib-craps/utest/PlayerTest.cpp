@@ -113,7 +113,48 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
     
     SUBCASE("leaveTable")
     {
-        // TODO
+        Gen::ErrorPass ep;
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        REQUIRE(p1 != nullptr);
+
+        // Leave table without ever joining
+        CHECK(p1->leaveTable(ep) == Gen::ReturnCode::Success);
+
+        // Join, then immediately leave, no intervening activity
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->leaveTable(ep) == Gen::ReturnCode::Success);
+        
+        // Leave table, with outstanding bets
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        Gen::Money bal = p1->getBalance();
+        REQUIRE(p1->makeBet(BetName::Place,    100, 6, ep) != nullptr);
+        REQUIRE(p1->makeBet(BetName::Place,    100, 8, ep) != nullptr);
+        REQUIRE(p1->makeBet(BetName::PassLine, 100, 0, ep) != nullptr);
+        REQUIRE(p1->makeBet(BetName::Hardway,  100, 4, ep) != nullptr);
+        REQUIRE(p1->getNumBetsOnTable() == 4);
+        REQUIRE(p1->getAmountOnTable() == 400);
+        REQUIRE(p1->getBalance() == bal - 400);
+        CHECK(p1->leaveTable(ep) == Gen::ReturnCode::Success);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getAmountOnTable() == 0);
+        CHECK(p1->getBalance() == bal);
+
+        // Leave, with PassLine bets, not allowed to remove normally
+        bal = p1->getBalance();
+        REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
+        REQUIRE(t->getNumBetsOnTable() == 0);
+        REQUIRE(p1->getNumBetsOnTable() == 0);
+        t->testSetState(0, 5, 5);  // point 0, d1=5, d2=5
+        // Put down a pass line bet, coming out
+        REQUIRE(p1->makeBet(BetName::PassLine, 100, 0, ep) != nullptr);
+        t->testRollDice(5,5); // roll a 10, point is 10 
+        // Confirm can't remove passline 10 normally
+        REQUIRE(p1->removeBet(BetName::PassLine, 10, ep) == Gen::ReturnCode::Fail);
+        REQUIRE(p1->getBalance() == bal - 100);
+        CHECK(p1->leaveTable(ep) == Gen::ReturnCode::Success);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getAmountOnTable() == 0);
+        CHECK(p1->getBalance() == bal);
     }
 }
 
@@ -315,6 +356,14 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         p1->processWin(r1);
         CHECK(p1->getBalance() == bal + 140);
         CHECK(p1->getNumBetsOnTable() == 0);
+
+        // check player stats
+        auto stats = p1->getCurrentStats();
+        CHECK(stats.betStats.totNumBetsAllBets == 1);
+        CHECK(stats.betStats.totAmtAllBets == 120);
+        CHECK(stats.betStats.totNumWinsAllBets == 1);
+        CHECK(stats.betStats.totNumLoseAllBets == 0);
+        CHECK(stats.betStats.amtBetsWinOneRoll.total == 140);
     }
 
     SUBCASE("processLose")
@@ -325,10 +374,18 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
         REQUIRE(p1->getNumBetsOnTable() == 1);
-        DecisionRecord r1{b1.get(), true, false, 0, 140, 0, 0};
+        DecisionRecord r1{b1.get(), true, false, 0, 120, 0, 0};
         p1->processLose(r1);
         CHECK(p1->getBalance() == bal - 120);
         CHECK(p1->getNumBetsOnTable() == 0);
+
+        // check player stats
+        auto stats = p1->getCurrentStats();
+        CHECK(stats.betStats.totNumBetsAllBets == 1);
+        CHECK(stats.betStats.totAmtAllBets == 120);
+        CHECK(stats.betStats.totNumWinsAllBets == 0);
+        CHECK(stats.betStats.totNumLoseAllBets == 1);
+        CHECK(stats.betStats.amtBetsLoseOneRoll.total == 120);
     }
 
     SUBCASE("processKeep")
