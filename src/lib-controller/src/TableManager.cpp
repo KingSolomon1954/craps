@@ -7,7 +7,6 @@
 #include <filesystem>
 #include <controller/TableManager.h>
 #include <controller/ConfigManager.h>
-#include <controller/ConfigManager.h>
 #include <controller/Globals.h>
 #include <craps/CrapsTable.h>
 #include <craps/EventManager.h>

@@ -19,6 +19,7 @@ add_library(controller STATIC
     src/GameController.cpp
     src/Globals.cpp
     src/PlayerManager.cpp
+    src/PlayerManifest.cpp
     src/Properties.cpp
     src/TableManager.cpp
     src/TableManifest.cpp

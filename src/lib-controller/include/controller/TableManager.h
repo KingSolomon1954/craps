@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <filesystem>
+#include <vector>
 #include <controller/TableManifest.h>
 #include <controller/TableDescription.h>
 #include <craps/CrapsTypes.h>
@@ -23,33 +24,34 @@ namespace Ctrl {
 class TableManager
 {
 public:
+    using TableDescriptions = std::vector<TableManifest::TableInfo>;
     
     /// @name Lifecycle
     /// @{
     TableManager();
    ~TableManager();
+    static Craps::CrapsTable* loadCrapsTable(const Craps::TableId& tableId);
+    static Craps::CrapsTable* loadStartingCrapsTable();
     /// @}
     
-    using TableDescriptions = std::vector<TableManifest::TableInfo>;
-    
-    // Table selection
+    /// @name Modifiers
+    /// @{
     Gen::ReturnCode switchCrapsTable(
         const Craps::TableId& toTableId, Gen::ErrorPass& ep);
-    const TableDescriptions& getTableChoices() const;
+    /// @}
 
-    // Table instantiation
-    static Craps::CrapsTable* loadCrapsTable(
-        const Craps::TableId& tableId);
-    static Craps::CrapsTable* loadStartingCrapsTable();
-    
+    /// @name Observers
+    /// @{
+    const TableDescriptions& getTableChoices() const;
+    /// @}
+
 private:
     Craps::CrapsTable* pCurrentCrapsTable_ = nullptr;
     TableManifest manifest_;
 
     static size_t retrieveMaxSessions();
     static size_t retrieveMaxRecentRolls();
-    static std::filesystem::path formTablePath(
-        const Craps::TableId& tableId);
+    static std::filesystem::path formTablePath(const Craps::TableId& tableId);
 };
 
 /*-----------------------------------------------------------*//**

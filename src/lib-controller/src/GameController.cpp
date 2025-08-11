@@ -57,7 +57,7 @@ GameController::onUserInputLine(GameEvent* pBase)
 void
 GameController::userSelectsPlayers()
 {
-    auto pds = Gbl::pPlayerMgr->loadPlayerChoices();
+    auto pds = Gbl::pPlayerMgr->getPlayerChoices();
     auto playerIds = Gbl::pView->promptUserToSelectPlayers(pds);
     
     Gen::ErrorPass ep;

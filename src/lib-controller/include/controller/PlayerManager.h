@@ -7,13 +7,16 @@
 #pragma once
 
 #include <memory>
-#include <unordered_map>
+#include <filesystem>
+#include <vector>
+#include <controller/PlayerManifest.h>
 #include <controller/PlayerDescription.h>
 #include <craps/CrapsTypes.h>
+#include <gen/ErrorPass.h>
+#include <gen/ReturnCode.h>
 
 namespace Craps {
-    struct DecisionRecord;  
-    class Player;           // fwd
+    class Player;  // fwd
 }
     
 namespace Ctrl {
@@ -21,33 +24,33 @@ namespace Ctrl {
 class PlayerManager
 {
 public:
+    using PlayerDescriptions = std::vector<PlayerManifest::PlayerInfo>;
+    using Players = std::vector<Craps::Player*>;
+    
     /// @name Lifecycle
     /// @{
     PlayerManager();
-   ~PlayerManager() = default;
-    
-    void loadStartingPlayers();
-    bool loadPlayers();
-    bool savePlayers();
+   ~PlayerManager();
     /// @}
 
     /// @name Modifiers
     /// @{
-    Craps::PlayerPtr createPlayer(const std::string& name);
     /// @}
 
     /// @name Observers
     /// @{
-    Craps::PlayerPtr getPlayer(const Craps::PlayerId& playerId) const;
+    const PlayerDescriptions& getPlayerChoices() const;
+    const Players& getPlayers() const;
     /// @}
 
-    using PlayerDescriptions = std::vector<PlayerDescription>;
-    
-    static PlayerDescriptions loadPlayerChoices();
-    static Craps::Player      loadPlayer(const Craps::PlayerId& playerId);
-
 private:
-    std::unordered_map<Craps::PlayerId, Craps::PlayerPtr> players_;
+    mutable PlayerManifest manifest_;
+    Players players_;
+
+    Craps::Player* loadPlayer(const Craps::PlayerId& playerId);
+    void loadStartingPlayers();  // throws
+    void addPlayersToTable();    // throws
+    static std::filesystem::path formPlayerPath(const Craps::PlayerId& playerId);
 };
 
 /*-----------------------------------------------------------*//**

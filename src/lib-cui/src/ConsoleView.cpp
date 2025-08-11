@@ -64,7 +64,7 @@ ConsoleView::promptUserToSelectPlayers(
     std::cout << "Available Players:\n";
     for (size_t i = 0; i < pds.size(); ++i)
     {
-        std::cout << i << ") " << pds[i].name << "\n";
+        std::cout << i << ") " << pds[i].playerName << "\n";
     }
 
     std::cout << "Enter comma-separated indices (e.g. 0,2): ";

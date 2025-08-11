@@ -15,7 +15,7 @@ namespace Ctrl {
 
 struct PlayerDescription
 {
-    std::string name;
+    std::string playerName;
     std::string description;
     Gen::Uuid playerId;
     std::chrono::time_point<std::chrono::system_clock> lastUsed;

@@ -132,7 +132,6 @@ PlayerManager*
 CrapsGame::initPlayerManager()
 {
     auto p = new PlayerManager();
-    p->loadStartingPlayers();
     Gbl::pPlayerMgr = p;
     return p;
 }

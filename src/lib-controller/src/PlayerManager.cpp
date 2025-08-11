@@ -6,11 +6,12 @@
 
 #include <controller/PlayerManager.h>
 #include <cassert>
+#include <stdexcept>
 #include <fstream>
 #include <iostream>
+#include <controller/ConfigManager.h>
 #include <controller/Globals.h>
-#include <craps/DecisionRecord.h>
-#include <craps/CrapsTable.h>
+#include <craps/Player.h>
 #include <gen/ErrorPass.h>
 
 using namespace Ctrl;
@@ -22,9 +23,108 @@ Constructor
 */
 PlayerManager::PlayerManager()
 {
-    // Empty.
+    loadStartingPlayers();  // throws
+    addPlayersToTable();    // throws
 }
 
+//----------------------------------------------------------------
+
+PlayerManager::~PlayerManager()
+{
+    // empty
+}
+
+//----------------------------------------------------------------
+
+Craps::Player*
+PlayerManager::loadPlayer(const Craps::PlayerId& playerId)
+{
+    Craps::PlayerConfig config;
+    config.playerPath = PlayerManager::formPlayerPath(playerId);
+
+    return Craps::Player::fromFile(playerId, config, *Gbl::pEventMgr);
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerManager::addPlayersToTable()
+{
+    Gen::ErrorPass ep;
+    bool booboo = false;
+    
+    for (auto p : players_)
+    {
+        auto rc = p->joinTable(Gbl::pTable, ep);
+        if (rc == Gen::ReturnCode::Fail) booboo = true;
+    }
+    if (booboo)
+    {
+        // TODO beef this up
+        throw std::runtime_error(ep.diag);
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerManager::loadStartingPlayers()
+{
+    // TODO
+    std::vector<Craps::PlayerId> playerVec;
+    
+    Craps::PlayerId pid1 =
+        Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer1).value();
+    playerVec.push_back(pid1);
+
+    // TODO
+    for (auto pid : playerVec)
+    {
+        players_.push_back(loadPlayer(pid));
+    }
+}
+
+//----------------------------------------------------------------
+
+const PlayerManager::Players& 
+PlayerManager::getPlayers() const
+{
+    return players_;
+}
+
+//----------------------------------------------------------------
+
+const PlayerManager::PlayerDescriptions&
+PlayerManager::getPlayerChoices() const
+{
+    // TODO
+    manifest_.loadFromFile();  // Load players.yaml manifest
+    return manifest_.getPlayers();
+}
+
+//----------------------------------------------------------------
+
+std::filesystem::path
+PlayerManager::formPlayerPath(const Craps::PlayerId& playerId)
+{
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysPlayers).value();
+
+    namespace fs = std::filesystem;
+    fs::path path = fs::path(dir) / (playerId + ".yaml");
+    return path;
+}
+    
+//----------------------------------------------------------------
+
+
+
+
+
+
+
+
+#if 0
 /*-----------------------------------------------------------*//**
 
 Create a Player
@@ -73,6 +173,17 @@ PlayerManager::loadPlayerChoices()
 
 //----------------------------------------------------------------
 
+Craps::Player
+PlayerManager::loadPlayer(const Craps::PlayerId& playerId)
+{
+    // TODO: read from file and create player
+
+    Craps::PlayerConfig config;
+    return Craps::Player("1", config, *Gbl::pEventMgr);
+}
+
+//----------------------------------------------------------------
+
 void
 PlayerManager::loadStartingPlayers()
 {
@@ -91,67 +202,5 @@ PlayerManager::loadStartingPlayers()
     }
 }
 
-//----------------------------------------------------------------
+#endif
 
-Craps::Player
-PlayerManager::loadPlayer(const Craps::PlayerId& playerId)
-{
-    // TODO: read from file and create player
-
-    Craps::PlayerConfig config;
-    return Craps::Player("1", config, *Gbl::pEventMgr);
-}
-
-/*-----------------------------------------------------------*//**
-
-Load all players from file
-
-*/
-bool
-PlayerManager::loadPlayers()
-{
-#if 0    
-    /// TODO switch to a YAML index, or read directory freshly each time
-    std::ifstream in("players/index.json");
-    if (!in) return false;
-    json index;
-    in >> index;
-
-    for (const auto& entry : index["players"])
-    {
-        auto player = std::make_shared<Craps::Player>();
-        if (player->loadFromFile("players/" + entry["uuid"].get<Gen::Uuid>() + ".json"))
-        {
-            players_[player->getUuid()] = player;
-        }
-    }
-#endif    
-    return true;
-}
-
-/*-----------------------------------------------------------*//**
-
-Save all players to file
-
-*/
-bool
-PlayerManager::savePlayers()
-{
-#if 0    
-    json index;
-    for (const auto& [uuid, player] : players_)
-    {
-        player->saveToFile("players/" + uuid + ".json");
-        index["players"].push_back({
-            {"uuid", uuid},
-            {"name", player->getName()}
-        });
-    }
-
-    std::ofstream out("players/index.json");
-    out << index.dump(2);
-#endif    
-    return true;
-}
-
-//----------------------------------------------------------------
