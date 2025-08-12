@@ -35,7 +35,7 @@ class Player
 public:
     /// @name Lifecycle
     /// @{
-    Player(const PlayerId&     playerId, // Existing playerId, 
+    Player(const PlayerId&     playerId, // Existing playerId,
            const PlayerConfig& config,   // name will come from file
            EventManager&       eventMgr);
    ~Player() = default;
@@ -138,7 +138,7 @@ private:
                               size_t idx, Gen::ErrorPass& ep)   const;
     bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep);
     bool fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
-    
+
     // Default bank constants for player
     static constexpr unsigned InitialStartingBankBalance_ = 30000;
     static constexpr unsigned RefillThreshold_            = 15000;
@@ -154,7 +154,7 @@ private:
 Player Responsibilities:
 
 @li Maintains player's money
-@li Tracks player's bets 
+@li Tracks player's bets
 @li Know how to read/write its own data
 @li Exports toYAML() and reads fromYAML()
 @li Maintains one file per player

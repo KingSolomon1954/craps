@@ -94,7 +94,7 @@ PlayerManifest::PlayerInfo::toYAML() const
 //-----------------------------------------------------------------
 
 std::string
-PlayerManifest::getFileBaseName(const Craps::PlayerId& playerId) const
+PlayerManifest::getFileName(const Craps::PlayerId& playerId) const
 {
     for (const auto& p : players_)
     {

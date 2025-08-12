@@ -18,7 +18,7 @@
 namespace Craps {
     class Player;  // fwd
 }
-    
+
 namespace Ctrl {
 
 class PlayerManager
@@ -26,7 +26,7 @@ class PlayerManager
 public:
     using PlayerDescriptions = std::vector<PlayerManifest::PlayerInfo>;
     using Players = std::vector<Craps::Player*>;
-    
+
     /// @name Lifecycle
     /// @{
     PlayerManager();

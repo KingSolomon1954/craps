@@ -16,7 +16,7 @@ using namespace Ctrl;
 //----------------------------------------------------------------
 //
 // Design note:
-// 
+//
 // Private pCurrentCrapsTable_ is used to manage the lifetime of the
 // current global CrapsTable. This differs from how CrapsGame class
 // manages lifetime of all the other globals. Unlike the other
@@ -56,7 +56,7 @@ TableManager::loadCrapsTable(const std::string& fileName)
     {
         throw std::runtime_error("TODO: fill me out");
     }
-    
+
     Craps::TableConfig config;
     config.maxSessions    = TableManager::retrieveMaxSessions();
     config.maxRecentRolls = TableManager::retrieveMaxRecentRolls();
@@ -70,7 +70,7 @@ TableManager::loadCrapsTable(const std::string& fileName)
 Craps::CrapsTable*
 TableManager::loadStartingCrapsTable()
 {
-    std::string fileName = 
+    std::string fileName =
         Gbl::pConfigMgr->getString(ConfigManager::KeyTableStart).value();
     return loadCrapsTable(fileName);
 }
@@ -128,5 +128,5 @@ TableManager::formTablePath(const std::string& fileName)
     fs::path path = fs::path(dir) / fileName;
     return path;
 }
-    
+
 //----------------------------------------------------------------

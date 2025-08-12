@@ -47,7 +47,7 @@ Player::createPlayer(const std::string&  playerName,
     p->setName(playerName);
     return p;
 }
-    
+
 /*-----------------------------------------------------------*//**
 
 Construct Player from in-memory YAML node.
@@ -98,7 +98,7 @@ Player::saveFile() const
         LOG_DEBUG("Player::saveFile() skipping; playerPath is empty");
         return;
     }
-    
+
     LOG_DEBUG("Player::saveFile(" + config_.playerPath.string()  + ")");
     std::ofstream fout(config_.playerPath);
     fout << toYAML();
@@ -175,7 +175,7 @@ Player::prepareForShutdown()
 {
     Gen::ErrorPass ep;
     (void) leaveTable(ep);
-    
+
     // Create an entry for today's session.
     alltimeStats_.sessionHistory.addSessionSummary(
         1, // num players
@@ -240,7 +240,7 @@ Player::setupSubscriptions()
             this->onNewShooter(evt);
         });
 }
-                
+
 //----------------------------------------------------------------
 
 Gen::ReturnCode
@@ -255,11 +255,11 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 
     if (pTable->addPlayer(this, ep) == Gen::ReturnCode::Fail)
     {
-        ep.prepend("Player::joinTable(): Player:" + playerName_ + 
+        ep.prepend("Player::joinTable(): Player:" + playerName_ +
                    "; failed to join table. ");
         return Gen::ReturnCode::Fail;
     }
-    
+
     pTable_ = pTable;
     setupSubscriptions();
 
@@ -295,7 +295,7 @@ Player::leaveTable(Gen::ErrorPass& ep)
         assert(getNumBetsOnTable() == 0);
         return Gen::ReturnCode::Success;
     }
-    
+
     // Remove any outstanding bets from table, recover funds
     // Manually increment iterator so we can erase while iterating
     for (auto it = bets_.begin(); it != bets_.end(); ) // no increment here
@@ -329,7 +329,7 @@ Makes a bet on the table.
     If an error occurs, ep holds the reason
 
 @return
-    If successful, the shared pointer to the CrapsBet is returned, 
+    If successful, the shared pointer to the CrapsBet is returned,
     otherwise a nullptr and ep has the reason for failure
 
 @internal
@@ -342,7 +342,7 @@ Player::makeBet(BetName betName,
                 Gen::ErrorPass& ep)
 {
     // fif prefix means "fault if"
-    
+
     if (fifNoTable(1, ep))                                    return nullptr;
     if (fifInsufficientFunds(nullptr, contractAmount, 1, ep)) return nullptr;
     auto pBet = makeShared(betName, contractAmount, pivot, ep);
@@ -418,9 +418,9 @@ Player::setOddsAmount(BetPtr pBet,
             "; pBet is null.";
         return Gen::ReturnCode::Fail;
     }
-    
+
     // fif prefix means "fault if"
-    
+
     if (fifMissingBet(pBet, ep))                       return Gen::ReturnCode::Fail;
     if (fifNoTable(2, ep))                             return Gen::ReturnCode::Fail;
     if (fifInsufficientFunds(pBet, oddsAmount, 2, ep)) return Gen::ReturnCode::Fail;
@@ -454,7 +454,7 @@ Player::processWin(const DecisionRecord& dr)
 
     // Confirm we actually own the bet in dr.pBet (raw pointer)
     // Obtain shared_ptr to our bet
-    // 
+    //
     auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
@@ -465,7 +465,7 @@ Player::processWin(const DecisionRecord& dr)
 
     wallet_.deposit(dr.returnToPlayer);
     wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
-    
+
     // std::cout << playerName_ << ": processWin(" << pBet->betName() <<
     //     ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
 
@@ -488,7 +488,7 @@ Player::processLose(const DecisionRecord& dr)
 
     // Confirm we actually own the bet in dr.pBet (raw pointer)
     // Obtain shared_ptr to our bet
-    // 
+    //
     auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
@@ -499,7 +499,7 @@ Player::processLose(const DecisionRecord& dr)
 
     // No need to update money. Money was withdrawn from wallet
     // when making the bet. Just deal with return to player, if any.
-    // 
+    //
     wallet_.deposit(dr.returnToPlayer);
 
 //    std::cout << playerName_ << ": processLose(" << pBet->betName() <<
@@ -521,10 +521,10 @@ void
 Player::processKeep(const DecisionRecord& dr)
 {
     assert(dr.pBet != nullptr);
-    
+
     // Confirm we actually own the bet in dr.pBet (raw pointer)
     // Obtain shared_ptr to our bet
-    // 
+    //
     auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
@@ -882,10 +882,10 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
                              size_t idx, Gen::ErrorPass& ep) const
 {
     // fault if insufficient funds and sets ep error diag
-    
-    // nullptr arg is expected when called from makeBet(), since a 
+
+    // nullptr arg is expected when called from makeBet(), since a
     // bet has not been created.
-    
+
     int diff = 0;
     if (pBet == nullptr)
     {
@@ -900,7 +900,7 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
     {
         return false;  // Reducing existing bet, always enough funds.
     }
-    
+
     if (diff > wallet_.getBalance())
     {
         ep.diag = diagPrefix(idx) + "Player " + playerName_ +
@@ -921,7 +921,7 @@ Player::fifBadAddBet(BetPtr pBet, Gen::ErrorPass& ep)
     // fault if can't add bet and sets ep error diag
     assert(pBet != nullptr);
     assert(pTable_ != nullptr);
-    
+
     if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend(diagPrefix(1));
@@ -937,7 +937,7 @@ Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
 {
     // fault if bet is not owned by this player and sets ep error diag
     assert(pBet != nullptr);
-    
+
     if (findBetById(pBet->betId()) == nullptr)
     {
         if (pBet->player().getPlayerId() == playerId_)
@@ -966,7 +966,7 @@ Player::fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount,
 {
     assert(pBet != nullptr);
     assert(pTable_ != nullptr);
-    
+
     if (pTable_->setOddsAmount(pBet, oddsAmount, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend(diagPrefix(2));
@@ -1028,4 +1028,3 @@ Player::removeBetById(unsigned betId)
     return false;
 }
 #endif
-

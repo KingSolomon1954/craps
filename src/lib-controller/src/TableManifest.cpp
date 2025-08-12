@@ -94,7 +94,7 @@ TableManifest::TableInfo::toYAML() const
 //-----------------------------------------------------------------
 
 std::string
-TableManifest::getFileBaseName(const Craps::TableId& tableId) const
+TableManifest::getFileName(const Craps::TableId& tableId) const
 {
     for (const auto& t : tables_)
     {

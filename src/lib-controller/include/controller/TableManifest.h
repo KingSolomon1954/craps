@@ -22,15 +22,15 @@ public:
         std::string shortDescription;
         std::string fullDescription;
         std::string fileName;
-        
+
         YAML::Node toYAML() const;
         void fromYAML(const YAML::Node& node);
     };
-    
-    std::string getFileBaseName(const Craps::TableId& tableId) const;
-    Craps::TableId getTableId(const std::string& fileName)     const;
+
+    std::string getFileName(const Craps::TableId& tableId)   const;
+    Craps::TableId getTableId(const std::string& fileName)   const;
     void loadFromFile();  // throws
-    const std::vector<TableManifest::TableInfo>& getTables()   const;
+    const std::vector<TableManifest::TableInfo>& getTables() const;
     void fromYAML(const YAML::Node& node);
 
 private:

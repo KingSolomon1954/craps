@@ -44,7 +44,7 @@ void
 PlayerManager::loadStartingPlayers()
 {
     std::vector<std::string> playerFiles;
-    
+
     Craps::PlayerId playerFile1 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer1).value();
     Craps::PlayerId playerFile2 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer2).value();
     Craps::PlayerId playerFile3 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer3).value();
@@ -73,9 +73,12 @@ PlayerManager::loadPlayer(const std::string& fileName)
     auto playerId = manifest_.getPlayerId(fileName);
     if (playerId.empty())
     {
-        throw std::runtime_error("TODO: fill me out");
+        std::string diag = "PlayerManager::loadPlayer(): unable to load "
+            "player file; lookup failed; file name:\"" + fileName +
+            "\" is not found in manifest file:\"players.yaml\".";
+        throw std::runtime_error(diag);
     }
-    
+
     Craps::PlayerConfig config;
     config.playerPath = PlayerManager::formPlayerPath(fileName);
     return Craps::Player::fromFile(playerId, config, *Gbl::pEventMgr);
@@ -88,7 +91,7 @@ PlayerManager::addPlayersToTable()
 {
     Gen::ErrorPass ep;
     bool booboo = false;
-    
+
     for (auto p : players_)
     {
         auto rc = p->joinTable(Gbl::pTable, ep);
@@ -104,7 +107,7 @@ PlayerManager::addPlayersToTable()
 
 //----------------------------------------------------------------
 
-const PlayerManager::Players& 
+const PlayerManager::Players&
 PlayerManager::getPlayers() const
 {
     return players_;
@@ -115,7 +118,6 @@ PlayerManager::getPlayers() const
 const PlayerManager::PlayerDescriptions&
 PlayerManager::getPlayerChoices() const
 {
-    // TODO
     return manifest_.getPlayers();
 }
 
@@ -131,7 +133,7 @@ PlayerManager::formPlayerPath(const std::string& fileName)
     fs::path path = fs::path(dir) / fileName;
     return path;
 }
-    
+
 /*-----------------------------------------------------------*//**
 
 Returns the player that is the user.

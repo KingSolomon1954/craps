@@ -18,20 +18,20 @@
 namespace Craps {
     class CrapsTable;  // fwd
 }
-    
+
 namespace Ctrl {
 
 class TableManager
 {
 public:
     using TableDescriptions = std::vector<TableManifest::TableInfo>;
-    
+
     /// @name Lifecycle
     /// @{
     TableManager();
    ~TableManager();
     /// @}
-    
+
     /// @name Modifiers
     /// @{
     Gen::ReturnCode switchCrapsTable(
