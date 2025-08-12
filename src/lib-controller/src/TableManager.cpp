@@ -26,10 +26,9 @@ using namespace Ctrl;
 //
 TableManager::TableManager()
 {
+    manifest_.loadFromFile();           // Load tables.yaml manifest
     pCurrentCrapsTable_ = loadStartingCrapsTable();
     Gbl::pTable = pCurrentCrapsTable_;  // Make it accessible via globals
-    
-    manifest_.loadFromFile();  // Load tables.yaml manifest
 }
 
 //----------------------------------------------------------------
@@ -50,12 +49,18 @@ TableManager::getTableChoices() const
 //----------------------------------------------------------------
 
 Craps::CrapsTable*
-TableManager::loadCrapsTable(const Craps::TableId& tableId)
+TableManager::loadCrapsTable(const std::string& fileName)
 {
+    auto tableId = manifest_.getTableId(fileName);
+    if (tableId.empty())
+    {
+        throw std::runtime_error("TODO: fill me out");
+    }
+    
     Craps::TableConfig config;
     config.maxSessions    = TableManager::retrieveMaxSessions();
     config.maxRecentRolls = TableManager::retrieveMaxRecentRolls();
-    config.tablePath      = TableManager::formTablePath(tableId);
+    config.tablePath      = TableManager::formTablePath(fileName);
 
     return Craps::CrapsTable::fromFile(tableId, config, *Gbl::pEventMgr);
 }
@@ -65,9 +70,9 @@ TableManager::loadCrapsTable(const Craps::TableId& tableId)
 Craps::CrapsTable*
 TableManager::loadStartingCrapsTable()
 {
-    Craps::TableId tid =
+    std::string fileName = 
         Gbl::pConfigMgr->getString(ConfigManager::KeyTableStart).value();
-    return loadCrapsTable(tid);
+    return loadCrapsTable(fileName);
 }
 
 //----------------------------------------------------------------
@@ -114,13 +119,13 @@ TableManager::retrieveMaxRecentRolls()
 //----------------------------------------------------------------
 
 std::filesystem::path
-TableManager::formTablePath(const Craps::TableId& tableId)
+TableManager::formTablePath(const std::string& fileName)
 {
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysTables).value();
 
     namespace fs = std::filesystem;
-    fs::path path = fs::path(dir) / (tableId + ".yaml");
+    fs::path path = fs::path(dir) / fileName;
     return path;
 }
     

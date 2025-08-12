@@ -5,30 +5,30 @@ players:
   - playerId: 550e8400-e29b-41d4-a716-446655440000
     playerName: Nathan
     shortDescription: Primary player
-    fullDescription: Likes to play pass line
+    fullDescription: Likes to play pass line.
     fileName: nathan.yaml
   
   - playerId: 8f6c1fbc-bfc1-4e02-87bb-b71d5d2e87ff
     playerName: Arthur
     shortDescription: High roller
-    fullDescription: Likes to have lots of bets each roll
+    fullDescription: Likes to have lots of bets each roll.
     fileName: arthur.yaml
 
   - playerId: 50d2cd10-bef8-4c35-a0a4-5ff7d86944e1
     playerName: Paige
     shortDescription: Super hungry player
-    fullDescription: Likes to eat between throws
+    fullDescription: Likes to eat between throws.
     fileName: paige.yaml
 
   - playerId: e7fcde92-7a5a-4e8e-a565-5a42bcb40c14
     playerName: Lenny
-    shortDescription: Throws dice off the table
-    fullDescription: Likes to throw dice very hard
+    shortDescription: Throws dice hard
+    fullDescription: Dice winds up off the table a lot.
     fileName: lenny.yaml
 
   - playerId: f3ecbc07-4c52-4d1b-a523-1bcd38b9fd4f
     playerName: Winnifred 
     shortDescription: Beginning craps player
-    fullDescription: Interested in learning
+    fullDescription: Interested in learning.
     fileName: winnifred.yaml
     

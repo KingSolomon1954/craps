@@ -132,4 +132,27 @@ PlayerManager::formPlayerPath(const std::string& fileName)
     return path;
 }
     
+/*-----------------------------------------------------------*//**
+
+Returns the player that is the user.
+
+This is the person operating the game as player "x".
+*/
+Craps::Player*
+PlayerManager::getUserPlayer() const
+{
+    std::string playerFileName = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyTableUserIsPlayer).value();
+
+    auto playerId = manifest_.getPlayerId(playerFileName);
+    for (auto p : players_)
+    {
+        if (p->getPlayerId() == playerId)
+        {
+            return p;
+        }
+    }
+    return nullptr;
+}
+
 //----------------------------------------------------------------

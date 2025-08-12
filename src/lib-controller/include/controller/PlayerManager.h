@@ -40,7 +40,8 @@ public:
     /// @name Observers
     /// @{
     const PlayerDescriptions& getPlayerChoices() const;
-    const Players& getPlayers() const;
+    const Players& getPlayers()                  const;
+    Craps::Player* getUserPlayer()               const;
     /// @}
 
 private:

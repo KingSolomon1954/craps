@@ -9,7 +9,6 @@
 #include <functional>
 #include <controller/ConfigManager.h>
 #include <gen/MultiLayerConfig.h>
-#include <yaml-cpp/yaml.h>
 
 using namespace Ctrl;
 namespace fs = std::filesystem;
@@ -97,7 +96,7 @@ ConfigFiles::loadSystemConfig(
     const std::string& filename =
         multiConfig.getString(ConfigManager::KeyDirsSysConfig).value() + "/sys-config.yaml";
     existsOrThrow(filename);
-    loadNamedConfig(filename, cfg);
+    yamlToMultiConfig(filename, cfg);
 }
 
 //----------------------------------------------------------------
@@ -111,15 +110,15 @@ ConfigFiles::loadUserConfig(
         multiConfig.getString(ConfigManager::KeyDirsUsrConfig).value() + "/config.yaml";
     if (fs::exists(filename))
     {
-        loadNamedConfig(filename, cfg);
+        yamlToMultiConfig(filename, cfg);
     }
 }
 
 //----------------------------------------------------------------
 
 void
-ConfigFiles::loadNamedConfig(const std::string& filename,
-                             Gen::ConfigLayer& cfg)
+ConfigFiles::yamlToMultiConfig(const std::string& filename,
+                               Gen::ConfigLayer& cfg)
 {
     try
     {
@@ -169,49 +168,6 @@ ConfigFiles::loadNamedConfig(const std::string& filename,
     }
 }
 
-#if 0
-
-void
-ConfigFiles::loadNamedConfig(const std::string& filename,
-                             Gen::ConfigLayer& cfg)
-{
-    try
-    {
-        YAML::Node root = YAML::LoadFile(filename);
-
-        std::function<void(const YAML::Node&, const std::string&)> recurse;
-        recurse = [&](const YAML::Node& node, const std::string& prefix)
-        {
-            for (const auto& kv : node)
-            {
-                std::string key = prefix.empty() ? kv.first.as<std::string>() :
-                    prefix + "." + kv.first.as<std::string>();
-                if (key.empty())
-                {
-                     throw std::runtime_error("Empty key in YAML file: " + filename);
-                }
-                if (kv.second.IsMap())
-                {
-                    recurse(kv.second, key);
-                }
-                else
-                {
-                    cfg.set(key, kv.second.as<std::string>());
-                }
-            }
-        };
-
-        recurse(root, "");
-    }
-    catch (const YAML::Exception& e)
-    {
-        throw std::runtime_error("Failed to parse YAML file " +
-                                 filename + ": " + e.what());
-    }
-}
-
-#endif
-
 //----------------------------------------------------------------
 
 void
@@ -225,36 +181,87 @@ ConfigFiles::existsOrThrow(const std::string& pathStr)
 
 //----------------------------------------------------------------
 
+
+
+
+
 #if 0
 
-yaml-cpp
-
-sudo apt install libyaml-cpp-dev  # Debian/Ubuntu
-# or build from source via CMake
+// TODO: incorporate, need to save back to user's config.yaml
 
 #include <yaml-cpp/yaml.h>
+#include <string>
+#include <map>
+#include <regex>
+#include <sstream>
 #include <iostream>
-#include "MultiLayerConfig.h"
 
-void loadYamlIntoConfig(const std::string& filename, MultiLayerConfig& config, const std::string& layerName) {
-    config.addLayer(layerName);
-    YAML::Node root = YAML::LoadFile(filename);
+// Example: flattenKey = "table.startPlayers[2]", value = "paige.yaml"
+void insertKeyValue(YAML::Node& root, const std::string& flatKey, const std::string& value) {
+    std::regex arrayRegex(R"((\w+)\[(\d+)\])"); // matches name[index]
+    std::stringstream ss(flatKey);
+    std::string segment;
+    YAML::Node* current = &root;
 
-    std::function<void(const YAML::Node&, const std::string&)> recurse;
-    recurse = [&](const YAML::Node& node, const std::string& prefix) {
-        for (const auto& kv : node) {
-            std::string key = prefix.empty() ? kv.first.as<std::string>() : prefix + "." + kv.first.as<std::string>();
-            if (kv.second.IsMap()) {
-                recurse(kv.second, key);
-            } else {
-                config.set(layerName, key, kv.second.as<std::string>());
+    while (std::getline(ss, segment, '.')) {
+        std::smatch match;
+        if (std::regex_match(segment, match, arrayRegex)) {
+            std::string arrayName = match[1];
+            int index = std::stoi(match[2]);
+
+            (*current)[arrayName] = (*current)[arrayName] ? (*current)[arrayName] : YAML::Node(YAML::NodeType::Sequence);
+
+            // Resize if needed
+            if ((*current)[arrayName].size() <= (size_t)index) {
+                (*current)[arrayName].resize(index + 1);
             }
+            current = &((*current)[arrayName][index]);
+        } else {
+            // Regular map key
+            (*current)[segment] = (*current)[segment] ? (*current)[segment] : YAML::Node(YAML::NodeType::Map);
+            current = &((*current)[segment]);
         }
-    };
+    }
 
-    recurse(root, "");
+    // Finally, assign value
+    *current = value;
 }
 
+YAML::Node multiConfigToYaml(const std::map<std::string, std::string>& flatMap) {
+    YAML::Node root;
+    for (const auto& [key, value] : flatMap) {
+        insertKeyValue(root, key, value);
+    }
+    return root;
+}
+
+int main() {
+    std::map<std::string, std::string> flatConfig = {
+        {"table.startTable", "las-vegas.yaml"},
+        {"table.startWithLastPlayers", "true"},
+        {"table.startPlayers[0]", "nathan.yaml"},
+        {"table.startPlayers[1]", "arthur.yaml"},
+        {"table.startPlayers[2]", "paige.yaml"},
+        {"table.maxSessions", "44"},
+        {"table.maxRecentRolls", "33"},
+        {"rollHistory.format", "1"},
+        {"rollHistory.scroll", "up"},
+        {"log.debug", "true"},
+        {"log.trace", "false"},
+        {"player.maxSessions", "22"}
+    };
+
+    YAML::Node root = multiConfigToYaml(flatConfig);
+
+    YAML::Emitter out;
+    out << root;
+
+    std::cout << out.c_str() << "\n";
+}
+
+#endif
+
+#if 0
 // Writng to YAML file
 
 YAML::Node out;
@@ -266,3 +273,6 @@ fout << out;
 
 
 #endif
+
+//----------------------------------------------------------------
+

@@ -30,8 +30,6 @@ public:
     /// @{
     TableManager();
    ~TableManager();
-    static Craps::CrapsTable* loadCrapsTable(const Craps::TableId& tableId);
-    static Craps::CrapsTable* loadStartingCrapsTable();
     /// @}
     
     /// @name Modifiers
@@ -48,6 +46,9 @@ public:
 private:
     Craps::CrapsTable* pCurrentCrapsTable_ = nullptr;
     TableManifest manifest_;
+
+    Craps::CrapsTable* loadCrapsTable(const std::string& fileName);
+    Craps::CrapsTable* loadStartingCrapsTable();
 
     static size_t retrieveMaxSessions();
     static size_t retrieveMaxRecentRolls();

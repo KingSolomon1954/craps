@@ -79,6 +79,7 @@ public:
     static constexpr auto KeyTablePlayer6        = "table.startPlayers[5]";
     static constexpr auto KeyTableMaxSessions    = "table.maxSessions";
     static constexpr auto KeyTableMaxRecentRolls = "table.maxRecentRolls";
+    static constexpr auto KeyTableUserIsPlayer   = "table.userIsPlayer";
 
     // Player
     static constexpr auto KeyPlayerMaxSessions  = "player.maxSessions";

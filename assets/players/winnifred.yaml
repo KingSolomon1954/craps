@@ -1,7 +1,7 @@
-playerId: uuid1
-playerName: Elvis
-shortDescription: User can be this player
-fullDescription: Always plays Pass and automated Come.
+playerId: f3ecbc07-4c52-4d1b-a523-1bcd38b9fd4f
+playerName: Winnifred
+shortDescription: Beginning craps player
+fullDescription: Interested in learning.
 Bank:
   originalStartBalance: 30000
   sessionStartBalance: 30000
@@ -69,7 +69,7 @@ BetStats:
             amount: 0
             amountBet: 0
 SessionStats:
-  numSessionsAlltime: 25
+  numSessionsAlltime: 1
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 00:01:04
   history:

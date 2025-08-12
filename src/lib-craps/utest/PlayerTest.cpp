@@ -70,12 +70,13 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
     
     SUBCASE("via fromFile()")
     {
-        PlayerConfig pc { "/work/craps/assets/players/Player-1.yaml" };
+        PlayerConfig pc { "/work/craps/assets/players/nathan.yaml" };
 
         // Good load
-        std::unique_ptr<Player> p1(Player::fromFile(p1Id, pc, em));
-        CHECK(p1->getPlayerId() == "uuid1");
-        CHECK(p1->getName() == "Elvis");
+        std::string nathanUuid("550e8400-e29b-41d4-a716-446655440000");
+        std::unique_ptr<Player> p1(Player::fromFile(nathanUuid, pc, em));
+        CHECK(p1->getPlayerId() == nathanUuid);
+        CHECK(p1->getName() == "Nathan");
         CHECK(p1->getBalance() == 30000);
 
         // Mismatched player ID
@@ -86,8 +87,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
     {
         // Clobber path. Use bad playerId/path so file won't be found.
         PlayerFixture::config.playerPath = "missing/FakePlayer-1";
-        CHECK_THROWS_AS(Player::fromFile("uuid1", config, em),
-                        std::runtime_error);
+        CHECK_THROWS_AS(Player::fromFile(p1Id, config, em), std::runtime_error);
     }
 }
 

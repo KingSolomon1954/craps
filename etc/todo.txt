@@ -1,9 +1,6 @@
 
-Save Config to yaml file
-Write unit test MultiLayerConfigTest
 Write unit test ConfigManagerTest
 
-load Player choices by reading dir
 write script to copy files/assets to install locations
 design EventQueue and Events
 
@@ -29,9 +26,16 @@ Allow a clear/undo last bet capability
     CrapsBet::isLocked()
     enum BetStats { New, Actvie, Staged, Resolved };
 
+Save Config to yaml file
 Need unit test for initial bank money
-Fix Player startup/init
 
+(Done) Write unit test MultiLayerConfigTest
+(Done) load Player choices by reading dir
+(Done) Load config.yaml with arrays into multi-layer config
+(Done) Switch to use file names to load, instead of TableId or PlayerId
+(Done) Implement PlayerManifest
+(Done) Fix Player startup/init
+(Done) Load n Players on startup/init
 (Done) Load Player from yaml file 
 (Done) Save Player to yaml file
 (Done) stats PlayerStats

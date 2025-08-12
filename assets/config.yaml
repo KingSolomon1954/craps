@@ -1,14 +1,21 @@
-table.startTable = "las-vegas.yaml"
-table.startWithLastPlayers = "true"
-table.startPlayers[0] = "nathan.yaml"
-table.startPlayers[1] = "arthur.yaml"
-table.startPlayers[2] = "paige.yaml"
-table.maxSessions = "50"
-table.maxRecentRolls = "25"
-rollHistory.format = "1"       # [ 1..4 ]
-rollHistory.scroll = "up"      # [left | right | up | down]
-log.debug = "true"
-log.trace = "false"
-player.maxSessions = "50"
+table:
+  startTable: "las-vegas-strip.yaml"
+  startWithLastPlayers: true
+  startPlayers:
+    - "nathan.yaml"
+    - "arthur.yaml"
+    - "paige.yaml"
+  maxSessions: 44
+  maxRecentRolls: 33
+  userIsPlayer: "nathan.yaml"
+  
+rollHistory:
+  format: 1         # [ 1..4 ]
+  scroll: "up"      # [left | right | up | down]
 
+log:
+  debug: true
+  trace: false
 
+player:
+  maxSessions: 22

@@ -92,3 +92,33 @@ TableManifest::TableInfo::toYAML() const
 }
 
 //-----------------------------------------------------------------
+
+std::string
+TableManifest::getFileBaseName(const Craps::TableId& tableId) const
+{
+    for (const auto& t : tables_)
+    {
+        if (t.tableId == tableId)
+        {
+            return t.fileName;
+        }
+    }
+    return "";
+}
+
+//-----------------------------------------------------------------
+
+Craps::TableId
+TableManifest::getTableId(const std::string& fileName) const
+{
+    for (const auto& t : tables_)
+    {
+        if (t.fileName == fileName)
+        {
+            return t.tableId;
+        }
+    }
+    return "";
+}
+
+//-----------------------------------------------------------------

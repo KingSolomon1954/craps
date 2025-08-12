@@ -44,7 +44,7 @@ struct CrapsTableFixture
         
         config.maxSessions = 50;
         config.maxRecentRolls = 25;
-        config.tablePath = "/work/craps/assets/tables/Table-1.yaml";
+        config.tablePath = "/work/craps/assets/tables/las-vegas-strip.yaml";
         // Unit tests won't overwrite YAML file. CrapsTable dtor
         // does not trigger save to file. Would have to call 
         // prepareToShutdown() or close() to save YAML file.
