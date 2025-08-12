@@ -26,7 +26,9 @@ public:
         YAML::Node toYAML() const;
         void fromYAML(const YAML::Node& node);
     };
-    
+
+    Craps::PlayerId getPlayerId(const std::string& fileName) const;
+    std::string getFileBaseName(const Craps::PlayerId& playerId) const;
     void loadFromFile();  // throws
     const std::vector<PlayerManifest::PlayerInfo>& getPlayers() const;
     void fromYAML(const YAML::Node& node);

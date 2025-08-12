@@ -66,7 +66,7 @@ Craps::CrapsTable*
 TableManager::loadStartingCrapsTable()
 {
     Craps::TableId tid =
-        Gbl::pConfigMgr->getString(ConfigManager::KeyTableStartId).value();
+        Gbl::pConfigMgr->getString(ConfigManager::KeyTableStart).value();
     return loadCrapsTable(tid);
 }
 

@@ -47,10 +47,10 @@ private:
     mutable PlayerManifest manifest_;
     Players players_;
 
-    Craps::Player* loadPlayer(const Craps::PlayerId& playerId);
+    Craps::Player* loadPlayer(const std::string& fileName);
     void loadStartingPlayers();  // throws
     void addPlayersToTable();    // throws
-    static std::filesystem::path formPlayerPath(const Craps::PlayerId& playerId);
+    static std::filesystem::path formPlayerPath(const std::string& fileName);
 };
 
 /*-----------------------------------------------------------*//**

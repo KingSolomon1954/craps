@@ -118,9 +118,62 @@ ConfigFiles::loadUserConfig(
 //----------------------------------------------------------------
 
 void
-ConfigFiles::loadNamedConfig(
-    const std::string& filename,
-    Gen::ConfigLayer& cfg)
+ConfigFiles::loadNamedConfig(const std::string& filename,
+                             Gen::ConfigLayer& cfg)
+{
+    try
+    {
+        YAML::Node root = YAML::LoadFile(filename);
+
+        std::function<void(const YAML::Node&, const std::string&)> recurse;
+        recurse = [&](const YAML::Node& node, const std::string& prefix)
+        {
+            if (node.IsMap())
+            {
+                for (const auto& kv : node)
+                {
+                    std::string key = prefix.empty()
+                        ? kv.first.as<std::string>()
+                        : prefix + "." + kv.first.as<std::string>();
+
+                    if (key.empty())
+                        throw std::runtime_error("Empty key in YAML file: " + filename);
+
+                    recurse(kv.second, key);
+                }
+            }
+            else if (node.IsSequence())
+            {
+                for (size_t i = 0; i < node.size(); ++i)
+                {
+                    std::string seqKey = prefix + "[" + std::to_string(i) + "]";
+                    recurse(node[i], seqKey);
+                }
+            }
+            else if (node.IsScalar())
+            {
+                cfg.set(prefix, node.as<std::string>());
+            }
+            else
+            {
+                throw std::runtime_error("Unsupported YAML node type in file: " + filename);
+            }
+        };
+
+        recurse(root, "");
+    }
+    catch (const YAML::Exception& e)
+    {
+        throw std::runtime_error("Failed to parse YAML file " +
+                                 filename + ": " + e.what());
+    }
+}
+
+#if 0
+
+void
+ConfigFiles::loadNamedConfig(const std::string& filename,
+                             Gen::ConfigLayer& cfg)
 {
     try
     {
@@ -156,6 +209,8 @@ ConfigFiles::loadNamedConfig(
                                  filename + ": " + e.what());
     }
 }
+
+#endif
 
 //----------------------------------------------------------------
 

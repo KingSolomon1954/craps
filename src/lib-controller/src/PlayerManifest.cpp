@@ -92,3 +92,33 @@ PlayerManifest::PlayerInfo::toYAML() const
 }
 
 //-----------------------------------------------------------------
+
+std::string
+PlayerManifest::getFileBaseName(const Craps::PlayerId& playerId) const
+{
+    for (const auto& p : players_)
+    {
+        if (p.playerId == playerId)
+        {
+            return p.fileName;
+        }
+    }
+    return "";
+}
+
+//-----------------------------------------------------------------
+
+Craps::PlayerId
+PlayerManifest::getPlayerId(const std::string& fileName) const
+{
+    for (const auto& p : players_)
+    {
+        if (p.fileName == fileName)
+        {
+            return p.playerId;
+        }
+    }
+    return "";
+}
+
+//-----------------------------------------------------------------

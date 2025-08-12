@@ -61,25 +61,28 @@ public:
     static constexpr auto KeyDirsAdmConfig  = "dirs.admconfig";
     
     // General Config    
-    static constexpr auto KeySessionStart   = "sess.start";
-    static constexpr auto KeyViewType       = "screen.viewType";
-    static constexpr auto KeySoundEnabled   = "sound.enabled";
-    static constexpr auto KeySoundVolume    = "sound.volume";
-    static constexpr auto KeyDebugLogging   = "log.debug";
-    static constexpr auto KeyTraceLogging   = "log.trace";
+    static constexpr auto KeySessionStartTime = "session.startTime";
+    static constexpr auto KeyViewType         = "screen.viewType";
+    static constexpr auto KeySoundEnabled     = "sound.enabled";
+    static constexpr auto KeySoundVolume      = "sound.volume";
+    static constexpr auto KeyDebugLogging     = "log.debug";
+    static constexpr auto KeyTraceLogging     = "log.trace";
     
     // Table Setup
-    static constexpr auto KeyTableStartId        = "tbl.startId";
-    static constexpr auto KeyTableStartLastPlyrs = "tbl.startLastPlyrs";
-    static constexpr auto KeyTablePlayer1        = "tbl.plyr1";
-    static constexpr auto KeyTablePlayer2        = "tbl.plyr2";
-    static constexpr auto KeyTablePlayer3        = "tbl.plyr3";
-    static constexpr auto KeyTablePlayer4        = "tbl.plyr4";
-    static constexpr auto KeyTablePlayer5        = "tbl.plyr5";
-    static constexpr auto KeyTablePlayer6        = "tbl.plyr6";
-    static constexpr auto KeyTableMaxSessions    = "tbl.maxSessions";
-    static constexpr auto KeyTableMaxRecentRolls = "tbl.maxRecentRolls";
-        
+    static constexpr auto KeyTableStart          = "table.startTable";
+    static constexpr auto KeyTableStartLastPlyrs = "table.startWithLastPlayers";
+    static constexpr auto KeyTablePlayer1        = "table.startPlayers[0]";
+    static constexpr auto KeyTablePlayer2        = "table.startPlayers[1]";
+    static constexpr auto KeyTablePlayer3        = "table.startPlayers[2]";
+    static constexpr auto KeyTablePlayer4        = "table.startPlayers[3]";
+    static constexpr auto KeyTablePlayer5        = "table.startPlayers[4]";
+    static constexpr auto KeyTablePlayer6        = "table.startPlayers[5]";
+    static constexpr auto KeyTableMaxSessions    = "table.maxSessions";
+    static constexpr auto KeyTableMaxRecentRolls = "table.maxRecentRolls";
+
+    // Player
+    static constexpr auto KeyPlayerMaxSessions  = "player.maxSessions";
+
 private:
 };
 

@@ -23,25 +23,61 @@ Constructor
 */
 PlayerManager::PlayerManager()
 {
-    loadStartingPlayers();  // throws
-    addPlayersToTable();    // throws
+    manifest_.loadFromFile();  // Load players manifest
+    loadStartingPlayers();     // Throws
+    addPlayersToTable();       // Throws
 }
 
 //----------------------------------------------------------------
 
 PlayerManager::~PlayerManager()
 {
-    // empty
+    for (auto p : players_)
+    {
+        delete p;
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerManager::loadStartingPlayers()
+{
+    std::vector<std::string> playerFiles;
+    
+    Craps::PlayerId playerFile1 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer1).value();
+    Craps::PlayerId playerFile2 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer2).value();
+    Craps::PlayerId playerFile3 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer3).value();
+    Craps::PlayerId playerFile4 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer4).value();
+    Craps::PlayerId playerFile5 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer5).value();
+    Craps::PlayerId playerFile6 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer6).value();
+    if (!playerFile1.empty()) playerFiles.push_back(playerFile1);
+    if (!playerFile2.empty()) playerFiles.push_back(playerFile2);
+    if (!playerFile3.empty()) playerFiles.push_back(playerFile3);
+    if (!playerFile4.empty()) playerFiles.push_back(playerFile4);
+    if (!playerFile5.empty()) playerFiles.push_back(playerFile5);
+    if (!playerFile6.empty()) playerFiles.push_back(playerFile6);
+
+    for (auto& f : playerFiles)
+    {
+        players_.push_back(loadPlayer(f));
+    }
 }
 
 //----------------------------------------------------------------
 
 Craps::Player*
-PlayerManager::loadPlayer(const Craps::PlayerId& playerId)
+PlayerManager::loadPlayer(const std::string& fileName)
 {
+    // Confirm fileName appears in players manifest
+    auto playerId = manifest_.getPlayerId(fileName);
+    if (playerId.empty())
+    {
+        throw std::runtime_error("TODO: fill me out");
+    }
+    
     Craps::PlayerConfig config;
-    config.playerPath = PlayerManager::formPlayerPath(playerId);
-
+    config.playerPath = PlayerManager::formPlayerPath(fileName);
     return Craps::Player::fromFile(playerId, config, *Gbl::pEventMgr);
 }
 
@@ -60,27 +96,9 @@ PlayerManager::addPlayersToTable()
     }
     if (booboo)
     {
-        // TODO beef this up
+        ep.prepend("PlayerManager::addPlayersToTable(): Unable to "
+                   "add player to table; ");
         throw std::runtime_error(ep.diag);
-    }
-}
-
-//----------------------------------------------------------------
-
-void
-PlayerManager::loadStartingPlayers()
-{
-    // TODO
-    std::vector<Craps::PlayerId> playerVec;
-    
-    Craps::PlayerId pid1 =
-        Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer1).value();
-    playerVec.push_back(pid1);
-
-    // TODO
-    for (auto pid : playerVec)
-    {
-        players_.push_back(loadPlayer(pid));
     }
 }
 
@@ -98,109 +116,20 @@ const PlayerManager::PlayerDescriptions&
 PlayerManager::getPlayerChoices() const
 {
     // TODO
-    manifest_.loadFromFile();  // Load players.yaml manifest
     return manifest_.getPlayers();
 }
 
 //----------------------------------------------------------------
 
 std::filesystem::path
-PlayerManager::formPlayerPath(const Craps::PlayerId& playerId)
+PlayerManager::formPlayerPath(const std::string& fileName)
 {
     std::string dir = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyDirsSysPlayers).value();
 
     namespace fs = std::filesystem;
-    fs::path path = fs::path(dir) / (playerId + ".yaml");
+    fs::path path = fs::path(dir) / fileName;
     return path;
 }
     
 //----------------------------------------------------------------
-
-
-
-
-
-
-
-
-#if 0
-/*-----------------------------------------------------------*//**
-
-Create a Player
-
-*/
-Craps::PlayerPtr
-PlayerManager::createPlayer(const std::string& name)
-{
-    // TODO
-    Craps::PlayerConfig config;
-    
-    auto player = std::make_shared<Craps::Player>(
-        "1", config, *Gbl::pEventMgr);
-    players_[player->getPlayerId()] = player;
-    return player;
-}
-
-/*-----------------------------------------------------------*//**
-
-Get Player by UUID
-
-*/
-Craps::PlayerPtr
-PlayerManager::getPlayer(const Craps::PlayerId& playerId) const
-{
-    auto it = players_.find(playerId);
-    if (it != players_.end()) return it->second;
-    return nullptr;
-}
-
-/*-----------------------------------------------------------*//**
-
-Loads player descriptions from file.
-
-*/
-PlayerManager::PlayerDescriptions
-PlayerManager::loadPlayerChoices()
-{
-    // TODO: read directory and build up player choices
-    return {
-        { "John", "The Bronx better",  "abcd", std::chrono::system_clock::now()},
-        { "Jane", "The Chatty roller", "efgh", std::chrono::system_clock::now()},
-        { "Dave", "The quiet gambler", "ijkl", std::chrono::system_clock::now()},
-    };
-}
-
-//----------------------------------------------------------------
-
-Craps::Player
-PlayerManager::loadPlayer(const Craps::PlayerId& playerId)
-{
-    // TODO: read from file and create player
-
-    Craps::PlayerConfig config;
-    return Craps::Player("1", config, *Gbl::pEventMgr);
-}
-
-//----------------------------------------------------------------
-
-void
-PlayerManager::loadStartingPlayers()
-{
-    assert(Gbl::pTable);
-    
-    // TODO read from mult layer config
-    // Form list of the last player ids
-    std::vector<Craps::PlayerId> ids;
-    
-    // Add each player to table
-    Gen::ErrorPass ep;
-    for (auto pid : ids)  // Players join table
-    {
-        // TODO: check error return
-        // Gbl::pTable->addPlayer(pid, ep);
-    }
-}
-
-#endif
-
