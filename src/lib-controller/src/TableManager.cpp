@@ -54,7 +54,10 @@ TableManager::loadCrapsTable(const std::string& fileName)
     auto tableId = manifest_.getTableId(fileName);
     if (tableId.empty())
     {
-        throw std::runtime_error("TODO: fill me out");
+        std::string diag = "TableManager::loadCrapsTable(): unable to load "
+            "table file; lookup failed; file name:\"" + fileName +
+            "\" is not found in manifest file:\"tables.yaml\".";
+        throw std::runtime_error(diag);
     }
 
     Craps::TableConfig config;

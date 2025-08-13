@@ -632,3 +632,144 @@ Date                Duration    Bets   Intake   Payout  Balance Players
 2025-07-12T09:29:56 0d 01:33:08 112    246222   334577  +88355  6
 2025-05-12T08:05:44 0d 00:22:11 24     1009     950     +59     6
 
+
+
+
+
+
+
+
+
+
+I'd like to pursue a variation on your recommendation.
+
+The top row is dedicated to table info and shows:
+  * current point, or 0 if coming out (frequently looked at so appears first)
+  * number of dice rolls so far (4 or 5 digits?)
+  * table name  (only looked at a couple of times, so can be out of the way, centered in its field)
+  * table min/max/odds (looked at only occasionally)
+  * (future) if playing with a countdown timer to next roll then 
+    I'd make room for that on this line, and move min/max/odds to a
+    menu entry or accessible via command 
+  
+Second row dedicated to roll history
+  * latest roll appears left most, others shift right
+  * format is selectable, example is showing one possible format
+  * if line is selected, then screen overlay shows full history
+
+Next to last row is the player row. Shows:
+  * Player name
+  * Current balance  
+  * balance difference from start of session +/-
+  * amount currently in bets on the table
+  * amount won on last roll
+  * amount lost on last roll
+  * player row is selectable maybe by clicking or command such that any
+    player can appear here, or perhaps an F-key cycles through players
+    
+Last row is command line as you suggest
+
+Here's my cut at this:
+
+┌────────────────────────────────────────────────────────────────────────┐
+│Point:10 | Roll:  273 | Las Vegas Strip     | min:$5 max:$2,000 odds:5x │
+├────────────────────────────────────────────────────────────────────────┤
+│4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4) 4(2,2) │
+├────────────────────────────────────────────────────────────────────────┤
+
+                         table layout here
+
+├────────────────────────────────────────────────────────────────────────┤
+│ Nathan: bal: $2,000 (+880) Betting: $320            Win: $220 Lose: $0 │
+├────────────────────────────────────────────────────────────────────────┤
+│ > command line here                                                    │
+└────────────────────────────────────────────────────────────────────────┘
+
+For terminal mode:
+
+If < 80×24:
+    Show a clear error: "Terminal too small (need at least 80x24).
+    Resize and restart."
+
+
+
+
+
+
+3. Subwindow Allocation in Code
+
+Example in C++ (ncurses):
+
+int termRows, termCols;
+getmaxyx(stdscr, termRows, termCols);
+
+if (termRows < 24 || termCols < 80) {
+    endwin();
+    std::cerr << "Terminal too small (need at least 80x24)\n";
+    exit(1);
+}
+
+// Allocate windows
+WINDOW *winTableInfo   = newwin(1, termCols, 0, 0);
+WINDOW *winRollHistory = newwin(1, termCols, 1, 0);
+WINDOW *winTableLayout = newwin(termRows - 4, termCols, 2, 0);
+WINDOW *winPlayerInfo  = newwin(1, termCols, termRows - 2, 0);
+WINDOW *winCommand     = newwin(1, termCols, termRows - 1, 0);
+
+// Optional: make each window have its own border or attributes
+
+4. Mouse Click Mapping
+
+Ncurses mouse events give you y and x coordinates.
+You can identify where the click happened:
+
+MEVENT event;
+if (getmouse(&event) == OK) {
+    if (event.y == 0) { /* Table info click */ }
+    else if (event.y == 1) { /* Roll history click */ }
+    else if (event.y >= 2 && event.y < termRows - 2) { /* Table layout */ }
+    else if (event.y == termRows - 2) { /* Player info click */ }
+    else if (event.y == termRows - 1) { /* Command line */ }
+}
+
+5. Overlay Windows (Popups)
+
+We’ll need temporary windows for things like:
+
+    Full roll history (covers table layout zone only)
+
+    All player list (could cover whole table layout + player info row)
+
+    Help screen (full screen takeover)
+
+Example:
+
+WINDOW *popup = newwin(height, width, starty, startx);
+box(popup, 0, 0);
+mvwprintw(popup, 1, 1, "Player List:");
+wrefresh(popup);
+
+When closed:
+
+delwin(popup);
+touchwin(winTableLayout); // Restore underlying window
+wrefresh(winTableLayout);
+
+6. Redraw Strategy
+
+    Each zone redraws only when its data changes.
+
+    Table layout will update more often (bets moving, dice animation, etc.).
+
+    Command line is interactive — redrawn on every keystroke.
+
+This makes performance snappy even in 80×24.
+7. Resizing
+
+    Catch SIGWINCH
+
+    Recalculate all subwindow dimensions
+
+    Redraw everything
+
+    If below minimum, pause game with resize prompt

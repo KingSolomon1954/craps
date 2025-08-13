@@ -270,21 +270,22 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 
 Player leaves the table.
 
-Any outstanding bets on the table are forcibly removed, meaning bets are
-pulled from the table and funds are returned to the player. This
-bypasses normal table checks that prevent removing bets due to table
-rules.
+Any outstanding bets on the table are forcibly removed, meaning bets
+are pulled from the table and funds are returned to the player. This
+bypasses normal table checks that prevent removing bets due to Craps
+table rules.
 
 UI should perform confirmation checks with users prior to leaving table.
 
-leaveTable is called upon program shutdown as well as
+leaveTable() is called upon program shutdown as well as
 when player switches tables.
 
 @param[in,out] ep
     If an error occurs, ep holds the reason
 
 @return
-    Success, otherwsie Fail and ep has the reason for failure
+    Success, otherwsie Fail and ep has the reason for failure.
+    It is not an error if a player has not joined a table.
 */
 Gen::ReturnCode
 Player::leaveTable(Gen::ErrorPass& ep)
