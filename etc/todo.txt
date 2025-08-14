@@ -692,8 +692,36 @@ If < 80×24:
     Resize and restart."
 
 
-
-
+100x36
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ Point:10 | Roll:  273 | Las Vegas Strip       | min:$5 max:$2,000 odds:5x  Timer:--s │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4) 4(2,2) 8(4,4) 6(2,4)│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                      │
+│                       ( Craps Table Layout — 18 rows high )                          │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ MESSAGE: Welcome to Royal Craps!                                                     │
+│ MESSAGE: Nathan placed $20 on Pass Line                                              │
+│ MESSAGE: Shooter rolled a 6 — point is now 6                                         │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Nathan: bal: $2,000 (+880)  Betting: $320   Win: $220  Lose: $0                      │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ > command line here                                                                  │
+└──────────────────────────────────────────────────────────────────────────────────────┘
 
 
 3. Subwindow Allocation in Code
@@ -773,3 +801,284 @@ This makes performance snappy even in 80×24.
     Redraw everything
 
     If below minimum, pause game with resize prompt
+
+
+(0,0) ┌────────────────────────────────────────────────────────────────────────────┐
+      │ w_info (3×100)                                                             │
+(3,0) ├────────────────────────────────────────────────────────────────────────────┤
+      │ w_history (3×100)                                                          │
+(6,0) ├────────────────────────────────────────────────────────────────────────────┤
+      │ w_table (20×100)                                                           │
+      │                                                                            │
+(26,0)├────────────────────────────────────────────────────────────────────────────┤
+      │ w_messages (4×100)                                                         │
+(30,0)├────────────────────────────────────────────────────────────────────────────┤
+      │ w_player (3×100)                                                           │
+(33,0)├────────────────────────────────────────────────────────────────────────────┤
+      │ w_cmdline (3×100)                                                          │
+(36,0)└────────────────────────────────────────────────────────────────────────────┘
+
+
+
+22 rows content, 2 border rows
+┌───────────────────────┬──────────────────────────┐
+│ Pass Line o o o o o o │ Don't Pass   o o o o o o │
+│ Come      o o o o o o │ Dont Come    o o o o o o │
+│ Come 4    o o o o o o │ Dont Come 4  o o o o o o │
+│ Come 5    o o o o o o │ Dont Come 5  o o o o o o │
+│ Come 6    o o o o o o │ Dont Come 6  o o o o o o │
+│ Come 8    o o o o o o │ Dont Come 8  o o o o o o │
+│ Come 9    o o o o o o │ Dont Come 9  o o o o o o │
+│ Come 10   o o o o o o │ Dont Come 10 o o o o o o │
+│ Buy 4     o o o o o o │ Lay 4        o o o o o o │
+│ Buy 5     o o o o o o │ Lay 5        o o o o o o │
+│ Buy 6     o o o o o o │ Lay 6        o o o o o o │
+│ Buy 8     o o o o o o │ Lay 8        o o o o o o │
+│ Buy 9     o o o o o o │ Lay 9        o o o o o o │
+│ Buy 10    o o o o o o │ Lay 10       o o o o o o │
+│ Place 4   o o o o o o │ Hard 4       o o o o o o │
+│ Place 5   o o o o o o │ Hard 6       o o o o o o │
+│ Place 6   o o o o o o │ Hard 8       o o o o o o │
+│ Place 8   o o o o o o │ Hard 10      o o o o o o │
+│ Place 9   o o o o o o │ Any 7        o o o o o o │
+│ Field     o o o o o o │ Any Craps    o o o o o o │
+│ C&E       o o o o o o │ Horn         o o o o o o │
+└───────────────────────┴──────────────────────────┘
+
+I think this fits in minimal size 2 column adaptive layout
+
+19 rows content, 2 border rows, 77 columns
+┌───────────────────────┬───────────────────────────┬───────────────────────┐
+│           N A P L W   │              N A P L W    │           N A P L W   │
+│ Pass Line o o o o o o │ Don't Pass   o o o o o o  │ Hard 4    o o o o o o │
+│ Come      o o o o o o │ Dont Come    o o o o o o  │ Hard 6    o o o o o o │
+│ Come 4    o o o o o o │ Dont Come 4  o o o o o o  │ Hard 8    o o o o o o │
+│ Come 5    o o o o o o │ Dont Come 5  o o o o o o  │ Hard 10   o o o o o o │
+│ Come 6    o o o o o o │ Dont Come 6  o o o o o o  │ C&E       o o o o o o │
+│ Come 8    o o o o o o │ Dont Come 8  o o o o o o  │ Any 7     o o o o o o │
+│ Come 9    o o o o o o │ Dont Come 9  o o o o o o  │ Any Craps o o o o o o │
+│ Come 10   o o o o o o │ Dont Come 10 o o o o o o  │ Field     o o o o o o │
+│ Buy 4     o o o o o o │ Lay 4        o o o o o o  │                       │
+│ Buy 5     o o o o o o │ Lay 5        o o o o o o  │                       │
+│ Buy 6     o o o o o o │ Lay 6        o o o o o o  │                       │
+│ Buy 8     o o o o o o │ Lay 8        o o o o o o  │                       │
+│ Buy 9     o o o o o o │ Lay 9        o o o o o o  │                       │
+│ Buy 10    o o o o o o │ Lay 10       o o o o o o  │                       │
+│ Place 4   o o o o o o │ Place 8      o o o o o o  │                       │
+│ Place 5   o o o o o o │ Place 9      o o o o o o  │                       │
+│ Place 6   o o o o o o │ Place 10     o o o o o o  │                       │
+└───────────────────────┴───────────────────────────┴───────────────────────┘
+
+
+
+
+
+I'm updating the player subwindow to have an additional row so that
+now the player subwindow has the following information:
+  * row 1: Player name (plus indicator if player is currently the shooter)
+  * row 2: dashed line separator, so info is not so disjoint from name
+  * row 3: Current balance, and balance difference from start of session +/-
+  * row 4: total number of bets, number of winning bets, number of losing bets
+  * row 5: num bets and amount currently on the table
+  * row 6: last roll: net win/lose, amount won, amount lost
+
+Labels and formatting a bit more terse to fit larger numbers.
+Player subwindow is selectable maybe by clicking or command such that any
+player can appear here, or perhaps an F-key cycles through players. Here's
+example of the updated player subwindow .
+    
+┬─────────────────────────────┐
+│ Player: Nathan (shooter)    │
+│ - - - - - - - - - - - - - - │
+│ Bal: $2,000 (+880)          │
+│ Bets: 55 Win: 21 Lose: 34   │
+│ On table: 3 bets, $320      │
+│ Last: +$80,180W,100L        │
+├─────────────────────────────┤
+
+I'm adding an additional subwindow for house information.
+This is a right side window located immediately beneath the Player subwindow.
+The command window moves below this house subwindow.
+  * row 1: house bank balance difference from start of session +/-
+  * row 2: total number of bets, number of winning bets, number of losing bets
+  * row 3: num bets and amount currently on the table
+  * row 4: last roll: net win/lose, amount won, amount lost
+
+┬─────────────────────────────┐
+│ House: +$2,050              │
+│ Bets: 128 (68W, 60L)        │
+│ On table: 12 bets, $1,520   │
+│ Last: -$100,300W,200L       │
+├─────────────────────────────┤
+
+I've been experimenting with several table layouts to find one that fits
+in the minimum 100x36 terminal size. It must include all the bets that
+the game supports as well as the max number of players (6). I've come up
+with this one which I think works.
+
+Table layout: 21 rows content, 2 border rows, 70 columns
+
+┌─────────────────────┬────────────────────────┬─────────────────────┐
+│                     │                        │                     │
+│          N A P L W  │             N A P L W  │          N A P L W  │
+│ PassLine o o o o o o│ DontPass    o o o o o o│ Hard4    o o o o o o│
+│ Come     o o o o o o│ DontCome    o o o o o o│ Hard6    o o o o o o│
+│ Come4    o o o o o o│ DontCome 4  o o o o o o│ Hard8    o o o o o o│
+│ Come5    o o o o o o│ DontCome 5  o o o o o o│ Hard10   o o o o o o│
+│ Come6    o o o o o o│ DontCome 6  o o o o o o│ C&E      o o o o o o│
+│ Come8    o o o o o o│ DontCome 8  o o o o o o│ Any7     o o o o o o│
+│ Come9    o o o o o o│ DontCome 9  o o o o o o│ AnyCraps o o o o o o│
+│ Come10   o o o o o o│ DontCome 10 o o o o o o│ Field    o o o o o o│
+│ Buy4     o o o o o o│ Lay4        o o o o o o│                     │
+│ Buy5     o o o o o o│ Lay5        o o o o o o│                     │
+│ Buy6     o o o o o o│ Lay6        o o o o o o│                     │
+│ Buy8     o o o o o o│ Lay8        o o o o o o│                     │
+│ Buy9     o o o o o o│ Lay9        o o o o o o│                     │
+│ Buy10    o o o o o o│ Lay10       o o o o o o│                     │
+│ Place4   o o o o o o│ Place8      o o o o o o│                     │
+│ Place5   o o o o o o│ Place9      o o o o o o│                     │
+│ Place6   o o o o o o│ Place10     o o o o o o│                     │
+│                     │                        │                     │
+└─────────────────────┴────────────────────────┴─────────────────────┘
+
+Table layout notes:
+
+Table layout has three sections for bets. Each section has a list of bets
+along with an indication of which player has made that bet. Within each
+section, there are 6 columns of o's, one for each player (up to 6 players)
+indicating if a player has made a bet.  o's in each column are color
+coded to agree with assigned color of a player.  o's do not appear in a
+column unless there's a bet for it on the table.  For passline, come,
+dontpass, and dontcome bets, if the player has also made an odds bet,
+then instead of an "o", a bullet or filled in "o"is shown. Notice a
+header row over the columns; has the first initial of the player's name,
+(in this example 5 players Nathan, Arthur, Paige, Lenny, Winnifred),
+also color coded over their column.
+
+
+
+To get a visual of what all this looks like and whether this fits the
+minimum size 100x36 terminal window, here's the resulting layout for
+minimum 100x36 including the table layout and all the subwindows. Note
+that there are still a few rows available.  Probably should increase
+rows in the messaging section.
+
+┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
+│ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│ Player: Nathan (shooter)    │
+├──────────┴────────────┴──────────────────┴─────────────────────────│ - - - - - - - - - - - - - - │
+│ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │ Bal: $2,000 (+880)          │
+├──────────────────────┬───────────────────────┬─────────────────────┤ Bets: 55 (21W, 34L)         │
+│                      │                       │                     │ On table: 3 bets, $320      │
+│          N A P L W   │            N A P L W  │          N A P L W  │ Last: +$80,180W,100L        │
+│ PassLine o o o o o o │ DontPass   o o o o o o│ Hard4    o o o o o o├─────────────────────────────┤
+│ Come     o o o o o o │ DontCome   o o o o o o│ Hard6    o o o o o o│ House: +$2,050              │
+│ Come4    o o o o o o │ DontCome4  o o o o o o│ Hard8    o o o o o o│ Bets: 128 (68W, 60L)        │
+│ Come5    o o o o o o │ DontCome5  o o o o o o│ Hard10   o o o o o o│ On table: 12 bets, $1,520   │
+│ Come6    o o o o o o │ DontCome6  o o o o o o│ C&E      o o o o o o│ Last: -$100,300W,200L       │
+│ Come8    o o o o o o │ DontCome8  o o o o o o│ Any7     o o o o o o├─────────────────────────────┤
+│ Come9    o o o o o o │ DontCome9  o o o o o o│ AnyCraps o o o o o o│   🎲 Rolling... 🎲          │
+│ Come10   o o o o o o │ DontCome10 o o o o o o│ Field    o o o o o o│   ⚄ + ⚂  →  7               │
+│ Buy4     o o o o o o │ Lay4       o o o o o o│                     │   You lose Pass Line        │
+│ Buy5     o o o o o o │ Lay5       o o o o o o│                     ├─────────────────────────────┤
+│ Buy6     o o o o o o │ Lay6       o o o o o o│                     │ > command line here         │
+│ Buy8     o o o o o o │ Lay8       o o o o o o│                     ├─────────────────────────────┘
+│ Buy9     o o o o o o │ Lay9       o o o o o o│                     │
+│ Buy10    o o o o o o │ Lay10      o o o o o o│                     │
+│ Place4   o o o o o o │ Place8     o o o o o o│                     │
+│ Place5   o o o o o o │ Place9     o o o o o o│                     │
+│ Place6   o o o o o o │ Place10    o o o o o o│                     │
+│                      │                       │                     │
+├──────────────────────┴───────────────────────┴─────────────────────┤
+│ Nathan wins PassLine bet, +$200                                    │
+│ Shooter rolls a 6, point is set                                    │
+│ Lenny places $500 odds on pass line bet                            │
+│ Lenny places $200 come bet                                         │
+│ Paige places $10 on Field                                          │
+└────────────────────────────────────────────────────────────────────┘
+
+
+#include <ncurses.h>
+#include <stdexcept>
+
+struct WinSpec {
+    int starty, startx;
+    int height, width;
+};
+
+enum WinID {
+    WIN_INFO, WIN_HISTORY, WIN_TABLE, WIN_MESSAGES, WIN_PLAYER, WIN_CMDLINE, WIN_COUNT
+};
+
+WINDOW* windows[WIN_COUNT];
+
+void create_windows_flex2() {
+    int term_h, term_w;
+    getmaxyx(stdscr, term_h, term_w);
+
+    // Minimum check
+    if (term_w < 100 || term_h < 36) {
+        endwin();
+        throw std::runtime_error("Terminal too small. Minimum is 100x36.");
+    }
+
+    // Height base & flex
+    int base_rows[WIN_COUNT]   = { 3, 3, 20, 4, 3, 3 };
+    int flex_h[WIN_COUNT]      = { 0, 0, 5, 1, 0, 0 };
+
+    int extra_h = term_h - 36;
+    int total_flex_h = 0;
+    for (int i = 0; i < WIN_COUNT; i++) total_flex_h += flex_h[i];
+    if (extra_h > 0 && total_flex_h > 0) {
+        for (int i = 0; i < WIN_COUNT; i++)
+            if (flex_h[i] > 0)
+                base_rows[i] += (extra_h * flex_h[i]) / total_flex_h;
+    }
+
+    // Width base & flex
+    int base_w_left  = 70;
+    int base_w_right = 30;
+    int flex_w_left  = 3;
+    int flex_w_right = 1;
+
+    int extra_w = term_w - 100;
+    int total_flex_w = flex_w_left + flex_w_right;
+    if (extra_w > 0 && total_flex_w > 0) {
+        base_w_left  += (extra_w * flex_w_left)  / total_flex_w;
+        base_w_right += (extra_w * flex_w_right) / total_flex_w;
+    }
+
+    // Create windows
+    int y_left = 0;
+    int y_right = 0;
+    // Left column (History, Table, Messages)
+    windows[WIN_HISTORY] = newwin(base_rows[WIN_HISTORY], base_w_left, y_left, 0);
+    box(windows[WIN_HISTORY], 0, 0);
+    wrefresh(windows[WIN_HISTORY]);
+    y_left += base_rows[WIN_HISTORY];
+
+    windows[WIN_TABLE] = newwin(base_rows[WIN_TABLE], base_w_left, y_left, 0);
+    box(windows[WIN_TABLE], 0, 0);
+    wrefresh(windows[WIN_TABLE]);
+    y_left += base_rows[WIN_TABLE];
+
+    windows[WIN_MESSAGES] = newwin(base_rows[WIN_MESSAGES], base_w_left, y_left, 0);
+    box(windows[WIN_MESSAGES], 0, 0);
+    wrefresh(windows[WIN_MESSAGES]);
+    y_left += base_rows[WIN_MESSAGES];
+
+    // Right column (Info, Player, Cmdline)
+    windows[WIN_INFO] = newwin(base_rows[WIN_INFO], base_w_right, y_right, base_w_left);
+    box(windows[WIN_INFO], 0, 0);
+    wrefresh(windows[WIN_INFO]);
+    y_right += base_rows[WIN_INFO];
+
+    windows[WIN_PLAYER] = newwin(base_rows[WIN_PLAYER], base_w_right, y_right, base_w_left);
+    box(windows[WIN_PLAYER], 0, 0);
+    wrefresh(windows[WIN_PLAYER]);
+    y_right += base_rows[WIN_PLAYER];
+
+    windows[WIN_CMDLINE] = newwin(base_rows[WIN_CMDLINE], base_w_right, y_right, base_w_left);
+    box(windows[WIN_CMDLINE], 0, 0);
+    wrefresh(windows[WIN_CMDLINE]);
+    y_right += base_rows[WIN_CMDLINE];
+}
