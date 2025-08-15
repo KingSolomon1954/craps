@@ -1853,6 +1853,8 @@ RollStats:
       lose:
         count: 0
         maxRepeats: 0
+  numRolls: 0
+  numPointsEstablished: 0
   comeOutRolls:
     count: 0
     maxRepeats: 0
