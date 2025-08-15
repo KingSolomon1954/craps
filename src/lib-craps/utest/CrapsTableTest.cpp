@@ -666,6 +666,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(p2->getNumBetsOnTable() == 0);
         CHECK(p2->getAmountOnTable() == 0);
         CHECK(t->isComeOutRoll());
+        CHECK(t->getLastRollStats().amountOnTable == 20);
+        CHECK(t->getLastRollStats().amountWin == 10);
+        CHECK(t->getLastRollStats().amountLose == 10);
+        CHECK(t->getLastRollStats().numBetsOnTable == 2);
+        CHECK(t->getLastRollStats().numBetsWin == 1);
+        CHECK(t->getLastRollStats().numBetsLose == 1);
 
         // come out roll, roll a 11, pass line win, dont pass lose
         johnBalance = p1->getBalance();  // reset

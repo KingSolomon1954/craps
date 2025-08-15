@@ -551,6 +551,7 @@ CrapsTable::rollDice()
     advanceState();            // Updates point, updates shooter
     bumpRecentRolls(dice_);
     currentStats_.recordDiceRoll(point_, dice_);
+    lastRollStats_.rollCount = getNumRolls();
     declareBettingOpen();
 }
 
@@ -578,8 +579,8 @@ void
 CrapsTable::throwDice()
 {
     eventMgr_.publish(DiceThrowStart{});
-
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
+    
 //  std::cout << "point:" << point_ << " dice:" << dice_.value()
 //            << "(" << dice_.d1() << "," << dice_.d2() << ")\n";
     eventMgr_.publish(DiceThrowEnd{});
@@ -647,6 +648,7 @@ void
 CrapsTable::resolveBets()
 {
     eventMgr_.publish(ResolveBetsStart{});
+    lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
     evaluateBets();
     dispenseResults();
     trimTableBets();
@@ -720,10 +722,14 @@ CrapsTable::disburseHouseResults()
         if (r.lose > 0)  // player loses, house wins
         {
             houseBank_.deposit(r.lose);
+            lastRollStats_.amountWin += r.lose;
+            lastRollStats_.numBetsWin++;
         }
         if (r.win > 0)  // player wins, house loses
         {
             houseBank_.withdraw(r.win);
+            lastRollStats_.amountLose += r.win;
+            lastRollStats_.numBetsLose++;
         }
         if (r.commission > 0)
         {
@@ -959,6 +965,14 @@ CrapsTable::getCurrentRoll() const
 //----------------------------------------------------------------
 
 unsigned
+CrapsTable::getNumRolls() const
+{
+    return currentStats_.rollStats.numRolls;
+}
+
+//----------------------------------------------------------------
+
+unsigned
 CrapsTable::getMinLineBet() const
 {
     return minLineBet_;
@@ -1069,6 +1083,14 @@ const BankStats&
 CrapsTable::getBankAlltimeStats() const
 {
     return houseBank_.getAlltimeStats();
+}
+
+//----------------------------------------------------------------
+
+const LastRollStats&
+CrapsTable::getLastRollStats() const
+{
+    return lastRollStats_;
 }
 
 //----------------------------------------------------------------

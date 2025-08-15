@@ -352,6 +352,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
         REQUIRE(p1->getNumBetsOnTable() == 1);
+        em.publish(DiceThrowStart{});
         DecisionRecord r1{b1.get(), true, false, 140, 0, 0, 0};
         p1->processWin(r1);
         CHECK(p1->getBalance() == bal + 140);
@@ -364,6 +365,14 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         CHECK(stats.betStats.totNumWinsAllBets == 1);
         CHECK(stats.betStats.totNumLoseAllBets == 0);
         CHECK(stats.betStats.amtBetsWinOneRoll.total == 140);
+
+        // Check lastRollStats
+        CHECK(p1->getLastRollStats().amountOnTable == 120);
+        CHECK(p1->getLastRollStats().amountWin == 140);
+        CHECK(p1->getLastRollStats().amountLose == 0);
+        CHECK(p1->getLastRollStats().numBetsOnTable == 1);
+        CHECK(p1->getLastRollStats().numBetsWin == 1);
+        CHECK(p1->getLastRollStats().numBetsLose == 0);
     }
 
     SUBCASE("processLose")
@@ -374,6 +383,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
         REQUIRE(p1->getNumBetsOnTable() == 1);
+        em.publish(DiceThrowStart{});
         DecisionRecord r1{b1.get(), true, false, 0, 120, 0, 0};
         p1->processLose(r1);
         CHECK(p1->getBalance() == bal - 120);
@@ -386,6 +396,14 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         CHECK(stats.betStats.totNumWinsAllBets == 0);
         CHECK(stats.betStats.totNumLoseAllBets == 1);
         CHECK(stats.betStats.amtBetsLoseOneRoll.total == 120);
+
+        // Check lastRollStats
+        CHECK(p1->getLastRollStats().amountOnTable == 120);
+        CHECK(p1->getLastRollStats().amountWin == 0);
+        CHECK(p1->getLastRollStats().amountLose == 120);
+        CHECK(p1->getLastRollStats().numBetsOnTable == 1);
+        CHECK(p1->getLastRollStats().numBetsWin == 0);
+        CHECK(p1->getLastRollStats().numBetsLose == 1);
     }
 
     SUBCASE("processKeep")

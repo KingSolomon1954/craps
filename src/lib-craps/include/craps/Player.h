@@ -14,6 +14,7 @@
 #include <craps/CrapsBet.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
+#include <craps/LastRollStats.h>
 #include <craps/PlayerConfig.h>
 #include <craps/PlayerStats.h>
 #include <gen/ReturnCode.h>
@@ -75,16 +76,17 @@ public:
 
     /// @name Observers
     /// @{
-    const std::string& getName()                    const;
-    const PlayerId&    getPlayerId()                const;
-    Gen::Money         getAmountOnTable()           const;
-    unsigned           getNumBetsOnTable()          const;
-    Gen::Money         getBalance()                 const;
-    const PlayerStats& getCurrentStats()            const;
-    const PlayerStats& getAlltimeStats()            const;
-    const BankStats&   getBankCurrentStats()        const;
-    const BankStats&   getBankAlltimeStats()        const;
-    bool               haveBet(const CrapsBet& bet) const;
+    const std::string&   getName()                      const;
+    const PlayerId&      getPlayerId()                  const;
+    Gen::Money           getAmountOnTable()             const;
+    unsigned             getNumBetsOnTable()            const;
+    Gen::Money           getBalance()                   const;
+    const PlayerStats&   getCurrentStats()              const;
+    const PlayerStats&   getAlltimeStats()              const;
+    const BankStats&     getBankCurrentStats()          const;
+    const BankStats&     getBankAlltimeStats()          const;
+    const LastRollStats& getLastRollStats()             const;
+    bool                 haveBet(const CrapsBet& bet)   const;
     const SessionHistory::Sessions& getSessionHistory() const;
 
     /// @name File operations
@@ -110,6 +112,7 @@ private:
     CrapsTable*       pTable_;
     PlayerStats       currentStats_;
     PlayerStats       alltimeStats_;
+    mutable LastRollStats lastRollStats_;
 
     BetPtr makeShared(BetName betName,
                       Gen::Money contractAmount,

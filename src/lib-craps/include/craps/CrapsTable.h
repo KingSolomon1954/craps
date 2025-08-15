@@ -19,6 +19,7 @@
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
 #include <craps/EventManager.h>
+#include <craps/LastRollStats.h>
 #include <craps/Player.h>
 #include <craps/TableConfig.h>
 #include <craps/TableStats.h>
@@ -72,6 +73,7 @@ public:
     unsigned                getNumPlayers()       const;
     unsigned                getPoint()            const;
     Dice                    getCurrentRoll()      const;
+    unsigned                getNumRolls()         const;
     Gen::Money              getAmountOnTable()    const;
     unsigned                getNumBetsOnTable()   const;
     std::vector<Player*>    getPlayers()          const;
@@ -81,6 +83,7 @@ public:
     const TableStats&       getAlltimeStats()     const;
     const BankStats&        getBankCurrentStats() const;
     const BankStats&        getBankAlltimeStats() const;
+    const LastRollStats&    getLastRollStats()    const;
     unsigned                getMinLineBet()       const;
     unsigned                getMaxLineBet()       const;
     unsigned                getMaxOdds()          const;
@@ -131,6 +134,7 @@ private:
     Dice testRollDice_;
     TableStats currentStats_;
     TableStats alltimeStats_;
+    LastRollStats lastRollStats_; 
     std::deque<Dice> recentRolls_;  // Front element is oldest roll
 
     // Move these to a rules struct 

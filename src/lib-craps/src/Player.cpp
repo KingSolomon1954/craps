@@ -471,6 +471,8 @@ Player::processWin(const DecisionRecord& dr)
     //     ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
 
     currentStats_.recordWin(*(dr.pBet), dr.win);
+    lastRollStats_.amountWin += dr.win;
+    lastRollStats_.numBetsWin++;
     (void) removeBetByPtr(pBet);
 }
 
@@ -507,6 +509,8 @@ Player::processLose(const DecisionRecord& dr)
 //        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
 
     currentStats_.recordLose(*(dr.pBet), dr.lose);
+    lastRollStats_.amountLose += dr.lose;
+    lastRollStats_.numBetsLose++;
     (void) removeBetByPtr(pBet);  // Done with this bet
 }
 
@@ -735,6 +739,18 @@ Player::getBankAlltimeStats() const
 }
 
 //----------------------------------------------------------------
+
+const LastRollStats&
+Player::getLastRollStats() const
+{
+    if (pTable_ != nullptr)
+    {
+        lastRollStats_.rollCount = pTable_->getNumRolls();
+    }
+    return lastRollStats_;
+}
+
+//----------------------------------------------------------------
 //
 // Return session history.
 //
@@ -769,6 +785,8 @@ Player::onBettingOpened()
 void
 Player::onDiceThrowStart()
 {
+    lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
+    
     // TODO
     // std::cout << playerName_ << " acknowledges DiceThrowStart\n";
 }
