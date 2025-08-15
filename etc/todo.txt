@@ -916,30 +916,28 @@ in the minimum 100x36 terminal size. It must include all the bets that
 the game supports as well as the max number of players (6). I've come up
 with this one which I think works.
 
-Table layout: 21 rows content, 2 border rows, 70 columns
+Table layout: 18 rows content, 2 border rows, 70 columns
 
-┌─────────────────────┬────────────────────────┬─────────────────────┐
-│                     │                        │                     │
-│          N A P L W  │             N A P L W  │          N A P L W  │
-│ PassLine o o o o o o│ DontPass    o o o o o o│ Hard4    o o o o o o│
-│ Come     o o o o o o│ DontCome    o o o o o o│ Hard6    o o o o o o│
-│ Come4    o o o o o o│ DontCome 4  o o o o o o│ Hard8    o o o o o o│
-│ Come5    o o o o o o│ DontCome 5  o o o o o o│ Hard10   o o o o o o│
-│ Come6    o o o o o o│ DontCome 6  o o o o o o│ C&E      o o o o o o│
-│ Come8    o o o o o o│ DontCome 8  o o o o o o│ Any7     o o o o o o│
-│ Come9    o o o o o o│ DontCome 9  o o o o o o│ AnyCraps o o o o o o│
-│ Come10   o o o o o o│ DontCome 10 o o o o o o│ Field    o o o o o o│
-│ Buy4     o o o o o o│ Lay4        o o o o o o│                     │
-│ Buy5     o o o o o o│ Lay5        o o o o o o│                     │
-│ Buy6     o o o o o o│ Lay6        o o o o o o│                     │
-│ Buy8     o o o o o o│ Lay8        o o o o o o│                     │
-│ Buy9     o o o o o o│ Lay9        o o o o o o│                     │
-│ Buy10    o o o o o o│ Lay10       o o o o o o│                     │
-│ Place4   o o o o o o│ Place8      o o o o o o│                     │
-│ Place5   o o o o o o│ Place9      o o o o o o│                     │
-│ Place6   o o o o o o│ Place10     o o o o o o│                     │
-│                     │                        │                     │
-└─────────────────────┴────────────────────────┴─────────────────────┘
+┌────────────────────────┬──────────────────────┬────────────────────┐
+│                        │                      │                    │
+│            N A P L W   │          N A P L W   │        N A P L W   │
+│ PassLine   o o o o o o │ Place4   o o o o o o │ Buy4   o o o o o o │
+│ Come       o o o o o o │ Place5   o o o o o o │ Buy5   o o o o o o │
+│ Come4      o o o o o o │ Place6   o o o o o o │ Buy6   o o o o o o │
+│ Come5      o o o o o o │ Place8   o o o o o o │ Buy8   o o o o o o │
+│ Come6      o o o o o o │ Place9   o o o o o o │ Buy9   o o o o o o │
+│ Come8      o o o o o o │ Place10  o o o o o o │ Buy10  o o o o o o │
+│ Come9      o o o o o o │ Hard4    o o o o o o │ Lay4   o o o o o o │
+│ Come10     o o o o o o │ Hard6    o o o o o o │ Lay5   o o o o o o │
+│ DontPass   o o o o o o │ Hard8    o o o o o o │ Lay6   o o o o o o │
+│ DontCome   o o o o o o │ Hard10   o o o o o o │ Lay8   o o o o o o │
+│ DontCome4  o o o o o o │ C&E      o o o o o o │ Lay9   o o o o o o │
+│ DontCome5  o o o o o o │ Field    o o o o o o │ Lay10  o o o o o o │
+│ DontCome6  o o o o o o │                      │ AnyC   o o o o o o │
+│ DontCome8  o o o o o o │                      │ Any7   o o o o o o │
+│ DontCome9  o o o o o o │                      │                    │
+│ DontCome10 o o o o o o │                      │                    │
+└────────────────────────┴──────────────────────┴────────────────────┘
 
 Table layout notes:
 
@@ -955,47 +953,44 @@ header row over the columns; has the first initial of the player's name,
 (in this example 5 players Nathan, Arthur, Paige, Lenny, Winnifred),
 also color coded over their column.
 
-
-
-To get a visual of what all this looks like and whether this fits the
-minimum size 100x36 terminal window, here's the resulting layout for
-minimum 100x36 including the table layout and all the subwindows. Note
-that there are still a few rows available.  Probably should increase
-rows in the messaging section.
-
 ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
-│ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│ Player: Nathan (shooter)    │
-├──────────┴────────────┴──────────────────┴─────────────────────────│ - - - - - - - - - - - - - - │
-│ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │ Bal: $2,000 (+880)          │
-├──────────────────────┬───────────────────────┬─────────────────────┤ Bets: 55 (21W, 34L)         │
-│                      │                       │                     │ On table: 3 bets, $320      │
-│          N A P L W   │            N A P L W  │          N A P L W  │ Last: +$80,180W,100L        │
-│ PassLine o o o o o o │ DontPass   o o o o o o│ Hard4    o o o o o o├─────────────────────────────┤
-│ Come     o o o o o o │ DontCome   o o o o o o│ Hard6    o o o o o o│ House: +$2,050              │
-│ Come4    o o o o o o │ DontCome4  o o o o o o│ Hard8    o o o o o o│ Bets: 128 (68W, 60L)        │
-│ Come5    o o o o o o │ DontCome5  o o o o o o│ Hard10   o o o o o o│ On table: 12 bets, $1,520   │
-│ Come6    o o o o o o │ DontCome6  o o o o o o│ C&E      o o o o o o│ Last: -$100,300W,200L       │
-│ Come8    o o o o o o │ DontCome8  o o o o o o│ Any7     o o o o o o├─────────────────────────────┤
-│ Come9    o o o o o o │ DontCome9  o o o o o o│ AnyCraps o o o o o o│   🎲 Rolling... 🎲          │
-│ Come10   o o o o o o │ DontCome10 o o o o o o│ Field    o o o o o o│   ⚄ + ⚂  →  7               │
-│ Buy4     o o o o o o │ Lay4       o o o o o o│                     │   You lose Pass Line        │
-│ Buy5     o o o o o o │ Lay5       o o o o o o│                     ├─────────────────────────────┤
-│ Buy6     o o o o o o │ Lay6       o o o o o o│                     │ > command line here         │
-│ Buy8     o o o o o o │ Lay8       o o o o o o│                     ├─────────────────────────────┘
-│ Buy9     o o o o o o │ Lay9       o o o o o o│                     │
-│ Buy10    o o o o o o │ Lay10      o o o o o o│                     │
-│ Place4   o o o o o o │ Place8     o o o o o o│                     │
-│ Place5   o o o o o o │ Place9     o o o o o o│                     │
-│ Place6   o o o o o o │ Place10    o o o o o o│                     │
-│                      │                       │                     │
-├──────────────────────┴───────────────────────┴─────────────────────┤
-│ Nathan wins PassLine bet, +$200                                    │
-│ Shooter rolls a 6, point is set                                    │
-│ Lenny places $500 odds on pass line bet                            │
-│ Lenny places $200 come bet                                         │
-│ Paige places $10 on Field                                          │
-└────────────────────────────────────────────────────────────────────┘
-
+│ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
+├──────────┴────────────┴──────────────────┴─────────────────────────│   ⚄ + ⚂  →  7               │
+│ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
+├────────────────────────┬──────────────────────┬────────────────────┤                             │ 
+│                        │                      │                    │                             │
+│            N A P L W   │          N A P L W   │        N A P L W   │                             │
+│ PassLine   o o o o o o │ Place4   o o o o o o │ Buy4   o o o o o o │                             │
+│ Come       o o o o o o │ Place5   o o o o o o │ Buy5   o o o o o o │                             │
+│ Come4      o o o o o o │ Place6   o o o o o o │ Buy6   o o o o o o │                             │
+│ Come5      o o o o o o │ Place8   o o o o o o │ Buy8   o o o o o o │                             │
+│ Come6      o o o o o o │ Place9   o o o o o o │ Buy9   o o o o o o │                             │
+│ Come8      o o o o o o │ Place10  o o o o o o │ Buy10  o o o o o o │                             │  
+│ Come9      o o o o o o │ Hard4    o o o o o o │ Lay4   o o o o o o │                             │
+│ Come10     o o o o o o │ Hard6    o o o o o o │ Lay5   o o o o o o │                             │
+│ DontPass   o o o o o o │ Hard8    o o o o o o │ Lay6   o o o o o o │                             │
+│ DontCome   o o o o o o │ Hard10   o o o o o o │ Lay8   o o o o o o │                             │
+│ DontCome4  o o o o o o │ C&E      o o o o o o │ Lay9   o o o o o o │                             │
+│ DontCome5  o o o o o o │ Field    o o o o o o │ Lay10  o o o o o o │                             │
+│ DontCome6  o o o o o o │                      │ AnyC   o o o o o o │                             │
+│ DontCome8  o o o o o o │                      │ Any7   o o o o o o │                             │
+│ DontCome9  o o o o o o │                      │                    │                             │
+│ DontCome10 o o o o o o │                      │                    │                             │
+├────────────────────────┴──────────────────────┴────────────────────┤─────────────────────────────┤
+│ Nathan wins PassLine bet, +$200                                    │ House: +$2,050              │
+│ Shooter rolls a 6, point is set                                    │ Bets: 128 (68W, 60L)        │
+│ Arthur bets $20 on Hard 4 and 10                                   │ On table: 12 bets, $1,520   │
+│ Nathan bets $50 PassLine odds                                      │ Last: -$100,300W,200L       │
+│ Arthur places $50 come bet                                         ├─────────────────────────────┤
+│ Arthur places $10 Field bet                                        │ Player: Nathan (shooter)    │
+│ Winnifred placed $100 field bet                                    │ - - - - - - - - - - - - - - │
+│ Lenny places $500 DontCome                                         │ Bal: $2,000 (+880)          │
+│ Nathan places $200 come bet                                        │ Bets: 55 (21W, 34L)         │
+│ Paige places $10 on Field                                          │ On table: 3 bets, $320      │
+│ Another message row                                                │ Last: +$80,180W,100L        │
+│ Another message                                                    ├─────────────────────────────┤
+│ Another message                                                    │ > command line here         │
+└────────────────────────────────────────────────────────────────────┴─────────────────────────────┘
 
 #include <ncurses.h>
 #include <stdexcept>
