@@ -548,6 +548,14 @@ Player::processKeep(const DecisionRecord& dr)
 
 //----------------------------------------------------------------
 
+BetPtr
+Player::getBet(BetId betId) const
+{
+    return findBetById(betId);
+}
+
+//----------------------------------------------------------------
+
 bool
 Player::haveBet(const CrapsBet& bet) const
 {
@@ -592,23 +600,23 @@ Player::removeBetByPtr(BetPtr& b)
 
 //----------------------------------------------------------------
 //
-// Remove bet by name.
+// Remove bet by betId.
 //
 // Called by the UI to remove a bet from the table.
 //
 Gen::ReturnCode
-Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
+Player::removeBet(BetId betId, Gen::ErrorPass& ep)
 {
     auto it = std::remove_if(bets_.begin(), bets_.end(),
-        [betName, pivot](const BetPtr& b)
+        [betId](const BetPtr& b)
         {
-            return (b->betName() == betName) && (b->pivot() == pivot);
+            return (b->betId() == betId);
         });
     if (it == bets_.end())
     {
         ep.diag = "Player::removeBet(): unable to remove bet; Player " +
-            playerName_ + " does not have such a bet(" +
-            EnumBetName::toString(betName) + ":" + std::to_string(pivot) + ").";
+            playerName_ + " does not have a bet with betId:" +
+            std::to_string(betId) + ").";
         return Gen::ReturnCode::Fail;
     }
 

@@ -762,7 +762,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(t->isComeOutRoll());
 
         // Remove bet, allowed
-        p2->removeBet(BetName::DontPass, 0, ep);
+        p2->removeBet(janeBet5->betId(), ep);
         CHECK(p2->getNumBetsOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
 

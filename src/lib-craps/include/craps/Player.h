@@ -64,8 +64,7 @@ public:
     Gen::ReturnCode setOddsAmount(BetPtr pBet,
                                   Gen::Money amount,
                                   Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(BetName betName,
-                              unsigned pivot,
+    Gen::ReturnCode removeBet(BetId betId,
                               Gen::ErrorPass& ep);
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
@@ -81,6 +80,7 @@ public:
     Gen::Money           getAmountOnTable()             const;
     unsigned             getNumBetsOnTable()            const;
     Gen::Money           getBalance()                   const;
+    BetPtr               getBet(BetId betId)            const;
     const PlayerStats&   getCurrentStats()              const;
     const PlayerStats&   getAlltimeStats()              const;
     const BankStats&     getBankCurrentStats()          const;

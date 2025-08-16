@@ -7,8 +7,56 @@
 //
 //----------------------------------------------------------------
 
+#pragma once
 
-// TODO
+#include <craps/EnumBetName.h>
+#include <craps/CrapsTypes.h>
+#include <craps/SessionHistory.h>
+#include <gen/ErrorPass.h>
+#include <gen/MoneyUtils.h>
+#include <gen/ReturnCode.h>
+
+namespace Ctrl {
+
+class CrapsInterface
+{
+    // Player related
+    static Gen::ReturnCode joinTable(const Craps::TableId& tableId,
+                                     const Craps::PlayerId& playerId,
+                                     Gen::ErrorPass& ep);
+    static Gen::ReturnCode leaveTable(const Craps::PlayerId& playerId,
+                                      Gen::ErrorPass& ep);
+    static Craps::BetId makeBet(const Craps::PlayerId& playerId,
+                                BetName betName,
+                                Gen::Money contractAmount,
+                                unsigned pivot,
+                                Gen::ErrorPass& ep);
+    static Gen::ReturnCode setOddsAmount(const Craps::PlayerId& playerId,
+                                         Craps::BetId betId,
+                                         Gen::Money oddsAmount,
+                                         Gen::ErrorPass& ep);
+    static Gen::ReturnCode removeBet(const Craps::PlayerId& playerId,
+                                     Craps::BetId betid,
+                                     Gen::ErrorPass& ep);
+    static const Craps::SessionHistory::Sessions& getSessionHistory(
+                                     const Craps::PlayerId& playerId);
+};
+
+/*-----------------------------------------------------------*//**
+
+@class CrapsInterface
+
+
+*/    
+
+} // namespace Ctrl
+
+//----------------------------------------------------------------
+
+
+
+
+
 
 
 #if 0

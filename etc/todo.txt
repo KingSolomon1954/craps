@@ -992,6 +992,85 @@ also color coded over their column.
 │ Another message                                                    │ > command line here         │
 └────────────────────────────────────────────────────────────────────┴─────────────────────────────┘
 
+
+┌─────┐
+│     │
+│  ●  │
+│     │
+└─────┘
+
+┌─────┐
+│ ●   │
+│     │
+│   ● │
+└─────┘
+
+┌─────┐
+│ ●   │
+│  ●  │
+│   ● │
+└─────┘
+
+┌─────┐
+│ ● ● │
+│     │
+│ ● ● │
+└─────┘
+
+┌─────┐
+│ ● ● │
+│  ●  │
+│ ● ● │
+└─────┘
+
+┌─────┐
+│ ● ● │
+│ ● ● │
+│ ● ● │
+└─────┘
+
+
+Animation logic (ncurses-friendly pseudocode)
+
+    Pick random sequence length (e.g., 8–15 frames).
+
+    For each frame:
+
+        Randomize dice faces.
+
+        Randomize X/Y offset (small jitter inside the 22×30 window).
+
+        Draw dice at that position.
+
+        usleep(70ms) or similar.
+
+        Clear/redraw.
+
+    On final frame:
+
+        Center dice.
+
+        Show actual rolled result.
+
+--------------------------
+
+Using color with dice
+
+initscr();
+start_color();
+use_default_colors();
+
+init_pair(1, COLOR_WHITE, COLOR_RED);   // pair #1
+
+attron(COLOR_PAIR(1));
+printw("┌─────┐");
+...
+attroff(COLOR_PAIR(1));
+
+attron(COLOR_PAIR(1) | A_BOLD);
+
+--------------------------
+
 #include <ncurses.h>
 #include <stdexcept>
 

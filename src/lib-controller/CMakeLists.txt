@@ -15,6 +15,7 @@ add_library(controller STATIC
     src/ConfigEnv.cpp
     src/ConfigFiles.cpp
     src/CrapsGame.cpp
+    src/CrapsInterface.cpp
     src/EventLoop.cpp
     src/GameController.cpp
     src/Globals.cpp

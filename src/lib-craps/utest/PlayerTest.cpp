@@ -146,10 +146,11 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
         REQUIRE(p1->getNumBetsOnTable() == 0);
         t->testSetState(0, 5, 5);  // point 0, d1=5, d2=5
         // Put down a pass line bet, coming out
-        REQUIRE(p1->makeBet(BetName::PassLine, 100, 0, ep) != nullptr);
+        BetPtr pBet = p1->makeBet(BetName::PassLine, 100, 0, ep);
+        REQUIRE(pBet != nullptr);
         t->testRollDice(5,5); // roll a 10, point is 10 
         // Confirm can't remove passline 10 normally
-        REQUIRE(p1->removeBet(BetName::PassLine, 10, ep) == Gen::ReturnCode::Fail);
+        REQUIRE(p1->removeBet(pBet->betId(), ep) == Gen::ReturnCode::Fail);
         REQUIRE(p1->getBalance() == bal - 100);
         CHECK(p1->leaveTable(ep) == Gen::ReturnCode::Success);
         CHECK(p1->getNumBetsOnTable() == 0);
@@ -207,25 +208,27 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
 
         Gen::Money bal = p1->getBalance();
-        REQUIRE(p1->makeBet(BetName::Place, 100, 6, ep) != nullptr);
+        BetPtr pBet = p1->makeBet(BetName::Place, 100, 6, ep);
+        REQUIRE(pBet != nullptr);
         REQUIRE(p1->getNumBetsOnTable() == 1);
         REQUIRE(t->getNumBetsOnTable() == 1);
         CHECK(p1->getBalance() == bal - 100);        
-        CHECK(p1->removeBet(BetName::Place, 6, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->removeBet(pBet->betId(), ep) == Gen::ReturnCode::Success);
         CHECK(p1->getNumBetsOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
         CHECK(p1->getBalance() == bal);
 
         // Remove bet that doesn't exist
-        CHECK(p1->removeBet(BetName::Place, 6, ep) == Gen::ReturnCode::Fail);
+        CHECK(p1->removeBet(9999, ep) == Gen::ReturnCode::Fail);
 
         // Remove bet, any bet allowed can be removed before its first roll
         // Force table state to be point rolls
         t->testSetState(4, 5, 5);  // point 4, d1=5, d2=5
         // Put down a pass line bet after point already established
-        REQUIRE(p1->makeBet(BetName::PassLine, 100, 4, ep) != nullptr);
+        BetPtr pBet2 = p1->makeBet(BetName::PassLine, 100, 4, ep);
+        REQUIRE(pBet2 != nullptr);
         // OK to remove, has not yet participated in a roll
-        CHECK(p1->removeBet(BetName::PassLine, 4, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->removeBet(pBet2->betId(), ep) == Gen::ReturnCode::Success);
         CHECK(p1->getBalance() == bal);
 
         // Remove bet that is not allowed to be removed, fail
@@ -233,10 +236,11 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         REQUIRE(p1->getNumBetsOnTable() == 0);
         t->testSetState(0, 5, 5);  // point 0, d1=5, d2=5
         // Put down a pass line bet, coming out
-        REQUIRE(p1->makeBet(BetName::PassLine, 100, 0, ep) != nullptr);
+        BetPtr pBet3 = p1->makeBet(BetName::PassLine, 100, 0, ep);
+        REQUIRE(pBet3 != nullptr);
         t->testRollDice(5,5); // roll a 10, point is 10 
         // Error to remove, can't remove passline 10 any more.
-        CHECK(p1->removeBet(BetName::PassLine, 10, ep) == Gen::ReturnCode::Fail);
+        CHECK(p1->removeBet(pBet3->betId(), ep) == Gen::ReturnCode::Fail);
         CHECK(p1->getBalance() == bal - 100);
 // std::cout << ep.diag << std::endl;
     }
