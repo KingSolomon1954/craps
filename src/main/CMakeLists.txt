@@ -33,4 +33,12 @@ target_link_libraries(ncurses-snippet
     PRIVATE ncurses
 )
 
+add_executable(ncurses-animation
+    src/ncurses-animation.cpp
+)
+
+target_link_libraries(ncurses-animation
+    PRIVATE ncurses
+)
+
 # --------------------------------------------------------
