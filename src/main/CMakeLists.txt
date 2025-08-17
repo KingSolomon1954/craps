@@ -24,4 +24,13 @@ target_link_libraries(royalcraps
     PRIVATE gui
 )
 
+
+add_executable(ncurses-snippet
+    src/ncurses-snippet.cpp
+)
+
+target_link_libraries(ncurses-snippet
+    PRIVATE ncurses
+)
+
 # --------------------------------------------------------

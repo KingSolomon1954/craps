@@ -22,6 +22,7 @@ class AppRecipe(ConanFile):
         self.requires("nlohmann_json/[~3.12.0]")
         self.requires("boost/1.84.0")
         self.requires("cxxopts/3.2.0")
+        self.requires("ncurses/6.5")
         self.requires("rang/3.2")
         self.requires("yaml-cpp/[~0.8.0]")
         self.requires("doctest/[~2.4.11]")

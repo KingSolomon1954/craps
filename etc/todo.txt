@@ -6,9 +6,9 @@ design EventQueue and Events
 
 stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
 stats Streaks - count same number repeats before 7 for
-      example (4:1:57)  57 times, the 4 hit once before a 7
-      example (4:2:33)  33 times, the 4 hit twice before a 7
-      example (4:3:21)  21 times, the 4 hit three times before a 7
+      example (4:1:57)  57 times, the 4 repeated once before a 7
+      example (4:2:33)  33 times, the 4 repeated twice before a 7
+      example (4:3:21)  21 times, the 4 repeated three times before a 7
 
 Refund on quit - unresolved bets back to player's bank
   show a message like: “You left the table with active bets.
@@ -952,13 +952,13 @@ then instead of an "o", a bullet or filled in "o"is shown. Notice a
 header row over the columns; has the first initial of the player's name,
 (in this example 5 players Nathan, Arthur, Paige, Lenny, Winnifred),
 also color coded over their column.
-
+                                                                     70
 ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
 │ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
 ├──────────┴────────────┴──────────────────┴─────────────────────────│   ⚄ + ⚂  →  7               │
 │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
 ├────────────────────────┬──────────────────────┬────────────────────┤                             │ 
-│                        │                      │                    │                             │
+│5                       │                      │                    │                             │
 │            N A P L W   │          N A P L W   │        N A P L W   │                             │
 │ PassLine   o o o o o o │ Place4   o o o o o o │ Buy4   o o o o o o │                             │
 │ Come       o o o o o o │ Place5   o o o o o o │ Buy5   o o o o o o │                             │
@@ -976,8 +976,9 @@ also color coded over their column.
 │ DontCome8  o o o o o o │                      │ Any7   o o o o o o │                             │
 │ DontCome9  o o o o o o │                      │                    │                             │
 │ DontCome10 o o o o o o │                      │                    │                             │
+│ 23                     │                      │                    │23                           │
 ├────────────────────────┴──────────────────────┴────────────────────┤─────────────────────────────┤
-│ Nathan wins PassLine bet, +$200                                    │ House: +$2,050              │
+│ 25 Nathan wins PassLine bet, +$200                                 │ House: +$2,050              │
 │ Shooter rolls a 6, point is set                                    │ Bets: 128 (68W, 60L)        │
 │ Arthur bets $20 on Hard 4 and 10                                   │ On table: 12 bets, $1,520   │
 │ Nathan bets $50 PassLine odds                                      │ Last: -$100,300W,200L       │
@@ -989,8 +990,52 @@ also color coded over their column.
 │ Paige places $10 on Field                                          │ On table: 3 bets, $320      │
 │ Another message row                                                │ Last: +$80,180W,100L        │
 │ Another message                                                    ├─────────────────────────────┤
-│ Another message                                                    │ > command line here         │
+│ 37 Another message                                                 │ > command line here         │
 └────────────────────────────────────────────────────────────────────┴─────────────────────────────┘
+38 Press enter
+
+
+Rendered by ncurses program
+
+0  ┌─[Header]────────────────────────────────────────────────────────────┬─[Animation]────────────────┐
+1  │Header text here                                                     │Animation area              │
+2  ├─[History]───────────────────────────────────────────────────────────┤                            │
+3  │History entry                                                        │                            │
+4  ├─[Table]─────────────────────────────────────────────────────────────┤                            │
+5  │Table content...                                                     │                            │
+6  │                                                                     │                            │
+7  │                                                                     │                            │
+8  │                                                                     │                            │
+9  │                                                                     │                            │
+10 │                                                                     │                            │
+11 │                                                                     │                            │
+12 │                                                                     │                            │
+13 │                                                                     │                            │
+14 │                                                                     │                            │
+15 │                                                                     │                            │
+16 │                                                                     │                            │
+17 │                                                                     │                            │
+18 │                                                                     │                            │
+19 │                                                                     │                            │
+20 │                                                                     │                            │
+21 │                                                                     │                            │
+22 │                                                                     │                            │
+23 ├─[Message]───────────────────────────────────────────────────────────┼─[House]────────────────────┤
+24 │Messages go here                                                     │House: $1000                │
+25 │                                                                     │                            │
+26 │                                                                     │                            │
+27 │                                                                     │                            │
+28 │                                                                     ├─[Player]───────────────────┤
+29 │                                                                     │Player: $500                │
+30 │                                                                     │                            │
+31 │                                                                     │                            │
+32 │                                                                     │                            │
+33 │                                                                     │                            │
+34 │                                                                     │                            │
+35 │                                                                     ├─[Command]──────────────────┤
+36 │                                                                     │Command>                    │
+37 └─────────────────────────────────────────────────────────────────────┴────────────────────────────┘
+38  Press any key to exit...
 
 
 ┌─────┐
@@ -1071,88 +1116,4 @@ attron(COLOR_PAIR(1) | A_BOLD);
 
 --------------------------
 
-#include <ncurses.h>
-#include <stdexcept>
 
-struct WinSpec {
-    int starty, startx;
-    int height, width;
-};
-
-enum WinID {
-    WIN_INFO, WIN_HISTORY, WIN_TABLE, WIN_MESSAGES, WIN_PLAYER, WIN_CMDLINE, WIN_COUNT
-};
-
-WINDOW* windows[WIN_COUNT];
-
-void create_windows_flex2() {
-    int term_h, term_w;
-    getmaxyx(stdscr, term_h, term_w);
-
-    // Minimum check
-    if (term_w < 100 || term_h < 36) {
-        endwin();
-        throw std::runtime_error("Terminal too small. Minimum is 100x36.");
-    }
-
-    // Height base & flex
-    int base_rows[WIN_COUNT]   = { 3, 3, 20, 4, 3, 3 };
-    int flex_h[WIN_COUNT]      = { 0, 0, 5, 1, 0, 0 };
-
-    int extra_h = term_h - 36;
-    int total_flex_h = 0;
-    for (int i = 0; i < WIN_COUNT; i++) total_flex_h += flex_h[i];
-    if (extra_h > 0 && total_flex_h > 0) {
-        for (int i = 0; i < WIN_COUNT; i++)
-            if (flex_h[i] > 0)
-                base_rows[i] += (extra_h * flex_h[i]) / total_flex_h;
-    }
-
-    // Width base & flex
-    int base_w_left  = 70;
-    int base_w_right = 30;
-    int flex_w_left  = 3;
-    int flex_w_right = 1;
-
-    int extra_w = term_w - 100;
-    int total_flex_w = flex_w_left + flex_w_right;
-    if (extra_w > 0 && total_flex_w > 0) {
-        base_w_left  += (extra_w * flex_w_left)  / total_flex_w;
-        base_w_right += (extra_w * flex_w_right) / total_flex_w;
-    }
-
-    // Create windows
-    int y_left = 0;
-    int y_right = 0;
-    // Left column (History, Table, Messages)
-    windows[WIN_HISTORY] = newwin(base_rows[WIN_HISTORY], base_w_left, y_left, 0);
-    box(windows[WIN_HISTORY], 0, 0);
-    wrefresh(windows[WIN_HISTORY]);
-    y_left += base_rows[WIN_HISTORY];
-
-    windows[WIN_TABLE] = newwin(base_rows[WIN_TABLE], base_w_left, y_left, 0);
-    box(windows[WIN_TABLE], 0, 0);
-    wrefresh(windows[WIN_TABLE]);
-    y_left += base_rows[WIN_TABLE];
-
-    windows[WIN_MESSAGES] = newwin(base_rows[WIN_MESSAGES], base_w_left, y_left, 0);
-    box(windows[WIN_MESSAGES], 0, 0);
-    wrefresh(windows[WIN_MESSAGES]);
-    y_left += base_rows[WIN_MESSAGES];
-
-    // Right column (Info, Player, Cmdline)
-    windows[WIN_INFO] = newwin(base_rows[WIN_INFO], base_w_right, y_right, base_w_left);
-    box(windows[WIN_INFO], 0, 0);
-    wrefresh(windows[WIN_INFO]);
-    y_right += base_rows[WIN_INFO];
-
-    windows[WIN_PLAYER] = newwin(base_rows[WIN_PLAYER], base_w_right, y_right, base_w_left);
-    box(windows[WIN_PLAYER], 0, 0);
-    wrefresh(windows[WIN_PLAYER]);
-    y_right += base_rows[WIN_PLAYER];
-
-    windows[WIN_CMDLINE] = newwin(base_rows[WIN_CMDLINE], base_w_right, y_right, base_w_left);
-    box(windows[WIN_CMDLINE], 0, 0);
-    wrefresh(windows[WIN_CMDLINE]);
-    y_right += base_rows[WIN_CMDLINE];
-}
