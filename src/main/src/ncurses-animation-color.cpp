@@ -131,6 +131,9 @@ Windows create_subwindows()
 
 static void draw_die(WINDOW* w, int top, int left, int value)
 {
+    // --- draw border (red on default background) ---
+    wattron(w, COLOR_PAIR(2));
+
     // corners
     mvwaddch(w, top + 0, left + 0, ACS_ULCORNER);
     mvwaddch(w, top + 0, left + 6, ACS_URCORNER);
@@ -145,21 +148,26 @@ static void draw_die(WINDOW* w, int top, int left, int value)
     mvwvline(w, top + 1, left + 0, ACS_VLINE, 3);
     mvwvline(w, top + 1, left + 6, ACS_VLINE, 3);
 
+    wattroff(w, COLOR_PAIR(2));
+
+    // --- fill interior (spaces in red background) ---
+    wattron(w, COLOR_PAIR(1));
     for (int r = 1; r <= 3; ++r) {
         mvwhline(w, top + r, left + 1, ' ', 5);
     }
+    wattroff(w, COLOR_PAIR(1));
+
+    // --- draw pips (white on red) ---
+    wattron(w, COLOR_PAIR(3) | A_BOLD);
 
     // interior coordinates
-    int rTop = top + 1,  rMid = top + 2,  rBot = top + 3;
-    int cL   = left + 2, cM   = left + 3, cR   = left + 4;
+    int rTop = top + 1, rMid = top + 2, rBot = top + 3;
+    int cL   = left + 2, cM  = left + 3, cR  = left + 4;
 
     auto pip = [&](int y, int x){
-//      mvwaddch(w, y, x, '*' | A_BOLD);
-//      mvwaddch(w, y, x, ACS_BULLET);
-        mvwaddch(w, y, x, '*');
+        mvwaddch(w, y, x, ACS_BULLET);
     };
 
-    wattron(w, A_BOLD);
     switch (value) {
         case 1: pip(rMid, cM); break;
         case 2: pip(rTop, cL); pip(rBot, cR); break;
@@ -169,7 +177,8 @@ static void draw_die(WINDOW* w, int top, int left, int value)
         case 6: pip(rTop, cL); pip(rTop, cR); pip(rMid, cL); pip(rMid, cR); pip(rBot, cL); pip(rBot, cR); break;
         default: break;
     }
-    wattroff(w, A_BOLD);
+
+    wattroff(w, COLOR_PAIR(3) | A_BOLD);
 }
 
 static void animate_roll(WINDOW* anim_win)
@@ -202,12 +211,12 @@ static void animate_roll(WINDOW* anim_win)
     int start_y   = 1;
     int landing_y = max_y - die_h;
 
-    // Fall with horizontal jitter
+    // FALL with wider horizontal jitter
     for (int y = start_y; y <= landing_y; ++y)
     {
         werase(anim_win);
 
-        // Wobble, up to ~1/3 screen width shift
+        // bigger wobble, up to ~1/3 screen width shift
         int max_jitter = 6; // try 6..10 for wider swings
         int dx1 = (std::rand() % (2 * max_jitter + 1)) - max_jitter;
         int dx2 = (std::rand() % (2 * max_jitter + 1)) - max_jitter;
@@ -232,11 +241,11 @@ static void animate_roll(WINDOW* anim_win)
         napms(28);
     }
 
-    // Final rolled values
+    // final rolled values
     int final1 = (std::rand() % 6) + 1;
     int final2 = (std::rand() % 6) + 1;
 
-    // Settle
+    // SETTLE
     int amplitudes[] = {2, 1, 1, 0};
     for (int a : amplitudes)
     {
@@ -259,7 +268,7 @@ static void animate_roll(WINDOW* anim_win)
         napms(55);
     }
 
-    // Final clean render (no jitter)
+    // final clean render (no jitter)
     werase(anim_win);
     std::string msg = "You rolled " + std::to_string(final1) + " + "
                       + std::to_string(final2) + " = "
@@ -281,6 +290,18 @@ int main()
     curs_set(0);
     keypad(stdscr, TRUE);
 
+    start_color();
+    use_default_colors();
+
+    // 1 = dice interior (red bg, white fg for the spaces)
+    init_pair(1, COLOR_WHITE, COLOR_RED);
+
+    // 2 = border (red fg, default bg)
+    init_pair(2, COLOR_RED, -1);
+
+    // 3 = pips (white fg, red bg)
+    init_pair(3, COLOR_WHITE, COLOR_RED);
+    
     draw_frame();
     Windows w = create_subwindows();
 
@@ -307,10 +328,8 @@ int main()
     doupdate();
     
     int ch;
-    while ((ch = getch()) != 'q')
-    {
-        if (ch == 'r')
-        {
+    while ((ch = getch()) != 'q') {
+        if (ch == 'r') {
             animate_roll(w.animation);
         }
     }
