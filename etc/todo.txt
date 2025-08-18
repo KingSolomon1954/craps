@@ -782,7 +782,6 @@ When closed:
 delwin(popup);
 touchwin(winTableLayout); // Restore underlying window
 wrefresh(winTableLayout);
-
 6. Redraw Strategy
 
     Each zone redraws only when its data changes.
@@ -868,10 +867,6 @@ I think this fits in minimal size 2 column adaptive layout
 │ Place 5   o o o o o o │ Place 9      o o o o o o  │                       │
 │ Place 6   o o o o o o │ Place 10     o o o o o o  │                       │
 └───────────────────────┴───────────────────────────┴───────────────────────┘
-
-
-
-
 
 I'm updating the player subwindow to have an additional row so that
 now the player subwindow has the following information:
@@ -1074,46 +1069,5 @@ Rendered by ncurses program
 │ ● ● │
 └─────┘
 
-
-Animation logic (ncurses-friendly pseudocode)
-
-    Pick random sequence length (e.g., 8–15 frames).
-
-    For each frame:
-
-        Randomize dice faces.
-
-        Randomize X/Y offset (small jitter inside the 22×30 window).
-
-        Draw dice at that position.
-
-        usleep(70ms) or similar.
-
-        Clear/redraw.
-
-    On final frame:
-
-        Center dice.
-
-        Show actual rolled result.
-
---------------------------
-
-Using color with dice
-
-initscr();
-start_color();
-use_default_colors();
-
-init_pair(1, COLOR_WHITE, COLOR_RED);   // pair #1
-
-attron(COLOR_PAIR(1));
-printw("┌─────┐");
-...
-attroff(COLOR_PAIR(1));
-
-attron(COLOR_PAIR(1) | A_BOLD);
-
---------------------------
 
 

@@ -344,6 +344,24 @@ CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
     return true;
 }
 
+//----------------------------------------------------------------
+
+bool
+CrapsTable::isBetRemovable(BetPtr pBet) const
+{
+    if (pBet == nullptr) return false;
+    if (!haveBet(*pBet)) return false;
+    if ((pBet->distance() > 0))
+    {
+        if (pBet->betName() == BetName::PassLine || 
+            pBet->betName() == BetName::Come)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 /*-----------------------------------------------------------*//**
 
 Removes the bet from the table subject to craps table rules.
@@ -369,15 +387,11 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
         ep.diag = diag + "This bet instance is not on the table.";
         return Gen::ReturnCode::Fail;
     }
-    if ((pBet->betName() == BetName::PassLine && pBet->distance() > 0) ||
-         pBet->betName() == BetName::Come)
+    if (!isBetRemovable(pBet))
     {
-        if (pBet->pivot() != 0)  // This bet has a point.
-        {
-            ep.diag = diag + "PassLine|Come bets with points must remain "
-                "on table until a decision; " + pBet->diagBetId() + ".";
-            return Gen::ReturnCode::Fail;
-        }
+        ep.diag = diag + "PassLine|Come bets with points must remain "
+            "on table until a decision; " + pBet->diagBetId() + ".";
+        return Gen::ReturnCode::Fail;
     }
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
     return Gen::ReturnCode::Success;

@@ -16,13 +16,18 @@
 #include <gen/MoneyUtils.h>
 #include <gen/ReturnCode.h>
 
+namespace Craps {
+    class BankStats;       // fwd
+    class PlayerStats;     // fwd
+}
+
 namespace Ctrl {
 
 class CrapsInterface
 {
     // Player related
-    static Gen::ReturnCode joinTable(const Craps::TableId& tableId,
-                                     const Craps::PlayerId& playerId,
+    static Gen::ReturnCode joinTable(const Craps::PlayerId& playerId,
+                                     const Craps::TableId& tableId,
                                      Gen::ErrorPass& ep);
     static Gen::ReturnCode leaveTable(const Craps::PlayerId& playerId,
                                       Gen::ErrorPass& ep);
@@ -35,11 +40,23 @@ class CrapsInterface
                                          Craps::BetId betId,
                                          Gen::Money oddsAmount,
                                          Gen::ErrorPass& ep);
+    static bool isBetRemovable(const Craps::PlayerId& playerId,
+                               Craps::BetId betid);
     static Gen::ReturnCode removeBet(const Craps::PlayerId& playerId,
                                      Craps::BetId betid,
                                      Gen::ErrorPass& ep);
-    static const Craps::SessionHistory::Sessions& getSessionHistory(
+    static const Craps::PlayerStats& getCurrentStatsPlayer(
                                      const Craps::PlayerId& playerId);
+    static const Craps::PlayerStats& getAlltimeStatsPlayer(
+                                     const Craps::PlayerId& playerId);
+    static const Craps::BankStats& getBankCurrentStatsPlayer(
+                                     const Craps::PlayerId& playerId);
+    static const Craps::BankStats& getBankAlltimeStatsPlayer(
+                                     const Craps::PlayerId& playerId);
+    static const Craps::SessionHistory::Sessions& getSessionHistoryPlayer(
+                                     const Craps::PlayerId& playerId);
+
+    // Table related
 };
 
 /*-----------------------------------------------------------*//**
