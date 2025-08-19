@@ -350,7 +350,7 @@ bool
 CrapsTable::isBetRemovable(BetPtr pBet) const
 {
     if (pBet == nullptr) return false;
-    if (!haveBet(*pBet)) return false;
+    if (!haveBet(pBet->betId())) return false;
     if ((pBet->distance() > 0))
     {
         if (pBet->betName() == BetName::PassLine || 
@@ -382,7 +382,12 @@ Gen::ReturnCode
 CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
 {
     std::string diag = "CrapsTable::removeBet(): Unable to remove bet. ";
-    if (!haveBet(*pBet))
+    if (pBet == nullptr)
+    {
+        ep.diag = diag + "pBet is nullptr.";
+        return Gen::ReturnCode::Fail;
+    }
+    if (!haveBet(pBet->betId()))
     {
         ep.diag = diag + "This bet instance is not on the table.";
         return Gen::ReturnCode::Fail;
@@ -401,7 +406,7 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
 
 Removes the bet from the table regardless of craps table rules.
 
-Funds associated with the bet are not claimed by the house bank. It is
+Funds associated with the bet are NOT claimed by the house bank. It is
 expected that Player recovers the bet amount into their wallet.  This is
 meant to be called upon program shutdown or when player switches table
 and player is allowed to recover their bets (instead of abandoning
@@ -421,7 +426,12 @@ Gen::ReturnCode
 CrapsTable::removeBetForce(BetPtr pBet, Gen::ErrorPass& ep)
 {
     std::string diag = "CrapsTable::removeBetForce(): Unable to remove bet. ";
-    if (!haveBet(*pBet))
+    if (pBet == nullptr)
+    {
+        ep.diag = diag + "pBet is nullptr.";
+        return Gen::ReturnCode::Fail;
+    }
+    if (!haveBet(pBet->betId()))
     {
         ep.diag = diag + "This bet instance is not on the table.";
         return Gen::ReturnCode::Fail;
@@ -524,12 +534,22 @@ CrapsTable::setOddsAmount(BetPtr pBet,
 
 //----------------------------------------------------------------
 //
+// Returns shared_ptr to the bet of interest.
+//
+BetPtr
+CrapsTable::getBet(const BetId& betId) const
+{
+    return findBetById(betId);
+}
+
+//----------------------------------------------------------------
+//
 // Determine if we have the given bet on the table.
 //
 bool
-CrapsTable::haveBet(const CrapsBet& bet) const
+CrapsTable::haveBet(const BetId& betId) const
 {
-    return findBetById(bet.betId()) != nullptr;
+    return findBetById(betId) != nullptr;
 }
 
 //----------------------------------------------------------------
@@ -537,7 +557,7 @@ CrapsTable::haveBet(const CrapsBet& bet) const
 // Find a bet by ID.
 //
 BetPtr
-CrapsTable::findBetById(BetId betId) const
+CrapsTable::findBetById(const BetId& betId) const
 {
     // Loop over all bets
     for (size_t i = 0; i < tableBets_.size(); ++i)

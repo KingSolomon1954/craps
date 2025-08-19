@@ -70,30 +70,31 @@ public:
 
     /// @name Observers
     /// @{
-    unsigned                getNumPlayers()       const;
-    unsigned                getPoint()            const;
-    Dice                    getCurrentRoll()      const;
-    unsigned                getNumRolls()         const;
-    Gen::Money              getAmountOnTable()    const;
-    unsigned                getNumBetsOnTable()   const;
-    std::vector<Player*>    getPlayers()          const;
-    Player*                 getCurrentShooter()   const;
-    const TableId&          getTableId()          const;
-    const std::deque<Dice>& getRecentRolls()      const;
-    const TableStats&       getCurrentStats()     const;
-    const TableStats&       getAlltimeStats()     const;
-    const BankStats&        getBankCurrentStats() const;
-    const BankStats&        getBankAlltimeStats() const;
-    const LastRollStats&    getLastRollStats()    const;
-    unsigned                getMinLineBet()       const;
-    unsigned                getMaxLineBet()       const;
-    unsigned                getMaxOdds()          const;
-    bool                    isComeOutRoll()       const;
-    bool                    isBettingOpen()       const;
-    bool                    isBetRemovable(BetPtr pBet)  const;
-    bool                    havePlayer(Player* pPlayer)  const;
-    bool                    haveBet(const CrapsBet& bet) const;
-    const SessionHistory::Sessions& getSessionHistory()  const;
+    unsigned                getNumPlayers()             const;
+    unsigned                getPoint()                  const;
+    Dice                    getCurrentRoll()            const;
+    unsigned                getNumRolls()               const;
+    Gen::Money              getAmountOnTable()          const;
+    unsigned                getNumBetsOnTable()         const;
+    std::vector<Player*>    getPlayers()                const;
+    Player*                 getCurrentShooter()         const;
+    const TableId&          getTableId()                const;
+    const std::deque<Dice>& getRecentRolls()            const;
+    const TableStats&       getCurrentStats()           const;
+    const TableStats&       getAlltimeStats()           const;
+    const BankStats&        getBankCurrentStats()       const;
+    const BankStats&        getBankAlltimeStats()       const;
+    const LastRollStats&    getLastRollStats()          const;
+    unsigned                getMinLineBet()             const;
+    unsigned                getMaxLineBet()             const;
+    unsigned                getMaxOdds()                const;
+    BetPtr                  getBet(const BetId& betId)  const;
+    bool                    haveBet(const BetId& betId) const;
+    bool                    isComeOutRoll()             const;
+    bool                    isBettingOpen()             const;
+    bool                    isBetRemovable(BetPtr pBet) const;
+    bool                    havePlayer(Player* pPlayer) const;
+    const SessionHistory::Sessions& getSessionHistory() const;
     /// @}
 
 #if 0
@@ -193,7 +194,7 @@ private:
     void removePlayerBets            (Player* pPlayer);
     void removeBetsByPlayerPtr       (BetList& bets, Player* pPlayer);
     bool removeMatchingBet           (BetList& bets, CrapsBet* pBet);
-    BetPtr findBetById               (BetId betId) const;
+    BetPtr findBetById               (const BetId& betId) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();

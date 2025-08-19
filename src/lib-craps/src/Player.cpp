@@ -440,6 +440,44 @@ Player::setOddsAmount(BetPtr pBet,
     return Gen::ReturnCode::Success;
 }
 
+
+/*-----------------------------------------------------------*//**
+
+Changes the contract amount of a bet on the table.
+
+@li The bet must already exist on the table.
+@li Validates the change against table rules.
+@li Overwrites the previous amount.
+@li Fails if insufficient funds.
+@li Reclaims funds if reducing contract amount.
+
+@param[in] betId
+    The bet of interest.
+
+@param[in] newAmount
+    Sets the contract bet amount to newAmount
+
+@param[in,out] ep
+    Holds reason for error
+
+@return
+    Success if amount has been changed, otherwise Fail and ep has reason
+
+@internal
+@li fif prefix means "fault if"
+@li Sca suffix means "set contract amount"
+@li 2 is the index to select the right diagPrefix
+*/
+Gen::ReturnCode
+Player::setContractAmount(
+    const BetId& betId,
+    Gen::Money newAmount,
+    Gen::ErrorPass& ep)
+{
+    // TODO
+    return Gen::ReturnCode::Fail;
+}
+
 /*-----------------------------------------------------------*//**
 
 Process WIN decision
@@ -549,17 +587,22 @@ Player::processKeep(const DecisionRecord& dr)
 //----------------------------------------------------------------
 
 BetPtr
-Player::getBet(BetId betId) const
+Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
 {
-    return findBetById(betId);
+    auto b = findBetById(betId);
+    if (b != nullptr) return b;
+        
+    ep.diag = "Player::getBet(): player " + playerName_ +
+        " has no such betId " + std::to_string(betId) + ".";
+    return nullptr;
 }
 
 //----------------------------------------------------------------
 
 bool
-Player::haveBet(const CrapsBet& bet) const
+Player::haveBet(const BetId& betId) const
 {
-    return findBetById(bet.betId()) != nullptr;
+    return findBetById(betId) != nullptr;
 }
 
 //----------------------------------------------------------------
@@ -567,7 +610,7 @@ Player::haveBet(const CrapsBet& bet) const
 // Search for bet by ID
 //
 BetPtr
-Player::findBetById(BetId betId) const
+Player::findBetById(const BetId& betId) const
 {
     auto it = std::find_if(bets_.begin(), bets_.end(),
                    [betId](const BetPtr& b)
@@ -605,7 +648,7 @@ Player::removeBetByPtr(BetPtr& b)
 // Called by the UI to remove a bet from the table.
 //
 Gen::ReturnCode
-Player::removeBet(BetId betId, Gen::ErrorPass& ep)
+Player::removeBet(const BetId& betId, Gen::ErrorPass& ep)
 {
     auto it = std::remove_if(bets_.begin(), bets_.end(),
         [betId](const BetPtr& b)

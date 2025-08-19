@@ -262,12 +262,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         CHECK(t->addBet(b4, ep) == Gen::ReturnCode::Success);
 
         // Test positive haveBet, use a previous bet
-        CHECK(t->haveBet(*b4));
+        CHECK(t->haveBet(b4->betId()));
         
         // Test negative haveBet, use a new bet
         auto b5 = std::make_shared<CrapsBet>(p1, BetName::PassLine, 10, 0);
         REQUIRE(b5 != nullptr);
-        CHECK(!t->haveBet(*b5));
+        CHECK(!t->haveBet(b5->betId()));
     }
 
     SUBCASE("betTiming")

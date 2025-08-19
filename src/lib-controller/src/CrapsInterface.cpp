@@ -18,11 +18,16 @@
 using namespace Ctrl;
 
 //----------------------------------------------------------------
+//
+// Player related
+//
+//----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterface::joinTable(const Craps::PlayerId& playerId,
-                          const Craps::TableId& tableId,
-                          Gen::ErrorPass& ep)
+CrapsInterface::playerJoinTable(
+    const Craps::PlayerId& playerId,
+    const Craps::TableId& tableId,
+    Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
@@ -36,8 +41,9 @@ CrapsInterface::joinTable(const Craps::PlayerId& playerId,
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterface::leaveTable(const Craps::PlayerId& playerId,
-                           Gen::ErrorPass& ep)
+CrapsInterface::playerLeaveTable(
+    const Craps::PlayerId& playerId,
+    Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
@@ -51,11 +57,12 @@ CrapsInterface::leaveTable(const Craps::PlayerId& playerId,
 //----------------------------------------------------------------
 
 Craps::BetId
-CrapsInterface::makeBet(const Craps::PlayerId& playerId,
-                        BetName betName,
-                        Gen::Money contractAmount,
-                        unsigned pivot,
-                        Gen::ErrorPass& ep)
+CrapsInterface::playerMakeBet(
+    const Craps::PlayerId& playerId,
+    BetName betName,
+    Gen::Money contractAmount,
+    unsigned pivot,
+    Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
@@ -74,58 +81,21 @@ CrapsInterface::makeBet(const Craps::PlayerId& playerId,
 
 //----------------------------------------------------------------
 
-Gen::ReturnCode
-CrapsInterface::setOddsAmount(const Craps::PlayerId& playerId,
-                              Craps::BetId betId,
-                              Gen::Money oddsAmount,
-                              Gen::ErrorPass& ep)
-{
-    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr)
-    {
-        ep.prepend("CrapsInterface::setOddsAmount(): unable to setOddsAmount; ");
-        return Gen::ReturnCode::Fail;
-    }
-    Craps::BetPtr pBet = p->getBet(betId);
-    return p->setOddsAmount(pBet, oddsAmount, ep);
-}
-
-//----------------------------------------------------------------
-
 bool
-CrapsInterface::isBetRemovable(const Craps::PlayerId& playerId,
-                               Craps::BetId betId)
+CrapsInterface::playerHaveBet(
+    const Craps::PlayerId& playerId,
+    const Craps::BetId& betId)
 {
-    Gen::ErrorPass ep;
-    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr)
-    {
-        return false;
-    }
-    Craps::BetPtr b = p->getBet(betId);
-    return Gbl::pTable->isBetRemovable(b);
-}
-
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsInterface::removeBet(const Craps::PlayerId& playerId,
-                          Craps::BetId betId,
-                          Gen::ErrorPass& ep)
-{
-    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr)
-    {
-        ep.prepend("CrapsInterface::removeBet(): unable to remove bet; ");
-        return Gen::ReturnCode::Fail;
-    }
-    return p->removeBet(betId, ep);
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr) return false;
+    return pBet->player().getPlayerId() == playerId;
 }
 
 //----------------------------------------------------------------
 
 const std::string&
-CrapsInterface::getName(const Craps::PlayerId& playerId)
+CrapsInterface::playerName(
+    const Craps::PlayerId& playerId)
 {
     Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -140,7 +110,7 @@ CrapsInterface::getName(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterface::getAmountOnTablePlayer(
+CrapsInterface::playerAmountOnTable(
     const Craps::PlayerId& playerId,
     Gen::Money& amount,
     Gen::ErrorPass& ep)
@@ -154,7 +124,7 @@ CrapsInterface::getAmountOnTablePlayer(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterface::getNumBetsOnTablePlayer(
+CrapsInterface::playerNumBetsOnTable(
     const Craps::PlayerId& playerId,
     unsigned& numBets,
     Gen::ErrorPass& ep)
@@ -167,8 +137,24 @@ CrapsInterface::getNumBetsOnTablePlayer(
 
 //----------------------------------------------------------------
 
+Gen::ReturnCode
+playerBalance(
+    const Craps::PlayerId& playerId,
+    Gen::Money& balance,
+    Gen::ErrorPass& ep)
+{
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr) return Gen::ReturnCode::Fail;
+    balance = p->getBalance();
+    return Gen::ReturnCode::Success;
+    
+}
+
+//----------------------------------------------------------------
+
 const Craps::LastRollStats&
-CrapsInterface::getLastRollStats(const Craps::PlayerId& playerId)
+CrapsInterface::playerLastRollStats(
+    const Craps::PlayerId& playerId)
 {
     Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -183,7 +169,8 @@ CrapsInterface::getLastRollStats(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 const Craps::PlayerStats&
-CrapsInterface::getCurrentStatsPlayer(const Craps::PlayerId& playerId)
+CrapsInterface::playerCurrentStats(
+    const Craps::PlayerId& playerId)
 {
     Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -198,7 +185,8 @@ CrapsInterface::getCurrentStatsPlayer(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 const Craps::PlayerStats&
-CrapsInterface::getAlltimeStatsPlayer(const Craps::PlayerId& playerId)
+CrapsInterface::playerAlltimeStats(
+    const Craps::PlayerId& playerId)
 {
     Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -213,7 +201,8 @@ CrapsInterface::getAlltimeStatsPlayer(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 const Craps::BankStats&
-CrapsInterface::getBankCurrentStatsPlayer(const Craps::PlayerId& playerId)
+CrapsInterface::playerCurrentStatsBank(
+    const Craps::PlayerId& playerId)
 {
     Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -228,7 +217,8 @@ CrapsInterface::getBankCurrentStatsPlayer(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 const Craps::BankStats&
-CrapsInterface::getBankAlltimeStatsPlayer(const Craps::PlayerId& playerId)
+CrapsInterface::playerAlltimeStatsBank(
+    const Craps::PlayerId& playerId)
 {
     Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -243,7 +233,8 @@ CrapsInterface::getBankAlltimeStatsPlayer(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 const Craps::SessionHistory::Sessions&
-CrapsInterface::getSessionHistoryPlayer(const Craps::PlayerId& playerId)
+CrapsInterface::playerSessionHistory(
+    const Craps::PlayerId& playerId)
 {
     Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -255,7 +246,333 @@ CrapsInterface::getSessionHistoryPlayer(const Craps::PlayerId& playerId)
     return p->getSessionHistory();
 }
 
+//----------------------------------------------------------------
+//
+// Bet related
+//
+//----------------------------------------------------------------
 
+Gen::ReturnCode
+CrapsInterface::betSetOddsAmount(
+    const Craps::BetId& betId,
+    Gen::Money oddsAmount,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betSetOddsAmount", "setOddsAmount", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    return pBet->player().setOddsAmount(pBet, oddsAmount, ep);
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betSetContractAmount(
+    const Craps::BetId& betId,
+    Gen::Money contractAmount,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betSetContractAmount", "setContractAmount", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    return pBet->player().setContractAmount(betId, contractAmount, ep);
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsInterface::betIsRemovable(
+    const Craps::BetId& betId)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    return Gbl::pTable->isBetRemovable(pBet);
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betRemove(
+    const Craps::BetId& betId,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betRemove", "remove bet", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    return pBet->player().removeBet(betId, ep);
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betPivot(
+    const Craps::BetId& betId,
+    unsigned& pivot,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betPivot", "retrieve pivot", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    pivot = pBet->pivot();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betPlayerId(
+    const Craps::BetId& betId,
+    Craps::PlayerId& playerId,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betPlayerId", "retrieve playerId from bet", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    playerId = pBet->player().getPlayerId();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betName(
+    const Craps::BetId& betId,
+    BetName& betName,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betName", "retrieve bet name", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    betName = pBet->betName();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betContractAmount(
+    const Craps::BetId& betId,
+    Gen::Money& contractAmount,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betContractAmount", "retrieve contract amount", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    contractAmount = pBet->contractAmount();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betOddsAmount(
+    const Craps::BetId& betId,
+    Gen::Money& oddsAmount,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betContractAmount", "retrieve odds amount", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    oddsAmount = pBet->oddsAmount();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betOffComeOutRoll(
+    const Craps::BetId& betId,
+    bool& offComeOutRoll,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betOffComeOutRoll", "retrieve comeout roll flag", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    offComeOutRoll = pBet->offComeOutRoll();
+    return Gen::ReturnCode::Success;
+    
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betHardwayWorking(
+    const Craps::BetId& betId,
+    bool& hardwayWorking,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betHardwayWorking", "retrieve hardway working flag", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    hardwayWorking = pBet->hardwayWorking();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betDistance(
+    const Craps::BetId& betId,
+    unsigned& distance,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betDistance", "retrieve distance", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    distance = pBet->distance();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betWhenCreated(
+    const Craps::BetId& betId,
+    Gen::Timepoint& whenCreated,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betWhenCreated", "retrieve when created", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    whenCreated = pBet->whenCreated();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betWhenDecided(
+    const Craps::BetId& betId,
+    Gen::Timepoint& whenDecided,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betWhenDecided", "retrieve when decided", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    whenDecided = pBet->whenDecided();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betSetOffComeOutRoll(
+    const Craps::BetId& betId,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betSetOffComeOutRoll", "set offComeOutRoll flag", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    pBet->setOffComeOutRoll();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betSetOnComeOutRoll(
+    const Craps::BetId& betId,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betSetOnComeOutRoll", "set onComeOutRoll flag", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    pBet->setOnComeOutRoll();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betSetHardwayOff(
+    const Craps::BetId& betId,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betSetHardwayOff", "set hardway off flag", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    pBet->setHardwayOff();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::betSetHardwayOn(
+    const Craps::BetId& betId,
+    Gen::ErrorPass& ep)
+{
+    auto pBet = Gbl::pTable->getBet(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = betDiag("betSetHardwayOn", "set hardway on flag", betId);
+        return Gen::ReturnCode::Fail;
+    }
+    pBet->setHardwayOn();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+// Private helper
+std::string
+CrapsInterface::betDiag(
+    const std::string& funcName,
+    const std::string& unableToWhat,
+    const Craps::BetId& betId)
+{
+    std::string d = "CrapsInterface::" + funcName + "(): unable to " +
+                    unableToWhat + "; No such betId: " + 
+                    std::to_string(betId) + ".";
+    return d;
+}
 
 //----------------------------------------------------------------
 //
@@ -264,9 +581,10 @@ CrapsInterface::getSessionHistoryPlayer(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterface::getAmountOnTable(const Craps::TableId& tableId,
-                                 Gen::Money& amount,
-                                 Gen::ErrorPass& ep)
+CrapsInterface::tableAmountOnTable(
+    const Craps::TableId& tableId,
+    Gen::Money& amount,
+    Gen::ErrorPass& ep)
 {
     Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
     if (pTable == nullptr)
@@ -280,9 +598,10 @@ CrapsInterface::getAmountOnTable(const Craps::TableId& tableId,
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterface::getNumBetsOnTable(const Craps::TableId& tableId,
-                                             unsigned& numBets,
-                                             Gen::ErrorPass& ep)
+CrapsInterface::tableNumBetsOnTable(
+    const Craps::TableId& tableId,
+    unsigned& numBets,
+    Gen::ErrorPass& ep)
 {
     Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
     if (pTable == nullptr)

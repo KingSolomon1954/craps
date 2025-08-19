@@ -64,7 +64,10 @@ public:
     Gen::ReturnCode setOddsAmount(BetPtr pBet,
                                   Gen::Money amount,
                                   Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(BetId betId,
+    Gen::ReturnCode setContractAmount(const BetId& betId,
+                                      Gen::Money newAmount,
+                                      Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet(const BetId& betId,
                               Gen::ErrorPass& ep);
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
@@ -75,19 +78,19 @@ public:
 
     /// @name Observers
     /// @{
-    const std::string&   getName()                      const;
-    const PlayerId&      getPlayerId()                  const;
-    Gen::Money           getAmountOnTable()             const;
-    unsigned             getNumBetsOnTable()            const;
-    Gen::Money           getBalance()                   const;
-    BetPtr               getBet(BetId betId)            const;
-    const PlayerStats&   getCurrentStats()              const;
-    const PlayerStats&   getAlltimeStats()              const;
-    const BankStats&     getBankCurrentStats()          const;
-    const BankStats&     getBankAlltimeStats()          const;
-    const LastRollStats& getLastRollStats()             const;
-    bool                 haveBet(const CrapsBet& bet)   const;
-    const SessionHistory::Sessions& getSessionHistory() const;
+    const std::string&   getName()                                const;
+    const PlayerId&      getPlayerId()                            const;
+    Gen::Money           getAmountOnTable()                       const;
+    unsigned             getNumBetsOnTable()                      const;
+    Gen::Money           getBalance()                             const;
+    BetPtr               getBet(const BetId& betId, Gen::ErrorPass& ep) const;
+    const LastRollStats& getLastRollStats()                       const;
+    const PlayerStats&   getCurrentStats()                        const;
+    const PlayerStats&   getAlltimeStats()                        const;
+    const BankStats&     getBankCurrentStats()                    const;
+    const BankStats&     getBankAlltimeStats()                    const;
+    bool                 haveBet(const BetId& betId)              const;
+    const SessionHistory::Sessions& getSessionHistory()           const;
 
     /// @name File operations
     /// @{
@@ -118,7 +121,7 @@ private:
                       Gen::Money contractAmount,
                       unsigned pivot,
                       Gen::ErrorPass& ep);
-    BetPtr findBetById(BetId betId) const;
+    BetPtr findBetById(const BetId& betId) const;
     bool removeBetByPtr(BetPtr& pBet);
     void setupSubscriptions();
     void onBettingClosed();

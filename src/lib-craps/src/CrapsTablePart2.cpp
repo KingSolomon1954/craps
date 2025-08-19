@@ -72,7 +72,7 @@ bool
 CrapsTable::fifHaveBet(const CrapsBet& bet, Gen::ErrorPass& ep) const
 {
     // fault if already have bet and sets ep error diag
-    if (haveBet(bet))
+    if (haveBet(bet.betId()))
     {
         ep.diag = diagPrefix(1, bet) + "Player " +
             bet.player().getName() + " has already made this bet.";
@@ -87,7 +87,7 @@ bool
 CrapsTable::fifMissingBet(const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const
 {
     // fault if bet is not on the table and sets ep error diag
-    if (!haveBet(bet))
+    if (!haveBet(bet.betId()))
     {
         ep.diag = diagPrefix(idx, bet) + "This bet is not on the table.";
         return true;
