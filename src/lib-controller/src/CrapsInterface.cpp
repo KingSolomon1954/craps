@@ -7,8 +7,10 @@
 #include <controller/CrapsInterface.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
+#include <controller/TableManager.h>
 #include <craps/BankStats.h>
 #include <craps/CrapsTable.h>
+#include <craps/LastRollStats.h>
 #include <craps/Player.h>
 #include <craps/PlayerStats.h>
 #include <craps/SessionHistory.h>
@@ -122,6 +124,64 @@ CrapsInterface::removeBet(const Craps::PlayerId& playerId,
 
 //----------------------------------------------------------------
 
+const std::string&
+CrapsInterface::getName(const Craps::PlayerId& playerId)
+{
+    Gen::ErrorPass ep;
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr)
+    {
+        static std::string empty;
+        return empty;
+    }
+    return p->getName();
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::getAmountOnTablePlayer(
+    const Craps::PlayerId& playerId,
+    Gen::Money& amount,
+    Gen::ErrorPass& ep)
+{
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr) return Gen::ReturnCode::Fail;
+    amount = p->getAmountOnTable();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::getNumBetsOnTablePlayer(
+    const Craps::PlayerId& playerId,
+    unsigned& numBets,
+    Gen::ErrorPass& ep)
+{
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr) return Gen::ReturnCode::Fail;
+    numBets = p->getNumBetsOnTable();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+const Craps::LastRollStats&
+CrapsInterface::getLastRollStats(const Craps::PlayerId& playerId)
+{
+    Gen::ErrorPass ep;
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr)
+    {
+        static Craps::LastRollStats empty;
+        return empty;
+    }
+    return p->getLastRollStats();
+}
+
+//----------------------------------------------------------------
+
 const Craps::PlayerStats&
 CrapsInterface::getCurrentStatsPlayer(const Craps::PlayerId& playerId)
 {
@@ -193,6 +253,44 @@ CrapsInterface::getSessionHistoryPlayer(const Craps::PlayerId& playerId)
         return empty;
     }
     return p->getSessionHistory();
+}
+
+
+
+//----------------------------------------------------------------
+//
+// Table related
+//
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::getAmountOnTable(const Craps::TableId& tableId,
+                                 Gen::Money& amount,
+                                 Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        return Gen::ReturnCode::Fail;
+    }
+    amount = pTable->getAmountOnTable();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::getNumBetsOnTable(const Craps::TableId& tableId,
+                                             unsigned& numBets,
+                                             Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        return Gen::ReturnCode::Fail;
+    }
+    numBets = pTable->getNumBetsOnTable();
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

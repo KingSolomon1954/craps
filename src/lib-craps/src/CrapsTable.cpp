@@ -951,6 +951,14 @@ CrapsTable::getNumPlayers() const
 }
 
 //----------------------------------------------------------------
+
+const TableId&
+CrapsTable::getTableId() const
+{
+    return tableId_;
+}
+
+//----------------------------------------------------------------
 //
 // Returns current point, or 0 if in come-out
 //

@@ -41,7 +41,8 @@ public:
     /// @{
     const PlayerDescriptions& getPlayerChoices()   const;
     const Players& getPlayers()                    const;
-    Craps::Player* getPlayer(const Craps::PlayerId& pid, Gen::ErrorPass& ep) const;
+    Craps::Player* getPlayer(const Craps::PlayerId& playerId,
+                             Gen::ErrorPass& ep)   const;
     Craps::Player* getUserPlayer()                 const;
     /// @}
 

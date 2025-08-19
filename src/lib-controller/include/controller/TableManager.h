@@ -25,6 +25,7 @@ class TableManager
 {
 public:
     using TableDescriptions = std::vector<TableManifest::TableInfo>;
+    using Tables = std::vector<Craps::CrapsTable*>;
 
     /// @name Lifecycle
     /// @{
@@ -41,11 +42,14 @@ public:
     /// @name Observers
     /// @{
     const TableDescriptions& getTableChoices() const;
+    Craps::CrapsTable* getTable(const Craps::TableId& tableId,
+                                Gen::ErrorPass& ep) const;
     /// @}
 
 private:
     Craps::CrapsTable* pCurrentCrapsTable_ = nullptr;
     TableManifest manifest_;
+    Tables tables_;
 
     Craps::CrapsTable* loadCrapsTable(const std::string& fileName);
     Craps::CrapsTable* loadStartingCrapsTable();

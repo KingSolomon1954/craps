@@ -18,6 +18,7 @@
 
 namespace Craps {
     class BankStats;       // fwd
+    class LastRollStats;   // fwd
     class PlayerStats;     // fwd
 }
 
@@ -45,6 +46,17 @@ class CrapsInterface
     static Gen::ReturnCode removeBet(const Craps::PlayerId& playerId,
                                      Craps::BetId betid,
                                      Gen::ErrorPass& ep);
+    static bool haveBet(const Craps::PlayerId& playerId,
+                        Craps::BetId betId);
+    static const std::string& getName(const Craps::PlayerId& playerId);
+    static Gen::ReturnCode getAmountOnTablePlayer(const Craps::PlayerId& playerId,
+                                                  Gen::Money& amount,
+                                                  Gen::ErrorPass& ep);
+    static Gen::ReturnCode getNumBetsOnTablePlayer(const Craps::PlayerId& playerId,
+                                                   unsigned& numBets,
+                                                   Gen::ErrorPass& ep);
+    static const Craps::LastRollStats& getLastRollStats(
+                                     const Craps::PlayerId& playerId);
     static const Craps::PlayerStats& getCurrentStatsPlayer(
                                      const Craps::PlayerId& playerId);
     static const Craps::PlayerStats& getAlltimeStatsPlayer(
@@ -57,6 +69,12 @@ class CrapsInterface
                                      const Craps::PlayerId& playerId);
 
     // Table related
+    static Gen::ReturnCode getAmountOnTable(const Craps::TableId& tableId,
+                                            Gen::Money& amount,
+                                            Gen::ErrorPass& ep);
+    static Gen::ReturnCode getNumBetsOnTable(const Craps::TableId& tableId,
+                                             unsigned& numBets,
+                                             Gen::ErrorPass& ep);
 };
 
 /*-----------------------------------------------------------*//**

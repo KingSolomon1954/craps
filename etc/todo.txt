@@ -29,6 +29,8 @@ Allow a clear/undo last bet capability
 Save Config to yaml file
 Need unit test for initial bank money
 
+Build up CrapsInterface for UI interaction
+
 (Done) Write unit test MultiLayerConfigTest
 (Done) load Player choices by reading dir
 (Done) Load config.yaml with arrays into multi-layer config

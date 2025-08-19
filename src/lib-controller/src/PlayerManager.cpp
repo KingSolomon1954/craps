@@ -108,17 +108,18 @@ PlayerManager::addPlayersToTable()
 //----------------------------------------------------------------
 
 Craps::Player*
-PlayerManager::getPlayer(const Craps::PlayerId& pid, Gen::ErrorPass& ep) const
+PlayerManager::getPlayer(const Craps::PlayerId& playerId,
+                         Gen::ErrorPass& ep) const
 {
     for (auto p : players_)
     {
-        if (p->getPlayerId() == pid)
+        if (p->getPlayerId() == playerId)
         {
             return p;
         }
     }
     ep.diag = "PlayerManager::getPLayer(): no such playerId; \"" +
-        pid + "\"";
+        playerId + "\"";
     return nullptr;
 }
 
