@@ -88,7 +88,7 @@ public:
     unsigned                getMinLineBet()             const;
     unsigned                getMaxLineBet()             const;
     unsigned                getMaxOdds()                const;
-    BetPtr                  getBet(const BetId& betId)  const;
+    BetPtr                  getBet (const BetId& betId, Gen::ErrorPass& ep) const;
     bool                    haveBet(const BetId& betId) const;
     bool                    isComeOutRoll()             const;
     bool                    isBettingOpen()             const;

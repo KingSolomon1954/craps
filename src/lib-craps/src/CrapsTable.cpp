@@ -537,9 +537,15 @@ CrapsTable::setOddsAmount(BetPtr pBet,
 // Returns shared_ptr to the bet of interest.
 //
 BetPtr
-CrapsTable::getBet(const BetId& betId) const
+CrapsTable::getBet(const BetId& betId, Gen::ErrorPass& ep) const
 {
-    return findBetById(betId);
+    auto pBet = findBetById(betId);
+    if (pBet == nullptr)
+    {
+        ep.diag = "CrapsTable::getBet(): no such betId: " +
+                  std::to_string(betId) + ".";
+    }
+    return pBet;
 }
 
 //----------------------------------------------------------------

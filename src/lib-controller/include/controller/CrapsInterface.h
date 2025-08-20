@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <deque>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
 #include <craps/SessionHistory.h>
@@ -18,6 +19,7 @@
 
 namespace Craps {
     class BankStats;       // fwd
+    class Dice;            // fwd
     class LastRollStats;   // fwd
     class PlayerStats;     // fwd
 }
@@ -75,12 +77,14 @@ class CrapsInterface
         const Craps::BetId& betId,
         Gen::Money oddsAmount,
         Gen::ErrorPass& ep);
-    Gen::ReturnCode betSetContractAmount(
+    static Gen::ReturnCode betSetContractAmount(
         const Craps::BetId& betId,
         Gen::Money contractAmount,
         Gen::ErrorPass& ep);
-    static bool betIsRemovable(
-        const Craps::BetId& betid);
+    static Gen::ReturnCode betIsRemovable(
+        const Craps::BetId& betid,
+        bool& isRemovable,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode betRemove(
         const Craps::BetId& betid,
         Gen::ErrorPass& ep);
@@ -137,8 +141,26 @@ class CrapsInterface
         const Craps::BetId& betId,
         Gen::ErrorPass& ep);
 
-
     // Table related
+    static Gen::ReturnCode rollDice(
+        const Craps::TableId& tableId,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableNumPlayers(
+        const Craps::TableId& tableId,
+        unsigned& numPlayers,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tablePoint(
+        const Craps::TableId& tableId,
+        unsigned& point,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableCurrentRoll(
+        const Craps::TableId& tableId,
+        Craps::Dice& dice,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableNumRolls(
+        const Craps::TableId& tableId,
+        unsigned& numRolls,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode tableAmountOnTable(
         const Craps::TableId& tableId,
         Gen::Money& amount,
@@ -147,13 +169,20 @@ class CrapsInterface
         const Craps::TableId& tableId,
         unsigned& numBets,
         Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableCurrentShooter(
+        const Craps::TableId& tableId,
+        Craps::PlayerId& playerId,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableRecentRolls(
+        const Craps::TableId& tableId,
+        std::deque<Craps::Dice>& recentRolls,
+        Gen::ErrorPass& ep);
 
 private:
     // Private helpers
-    static std::string betDiag(
+    static std::string diagPrefix(
         const std::string& funcName,
-        const std::string& unableToWhat,
-        const Craps::BetId& betId);
+        const std::string& unableToWhat);
 };
 
 /*-----------------------------------------------------------*//**
