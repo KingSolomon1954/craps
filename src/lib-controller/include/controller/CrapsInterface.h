@@ -22,6 +22,7 @@ namespace Craps {
     class Dice;            // fwd
     class LastRollStats;   // fwd
     class PlayerStats;     // fwd
+    class TableStats;      // fwd
 }
 
 namespace Ctrl {
@@ -36,17 +37,22 @@ class CrapsInterface
     static Gen::ReturnCode playerLeaveTable(
         const Craps::PlayerId& playerId,
         Gen::ErrorPass& ep);
-    static Craps::BetId playerMakeBet(
+    static Gen::ReturnCode playerMakeBet(
         const Craps::PlayerId& playerId,
         BetName betName,
         Gen::Money contractAmount,
         unsigned pivot,
+        Craps::BetId& betId,
         Gen::ErrorPass& ep);
-    static bool playerHaveBet(
+    static Gen::ReturnCode playerHaveBet(
         const Craps::PlayerId& playerId,
-        const Craps::BetId& betId);
-    static const std::string& playerName(
-        const Craps::PlayerId& playerId);
+        const Craps::BetId& betId,
+        bool& haveBet,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode playerName(
+        const Craps::PlayerId& playerId,
+        std::string playerName,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode playerAmountOnTable(
         const Craps::PlayerId& playerId,
         Gen::Money& amount,
@@ -59,18 +65,26 @@ class CrapsInterface
         const Craps::PlayerId& playerId,
         Gen::Money& balance,
         Gen::ErrorPass& ep);
-    static const Craps::LastRollStats& playerLastRollStats(
-        const Craps::PlayerId& playerId);
-    static const Craps::PlayerStats& playerCurrentStats(
-        const Craps::PlayerId& playerId);
-    static const Craps::PlayerStats& playerAlltimeStats(
-        const Craps::PlayerId& playerId);
-    static const Craps::BankStats& playerCurrentStatsBank(
-        const Craps::PlayerId& playerId);
-    static const Craps::BankStats& playerAlltimeStatsBank(
-        const Craps::PlayerId& playerId);
-    static const Craps::SessionHistory::Sessions& playerSessionHistory(
-        const Craps::PlayerId& playerId);
+    static Gen::ReturnCode playerLastRollStats(
+        const Craps::PlayerId& playerId,
+        Craps::LastRollStats& lastRollStats,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode playerCurrentStats(
+        const Craps::PlayerId& playerId,
+        Craps::PlayerStats& playerCurrentStats,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode playerAlltimeStats(
+        const Craps::PlayerId& playerId,
+        Craps::PlayerStats& playerAlltimeStats,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode playerCurrentStatsBank(
+        const Craps::PlayerId& playerId,
+        Craps::BankStats& playerCurrentStatsBank,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode playerSessionHistory(
+        const Craps::PlayerId& playerId,
+        Craps::SessionHistory::Sessions& playerSessionHistory,
+        Gen::ErrorPass& ep);
     
     // Bet related
     static Gen::ReturnCode betSetOddsAmount(
@@ -169,6 +183,10 @@ class CrapsInterface
         const Craps::TableId& tableId,
         unsigned& numBets,
         Gen::ErrorPass& ep);
+    static Gen::ReturnCode tablePlayers(
+        const Craps::TableId& tableId,
+        std::vector<Craps::PlayerId>& playerIds,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode tableCurrentShooter(
         const Craps::TableId& tableId,
         Craps::PlayerId& playerId,
@@ -176,6 +194,48 @@ class CrapsInterface
     static Gen::ReturnCode tableRecentRolls(
         const Craps::TableId& tableId,
         std::deque<Craps::Dice>& recentRolls,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode  tableCurrentStats(
+        const Craps::TableId& tableId,
+        Craps::TableStats& currentTableStats,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode  tableAlltimeStats(
+        const Craps::TableId& tableId,
+        Craps::TableStats& alltimeTableStats,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode  tableCurrentStatsBank(
+        const Craps::TableId& tableId,
+        Craps::BankStats& currentStatsBank,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode  tableAlltimeStatsBank(
+        const Craps::TableId& tableId,
+        Craps::BankStats& alltimeStatsBank,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableLastRollStats(
+        const Craps::TableId& tableId,
+        Craps::LastRollStats& lastRollStats,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode  tableSessionHistory(
+        const Craps::TableId& tableId,
+        Craps::SessionHistory::Sessions& tableSessionHistory,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableComeOutRoll(
+        const Craps::TableId& tableId,
+        bool& isComeOutRoll,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableBettingOpen(
+        const Craps::TableId& tableId,
+        bool& isBettingOpen,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableHaveBet(
+        const Craps::PlayerId& tableId,
+        const Craps::BetId& betId,
+        bool& haveBet,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode tableHavePlayer(
+        const Craps::TableId& tableId,
+        const Craps::PlayerId& playerId,
+        bool& havePlayer,
         Gen::ErrorPass& ep);
 
 private:

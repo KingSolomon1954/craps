@@ -15,6 +15,7 @@
 #include <craps/Player.h>
 #include <craps/PlayerStats.h>
 #include <craps/SessionHistory.h>
+#include <craps/TableStats.h>
 
 using namespace Ctrl;
 
@@ -33,7 +34,7 @@ CrapsInterface::playerJoinTable(
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        ep.prepend("CrapsInterface::joinTable(): unable to join table; ");
+        ep.prepend(diagPrefix("playerJoinTable", "join table"));
         return Gen::ReturnCode::Fail;
     }
     return p->joinTable(Gbl::pTable, ep);
@@ -49,7 +50,7 @@ CrapsInterface::playerLeaveTable(
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        ep.prepend("CrapsInterface::leaveTable(): unable to leave table; ");
+        ep.prepend(diagPrefix("leaveTable", "leave table"));
         return Gen::ReturnCode::Fail;
     }
     return p->leaveTable(ep);
@@ -57,56 +58,70 @@ CrapsInterface::playerLeaveTable(
 
 //----------------------------------------------------------------
 
-Craps::BetId
+Gen::ReturnCode
 CrapsInterface::playerMakeBet(
     const Craps::PlayerId& playerId,
     BetName betName,
     Gen::Money contractAmount,
     unsigned pivot,
+    Craps::BetId& betId,
     Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        ep.prepend("CrapsInterface::makeBet(): unable to makeBet; ");
-        return 0;
+        ep.prepend(diagPrefix("playerMakeBet", "make bet"));
+        return Gen::ReturnCode::Fail;
     }
     Craps::BetPtr pBet = p->makeBet(betName, contractAmount, pivot, ep);
     if (pBet == nullptr)
     {
-        ep.prepend("CrapsInterface::makeBet(): unable to makeBet; ");
-        return 0;
+        ep.prepend(diagPrefix("playerMakeBet", "make bet"));
+        return Gen::ReturnCode::Fail;
     }
-    return pBet->betId();
+    betId = pBet->betId();
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
-bool
+Gen::ReturnCode
 CrapsInterface::playerHaveBet(
     const Craps::PlayerId& playerId,
-    const Craps::BetId& betId)
+    const Craps::BetId& betId,
+    bool& haveBet,
+    Gen::ErrorPass& ep)
 {
-    Gen::ErrorPass ep;
     auto pBet = Gbl::pTable->getBet(betId, ep);
-    if (pBet == nullptr) return false;
-    return pBet->player().getPlayerId() == playerId;
+    if (pBet == nullptr)
+    {
+        ep.prepend(diagPrefix("playerHaveBet", "retrieve player bet"));
+        Gen::ReturnCode::Fail;
+    }
+    haveBet = (pBet->player().getPlayerId() == playerId);
+    if (haveBet)
+    {
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;    
 }
 
 //----------------------------------------------------------------
 
-const std::string&
+Gen::ReturnCode
 CrapsInterface::playerName(
-    const Craps::PlayerId& playerId)
+    const Craps::PlayerId& playerId,
+    std::string playerName,
+    Gen::ErrorPass& ep)
 {
-    Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        static std::string empty;
-        return empty;
+        ep.prepend(diagPrefix("playerName", "retrieve player name"));
+        return Gen::ReturnCode::Fail;
     }
-    return p->getName();
+    playerName = p->getName();
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
@@ -118,7 +133,11 @@ CrapsInterface::playerAmountOnTable(
     Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr) return Gen::ReturnCode::Fail;
+    if (p == nullptr)
+    {
+        ep.prepend(diagPrefix("playerAmountOnTable", "retrieve amount on table"));
+        return Gen::ReturnCode::Fail;
+    }
     amount = p->getAmountOnTable();
     return Gen::ReturnCode::Success;
 }
@@ -132,7 +151,11 @@ CrapsInterface::playerNumBetsOnTable(
     Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr) return Gen::ReturnCode::Fail;
+    if (p == nullptr)
+    {
+        ep.prepend(diagPrefix("playerAmountOnTable", "retrieve amount on table"));
+        return Gen::ReturnCode::Fail;
+    }
     numBets = p->getNumBetsOnTable();
     return Gen::ReturnCode::Success;
 }
@@ -140,112 +163,109 @@ CrapsInterface::playerNumBetsOnTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-playerBalance(
+CrapsInterface::playerBalance(
     const Craps::PlayerId& playerId,
     Gen::Money& balance,
     Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr) return Gen::ReturnCode::Fail;
+    if (p == nullptr)
+    {
+        ep.prepend(diagPrefix("playerBalance", "retrieve player balance"));
+        return Gen::ReturnCode::Fail;
+    }
     balance = p->getBalance();
     return Gen::ReturnCode::Success;
-    
 }
 
 //----------------------------------------------------------------
 
-const Craps::LastRollStats&
+Gen::ReturnCode
 CrapsInterface::playerLastRollStats(
-    const Craps::PlayerId& playerId)
+    const Craps::PlayerId& playerId,
+    Craps::LastRollStats& lastRollStats,
+    Gen::ErrorPass& ep)
 {
-    Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        static Craps::LastRollStats empty;
-        return empty;
+        ep.prepend(diagPrefix("playerLastRollStats", "retrieve last roll stats"));
+        return Gen::ReturnCode::Fail;
     }
-    return p->getLastRollStats();
+    lastRollStats = p->getLastRollStats();
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
-const Craps::PlayerStats&
+Gen::ReturnCode
 CrapsInterface::playerCurrentStats(
-    const Craps::PlayerId& playerId)
+    const Craps::PlayerId& playerId,
+    Craps::PlayerStats& playerCurrentStats,
+    Gen::ErrorPass& ep)
 {
-    Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        static Craps::PlayerStats empty;
-        return empty;
+        ep.prepend(diagPrefix("playerCurrentStats", "retrieve player current stats"));
+        return Gen::ReturnCode::Fail;
     }
-    return p->getCurrentStats();
+    playerCurrentStats = p->getCurrentStats();
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
-const Craps::PlayerStats&
+Gen::ReturnCode
 CrapsInterface::playerAlltimeStats(
-    const Craps::PlayerId& playerId)
+    const Craps::PlayerId& playerId,
+    Craps::PlayerStats& playerAlltimeStats,
+    Gen::ErrorPass& ep)
 {
-    Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        static Craps::PlayerStats empty;
-        return empty;
+        ep.prepend(diagPrefix("playerAlltimeStats", "retrieve player alltime stats"));
+        return Gen::ReturnCode::Fail;
     }
-    return p->getAlltimeStats();
+    playerAlltimeStats = p->getAlltimeStats();
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
-const Craps::BankStats&
+Gen::ReturnCode
 CrapsInterface::playerCurrentStatsBank(
-    const Craps::PlayerId& playerId)
+    const Craps::PlayerId& playerId,
+    Craps::BankStats& playerCurrentStatsBank,
+    Gen::ErrorPass& ep)
 {
-    Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        static Craps::BankStats empty;
-        return empty;
+        ep.prepend(diagPrefix("playerCurrentStatsBank", "retrieve player currennt bank stats"));
+        return Gen::ReturnCode::Fail;
     }
-    return p->getBankCurrentStats();
+    playerCurrentStatsBank = p->getBankCurrentStats();
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
 
-const Craps::BankStats&
-CrapsInterface::playerAlltimeStatsBank(
-    const Craps::PlayerId& playerId)
-{
-    Gen::ErrorPass ep;
-    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr)
-    {
-        static Craps::BankStats empty;
-        return empty;
-    }
-    return p->getBankAlltimeStats();
-}
-
-//----------------------------------------------------------------
-
-const Craps::SessionHistory::Sessions&
+Gen::ReturnCode
 CrapsInterface::playerSessionHistory(
-    const Craps::PlayerId& playerId)
+    const Craps::PlayerId& playerId,
+    Craps::SessionHistory::Sessions& playerSessionHistory,
+    Gen::ErrorPass& ep)
 {
-    Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
     if (p == nullptr)
     {
-        static Craps::SessionHistory::Sessions empty;
-        return empty;
+        ep.prepend(diagPrefix("playerSessionHistory", "retrieve player session history"));
+        return Gen::ReturnCode::Fail;
     }
-    return p->getSessionHistory();
+    playerSessionHistory = p->getSessionHistory();
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
@@ -701,6 +721,28 @@ CrapsInterface::tableNumBetsOnTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsInterface::tablePlayers(
+    const Craps::TableId& tableId,
+    std::vector<Craps::PlayerId>& playerIds,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tablePlayers", "retrieve table players"));
+        return Gen::ReturnCode::Fail;
+    }
+    const auto playerPtrs  = pTable->getPlayers();
+    for (const auto p : playerPtrs)
+    {
+        playerIds.push_back(p->getPlayerId());
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsInterface::tableCurrentShooter(
     const Craps::TableId& tableId,
     Craps::PlayerId& playerId,
@@ -731,6 +773,190 @@ CrapsInterface::tableRecentRolls(
         return Gen::ReturnCode::Fail;
     }
     recentRolls = pTable->getRecentRolls();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableCurrentStats(
+    const Craps::TableId& tableId,
+    Craps::TableStats& currentTableStats,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableCurrentStats", "retrieve current stats"));
+        return Gen::ReturnCode::Fail;
+    }
+    currentTableStats = pTable->getCurrentStats();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableAlltimeStats(
+    const Craps::TableId& tableId,
+    Craps::TableStats& alltimeTableStats,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableAlltimeStats", "retrieve alltime stats"));
+        return Gen::ReturnCode::Fail;
+    }
+    alltimeTableStats = pTable->getAlltimeStats();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableCurrentStatsBank(
+    const Craps::TableId& tableId,
+    Craps::BankStats& currentStatsBank,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableCurrentStatsBank", "retrieve current bank stats"));
+        return Gen::ReturnCode::Fail;
+    }
+    currentStatsBank = pTable->getBankCurrentStats();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableAlltimeStatsBank(
+    const Craps::TableId& tableId,
+    Craps::BankStats& alltimeStatsBank,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableAlltimeStatsBank", "retrieve alltime bank stats"));
+        return Gen::ReturnCode::Fail;
+    }
+    alltimeStatsBank = pTable->getBankAlltimeStats();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableLastRollStats(
+    const Craps::TableId& tableId,
+    Craps::LastRollStats& lastRollStats,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableLastRollStats", "retrieve last roll stats"));
+        return Gen::ReturnCode::Fail;
+    }
+    lastRollStats = pTable->getLastRollStats();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableSessionHistory(
+    const Craps::TableId& tableId,
+    Craps::SessionHistory::Sessions& tableSessionHistory,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableSessionHistory", "retrieve session history"));
+        return Gen::ReturnCode::Fail;
+    }
+    tableSessionHistory = pTable->getSessionHistory();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableComeOutRoll(
+    const Craps::TableId& tableId,
+    bool& isComeOutRoll,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableComeOutRoll", "retrieve come out roll flag"));
+        return Gen::ReturnCode::Fail;
+    }
+    isComeOutRoll = pTable->isComeOutRoll();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableBettingOpen(
+    const Craps::TableId& tableId,
+    bool& isBettingOpen,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableBettingOpen", "retrieve betting opne flag"));
+        return Gen::ReturnCode::Fail;
+    }
+    isBettingOpen = pTable->isBettingOpen();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableHaveBet(
+    const Craps::TableId& tableId,
+    const Craps::BetId& betId,
+    bool& haveBet,
+    Gen::ErrorPass& ep)
+{
+    Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("tableHaveBet", "retrieve table bet"));
+        return Gen::ReturnCode::Fail;
+    }
+    auto pBet = Gbl::pTable->getBet(betId, ep);
+    haveBet = (pBet != nullptr);
+    return Gen::ReturnCode::Success;    
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::tableHavePlayer(
+    const Craps::TableId& tableId,
+    const Craps::PlayerId& playerId,
+    bool& havePlayer,
+    Gen::ErrorPass& ep)
+{
+    auto pTable  = Gbl::pTableMgr->getTable  (tableId,  ep);
+    auto pPlayer = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (pTable == nullptr || pPlayer == nullptr)
+    {
+        ep.prepend(diagPrefix("tableHavePlayer", "retrieve table player"));
+        return Gen::ReturnCode::Fail;
+    }
+    havePlayer = pTable->havePlayer(pPlayer);
     return Gen::ReturnCode::Success;
 }
 
