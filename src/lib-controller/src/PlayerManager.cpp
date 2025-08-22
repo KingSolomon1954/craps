@@ -125,18 +125,10 @@ PlayerManager::getPlayer(const Craps::PlayerId& playerId,
 
 //----------------------------------------------------------------
 
-const PlayerManager::Players&
-PlayerManager::getPlayers() const
+const PlayerManifest::PlayerList&
+PlayerManager::getPlayerList() const
 {
-    return players_;
-}
-
-//----------------------------------------------------------------
-
-const PlayerManager::PlayerDescriptions&
-PlayerManager::getPlayerChoices() const
-{
-    return manifest_.getPlayers();
+    return manifest_.getPlayerList();
 }
 
 //----------------------------------------------------------------

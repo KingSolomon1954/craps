@@ -35,7 +35,7 @@ tables:
     TableManifest manifest;
     manifest.fromYAML(root["tables"]);
 
-    const auto& tables = manifest.getTables();
+    const auto& tables = manifest.getTableList();
     REQUIRE(tables.size() == 2);
 
     SUBCASE("First table entry is correct")

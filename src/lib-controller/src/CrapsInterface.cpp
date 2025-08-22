@@ -269,6 +269,14 @@ CrapsInterface::playerSessionHistory(
 }
 
 //----------------------------------------------------------------
+
+const PlayerManifest::PlayerList&
+CrapsInterface::playerList()
+{
+    return Gbl::pPlayerMgr->getPlayerList();
+}
+
+//----------------------------------------------------------------
 //
 // Bet related
 //
@@ -958,6 +966,15 @@ CrapsInterface::tableHavePlayer(
     }
     havePlayer = pTable->havePlayer(pPlayer);
     return Gen::ReturnCode::Success;
+}
+
+
+//----------------------------------------------------------------
+
+const TableManifest::TableList&
+CrapsInterface::tableList()
+{
+    return Gbl::pTableMgr->getTableList();
 }
 
 //----------------------------------------------------------------

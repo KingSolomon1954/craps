@@ -9,7 +9,6 @@
 #include <memory>
 #include <string>
 #include <controller/TableManager.h>
-#include <controller/PlayerManager.h>
 #include <craps/CrapsTypes.h>
 
 namespace Ctrl {
@@ -24,10 +23,10 @@ public:
 
     /// @name Modifiers
     /// @{
-    virtual void displayMessage(const std::string& msg) = 0;
-    virtual void displayAboutCraps() = 0;
-    virtual Craps::TableId promptUserToSelectTable(const TableManager::TableDescriptions& tds) = 0;
-    virtual std::vector<Craps::PlayerId> promptUserToSelectPlayers(const PlayerManager::PlayerDescriptions& pds) = 0;
+    virtual void displayMessage(const std::string& msg)              = 0;
+    virtual void displayAboutCraps()                                 = 0;
+    virtual Craps::TableId               promptUserToSelectTable()   = 0;
+    virtual std::vector<Craps::PlayerId> promptUserToSelectPlayers() = 0;
     /// @}
 
     /// @name Observers

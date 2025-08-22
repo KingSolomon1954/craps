@@ -24,7 +24,6 @@ namespace Ctrl {
 class TableManager
 {
 public:
-    using TableDescriptions = std::vector<TableManifest::TableInfo>;
     using Tables = std::vector<Craps::CrapsTable*>;
 
     /// @name Lifecycle
@@ -41,7 +40,7 @@ public:
 
     /// @name Observers
     /// @{
-    const TableDescriptions& getTableChoices() const;
+    const TableManifest::TableList& getTableList() const;
     Craps::CrapsTable* getTable(const Craps::TableId& tableId,
                                 Gen::ErrorPass& ep) const;
     /// @}

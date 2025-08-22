@@ -9,9 +9,7 @@
 #include <iostream>
 #include <controller/EventLoop.h>
 #include <controller/Globals.h>
-#include <controller/TableManager.h>
 #include <controller/ViewIntfc.h>
-#include <craps/CrapsTable.h>
 
 using namespace Ctrl;
 
@@ -57,8 +55,7 @@ GameController::onUserInputLine(GameEvent* pBase)
 void
 GameController::userSelectsPlayers()
 {
-    auto pds = Gbl::pPlayerMgr->getPlayerChoices();
-    auto playerIds = Gbl::pView->promptUserToSelectPlayers(pds);
+    auto playerIds = Gbl::pView->promptUserToSelectPlayers();
     
     Gen::ErrorPass ep;
     for (auto pid : playerIds)  // Players join table

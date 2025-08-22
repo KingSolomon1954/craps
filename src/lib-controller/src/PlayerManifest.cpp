@@ -15,8 +15,8 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 
-const std::vector<PlayerManifest::PlayerInfo>&
-PlayerManifest::getPlayers() const
+const PlayerManifest::PlayerList&
+PlayerManifest::getPlayerList() const
 {
     return players_;
 }
@@ -59,16 +59,16 @@ PlayerManifest::fromYAML(const YAML::Node& node)
 
     for (const auto& playerNode : node)
     {
-        PlayerInfo info;
-        info.fromYAML(playerNode);
-        players_.emplace_back(std::move(info));
+        PlayerDescription desc;
+        desc.fromYAML(playerNode);
+        players_.emplace_back(std::move(desc));
     }
 }
 
 //-----------------------------------------------------------------
 
 void
-PlayerManifest::PlayerInfo::fromYAML(const YAML::Node& node)
+PlayerManifest::PlayerDescription::fromYAML(const YAML::Node& node)
 {
     playerId         = node["playerId"].as<Craps::PlayerId>();
     playerName       = node["playerName"].as<std::string>();
@@ -80,7 +80,7 @@ PlayerManifest::PlayerInfo::fromYAML(const YAML::Node& node)
 //-----------------------------------------------------------------
 
 YAML::Node
-PlayerManifest::PlayerInfo::toYAML() const
+PlayerManifest::PlayerDescription::toYAML() const
 {
     YAML::Node node;
     node["playerId"]         = playerId;

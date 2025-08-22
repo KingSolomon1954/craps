@@ -15,8 +15,8 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 
-const std::vector<TableManifest::TableInfo>&
-TableManifest::getTables() const
+const TableManifest::TableList&
+TableManifest::getTableList() const
 {
     return tables_;
 }
@@ -59,16 +59,16 @@ TableManifest::fromYAML(const YAML::Node& node)
 
     for (const auto& tableNode : node)
     {
-        TableInfo info;
-        info.fromYAML(tableNode);
-        tables_.emplace_back(std::move(info));
+        TableDescription desc;
+        desc.fromYAML(tableNode);
+        tables_.emplace_back(std::move(desc));
     }
 }
 
 //-----------------------------------------------------------------
 
 void
-TableManifest::TableInfo::fromYAML(const YAML::Node& node)
+TableManifest::TableDescription::fromYAML(const YAML::Node& node)
 {
     tableId          = node["tableId"].as<Craps::TableId>();
     tableName        = node["tableName"].as<std::string>();
@@ -80,7 +80,7 @@ TableManifest::TableInfo::fromYAML(const YAML::Node& node)
 //-----------------------------------------------------------------
 
 YAML::Node
-TableManifest::TableInfo::toYAML() const
+TableManifest::TableDescription::toYAML() const
 {
     YAML::Node node;
     node["tableId"]          = tableId;

@@ -10,6 +10,8 @@
 #pragma once
 
 #include <deque>
+#include <controller/PlayerManifest.h>
+#include <controller/TableManifest.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
 #include <craps/SessionHistory.h>
@@ -85,6 +87,7 @@ class CrapsInterface
         const Craps::PlayerId& playerId,
         Craps::SessionHistory::Sessions& playerSessionHistory,
         Gen::ErrorPass& ep);
+    static const PlayerManifest::PlayerList& playerList();
     
     // Bet related
     static Gen::ReturnCode betSetOddsAmount(
@@ -237,7 +240,8 @@ class CrapsInterface
         const Craps::PlayerId& playerId,
         bool& havePlayer,
         Gen::ErrorPass& ep);
-
+    static const TableManifest::TableList& tableList();
+    
 private:
     // Private helpers
     static std::string diagPrefix(

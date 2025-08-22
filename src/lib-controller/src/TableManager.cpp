@@ -41,10 +41,10 @@ TableManager::~TableManager()
 
 //----------------------------------------------------------------
 
-const TableManager::TableDescriptions&
-TableManager::getTableChoices() const
+const TableManifest::TableList&
+TableManager::getTableList() const
 {
-    return manifest_.getTables();
+    return manifest_.getTableList();
 }
 
 //----------------------------------------------------------------

@@ -15,7 +15,7 @@ namespace Ctrl {
 class TableManifest
 {
 public:
-    struct TableInfo
+    struct TableDescription
     {
         Craps::TableId tableId;
         std::string tableName;
@@ -27,14 +27,16 @@ public:
         void fromYAML(const YAML::Node& node);
     };
 
-    std::string getFileName(const Craps::TableId& tableId)   const;
-    Craps::TableId getTableId(const std::string& fileName)   const;
+    using TableList = std::vector<TableManifest::TableDescription>;
+    
+    std::string getFileName(const Craps::TableId& tableId) const;
+    Craps::TableId getTableId(const std::string& fileName) const;
+    const TableList& getTableList()                        const;
     void loadFromFile();  // throws
-    const std::vector<TableManifest::TableInfo>& getTables() const;
     void fromYAML(const YAML::Node& node);
 
 private:
-    std::vector<TableInfo> tables_;
+    TableList tables_;
 };
 
 /*-----------------------------------------------------------*//**

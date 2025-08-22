@@ -5,8 +5,11 @@
 //----------------------------------------------------------------
 
 #include <cui/ConsoleView.h>
+#include <controller/Globals.h>
+#include <controller/PlayerManager.h>
 #include <cassert>
 #include <iostream>
+#include <vector>
 
 using namespace Cui;
 
@@ -41,30 +44,30 @@ ConsoleView::displayAboutCraps()
 //----------------------------------------------------------------
 
 Craps::TableId
-ConsoleView::promptUserToSelectTable(
-    const Ctrl::TableManager::TableDescriptions& tds)
+ConsoleView::promptUserToSelectTable()
 {
     std::cout << "Available Tables:\n";
-    for (size_t i = 0; i < tds.size(); ++i)
+    auto tableList = Gbl::pTableMgr->getTableList();
+    for (size_t i = 0; i < tableList.size(); ++i)
     {
-        std::cout << i << ") " << tds[i].tableName << "\n";
+        std::cout << i << ") " << tableList[i].tableName << "\n";
     }
     std::cout << "Select table index: ";
     int choice = 0;
     std::cin >> choice;
-    return tds[choice].tableId;
+    return tableList[choice].tableId;
 }
 
 //----------------------------------------------------------------
 
 std::vector<Craps::PlayerId>
-ConsoleView::promptUserToSelectPlayers(
-    const Ctrl::PlayerManager::PlayerDescriptions& pds)
+ConsoleView::promptUserToSelectPlayers()
 {
     std::cout << "Available Players:\n";
-    for (size_t i = 0; i < pds.size(); ++i)
+    const auto& players = Gbl::pPlayerMgr->getPlayerList();
+    for (size_t i = 0; i < players.size(); ++i)
     {
-        std::cout << i << ") " << pds[i].playerName << "\n";
+        std::cout << i << ") " << players[i].playerName << "\n";
     }
 
     std::cout << "Enter comma-separated indices (e.g. 0,2): ";
@@ -76,15 +79,15 @@ ConsoleView::promptUserToSelectPlayers(
     while ((pos = input.find(',')) != std::string::npos)
     {
         int idx = std::stoi(input.substr(0, pos));
-        if (idx >= 0 && idx < pds.size())
-            selected.push_back(pds[idx].playerId);
+        if (idx >= 0 && idx < players.size())
+            selected.push_back(players[idx].playerId);
         input.erase(0, pos + 1);
     }
     if (!input.empty())
     {
         int idx = std::stoi(input);
-        if (idx >= 0 && idx < pds.size())
-            selected.push_back(pds[idx].playerId);
+        if (idx >= 0 && idx < players.size())
+            selected.push_back(players[idx].playerId);
     }
     return selected;
 }

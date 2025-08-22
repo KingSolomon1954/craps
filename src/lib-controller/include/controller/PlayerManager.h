@@ -8,9 +8,7 @@
 
 #include <memory>
 #include <filesystem>
-#include <vector>
 #include <controller/PlayerManifest.h>
-#include <controller/PlayerDescription.h>
 #include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
@@ -24,7 +22,6 @@ namespace Ctrl {
 class PlayerManager
 {
 public:
-    using PlayerDescriptions = std::vector<PlayerManifest::PlayerInfo>;
     using Players = std::vector<Craps::Player*>;
 
     /// @name Lifecycle
@@ -39,11 +36,12 @@ public:
 
     /// @name Observers
     /// @{
-    const PlayerDescriptions& getPlayerChoices()   const;
-    const Players& getPlayers()                    const;
-    Craps::Player* getPlayer(const Craps::PlayerId& playerId,
-                             Gen::ErrorPass& ep)   const;
-    Craps::Player* getUserPlayer()                 const;
+    const PlayerManifest::PlayerList& getPlayerList() const;
+    const Players& getPlayers()                       const;
+    Craps::Player* getUserPlayer()                    const;
+    Craps::Player* getPlayer(
+        const Craps::PlayerId& playerId,
+        Gen::ErrorPass& ep)                           const;
     /// @}
 
 private:

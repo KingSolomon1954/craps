@@ -15,7 +15,7 @@ namespace Ctrl {
 class PlayerManifest
 {
 public:
-    struct PlayerInfo
+    struct PlayerDescription
     {
         Craps::PlayerId playerId;
         std::string playerName;
@@ -26,15 +26,17 @@ public:
         YAML::Node toYAML() const;
         void fromYAML(const YAML::Node& node);
     };
+    
+    using PlayerList = std::vector<PlayerManifest::PlayerDescription>;
 
     Craps::PlayerId getPlayerId(const std::string& fileName) const;
     std::string getFileName(const Craps::PlayerId& playerId) const;
+    const PlayerList& getPlayerList()                        const;
     void loadFromFile();  // throws
-    const std::vector<PlayerManifest::PlayerInfo>& getPlayers() const;
     void fromYAML(const YAML::Node& node);
 
 private:
-    std::vector<PlayerInfo> players_;
+    PlayerList players_;
 };
 
 /*-----------------------------------------------------------*//**
