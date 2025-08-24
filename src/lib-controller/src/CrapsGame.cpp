@@ -17,6 +17,7 @@
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/ViewIntfc.h>
+#include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
 #include <craps/EventManager.h>
 #include <cui/ConsoleView.h>
@@ -46,6 +47,7 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::unique_ptr<Craps::EventManager>  pEventMgr(initEventManager());       (void) pEventMgr;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
+    std::unique_ptr<Ctrl::UndoManager>    pUndoMgr(initUndoManager());         (void) pUndoMgr;
     std::unique_ptr<Ctrl::ViewIntfc>      pView(initView());                   (void) pView;
     std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
     std::unique_ptr<Ctrl::EventLoop>      pEventLoop(initEventLoop());         (void) pEventLoop;
@@ -133,6 +135,16 @@ CrapsGame::initPlayerManager()
 {
     auto p = new PlayerManager();
     Gbl::pPlayerMgr = p;
+    return p;
+}
+
+//----------------------------------------------------------------
+
+UndoManager*
+CrapsGame::initUndoManager()
+{
+    auto p = new UndoManager();
+    Gbl::pUndoMgr = p;
     return p;
 }
 

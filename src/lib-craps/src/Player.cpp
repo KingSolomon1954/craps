@@ -356,6 +356,59 @@ Player::makeBet(BetName betName,
 
 //----------------------------------------------------------------
 //
+// Restores a previouly removed bet.
+//
+// This participates in the undo facility.
+//
+// Adds the saved previously removed bet back in, bypassing
+// validity checks and avoiding double stats counters.
+// This only works as part of the undo manager unstacking.
+// It does not work for restoring arbitrary bets as no checks
+// are made for sufficient funds, duplicates, etc.
+//
+Gen::ReturnCode
+Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
+{
+    wallet_.withdraw(pBet->contractAmount() + pBet->oddsAmount());
+    bets_.push_back(pBet);
+    (void) pTable_->addBet(pBet, ep);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+//
+// Restores a previouly changed bet amount.
+//
+// This participates in the undo facility.
+//
+// Adjusts player's wallet due to an undo of a change in bet amount.
+//
+void
+Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState)
+{
+    auto applyDelta = [this](int delta)
+    {
+        if (delta > 0)
+        {
+            // Undoing an increase → get money back
+            wallet_.deposit(delta);
+        }
+        else if (delta < 0)
+        {
+            // Undoing a decrease → costs us money
+            wallet_.withdraw(-delta); // must negate since withdraw expects positive
+        }
+    };
+
+    int deltaContract = pBet->contractAmount() - prevState.contractAmount();
+    applyDelta(deltaContract);
+
+    int deltaOdds = pBet->oddsAmount() - prevState.oddsAmount();
+    applyDelta(deltaOdds);
+}
+
+//----------------------------------------------------------------
+//
 // Purpose of this is to issue std::make_shared in try/catch block.
 // Convert exception to ErrorPass.
 //

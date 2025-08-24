@@ -61,6 +61,7 @@ public:
     Gen::ReturnCode setOddsAmount(BetPtr pBet,
                                   Gen::Money oddsAmount,
                                   Gen::ErrorPass& ep);
+    
     // Table
     void rollDice();
     void resetStats();

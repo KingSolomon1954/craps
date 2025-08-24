@@ -69,6 +69,8 @@ public:
                                       Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet(const BetId& betId,
                               Gen::ErrorPass& ep);
+    Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
+    void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);

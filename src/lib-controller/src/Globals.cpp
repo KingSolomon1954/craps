@@ -11,6 +11,7 @@
 #include <controller/PlayerManager.h>
 #include <controller/TableManager.h>
 #include <controller/ViewIntfc.h>
+#include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
 #include <craps/EventManager.h>
 #include <gen/BuildInfo.h>
@@ -24,6 +25,7 @@ Ctrl::GameController*  Gbl::pGameCtrl  = nullptr;
 Ctrl::TableManager*    Gbl::pTableMgr  = nullptr;
 Ctrl::PlayerManager*   Gbl::pPlayerMgr = nullptr;
 Ctrl::ViewIntfc*       Gbl::pView      = nullptr;
+Ctrl::UndoManager*     Gbl::pUndoMgr   = nullptr;
 
 const std::string Gbl::appNameScreen = "Royal Craps";
 const std::string Gbl::appNameExec   = "royalcraps";

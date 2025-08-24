@@ -8,6 +8,7 @@
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/TableManager.h>
+#include <controller/UndoManager.h>
 #include <craps/BankStats.h>
 #include <craps/CrapsTable.h>
 #include <craps/Dice.h>
@@ -79,6 +80,7 @@ CrapsInterface::playerMakeBet(
         ep.prepend(diagPrefix("playerMakeBet", "make bet"));
         return Gen::ReturnCode::Fail;
     }
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetAdded>(pBet));
     betId = pBet->betId();
     return Gen::ReturnCode::Success;
 }
@@ -294,6 +296,7 @@ CrapsInterface::betSetOddsAmount(
         ep.prepend(diagPrefix("betSetOddsAmount", "setOddsAmount"));
         return Gen::ReturnCode::Fail;
     }
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
     return pBet->player().setOddsAmount(pBet, oddsAmount, ep);
 }
 
@@ -311,6 +314,7 @@ CrapsInterface::betSetContractAmount(
         ep.prepend(diagPrefix("betSetContractAmount", "setContractAmount"));
         return Gen::ReturnCode::Fail;
     }
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
     return pBet->player().setContractAmount(betId, contractAmount, ep);
 }
 
@@ -345,6 +349,7 @@ CrapsInterface::betRemove(
         ep.prepend(diagPrefix("betRemove", "remove bet"));
         return Gen::ReturnCode::Fail;
     }
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetRemoved>(pBet));
     return pBet->player().removeBet(betId, ep);
 }
 
@@ -542,6 +547,7 @@ CrapsInterface::betSetOffComeOutRoll(
         ep.prepend(diagPrefix("betSetOffComeOutRoll", "set offComeOutRoll flag"));
         return Gen::ReturnCode::Fail;
     }
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
     pBet->setOffComeOutRoll();
     return Gen::ReturnCode::Success;
 }
@@ -559,6 +565,7 @@ CrapsInterface::betSetOnComeOutRoll(
         ep.prepend(diagPrefix("betSetOnComeOutRoll", "set onComeOutRoll flag"));
         return Gen::ReturnCode::Fail;
     }
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
     pBet->setOnComeOutRoll();
     return Gen::ReturnCode::Success;
 }
@@ -576,6 +583,7 @@ CrapsInterface::betSetHardwayOff(
         ep.prepend(diagPrefix("betSetHardwayOff", "set hardway off flag"));
         return Gen::ReturnCode::Fail;
     }
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
     pBet->setHardwayOff();
     return Gen::ReturnCode::Success;
 }
@@ -593,6 +601,7 @@ CrapsInterface::betSetHardwayOn(
         ep.prepend(diagPrefix("betSetHardwayOn", "set hardway on flag"));
         return Gen::ReturnCode::Fail;
     }
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
     pBet->setHardwayOn();
     return Gen::ReturnCode::Success;
 }
@@ -615,6 +624,7 @@ CrapsInterface::rollDice(
         return Gen::ReturnCode::Fail;
     }
     pTable->rollDice();
+    Gbl::pUndoMgr->clear();
     return Gen::ReturnCode::Success;
 }
 

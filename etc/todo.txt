@@ -17,20 +17,13 @@ Refund on quit - unresolved bets back to player's bank
   Add a warning like: “You have active bets. Are you sure
   you want to quit and abandon them?”
 
-Allow a clear/undo last bet capability
-    void commitStagedAmounts(); // called by CrapsTable during roll
-    void discardStagedAmounts(); // if needed
-    MoneyAmount stagedContractAmount_;
-    MoneyAmount stagedOddsAmount_;
-    bool lineBetLocked_ = false;
-    CrapsBet::isLocked()
-    enum BetStats { New, Actvie, Staged, Resolved };
-
 Save Config to yaml file
 Need unit test for initial bank money
+Need unit test for undo capability
 
-Build up CrapsInterface for UI interaction
-
+(Done) Undo capability, UndoManager class, UndoBet classes
+(Done) Build up CrapsInterface for UI interaction
+(Done) Populate CrapsInterface, organized around players, bets, table
 (Done) Write unit test MultiLayerConfigTest
 (Done) load Player choices by reading dir
 (Done) Load config.yaml with arrays into multi-layer config
@@ -1071,5 +1064,66 @@ Rendered by ncurses program
 │ ● ● │
 └─────┘
 
+
+Undo Capability
+---------------
+
+Supported (stack-based undo, limited to bets)
+
+* Scope: only bet state (no configuration, no gameplay state, no rolls).
+* Granularity: one atomic bet change = one undo step.
+* Kinds of changes:
+
+  * new bet placed
+  * existing bet modified (amount, odds, flags)
+  * bet removed
+
+* Ordering: last-in, first-out (classic undo stack).
+* Lifetime: undo history is cleared after each roll (so you can only undo the current betting decisions before the dice are rolled).
+
+Not supported (explicit exclusions)
+
+* Undoing out of order changes (no random-access undo).
+* Redo.
+* Anything outside of bets (like table config, game options).
+
+Implications for implementation
+
+* Each action on bets needs to push a reversible “snapshot” (or command
+  object) onto an undo stack.  e.g. "BetAdded {id, betData}",
+  "BetModified {id, oldAmount, newAmount}", "BetRemoved {id, betData}".
+* When you pop and execute an undo, you restore the prior state of that
+  bet (or remove it, or re-add it).
+* Clear the undo stack at the end of each roll → ensures betting
+  decisions are isolated to the roll cycle.
+
+
+class UndoBet
+{
+public:
+    BetPtr pBet = nullptr;
+    virtual void undo() = 0;
+    virtual ~UndoBet = default;
+};
+
+class UndoBetAdded : public UndoBet
+{
+    
+
+};
+
+
+class UndoBetRemoved : public UndoBet
+{
+    
+
+};
+
+
+class UndoBetModified : public UndoBet
+{
+    
+
+};
 
 

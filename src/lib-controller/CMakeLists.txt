@@ -24,6 +24,8 @@ add_library(controller STATIC
     src/Properties.cpp
     src/TableManager.cpp
     src/TableManifest.cpp
+    src/UndoBet.cpp
+    src/UndoManager.cpp
 )
 
 target_include_directories(controller

@@ -8,6 +8,7 @@
 #include <controller/TableManager.h>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
+#include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
 #include <craps/EventManager.h>
 
@@ -110,7 +111,8 @@ TableManager::switchCrapsTable(
         delete pCurrentCrapsTable_;          // Clean up its memory
         Gbl::pTable = p;                     // New table accssible in globals
         pCurrentCrapsTable_ = p;             // Manage it's memory
-        tables_[0] = p;                       // replace table in container
+        tables_[0] = p;                      // replace table in container
+        Gbl::pUndoMgr->clear();              // Start with zero undo's
         return Gen::ReturnCode::Success;
     }
     catch (const std::runtime_error& e)

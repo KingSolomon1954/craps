@@ -366,8 +366,8 @@ CrapsTable::isBetRemovable(BetPtr pBet) const
 
 Removes the bet from the table subject to craps table rules.
 
-If successful return, it is expected that Player recovers the bet amount
-back into their wallet.
+If successful, it is expected that Player recovers the bet amount back
+into their wallet.
 
 @param[in,out] pBet
     The bet of interest.
@@ -409,8 +409,8 @@ Removes the bet from the table regardless of craps table rules.
 Funds associated with the bet are NOT claimed by the house bank. It is
 expected that Player recovers the bet amount into their wallet.  This is
 meant to be called upon program shutdown or when player switches table
-and player is allowed to recover their bets (instead of abandoning
-them).
+and the player is allowed to recover their bets instead of abandoning
+them.
 
 @param[in,out] pBet
     The bet of interest.
