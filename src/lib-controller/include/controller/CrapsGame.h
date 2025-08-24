@@ -43,15 +43,15 @@ public:
     /// @}
 
 private:
-    Gen::BuildInfo*        initBuildInfo();
-    Ctrl::ConfigManager*   initConfigManager(int argc, char* argv[]);
-    Craps::EventManager*   initEventManager();
-    Ctrl::TableManager*    initTableManager();
-    Ctrl::PlayerManager*   initPlayerManager();
-    Ctrl::UndoManager*     initUndoManager();
-    Ctrl::ViewIntfc*       initView();
-    Ctrl::GameController*  initGameController();
-    Ctrl::EventLoop*       initEventLoop();
+    Gen::BuildInfo*       initBuildInfo();
+    Ctrl::ConfigManager*  initConfigManager(int argc, char* argv[]);
+    Craps::EventManager*  initEventManager();
+    Ctrl::TableManager*   initTableManager();
+    Ctrl::PlayerManager*  initPlayerManager();
+    Ctrl::UndoManager*    initUndoManager();
+    Ctrl::ViewIntfc*      initView();
+    Ctrl::GameController* initGameController();
+    Ctrl::EventLoop*      initEventLoop();
     
     Ctrl::ViewIntfc* getView();
     void enableFileLogging();

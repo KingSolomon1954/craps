@@ -1,14 +1,13 @@
 
-Write unit test ConfigManagerTest
+Write script to copy files/assets to install locations
+Design EventQueue and Events
 
-write script to copy files/assets to install locations
-design EventQueue and Events
+New feature Stats maybe add stats for place, lay, buy, any7, CandE, Horn
 
-stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
-stats Streaks - count same number repeats before 7 for
-      example (4:1:57)  57 times, the 4 repeated once before a 7
-      example (4:2:33)  33 times, the 4 repeated twice before a 7
-      example (4:3:21)  21 times, the 4 repeated three times before a 7
+New feature Stat Streaks - count same number repeats before 7
+    example (4:1:57)  57 times, the 4 repeated once before a 7
+    example (4:2:33)  33 times, the 4 repeated twice before a 7
+    example (4:3:21)  21 times, the 4 repeated three times before a 7
 
 Refund on quit - unresolved bets back to player's bank
   show a message like: “You left the table with active bets.
@@ -19,7 +18,9 @@ Refund on quit - unresolved bets back to player's bank
 
 Save Config to yaml file
 Need unit test for initial bank money
-Need unit test for undo capability
+Need unit test for undo bet capability
+Need unit test ConfigManagerTest
+Need unit test CrapsInterface
 
 (Done) Undo capability, UndoManager class, UndoBet classes
 (Done) Build up CrapsInterface for UI interaction
@@ -966,9 +967,9 @@ also color coded over their column.
 │ DontCome8  o o o o o o │                      │ Any7   o o o o o o │                             │
 │ DontCome9  o o o o o o │                      │                    │                             │
 │ DontCome10 o o o o o o │                      │                    │                             │
-│ 23                     │                      │                    │23                           │
+│23                      │                      │                    │23                           │
 ├────────────────────────┴──────────────────────┴────────────────────┤─────────────────────────────┤
-│ 25 Nathan wins PassLine bet, +$200                                 │ House: +$2,050              │
+│25 Nathan wins PassLine bet, +$200                                  │ House: +$2,050              │
 │ Shooter rolls a 6, point is set                                    │ Bets: 128 (68W, 60L)        │
 │ Arthur bets $20 on Hard 4 and 10                                   │ On table: 12 bets, $1,520   │
 │ Nathan bets $50 PassLine odds                                      │ Last: -$100,300W,200L       │
@@ -980,9 +981,9 @@ also color coded over their column.
 │ Paige places $10 on Field                                          │ On table: 3 bets, $320      │
 │ Another message row                                                │ Last: +$80,180W,100L        │
 │ Another message                                                    ├─────────────────────────────┤
-│ 37 Another message                                                 │ > command line here         │
+│37 Another message                                                  │ > command line here         │
 └────────────────────────────────────────────────────────────────────┴─────────────────────────────┘
-38 Press enter
+
 
 
 Rendered by ncurses program

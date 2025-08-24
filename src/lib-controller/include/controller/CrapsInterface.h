@@ -31,6 +31,8 @@ namespace Ctrl {
 
 class CrapsInterface
 {
+    CrapsInterface() = delete;  // Pure static class, no instantiation
+    
     // Player related
     static Gen::ReturnCode playerJoinTable(
         const Craps::PlayerId& playerId,
@@ -53,7 +55,7 @@ class CrapsInterface
         Gen::ErrorPass& ep);
     static Gen::ReturnCode playerName(
         const Craps::PlayerId& playerId,
-        std::string playerName,
+        std::string& playerName,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode playerAmountOnTable(
         const Craps::PlayerId& playerId,
@@ -157,7 +159,7 @@ class CrapsInterface
     static Gen::ReturnCode betSetHardwayOn(
         const Craps::BetId& betId,
         Gen::ErrorPass& ep);
-
+    
     // Table related
     static Gen::ReturnCode rollDice(
         const Craps::TableId& tableId,
@@ -222,16 +224,16 @@ class CrapsInterface
         const Craps::TableId& tableId,
         Craps::SessionHistory::Sessions& tableSessionHistory,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode tableComeOutRoll(
+    static Gen::ReturnCode tableIsComeOutRoll(
         const Craps::TableId& tableId,
         bool& isComeOutRoll,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode tableBettingOpen(
+    static Gen::ReturnCode tableIsBettingOpen(
         const Craps::TableId& tableId,
         bool& isBettingOpen,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode tableHaveBet(
-        const Craps::PlayerId& tableId,
+        const Craps::TableId& tableId,
         const Craps::BetId& betId,
         bool& haveBet,
         Gen::ErrorPass& ep);
@@ -241,6 +243,11 @@ class CrapsInterface
         bool& havePlayer,
         Gen::ErrorPass& ep);
     static const TableManifest::TableList& tableList();
+
+    // Program control
+    static Gen::ReturnCode undoLast(
+        Gen::ErrorPass& ep);
+    static void gameTerminate();
     
 private:
     // Private helpers

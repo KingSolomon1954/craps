@@ -113,7 +113,7 @@ CrapsInterface::playerHaveBet(
 Gen::ReturnCode
 CrapsInterface::playerName(
     const Craps::PlayerId& playerId,
-    std::string playerName,
+    std::string& playerName,
     Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -905,7 +905,7 @@ CrapsInterface::tableSessionHistory(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterface::tableComeOutRoll(
+CrapsInterface::tableIsComeOutRoll(
     const Craps::TableId& tableId,
     bool& isComeOutRoll,
     Gen::ErrorPass& ep)
@@ -923,7 +923,7 @@ CrapsInterface::tableComeOutRoll(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterface::tableBettingOpen(
+CrapsInterface::tableIsBettingOpen(
     const Craps::TableId& tableId,
     bool& isBettingOpen,
     Gen::ErrorPass& ep)
@@ -978,13 +978,39 @@ CrapsInterface::tableHavePlayer(
     return Gen::ReturnCode::Success;
 }
 
-
 //----------------------------------------------------------------
 
 const TableManifest::TableList&
 CrapsInterface::tableList()
 {
     return Gbl::pTableMgr->getTableList();
+}
+
+//----------------------------------------------------------------
+//
+// Program related
+//
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::undoLast(
+    Gen::ErrorPass& ep)
+{
+    if (Gbl::pUndoMgr->canUndo())
+    {
+        Gbl::pUndoMgr->undo();
+        return Gen::ReturnCode::Success;
+    }
+    ep.diag = "CrapsInterface::betUndoLast(): Nothing to undo. "
+              "Undo stack is empty.";
+    return Gen::ReturnCode::Fail;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsInterface::gameTerminate()
+{
 }
 
 //----------------------------------------------------------------
@@ -1001,3 +1027,4 @@ CrapsInterface::diagPrefix(
 }
 
 //----------------------------------------------------------------
+
