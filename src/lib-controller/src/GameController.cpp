@@ -19,8 +19,17 @@ Constructor
 
 */
 GameController::GameController()
+    : eventLoop_([this](GameEvent* ev) { dispatchEvent(ev); })
 {
     assert(Gbl::pView != nullptr);
+}
+
+//----------------------------------------------------------------
+
+void
+GameController::enqueue(GameEvent::GameEventPtr ev)
+{
+    eventLoop_.enqueue(ev);
 }
 
 //----------------------------------------------------------------
@@ -44,7 +53,17 @@ GameController::onUserInputLine(GameEvent* pBase)
 {
     auto pEvent = static_cast<UserInputLineEvent*>(pBase);
     std::cout << "[InputLine] " << pEvent->input << '\n';
-    if (pEvent->input == "quit") Gbl::pEventLoop->stop();
+    if (pEvent->input == "quit") eventLoop_.stop();
+}
+
+//----------------------------------------------------------------
+
+void
+GameController::onUserInputChar(GameEvent* pBase)
+{
+    auto pEvent = static_cast<UserInputCharEvent*>(pBase);
+    std::cout << "[InputChar] " << pEvent->input << '\n';
+    if (pEvent->input == 'q') eventLoop_.stop();
 }
 
 //----------------------------------------------------------------
@@ -52,6 +71,7 @@ GameController::onUserInputLine(GameEvent* pBase)
 // Not used.
 // Pursue different design for choosing players
 //
+#if 0
 void
 GameController::userSelectsPlayers()
 {
@@ -64,5 +84,6 @@ GameController::userSelectsPlayers()
         // Gbl::pTable->addPlayer(pid, ep);
     }
 }
+#endif
 
 //----------------------------------------------------------------

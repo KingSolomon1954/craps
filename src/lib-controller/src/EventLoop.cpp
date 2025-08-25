@@ -10,7 +10,9 @@
 
 using namespace Ctrl;
 
-EventLoop::EventLoop()
+EventLoop::EventLoop(const Callback dispatchEventCb)
+    : dispatchEventCb_(std::move(dispatchEventCb))
+    , thread_(&EventLoop::run, this)
 {
 }
 
@@ -58,9 +60,7 @@ EventLoop::processEvents()
             eventQueue_.pop();
             lock.unlock();
 
-            // Controller owns event dispatching
-            Gbl::pGameCtrl->dispatchEvent(ev.get());
-            
+            dispatchEventCb_(ev.get()); // Controller owns dispatching
             lock.lock();
         }
     }

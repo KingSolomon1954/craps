@@ -12,10 +12,10 @@
 #include <gen/Logger.h>
 #include <gen/Debug.h>
 #include <controller/ConfigManager.h>
-#include <controller/EventLoop.h>
 #include <controller/GameController.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
+#include <controller/TableManager.h>
 #include <controller/ViewIntfc.h>
 #include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
@@ -50,9 +50,9 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::unique_ptr<Ctrl::UndoManager>    pUndoMgr(initUndoManager());         (void) pUndoMgr;
     std::unique_ptr<Ctrl::ViewIntfc>      pView(initView());                   (void) pView;
     std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
-    std::unique_ptr<Ctrl::EventLoop>      pEventLoop(initEventLoop());         (void) pEventLoop;
     
-    pView->run();  // Doesn't return until exiting
+    // Need signal handler blocking here
+    std::this_thread::sleep_for(std::chrono::seconds(20));
     
     Gbl::pTable->prepareForShutdown();
 }
@@ -165,16 +165,6 @@ CrapsGame::initGameController()
 {
     auto p = new GameController();
     Gbl::pGameCtrl = p;
-    return p;
-}
-
-//----------------------------------------------------------------
-
-EventLoop*
-CrapsGame::initEventLoop()
-{
-    auto p = new EventLoop();
-    Gbl::pEventLoop = p;
     return p;
 }
 

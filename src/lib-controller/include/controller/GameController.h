@@ -25,12 +25,12 @@ public:
     /// @name Lifecycle
     /// @{
     GameController();
-    void userSelectsPlayers();
+//  void userSelectsPlayers();
     /// @}
 
     /// @name Modifiers
     /// @{
-    void dispatchEvent(GameEvent* pBase);
+    void enqueue(GameEvent::GameEventPtr ev);
     /// @}
 
     /// @name Observers
@@ -38,14 +38,18 @@ public:
     /// @}
 
 private:
+    EventLoop eventLoop_;
+    
+    void dispatchEvent(GameEvent* pBase);
     void onUserInputLine(GameEvent* pBase);
+    void onUserInputChar(GameEvent* pBase);
 };
 
 /*-----------------------------------------------------------*//**
 
 @class GamerController
 
-@brief Reacts to user input and updates views by processes GameEvents.
+@brief Reacts to user input by processing GameEvents.
 
 more ...
 

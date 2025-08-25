@@ -5,91 +5,197 @@
 //----------------------------------------------------------------
 
 #include <cui/ConsoleView.h>
-#include <controller/Globals.h>
-#include <controller/PlayerManager.h>
-#include <cassert>
 #include <iostream>
-#include <vector>
+#include <cassert>
+#include <chrono>
+#include <controller/Globals.h>
+#include <controller/GameEvent.h>
+#include <controller/GameController.h>
 
 using namespace Cui;
+using namespace std::chrono_literals;
 
 //----------------------------------------------------------------
 
-void
-ConsoleView::run()
+ConsoleView::ConsoleView()
 {
-    std::cout << "Need to implement run()\n";
-    std::cout << "Press any key to exit\n";
-    
-    int choice = 0;
-    std::cin >> choice;
+    // Empty
+}
+
+//----------------------------------------------------------------
+
+ConsoleView::~ConsoleView()
+{
+    shutdown();
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::displayMessage(const std::string& msg)
+ConsoleView::init()
 {
-    std::cout << msg << "\n";
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+
+    int rows, cols;
+    getmaxyx(stdscr, rows, cols);
+
+    mainWin_   = newwin(rows - 3, cols, 0, 0);
+    statusWin_ = newwin(1, cols, rows - 3, 0);
+    inputWin_  = newwin(2, cols, rows - 2, 0);
+
+    scrollok(mainWin_, TRUE);
+
+    running_ = true;
+    inputThread_ = std::thread(&ConsoleView::inputThreadFunc, this);
+    draw();
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::displayAboutCraps()
+ConsoleView::shutdown()
 {
-    // TODO
+    running_ = false;
+    if (inputThread_.joinable()) inputThread_.join();
+    if (mainWin_)   delwin(mainWin_);
+    if (statusWin_) delwin(statusWin_);
+    if (inputWin_)  delwin(inputWin_);
+
+    endwin();
 }
 
 //----------------------------------------------------------------
 
-Craps::TableId
-ConsoleView::promptUserToSelectTable()
+void
+ConsoleView::draw()
 {
-    std::cout << "Available Tables:\n";
-    auto tableList = Gbl::pTableMgr->getTableList();
-    for (size_t i = 0; i < tableList.size(); ++i)
-    {
-        std::cout << i << ") " << tableList[i].tableName << "\n";
-    }
-    std::cout << "Select table index: ";
-    int choice = 0;
-    std::cin >> choice;
-    return tableList[choice].tableId;
+    curs_set(0);
+    werase(mainWin_);
+//  box(mainWin_, 0, 0);
+    wrefresh(mainWin_);
+
+    werase(statusWin_);
+    mvwprintw(statusWin_, 0, 0, "Status: ready");
+    wrefresh(statusWin_);
+
+    werase(inputWin_);
+    mvwprintw(inputWin_, 0, 0, "> ");
+    wrefresh(inputWin_);
+    curs_set(1);
 }
 
 //----------------------------------------------------------------
 
-std::vector<Craps::PlayerId>
-ConsoleView::promptUserToSelectPlayers()
+void
+ConsoleView::drawStatus(const std::string& msg)
 {
-    std::cout << "Available Players:\n";
-    const auto& players = Gbl::pPlayerMgr->getPlayerList();
-    for (size_t i = 0; i < players.size(); ++i)
+    werase(statusWin_);
+    mvwprintw(statusWin_, 0, 0, "Status: %s", msg.c_str());
+    wrefresh(statusWin_);
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::drawMenu(const std::string& title, const std::vector<std::string>& items)
+{
+    werase(mainWin_);
+    box(mainWin_, 0, 0);
+    mvwprintw(mainWin_, 0, 2, "[ %s ]", title.c_str());
+    for (size_t i = 0; i < items.size(); ++i) {
+        mvwprintw(mainWin_, 2 + i, 2, "%c) %s", 'a' + i, items[i].c_str());
+    }
+    wrefresh(mainWin_);
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::drawPrompt(const std::string& prompt)
+{
+    werase(inputWin_);
+    mvwprintw(inputWin_, 0, 0, "%s", prompt.c_str());
+    wrefresh(inputWin_);
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::setInputMode(InputMode mode)
+{
+    mode_ = mode;
+    lineBuffer_.clear();
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::inputThreadFunc()
+{
+    assert(inputWin_ != nullptr);
+    nodelay(inputWin_, TRUE);  // non-blocking
+    while (running_)
     {
-        std::cout << i << ") " << players[i].playerName << "\n";
+        int ch = wgetch(inputWin_);
+        if (ch == ERR)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            continue;
+        }
+        if (mode_ == InputMode::Menu)
+        {
+            handleMenuInput(ch);
+        }
+        else
+        {
+            handleLineInput(ch);
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::handleMenuInput(int ch)
+{
+    auto ev = std::make_shared<Ctrl::UserInputCharEvent>();
+    ev->input = static_cast<char>(ch);
+    Gbl::pGameCtrl->enqueue(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::handleLineInput(int ch)
+{
+    if (ch == '\n')
+    {
+        auto ev = std::make_shared<Ctrl::UserInputLineEvent>();
+        ev->input = lineBuffer_;
+        Gbl::pGameCtrl->enqueue(ev);
+
+        lineBuffer_.clear();
+        werase(inputWin_);
+        mvwprintw(inputWin_, 0, 0, "> ");
+        wrefresh(inputWin_);
+    }
+    else if (ch == KEY_BACKSPACE || ch == 127)
+    {
+        if (!lineBuffer_.empty())
+            lineBuffer_.pop_back();
+    }
+    else if (isprint(ch))
+    {
+        lineBuffer_.push_back(static_cast<char>(ch));
     }
 
-    std::cout << "Enter comma-separated indices (e.g. 0,2): ";
-    std::string input;
-    std::cin >> input;
-
-    std::vector<Craps::PlayerId> selected;
-    size_t pos = 0;
-    while ((pos = input.find(',')) != std::string::npos)
-    {
-        int idx = std::stoi(input.substr(0, pos));
-        if (idx >= 0 && idx < players.size())
-            selected.push_back(players[idx].playerId);
-        input.erase(0, pos + 1);
-    }
-    if (!input.empty())
-    {
-        int idx = std::stoi(input);
-        if (idx >= 0 && idx < players.size())
-            selected.push_back(players[idx].playerId);
-    }
-    return selected;
+    // redraw buffer
+    werase(inputWin_);
+    mvwprintw(inputWin_, 0, 0, "> %s", lineBuffer_.c_str());
+    wrefresh(inputWin_);
 }
 
 //----------------------------------------------------------------

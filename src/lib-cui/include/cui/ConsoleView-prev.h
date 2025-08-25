@@ -7,63 +7,30 @@
 #pragma once
 
 #include <controller/ViewIntfc.h>
-#include <atomic>
-#include <string>
-#include <thread>
-#include <vector>
-#include <ncurses.h>
 
 namespace Cui {
-
-enum class InputMode
-{
-    Menu,   // single-key
-    Line    // line input with Enter
-};
 
 class ConsoleView : public Ctrl::ViewIntfc
 {
 public:
     /// @name Lifecycle
     /// @{
-    ConsoleView();
-   ~ConsoleView();
-    void init() override;
-    void shutdown();
+    void run() override;
     /// @}
 
-    /// @name Rendering
+    /// @name Modifiers
     /// @{
-    void draw();              // redraw whole screen
-    void drawStatus(const std::string& msg);
-    void drawMenu(const std::string& title, const std::vector<std::string>& items);
-    void drawPrompt(const std::string& prompt);
+    void displayMessage(const std::string& msg)              override;
+    void displayAboutCraps()                                 override;
+    Craps::TableId               promptUserToSelectTable()   override;
+    std::vector<Craps::PlayerId> promptUserToSelectPlayers() override;
     /// @}
 
-    /// @name Lifecycle
+    /// @name Observers
     /// @{
-    void setInputMode(InputMode mode);
     /// @}
 
 private:
-    void inputThreadFunc();
-
-    // Event forwarding helpers
-    void handleMenuInput(int ch);
-    void handleLineInput(int ch);
-
-private:
-    std::atomic<bool> running_{false};
-    std::thread inputThread_;
-    InputMode mode_{InputMode::Menu};
-
-    // ncurses windows
-    WINDOW* mainWin_  {nullptr};
-    WINDOW* statusWin_{nullptr};
-    WINDOW* inputWin_ {nullptr};
-
-    // Line input buffer
-    std::string lineBuffer_;
 };
 
 /*-----------------------------------------------------------*//**

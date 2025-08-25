@@ -21,7 +21,6 @@ namespace Craps {
 
 namespace Ctrl {
     class ConfigManager;   // fwd    
-    class EventLoop;       // fwd
     class EventManager;    // fwd
     class GameController;  // fwd
     class PlayerManager;   // fwd
@@ -36,7 +35,6 @@ public:
     static Gen::BuildInfo*       pBuildInfo;
     static Ctrl::ConfigManager*  pConfigMgr;
     static Craps::CrapsTable*    pTable;
-    static Ctrl::EventLoop*      pEventLoop;
     static Craps::EventManager*  pEventMgr;
     static Ctrl::GameController* pGameCtrl;
     static Ctrl::PlayerManager*  pPlayerMgr;

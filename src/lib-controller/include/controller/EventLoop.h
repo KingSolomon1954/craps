@@ -19,10 +19,12 @@ namespace Ctrl {
 class EventLoop
 {
 public:
+    using Callback = std::function<void(GameEvent*)>;
+
     /// @name Lifecycle
     /// @{
-    EventLoop();
-    void run();
+    explicit EventLoop(const Callback dispatchCb);
+   ~EventLoop() = default;
     void stop();
     /// @}
 
@@ -36,19 +38,25 @@ public:
     /// @}
     
 private:
-    void processEvents();
-
+    // Order doesn't matter
     bool running_ = false;
     std::queue<GameEvent::GameEventPtr> eventQueue_;
     std::mutex queueMutex_;
     std::condition_variable queueCv_;
+    
+    // Order matters
+    Callback dispatchEventCb_;
+    std::thread thread_;
+    
+    void run();
+    void processEvents();
 };
 
 /*-----------------------------------------------------------*//**
 
-@class ConsoleView
+@class EventLoop
 
-@brief Console interaction with the user.
+@brief UI (Console or GUI) enqueues events. The loop processes events.
 
 more ...
 

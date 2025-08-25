@@ -5,7 +5,6 @@
 # -----------------------------------------------------------------
 
 add_library(cui STATIC
-    src/Placeholder.cpp
     src/ConsoleView.cpp
 )
 
@@ -15,6 +14,7 @@ target_include_directories(cui
 
 target_link_libraries(cui
     PUBLIC gen controller
+    PRIVATE ncurses
 )
 
 target_compile_definitions(cui
