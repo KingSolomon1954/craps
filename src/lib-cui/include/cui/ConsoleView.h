@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: ConsoleView.h
+// File: Consoleview.h
 //
 //----------------------------------------------------------------
 
@@ -8,62 +8,76 @@
 
 #include <controller/ViewIntfc.h>
 #include <atomic>
+#include <unordered_map>
 #include <string>
 #include <thread>
 #include <vector>
+#include <mutex>
 #include <ncurses.h>
+#include <cui/Screen.h>
 
 namespace Cui {
-
-enum class InputMode
-{
-    Menu,   // single-key
-    Line    // line input with Enter
-};
 
 class ConsoleView : public Ctrl::ViewIntfc
 {
 public:
+    enum class InputMode
+    {
+        Menu,   // single-key
+        Line    // line input with Enter
+    };
+
+    enum class ScreenId
+    {
+        CrapsTable,
+        Stats,
+        Help
+        // ...
+    };
+
     /// @name Lifecycle
     /// @{
     ConsoleView();
    ~ConsoleView();
-    void init()               override;
+    void init() override;
     void prepareForShutdown() override;
+    void registerScreen(ScreenId id, std::unique_ptr<Screen> pScreen);
+    /// @}
+
+    /// @name StackOps
+    /// @{
+    void setScreen(ScreenId id);   // clear stack, push this (replace)
+    void pushScreen(ScreenId id);  // overlay (pauses previous top)
+    void popScreen();              // remove top, resume new top if any
     /// @}
 
     /// @name Rendering
     /// @{
-    void draw();              // redraw whole screen
-    void drawStatus(const std::string& msg);
-    void drawMenu(const std::string& title, const std::vector<std::string>& items);
-    void drawPrompt(const std::string& prompt);
+    void redraw();                 // Optional explicit redraw (e.g., on resize)
     /// @}
 
-    /// @name Lifecycle
+    /// @name InputHandling
     /// @{
     void setInputMode(InputMode mode);
+    void inputThreadFunc();        // Input thread -> forward to top
     /// @}
 
 private:
-    void inputThreadFunc();
-
-    // Event forwarding helpers
-    void handleMenuInput(int ch);
-    void handleLineInput(int ch);
-
-private:
+    std::unordered_map<ScreenId, std::unique_ptr<Screen>> registry_; // owns screens
+    std::vector<Screen*> stack_;                                     // non-owning stack
+    std::mutex stackMx_;
     std::atomic<bool> running_{false};
     std::thread inputThread_;
-    InputMode mode_{InputMode::Menu};
 
-    // ncurses windows
-    WINDOW* mainWin_  {nullptr};
-    WINDOW* statusWin_{nullptr};
-    WINDOW* inputWin_ {nullptr};
-
-    // Line input buffer
+    InputMode inputMode_{InputMode::Menu};
     std::string lineBuffer_;
+    WINDOW* inputWin_{nullptr};
+
+    Screen* topUnlocked();
+    void redrawUnlocked();
+    void setScreenUnlocked(Screen* s);
+    void handleMenuInput(int ch);
+    void handleLineInput(int ch);
 };
 
 /*-----------------------------------------------------------*//**

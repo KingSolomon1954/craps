@@ -23,7 +23,6 @@ GameController::GameController()
     : eventLoop_([this](GameEvent* ev) { dispatchEvent(ev); })
 {
     assert(Gbl::pView != nullptr);
-    Gbl::pView->init();
 }
 
 //----------------------------------------------------------------
@@ -35,7 +34,12 @@ GameController::prepareForShutdown()
 }
 
 //----------------------------------------------------------------
-
+//
+// Enqueues an event to be processed.
+//
+// Called mainly by UI code after translating user input
+// into events. Also called by timers.
+//
 void
 GameController::enqueue(GameEvent::GameEventPtr ev)
 {

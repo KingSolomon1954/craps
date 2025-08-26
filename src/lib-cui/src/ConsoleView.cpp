@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: Consoleview.cpp
+// File: ConsoleView.cpp
 //
 //----------------------------------------------------------------
 
@@ -10,18 +10,15 @@
 #include <controller/Globals.h>
 #include <controller/GameEvent.h>
 #include <controller/GameController.h>
+#include <cui/Screen.h>
+#include <cui/ScreenCrapsTable.h>
 
 using namespace Cui;
 using namespace std::chrono_literals;
 
 //----------------------------------------------------------------
 
-ConsoleView::ConsoleView()
-{
-    // Empty
-}
-
-//----------------------------------------------------------------
+ConsoleView::ConsoleView() = default;
 
 ConsoleView::~ConsoleView()
 {
@@ -38,18 +35,13 @@ ConsoleView::init()
     noecho();
     keypad(stdscr, TRUE);
 
-    int rows, cols;
-    getmaxyx(stdscr, rows, cols);
-
-    mainWin_   = newwin(rows - 3, cols, 0, 0);
-    statusWin_ = newwin(1, cols, rows - 3, 0);
-    inputWin_  = newwin(2, cols, rows - 2, 0);
-
-    scrollok(mainWin_, TRUE);
-
     running_ = true;
     inputThread_ = std::thread(&ConsoleView::inputThreadFunc, this);
-    draw();
+
+    registerScreen(ScreenId::CrapsTable, std::make_unique<ScreenCrapsTable>());
+    // registerScreen(ScreenId::Stats, std::make_unique<StatsScreen>(rows, cols));
+
+    setScreen(ScreenId::CrapsTable);  // First screen is CrapsTable
 }
 
 //----------------------------------------------------------------
@@ -58,66 +50,116 @@ void
 ConsoleView::prepareForShutdown()
 {
     running_ = false;
-    if (inputThread_.joinable()) inputThread_.join();
-    if (mainWin_)   delwin(mainWin_);
-    if (statusWin_) delwin(statusWin_);
-    if (inputWin_)  delwin(inputWin_);
+    if (inputThread_.joinable())
+    {
+        inputThread_.join();
+    }
 
+    {
+        // Clear registry and stack before ending ncurses
+        std::lock_guard<std::mutex> lk(stackMx_);
+        stack_.clear();
+        registry_.clear();
+    }
     endwin();
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::draw()
+ConsoleView::registerScreen(ScreenId id, std::unique_ptr<Screen> screen)
 {
-    curs_set(0);
-    werase(mainWin_);
-//  box(mainWin_, 0, 0);
-    wrefresh(mainWin_);
-
-    werase(statusWin_);
-    mvwprintw(statusWin_, 0, 0, "Status: ready");
-    wrefresh(statusWin_);
-
-    werase(inputWin_);
-    mvwprintw(inputWin_, 0, 0, "> ");
-    wrefresh(inputWin_);
-    curs_set(1);
+    registry_[id] = std::move(screen);
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::drawStatus(const std::string& msg)
+ConsoleView::setScreen(ScreenId id)
 {
-    werase(statusWin_);
-    mvwprintw(statusWin_, 0, 0, "Status: %s", msg.c_str());
-    wrefresh(statusWin_);
+    std::lock_guard<std::mutex> lk(stackMx_);
+    auto it = registry_.find(id);
+    if (it == registry_.end()) return;
+    setScreenUnlocked(it->second.get());
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::drawMenu(const std::string& title, const std::vector<std::string>& items)
+ConsoleView::pushScreen(ScreenId id)
 {
-    werase(mainWin_);
-    box(mainWin_, 0, 0);
-    mvwprintw(mainWin_, 0, 2, "[ %s ]", title.c_str());
-    for (size_t i = 0; i < items.size(); ++i) {
-        mvwprintw(mainWin_, 2 + i, 2, "%c) %s", 'a' + i, items[i].c_str());
+    std::lock_guard<std::mutex> lk(stackMx_);
+    auto it = registry_.find(id);
+    if (it == registry_.end()) return;
+
+    if (auto* top = topUnlocked()) top->onPause();
+    auto* s = it->second.get();
+    stack_.push_back(s);
+    s->onAttach();
+    redrawUnlocked();
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::popScreen()
+{
+    std::lock_guard<std::mutex> lk(stackMx_);
+    if (stack_.empty()) return;
+
+    Screen* oldTop = stack_.back();
+    stack_.pop_back();
+    oldTop->onDetach();
+
+    if (auto* nowTop = topUnlocked())
+    {
+        nowTop->onResume();
     }
-    wrefresh(mainWin_);
+    redrawUnlocked();
+}
+
+//----------------------------------------------------------------
+
+Screen*
+ConsoleView::topUnlocked()
+{
+    return stack_.empty() ? nullptr : stack_.back();
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::drawPrompt(const std::string& prompt)
+ConsoleView::redrawUnlocked()
 {
-    werase(inputWin_);
-    mvwprintw(inputWin_, 0, 0, "%s", prompt.c_str());
-    wrefresh(inputWin_);
+    // Draw bottom->top using *wnoutrefresh* in each screen's draw()
+    werase(stdscr);
+    for (auto* s : stack_) s->draw();
+    doupdate();
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::setScreenUnlocked(Screen* s)
+{
+    // detach all
+    while (!stack_.empty())
+    {
+        stack_.back()->onDetach();
+        stack_.pop_back();
+    }
+    stack_.push_back(s);
+    s->onAttach();
+    redrawUnlocked();
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::redraw()
+{
+    std::lock_guard<std::mutex> lk(stackMx_);
+    redrawUnlocked();
 }
 
 //----------------------------------------------------------------
@@ -125,8 +167,29 @@ ConsoleView::drawPrompt(const std::string& prompt)
 void
 ConsoleView::setInputMode(InputMode mode)
 {
-    mode_ = mode;
-    lineBuffer_.clear();
+    std::lock_guard<std::mutex> lk(stackMx_);
+    inputMode_ = mode;
+
+    if (mode == InputMode::Line)
+    {
+        if (!inputWin_)
+        {
+            int rows, cols;
+            getmaxyx(stdscr, rows, cols);
+            inputWin_ = newwin(1, cols, rows - 1, 0); // bottom line
+        }
+        werase(inputWin_);
+        mvwprintw(inputWin_, 0, 0, "> ");
+        wrefresh(inputWin_);
+    }
+    else
+    {
+        if (inputWin_)
+        {
+            werase(inputWin_);
+            wrefresh(inputWin_);
+        }
+    }
 }
 
 //----------------------------------------------------------------
@@ -134,17 +197,18 @@ ConsoleView::setInputMode(InputMode mode)
 void
 ConsoleView::inputThreadFunc()
 {
-    assert(inputWin_ != nullptr);
-    nodelay(inputWin_, TRUE);  // non-blocking
+    nodelay(stdscr, TRUE);    // non-blocking input on global screen
     while (running_)
     {
-        int ch = wgetch(inputWin_);
+        int ch = wgetch(stdscr);
         if (ch == ERR)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
             continue;
         }
-        if (mode_ == InputMode::Menu)
+
+        std::lock_guard<std::mutex> lk(stackMx_);
+        if (inputMode_ == InputMode::Menu)
         {
             handleMenuInput(ch);
         }
@@ -160,9 +224,8 @@ ConsoleView::inputThreadFunc()
 void
 ConsoleView::handleMenuInput(int ch)
 {
-    auto ev = std::make_shared<Ctrl::UserInputCharEvent>();
-    ev->input = static_cast<char>(ch);
-    Gbl::pGameCtrl->enqueue(ev);
+    std::string input(1, static_cast<char>(ch));
+    if (!stack_.empty()) stack_.back()->handleInput(input);
 }
 
 //----------------------------------------------------------------
@@ -170,28 +233,20 @@ ConsoleView::handleMenuInput(int ch)
 void
 ConsoleView::handleLineInput(int ch)
 {
-    if (ch == '\n')
-    {
-        auto ev = std::make_shared<Ctrl::UserInputLineEvent>();
-        ev->input = lineBuffer_;
-        Gbl::pGameCtrl->enqueue(ev);
-
+    if (ch == '\n') {
+        if (!stack_.empty())
+            stack_.back()->handleInput(lineBuffer_);
         lineBuffer_.clear();
         werase(inputWin_);
         mvwprintw(inputWin_, 0, 0, "> ");
         wrefresh(inputWin_);
-    }
-    else if (ch == KEY_BACKSPACE || ch == 127)
-    {
+    } else if (ch == KEY_BACKSPACE || ch == 127) {
         if (!lineBuffer_.empty())
             lineBuffer_.pop_back();
-    }
-    else if (isprint(ch))
-    {
+    } else if (isprint(ch)) {
         lineBuffer_.push_back(static_cast<char>(ch));
     }
 
-    // redraw buffer
     werase(inputWin_);
     mvwprintw(inputWin_, 0, 0, "> %s", lineBuffer_.c_str());
     wrefresh(inputWin_);

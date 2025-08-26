@@ -175,6 +175,7 @@ CrapsGame::initView()
 {
     auto p = getView();
     Gbl::pView = p;
+    Gbl::pView->init();
     return p;
 }
 
