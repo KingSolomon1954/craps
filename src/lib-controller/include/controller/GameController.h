@@ -25,6 +25,7 @@ public:
     /// @name Lifecycle
     /// @{
     GameController();
+    void prepareForShutdown();
 //  void userSelectsPlayers();
     /// @}
 

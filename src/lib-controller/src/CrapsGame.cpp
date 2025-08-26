@@ -24,6 +24,8 @@
 
 using namespace Ctrl;
 
+CrapsGame* CrapsGame::instancePtr_ = nullptr;
+
 /*-----------------------------------------------------------*//**
 
 Constructor
@@ -41,6 +43,7 @@ All these unique_ptr's on the stack manage the lifetime of globals.
 */
 CrapsGame::CrapsGame(int argc, char* argv[])
 {
+    instancePtr_ = this;
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
     std::unique_ptr<Ctrl::ConfigManager>  pCfg(initConfigManager(argc, argv)); (void) pCfg;
     enableFileLogging();                  // Only after config manager.
@@ -50,11 +53,28 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::unique_ptr<Ctrl::UndoManager>    pUndoMgr(initUndoManager());         (void) pUndoMgr;
     std::unique_ptr<Ctrl::ViewIntfc>      pView(initView());                   (void) pView;
     std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
-    
-    // Need signal handler blocking here
-    std::this_thread::sleep_for(std::chrono::seconds(20));
-    
+
+    signalHandler_.waitForTerminate();  // Blocks until signal
+
+    Gbl::pView->prepareForShutdown();
+    Gbl::pGameCtrl->prepareForShutdown();
     Gbl::pTable->prepareForShutdown();
+}
+
+//----------------------------------------------------------------
+
+CrapsGame*
+CrapsGame::instance()
+{
+    return instancePtr_;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsGame::terminateApp()
+{
+    signalHandler_.terminate();
 }
 
 //----------------------------------------------------------------

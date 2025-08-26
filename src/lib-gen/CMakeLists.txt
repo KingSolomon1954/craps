@@ -16,6 +16,7 @@ add_library(gen STATIC
     src/Money.cpp
     src/MoneyUtils.cpp
     src/MultiLayerConfig.cpp
+    src/SignalHandler.cpp
     src/StringUtils.cpp
     src/TimerManager.cpp
     src/Timepoint.cpp

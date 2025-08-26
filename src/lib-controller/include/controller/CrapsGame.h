@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <gen/SignalHandler.h>
+
 namespace Gen {
     class BuildInfo;  // fwd
 }
@@ -32,10 +34,12 @@ public:
     /// @{
     CrapsGame(int argc, char* argv[]);
    ~CrapsGame() = default;
+    void terminateApp();
     /// @}
 
     /// @name Modifiers
     /// @{
+    static CrapsGame* instance();
     /// @}
 
     /// @name Observers
@@ -43,6 +47,9 @@ public:
     /// @}
 
 private:
+    static CrapsGame*     instancePtr_;
+    Gen::SignalHandler    signalHandler_;
+    
     Gen::BuildInfo*       initBuildInfo();
     Ctrl::ConfigManager*  initConfigManager(int argc, char* argv[]);
     Craps::EventManager*  initEventManager();

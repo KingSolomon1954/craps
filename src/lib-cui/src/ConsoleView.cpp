@@ -5,7 +5,6 @@
 //----------------------------------------------------------------
 
 #include <cui/ConsoleView.h>
-#include <iostream>
 #include <cassert>
 #include <chrono>
 #include <controller/Globals.h>
@@ -26,7 +25,7 @@ ConsoleView::ConsoleView()
 
 ConsoleView::~ConsoleView()
 {
-    shutdown();
+    prepareForShutdown();
 }
 
 //----------------------------------------------------------------
@@ -56,7 +55,7 @@ ConsoleView::init()
 //----------------------------------------------------------------
 
 void
-ConsoleView::shutdown()
+ConsoleView::prepareForShutdown()
 {
     running_ = false;
     if (inputThread_.joinable()) inputThread_.join();

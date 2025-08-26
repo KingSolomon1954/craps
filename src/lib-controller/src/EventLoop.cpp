@@ -33,6 +33,7 @@ EventLoop::stop()
 {
     running_ = false;
     queueCv_.notify_all();
+    if (thread_.joinable()) thread_.join();
 }
 
 //----------------------------------------------------------------

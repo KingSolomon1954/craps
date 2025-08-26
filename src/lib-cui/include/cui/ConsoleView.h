@@ -28,8 +28,8 @@ public:
     /// @{
     ConsoleView();
    ~ConsoleView();
-    void init() override;
-    void shutdown();
+    void init()               override;
+    void prepareForShutdown() override;
     /// @}
 
     /// @name Rendering

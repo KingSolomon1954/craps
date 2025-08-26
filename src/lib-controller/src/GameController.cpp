@@ -7,6 +7,7 @@
 #include <controller/GameController.h>
 #include <cassert>
 #include <iostream>
+#include <controller/CrapsGame.h>
 #include <controller/EventLoop.h>
 #include <controller/Globals.h>
 #include <controller/ViewIntfc.h>
@@ -22,6 +23,15 @@ GameController::GameController()
     : eventLoop_([this](GameEvent* ev) { dispatchEvent(ev); })
 {
     assert(Gbl::pView != nullptr);
+    Gbl::pView->init();
+}
+
+//----------------------------------------------------------------
+
+void
+GameController::prepareForShutdown()
+{
+    eventLoop_.stop();
 }
 
 //----------------------------------------------------------------
@@ -40,7 +50,7 @@ GameController::dispatchEvent(GameEvent* pBase)
     switch(pBase->type())
     {
     case EventType::UserInputLine: onUserInputLine(pBase); break;
-    case EventType::UserInputChar: ; break;
+    case EventType::UserInputChar: onUserInputChar(pBase); break;
     case EventType::Timer:         ; break;
     case EventType::Signal:        ; break;
     }
@@ -63,7 +73,8 @@ GameController::onUserInputChar(GameEvent* pBase)
 {
     auto pEvent = static_cast<UserInputCharEvent*>(pBase);
     std::cout << "[InputChar] " << pEvent->input << '\n';
-    if (pEvent->input == 'q') eventLoop_.stop();
+//  if (pEvent->input == 'q') eventLoop_.stop();
+    if (pEvent->input == 'q') CrapsGame::instance()->terminateApp();
 }
 
 //----------------------------------------------------------------
