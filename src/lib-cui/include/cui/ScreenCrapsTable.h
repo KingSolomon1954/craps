@@ -19,7 +19,7 @@ public:
    ~ScreenCrapsTable() override;
     
     void draw()                                override;
-    void onActivate(ConsoleView& view)         override;
+    void onAttach(ConsoleView& view)           override;
     void handleInput(const std::string& input) override;
 
 private:

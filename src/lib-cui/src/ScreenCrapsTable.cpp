@@ -41,7 +41,7 @@ ScreenCrapsTable::draw()
 //----------------------------------------------------------------
 
 void
-ScreenCrapsTable::onActivate(ConsoleView& view)
+ScreenCrapsTable::onAttach(ConsoleView& view)
 {
     view.setInputMode(ConsoleView::InputMode::Line);
 }

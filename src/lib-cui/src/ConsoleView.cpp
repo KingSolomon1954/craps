@@ -95,7 +95,7 @@ ConsoleView::pushScreen(ScreenId id)
     if (auto* top = topUnlocked()) top->onPause();
     auto* s = it->second.get();
     stack_.push_back(s);
-    s->onAttach();
+    s->onAttach(*this);
     redrawUnlocked();
 }
 
@@ -149,7 +149,7 @@ ConsoleView::setScreenUnlocked(Screen* s)
         stack_.pop_back();
     }
     stack_.push_back(s);
-    s->onAttach();
+    s->onAttach(*this);
     redrawUnlocked();
 }
 
