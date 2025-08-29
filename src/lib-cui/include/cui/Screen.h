@@ -15,17 +15,28 @@ class ConsoleView;  // fwd
 class Screen
 {
 public:
+    explicit Screen(ConsoleView& view) : view_(view) {}
     virtual ~Screen() = default;
 
     // Lifecycle hooks
-    virtual void onAttach(ConsoleView& view) {} // became top (pushed or set)
-    virtual void onDetach() {}   // removed from stack
-    virtual void onPause()  {}   // covered by another screen
-    virtual void onResume() {}   // uncovered and back on top
+    virtual void onAttach() {}  // became top (pushed or set)
+    virtual void onDetach() {}  // removed from stack
+    virtual void onPause()  {}  // covered by another screen
+    virtual void onResume() {}  // uncovered and back on top
     
     // Required
-    virtual void draw() = 0;     // call wnoutrefresh() on owned windows
-    virtual void handleInput(const std::string& input) = 0;
+    virtual void draw() = 0;    // call wnoutrefresh() on owned windows
+    virtual void handleKey(int ch) = 0;
+
+protected:
+    enum class InputMode
+    {
+        Menu,   // single-key
+        Line    // line input with Enter
+    };
+
+    ConsoleView& view_;
+    InputMode inputMode_;
 };
 
 //----------------------------------------------------------------

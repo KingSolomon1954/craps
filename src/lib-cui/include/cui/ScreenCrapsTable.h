@@ -7,7 +7,6 @@
 #pragma once
 
 #include <cui/Screen.h>
-#include <cui/ConsoleView.h>
 #include <ncurses.h>
 
 namespace Cui {
@@ -15,16 +14,41 @@ namespace Cui {
 class ScreenCrapsTable : public Screen
 {
 public:
-    ScreenCrapsTable();
+    ScreenCrapsTable(ConsoleView& view);
    ~ScreenCrapsTable() override;
     
-    void draw()                                override;
-    void onAttach(ConsoleView& view)           override;
-    void handleInput(const std::string& input) override;
+    void draw()            override;
+    void onAttach()        override;
+    void handleKey(int ch) override;
 
 private:
-    WINDOW* mainWin_   = nullptr;
-    WINDOW* statusWin_ = nullptr;
+    struct Windows
+    {
+        WINDOW *header,  *animation,
+               *history, *house,
+               *table,   *player,
+               *message, *command;
+    };
+
+    enum class Menus
+    {
+        Betting,
+        Stats
+    };
+
+    Windows w_;
+    std::string lineBuffer_;
+    Menus activeMenu_;
+
+    Windows createSubwindows();
+    void handleLineInput(int ch);
+    void handleMenuInput(int ch);
+    void menuInputBetting(int ch);
+    void menuInputStats(int ch);
+    void setMenuInputMode();
+    void setLineInputMode();
+    void redrawInputPrompt();
+    void processLineBuffer();
 };
 
 //----------------------------------------------------------------

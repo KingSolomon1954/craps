@@ -38,10 +38,10 @@ ConsoleView::init()
     running_ = true;
     inputThread_ = std::thread(&ConsoleView::inputThreadFunc, this);
 
-    registerScreen(ScreenId::CrapsTable, std::make_unique<ScreenCrapsTable>());
-    // registerScreen(ScreenId::Stats, std::make_unique<StatsScreen>(rows, cols));
+    registerScreen(ScreenId::ScreenCrapsTable, std::make_unique<ScreenCrapsTable>(*this));
+    // registerScreen(ScreenId::Stats, std::make_unique<StatsScreen>(*this));
 
-    setScreen(ScreenId::CrapsTable);  // First screen is CrapsTable
+    setScreen(ScreenId::ScreenCrapsTable);  // First screen is CrapsTable
 }
 
 //----------------------------------------------------------------
@@ -95,7 +95,7 @@ ConsoleView::pushScreen(ScreenId id)
     if (auto* top = topUnlocked()) top->onPause();
     auto* s = it->second.get();
     stack_.push_back(s);
-    s->onAttach(*this);
+    s->onAttach();
     redrawUnlocked();
 }
 
@@ -149,18 +149,41 @@ ConsoleView::setScreenUnlocked(Screen* s)
         stack_.pop_back();
     }
     stack_.push_back(s);
-    s->onAttach(*this);
+    s->onAttach();
     redrawUnlocked();
 }
 
 //----------------------------------------------------------------
 
-void
-ConsoleView::redraw()
+void ConsoleView::inputThreadFunc()
 {
-    std::lock_guard<std::mutex> lk(stackMx_);
-    redrawUnlocked();
+    nodelay(stdscr, TRUE);    
+    while (running_)
+    {
+        int ch = wgetch(stdscr);
+        if (ch == ERR)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            continue;
+        }
+
+        std::lock_guard<std::mutex> lk(stackMx_);
+        if (auto* top = topUnlocked())
+        {
+            top->handleKey(ch);
+        }
+    }
 }
+
+//----------------------------------------------------------------
+
+
+
+
+
+
+
+#if 0
 
 //----------------------------------------------------------------
 
@@ -172,12 +195,6 @@ ConsoleView::setInputMode(InputMode mode)
 
     if (mode == InputMode::Line)
     {
-        if (!inputWin_)
-        {
-            int rows, cols;
-            getmaxyx(stdscr, rows, cols);
-            inputWin_ = newwin(1, cols, rows - 1, 0); // bottom line
-        }
         werase(inputWin_);
         mvwprintw(inputWin_, 0, 0, "> ");
         wrefresh(inputWin_);
@@ -192,7 +209,6 @@ ConsoleView::setInputMode(InputMode mode)
     }
 }
 
-//----------------------------------------------------------------
 
 void
 ConsoleView::inputThreadFunc()
@@ -233,17 +249,24 @@ ConsoleView::handleMenuInput(int ch)
 void
 ConsoleView::handleLineInput(int ch)
 {
-    if (ch == '\n') {
+    if (ch == '\n')
+    {
         if (!stack_.empty())
+        {
             stack_.back()->handleInput(lineBuffer_);
+        }
         lineBuffer_.clear();
         werase(inputWin_);
         mvwprintw(inputWin_, 0, 0, "> ");
         wrefresh(inputWin_);
-    } else if (ch == KEY_BACKSPACE || ch == 127) {
+    }
+    else if (ch == KEY_BACKSPACE || ch == 127)
+    {
         if (!lineBuffer_.empty())
             lineBuffer_.pop_back();
-    } else if (isprint(ch)) {
+    }
+    else if (isprint(ch))
+    {
         lineBuffer_.push_back(static_cast<char>(ch));
     }
 
@@ -253,3 +276,5 @@ ConsoleView::handleLineInput(int ch)
 }
 
 //----------------------------------------------------------------
+
+#endif

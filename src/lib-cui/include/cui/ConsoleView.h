@@ -21,15 +21,9 @@ namespace Cui {
 class ConsoleView : public Ctrl::ViewIntfc
 {
 public:
-    enum class InputMode
-    {
-        Menu,   // single-key
-        Line    // line input with Enter
-    };
-
     enum class ScreenId
     {
-        CrapsTable,
+        ScreenCrapsTable,
         Stats,
         Help
         // ...
@@ -51,14 +45,8 @@ public:
     void popScreen();              // remove top, resume new top if any
     /// @}
 
-    /// @name Rendering
-    /// @{
-    void redraw();                 // Optional explicit redraw (e.g., on resize)
-    /// @}
-
     /// @name InputHandling
     /// @{
-    void setInputMode(InputMode mode);
     void inputThreadFunc();        // Input thread -> forward to top
     /// @}
 
@@ -69,15 +57,9 @@ private:
     std::atomic<bool> running_{false};
     std::thread inputThread_;
 
-    InputMode inputMode_{InputMode::Menu};
-    std::string lineBuffer_;
-    WINDOW* inputWin_{nullptr};
-
     Screen* topUnlocked();
     void redrawUnlocked();
     void setScreenUnlocked(Screen* s);
-    void handleMenuInput(int ch);
-    void handleLineInput(int ch);
 };
 
 /*-----------------------------------------------------------*//**
