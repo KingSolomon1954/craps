@@ -24,10 +24,11 @@ public:
 private:
     struct Windows
     {
-        WINDOW *header,  *animation,
-               *history, *house,
-               *table,   *player,
-               *message, *command;
+        WINDOW *header,      *animation,
+               *history,     *houseBrief,
+               *allPlayers,
+               *onePlayer,   *playerBrief,
+               *message,     *command;
     };
 
     enum class Menus
