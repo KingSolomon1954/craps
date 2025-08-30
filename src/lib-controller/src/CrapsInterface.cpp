@@ -993,6 +993,40 @@ CrapsInterface::tableList()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsInterface::getActiveCrapsTable(
+        Craps::TableId& tableId,
+        Gen::ErrorPass& ep)
+{
+    auto* t = Gbl::pTable;
+    if (t == nullptr)
+    {
+        ep.diag = "CrapsInterface::getActiveCrapsTable(): nullptr for active table. Coding error.";
+        return Gen::ReturnCode::Fail;
+    }
+    tableId = t->getTableId();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::getUserPlayer(
+        Craps::PlayerId& playerId,
+        Gen::ErrorPass& ep)
+{
+    auto* p = Gbl::pPlayerMgr->getUserPlayer();
+    if (p == nullptr)
+    {
+        ep.diag = "CrapsInterface::getUserPlayer(): nullptr for user/player. Coding error.";
+        return Gen::ReturnCode::Fail;
+    }
+    playerId = p->getPlayerId();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsInterface::undoLast(
     Gen::ErrorPass& ep)
 {
@@ -1011,6 +1045,7 @@ CrapsInterface::undoLast(
 void
 CrapsInterface::gameTerminate()
 {
+    // TODO
 }
 
 //----------------------------------------------------------------

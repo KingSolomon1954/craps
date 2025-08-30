@@ -6,8 +6,10 @@
 
 #pragma once
 
-#include <cui/Screen.h>
+#include <vector>
 #include <ncurses.h>
+#include <cui/Screen.h>
+#include <craps/CrapsTypes.h>
 
 namespace Cui {
 
@@ -24,11 +26,10 @@ public:
 private:
     struct Windows
     {
-        WINDOW *header,      *animation,
-               *history,     *houseBrief,
-               *allPlayers,
-               *onePlayer,   *playerBrief,
-               *message,     *command;
+        WINDOW *header,  *animation,
+               *history, *houseBrief,
+               *table,   *playerBrief,
+               *message, *command;
     };
 
     enum class Menus
@@ -37,20 +38,48 @@ private:
         Stats
     };
 
+    enum class TableView
+    {
+        AllPlayers,
+        OnePlayer
+    };
+
+    Craps::PlayerId userPlayerId_;
+    Craps::TableId  tableId_;
+    
     Windows w_;
     std::string lineBuffer_;
     Menus activeMenu_;
-
+    TableView tableView_ = TableView::AllPlayers;
+    size_t onePlayerIndex_ = 0;  // For cycling thru players
+    std::vector<Craps::PlayerId> playerIds_;
+    
     Windows createSubwindows();
+
+    // Input handling
     void handleLineInput(int ch);
     void handleMenuInput(int ch);
     void menuInputBetting(int ch);
     void menuInputStats(int ch);
     void setMenuInputMode();
     void setLineInputMode();
-    void redrawInputPrompt();
     void processLineBuffer();
+    void cycleTableView();
+
+    // Drawing table subwindow
+    void drawTable();
+    void drawHeader();
+    void drawHistory();
+    void drawTableAllPlayers();
+    void drawTableOnePlayer();
+    Craps::PlayerId getPlayerAt(size_t index);
+
+    // Draw command subwindow
+    void drawInputPrompt();
 };
+
+// TODO: subscribe to players leaving/joining table
+// TODO: update PlayerList upon notification
 
 //----------------------------------------------------------------
 

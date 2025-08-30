@@ -31,8 +31,9 @@ namespace Ctrl {
 
 class CrapsInterface
 {
+public:    
     CrapsInterface() = delete;  // Pure static class, no instantiation
-    
+
     // Player related
     static Gen::ReturnCode playerJoinTable(
         const Craps::PlayerId& playerId,
@@ -245,6 +246,12 @@ class CrapsInterface
     static const TableManifest::TableList& tableList();
 
     // Program control
+    static Gen::ReturnCode getActiveCrapsTable(
+        Craps::TableId& tableId,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode getUserPlayer(
+        Craps::PlayerId& playerId,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode undoLast(
         Gen::ErrorPass& ep);
     static void gameTerminate();
