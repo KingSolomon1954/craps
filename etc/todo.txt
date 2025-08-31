@@ -1143,32 +1143,59 @@ Implications for implementation
   decisions are isolated to the roll cycle.
 
 
-class UndoBet
-{
-public:
-    BetPtr pBet = nullptr;
-    virtual void undo() = 0;
-    virtual ~UndoBet = default;
-};
+p PassLine
+c Come
+d DontPass
+k DontCome
+l place
+h hardways
+  4,6,8,10
+  amount
+f field
+x back
+o odds
+     p PassLine
+       a auto
+       amount
+     d DontPass 
+     c Come
+       4,5,6,8,9,10
+       amount
+     k DontCome
+       4,5,6,8,9,10
+       amount
 
-class UndoBetAdded : public UndoBet
-{
-    
+remove bet
+undo last
+help
+roll
+pause
+resume
+quick bet a,b,c,d,e,f,g,h...
+jump to   a,b,c,d,e,f,g,h...
 
-};
+configure
+    quick bet setup
+    auto bet setup
+    timed rolls
+    jump to setup
+    player colors
 
+cycle player brief
+cycle table view
+jump player n
+quit game
 
-class UndoBetRemoved : public UndoBet
-{
-    
+player
+    leave table
+    join  table
+    current stats
+    alltime stats
+    session history
+    set color
 
-};
-
-
-class UndoBetModified : public UndoBet
-{
-    
-
-};
-
+table
+    current stats
+    alltime stats
+    session history
 
