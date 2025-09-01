@@ -1143,59 +1143,112 @@ Implications for implementation
   decisions are isolated to the roll cycle.
 
 
+space bar toggles menu visbility
+
+Betting menu (starts) ESC SPACEBAR
 p PassLine
+    amount/autofill ESC
 c Come
+    amount/autofill ESC
 d DontPass
+    amount/autofill ESC
 k DontCome
-l place
-h hardways
-  4,6,8,10
-  amount
+    amount/autofill ESC
+l Place ...
+    4,5,6,8,9,10 ESC SPACEBAR
+    amount/autofill ESC
+h Hardways ...
+    4,6,8,10 ESC SPACEBAR
+    amount/autofill ESC
 f field
-x back
-o odds
-     p PassLine
-       a auto
-       amount
-     d DontPass 
-     c Come
-       4,5,6,8,9,10
-       amount
-     k DontCome
-       4,5,6,8,9,10
-       amount
-
-remove bet
-undo last
-help
-roll
-pause
-resume
-quick bet a,b,c,d,e,f,g,h...
-jump to   a,b,c,d,e,f,g,h...
-
-configure
-    quick bet setup
-    auto bet setup
-    timed rolls
-    jump to setup
-    player colors
-
-cycle player brief
-cycle table view
-jump player n
-quit game
-
-player
-    leave table
-    join  table
-    current stats
-    alltime stats
-    session history
-    set color
-
-table
-    current stats
-    alltime stats
-    session history
+    amount/autofill ESC
+e C&E
+    amount/autofill ESC
+t AnyCraps
+    amount/autofill ESC
+7 Any7
+    amount/autofill ESC
+v Horn
+    amount/autofill ESC
+w World
+    amount/autofill ESC
+q quick bet ...
+    a,b,c,d,e,f,g,h... ESC SPACEBAR
+r roll dice
+u undo last
+o odds ... ESC SPACEBAR
+    p PassLine
+      amount/autofill ESC
+    d DontPass 
+      amount/autofill ESC
+    c Come
+      4,5,6,8,9,10  ESC SPACEBAR
+      amount/autofill  ESC
+    k DontCome
+      4,5,6,8,9,10  ESC SPACEBAR
+      amount/autofill  ESC
+r remove bet ... ESC SPACEBAR
+    p Passline
+    c Come
+    d DontPass
+    k DontCome
+    l Place ... ESC SPACEBAR
+        4,5,6,8,9,10 ESC
+    h Hardways ... ESC SPACEBAR
+        4,6,8,10 ESC SPACEBAR
+    f field
+    e C&E
+    t AnyCraps
+    7 Any7
+    v Horn
+    w World
+? flags
+    
+. control menu ... ESC SPACEBAR
+    h help
+    p pause
+    r resume
+    q quit game
+    j player join table
+    l player leave table
+    c configure ... ESC SPACEBAR
+        quick bet setup ... ESC SPACEBAR
+        bet fill setup ... ESC SPACEBAR
+        auto bet setup ... ESC SPACEBAR
+        jump setup ... ESC SPACEBAR
+        timed rolls ... ESC SPACEBAR
+        player colors ... ESC SPACEBAR
+        
+, view menu ... ESC SPACEBAR
+    n next table-subwindow view
+    p prev table-subwindow view
+    g goto table-subwindow view  ... ESC SPACEBAR
+          0,1,2,3,4,5,6 ESC SPACEBAR
+    d dice stats ... ESC SPACEBAR
+        a alltime
+        c current
+    t table stats  ... ESC SPACEBAR
+        a alltime
+        c current
+        s session history
+    p player stats  ... ESC SPACEBAR
+        a alltime   ... ESC SPACEBAR
+            n next player
+            p prev player
+            g goto player
+        c current   ... ESC SPACEBAR
+            n next player
+            p prev player
+            g goto player  ... ESC SPACEBAR
+                0,1,2,3,4,5,6 ESC SPACEBAR
+        s session history
+            n next player
+            p prev player
+            g goto player  ... ESC SPACEBAR
+                0,1,2,3,4,5,6 ESC SPACEBAR
+        
+    x next player brief view
+    y prev player brief view
+    z goto player brief view ... ESC SPACEBAR
+        0,1,2,3,4,5,6 ESC SPACEBAR
 
