@@ -57,13 +57,13 @@ private:
     Windows createSubwindows();
 
     // Input handling
-    void handleLineInput(int ch);
-    void handleMenuInput(int ch);
-    void menuInputBetting(int ch);
-    void menuInputStats(int ch);
+    void handleLineInput  (int ch);
+    void handleMenuInput  (int ch);
+    void handleAmountInput(int ch);
+    void menuInputBetting (int ch);
+    void menuInputStats   (int ch);
     void setMenuInputMode();
     void setLineInputMode();
-    void processLineBuffer();
     void cycleTableView();
 
     // Drawing table subwindow
@@ -76,6 +76,11 @@ private:
 
     // Draw command subwindow
     void drawInputPrompt();
+
+    void setupQuickBet();
+    void setupAutoFill();
+    void processAmountBuffer();
+    void processLineBuffer();
 };
 
 // TODO: subscribe to players leaving/joining table

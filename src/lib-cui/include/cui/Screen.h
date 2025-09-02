@@ -32,6 +32,7 @@ protected:
     enum class InputMode
     {
         Menu,   // single-key
+        Amount, // line input for bet ammounts
         Line    // line input with Enter
     };
 

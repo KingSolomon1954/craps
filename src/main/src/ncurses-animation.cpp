@@ -19,8 +19,7 @@ struct Layout {
     static constexpr int row_history = 2;
     static constexpr int row_table   = 4;
     static constexpr int row_message = 23;
-    static constexpr int row_player  = 28;
-    static constexpr int row_command = 35;
+    static constexpr int row_player  = 29;
     
     static constexpr int animation_rows = 24;
     static constexpr int animation_cols = 30;
@@ -30,7 +29,7 @@ struct Layout {
 struct Windows
 {
     WINDOW *header, *history, *table, *message;
-    WINDOW *animation, *house, *player, *command;
+    WINDOW *animation, *house, *player;
 };
 
 void draw_frame()
@@ -46,7 +45,6 @@ void draw_frame()
 
     mvhline(L::row_message, L::left_w, ACS_HLINE, L::right_w);
     mvhline(L::row_player,  L::left_w, ACS_HLINE, L::right_w);
-    mvhline(L::row_command, L::left_w, ACS_HLINE, L::right_w);
 
     // Vertical lines
     mvvline(0, 0,               ACS_VLINE, L::total_rows);
@@ -70,13 +68,11 @@ void draw_frame()
     mvaddch(L::row_table,   L::left_w, ACS_RTEE);
     mvaddch(L::row_message, L::left_w, ACS_PLUS);
     mvaddch(L::row_player,  L::left_w, ACS_LTEE);
-    mvaddch(L::row_command, L::left_w, ACS_LTEE);
     mvaddch(L::total_rows-1,L::left_w, ACS_BTEE);
 
     // Junctions at right border
     mvaddch(L::row_message, L::total_cols-1, ACS_RTEE);
     mvaddch(L::row_player,  L::total_cols-1, ACS_RTEE);
-    mvaddch(L::row_command, L::total_cols-1, ACS_RTEE);
 
     // Labels
     mvprintw(0,              2, "[Header]");
@@ -87,7 +83,6 @@ void draw_frame()
     mvprintw(0,              L::left_w+2, "[Animation]");
     mvprintw(L::row_message, L::left_w+2, "[House]");
     mvprintw(L::row_player,  L::left_w+2, "[Player]");
-    mvprintw(L::row_command, L::left_w+2, "[Command]");
 
     refresh();
 }
@@ -123,8 +118,7 @@ Windows create_subwindows()
     // Right column
     w.animation = make_subwin(0,              L::row_message,  right_inner_w, Column::Right);
     w.house     = make_subwin(L::row_message, L::row_player,   right_inner_w, Column::Right);
-    w.player    = make_subwin(L::row_player,  L::row_command,  right_inner_w, Column::Right);
-    w.command   = make_subwin(L::row_command, L::total_rows-1, right_inner_w, Column::Right);
+    w.player    = make_subwin(L::row_player,  L::total_rows-1, right_inner_w, Column::Right);
 
     return w;
 }
@@ -293,7 +287,6 @@ int main()
     mvwprintw(w.animation, 0, 0, "Animation area");
     mvwprintw(w.house,     0, 0, "House: $1000");
     mvwprintw(w.player,    0, 0, "Player: $500");
-    mvwprintw(w.command,   0, 0, "Command>");
 
     // Refresh all subwindows
     wnoutrefresh(w.header);
@@ -303,7 +296,6 @@ int main()
     wnoutrefresh(w.animation);
     wnoutrefresh(w.house);
     wnoutrefresh(w.player);
-    wnoutrefresh(w.command);
     doupdate();
     
     int ch;
@@ -346,19 +338,19 @@ int main()
 21 │                                                                     │                            │
 22 │                                                                     │                            │
 23 ├─[Message]───────────────────────────────────────────────────────────┼─[House]────────────────────┤
-24 │Messages go here                                                     │House: $1000                │25 │                                                                     │                            │
+24 │Messages go here                                                     │House: $1000                │
+25 │                                                                     │                            │
 26 │                                                                     │                            │
 27 │                                                                     │                            │
-28 │                                                                     ├─[Player]───────────────────┤
-29 │                                                                     │Player: $500                │
-30 │                                                                     │                            │
+28 │                                                                     │                            │
+29 │                                                                     ├─[Player]───────────────────┤
+30 │                                                                     │Player: $500                │
 31 │                                                                     │                            │
 32 │                                                                     │                            │
 33 │                                                                     │                            │
 34 │                                                                     │                            │
-35 │                                                                     ├─[Command]──────────────────┤
-36 │                                                                     │Command>                    │
+35 │                                                                     │                            │
+36 │                                                                     │                            │
 37 └─────────────────────────────────────────────────────────────────────┴────────────────────────────┘
-38  Press any key to exit...
 
 */

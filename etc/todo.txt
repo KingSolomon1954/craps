@@ -22,6 +22,9 @@ Need unit test for undo bet capability
 Need unit test ConfigManagerTest
 Need unit test CrapsInterface
 
+Implement initial ScreenCrapsTable draw window
+
+(Done) Design menu hierarchy
 (Done) Undo capability, UndoManager class, UndoBet classes
 (Done) Build up CrapsInterface for UI interaction
 (Done) Populate CrapsInterface, organized around players, bets, table
@@ -882,7 +885,8 @@ example of the updated player subwindow .
 │ Player: Nathan (shooter)    │
 │ - - - - - - - - - - - - - - │
 │ Bal: $2,000 (+880)          │
-│ Bets: 55 Win: 21 Lose: 34   │
+│ Bets: 55 (21W, 34L)         │
+│ Pct: 38.18% win 61.81% lose │
 │ On table: 3 bets, $320      │
 │ Last: +$80,180W,100L        │
 ├─────────────────────────────┤
@@ -898,6 +902,7 @@ The command window moves below this house subwindow.
 ┬─────────────────────────────┐
 │ House: +$2,050              │
 │ Bets: 128 (68W, 60L)        │
+│ Pct: 53.12% win 46.87% lose │
 │ On table: 12 bets, $1,520   │
 │ Last: -$100,300W,200L       │
 ├─────────────────────────────┤
@@ -971,17 +976,17 @@ also color coded over their column.
 ├────────────────────────┴──────────────────────┴────────────────────┤─────────────────────────────┤
 │25 Nathan wins PassLine bet, +$200                                  │ House: +$2,050              │
 │ Shooter rolls a 6, point is set                                    │ Bets: 128 (68W, 60L)        │
-│ Arthur bets $20 on Hard 4 and 10                                   │ On table: 12 bets, $1,520   │
-│ Nathan bets $50 PassLine odds                                      │ Last: -$100,300W,200L       │
-│ Arthur places $50 come bet                                         ├─────────────────────────────┤
-│ Arthur places $10 Field bet                                        │ Player: Nathan (shooter)    │
-│ Winnifred placed $100 field bet                                    │ - - - - - - - - - - - - - - │
-│ Lenny places $500 DontCome                                         │ Bal: $2,000 (+880)          │
-│ Nathan places $200 come bet                                        │ Bets: 55 (21W, 34L)         │
-│ Paige places $10 on Field                                          │ On table: 3 bets, $320      │
-│ Another message row                                                │ Last: +$80,180W,100L        │
-│ Another message                                                    ├─────────────────────────────┤
-│37 Another message                                                  │ > command line here         │
+│ Arthur bets $20 on Hard 4 and 10                                   │ Pct: 53.12% win 46.87% lose │
+│ Nathan bets $50 PassLine odds                                      │ On table: 12 bets, $1,520   │
+│ Arthur places $50 come bet                                         │ Last: -$100,300W,200L       │
+│ Arthur places $10 Field bet                                        │─────────────────────────────┤ 
+│ Winnifred placed $100 field bet                                    │ Player: Nathan (shooter)    │
+│ Lenny places $500 DontCome                                         │ - - - - - - - - - - - - - - │
+│ Nathan places $200 come bet                                        │ Bal: $2,000 (+880)          │
+│ Paige places $10 on Field                                          │ Bets: 55 (21W, 34L)         │
+│ Another message row                                                │ Pct: 38.18% win 61.81% lose │
+│ Another message                                                    │ On table: 3 bets, $320      │
+│37 Another message                                                  │ Last: +$80,180W,100L        │
 └────────────────────────────────────────────────────────────────────┴─────────────────────────────┘
 
 
@@ -1016,17 +1021,16 @@ Rendered by ncurses program
 25 │                                                                     │                            │
 26 │                                                                     │                            │
 27 │                                                                     │                            │
-28 │                                                                     ├─[Player]───────────────────┤
-29 │                                                                     │Player: $500                │
-30 │                                                                     │                            │
+28 │                                                                     │                            │
+29 │                                                                     ├─[Player]───────────────────┤
+30 │                                                                     │Player: $500                │
 31 │                                                                     │                            │
 32 │                                                                     │                            │
 33 │                                                                     │                            │
 34 │                                                                     │                            │
-35 │                                                                     ├─[Command]──────────────────┤
-36 │                                                                     │Command>                    │
+35 │                                                                     │                            │
+36 │                                                                     │                            │
 37 └─────────────────────────────────────────────────────────────────────┴────────────────────────────┘
-38  Press any key to exit...
 
 
 ┌─────┐
@@ -1142,113 +1146,173 @@ Implications for implementation
 * Clear the undo stack at the end of each roll → ensures betting
   decisions are isolated to the roll cycle.
 
+Menus
+-----
 
-space bar toggles menu visbility
+Menu behaviors:
+* Default for menu visibility is off.
+* SPACEBAR toggles menu visbility for the currently active menu.
+* SPACEBAR key is actionable from any menu.
+* Enabling visibility from within a menu affects only that menu, it
+  does not enable visibility up and down the chain of menus.
+* Most menu entries are fixed, however some menus are dynamically
+  built to present current bets and choices to the user.
 
-Betting menu (starts) ESC SPACEBAR
-p PassLine
-    amount/autofill ESC
-c Come
-    amount/autofill ESC
-d DontPass
-    amount/autofill ESC
-k DontCome
-    amount/autofill ESC
-l Place ...
-    4,5,6,8,9,10 ESC SPACEBAR
-    amount/autofill ESC
-h Hardways ...
-    4,6,8,10 ESC SPACEBAR
-    amount/autofill ESC
-f field
-    amount/autofill ESC
-e C&E
-    amount/autofill ESC
-t AnyCraps
-    amount/autofill ESC
-7 Any7
-    amount/autofill ESC
-v Horn
-    amount/autofill ESC
-w World
-    amount/autofill ESC
-q quick bet ...
-    a,b,c,d,e,f,g,h... ESC SPACEBAR
-r roll dice
-u undo last
-o odds ... ESC SPACEBAR
-    p PassLine
-      amount/autofill ESC
-    d DontPass 
-      amount/autofill ESC
-    c Come
-      4,5,6,8,9,10  ESC SPACEBAR
-      amount/autofill  ESC
-    k DontCome
-      4,5,6,8,9,10  ESC SPACEBAR
-      amount/autofill  ESC
-r remove bet ... ESC SPACEBAR
-    p Passline
-    c Come
-    d DontPass
-    k DontCome
-    l Place ... ESC SPACEBAR
-        4,5,6,8,9,10 ESC
-    h Hardways ... ESC SPACEBAR
-        4,6,8,10 ESC SPACEBAR
-    f field
-    e C&E
-    t AnyCraps
-    7 Any7
-    v Horn
-    w World
-? flags
+ESC quits the current menu, visible or not, and control is
+given back to the parent menu.
+
+The top most and starting menu is the Betting Menu.  All other menus are
+reachable from this menu.  Since the game opens up on the Craps Table
+with players ready to go, this makes sense.  I don't think I need
+accelerator keys like VIM uses, however, I do use '.' to bring up the
+Control Menu.
+
+Here's the menu map. Maybe there's a better way to present this for
+discussion. I use indentation to indicate submenu selections. I use
+"..." to indicate that a submenu will be activated.
+
+Betting Menu ... (starts)
+'p' PassLine
+    popup amount subwindow (autofill)
+'c' Come
+    popup amount subwindow (autofill)
+'d' DontPass
+    popup amount subwindow (autofill)
+'k' DontCome
+    popup amount subwindow (autofill)
+'l' Place ...
+    4,5,6,8,9,10
+    popup amount subwindow (autofill)
+'h' Hardways ...
+    4,6,8,10 
+    popup amount subwindow (autofill)
+'f' field
+'e' C&E
+    popup amount subwindow (autofill)
+'a' AnyCraps
+    popup amount subwindow (autofill)
+'7' Any7
+    popup amount subwindow (autofill)
+'n' Horn
+    popup amount subwindow (autofill)
+'w' World
+    popup amount subwindow (autofill)
+'o' odds ... (menu is default visible)
+    list of player's active odds capable bets (sorted most recent first)
+    1,2,3,4,5,6             (dynamic)
+    popup amount subwindow (autofill)
+'x' remove bet ... (menu is default visible)
+    list of player's active bets (sorted most recent first)
+    1,2,3,4,5,6             (dynamic)
+'t' bet flags ...
+    '1' set odds not-working ...
+        a,1,2,3,4,5,6       (dynamic)   
+    '2' set odds working ...
+        a,1,2,3,4,5,6       (dynamic)   
+    '3' set bets not-working ...
+        a,1,2,3,4,5,6.      (dynamic)   
+    '4' set bets working...
+        a,1,2,3,4,5,6       (dynamic)   
+    '5' take all bets down
+    '6' set default: odds working come out roll
+    '7' set default: odds not-working come out roll
+'q' quick bet ...
+    a,b,c,d,e,f,g,h         (dynamic)
+'r' roll dice
+'u' undo last bet
     
-. control menu ... ESC SPACEBAR
-    h help
-    p pause
-    r resume
-    q quit game
-    j player join table
-    l player leave table
-    c configure ... ESC SPACEBAR
-        quick bet setup ... ESC SPACEBAR
-        bet fill setup ... ESC SPACEBAR
-        auto bet setup ... ESC SPACEBAR
-        jump setup ... ESC SPACEBAR
-        timed rolls ... ESC SPACEBAR
-        player colors ... ESC SPACEBAR
+'.' Control Menu ...
+    'q' quit game
+    'h' help
+    'p' pause
+    'r' resume
+    'j' player join table
+    'l' player leave table
+    's' switch tables
+    'c' configure  ...
+        'q' quick bet setup ...
+            TODO
+        'f' bet autofill setup  ...
+            TODO
+        'a' auto bet setup  ...
+            TODO
+        'j' jump setup      ...
+            TODO
+        't' timed rolls     ...
+            TODO
         
-, view menu ... ESC SPACEBAR
-    n next table-subwindow view
-    p prev table-subwindow view
-    g goto table-subwindow view  ... ESC SPACEBAR
-          0,1,2,3,4,5,6 ESC SPACEBAR
-    d dice stats ... ESC SPACEBAR
-        a alltime
-        c current
-    t table stats  ... ESC SPACEBAR
-        a alltime
-        c current
-        s session history
-    p player stats  ... ESC SPACEBAR
-        a alltime   ... ESC SPACEBAR
-            n next player
-            p prev player
-            g goto player
-        c current   ... ESC SPACEBAR
-            n next player
-            p prev player
-            g goto player  ... ESC SPACEBAR
-                0,1,2,3,4,5,6 ESC SPACEBAR
-        s session history
-            n next player
-            p prev player
-            g goto player  ... ESC SPACEBAR
-                0,1,2,3,4,5,6 ESC SPACEBAR
-        
-    x next player brief view
-    y prev player brief view
-    z goto player brief view ... ESC SPACEBAR
-        0,1,2,3,4,5,6 ESC SPACEBAR
+'v' View Menu ...
+    'c' user player table-subwindow view
+    'n' next table-subwindow view
+    'p' prev table-subwindow view
+    'g' goto table-subwindow 'n' ...
+          0,1,2,3,4,5,6     (dynamic)
+    'd' dice stats ...
+        'a' alltime
+        'c' current
+    't' table stats ...
+        'a' alltime
+        'c' current
+        's' session history
+    'p' player stats ...
+        'a' alltime ... 
+            'c' user player
+            'n' next player
+            'p' prev player
+            'g' goto player 'n' ...
+                0,1,2,3,4,5,6  (dynamic)
+        'c' current...
+            'c' user player
+            'n' next player
+            'p' prev player
+            'g' goto player 'n' ...
+                0,1,2,3,4,5,6   (dynamic)
+        's' session history
+            'c' user player
+            'n' next player
+            'p' prev player
+            'g' goto player 'n' ...
+                0,1,2,3,4,5,6   (dynamic)
+    'w' user player brief view
+    'x' next player brief view
+    'y' prev player brief view
+    'z' goto player brief 'n' ...
+        0,1,2,3,4,5,6           (dynamic)
 
+With respect to the popup subwindow for entering bet amounts, it has some
+special behaviors that I'm still thinking through.  Since it is already
+focused on a particular bet and amount, it is natural to use it to help
+configure some automatic behaviors.
+
+The Amount Entry subwindow will support two menu entries
+such that if selected it uses the current entry value for:
+
+* setting the auto fill value for the current bet type, to be used for
+  default filling future bets of this type with the given amount.
+      
+* using the current bet type and amount to configure a quick bet. A
+  quick bet is shortcut that is assigned to a particular bet and amount,
+  and is given a fixed menu entry on the quick bet menu.  So for
+  example, the user presses 'q' (quick bet menu) followed by 'a' (the
+  first configured quick bet) could mean make a Place Bet on the 6 for
+  100.
+
+* needs to allow left/right arrow keys for editing
+
++------------------------+
+|  Place Bet on 6        |
+|  Enter amount: [ 100 ] |
+|                        |
+|  [Enter] Confirm Bet   |
+|  [a] Save as AutoFill  |
+|  [q] Save as QuickBet  |
+|                        |
+|  [ESC] Cancel          |
++------------------------+
+
+Suggestion:
+
+    Let ESC always back out just one level (as you have now).
+
+    But also allow b (or something) as a shortcut back to the Betting Menu, regardless of depth.
+    This avoids “ESC fatigue.”

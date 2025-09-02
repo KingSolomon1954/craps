@@ -24,9 +24,8 @@ ScreenCrapsTable::ScreenCrapsTable(ConsoleView& view)
     : Screen::Screen(view)
 {
     Gen::ErrorPass ep;
-    Gen::ReturnCode rc;
     
-    rc = Ctrl::CrapsInterface::getUserPlayer(userPlayerId_, ep);
+    auto rc = Ctrl::CrapsInterface::getUserPlayer(userPlayerId_, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
@@ -204,6 +203,10 @@ std::this_thread::sleep_for(std::chrono::seconds(2));
     {
         handleMenuInput(ch);
     } 
+    else if (inputMode_ == Screen::InputMode::Amount)
+    {
+        handleAmountInput(ch);
+    }
     else
     {
         handleLineInput(ch);
@@ -237,6 +240,43 @@ ScreenCrapsTable::handleLineInput(int ch)
         lineBuffer_.clear();
         drawInputPrompt();
     } 
+    else if (ch == KEY_BACKSPACE || ch == 127)
+    {
+        if (!lineBuffer_.empty())
+        {
+            lineBuffer_.pop_back();
+        }
+        drawInputPrompt();
+    }
+    else if (isprint(ch))
+    {
+        lineBuffer_.push_back(static_cast<char>(ch));
+        drawInputPrompt();
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Gather then interpret command line input
+//
+void
+ScreenCrapsTable::handleAmountInput(int ch)
+{
+    // TODO add left/right arrow keys and deletion under cursor
+    if (ch == '\n')
+    {
+        processLineBuffer();
+        lineBuffer_.clear();
+        drawInputPrompt();
+    }
+    else if (ch = 'q')
+    {
+        setupQuickBet();
+    }
+    else if (ch = 'a')
+    {
+        setupAutoFill();
+    }
     else if (ch == KEY_BACKSPACE || ch == 127)
     {
         if (!lineBuffer_.empty())
@@ -309,6 +349,28 @@ ScreenCrapsTable::menuInputStats(int ch)
         Ctrl::CrapsGame::instance()->terminateApp();
     }
 }
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::setupQuickBet()
+{
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::setupAutoFill()
+{
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::processAmountBuffer()
+{
+}
+
 
 //----------------------------------------------------------------
 
