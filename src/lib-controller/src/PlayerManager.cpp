@@ -13,6 +13,7 @@
 #include <controller/Globals.h>
 #include <craps/Player.h>
 #include <gen/ErrorPass.h>
+#include <gen/Logger.h>
 
 using namespace Ctrl;
 
@@ -153,10 +154,13 @@ This is the person operating the game as player "x".
 Craps::Player*
 PlayerManager::getUserPlayer() const
 {
+    LOG_TRACE("PlayerManager::getUserPlayer()");
     std::string playerFileName = Gbl::pConfigMgr->getString(
         Ctrl::ConfigManager::KeyTableUserIsPlayer).value();
 
+    LOG_TRACE("PlayerManager::before manifest()");
     auto playerId = manifest_.getPlayerId(playerFileName);
+    LOG_TRACE("PlayerManager::after manifest()");
     for (auto p : players_)
     {
         if (p->getPlayerId() == playerId)

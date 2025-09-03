@@ -7,18 +7,26 @@
 #include <cui/ConsoleView.h>
 #include <cassert>
 #include <chrono>
+#include <locale.h>
 #include <controller/Globals.h>
 #include <controller/GameEvent.h>
 #include <controller/GameController.h>
 #include <cui/Screen.h>
 #include <cui/ScreenCrapsTable.h>
+#include <gen/Logger.h>
 
 using namespace Cui;
 using namespace std::chrono_literals;
 
 //----------------------------------------------------------------
 
-ConsoleView::ConsoleView() = default;
+ConsoleView::ConsoleView()
+{
+    setlocale(LC_ALL, "");   // enable locale detection
+    useUnicodePips = utf8_enabled();
+}
+
+//----------------------------------------------------------------
 
 ConsoleView::~ConsoleView()
 {
@@ -35,13 +43,13 @@ ConsoleView::init()
     noecho();
     keypad(stdscr, TRUE);
 
-    running_ = true;
-    inputThread_ = std::thread(&ConsoleView::inputThreadFunc, this);
-
     registerScreen(ScreenId::ScreenCrapsTable, std::make_unique<ScreenCrapsTable>(*this));
     // registerScreen(ScreenId::Stats, std::make_unique<StatsScreen>(*this));
 
     setScreen(ScreenId::ScreenCrapsTable);  // First screen is CrapsTable
+
+    running_ = true;
+    inputThread_ = std::thread(&ConsoleView::inputThreadFunc, this);
 }
 
 //----------------------------------------------------------------
@@ -155,14 +163,18 @@ ConsoleView::setScreenUnlocked(Screen* s)
 
 //----------------------------------------------------------------
 
-void ConsoleView::inputThreadFunc()
+void
+ConsoleView::inputThreadFunc()
 {
     nodelay(stdscr, TRUE);    
     while (running_)
     {
+//      LOG_TRACE("ConsoleView::inputThreadFunc() before wgetch()");
         int ch = wgetch(stdscr);
+//      LOG_TRACE("ConsoleView::inputThreadFunc() after wgetch(" + std::to_string(ch) + ")");
         if (ch == ERR)
         {
+//          LOG_TRACE("ConsoleView::inputThreadFunc() sleeping");
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
             continue;
         }
@@ -170,6 +182,7 @@ void ConsoleView::inputThreadFunc()
         std::lock_guard<std::mutex> lk(stackMx_);
         if (auto* top = topUnlocked())
         {
+            LOG_TRACE("ConsoleView::inputThreadFunc() calling handlekey(" + std::to_string(ch) + ")");
             top->handleKey(ch);
         }
     }
@@ -177,104 +190,15 @@ void ConsoleView::inputThreadFunc()
 
 //----------------------------------------------------------------
 
-
-
-
-
-
-
-#if 0
-
-//----------------------------------------------------------------
-
-void
-ConsoleView::setInputMode(InputMode mode)
+bool
+ConsoleView::utf8_enabled()
 {
-    std::lock_guard<std::mutex> lk(stackMx_);
-    inputMode_ = mode;
-
-    if (mode == InputMode::Line)
-    {
-        werase(inputWin_);
-        mvwprintw(inputWin_, 0, 0, "> ");
-        wrefresh(inputWin_);
-    }
-    else
-    {
-        if (inputWin_)
-        {
-            werase(inputWin_);
-            wrefresh(inputWin_);
-        }
-    }
-}
-
-
-void
-ConsoleView::inputThreadFunc()
-{
-    nodelay(stdscr, TRUE);    // non-blocking input on global screen
-    while (running_)
-    {
-        int ch = wgetch(stdscr);
-        if (ch == ERR)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            continue;
-        }
-
-        std::lock_guard<std::mutex> lk(stackMx_);
-        if (inputMode_ == InputMode::Menu)
-        {
-            handleMenuInput(ch);
-        }
-        else
-        {
-            handleLineInput(ch);
-        }
-    }
+    const char* loc = setlocale(LC_CTYPE, nullptr);
+    if (!loc) return false;
+    std::string s(loc);
+    return s.find("UTF-8") != std::string::npos || s.find("utf8") != std::string::npos;
 }
 
 //----------------------------------------------------------------
 
-void
-ConsoleView::handleMenuInput(int ch)
-{
-    std::string input(1, static_cast<char>(ch));
-    if (!stack_.empty()) stack_.back()->handleInput(input);
-}
 
-//----------------------------------------------------------------
-
-void
-ConsoleView::handleLineInput(int ch)
-{
-    if (ch == '\n')
-    {
-        if (!stack_.empty())
-        {
-            stack_.back()->handleInput(lineBuffer_);
-        }
-        lineBuffer_.clear();
-        werase(inputWin_);
-        mvwprintw(inputWin_, 0, 0, "> ");
-        wrefresh(inputWin_);
-    }
-    else if (ch == KEY_BACKSPACE || ch == 127)
-    {
-        if (!lineBuffer_.empty())
-            lineBuffer_.pop_back();
-    }
-    else if (isprint(ch))
-    {
-        lineBuffer_.push_back(static_cast<char>(ch));
-    }
-
-    werase(inputWin_);
-    mvwprintw(inputWin_, 0, 0, "> %s", lineBuffer_.c_str());
-    wrefresh(inputWin_);
-}
-
-//----------------------------------------------------------------
-
-#endif

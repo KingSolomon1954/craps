@@ -951,7 +951,7 @@ also color coded over their column.
                                                                      70
 ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
 │ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
-├──────────┴────────────┴──────────────────┴─────────────────────────│   ⚄ + ⚂  →  7               │
+├──────────┴────────────┴──────────────────┴─────────────────────────┤   ⚄ + ⚂  →  7               │
 │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
 ├────────────────────────┬──────────────────────┬────────────────────┤                             │ 
 │5                       │                      │                    │                             │
@@ -973,13 +973,13 @@ also color coded over their column.
 │ DontCome9  o o o o o o │                      │ Horn   o o o o o o │                             │
 │ DontCome10 o o o o o o │                      │ World  o o o o o o │                             │
 │23                      │                      │                    │23                           │
-├────────────────────────┴──────────────────────┴────────────────────┤─────────────────────────────┤
+├────────────────────────┴──────────────────────┴────────────────────┼─────────────────────────────┤
 │25 Nathan wins PassLine bet, +$200                                  │ House: +$2,050              │
 │ Shooter rolls a 6, point is set                                    │ Bets: 128 (68W, 60L)        │
 │ Arthur bets $20 on Hard 4 and 10                                   │ Pct: 53.12% win 46.87% lose │
 │ Nathan bets $50 PassLine odds                                      │ On table: 12 bets, $1,520   │
 │ Arthur places $50 come bet                                         │ Last: -$100,300W,200L       │
-│ Arthur places $10 Field bet                                        │─────────────────────────────┤ 
+│ Arthur places $10 Field bet                                        ├─────────────────────────────┤ 
 │ Winnifred placed $100 field bet                                    │ Player: Nathan (shooter)    │
 │ Lenny places $500 DontCome                                         │ - - - - - - - - - - - - - - │
 │ Nathan places $200 come bet                                        │ Bal: $2,000 (+880)          │
@@ -1074,7 +1074,7 @@ Focused Player View
 
 ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
 │ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
-├──────────┴────────────┴──────────────────┴─────────────────────────│   ⚄ + ⚂  →  7               │
+├──────────┴────────────┴──────────────────┴─────────────────────────┤   ⚄ + ⚂  →  7               │
 │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
 ├──────────────────┬─────────┬─────────┬─────────┬─────────┬─────────┤                             │ 
 │5Nathan:     4    │    5    │     6   │    8    │    9    │    10   │                             │
@@ -1096,7 +1096,7 @@ Focused Player View
 ├───────────────────────────────────┬────────────────────────────────┤                             │
 │ Come     10000000                 │ DontCome 1000000               │                             │
 23PassLine 10000000  Odds 10000000  │ DontPass 1000000  Odds 1000000 │                             │
-├───────────────────────────────────┴────────────────────────────────┤─────────────────────────────┤
+├───────────────────────────────────┴────────────────────────────────┼─────────────────────────────┤
 │25 Nathan wins PassLine bet, +$200                                  │ House: +$2,050              │
 │ Shooter rolls a 6, point is set                                    │ Bets: 128 (68W, 60L)        │
 │ Arthur bets $20 on Hard 4 and 10                                   │ On table: 12 bets, $1,520   │
@@ -1316,3 +1316,206 @@ Suggestion:
 
     But also allow b (or something) as a shortcut back to the Betting Menu, regardless of depth.
     This avoids “ESC fatigue.”
+
+
+
+
+new ConsoleView and friends
+
+// Screen.hpp
+#pragma once
+#include <string>
+
+enum class ScreenType { Full, Overlay };
+
+class ConsoleView; // forward
+
+class Screen {
+public:
+    virtual ~Screen() = default;
+
+    virtual void draw() = 0;
+    virtual void handleInput(const std::string& input) = 0;
+
+    virtual ScreenType type() const { return ScreenType::Full; }
+
+    // lifecycle hooks
+    virtual void onAttach(ConsoleView&) {}
+    virtual void onDetach() {}
+    virtual void onPause() {}
+    virtual void onResume() {}
+};
+
+
+
+// ConsoleView.hpp
+#pragma once
+#include <vector>
+#include <mutex>
+#include <ncursesw/ncurses.h>
+#include "Screen.hpp"
+
+class ConsoleView {
+public:
+    ConsoleView();
+    ~ConsoleView();
+
+    void init();
+    void shutdown();
+
+    void pushScreen(Screen* screen);
+    void popScreen();
+    void setScreen(Screen* screen); // replace with full screen
+
+    void handleInput(const std::string& input);
+    void redraw();
+
+private:
+    std::vector<Screen*> stack_;
+    std::mutex mutex_;
+
+    void redrawUnlocked();
+};
+
+
+
+// ConsoleView.cpp
+#include "ConsoleView.hpp"
+#include <algorithm>
+
+ConsoleView::ConsoleView() {}
+ConsoleView::~ConsoleView() { shutdown(); }
+
+void ConsoleView::init() {
+    setlocale(LC_ALL, "");
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+    curs_set(0);
+    start_color();
+    use_default_colors();
+}
+
+void ConsoleView::shutdown() {
+    if (!stack_.empty()) {
+        for (auto* s : stack_) s->onDetach();
+        stack_.clear();
+    }
+    endwin();
+}
+
+void ConsoleView::pushScreen(Screen* screen) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    if (screen->type() == ScreenType::Full) {
+        // Pause all, detach top, clear stack
+        if (!stack_.empty()) {
+            stack_.back()->onPause();
+        }
+        for (auto* s : stack_) s->onDetach();
+        stack_.clear();
+    } else {
+        if (!stack_.empty()) stack_.back()->onPause();
+    }
+
+    stack_.push_back(screen);
+    screen->onAttach(*this);
+    redrawUnlocked();
+}
+
+void ConsoleView::popScreen() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (stack_.empty()) return;
+
+    auto* top = stack_.back();
+    stack_.pop_back();
+    top->onDetach();
+
+    if (!stack_.empty()) {
+        stack_.back()->onResume();
+    }
+
+    redrawUnlocked();
+}
+
+void ConsoleView::setScreen(Screen* screen) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    for (auto* s : stack_) s->onDetach();
+    stack_.clear();
+    stack_.push_back(screen);
+    screen->onAttach(*this);
+    redrawUnlocked();
+}
+
+void ConsoleView::handleInput(const std::string& input) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (!stack_.empty()) {
+        stack_.back()->handleInput(input);
+    }
+}
+
+void ConsoleView::redraw() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    redrawUnlocked();
+}
+
+void ConsoleView::redrawUnlocked() {
+    if (stack_.empty()) return;
+
+    // find bottom-most full screen
+    auto it = std::find_if(stack_.begin(), stack_.end(),
+        [](Screen* s){ return s->type() == ScreenType::Full; });
+
+    if (it != stack_.end()) {
+        werase(stdscr);
+        (*it)->draw(); // draw base full screen
+        ++it;
+    }
+
+    // draw overlays in order
+    for (; it != stack_.end(); ++it) {
+        (*it)->draw();
+    }
+
+    doupdate();
+}
+
+
+
+// CrapsTableScreen.hpp
+#include "Screen.hpp"
+#include "ConsoleView.hpp"
+
+class CrapsTableScreen : public Screen {
+public:
+    void draw() override {
+        mvprintw(0, 0, "Craps Table Screen (Press SPACE for menu)");
+    }
+
+    void handleInput(const std::string& input) override {
+        if (input == " ") {
+            // TODO: push menu screen
+        }
+    }
+};
+
+// MenuScreen.hpp
+#include "Screen.hpp"
+#include "ConsoleView.hpp"
+
+class MenuScreen : public Screen {
+public:
+    ScreenType type() const override { return ScreenType::Overlay; }
+
+    void draw() override {
+        mvprintw(2, 2, "[Menu Overlay]");
+        mvprintw(3, 2, "Press ESC to close");
+    }
+
+    void handleInput(const std::string& input) override {
+        if (input == "\x1b") { // ESC
+            // TODO: pop self
+        }
+    }
+};

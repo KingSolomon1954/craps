@@ -50,6 +50,8 @@ public:
     void inputThreadFunc();        // Input thread -> forward to top
     /// @}
 
+    bool useUnicodePips = false;
+    
 private:
     std::unordered_map<ScreenId, std::unique_ptr<Screen>> registry_; // owns screens
     std::vector<Screen*> stack_;                                     // non-owning stack
@@ -60,6 +62,7 @@ private:
     Screen* topUnlocked();
     void redrawUnlocked();
     void setScreenUnlocked(Screen* s);
+    bool utf8_enabled();
 };
 
 /*-----------------------------------------------------------*//**

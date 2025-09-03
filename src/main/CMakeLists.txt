@@ -30,7 +30,7 @@ add_executable(ncurses-snippet
 )
 
 target_link_libraries(ncurses-snippet
-    PRIVATE ncurses
+    PRIVATE ncursesw
 )
 
 add_executable(ncurses-animation
@@ -38,7 +38,7 @@ add_executable(ncurses-animation
 )
 
 target_link_libraries(ncurses-animation
-    PRIVATE ncurses
+    PRIVATE ncursesw
 )
 
 # --------------------------------------------------------

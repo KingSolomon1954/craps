@@ -148,9 +148,15 @@ static void draw_die(WINDOW* w, int top, int left, int value)
     int cL   = left + 2, cM   = left + 3, cR   = left + 4;
 
     auto pip = [&](int y, int x){
+        static bool useUnicodePips = false;
 //      mvwaddch(w, y, x, '*' | A_BOLD);
 //      mvwaddch(w, y, x, ACS_BULLET);
-        mvwaddch(w, y, x, '*');
+//      mvwaddch(w, y, x, '*');
+//      mvwaddwstr(w, y, x, L"◆");
+        if (useUnicodePips)
+            mvwaddwstr(w, y, x, L"●");
+        else
+            mvwaddch(w, y, x, '*');
     };
 
     wattron(w, A_BOLD);
@@ -268,6 +274,7 @@ static void animate_roll(WINDOW* anim_win)
 
 int main()
 {
+    setlocale(LC_ALL, "");  // ensure wide characters work
     std::srand(std::time(nullptr));
     initscr();
     cbreak();
