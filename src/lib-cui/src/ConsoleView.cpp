@@ -209,6 +209,31 @@ ConsoleView::inputThreadFunc()
     }
 }
 
+
+
+//----------------------------------------------------------------
+// 
+// Create a new window centered on the screen
+// @param h Desired height
+// @param w Desired width
+// @return A new WINDOW* positioned at the center
+//
+WINDOW*
+ConsoleView::makeCenteredWindow(int h, int w)
+{
+    int max_h, max_w;
+    getmaxyx(stdscr, max_h, max_w);
+
+    // Clamp requested size to screen size
+    if (h > max_h) h = max_h;
+    if (w > max_w) w = max_w;
+
+    int start_y = (max_h - h) / 2;
+    int start_x = (max_w - w) / 2;
+
+    return newwin(h, w, start_y, start_x);
+}
+
 //----------------------------------------------------------------
 
 bool

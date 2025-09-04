@@ -25,36 +25,32 @@ ScreenCrapsTable::ScreenCrapsTable(ConsoleView& view)
     : Screen::Screen(view)
 {
     Gen::ErrorPass ep;
-    LOG_TRACE("ScreenCrapsTable::ctor");
+    LOG_TRACE("Entered ScreenCrapsTable::ctor()");
     
-    LOG_TRACE("calling ScreenCrapsTable::getUserPlayer()");
     auto rc = Ctrl::CrapsInterface::getUserPlayer(userPlayerId_, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
-        LOG_TRACE("throwing() user player");
         ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
         throw std::runtime_error(ep.diag);
     }
 
-    LOG_TRACE("calling ScreenCrapsTable::getActiveCrapsTable()");
-    
     rc = Ctrl::CrapsInterface::getActiveCrapsTable(tableId_, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
-        LOG_TRACE("throwing() activecrapstable");
         ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
         throw std::runtime_error(ep.diag);
     }
     
-// std::cout << "Howie 21 ScreenCrapsTable::ScreenCrapsTable()\n";
-// std::this_thread::sleep_for(std::chrono::seconds(2));
+    pMenuBetting_ = view_.getScreen(ConsoleView::ScreenId::MenuBetting);
+//  Howie TODO
+//  auto* pMenu = dynamic_cast<MenuBetting*>(pMenuBetting);
+//  pMenu->setRootMenu(true);
+//  pMenu->setOwningScreen(*this);
 
-    LOG_TRACE("before createSubwindows");
     createSubwindows();
-    LOG_TRACE("after createSubwindows");
     rc = Ctrl::CrapsInterface::tablePlayers(tableId_, playerIds_, ep);
     assert(playerIds_.size() > 0);
-    LOG_TRACE("finished ScreenCrapsTable::ctor ");
+    LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
 }
 
 //----------------------------------------------------------------
@@ -438,38 +434,29 @@ ScreenCrapsTable::cycleTableView()
 void
 ScreenCrapsTable::onAttach()
 {
-// std::cout << "Howie 48 ScreenCrapsTable::onAttach() \n";
-// std::this_thread::sleep_for(std::chrono::seconds(2));
     LOG_TRACE("ScreenCrapsTable::onAttach()");
-    setMenuInputMode();
+    view_.pushScreen(pMenuBetting_);
 }
 
 //----------------------------------------------------------------
 //
-// Input processing
+// Input is handled by menu MenuBetting.
 //
-//----------------------------------------------------------------
-
 void
 ScreenCrapsTable::handleKey(int ch)
 {
-// std::cout << "Howie 440 ScreenCrapsTable::handleKey()\n";
-// std::this_thread::sleep_for(std::chrono::seconds(2));
-
-//  LOG_TRACE("ScreenCrapsTable::handleKey(" + std::to_string(ch) + ")");
-    if (inputMode_ == Screen::InputMode::Menu)
-    {
-        handleMenuInput(ch);
-    } 
-    else if (inputMode_ == Screen::InputMode::Amount)
-    {
-        handleAmountInput(ch);
-    }
-    else
-    {
-        handleLineInput(ch);
-    }
+    (void) ch;
+    LOG_TRACE("ScreenCrapsTable::handleKey() should "
+              "not get here:(" + std::to_string(ch) + ")");
 }
+
+//----------------------------------------------------------------
+
+
+
+
+
+#if 0
 
 //----------------------------------------------------------------
 //
@@ -568,22 +555,6 @@ ScreenCrapsTable::drawInputPrompt()
 //----------------------------------------------------------------
 
 void
-ScreenCrapsTable::setMenuInputMode()
-{
-    inputMode_ = Screen::InputMode::Menu;
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::setLineInputMode()
-{
-    inputMode_ = Screen::InputMode::Line;
-}
-
-//----------------------------------------------------------------
-
-void
 ScreenCrapsTable::menuInputBetting(int ch)
 {
 //    LOG_TRACE("ScreenCrapsTable::menuInputBetting()");
@@ -614,33 +585,4 @@ ScreenCrapsTable::menuInputStats(int ch)
     }
 }
 
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::setupQuickBet()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::setupAutoFill()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::processAmountBuffer()
-{
-}
-
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::processLineBuffer()
-{
-}
-
-//----------------------------------------------------------------
+#endif

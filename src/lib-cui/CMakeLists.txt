@@ -6,6 +6,7 @@
 
 add_library(cui STATIC
     src/ConsoleView.cpp
+    src/MenuBase.cpp
     src/ScreenCrapsTable.cpp
     src/ScreenFactory.cpp
 )

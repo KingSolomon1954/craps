@@ -32,12 +32,6 @@ private:
                *message = nullptr;
     };
 
-    enum class Menus
-    {
-        Betting,
-        Stats
-    };
-
     enum class TableView
     {
         AllPlayers,
@@ -95,23 +89,15 @@ private:
     };
     
     // Order doesn't matter    
-    Craps::PlayerId userPlayerId_;
-    Craps::TableId  tableId_;
-    Windows w_;
-    std::string lineBuffer_;
-    Menus activeMenu_ = Menus::Betting;
-    TableView tableView_ = TableView::AllPlayers;
-    size_t onePlayerIndex_ = 0;  // For cycling thru players
+    Craps::PlayerId  userPlayerId_;
+    Craps::TableId   tableId_;
+    Windows          w_;
+    std::string      lineBuffer_;
+    TableView        tableView_ = TableView::AllPlayers;
+    size_t           onePlayerIndex_ = 0;  // For cycling thru players
+    Screen*          pMenuBetting_ = nullptr;
     std::vector<Craps::PlayerId> playerIds_;
     
-    // Input handling
-    void handleLineInput  (int ch);
-    void handleMenuInput  (int ch);
-    void handleAmountInput(int ch);
-    void menuInputBetting (int ch);
-    void menuInputStats   (int ch);
-    void setMenuInputMode();
-    void setLineInputMode();
     void cycleTableView();
 
     // Drawing screen borders/frame
@@ -136,16 +122,11 @@ private:
     // Draw Amount subwindow
     // TODO
 
-    void setupQuickBet();
-    void setupAutoFill();
-    void processAmountBuffer();
-    void processLineBuffer();
     void createSubwindows();
     WINDOW* makeSubwin(int topDivider,
                        int bottomDivider,
                        int innerW,
                        Column col);
-    void drawInputPrompt();
 };
 
 // TODO: subscribe to players leaving/joining table

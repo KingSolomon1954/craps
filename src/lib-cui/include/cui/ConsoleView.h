@@ -48,7 +48,7 @@ public:
     /// @{
     ConsoleView();
    ~ConsoleView();
-    void init() override;
+    void init()               override;
     void prepareForShutdown() override;
     Screen* getScreen(ScreenId);
     /// @}
@@ -58,6 +58,7 @@ public:
     void setScreen (Screen* pScreen);  // clear stack, push this (replace)
     void pushScreen(Screen* pScreen);  // overlay (pauses previous top)
     void popScreen();                  // remove top, resume new top if any
+    void redrawUnlocked();
     /// @}
 
     /// @name InputHandling
@@ -65,6 +66,8 @@ public:
     void inputThreadFunc();        // Input thread -> forward to top
     /// @}
 
+    WINDOW* makeCenteredWindow(int h, int w);
+         
     bool useUnicodePips = false;
     
 private:
@@ -75,7 +78,6 @@ private:
     std::thread inputThread_;
 
     void redraw();
-    void redrawUnlocked();
     bool utf8_enabled();
 };
 
