@@ -609,7 +609,7 @@ BetStats:
     total: 0
     max: 0
 SessionStats:
-  numSessionsAlltime: 27
+  numSessionsAlltime: 28
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 00:03:12
   history:
@@ -631,3 +631,9 @@ SessionStats:
       numPlayers: 1
       date: 2025-08-12T18:43:29.135198265
       duration: 0d 00:03:12
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2025-09-04T03:40:34.737488495
+      duration: 0d 00:00:08

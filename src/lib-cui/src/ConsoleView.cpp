@@ -13,6 +13,7 @@
 #include <controller/GameController.h>
 #include <cui/Screen.h>
 #include <cui/ScreenCrapsTable.h>
+#include <cui/ScreenFactory.h>
 #include <gen/Logger.h>
 
 using namespace Cui;
@@ -42,13 +43,12 @@ ConsoleView::init()
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
+    curs_set(0);
+    start_color();
+    use_default_colors();
 
-    registerScreen(ScreenId::ScreenCrapsTable, std::make_unique<ScreenCrapsTable>(*this));
-    // registerScreen(ScreenId::Stats, std::make_unique<StatsScreen>(*this));
+    setScreen(getScreen(ScreenId::ScreenCrapsTable));  
 
-    setScreen(ScreenId::ScreenCrapsTable);  // First screen is CrapsTable
-
-    running_ = true;
     inputThread_ = std::thread(&ConsoleView::inputThreadFunc, this);
 }
 
@@ -64,8 +64,8 @@ ConsoleView::prepareForShutdown()
     }
 
     {
-        // Clear registry and stack before ending ncurses
         std::lock_guard<std::mutex> lk(stackMx_);
+        for (auto* s : stack_) s->onDetach();
         stack_.clear();
         registry_.clear();
     }
@@ -74,36 +74,55 @@ ConsoleView::prepareForShutdown()
 
 //----------------------------------------------------------------
 
-void
-ConsoleView::registerScreen(ScreenId id, std::unique_ptr<Screen> screen)
+Screen*
+ConsoleView::getScreen(ScreenId id)
 {
-    registry_[id] = std::move(screen);
+    auto it = registry_.find(id);
+    if (it == registry_.end())
+    {
+        std::unique_ptr<Screen> s(ScreenFactory::createSrceen(id, *this));
+        registry_[id] = std::move(s);
+    }
+    return registry_[id].get();
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::setScreen(ScreenId id)
+ConsoleView::setScreen(Screen* pScreen)
 {
-    std::lock_guard<std::mutex> lk(stackMx_);
-    auto it = registry_.find(id);
-    if (it == registry_.end()) return;
-    setScreenUnlocked(it->second.get());
+    std::lock_guard<std::mutex> lock(stackMx_);
+    for (auto* s : stack_) s->onDetach();
+    stack_.clear();
+    stack_.push_back(pScreen);
+    pScreen->onAttach();
+    redrawUnlocked();
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::pushScreen(ScreenId id)
+ConsoleView::pushScreen(Screen* pScreen)
 {
-    std::lock_guard<std::mutex> lk(stackMx_);
-    auto it = registry_.find(id);
-    if (it == registry_.end()) return;
+    std::lock_guard<std::mutex> lock(stackMx_);
 
-    if (auto* top = topUnlocked()) top->onPause();
-    auto* s = it->second.get();
-    stack_.push_back(s);
-    s->onAttach();
+    if (pScreen->type() == Screen::ScreenType::Full)
+    {
+        // Pause all, detach top, clear stack
+        if (!stack_.empty())
+        {
+            stack_.back()->onPause();
+        }
+        for (auto* s : stack_) s->onDetach();
+        stack_.clear();
+    }
+    else
+    {
+        if (!stack_.empty()) stack_.back()->onPause();
+    }
+
+    stack_.push_back(pScreen);
+    pScreen->onAttach();
     redrawUnlocked();
 }
 
@@ -112,26 +131,28 @@ ConsoleView::pushScreen(ScreenId id)
 void
 ConsoleView::popScreen()
 {
-    std::lock_guard<std::mutex> lk(stackMx_);
+    std::lock_guard<std::mutex> lock(stackMx_);
     if (stack_.empty()) return;
 
-    Screen* oldTop = stack_.back();
+    auto* top = stack_.back();
     stack_.pop_back();
-    oldTop->onDetach();
+    top->onDetach();
 
-    if (auto* nowTop = topUnlocked())
+    if (!stack_.empty())
     {
-        nowTop->onResume();
+        stack_.back()->onResume();
     }
+
     redrawUnlocked();
 }
 
 //----------------------------------------------------------------
 
-Screen*
-ConsoleView::topUnlocked()
+void
+ConsoleView::redraw()
 {
-    return stack_.empty() ? nullptr : stack_.back();
+    std::lock_guard<std::mutex> lock(stackMx_);
+    redrawUnlocked();
 }
 
 //----------------------------------------------------------------
@@ -139,26 +160,26 @@ ConsoleView::topUnlocked()
 void
 ConsoleView::redrawUnlocked()
 {
-    // Draw bottom->top using *wnoutrefresh* in each screen's draw()
-    werase(stdscr);
-    for (auto* s : stack_) s->draw();
-    doupdate();
-}
+    if (stack_.empty()) return;
 
-//----------------------------------------------------------------
+    // find bottom-most full screen
+    auto it = std::find_if(stack_.begin(), stack_.end(),
+          [](Screen* s){ return s->type() == Screen::ScreenType::Full; });
 
-void
-ConsoleView::setScreenUnlocked(Screen* s)
-{
-    // detach all
-    while (!stack_.empty())
+    if (it != stack_.end())
     {
-        stack_.back()->onDetach();
-        stack_.pop_back();
+        werase(stdscr);
+        (*it)->draw(); // draw base full screen
+        ++it;
     }
-    stack_.push_back(s);
-    s->onAttach();
-    redrawUnlocked();
+
+    // draw overlays in order
+    for (; it != stack_.end(); ++it)
+    {
+        (*it)->draw();
+    }
+
+    doupdate();
 }
 
 //----------------------------------------------------------------
@@ -180,10 +201,10 @@ ConsoleView::inputThreadFunc()
         }
 
         std::lock_guard<std::mutex> lk(stackMx_);
-        if (auto* top = topUnlocked())
+        if (!stack_.empty())
         {
             LOG_TRACE("ConsoleView::inputThreadFunc() calling handlekey(" + std::to_string(ch) + ")");
-            top->handleKey(ch);
+            stack_.back()->handleKey(ch);
         }
     }
 }

@@ -24,8 +24,23 @@ public:
     enum class ScreenId
     {
         ScreenCrapsTable,
-        Stats,
-        Help
+        ScreenPlayerStats,
+        ScreenTableStats,
+        ScreenGameHelp,
+        MenuBetting,
+        MenuView,
+        MenuTableViewGoto,
+        MenuDiceStats,
+        MenuTableStats,
+        MenuPlayerStats,
+        MenuPlayerCurrentStats,
+        MenuPlayerCurrentStatsGoto,
+        MenuPlayerAlltimeStats,
+        MenuPlayerAlltimeStatsGoto,
+        MenuPlayerSessionHistory,
+        MenuPlayerSessionHistoryGoto,
+        MenuPlayerBriefGoto,
+        MenuControl
         // ...
     };
 
@@ -35,14 +50,14 @@ public:
    ~ConsoleView();
     void init() override;
     void prepareForShutdown() override;
-    void registerScreen(ScreenId id, std::unique_ptr<Screen> pScreen);
+    Screen* getScreen(ScreenId);
     /// @}
 
     /// @name StackOps
     /// @{
-    void setScreen(ScreenId id);   // clear stack, push this (replace)
-    void pushScreen(ScreenId id);  // overlay (pauses previous top)
-    void popScreen();              // remove top, resume new top if any
+    void setScreen (Screen* pScreen);  // clear stack, push this (replace)
+    void pushScreen(Screen* pScreen);  // overlay (pauses previous top)
+    void popScreen();                  // remove top, resume new top if any
     /// @}
 
     /// @name InputHandling
@@ -56,12 +71,11 @@ private:
     std::unordered_map<ScreenId, std::unique_ptr<Screen>> registry_; // owns screens
     std::vector<Screen*> stack_;                                     // non-owning stack
     std::mutex stackMx_;
-    std::atomic<bool> running_{false};
+    std::atomic<bool> running_{true};
     std::thread inputThread_;
 
-    Screen* topUnlocked();
+    void redraw();
     void redrawUnlocked();
-    void setScreenUnlocked(Screen* s);
     bool utf8_enabled();
 };
 

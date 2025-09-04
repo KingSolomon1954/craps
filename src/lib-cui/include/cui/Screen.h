@@ -15,6 +15,12 @@ class ConsoleView;  // fwd
 class Screen
 {
 public:
+    enum class ScreenType
+    {
+        Full,
+        Overlay
+    };
+
     explicit Screen(ConsoleView& view) : view_(view) {}
     virtual ~Screen() = default;
 
@@ -23,6 +29,7 @@ public:
     virtual void onDetach() {}  // removed from stack
     virtual void onPause()  {}  // covered by another screen
     virtual void onResume() {}  // uncovered and back on top
+    virtual ScreenType type() const { return ScreenType::Full; }
     
     // Required
     virtual void draw() = 0;    // call wnoutrefresh() on owned windows

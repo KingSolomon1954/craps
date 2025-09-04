@@ -478,6 +478,11 @@ ScreenCrapsTable::handleKey(int ch)
 void
 ScreenCrapsTable::handleMenuInput(int ch)
 {
+    if (ch == ' ')
+    {
+        // TODO: push/toggle menu screen
+        return;
+    }
     switch(activeMenu_)
     {
     case Menus::Betting:  menuInputBetting(ch); break;
