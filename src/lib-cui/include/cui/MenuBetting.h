@@ -10,7 +10,8 @@
 
 namespace Cui {
 
-class ConsoleView;  // fwd
+class ConsoleView;       // fwd
+class ScreenCrapsTable;  // fwd
     
 class MenuBetting : public MenuBase
 {
@@ -23,6 +24,7 @@ public:
 
     /// @name Modifiers
     /// @{
+    void setOwningScreen(ScreenCrapsTable* pOwning);
     /// @}
 
     /// @name Observers
@@ -30,15 +32,11 @@ public:
     /// @}
     
 protected:
-    void drawMenu()           override;
+    void drawMenu()            override;
     void handleMenuKey(int ch) override;
 
 private:
-    
-    WINDOW* w_             = nullptr;
-    bool visible_          = false;
-    bool isRoot_           = false;
-    Screen* pOwningScreen_ = nullptr;
+    ScrrenCrapTable* pOwning_ = nullptr;
 };
 
 /*-----------------------------------------------------------*//**
