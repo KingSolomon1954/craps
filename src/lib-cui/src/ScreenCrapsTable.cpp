@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <cui/ConsoleView.h>
+#include <cui/MenuBetting.h>
 #include <controller/CrapsGame.h>
 #include <controller/CrapsInterface.h>
 #include <gen/ErrorPass.h>
@@ -40,12 +41,12 @@ ScreenCrapsTable::ScreenCrapsTable(ConsoleView& view)
         ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
         throw std::runtime_error(ep.diag);
     }
-    
+
+    // Obtain our root menu and give it a pointer back to us.
     pMenuBetting_ = view_.getScreen(ConsoleView::ScreenId::MenuBetting);
-//  Howie TODO
-//  auto* pMenu = dynamic_cast<MenuBetting*>(pMenuBetting);
-//  pMenu->setRootMenu(true);
-//  pMenu->setOwningScreen(*this);
+    auto* pMenu = dynamic_cast<MenuBetting*>(pMenuBetting_);
+    pMenu->setRootMenu(true);
+    pMenu->setOwningScreen(this);
 
     createSubwindows();
     rc = Ctrl::CrapsInterface::tablePlayers(tableId_, playerIds_, ep);

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cui/Screen.h>
+#include <cui/MenuBase.h>
 
 namespace Cui {
 
@@ -18,7 +18,7 @@ class MenuBetting : public MenuBase
 public:
     /// @name Lifecycle
     /// @{
-    MenuBetting(ConsoleView& view)
+    MenuBetting(ConsoleView& view);
    ~MenuBetting();
     /// @}
 
@@ -36,7 +36,7 @@ protected:
     void handleMenuKey(int ch) override;
 
 private:
-    ScrrenCrapTable* pOwning_ = nullptr;
+    ScreenCrapsTable* pOwning_ = nullptr;
 };
 
 /*-----------------------------------------------------------*//**
@@ -45,9 +45,7 @@ private:
 
 @brief Root menu for ScreeCrapsTable class
 
-Responsibilities of MenuBetting
-
-@li Draws the menu
+Responsibilities of MenuBetting:
 
 @li Key bindings for the menu
 
@@ -55,33 +53,11 @@ Responsibilities of MenuBetting
 
 @li Takes action on input keys 
 
+@li Renders the menu on screen
+
 */
 
 } // namespace Cui
 
 //----------------------------------------------------------------
 
-
-
-
-
-
-class MenuBettingScreen : public Cui::MenuScreen {
-public:
-    using MenuScreen::MenuScreen;
-
-protected:
-    void drawMenu() override {
-        mvwprintw(win(), 0, 0, "Betting Menu:");
-        mvwprintw(win(), 1, 2, "1) Pass Line Bet");
-        mvwprintw(win(), 2, 2, "2) Don't Pass");
-        // etc.
-    }
-
-    void handleMenuKey(int ch) override {
-        switch (ch) {
-        case '1': /* handle pass line */ break;
-        case '2': /* handle don't pass */ break;
-        }
-    }
-};

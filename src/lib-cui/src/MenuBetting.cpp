@@ -13,7 +13,7 @@ using namespace Cui;
 //----------------------------------------------------------------
 
 MenuBetting::MenuBetting(ConsoleView& view)
-    : MenuBase(view, 5, 6)  // TODO Howie
+    : MenuBase(view, 5, 6)  // TODO Howie need layout
 {
 }
 
@@ -33,64 +33,50 @@ MenuBetting::setOwningScreen(ScreenCrapsTable* pOwning)
 
 //----------------------------------------------------------------
 //
-// Override Screen base class
+// Override menu base class
 //
 void
 MenuBetting::drawMenu()
 {
-    // TODo
+    // TODO
+    mvwprintw(w_, 0, 0, "Betting Menu:");
+    mvwprintw(w_, 1, 2, "1) Pass Line Bet");
+    mvwprintw(w_, 2, 2, "2) Don't Pass");
+    // etc.
 }
 
- //----------------------------------------------------------------
+//----------------------------------------------------------------
 //
-// Override Screen base class
+// Override menu base class
 //
 void
 MenuBetting::handleMenuKey(int ch)
 {
-    if (ch == ' ')
+    switch (ch)
     {
-        toggle();  // purely visual
-    }
-    else if (ch == 27)  // ESC
-    {
-        if (!isRoot_)
-        {
-            view_.popScreen();
-        }
-        // root menu ignores ESC
-    }
-    else
-    {
-        // Always active: handle key, regardless of visibility
-        handleMenuKey(ch);
+    case 'p': doPassLine(); break;
+    case 'c': doCome();     break;
     }
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBase::toggle()
+MenuBetting::doPassLine()
 {
-    visible_ = !visible_;
-    if (!visible_) werase(win());
-    view_.redrawUnlocked();
+#if 0
+    auto betAmount = amountSubwindow();
+    display amount subwindow
+#endif
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBase::setRootMenu(bool root)
+MenuBetting::doCome()
 {
-    isRoot_ = root;
+    
 }
 
 //----------------------------------------------------------------
 
-void
-MenuBase::setOwningScreen(Screen* pOwning)
-{
-    pOwningScreen_ = pOwning;
-}
-
-//----------------------------------------------------------------

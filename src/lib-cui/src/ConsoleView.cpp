@@ -25,6 +25,7 @@ ConsoleView::ConsoleView()
 {
     setlocale(LC_ALL, "");   // enable locale detection
     useUnicodePips = utf8_enabled();
+    LOG_DEBUG("useUnicodePips: " + std::to_string(useUnicodePips));
 }
 
 //----------------------------------------------------------------
@@ -142,7 +143,6 @@ ConsoleView::popScreen()
     {
         stack_.back()->onResume();
     }
-
     redrawUnlocked();
 }
 
@@ -162,23 +162,21 @@ ConsoleView::redrawUnlocked()
 {
     if (stack_.empty()) return;
 
-    // find bottom-most full screen
+    // Find bottom-most full screen
     auto it = std::find_if(stack_.begin(), stack_.end(),
           [](Screen* s){ return s->type() == Screen::ScreenType::Full; });
 
     if (it != stack_.end())
     {
         werase(stdscr);
-        (*it)->draw(); // draw base full screen
+        (*it)->draw(); // Draw base full screen
         ++it;
     }
 
-    // draw overlays in order
-    for (; it != stack_.end(); ++it)
+    for (; it != stack_.end(); ++it)  // Draw overlays in order
     {
         (*it)->draw();
     }
-
     doupdate();
 }
 

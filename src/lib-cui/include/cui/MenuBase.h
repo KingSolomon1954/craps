@@ -25,22 +25,20 @@ public:
     void handleKey(int ch) override;
     void toggle();
     void setRootMenu(bool root);
-    void setOwningScreen(Screen* pOwning);
     /// @}
 
     /// @name Observers
     /// @{
-    WINDOW* win() const;
+    Screen::ScreenType type() const override;
     /// @}
 
 protected:
     virtual void drawMenu()            = 0;
     virtual void handleMenuKey(int ch) = 0;
 
-    WINDOW* w_             = nullptr;
-    bool visible_          = false;
-    bool isRoot_           = false;
-    Screen* pOwningScreen_ = nullptr;
+    WINDOW* w_    = nullptr;
+    bool visible_ = false;
+    bool isRoot_  = false;
 
 private:
 };

@@ -26,10 +26,10 @@ MenuBase::~MenuBase()
 
 //----------------------------------------------------------------
 
-WINDOW*
-MenuBase::win() const
+Screen::ScreenType
+MenuBase::type() const
 {
-    return w_;
+    return Screen::ScreenType::Overlay;
 }
 
 //----------------------------------------------------------------
@@ -41,7 +41,7 @@ MenuBase::draw()
 {
     if (!visible_) return;  // only paint if visible
     drawMenu();
-    wnoutrefresh(win());
+    wnoutrefresh(w_);
 }
 
 //----------------------------------------------------------------
@@ -53,7 +53,7 @@ MenuBase::handleKey(int ch)
 {
     if (ch == ' ')
     {
-        toggle();  // purely visual
+        toggle();  // Toggle menu's visibility 
     }
     else if (ch == 27)  // ESC
     {
@@ -61,12 +61,11 @@ MenuBase::handleKey(int ch)
         {
             view_.popScreen();
         }
-        // root menu ignores ESC
+        // Root menu ignores ESC
     }
     else
     {
-        // Always active: handle key, regardless of visibility
-        handleMenuKey(ch);
+        handleMenuKey(ch);  // Always active
     }
 }
 
@@ -76,7 +75,7 @@ void
 MenuBase::toggle()
 {
     visible_ = !visible_;
-    if (!visible_) werase(win());
+    if (!visible_) werase(w_);
     view_.redrawUnlocked();
 }
 
@@ -86,14 +85,6 @@ void
 MenuBase::setRootMenu(bool root)
 {
     isRoot_ = root;
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBase::setOwningScreen(Screen* pOwning)
-{
-    pOwningScreen_ = pOwning;
 }
 
 //----------------------------------------------------------------
