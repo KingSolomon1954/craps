@@ -7,11 +7,13 @@
 #pragma once
 
 #include <cui/MenuBase.h>
+#include <gen/MoneyUtils.h>
 
 namespace Cui {
 
-class ConsoleView;       // fwd
-class ScreenCrapsTable;  // fwd
+class ConsoleView;        // fwd
+class ScreenCrapsTable;   // fwd
+class DialogAmountEntry;  // fwd
     
 class MenuBetting : public MenuBase
 {
@@ -25,6 +27,7 @@ public:
     /// @name Modifiers
     /// @{
     void setOwningScreen(ScreenCrapsTable* pOwning);
+    void onResume() override;
     /// @}
 
     /// @name Observers
@@ -36,7 +39,24 @@ protected:
     void handleMenuKey(int ch) override;
 
 private:
-    ScreenCrapsTable* pOwning_ = nullptr;
+    enum class ResumeState
+    {
+        None,
+        WaitingOnPassLineAmount,
+        WaitingOnComeAmount
+    };
+    
+    ScreenCrapsTable*  pOwning_;
+    DialogAmountEntry* pDialogAe_;
+    ResumeState        resumeState_ = ResumeState::None;
+
+    void setResumeState(ResumeState s);
+    void doPassLine1();
+    void doPassLine2();
+    void doPassLineAmount(Gen::Money contractAmount);
+    void doCome1();
+    void doCome2();
+    
 };
 
 /*-----------------------------------------------------------*//**

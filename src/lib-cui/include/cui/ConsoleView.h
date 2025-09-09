@@ -40,7 +40,8 @@ public:
         MenuPlayerSessionHistory,
         MenuPlayerSessionHistoryGoto,
         MenuPlayerBriefGoto,
-        MenuControl
+        MenuControl,
+        DialogAmountEntry
         // ...
     };
 

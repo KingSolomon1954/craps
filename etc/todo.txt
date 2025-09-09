@@ -1301,13 +1301,13 @@ such that if selected it uses the current entry value for:
 
 +------------------------+
 |  Place Bet on 6        |
-|  Enter amount: [ 100 ] |
 |                        |
 |  [Enter] Confirm Bet   |
 |  [a] Save as AutoFill  |
 |  [q] Save as QuickBet  |
-|                        |
 |  [ESC] Cancel          |
+|                        |
+|  Enter amount: 100     |
 +------------------------+
 
 Suggestion:
@@ -1325,19 +1325,25 @@ I'd like your help in getting this set up.
 
 
 // User presses 'p' in MenuBetting
-void MenuBetting::doPassLine()
+void MenuBetting::doPassLine1()
 {
     state_ = WaitingOnPassLineAmount;
+    pivot = 0;
 
+    // Optionally: pass in defaults (min bet, last bet, etc.)
+    fillAmount = minBet;
+    fillAmount = lastBets;
+    fillAmount = getAutoFillAmount(BetName::PassLine);
+    auto pDialog = dynamic_cast<DialogAmountEntry*>(
+        view_.getScreen(ConsoleView::ScreenId::DialogAmountEntry));
+    if (pDialog)
+    {
+        pDialog->setPrompt("Enter PassLine bet amount:");
+    }
+    
     // Push overlay dialog
     view_.pushScreen(ConsoleView::ScreenId::DialogAmountEntry);
 
-    // Optionally: pass in defaults (min bet, last bet, etc.)
-    auto pDialog = dynamic_cast<DialogAmountEntry*>(
-        view_.getScreen(ConsoleView::ScreenId::DialogAmountEntry));
-    if (pDialog) {
-        pDialog->setPrompt("Enter Pass Line bet amount:");
-    }
 }
 
 
