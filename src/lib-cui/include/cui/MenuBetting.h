@@ -8,6 +8,7 @@
 
 #include <cui/MenuBase.h>
 #include <gen/MoneyUtils.h>
+#include <craps/EnumBetName.h>
 
 namespace Cui {
 
@@ -15,6 +16,7 @@ class ConsoleView;        // fwd
 class ScreenCrapsTable;   // fwd
 class DialogAckError;     // fwd
 class DialogAmountEntry;  // fwd
+class MenuPivot;          // fwd
     
 class MenuBetting : public MenuBase
 {
@@ -43,30 +45,38 @@ private:
     enum class ResumeState
     {
         None,
-        WaitingOnPassLineAmount,
-        WaitingOnComeAmount,
-        WaitingOnPlace4Amount,
-        WaitingOnPlace5Amount,
-        WaitingOnPlace6Amount,
-        WaitingOnPlace8Amount,
-        WaitingOnPlace9Amount,
-        WaitingOnPlace10Amount,
+        WaitingOnBetAmount,
+        WaitingOnOddsAmount,
+        WaitingOnPivot,
         WaitingOnDialogAckError
     };
     
-    ScreenCrapsTable*  pOwning_;
-    DialogAmountEntry* pDlgAmount_;
-    DialogAckError*    pDlgError_;
+    ScreenCrapsTable*  pOwning_              = nullptr;
+    DialogAmountEntry* pDlgAmount_           = nullptr;
+    DialogAckError*    pDlgError_            = nullptr;
+    MenuPivot*         pMenuPivot_           = nullptr;
     ResumeState        resumeState_          = ResumeState::None;
     ResumeState        postDialogErrorState_ = ResumeState::None;
-
+    size_t             pivot_                = 0;
+    BetName            betName_;
+    
+    void showMenuPivot();
+    void showDialogAmountEntry();
+    void showDialogAckError(const std::string& diag);
+    
+    void resumeBets();
+    void resumeOdds();
+    void resumeMenuPivot();
+    void resumeDialogAckError();
     void setResumeState(ResumeState s);
-    void doPassLine1();
-    void doPassLine2();
-    void doPassLineAmount(Gen::Money contractAmount);
-    void doCome1();
-    void doCome2();
-    void doDialogAckError();
+    
+    void doBets(BetName betName);
+    void doOdds();
+    void doMakeBet(Gen::Money contractAmount);
+    
+    void clearState();
+    void setAmountPrompt();
+    void setFillAmount();
 };
 
 /*-----------------------------------------------------------*//**
