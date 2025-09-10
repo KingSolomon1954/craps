@@ -41,7 +41,8 @@ public:
         MenuPlayerSessionHistoryGoto,
         MenuPlayerBriefGoto,
         MenuControl,
-        DialogAmountEntry
+        DialogAmountEntry,
+        DialogAckError
         // ...
     };
 

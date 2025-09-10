@@ -1,44 +1,33 @@
 //----------------------------------------------------------------
 //
-// File: DialogAmountEntry.h
+// File: DialogAckError.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
 #include <cui/MenuBase.h>
-#include <gen/ErrorPass.h>
-#include <gen/MoneyUtils.h>
-#include <gen/ReturnCode.h>
 
 namespace Cui {
 
 class ConsoleView;  // fwd
     
-class DialogAmountEntry : public MenuBase
+class DialogAckError : public MenuBase
 {
 public:
-    struct Results
-    {
-        bool canceled;
-        Gen::Money amount;
-    };
-    
     /// @name Lifecycle
     /// @{
-    DialogAmountEntry(ConsoleView& view);
-   ~DialogAmountEntry();
+    DialogAckError(ConsoleView& view);
+   ~DialogAckError();
     /// @}
 
     /// @name Modifiers
     /// @{
-    void setPrompt(const std::string& prompt);
-    void setFillAmount(Gen::Money fillAmount);
+    void setMessage(const std::string& msg);
     /// @}
 
     /// @name Observers
     /// @{
-    Results getResults() const;
     /// @}
     
 protected:
@@ -50,13 +39,13 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class DialogAmountEntry
+@class DialogAckError
 
-@brief Obtains bet amount from user
+@brief Display diagnostic in a pop up, required user to enter or ok
 
-Responsibilities of DialogAmountEntry:
+Responsibilities of DialogAckError:
 
-@li Key bindings for the menu
+@li Key bindings for the dialog box
 
 @li Process input keys 
 
@@ -65,8 +54,6 @@ Responsibilities of DialogAmountEntry:
 @li Renders the dialog on screen
 
 @li Functions to establish defaults and fill values
-
-@li Returns entered values in results structure
 
 */
 

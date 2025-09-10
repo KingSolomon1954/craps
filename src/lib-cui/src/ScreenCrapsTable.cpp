@@ -403,6 +403,47 @@ ScreenCrapsTable::getPlayerAt(size_t index)
 
 //----------------------------------------------------------------
 //
+// Menu processing calls these onXxx functions for redrawing
+//
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::onBetFailed(const Craps::PlayerId& pid,
+                              const std::string& reason)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::onPlayerJoined(const Craps::PlayerId& pid)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::onPlayerLeft  (const Craps::PlayerId& pid)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------
+//
 // TODO hook in to menu processing
 //
 void

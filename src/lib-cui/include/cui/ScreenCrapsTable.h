@@ -23,6 +23,11 @@ public:
     void onAttach()        override;
     void handleKey(int ch) override;
 
+    void onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid);
+    void onBetFailed(const Craps::PlayerId& pid, const std::string& reason);
+    void onPlayerJoined(const Craps::PlayerId& pid);
+    void onPlayerLeft  (const Craps::PlayerId& pid);
+
 private:
     struct Windows
     {

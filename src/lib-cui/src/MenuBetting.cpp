@@ -10,6 +10,7 @@
 #include <controller/CrapsInterface.h>
 #include <cui/ConsoleView.h>
 #include <cui/ScreenCrapsTable.h>
+#include <cui/DialogAckError.h>
 #include <cui/DialogAmountEntry.h>
 
 using namespace Cui;
@@ -19,9 +20,12 @@ using namespace Cui;
 MenuBetting::MenuBetting(ConsoleView& view)
     : MenuBase(view, 5, 6)  // TODO Howie need layout
 {
-    // Obtain the DialogEntryAmount screen and cache it
-    auto* pScreen = view_.getScreen(ConsoleView::ScreenId::DialogAmountEntry);
-    auto* pDialogAe_ = dynamic_cast<DialogAmountEntry*>(pScreen);
+    // Obtain the DialogAmountEntry screen and cache it
+    auto* pDlgAmount_ = dynamic_cast<DialogAmountEntry*>(
+        view_.getScreen(ConsoleView::ScreenId::DialogAmountEntry));
+    // Obtain the DialogAckError screen and cache it
+    auto* pDlgError_ = dynamic_cast<DialogAckError*>(
+        view_.getScreen(ConsoleView::ScreenId::DialogAckError));
 }
 
 //----------------------------------------------------------------
@@ -77,9 +81,10 @@ MenuBetting::onResume()
 {
     switch (resumeState_)
     {
-    case ResumeState::None:                    assert(false); break;
-    case ResumeState::WaitingOnPassLineAmount: doPassLine2(); break;
-    case ResumeState::WaitingOnComeAmount:     doCome2();     break;
+    case ResumeState::None:                    assert(false);      break;
+    case ResumeState::WaitingOnPassLineAmount: doPassLine2();      break;
+    case ResumeState::WaitingOnComeAmount:     doCome2();          break;
+    case ResumeState::WaitingOnDialogAckError: doDialogAckError(); break;
     }
 }
 
@@ -88,10 +93,11 @@ MenuBetting::onResume()
 void
 MenuBetting::doPassLine1()
 {
-    pDialogAe_->setPrompt("PassLine Bet");
-    pDialogAe_->setFillAmount(100);  // TODO: find correct fill amount
+    // Setup to display DialogAmountEntry
+    pDlgAmount_->setPrompt("PassLine Bet");
+    pDlgAmount_->setFillAmount(100);  // TODO: find correct fill amount
     setResumeState(ResumeState::WaitingOnPassLineAmount);
-    view_.pushScreen(pDialogAe_);
+    view_.pushScreen(pDlgAmount_);
 }
 
 //----------------------------------------------------------------
@@ -99,19 +105,17 @@ MenuBetting::doPassLine1()
 void
 MenuBetting::doPassLine2()
 {
-    auto rs = pDialogAe_->getResults();
+    // Back from DialogAmountEntry
+    auto rs = pDlgAmount_->getResults();
     
     if (rs.canceled)
     {
-        // empty
+        // Empty
     }
     else
     {
         doPassLineAmount(rs.amount);
     }
-        
-    setResumeState(ResumeState::None);
-    view_.popScreen();
 }
 
 //----------------------------------------------------------------
@@ -137,28 +141,18 @@ MenuBetting::doPassLineAmount(Gen::Money contractAmount)
         ep);
     if (rc == Gen::ReturnCode::Fail)
     {
-#if 0  // TODO
-        // Show diagnostic dialog overlay
-        view_.pushScreen(ConsoleView::ScreenId::DialogDiagnostic);
-
-        auto pDd = dynamic_cast<DialogDiagnostic*>(
-            view_.getScreen(ConsoleView::ScreenId::DialogDiagnostic));
-        if (pDd)
-        {
-            pDd->setMessage(ep.message);
-        }
-#endif
+        pOwning_->onBetFailed(playerId, ep.diag);        
+        pDlgError_->setMessage(ep.diag);
+        postDialogErrorState_ = resumeState_;
+        setResumeState(ResumeState::WaitingOnDialogAckError);
+        view_.pushScreen(pDlgError_);
+        return;
     }
-    else
-    {
-#if 0  // TODO
-        // Bet succeeded — notify owning screen to update visuals
-        if (pOwning_)
-        {
-            pOwning_->drawMakeBet(playerId_, betId);
-        }
-#endif
-    }
+    
+    // Bet succeeded
+    pOwning_->onBetPlaced(playerId, betId);  // Update visuals
+    setResumeState(ResumeState::None);
+    view_.popScreen();
 }
 
 //----------------------------------------------------------------
@@ -166,7 +160,7 @@ MenuBetting::doPassLineAmount(Gen::Money contractAmount)
 void
 MenuBetting::doCome1()
 {
-    
+    // TODO    
 }
 
 //----------------------------------------------------------------
@@ -174,9 +168,19 @@ MenuBetting::doCome1()
 void
 MenuBetting::doCome2()
 {
-    
+    // TODO    
 }
 
+//----------------------------------------------------------------
+
+void
+MenuBetting::doDialogAckError()
+{
+    // Error dialog was dismissed, restore "return-to" state
+    resumeState_ = postDialogErrorState_;
+    postDialogErrorState_ = ResumeState::None;
+}
+        
 //----------------------------------------------------------------
 
 void

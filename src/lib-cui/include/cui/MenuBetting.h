@@ -13,6 +13,7 @@ namespace Cui {
 
 class ConsoleView;        // fwd
 class ScreenCrapsTable;   // fwd
+class DialogAckError;     // fwd
 class DialogAmountEntry;  // fwd
     
 class MenuBetting : public MenuBase
@@ -43,12 +44,21 @@ private:
     {
         None,
         WaitingOnPassLineAmount,
-        WaitingOnComeAmount
+        WaitingOnComeAmount,
+        WaitingOnPlace4Amount,
+        WaitingOnPlace5Amount,
+        WaitingOnPlace6Amount,
+        WaitingOnPlace8Amount,
+        WaitingOnPlace9Amount,
+        WaitingOnPlace10Amount,
+        WaitingOnDialogAckError
     };
     
     ScreenCrapsTable*  pOwning_;
-    DialogAmountEntry* pDialogAe_;
-    ResumeState        resumeState_ = ResumeState::None;
+    DialogAmountEntry* pDlgAmount_;
+    DialogAckError*    pDlgError_;
+    ResumeState        resumeState_          = ResumeState::None;
+    ResumeState        postDialogErrorState_ = ResumeState::None;
 
     void setResumeState(ResumeState s);
     void doPassLine1();
@@ -56,7 +66,7 @@ private:
     void doPassLineAmount(Gen::Money contractAmount);
     void doCome1();
     void doCome2();
-    
+    void doDialogAckError();
 };
 
 /*-----------------------------------------------------------*//**
