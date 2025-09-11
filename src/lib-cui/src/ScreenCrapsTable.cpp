@@ -404,6 +404,7 @@ ScreenCrapsTable::getPlayerAt(size_t index)
 //----------------------------------------------------------------
 //
 // Menu processing calls these onXxx functions for redrawing
+// Redrawing functions. Prefixed with onXxx called by Menu processing
 //
 //----------------------------------------------------------------
 

@@ -36,9 +36,10 @@ protected:
     virtual void drawMenu()            = 0;
     virtual void handleMenuKey(int ch) = 0;
 
-    WINDOW* w_    = nullptr;
-    bool visible_ = false;
-    bool isRoot_  = false;
+    WINDOW* w_       = nullptr;
+    bool visible_    = false;
+    bool isRoot_     = false;
+    bool isCanceled_ = false;
 
 private:
 };

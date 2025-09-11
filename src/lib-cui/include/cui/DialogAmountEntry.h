@@ -7,9 +7,7 @@
 #pragma once
 
 #include <cui/MenuBase.h>
-#include <gen/ErrorPass.h>
 #include <gen/MoneyUtils.h>
-#include <gen/ReturnCode.h>
 
 namespace Cui {
 
@@ -20,8 +18,8 @@ class DialogAmountEntry : public MenuBase
 public:
     struct Results
     {
-        bool canceled;
-        Gen::Money amount;
+        bool canceled     = false;
+        Gen::Money amount = 0;
     };
     
     /// @name Lifecycle
@@ -32,7 +30,8 @@ public:
 
     /// @name Modifiers
     /// @{
-    void setPrompt(const std::string& prompt);
+    void clearState();
+    void setTitle(const std::string& title);
     void setFillAmount(Gen::Money fillAmount);
     /// @}
 
@@ -46,6 +45,17 @@ protected:
     void handleMenuKey(int ch) override;
 
 private:
+    std::string title_;
+    Gen::Money fillAmount_ = 0;
+    Gen::Money amount_     = 0;
+    size_t cursorPos_      = 0;
+    std::string lineBuffer_;
+
+    void doEnter();
+    void doAutoFill();
+    void doQuickBet();
+    void handleLineInput(int ch);
+    void drawInput();
 };
 
 /*-----------------------------------------------------------*//**

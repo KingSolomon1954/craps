@@ -9,9 +9,10 @@
 #include <cassert>
 #include <controller/CrapsInterface.h>
 #include <cui/ConsoleView.h>
-#include <cui/ScreenCrapsTable.h>
 #include <cui/DialogAckError.h>
 #include <cui/DialogAmountEntry.h>
+#include <cui/ScreenCrapsTable.h>
+#include <cui/MenuPivot.h>
 
 using namespace Cui;
 
@@ -26,6 +27,8 @@ MenuBetting::MenuBetting(ConsoleView& view)
     // Obtain the DialogAckError screen and cache it
     auto* pDlgError_ = dynamic_cast<DialogAckError*>(
         view_.getScreen(ConsoleView::ScreenId::DialogAckError));
+    auto* pMenuPivot_ = dynamic_cast<MenuPivot*>(
+        view_.getScreen(ConsoleView::ScreenId::MenuPivot));
 }
 
 //----------------------------------------------------------------
@@ -85,7 +88,7 @@ MenuBetting::doBets(BetName betName)
     case BetName::DontPass:
     case BetName::DontCome:  showDialogAmountEntry(); break;
     case BetName::Place:     
-    case BetName::Hardway:   showMenuPivot();      break;
+    case BetName::Hardway:   showMenuPivot();         break;
     }
 }
 
@@ -188,7 +191,7 @@ MenuBetting::doMakeBet(Gen::Money contractAmount)
         playerId,
         betName_,
         contractAmount,
-        pivot_, // pivot
+        pivot_,
         betId,  // return value
         ep);
     if (rc == Gen::ReturnCode::Fail)
@@ -210,6 +213,7 @@ void
 MenuBetting::showDialogAmountEntry()
 {
     // Bring up DialogAmountEntry
+    pDlgAmount_->clearState();
     setAmountPrompt();
     setFillAmount();
     setResumeState(ResumeState::WaitingOnBetAmount);
@@ -255,7 +259,7 @@ MenuBetting::setAmountPrompt()
     // TODO
     // "Place Bet on 6"
     std::string s = "Place Bet on 6";
-    pDlgAmount_->setPrompt(s);
+    pDlgAmount_->setTitle(s);
 }
 
 //----------------------------------------------------------------

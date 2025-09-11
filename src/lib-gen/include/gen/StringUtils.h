@@ -8,6 +8,7 @@
 
 #include <string>
 #include <cstdarg>  // For variable args
+#include <vector>
 
 namespace Gen
 {
@@ -74,6 +75,9 @@ public:
     /// @}
     
     static const std::string whiteSpace;  ///< these chars " \t\v\f\r\n"
+
+    static std::vector<std::string> wrapText(const std::string& text,
+                                             int wrapWidth);
 };
 
 /*-----------------------------------------------------------*//**

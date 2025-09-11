@@ -391,3 +391,35 @@ StringUtils::toLower(const std::string& s1)
 }
 
 //----------------------------------------------------------------
+
+std::vector<std::string>
+StringUtils::wrapText(const std::string& text, int wrapWidth)
+{
+    std::vector<std::string> lines;
+    std::istringstream iss(text);
+    std::string word, line;
+
+    while (iss >> word)
+    {
+        if (line.empty())
+        {
+            line = word;
+        }
+        else if ((int)line.size() + 1 + (int)word.size() <= wrapWidth)
+        {
+            line += " " + word;
+        }
+        else
+        {
+            lines.push_back(line);
+            line = word;
+        }
+    }
+    if (!line.empty())
+    {
+        lines.push_back(line);
+    }
+    return lines;
+}
+
+//----------------------------------------------------------------

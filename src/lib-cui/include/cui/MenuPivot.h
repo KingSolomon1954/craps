@@ -1,34 +1,41 @@
 //----------------------------------------------------------------
 //
-// File: DialogAckError.h
+// File: MenuPivot.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
-#include <string>
 #include <cui/MenuBase.h>
+#include <craps/EnumBetName.h>
 
 namespace Cui {
 
 class ConsoleView;  // fwd
     
-class DialogAckError : public MenuBase
+class MenuPivot : public MenuBase
 {
 public:
+    struct Results
+    {
+        bool canceled;
+        size_t pivot;
+    };
+    
     /// @name Lifecycle
     /// @{
-    DialogAckError(ConsoleView& view);
-   ~DialogAckError();
+    MenuPivot(ConsoleView& view);
+   ~MenuPivot();
     /// @}
 
     /// @name Modifiers
     /// @{
-    void setMessage(const std::string& msg);
+    void setUpFor(BetName betName);
     /// @}
 
     /// @name Observers
     /// @{
+    Results getResults() const;
     /// @}
     
 protected:
@@ -36,32 +43,31 @@ protected:
     void handleMenuKey(int ch) override;
 
 private:
-    std::string message_;
+    BetName     betName_;
+    size_t      pivot_;
+    std::string title_;
     
+    void doPivot(int num);
     void clearState();
-    void doAck();
 };
 
 /*-----------------------------------------------------------*//**
 
-@class DialogAckError
+@class MenuPivot
 
-@brief Display diagnostic in a pop up, required user to enter or ok
+@brief Display choices for bet Pivots
 
-There is no result to obtain. When the user presses
-a key the dialog is done.
+Responsibilities of MenuPivot:
 
-Responsibilities of DialogAckError:
-
-@li Key bindings for the dialog box
+@li Key bindings for the menu
 
 @li Process input keys 
 
 @li Takes action on input keys 
 
-@li Renders the dialog on screen
+@li Renders the menu on screen
 
-@li Function to establish message in dialog box
+@li Functions to establish defaults and fill values
 
 */
 

@@ -6,8 +6,11 @@
 
 add_library(cui STATIC
     src/ConsoleView.cpp
+    src/DialogAckError.cpp
+    src/DialogAmountEntry.cpp
     src/MenuBase.cpp
     src/MenuBetting.cpp
+    src/MenuPivot.cpp
     src/ScreenCrapsTable.cpp
     src/ScreenFactory.cpp
 )

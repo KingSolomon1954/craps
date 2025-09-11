@@ -59,6 +59,7 @@ MenuBase::handleKey(int ch)
     {
         if (!isRoot_)
         {
+            isCanceled_ = true;
             view_.popScreen();
         }
         // Root menu ignores ESC
