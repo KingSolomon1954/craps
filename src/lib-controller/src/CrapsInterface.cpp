@@ -111,6 +111,54 @@ CrapsInterface::playerHaveBet(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsInterface::playerGetBets(
+    const Craps::PlayerId& playerId,
+    std::vector<Craps::BetId>& betIds,
+    Gen::ErrorPass& ep)
+{
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr)
+    {
+        ep.prepend(diagPrefix("playerName", "retrieve player bets"));
+        return Gen::ReturnCode::Fail;
+    }
+
+    auto playerBets = p->getBets();  // Grab player's bets
+    betIds.clear();
+    for (auto b : playerBets)        // Build a list of BetIds
+    {
+        betIds.push_back(b->betId());
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::playerGetOddsBets(
+    const Craps::PlayerId& playerId,
+    std::vector<Craps::BetId>& betIds,
+    Gen::ErrorPass& ep)
+{
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr)
+    {
+        ep.prepend(diagPrefix("playerName", "retrieve player bets"));
+        return Gen::ReturnCode::Fail;
+    }
+
+    auto playerBets = p->getOddsBets();  // Grab player's odds bets
+    betIds.clear();
+    for (auto b : playerBets)            // Build a list of BetIds
+    {
+        betIds.push_back(b->betId());
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsInterface::playerName(
     const Craps::PlayerId& playerId,
     std::string& playerName,

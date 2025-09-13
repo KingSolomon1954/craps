@@ -34,6 +34,8 @@ class CrapsTable;       // fwd
 class Player
 {
 public:
+    using Bets = std::vector<BetPtr>;
+    
     /// @name Lifecycle
     /// @{
     Player(const PlayerId&     playerId, // Existing playerId,
@@ -86,6 +88,9 @@ public:
     unsigned             getNumBetsOnTable()                      const;
     Gen::Money           getBalance()                             const;
     BetPtr               getBet(const BetId& betId, Gen::ErrorPass& ep) const;
+    Bets                 getBets()                                const;
+    Bets                 getOddsBets()                            const;
+
     const LastRollStats& getLastRollStats()                       const;
     const PlayerStats&   getCurrentStats()                        const;
     const PlayerStats&   getAlltimeStats()                        const;

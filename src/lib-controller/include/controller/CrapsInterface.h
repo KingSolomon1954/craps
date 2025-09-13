@@ -54,6 +54,14 @@ public:
         const Craps::BetId& betId,
         bool& haveBet,
         Gen::ErrorPass& ep);
+    static Gen::ReturnCode playerGetBets(
+        const Craps::PlayerId& playerId,
+        std::vector<Craps::BetId>& betIds,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode playerGetOddsBets(
+        const Craps::PlayerId& playerId,
+        std::vector<Craps::BetId>& betIds,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode playerName(
         const Craps::PlayerId& playerId,
         std::string& playerName,

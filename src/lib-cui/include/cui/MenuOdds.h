@@ -57,7 +57,7 @@ private:
         Craps::PlayerId playerId;
         Craps::BetId    betId;
         BetName         betName;
-        size_t          pivot;
+        unsigned        pivot;
         Gen::Money      contractAmount;
         Gen::Money      currentOddsAmount;
         Gen::Timepoint  whenCreated;
@@ -83,6 +83,7 @@ private:
     int  getLongestEntry(const std::vector<std::string>& entries,
                          const std::string& title,
                          const std::string&  prompt) const;
+    void populateBets(std::vector<Craps::BetId>& betIds);
 };
 
 /*-----------------------------------------------------------*//**

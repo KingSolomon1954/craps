@@ -652,6 +652,41 @@ Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
 
 //----------------------------------------------------------------
 
+Player::Bets
+Player::getBets() const
+{
+    std::vector<BetPtr> returnBets;
+    for (auto b : bets_)
+    {
+        returnBets.push_back(b);
+    }
+    return returnBets;
+}
+
+//----------------------------------------------------------------
+//
+// Return bets capable of odds
+//
+Player::Bets
+Player::getOddsBets() const
+{
+    std::vector<BetPtr> returnBets;
+    for (auto b : bets_)
+    {
+        if ((b->betName() == BetName::PassLine  ||
+             b->betName() == BetName::Come      ||
+             b->betName() == BetName::DontPass  ||
+             b->betName() == BetName::DontCome) &&
+            (b->pivot() != 0))
+        {
+            returnBets.push_back(b);
+        }
+    }
+    return returnBets;
+}
+
+//----------------------------------------------------------------
+
 bool
 Player::haveBet(const BetId& betId) const
 {
