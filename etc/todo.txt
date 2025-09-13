@@ -1317,10 +1317,94 @@ Suggestion:
     But also allow b (or something) as a shortcut back to the Betting Menu, regardless of depth.
     This avoids “ESC fatigue.”
 
+Quick Bets
 
-I'm working on the logic/pseudo code to process a
-MenuBetting::handleMenuKey('p'), meaning the user wants to make a
-PassLine bet. The amount of the bet comes from the AmountEntry dialog.
-I'd like your help in getting this set up.
+When building a menu of quick bet choices, there will also need to be a
+controller function to obtain the current quick bets. This will also be
+necessary when editing quick bets via the configuration menu.
 
+For CUI, when a quick bet is set from the DialogAmountEntry, it is
+automatically assigned the next available slot in the quick bet
+list. I'm thinking the slots are associated with a single digit number
+starting at '1', so therefore 1,2,3,4,5,6,7,8,9. If we want to support
+more than just 9 quick bets then slots beyond 9 would be associated with
+single alpha character 'a','b','c' and so on. But in the spirit and
+purpose of quick bets I think a max of 9 is probably sufficient and will
+satisfy user convenience.
+
+The QuickBet class in controller has these responsibilities:
+
+* maintains a list of quick bets. std::list or std::vector is fine
+* works off of indexes, not key mappings
+* UI is responsible for presenting key mappings to quick bets if
+  any. Could be numbers or alphas or just highlighted entry or pointer
+  position.
+* applyQuickBet(size_t index);
+* setQuickBet(BetName betName, size_t pivot, bool oddsBet, Gen::Money amount);
+* deleteQuickBet(BetName betName, size_t pivot, bool oddsBet); shift entries if necessary, no empty slots
+* deleteQuickBet(size_t index); shift entries if necessary, no empty slots
+* getQuickBets() - returns a vector of quick bet entries
+
+Auto Fill
+
+The AutoFill class in controller has these responsibilities:
+
+* maintains a list of auto fill bets. std::vector is fine
+* amount = getAutoFill(BetName betName, size_t pivot, bool oddsBet);
+* setAutoFill(BetName betName, size_t pivot, bool oddsBet, Gen::Money amount);
+  replaces amount if the entry already exists
+* getAutoFills() - returns the vector of auto fill entries - so
+  it can be edited via configuration menu.
+* deleteAutoFill(BetName betName, size_t pivot, bool oddsBet); shift entries if necessary, no empty slots
+
+I think putting quick bet and auto fill functions in
+CrapsInterface class is best. To agree with current
+API conventions the CrapsInterface for these would look like this.
+
+CrapsInterface
+{
+    struct AutoFillEntry {
+        BetName     betName;
+        size_t      pivot;
+        bool        oddsBet;
+        Gen::Money  amount;
+    };
+
+    struct QuickBetEntry {
+        BetName     betName;
+        size_t      pivot;
+        bool        oddsBet;
+        Gen::Money  amount;
+    };
+    
+    static Gen::ReturnCode setAutoFill(
+            const AutoFillEntry& entry,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode getAutoFill(
+            const AutoFillEntry& entry,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode deleteAutoFill(
+            const AutoFillEntry& entry,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode getAutoFills(
+            std::vector<AutoFillEntry>& autoFills,  // return arg
+            Gen::ErrorPass& ep);
+            
+    static Gen::ReturnCode setQuickBet(
+            const QuickBetEntry& entry,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode applyQuickBet(
+            size_t index,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode deleteQuickBet(
+            const QuickBetEntry& entry,
+            BetName betName,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode deleteQuickBet(
+            size_t index,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode getQuickBets(
+            std::vector<QuickBetEntry>& quickBets,  // return arg
+            Gen::ErrorPass& ep);
+};
 
