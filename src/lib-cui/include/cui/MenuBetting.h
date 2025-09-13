@@ -9,6 +9,7 @@
 #include <cui/MenuBase.h>
 #include <gen/MoneyUtils.h>
 #include <craps/EnumBetName.h>
+#include <craps/CrapsTypes.h>
 
 namespace Cui {
 
@@ -17,6 +18,7 @@ class ScreenCrapsTable;   // fwd
 class DialogAckError;     // fwd
 class DialogAmountEntry;  // fwd
 class MenuPivot;          // fwd
+class MenuOdds;           // fwd
     
 class MenuBetting : public MenuBase
 {
@@ -46,6 +48,7 @@ private:
     {
         None,
         WaitingOnBetAmount,
+        WaitingOnOddsSelection,
         WaitingOnOddsAmount,
         WaitingOnPivot,
         WaitingOnDialogAckError
@@ -55,27 +58,34 @@ private:
     DialogAmountEntry* pDlgAmount_           = nullptr;
     DialogAckError*    pDlgError_            = nullptr;
     MenuPivot*         pMenuPivot_           = nullptr;
+    MenuOdds*          pMenuOdds_            = nullptr;
     ResumeState        resumeState_          = ResumeState::None;
     ResumeState        postDialogErrorState_ = ResumeState::None;
     size_t             pivot_                = 0;
+    bool               isOddsBet_            = false;
     BetName            betName_;
+    Craps::BetId       betId_;
     
     void showMenuPivot();
+    void showMenuOdds();
     void showDialogAmountEntry();
     void showDialogAckError(const std::string& diag);
     
-    void resumeBets();
-    void resumeOdds();
+    void resumeBetAmount();
+    void resumeOddsAmount();
+    void resumeOddsSelection();
     void resumeMenuPivot();
     void resumeDialogAckError();
+    void setResumeState();
     void setResumeState(ResumeState s);
     
     void doBets(BetName betName);
-    void doOdds();
+    void doOddsBets();
     void doMakeBet(Gen::Money contractAmount);
+    void doMakeOddsBet(Gen::Money oddsAmount);
     
     void clearState();
-    void setAmountPrompt();
+    void setAmountTitle();
     void setFillAmount();
 };
 

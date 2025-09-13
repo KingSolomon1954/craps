@@ -29,6 +29,7 @@ public:
         ScreenGameHelp,
         MenuBetting,
         MenuPivot,
+        MenuOdds,
         MenuView,
         MenuTableViewGoto,
         MenuDiceStats,

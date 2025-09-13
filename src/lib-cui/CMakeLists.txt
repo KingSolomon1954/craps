@@ -10,6 +10,7 @@ add_library(cui STATIC
     src/DialogAmountEntry.cpp
     src/MenuBase.cpp
     src/MenuBetting.cpp
+    src/MenuOdds.cpp
     src/MenuPivot.cpp
     src/ScreenCrapsTable.cpp
     src/ScreenFactory.cpp

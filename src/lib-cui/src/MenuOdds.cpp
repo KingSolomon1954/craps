@@ -1,0 +1,348 @@
+//----------------------------------------------------------------
+//
+// File: MenuOdds.cpp
+//
+//----------------------------------------------------------------
+
+#include <cui/MenuOdds.h>
+#include <algorithm>
+#include <cstring>
+#include <cassert>
+#include <cui/ConsoleView.h>
+#include <gen/MoneyUtils.h>
+
+using namespace Cui;
+
+//----------------------------------------------------------------
+
+MenuOdds::MenuOdds(ConsoleView& view)
+    : MenuBase(view, 1, 1)  // Placeholder, resized in drawMenu()
+{
+    visible_ = true;
+}
+
+//----------------------------------------------------------------
+
+MenuOdds::~MenuOdds()
+{
+}
+
+//----------------------------------------------------------------
+//
+// Draw the menu prompts
+//
+// Overrides menu base class.
+//
+// Dynamically builds the menu prompts from list of player's odds bets.
+// Shows only active odds capable bets (sorted most recent first).
+// 
+// Looks something like this:
+//     
+//     +---------------------------------+
+//     | Make Odds Bet                   |
+//     |                                 |
+//     | 1 - Come 6      ($200, $0)      |
+//     | 2 - DontPass 10 ($1000, $3,000) |
+//     | 3 - PassLine 8  ($500, $500)    |
+//     | 4 - DontCome 6  ($100, 0)       |
+//     | ESC - cancel                    |
+//     |                                 |
+//     | Select:                         |
+//     +---------------------------------+
+// 
+void
+MenuOdds::drawMenu()
+{
+    assert(w_ && "MenuOdds: WINDOW not initialized");
+
+    const std::string title{"Make Odds Bet"};
+    const std::string prompt{"Select:"};
+
+    buildOddsBetEntries(); // Prepare bets_ (only odds-capable bets)
+
+    std::vector<std::string> entries;  // Build menu entries (strings only)
+    buildMenuEntries(entries);
+
+    int longest = getLongestEntry(entries, title, prompt);
+
+    // Compute window size and clamp to reasonable limits (max 80 cols)
+    int screenRows, screenCols;
+    getmaxyx(stdscr, screenRows, screenCols);
+
+    const int maxInnerWidth = std::min(80, screenCols - 4); // leave margin on sides
+    int innerWidth = std::min(maxInnerWidth, longest + 4);  // padding inside
+    int boxWidth = innerWidth + 2; // include borders
+
+    // Rows: title(1) + blank(1) + entries(n) + esc(1) + blank(1) + prompt(1)
+    int innerHeight = 1 + 1 + static_cast<int>(entries.size()) + 1 + 1 + 1;
+    int boxHeight = innerHeight + 2; // include top/bottom borders
+
+    // Ensure we fit vertically
+    if (boxHeight > screenRows - 2)
+    {
+        // clamp height and trim entries if necessary
+        boxHeight = screenRows - 2;
+        innerHeight = boxHeight - 2;
+        // keep top title + prompt + ESC, trim entries to fit
+        int minNeeded = 1 + 1 + 1 + 1 + 1; // title + blank + esc + blank + prompt
+        int allowedEntries = std::max(0, innerHeight - minNeeded);
+        if (allowedEntries < static_cast<int>(entries.size()))
+            entries.resize(static_cast<size_t>(allowedEntries));
+    }
+
+    // Center window
+    int startY = (screenRows - boxHeight) / 2;
+    int startX = (screenCols - boxWidth) / 2;
+
+    // Recreate window sized to content
+    if (w_) delwin(w_);
+    w_ = newwin(boxHeight, boxWidth, startY, startX);
+
+    // Clear, draw box, and title
+    werase(w_);
+    box(w_, 0, 0);
+
+    int row = 1;
+    int col = 2; // left padding inside box
+
+    // Title (left aligned)
+    mvwprintw(w_, row, col, "%s", title.c_str());
+    row += 2; // title + blank line
+
+    // Render entries
+    renderMenuEntries(entries, row);
+
+    // After entries, ensure we move row past them
+    row += static_cast<int>(entries.size());
+
+    // ESC line
+    mvwprintw(w_, row++, col, "ESC - cancel");
+
+    // blank line
+    row++;
+
+    // Prompt centered horizontally inside innerWidth
+    int promptX = std::max(1, (innerWidth - static_cast<int>(prompt.size())) / 2);
+    mvwprintw(w_, row++, promptX, "%s", prompt.c_str());
+
+    // Done: schedule window for refresh
+    wnoutrefresh(w_);
+}
+
+//----------------------------------------------------------------
+//
+// Create a vector of bets that are odds capable.
+//
+void
+MenuOdds::buildOddsBetEntries()
+{
+    // TODO
+    sortBetsByCreated();
+}
+
+//----------------------------------------------------------------
+//
+// Create a vector of bets that are odds capable.
+//
+void
+MenuOdds::buildMenuEntries(std::vector<std::string>& entries)
+{
+    entries.clear();
+
+    // First pass: build prefixes and amounts separately
+    std::vector<std::string> prefixes;
+    std::vector<std::string> amounts;
+
+    for (size_t i = 0; i < bets_.size(); ++i)
+    {
+        char key = betKeyFromIndex(i);
+        if (key == '\0') break; // out of supported range
+
+        auto& b = bets_[i];
+        std::string name       = EnumBetName::toString(b.betName);
+        std::string pivot      = std::to_string(b.pivot);
+        std::string amount     = Gen::MoneyUtils::toStringNoCommas(b.contractAmount);
+        std::string oddsAmount = Gen::MoneyUtils::toStringNoCommas(b.currentOddsAmount);
+
+        // Build everything before the amounts
+        std::string prefix = std::string(1, key) + " - " + name + " " + pivot;
+
+        // Build just the amounts portion
+        std::string amt = "(" + amount + ", " + oddsAmount + ")";
+
+        prefixes.push_back(prefix);
+        amounts.push_back(amt);
+    }
+
+    // Find the longest prefix
+    size_t maxPrefixLen = 0;
+    for (auto& p : prefixes)
+        maxPrefixLen = std::max(maxPrefixLen, p.size());
+
+    // Combine into final vertically aligned entries
+    for (size_t i = 0; i < prefixes.size(); ++i)
+    {
+        std::string line = prefixes[i];
+        // pad with spaces so all amounts start at same column
+        if (line.size() < maxPrefixLen)
+            line.append(maxPrefixLen - line.size(), ' ');
+
+        line += " " + amounts[i];
+        entries.push_back(line);
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+MenuOdds::renderMenuEntries(const std::vector<std::string>& entries,
+                            int startRow)
+{
+    int row = startRow;
+    int col = 2; // left padding inside box
+
+    for (const auto &e : entries)
+    {
+        mvwprintw(w_, row++, col, "%s", e.c_str());
+    }
+}
+
+//----------------------------------------------------------------
+
+int
+MenuOdds::getLongestEntry(const std::vector<std::string>& entries,
+                          const std::string& title,
+                          const std::string&  prompt) const
+{
+    int longest = static_cast<int>(title.size());
+    longest = std::max(longest, static_cast<int>(prompt.size()));
+    for (const auto &e : entries)
+    {
+        longest = std::max(longest, static_cast<int>(e.size()));
+    }
+    return longest;
+}
+
+//----------------------------------------------------------------
+//
+// Override menu base class
+//
+void
+MenuOdds::handleMenuKey(int ch)
+{
+    int idx = betIndexFromKey(ch, bets_.size());
+    if (idx >= 0)
+    {
+        auto& bet = bets_[static_cast<size_t>(idx)];
+        doSelection(bet);
+        return;
+    }
+    beep();
+}
+
+//----------------------------------------------------------------
+
+void
+MenuOdds::sortBetsByCreated()
+{
+    std::sort(bets_.begin(), bets_.end(),
+        [](const BetEntry& a, const BetEntry& b)
+        {
+            return a.whenCreated > b.whenCreated;  // newest first
+        });
+}
+
+//----------------------------------------------------------------
+//
+// Map input key to bet index
+//
+int
+MenuOdds::betIndexFromKey(int ch, size_t betCount)
+{
+    // '1'..'9'
+    if (ch >= '1' && ch <= '9')
+    {
+        int idx = ch - '1';  // '1' → 0
+        if (idx < static_cast<int>(betCount))
+            return idx;
+    }
+
+    // 'a'..'c' (case-insensitive)
+    if (ch >= 'a' && ch <= 'c')
+    {
+        int idx = 9 + (ch - 'a');  // 'a' → 9
+        if (idx < static_cast<int>(betCount))
+            return idx;
+    }
+    if (ch >= 'A' && ch <= 'C')
+    {
+        int idx = 9 + (ch - 'A');  // 'A' → 9
+        if (idx < static_cast<int>(betCount))
+            return idx;
+    }
+
+    return -1; // Invalid
+}
+
+//----------------------------------------------------------------
+//
+// Map bet index to display key
+//
+char
+MenuOdds::betKeyFromIndex(size_t idx)
+{
+    if (idx < 9)
+        return static_cast<char>('1' + idx);  // 0→'1', 8→'9'
+    else if (idx < 12)
+        return static_cast<char>('a' + (idx - 9));  // 9→'a', 11→'c'
+
+    return '\0'; // Out of supported range
+}
+
+//----------------------------------------------------------------
+
+void
+MenuOdds::doSelection(BetEntry& bet)
+{
+    // Load results struct for the selected bet
+    playerId_          = bet.playerId;
+    betName_           = bet.betName;
+    betId_             = bet.betId;
+    pivot_             = bet.pivot;
+    contractAmount_    = bet.contractAmount;    
+    currentOddsAmount_ = bet.currentOddsAmount;    
+    view_.popScreen();
+}    
+
+//----------------------------------------------------------------
+
+MenuOdds::Results
+MenuOdds::getResults() const
+{
+    Results results;
+    results.canceled          = isCanceled_;
+    results.playerId          = playerId_;         
+    results.betName           = betName_;          
+    results.betId             = betId_;            
+    results.pivot             = pivot_;            
+    results.contractAmount    = contractAmount_;   
+    results.currentOddsAmount = currentOddsAmount_;
+    return results;
+}
+
+//----------------------------------------------------------------
+
+void
+MenuOdds::clearState()
+{
+    bets_.clear();
+    playerId_.clear();
+    betName_           = BetName::Invalid;
+    betId_             = 0;
+    pivot_             = 0;
+    contractAmount_    = 0;
+    currentOddsAmount_ = 0;
+    isCanceled_        = false;  // base class
+}    
+
+//----------------------------------------------------------------

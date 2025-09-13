@@ -212,17 +212,16 @@ DialogAmountEntry::doEnter()
 {
     if (lineBuffer_.empty())
     {
-        beep();   // Reject empty input
+        beep();  // Reject empty input
         return;
     }
 
     try
     {
-        long long val = std::stoll(lineBuffer_);  // use wider type
+        long long val = std::stoll(lineBuffer_);
         if (val < 0)
         {
-            // Reject negative values
-            beep();
+            beep();  // Reject negative values
             return;
         }
 
