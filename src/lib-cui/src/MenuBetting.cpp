@@ -384,16 +384,21 @@ MenuBetting::setFillAmount()
         [this](Gen::Money amount) { autoFillCallback(amount); }
     );
 
-    // TODO
-    // Gen::ErrorPass ep;
-    // AutoFillEntry afe {betName_, pivot_, isOddsBet, 0};
-    // auto rc = CrapsInterface::getAutoFill(afe, ep);
-    // if (rc == Gen::ReturnCode::Success)
-    //     fillAmount = afe.fillAmount;
-    // else
-    //     fillAmount = tableMinimum(betName_);
-
     Gen::Money fillAmount = 0;
+    Gen::ErrorPass ep;
+    Ctrl::CrapsInterface::AutoFillEntry afe =
+        {betName_, pivot_, isOddsBet_, 0};
+    auto rc = Ctrl::CrapsInterface::getAutoFill(afe, ep);
+    if (rc == Gen::ReturnCode::Success)
+    {
+        fillAmount = afe.amount;
+    }
+    else
+    {
+        // TODO 
+        // fillAmount = tableMinimum(betName_);
+    }
+
     pDlgAmount_->setFillAmount(fillAmount);
 }
 

@@ -652,6 +652,24 @@ Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
 
 //----------------------------------------------------------------
 
+Craps::BetId
+Player::getBet(BetName betName, size_t pivot, Gen::ErrorPass& ep) const
+{
+    auto it = std::find_if(bets_.begin(), bets_.end(),
+                   [betName, pivot](const BetPtr& b)
+                   {
+                       return b->betName() == betName &&
+                              b->pivot()   == pivot;
+                   });
+    if (it != bets_.end())
+    {
+        return (*it)->betId();
+    }
+    return 0;
+}
+
+//----------------------------------------------------------------
+
 Player::Bets
 Player::getBets() const
 {

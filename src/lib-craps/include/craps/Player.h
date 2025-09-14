@@ -88,6 +88,7 @@ public:
     unsigned             getNumBetsOnTable()                      const;
     Gen::Money           getBalance()                             const;
     BetPtr               getBet(const BetId& betId, Gen::ErrorPass& ep) const;
+    Craps::BetId         getBet(BetName betName, size_t pivot, Gen::ErrorPass& ep) const;
     Bets                 getBets()                                const;
     Bets                 getOddsBets()                            const;
 

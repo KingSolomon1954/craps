@@ -5,8 +5,10 @@
 //----------------------------------------------------------------
 
 #include <controller/CrapsInterface.h>
+#include <controller/AutoFill.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
+#include <controller/QuickBet.h>
 #include <controller/TableManager.h>
 #include <controller/UndoManager.h>
 #include <craps/BankStats.h>
@@ -344,8 +346,12 @@ CrapsInterface::betSetOddsAmount(
         ep.prepend(diagPrefix("betSetOddsAmount", "setOddsAmount"));
         return Gen::ReturnCode::Fail;
     }
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
-    return pBet->player().setOddsAmount(pBet, oddsAmount, ep);
+    auto rc = pBet->player().setOddsAmount(pBet, oddsAmount, ep);
+    if (rc == Gen::ReturnCode::Success)
+    {
+        Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
+    }
+    return rc;
 }
 
 //----------------------------------------------------------------
@@ -362,8 +368,13 @@ CrapsInterface::betSetContractAmount(
         ep.prepend(diagPrefix("betSetContractAmount", "setContractAmount"));
         return Gen::ReturnCode::Fail;
     }
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
-    return pBet->player().setContractAmount(betId, contractAmount, ep);
+
+    auto rc = pBet->player().setContractAmount(betId, contractAmount, ep);
+    if (rc == Gen::ReturnCode::Success)
+    {
+        Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
+    }
+    return rc;
 }
 
 //----------------------------------------------------------------
@@ -397,8 +408,13 @@ CrapsInterface::betRemove(
         ep.prepend(diagPrefix("betRemove", "remove bet"));
         return Gen::ReturnCode::Fail;
     }
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetRemoved>(pBet));
-    return pBet->player().removeBet(betId, ep);
+
+    auto rc = pBet->player().removeBet(betId, ep);
+    if (rc == Gen::ReturnCode::Success)
+    {
+        Gbl::pUndoMgr->push(std::make_unique<UndoBetRemoved>(pBet));
+    }
+    return rc;
 }
 
 //----------------------------------------------------------------
@@ -1036,14 +1052,82 @@ CrapsInterface::tableList()
 
 //----------------------------------------------------------------
 //
+// Auto Fill
+//
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::setAutoFill(
+    const AutoFillEntry& entry,
+    Gen::ErrorPass& ep)
+{
+    AutoFill::AutoFillEntry afe =
+        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
+    AutoFill::instance()->setAutoFill(afe);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::getAutoFill(
+    AutoFillEntry& entry,
+    Gen::ErrorPass& ep)
+{
+    AutoFill::AutoFillEntry afe =
+        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
+    
+    if (AutoFill::instance()->getAutoFill(afe) == Gen::ReturnCode::Success)
+    {
+        entry.amount = afe.amount;
+        return Gen::ReturnCode::Fail;
+    }
+    ep.diag = "No such auto fill entry exists.";
+    return Gen::ReturnCode::Fail;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::deleteAutoFill(
+    const AutoFillEntry& entry,
+    Gen::ErrorPass& ep)
+{
+    AutoFill::AutoFillEntry afe =
+        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
+    AutoFill::instance()->deleteAutoFill(afe);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::getAutoFills(
+    std::vector<AutoFillEntry>& autoFills,  // return arg
+    Gen::ErrorPass& ep)
+{
+    AutoFill::Fills controllerFills = AutoFill::instance()->getAutoFills();
+
+    for (size_t i = 0; i < controllerFills.size(); i++)
+    {
+        autoFills[i].betName = controllerFills[i].betName;
+        autoFills[i].pivot   = controllerFills[i].pivot;
+        autoFills[i].oddsBet = controllerFills[i].isOddsBet;
+        autoFills[i].amount  = controllerFills[i].amount;
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+//
 // Program related
 //
 //----------------------------------------------------------------
 
 Gen::ReturnCode
 CrapsInterface::getActiveCrapsTable(
-        Craps::TableId& tableId,
-        Gen::ErrorPass& ep)
+    Craps::TableId& tableId,
+    Gen::ErrorPass& ep)
 {
     auto* t = Gbl::pTable;
     if (t == nullptr)
@@ -1059,8 +1143,8 @@ CrapsInterface::getActiveCrapsTable(
 
 Gen::ReturnCode
 CrapsInterface::getUserPlayer(
-        Craps::PlayerId& playerId,
-        Gen::ErrorPass& ep)
+    Craps::PlayerId& playerId,
+    Gen::ErrorPass& ep)
 {
     auto* p = Gbl::pPlayerMgr->getUserPlayer();
     if (p == nullptr)
