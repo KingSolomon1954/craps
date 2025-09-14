@@ -10,13 +10,13 @@
 #include <gen/MoneyUtils.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
+#include <cui/DialogAmountEntry.h>
 
 namespace Cui {
 
 class ConsoleView;        // fwd
 class ScreenCrapsTable;   // fwd
 class DialogAckError;     // fwd
-class DialogAmountEntry;  // fwd
 class MenuPivot;          // fwd
 class MenuOdds;           // fwd
     
@@ -87,6 +87,10 @@ private:
     void clearState();
     void setAmountTitle();
     void setFillAmount();
+    void setQuickBet();
+
+    void autoFillCallback(Gen::Money amount);
+    void quickBetCallback(Gen::Money amount);
 };
 
 /*-----------------------------------------------------------*//**

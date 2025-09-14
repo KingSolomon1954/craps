@@ -22,6 +22,11 @@ Need unit test for undo bet capability
 Need unit test ConfigManagerTest
 Need unit test CrapsInterface
 
+Minimum bets are wrong. Allow $1 bets for proposition bets,
+hardways, fix min field bet.
+
+Add world bet
+
 Implement initial ScreenCrapsTable draw window
 
 (Done) Design menu hierarchy
@@ -1180,6 +1185,10 @@ Betting Menu ... (starts)
     popup amount subwindow (autofill)
 'k' DontCome
     popup amount subwindow (autofill)
+'o' odds ... (menu is default visible)
+    list of player's active odds capable bets (sorted most recent first)
+    1,2,3,4,5,6             (dynamic)
+    popup amount subwindow (autofill)
 'l' Place ...
     4,5,6,8,9,10
     popup amount subwindow (autofill)
@@ -1187,6 +1196,7 @@ Betting Menu ... (starts)
     4,6,8,10 
     popup amount subwindow (autofill)
 'f' field
+    popup amount subwindow (autofill)
 'e' C&E
     popup amount subwindow (autofill)
 'a' AnyCraps
@@ -1196,10 +1206,6 @@ Betting Menu ... (starts)
 'n' Horn
     popup amount subwindow (autofill)
 'w' World
-    popup amount subwindow (autofill)
-'o' odds ... (menu is default visible)
-    list of player's active odds capable bets (sorted most recent first)
-    1,2,3,4,5,6             (dynamic)
     popup amount subwindow (autofill)
 'x' remove bet ... (menu is default visible)
     list of player's active bets (sorted most recent first)

@@ -43,6 +43,22 @@ DialogAmountEntry::setFillAmount(Gen::Money fillAmount)
 }
 
 //----------------------------------------------------------------
+
+void
+DialogAmountEntry::registerAutoFillCallback(Callback cb)
+{
+    autoFillCb_ = cb;
+}
+
+//----------------------------------------------------------------
+
+void
+DialogAmountEntry::registerQuickBetCallback(Callback cb)
+{
+    quickBetCb_ = cb;
+}
+
+//----------------------------------------------------------------
 //
 // Draw the menu prompts
 //
@@ -250,9 +266,7 @@ DialogAmountEntry::doEnter()
 void
 DialogAmountEntry::doAutoFill()
 {
-    // TODO grab amount from line buffer
-    // call setupAutoFill()
-    // call pOwning_->message()  update message area
+    autoFillCb_(amount_);
 }    
 
 //----------------------------------------------------------------
@@ -260,9 +274,7 @@ DialogAmountEntry::doAutoFill()
 void
 DialogAmountEntry::doQuickBet()
 {
-    // TODO grab amount from line buffer
-    // call setupQuickBet()
-    // call pOwning_->message()  update message area
+    quickBetCb_(amount_);
 }    
 
 //----------------------------------------------------------------
@@ -288,6 +300,8 @@ DialogAmountEntry::clearState()
     fillAmount_ = 0;
     amount_     = 0;
     cursorPos_  = 0;
+    autoFillCb_ = nullptr;
+    quickBetCb_ = nullptr;
     isCanceled_ = false;  // base class
 }    
 

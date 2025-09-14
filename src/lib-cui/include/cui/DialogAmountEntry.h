@@ -8,6 +8,7 @@
 
 #include <cui/MenuBase.h>
 #include <gen/MoneyUtils.h>
+#include <functional>
 
 namespace Cui {
 
@@ -33,6 +34,10 @@ public:
     void clearState();
     void setTitle(const std::string& title);
     void setFillAmount(Gen::Money fillAmount);
+    
+    using Callback = std::function<void(Gen::Money)>;
+    void registerAutoFillCallback(Callback cb);
+    void registerQuickBetCallback(Callback cb);
     /// @}
 
     /// @name Observers
@@ -50,6 +55,8 @@ private:
     Gen::Money amount_     = 0;
     size_t cursorPos_      = 0;
     std::string lineBuffer_;
+    Callback autoFillCb_ = nullptr;
+    Callback quickBetCb_ = nullptr;
 
     void doEnter();
     void doAutoFill();

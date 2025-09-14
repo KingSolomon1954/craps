@@ -77,8 +77,24 @@ MenuBetting::handleMenuKey(int ch)
     {
     case 'p': doBets(BetName::PassLine); break;
     case 'c': doBets(BetName::Come);     break;
+    case 'd': doBets(BetName::DontPass); break;
+    case 'k': doBets(BetName::DontCome); break;
+    case 'l': doBets(BetName::Place);    break;
+    case 'h': doBets(BetName::Hardway);  break;
+    case 'f': doBets(BetName::Field);    break;
+    case 'e': doBets(BetName::CandE);    break;
+    case 'a': doBets(BetName::AnyCraps); break;
+    case '7': doBets(BetName::AnySeven); break;
+    case 'n': doBets(BetName::Horn);     break;
     case 'o': doOddsBets();              break;
     // TODO add more...
+    // case 'x': doRemoveBet();          break;
+    // case 't': doBetFlags();           break;
+    // case 'q': doQuickBet();           break;
+    // case 'r': doRollDice();           break;
+    // case 'u': doUndoLastBet();        break;
+    // case '.': doControlMenu();        break;
+    // case 'v': doViewMenu();           break;
     }
 }
 
@@ -93,7 +109,12 @@ MenuBetting::doBets(BetName betName)
     case BetName::PassLine:
     case BetName::Come:
     case BetName::DontPass:
-    case BetName::DontCome:  showDialogAmountEntry(); break;
+    case BetName::DontCome:
+    case BetName::Field:
+    case BetName::CandE:
+    case BetName::AnyCraps:
+    case BetName::AnySeven:
+    case BetName::Horn:      showDialogAmountEntry(); break;
     case BetName::Place:     
     case BetName::Hardway:   showMenuPivot();         break;
     }
@@ -281,6 +302,7 @@ MenuBetting::showDialogAmountEntry()
     pDlgAmount_->clearState();
     setAmountTitle();
     setFillAmount();
+    setQuickBet();
     setResumeState();
     view_.pushScreen(pDlgAmount_);
 }
@@ -358,18 +380,31 @@ MenuBetting::setAmountTitle()
 void
 MenuBetting::setFillAmount()
 {
-    // TODO init to table minimum
-    Gen::Money fillAmount = 0;
-    Gen::ErrorPass ep;
-        
-    if (isOddsBet_)
-    {
-        // TODO
-    }
-    
+    pDlgAmount_->registerAutoFillCallback(
+        [this](Gen::Money amount) { autoFillCallback(amount); }
+    );
+
     // TODO
-    // lookup CrapsInterface::getFillAmount(betName_, pivot_, fillAmoutn, ep);
+    // Gen::ErrorPass ep;
+    // AutoFillEntry afe {betName_, pivot_, isOddsBet, 0};
+    // auto rc = CrapsInterface::getAutoFill(afe, ep);
+    // if (rc == Gen::ReturnCode::Success)
+    //     fillAmount = afe.fillAmount;
+    // else
+    //     fillAmount = tableMinimum(betName_);
+
+    Gen::Money fillAmount = 0;
     pDlgAmount_->setFillAmount(fillAmount);
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::setQuickBet()
+{
+    pDlgAmount_->registerQuickBetCallback(
+        [this](Gen::Money amount) { quickBetCallback(amount); }
+    );
 }
 
 //----------------------------------------------------------------
@@ -393,6 +428,27 @@ MenuBetting::setResumeState()
     {
         setResumeState(ResumeState::WaitingOnBetAmount);
     }
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::autoFillCallback(Gen::Money amount)
+{
+    if (amount == 0)
+    {
+        // TODO call CrapsInterface::deleteAutoFill(...)
+        return;
+    }
+    // TODO call CrapsInterface::setAutoFill(...)
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::quickBetCallback(Gen::Money amount)
+{
+    // TODO call CrapsInterface for quickBet
 }
 
 //----------------------------------------------------------------
