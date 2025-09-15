@@ -295,6 +295,22 @@ public:
         Gen::Money  amount;
     };
     
+    static Gen::ReturnCode setQuickBet(
+            const QuickBetEntry& entry,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode applyQuickBet(
+            size_t index,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode deleteQuickBet(
+            const QuickBetEntry& entry,
+            BetName betName,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode deleteQuickBet(
+            size_t index,
+            Gen::ErrorPass& ep);
+    static Gen::ReturnCode getQuickBets(
+            std::vector<QuickBetEntry>& quickBets,  // return arg
+            Gen::ErrorPass& ep);
 
 private:
     // Private helpers

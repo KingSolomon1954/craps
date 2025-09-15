@@ -15,6 +15,14 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 
+QuickBet* QuickBet::instance()
+{
+    static QuickBet quickBet;
+    return &quickBet;
+}
+
+//----------------------------------------------------------------
+
 void
 QuickBet::applyQuickBet(size_t index)
 {

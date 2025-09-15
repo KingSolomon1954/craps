@@ -44,6 +44,10 @@ public:
     
 private:
     Fills fills_;
+
+    // Helper to find an entry by betName/pivot/isOddsBet
+    Fills::iterator       findEntry(const AutoFillEntry& afe);
+    Fills::const_iterator findEntry(const AutoFillEntry& afe) const;
 };
 
 /*-----------------------------------------------------------*//**

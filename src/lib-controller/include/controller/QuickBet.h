@@ -26,13 +26,14 @@ public:
     
     /// @name Lifecycle
     /// @{
+    static QuickBet* instance();
     /// @}
     
     /// @name Modifiers
     /// @{
     void applyQuickBet (size_t index);
-    void setQuickBet   (const QuickBetEntry& afe);
-    void deleteQuickBet(const QuickBetEntry& afe);
+    void setQuickBet   (const QuickBetEntry& qbe);
+    void deleteQuickBet(const QuickBetEntry& qbe);
     void deleteQuickBet(size_t index);
     /// @}
 

@@ -1052,7 +1052,7 @@ CrapsInterface::tableList()
 
 //----------------------------------------------------------------
 //
-// Auto Fill
+// Auto Fills
 //
 //----------------------------------------------------------------
 
@@ -1114,6 +1114,78 @@ CrapsInterface::getAutoFills(
         autoFills[i].pivot   = controllerFills[i].pivot;
         autoFills[i].oddsBet = controllerFills[i].isOddsBet;
         autoFills[i].amount  = controllerFills[i].amount;
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+//
+// Quick Bets
+//
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::setQuickBet(
+    const QuickBetEntry& entry,
+    Gen::ErrorPass& ep)
+{
+    QuickBet::QuickBetEntry qbe =
+        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
+    QuickBet::instance()->setQuickBet(qbe);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::applyQuickBet(
+    size_t index,
+    Gen::ErrorPass& ep)
+{
+    QuickBet::instance()->applyQuickBet(index);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::deleteQuickBet(
+    const QuickBetEntry& entry,
+    BetName betName,
+    Gen::ErrorPass& ep)
+{
+    QuickBet::QuickBetEntry qbe =
+        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
+    QuickBet::instance()->deleteQuickBet(qbe);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::deleteQuickBet(
+    size_t index,
+    Gen::ErrorPass& ep)
+{
+    QuickBet::instance()->deleteQuickBet(index);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsInterface::getQuickBets(
+    std::vector<QuickBetEntry>& quickBets,  // return arg
+    Gen::ErrorPass& ep)
+{
+    QuickBet::Bets controllerBets = QuickBet::instance()->getQuickBets();
+
+    for (size_t i = 0; i < controllerBets.size(); i++)
+    {
+        quickBets[i].betName = controllerBets[i].betName;
+        quickBets[i].pivot   = controllerBets[i].pivot;
+        quickBets[i].oddsBet = controllerBets[i].isOddsBet;
+        quickBets[i].amount  = controllerBets[i].amount;
     }
     return Gen::ReturnCode::Success;
 }

@@ -436,24 +436,37 @@ MenuBetting::setResumeState()
 }
 
 //----------------------------------------------------------------
-
+//
+// The DialogAmountEntry calls this when user presses
+// 'a' to create an auto fill entry using the current bet and amount.
+//
 void
 MenuBetting::autoFillCallback(Gen::Money amount)
 {
+    Gen::ErrorPass ep;
+    Ctrl::CrapsInterface::AutoFillEntry afe =
+        {betName_, pivot_, isOddsBet_, amount};
+
     if (amount == 0)
     {
-        // TODO call CrapsInterface::deleteAutoFill(...)
+        Ctrl::CrapsInterface::deleteAutoFill(afe, ep);
         return;
     }
-    // TODO call CrapsInterface::setAutoFill(...)
+    Ctrl::CrapsInterface::setAutoFill(afe, ep);
 }
 
 //----------------------------------------------------------------
-
+//
+// The DialogAmountEntry calls this when user presses
+// 'q' to set quick bet using the current bet and amount.
+//
 void
 MenuBetting::quickBetCallback(Gen::Money amount)
 {
-    // TODO call CrapsInterface for quickBet
+    Gen::ErrorPass ep;
+    Ctrl::CrapsInterface::QuickBetEntry qbe =
+        {betName_, pivot_, isOddsBet_, amount};
+    Ctrl::CrapsInterface::setQuickBet(qbe, ep);
 }
 
 //----------------------------------------------------------------
