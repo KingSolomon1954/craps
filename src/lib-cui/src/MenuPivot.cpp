@@ -13,9 +13,18 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-MenuPivot::MenuPivot(ConsoleView& view)
-    : MenuBase(view, 1, 1)  // Placeholder, resized in setMessage()
+MenuPivot::MenuPivot()
+    : MenuBase(1, 1)  // Placeholder, resized in setMessage()
 {
+}
+
+//----------------------------------------------------------------
+
+MenuPivot*
+MenuPivot::instance()
+{
+    static MenuPivot menuPivot;
+    return &menuPivot;
 }
 
 //----------------------------------------------------------------

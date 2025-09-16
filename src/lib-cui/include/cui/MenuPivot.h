@@ -24,7 +24,7 @@ public:
     
     /// @name Lifecycle
     /// @{
-    MenuPivot(ConsoleView& view);
+    static MenuPivot* instance();
    ~MenuPivot();
     /// @}
 
@@ -46,6 +46,8 @@ private:
     BetName     betName_;
     size_t      pivot_;
     std::string title_;
+    
+    MenuPivot();  // Private ctor
     
     void doPivot(int num);
     void clearState();

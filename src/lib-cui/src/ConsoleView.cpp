@@ -13,7 +13,6 @@
 #include <controller/GameController.h>
 #include <cui/Screen.h>
 #include <cui/ScreenCrapsTable.h>
-#include <cui/ScreenFactory.h>
 #include <gen/Logger.h>
 
 using namespace Cui;
@@ -26,6 +25,15 @@ ConsoleView::ConsoleView()
     setlocale(LC_ALL, "");   // enable locale detection
     useUnicodePips = utf8_enabled();
     LOG_DEBUG("useUnicodePips: " + std::to_string(useUnicodePips));
+}
+
+//----------------------------------------------------------------
+
+ConsoleView*
+ConsoleView::instance()
+{
+    static ConsoleView consoleView;
+    return &consoleView;
 }
 
 //----------------------------------------------------------------
@@ -48,7 +56,8 @@ ConsoleView::init()
     start_color();
     use_default_colors();
 
-    setScreen(getScreen(ScreenId::ScreenCrapsTable));  
+    // Starting screen for the game
+    setScreen(ScreenCrapsTable::instance());
 
     inputThread_ = std::thread(&ConsoleView::inputThreadFunc, this);
 }
@@ -68,23 +77,8 @@ ConsoleView::prepareForShutdown()
         std::lock_guard<std::mutex> lk(stackMx_);
         for (auto* s : stack_) s->onDetach();
         stack_.clear();
-        registry_.clear();
     }
     endwin();
-}
-
-//----------------------------------------------------------------
-
-Screen*
-ConsoleView::getScreen(ScreenId id)
-{
-    auto it = registry_.find(id);
-    if (it == registry_.end())
-    {
-        std::unique_ptr<Screen> s(ScreenFactory::createSrceen(id, *this));
-        registry_[id] = std::move(s);
-    }
-    return registry_[id].get();
 }
 
 //----------------------------------------------------------------

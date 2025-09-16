@@ -15,7 +15,7 @@ class MenuBase : public Screen
 public:
     /// @name Lifecycle
     /// @{
-    MenuBase(ConsoleView& view, int h, int w);
+    MenuBase(int h, int w);
    ~MenuBase();
     /// @}
 

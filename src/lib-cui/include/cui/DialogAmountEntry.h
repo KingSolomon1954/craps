@@ -25,7 +25,7 @@ public:
     
     /// @name Lifecycle
     /// @{
-    DialogAmountEntry(ConsoleView& view);
+    static DialogAmountEntry* instance();
    ~DialogAmountEntry();
     /// @}
 
@@ -57,6 +57,8 @@ private:
     std::string lineBuffer_;
     Callback autoFillCb_ = nullptr;
     Callback quickBetCb_ = nullptr;
+
+    DialogAmountEntry();  // Private ctor
 
     void doEnter();
     void doAutoFill();

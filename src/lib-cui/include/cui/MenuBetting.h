@@ -25,8 +25,8 @@ class MenuBetting : public MenuBase
 public:
     /// @name Lifecycle
     /// @{
-    MenuBetting(ConsoleView& view);
    ~MenuBetting();
+    static MenuBetting* instance();
     /// @}
 
     /// @name Modifiers
@@ -66,6 +66,8 @@ private:
     BetName            betName_;
     Craps::BetId       betId_;
     
+    MenuBetting();  // private ctor
+
     void showMenuPivot();
     void showMenuOdds();
     void showDialogAmountEntry();

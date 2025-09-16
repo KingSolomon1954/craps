@@ -17,10 +17,19 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-MenuOdds::MenuOdds(ConsoleView& view)
-    : MenuBase(view, 1, 1)  // Placeholder, resized in drawMenu()
+MenuOdds::MenuOdds()
+    : MenuBase(1, 1)  // Placeholder, resized in drawMenu()
 {
     visible_ = true;
+}
+
+//----------------------------------------------------------------
+
+MenuOdds*
+MenuOdds::instance()
+{
+    static MenuOdds menuOdds;
+    return &menuOdds;
 }
 
 //----------------------------------------------------------------

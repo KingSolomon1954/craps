@@ -33,7 +33,7 @@ public:
     
     /// @name Lifecycle
     /// @{
-    MenuOdds(ConsoleView& view);
+    static MenuOdds* instance();
    ~MenuOdds();
     /// @}
 
@@ -71,6 +71,8 @@ private:
     Gen::Money      contractAmount_;
     Gen::Money      currentOddsAmount_;
     Bets            bets_;
+    
+    MenuOdds();  // Private ctor
     
     void buildOddsBets();
     void doSelection(BetEntry& bet);

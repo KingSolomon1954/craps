@@ -21,15 +21,15 @@ public:
         Overlay
     };
 
-    explicit Screen(ConsoleView& view) : view_(view) {}
+    explicit Screen();
     virtual ~Screen() = default;
 
     // Lifecycle hooks
-    virtual void onAttach() {}  // became top (pushed or set)
-    virtual void onDetach() {}  // removed from stack
-    virtual void onPause()  {}  // covered by another screen
-    virtual void onResume() {}  // uncovered and back on top
-    virtual ScreenType type() const { return ScreenType::Full; }
+    virtual void onAttach();  // became top (pushed or set)
+    virtual void onDetach();  // removed from stack
+    virtual void onPause();   // covered by another screen
+    virtual void onResume();  // uncovered and back on top
+    virtual ScreenType type() const;
     
     // Required
     virtual void draw() = 0;    // call wnoutrefresh() on owned windows

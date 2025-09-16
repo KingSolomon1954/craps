@@ -22,8 +22,7 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-ScreenCrapsTable::ScreenCrapsTable(ConsoleView& view)
-    : Screen::Screen(view)
+ScreenCrapsTable::ScreenCrapsTable()
 {
     Gen::ErrorPass ep;
     LOG_TRACE("Entered ScreenCrapsTable::ctor()");
@@ -43,15 +42,23 @@ ScreenCrapsTable::ScreenCrapsTable(ConsoleView& view)
     }
 
     // Obtain our root menu and give it a pointer back to us.
-    pMenuBetting_ = view_.getScreen(ConsoleView::ScreenId::MenuBetting);
-    auto* pMenu = dynamic_cast<MenuBetting*>(pMenuBetting_);
-    pMenu->setRootMenu(true);
-    pMenu->setOwningScreen(this);
+    pMenuBetting_ = MenuBetting::instance();
+    pMenuBetting_->setRootMenu(true);
+    pMenuBetting_->setOwningScreen(this);
 
     createSubwindows();
     rc = Ctrl::CrapsInterface::tablePlayers(tableId_, playerIds_, ep);
     assert(playerIds_.size() > 0);
     LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
+}
+
+//----------------------------------------------------------------
+
+ScreenCrapsTable*
+ScreenCrapsTable::instance()
+{
+    static ScreenCrapsTable screenCrapsTable;
+    return &screenCrapsTable;
 }
 
 //----------------------------------------------------------------

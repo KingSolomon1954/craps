@@ -20,21 +20,23 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-MenuBetting::MenuBetting(ConsoleView& view)
-    : MenuBase(view, 1, 1)  // Placeholder, resized in drawMenu()
+MenuBetting::MenuBetting()
+    : MenuBase(1, 1)  // Placeholder, resized in drawMenu()
 {
-    // Obtain the DialogAmountEntry screen and cache it
-    auto* pDlgAmount_ = dynamic_cast<DialogAmountEntry*>(
-        view_.getScreen(ConsoleView::ScreenId::DialogAmountEntry));
-    // Obtain the MenuPivot screen and cache it
-    auto* pMenuPivot_ = dynamic_cast<MenuPivot*>(
-        view_.getScreen(ConsoleView::ScreenId::MenuPivot));
-    // Obtain the MenuPivot screen and cache it
-    auto* pMenuOdds_ = dynamic_cast<MenuOdds*>(
-        view_.getScreen(ConsoleView::ScreenId::MenuOdds));
-    // Obtain the DialogAckError screen and cache it
-    auto* pDlgError_ = dynamic_cast<DialogAckError*>(
-        view_.getScreen(ConsoleView::ScreenId::DialogAckError));
+    // Obtain common menus/dialog screens and cache them
+    auto* pDlgAmount_ = DialogAmountEntry::instance();
+    auto* pMenuPivot_ = MenuPivot::instance();
+    auto* pMenuOdds_  = MenuOdds::instance();
+    auto* pDlgError_  = DialogAckError::instance();
+}
+
+//----------------------------------------------------------------
+
+MenuBetting*
+MenuBetting::instance()
+{
+    static MenuBetting menuBetting;
+    return &menuBetting;
 }
 
 //----------------------------------------------------------------

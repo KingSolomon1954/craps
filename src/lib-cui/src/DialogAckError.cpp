@@ -14,10 +14,19 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-DialogAckError::DialogAckError(ConsoleView& view)
-    : MenuBase(view, 1, 1)  // Placeholder, resized in setMessage()
+DialogAckError::DialogAckError()
+    : MenuBase(1, 1)  // Placeholder, resized in setMessage()
 {
     visible_ = true;
+}
+
+//----------------------------------------------------------------
+
+DialogAckError*
+DialogAckError::instance()
+{
+    static DialogAckError dialogAckError;
+    return &dialogAckError;
 }
 
 //----------------------------------------------------------------

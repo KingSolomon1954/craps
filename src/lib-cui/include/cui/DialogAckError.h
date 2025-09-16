@@ -18,7 +18,7 @@ class DialogAckError : public MenuBase
 public:
     /// @name Lifecycle
     /// @{
-    DialogAckError(ConsoleView& view);
+    static DialogAckError* instance();
    ~DialogAckError();
     /// @}
 
@@ -37,6 +37,8 @@ protected:
 
 private:
     std::string message_;
+    
+    DialogAckError();  // Private ctor
     
     void clearState();
     void doAck();

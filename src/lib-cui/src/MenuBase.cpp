@@ -11,9 +11,8 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-MenuBase::MenuBase(ConsoleView& view, int h, int w)
-    : Screen(view)
-    , w_(view.makeCenteredWindow(h,w))
+MenuBase::MenuBase(int h, int w)
+    : w_(ConsoleView::instance()->makeCenteredWindow(h,w))
 {
 }
 

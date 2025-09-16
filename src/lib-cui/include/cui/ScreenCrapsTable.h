@@ -13,11 +13,13 @@
 
 namespace Cui {
 
+class MenuBetting;  // fwd
+    
 class ScreenCrapsTable : public Screen
 {
 public:
-    ScreenCrapsTable(ConsoleView& view);
    ~ScreenCrapsTable() override;
+    static ScreenCrapsTable* instance();
     
     void draw()            override;
     void onAttach()        override;
@@ -100,9 +102,10 @@ private:
     std::string      lineBuffer_;
     TableView        tableView_ = TableView::AllPlayers;
     size_t           onePlayerIndex_ = 0;  // For cycling thru players
-    Screen*          pMenuBetting_ = nullptr;
+    MenuBetting*     pMenuBetting_ = nullptr;
     std::vector<Craps::PlayerId> playerIds_;
     
+    ScreenCrapsTable();  // private ctor
     void cycleTableView();
 
     // Drawing screen borders/frame

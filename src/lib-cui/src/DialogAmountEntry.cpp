@@ -14,10 +14,19 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-DialogAmountEntry::DialogAmountEntry(ConsoleView& view)
-    : MenuBase(view, 1, 1)  // Placeholder, resized in setMessage()
+DialogAmountEntry::DialogAmountEntry()
+    : MenuBase(1, 1)  // Placeholder, resized in setMessage()
 {
     visible_ = true;
+}
+
+//----------------------------------------------------------------
+
+DialogAmountEntry*
+DialogAmountEntry::instance()
+{
+    static DialogAmountEntry dialogAmountEntry;
+    return &dialogAmountEntry;
 }
 
 //----------------------------------------------------------------

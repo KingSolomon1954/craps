@@ -12,8 +12,8 @@ add_library(cui STATIC
     src/MenuBetting.cpp
     src/MenuOdds.cpp
     src/MenuPivot.cpp
+    src/Screen.cpp
     src/ScreenCrapsTable.cpp
-    src/ScreenFactory.cpp
 )
 
 target_include_directories(cui

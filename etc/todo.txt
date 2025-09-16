@@ -27,8 +27,12 @@ hardways, fix min field bet.
 
 Add world bet
 
+QuickBets need to save/read from user config
+AutoFills need to save/read from user config
+
 Implement initial ScreenCrapsTable draw window
 
+(Done) Modify lifetime model for menus, use instance() accessor
 (Done) Design menu hierarchy
 (Done) Undo capability, UndoManager class, UndoBet classes
 (Done) Build up CrapsInterface for UI interaction
