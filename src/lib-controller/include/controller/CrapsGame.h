@@ -24,7 +24,7 @@ class EventLoop;      // fwd
 class GameController; // fwd
 class PlayerManager;  // fwd
 class TableManager;   // fwd
-class ViewIntfc;      // fwd
+class ViewInterface;  // fwd
 class UndoManager;    // fwd
     
 class CrapsGame
@@ -56,11 +56,11 @@ private:
     Ctrl::TableManager*   initTableManager();
     Ctrl::PlayerManager*  initPlayerManager();
     Ctrl::UndoManager*    initUndoManager();
-    Ctrl::ViewIntfc*      initView();
+    Ctrl::ViewInterface*  initView();
     Ctrl::GameController* initGameController();
     Ctrl::EventLoop*      initEventLoop();
     
-    Ctrl::ViewIntfc* getView();
+    Ctrl::ViewInterface*  getView();
     void enableFileLogging();
 };
 

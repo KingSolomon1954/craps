@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <controller/ViewIntfc.h>
+#include <controller/ViewInterface.h>
 #include <atomic>
 #include <unordered_map>
 #include <string>
@@ -19,7 +19,7 @@ namespace Cui {
 
 class Screen;  // fwd
     
-class ConsoleView : public Ctrl::ViewIntfc
+class ConsoleView : public Ctrl::ViewInterface
 {
 public:
     /// @name Lifecycle
@@ -44,6 +44,17 @@ public:
     void inputThreadFunc();        // Input thread -> forward to top
     /// @}
 
+    /// @name EventsGeneration
+    /// @{
+    void emitViewErrorDialog()        override;
+    void emitViewMakeBetSuccess()     override;
+    void emitViewMakeOddsBetSuccess() override;
+    void emitViewRollDice()           override;
+    void emitSignalProgramExit()      override;
+    /// @}
+
+
+    
     WINDOW* makeCenteredWindow(int h, int w);
          
     bool useUnicodePips = false;
@@ -74,7 +85,10 @@ UI Initialization & Screen hierarchy
 @li Asynchronous input thread to obtain keys
 @li Each key forwarded to the active screen
 @li Delegates to next or previous screen for rendering/drawing
-
+@li For pure event dispatch (no console-side logic), it just forwards to
+    ViewEventEmitters.
+@li For UI-local things (like pushing a new window on success), it acts
+    directly.
 */
 
 } // namespace Cui

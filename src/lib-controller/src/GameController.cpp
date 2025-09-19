@@ -7,10 +7,9 @@
 #include <controller/GameController.h>
 #include <cassert>
 #include <iostream>
-#include <controller/CrapsGame.h>
 #include <controller/EventLoop.h>
-#include <controller/Globals.h>
-#include <controller/ViewIntfc.h>
+#include <controller/CrapsEventHandlers.h>
+#include <controller/ViewEventHandlers.h>
 
 using namespace Ctrl;
 
@@ -22,7 +21,7 @@ Constructor
 GameController::GameController()
     : eventLoop_([this](GameEvent* ev) { dispatchEvent(ev); })
 {
-    assert(Gbl::pView != nullptr);
+
 }
 
 //----------------------------------------------------------------
@@ -37,8 +36,7 @@ GameController::prepareForShutdown()
 //
 // Enqueues an event to be processed.
 //
-// Called mainly by UI code after translating user input
-// into events. Also called by timers.
+// Called by both model and UI code.
 //
 void
 GameController::enqueue(GameEvent::GameEventPtr ev)
@@ -53,52 +51,15 @@ GameController::dispatchEvent(GameEvent* pBase)
 {
     switch(pBase->type())
     {
-    case EventType::UserInputLine: onUserInputLine(pBase); break;
-    case EventType::UserInputChar: onUserInputChar(pBase); break;
-    case EventType::Timer:         ; break;
-    case EventType::Signal:        ; break;
+    case EventType::UserMakeBet:            CrapsEventHandlers::onUserMakeBet(pBase);            break;
+    case EventType::UserMakeOddsBet:        CrapsEventHandlers::onUserMakeOddsBet(pBase);        break;
+    case EventType::UserRollDice:           CrapsEventHandlers::onUserRollDice(pBase);           break;
+    case EventType::ViewErrorDialog:        ViewEventHandlers::onViewErrorDialog(pBase);         break;
+    case EventType::ViewMakeBetSuccess:     ViewEventHandlers::onViewMakeBetSuccess(pBase);      break;
+    case EventType::ViewMakeOddsBetSuccess: ViewEventHandlers::onViewMakeOddsBetSuccess(pBase);  break;
+    case EventType::ViewRollDiceCountDown:  ViewEventHandlers::onViewRollDiceCountDown(pBase);   break;
+    case EventType::SignalProgramExit:      ViewEventHandlers::onSignalProgramExit(pBase);       break;
     }
 }
-
-//----------------------------------------------------------------
-
-void
-GameController::onUserInputLine(GameEvent* pBase)
-{
-    auto pEvent = static_cast<UserInputLineEvent*>(pBase);
-    std::cout << "[InputLine] " << pEvent->input << '\n';
-    if (pEvent->input == "quit") eventLoop_.stop();
-}
-
-//----------------------------------------------------------------
-
-void
-GameController::onUserInputChar(GameEvent* pBase)
-{
-    auto pEvent = static_cast<UserInputCharEvent*>(pBase);
-    std::cout << "[InputChar] " << pEvent->input << '\n';
-//  if (pEvent->input == 'q') eventLoop_.stop();
-    if (pEvent->input == 'q') CrapsGame::instance()->terminateApp();
-}
-
-//----------------------------------------------------------------
-//
-// Not used.
-// Pursue different design for choosing players
-//
-#if 0
-void
-GameController::userSelectsPlayers()
-{
-    auto playerIds = Gbl::pView->promptUserToSelectPlayers();
-    
-    Gen::ErrorPass ep;
-    for (auto pid : playerIds)  // Players join table
-    {
-        // TODO: check error return
-        // Gbl::pTable->addPlayer(pid, ep);
-    }
-}
-#endif
 
 //----------------------------------------------------------------

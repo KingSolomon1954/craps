@@ -32,6 +32,8 @@ AutoFills need to save/read from user config
 
 Implement initial ScreenCrapsTable draw window
 
+Implement controller events for commands that change state
+
 (Done) Modify lifetime model for menus, use instance() accessor
 (Done) Design menu hierarchy
 (Done) Undo capability, UndoManager class, UndoBet classes
@@ -1366,3 +1368,72 @@ The AutoFill class in controller has these responsibilities:
 * getAutoFills() - returns the vector of auto fill entries - so
   it can be edited via configuration menu.
 * deleteAutoFill(BetName betName, size_t pivot, bool oddsBet); shift entries if necessary, no empty slots
+
+
+pub/sub event for UI menus and friends
+--------------------------------------
+
+class UIEventBus {
+public:
+    using Handler = std::function<void(const GameEvent&)>;
+    using SubscriptionId = size_t;
+
+    static UIEventBus& instance() {
+        static UIEventBus bus;
+        return bus;
+    }
+
+    // subscribe: returns a token you can use to unsubscribe
+    SubscriptionId subscribe(EventType type, Handler handler) {
+        auto id = nextId_++;
+        subscribers_[type].emplace_back(id, std::move(handler));
+        return id;
+    }
+
+    void unsubscribe(EventType type, SubscriptionId id) {
+        auto& vec = subscribers_[type];
+        vec.erase(
+            std::remove_if(vec.begin(), vec.end(),
+                [id](auto& pair) { return pair.first == id; }),
+            vec.end()
+        );
+    }
+
+    void publish(const GameEvent& ev) {
+        auto it = subscribers_.find(ev.type());
+        if (it != subscribers_.end()) {
+            for (auto& [id, handler] : it->second) {
+                handler(ev);
+            }
+        }
+    }
+
+private:
+    size_t nextId_{0};
+    std::unordered_map<EventType,
+        std::vector<std::pair<SubscriptionId, Handler>>> subscribers_;
+};
+
+
+Menus use it like this:
+
+class MenuBetting {
+public:
+    void onActivate() {
+        subId_ = UIEventBus::instance().subscribe(
+            EventType::ViewErrorDialog,
+            [this](const GameEvent& ev) {
+                if (ev.correlationId == myCorrelationId_) {
+                    showError(ev.message);
+                }
+            }
+        );
+    }
+
+    void onDeactivate() {
+        UIEventBus::instance().unsubscribe(EventType::ViewErrorDialog, subId_);
+    }
+
+private:
+    UIEventBus::SubscriptionId subId_{0};
+};

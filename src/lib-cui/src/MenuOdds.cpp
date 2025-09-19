@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cstring>
 #include <cassert>
-#include <controller/CrapsInterface.h>
+#include <controller/CrapsInterfaceReader.h>
 #include <cui/ConsoleView.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
@@ -151,12 +151,12 @@ MenuOdds::buildOddsBetEntries()
     Craps::PlayerId playerId;
 
     // Grab playerId
-    auto rc = Ctrl::CrapsInterface::getUserPlayer(playerId, ep);
+    auto rc = Ctrl::CrapsInterfaceReader::getUserPlayer(playerId, ep);
     assert(rc == Gen::ReturnCode::Success);
 
     // Get player's odds capable bets
     std::vector<Craps::BetId> betIds;
-    rc = Ctrl::CrapsInterface::playerGetOddsBets(playerId, betIds, ep); 
+    rc = Ctrl::CrapsInterfaceReader::playerGetOddsBets(playerId, betIds, ep); 
     assert(rc == Gen::ReturnCode::Success);
 
     populateBets(betIds);  // Populate our bets_ struct
@@ -175,12 +175,12 @@ MenuOdds::populateBets(std::vector<Craps::BetId>& betIds)
         BetEntry be;
 
         be.betId = id;
-        Ctrl::CrapsInterface::betPlayerId      (id, be.playerId,          ep);
-        Ctrl::CrapsInterface::betName          (id, be.betName,           ep);
-        Ctrl::CrapsInterface::betPivot         (id, be.pivot,             ep);
-        Ctrl::CrapsInterface::betContractAmount(id, be.contractAmount,    ep);
-        Ctrl::CrapsInterface::betOddsAmount    (id, be.currentOddsAmount, ep);
-        Ctrl::CrapsInterface::betWhenCreated   (id, be.whenCreated,       ep);
+        Ctrl::CrapsInterfaceReader::betPlayerId      (id, be.playerId,          ep);
+        Ctrl::CrapsInterfaceReader::betName          (id, be.betName,           ep);
+        Ctrl::CrapsInterfaceReader::betPivot         (id, be.pivot,             ep);
+        Ctrl::CrapsInterfaceReader::betContractAmount(id, be.contractAmount,    ep);
+        Ctrl::CrapsInterfaceReader::betOddsAmount    (id, be.currentOddsAmount, ep);
+        Ctrl::CrapsInterfaceReader::betWhenCreated   (id, be.whenCreated,       ep);
         
         bets_.push_back(be);
     }

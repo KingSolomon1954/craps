@@ -1,9 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: CrapsInterface.h
+// File: CrapsInterfaceReader.h
 //
 // The UI uses this API to interact with the game.
-// It is the only API the UI sees.
+// It retries read-only information directly from the model 
+// without enqueueing GameEvents.
 //
 //----------------------------------------------------------------
 
@@ -29,26 +30,12 @@ namespace Craps {
 
 namespace Ctrl {
 
-class CrapsInterface
+class CrapsInterfaceReader
 {
 public:    
-    CrapsInterface() = delete;  // Pure static class, no instantiation
+    CrapsInterfaceReader() = delete;  // Pure static class, no instantiation
 
     // Player related
-    static Gen::ReturnCode playerJoinTable(
-        const Craps::PlayerId& playerId,
-        const Craps::TableId& tableId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode playerLeaveTable(
-        const Craps::PlayerId& playerId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode playerMakeBet(
-        const Craps::PlayerId& playerId,
-        BetName betName,
-        Gen::Money contractAmount,
-        unsigned pivot,
-        Craps::BetId& betId,
-        Gen::ErrorPass& ep);
     static Gen::ReturnCode playerHaveBet(
         const Craps::PlayerId& playerId,
         const Craps::BetId& betId,
@@ -101,20 +88,9 @@ public:
     static const PlayerManifest::PlayerList& playerList();
     
     // Bet related
-    static Gen::ReturnCode betSetOddsAmount(
-        const Craps::BetId& betId,
-        Gen::Money oddsAmount,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetContractAmount(
-        const Craps::BetId& betId,
-        Gen::Money contractAmount,
-        Gen::ErrorPass& ep);
     static Gen::ReturnCode betIsRemovable(
         const Craps::BetId& betid,
         bool& isRemovable,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode betRemove(
-        const Craps::BetId& betid,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode betPivot(
         const Craps::BetId& betId,
@@ -156,23 +132,8 @@ public:
         const Craps::BetId& betId,
         Gen::Timepoint& whenDecided,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetOffComeOutRoll(
-        const Craps::BetId& betId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetOnComeOutRoll(
-        const Craps::BetId& betId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetHardwayOff(
-        const Craps::BetId& betId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetHardwayOn(
-        const Craps::BetId& betId,
-        Gen::ErrorPass& ep);
     
     // Table related
-    static Gen::ReturnCode rollDice(
-        const Craps::TableId& tableId,
-        Gen::ErrorPass& ep);
     static Gen::ReturnCode tableNumPlayers(
         const Craps::TableId& tableId,
         unsigned& numPlayers,
@@ -260,9 +221,6 @@ public:
     static Gen::ReturnCode getUserPlayer(
         Craps::PlayerId& playerId,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode undoLast(
-        Gen::ErrorPass& ep);
-    static void gameTerminate();
     
     // Auto Fill
     struct AutoFillEntry
@@ -273,14 +231,8 @@ public:
         Gen::Money  amount;
     };
 
-    static Gen::ReturnCode setAutoFill(
-            const AutoFillEntry& entry,
-            Gen::ErrorPass& ep);
     static Gen::ReturnCode getAutoFill(
             AutoFillEntry& entry,
-            Gen::ErrorPass& ep);
-    static Gen::ReturnCode deleteAutoFill(
-            const AutoFillEntry& entry,
             Gen::ErrorPass& ep);
     static Gen::ReturnCode getAutoFills(
             std::vector<AutoFillEntry>& autoFills,  // return arg
@@ -295,19 +247,6 @@ public:
         Gen::Money  amount;
     };
     
-    static Gen::ReturnCode setQuickBet(
-            const QuickBetEntry& entry,
-            Gen::ErrorPass& ep);
-    static Gen::ReturnCode applyQuickBet(
-            size_t index,
-            Gen::ErrorPass& ep);
-    static Gen::ReturnCode deleteQuickBet(
-            const QuickBetEntry& entry,
-            BetName betName,
-            Gen::ErrorPass& ep);
-    static Gen::ReturnCode deleteQuickBet(
-            size_t index,
-            Gen::ErrorPass& ep);
     static Gen::ReturnCode getQuickBets(
             std::vector<QuickBetEntry>& quickBets,  // return arg
             Gen::ErrorPass& ep);
@@ -321,17 +260,18 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsInterface
+@class CrapsInterfaceReader
 
-UI interface to the Craps Game.
+@brief UI retrieves read-only information directly from the model
+
+A collection of functions that retrieves information from the model
+directly, bypassing the EventLoop. These are read-only retrievals that
+do not change the game state.
+
+See class CrapsEventEmitters for issueing commands
+that change the model state.
 
 Both GUI and CUI go through this interface.
-
-Internally, the CrapsInterface works this way:
-
-@li Writes → always events.
-
-@li Reads → direct interface.
 
 */    
 

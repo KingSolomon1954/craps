@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 #include <controller/QuickBet.h>
-#include <controller/CrapsInterface.h>
+#include <controller/CrapsEventEmitters.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <craps/Player.h>
@@ -42,8 +42,8 @@ QuickBet::applyQuickBet(size_t index)
         {
             // TODO handle error
         }
-        // Go through CrapsInterface so bet is undoable.
-        rc = CrapsInterface::betSetOddsAmount(betId, qbe.amount, ep);
+        // Go through CrapsEventEmitters so bet is logged and undoable.
+        rc = CrapsEventEmitters::betSetOddsAmount(betId, qbe.amount, ep);
         if (rc == Gen::ReturnCode::Fail)
         {
             // TODO handle error
@@ -51,8 +51,8 @@ QuickBet::applyQuickBet(size_t index)
     }
     else
     {
-        // Go through CrapsInterface so bet is undoable.
-        rc = CrapsInterface::playerMakeBet(
+        // Go through CrapsInterface so bet is logged and undoable.
+        rc = CrapsEventEmitters::playerMakeBet(
             pPlayer->getPlayerId(),
             qbe.betName,
             qbe.amount,

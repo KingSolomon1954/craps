@@ -13,10 +13,16 @@ namespace Ctrl {
 
 enum class EventType
 {
-    UserInputLine,
-    UserInputChar,
-    Timer,
-    Signal
+    UserMakeBet,
+    UserMakeOddsBet,
+    UserRollDice,
+    
+    ViewErrorDialog,
+    ViewMakeBetSuccess,
+    ViewMakeOddsBetSuccess,
+    ViewRollDiceCountDown,
+    
+    SignalProgramExit
 };
 
 struct GameEvent
@@ -27,24 +33,73 @@ struct GameEvent
     virtual EventType type() const = 0;
 };
 
-struct UserInputLineEvent : public GameEvent
+struct UserMakeBet : public GameEvent
 {
     std::string input;
     EventType type() const override
     {
-        return EventType::UserInputLine;
+        return EventType::UserMakeBet;
     }
 };
 
-struct UserInputCharEvent : public GameEvent
+struct UserRollDice : public GameEvent
 {
     char input;
     EventType type() const override
     {
-        return EventType::UserInputChar;
+        return EventType::UserRollDice;
     }
 };
 
+struct ViewErrorDialog : public GameEvent
+{
+    char input;
+    EventType type() const override
+    {
+        return EventType::ViewErrorDialog;
+    }
+};
+
+struct ViewMakeBetSuccess : public GameEvent
+{
+    char input;
+    EventType type() const override
+    {
+        return EventType::ViewMakeBetSuccess;
+    }
+};
+
+struct ViewMakeOddsBetSuccess : public GameEvent
+{
+    char input;
+    EventType type() const override
+    {
+        return EventType::ViewMakeOddsBetSuccess;
+    }
+};
+
+struct ViewRollDiceCountDown : public GameEvent
+{
+    char input;
+    EventType type() const override
+    {
+        return EventType::ViewRollDiceCountDown;
+    }
+};
+
+struct SignalProgramExit : public GameEvent
+{
+    int signal;
+    EventType type() const override
+    {
+        return EventType::SignalProgramExit;
+    }
+};
+
+
+
+    
+#if 0    
 struct TimerEvent : public GameEvent
 {
     std::chrono::steady_clock::time_point time;
@@ -53,16 +108,8 @@ struct TimerEvent : public GameEvent
         return EventType::Timer;
     }
 };
-
-struct SignalEvent : public GameEvent
-{
-    int signal;
-    EventType type() const override
-    {
-        return EventType::Signal;
-    }
-};
-
+#endif
+    
 } // namespace Ctrl
 
 //----------------------------------------------------------------

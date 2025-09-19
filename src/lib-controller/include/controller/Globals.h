@@ -25,7 +25,7 @@ namespace Ctrl {
     class GameController;  // fwd
     class PlayerManager;   // fwd
     class TableManager;    // fwd
-    class ViewIntfc;       // fwd
+    class ViewInterface;   // fwd
     class UndoManager;     // fwd
 }
 
@@ -39,7 +39,7 @@ public:
     static Ctrl::GameController* pGameCtrl;
     static Ctrl::PlayerManager*  pPlayerMgr;
     static Ctrl::TableManager*   pTableMgr;
-    static Ctrl::ViewIntfc*      pView;
+    static Ctrl::ViewInterface*  pView;
     static Ctrl::UndoManager*    pUndoMgr;
 
     static const std::string appNameScreen;

@@ -16,7 +16,9 @@ add_library(controller STATIC
     src/ConfigEnv.cpp
     src/ConfigFiles.cpp
     src/CrapsGame.cpp
-    src/CrapsInterface.cpp
+    src/CrapsEventEmitters.cpp
+    src/CrapsEventHandlers.cpp
+    src/CrapsInterfaceReader.cpp
     src/EventLoop.cpp
     src/GameController.cpp
     src/Globals.cpp
@@ -28,6 +30,8 @@ add_library(controller STATIC
     src/TableManifest.cpp
     src/UndoBet.cpp
     src/UndoManager.cpp
+    src/ViewEventEmitters.cpp
+    src/ViewEventHandlers.cpp
 )
 
 target_include_directories(controller

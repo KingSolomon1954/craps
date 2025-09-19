@@ -16,7 +16,7 @@
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/TableManager.h>
-#include <controller/ViewIntfc.h>
+#include <controller/ViewInterface.h>
 #include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
 #include <craps/EventManager.h>
@@ -51,7 +51,7 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
     std::unique_ptr<Ctrl::UndoManager>    pUndoMgr(initUndoManager());         (void) pUndoMgr;
-    std::unique_ptr<Ctrl::ViewIntfc>      pView(initView());                   (void) pView;
+    std::unique_ptr<Ctrl::ViewInterface>  pView(initView());                   (void) pView;
     std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
 
     signalHandler_.waitForTerminate();  // Blocks until signal
@@ -170,7 +170,7 @@ CrapsGame::initUndoManager()
 
 //----------------------------------------------------------------
 
-ViewIntfc*
+ViewInterface*
 CrapsGame::initView()
 {
     auto p = getView();
@@ -191,7 +191,7 @@ CrapsGame::initGameController()
 
 //----------------------------------------------------------------
 
-ViewIntfc*
+ViewInterface*
 CrapsGame::getView()
 {
     std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();

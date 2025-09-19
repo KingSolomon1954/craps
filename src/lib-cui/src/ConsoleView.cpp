@@ -11,6 +11,7 @@
 #include <controller/Globals.h>
 #include <controller/GameEvent.h>
 #include <controller/GameController.h>
+#include <controller/ViewEventEmitters.h>
 #include <cui/Screen.h>
 #include <cui/ScreenCrapsTable.h>
 #include <gen/Logger.h>
@@ -224,6 +225,46 @@ ConsoleView::makeCenteredWindow(int h, int w)
     int start_x = (max_w - w) / 2;
 
     return newwin(h, w, start_y, start_x);
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::emitViewErrorDialog()
+{
+    Ctrl::ViewEventEmitters::emitViewErrorDialog();
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::emitViewMakeBetSuccess()
+{
+    Ctrl::ViewEventEmitters::emitViewMakeBetSuccess();
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::emitViewMakeOddsBetSuccess()
+{
+    Ctrl::ViewEventEmitters::emitViewMakeOddsBetSuccess();
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::emitViewRollDice()
+{
+    Ctrl::ViewEventEmitters::emitViewRollDice();
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::emitSignalProgramExit()
+{
+    Ctrl::ViewEventEmitters::emitSignalProgramExit();
 }
 
 //----------------------------------------------------------------

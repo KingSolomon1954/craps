@@ -7,7 +7,8 @@
 #include <cui/MenuBetting.h>
 
 #include <cassert>
-#include <controller/CrapsInterface.h>
+#include <controller/CrapsEventEmitters.h>
+#include <controller/CrapsInterfaceReader.h>
 #include <craps/EnumBetName.h>
 #include <cui/ConsoleView.h>
 #include <cui/DialogAckError.h>
@@ -247,11 +248,11 @@ MenuBetting::doMakeBet(Gen::Money contractAmount)
     Craps::PlayerId playerId;
 
     // Grab playerId
-    auto rc = Ctrl::CrapsInterface::getUserPlayer(playerId, ep);
+    auto rc = Ctrl::CrapsInterfaceReader::getUserPlayer(playerId, ep);
     assert(rc == Gen::ReturnCode::Success);
 
     // Make the bet
-    rc = Ctrl::CrapsInterface::playerMakeBet(
+    rc = Ctrl::CrapsEventEmitters::playerMakeBet(
         playerId,
         betName_,
         contractAmount,
@@ -278,10 +279,10 @@ MenuBetting::doMakeOddsBet(Gen::Money oddsAmount)
 {
     Gen::ErrorPass  ep;
     Craps::PlayerId playerId;
-    auto rc = Ctrl::CrapsInterface::getUserPlayer(playerId, ep);
+    auto rc = Ctrl::CrapsInterfaceReader::getUserPlayer(playerId, ep);
 
     // Make the bet
-    rc = Ctrl::CrapsInterface::betSetOddsAmount(betId_, oddsAmount, ep);
+    rc = Ctrl::CrapsEventEmitters::betSetOddsAmount(betId_, oddsAmount, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
         pOwning_->onBetFailed(playerId, ep.diag);
@@ -388,9 +389,9 @@ MenuBetting::setFillAmount()
 
     Gen::Money fillAmount = 0;
     Gen::ErrorPass ep;
-    Ctrl::CrapsInterface::AutoFillEntry afe =
+    Ctrl::CrapsInterfaceReader::AutoFillEntry afe =
         {betName_, pivot_, isOddsBet_, 0};
-    auto rc = Ctrl::CrapsInterface::getAutoFill(afe, ep);
+    auto rc = Ctrl::CrapsInterfaceReader::getAutoFill(afe, ep);
     if (rc == Gen::ReturnCode::Success)
     {
         fillAmount = afe.amount;
@@ -446,15 +447,15 @@ void
 MenuBetting::autoFillCallback(Gen::Money amount)
 {
     Gen::ErrorPass ep;
-    Ctrl::CrapsInterface::AutoFillEntry afe =
+    Ctrl::CrapsEventEmitters::AutoFillEntry afe =
         {betName_, pivot_, isOddsBet_, amount};
 
     if (amount == 0)
     {
-        Ctrl::CrapsInterface::deleteAutoFill(afe, ep);
+        Ctrl::CrapsEventEmitters::deleteAutoFill(afe, ep);
         return;
     }
-    Ctrl::CrapsInterface::setAutoFill(afe, ep);
+    Ctrl::CrapsEventEmitters::setAutoFill(afe, ep);
 }
 
 //----------------------------------------------------------------
@@ -466,9 +467,9 @@ void
 MenuBetting::quickBetCallback(Gen::Money amount)
 {
     Gen::ErrorPass ep;
-    Ctrl::CrapsInterface::QuickBetEntry qbe =
+    Ctrl::CrapsEventEmitters::QuickBetEntry qbe =
         {betName_, pivot_, isOddsBet_, amount};
-    Ctrl::CrapsInterface::setQuickBet(qbe, ep);
+    Ctrl::CrapsEventEmitters::setQuickBet(qbe, ep);
 }
 
 //----------------------------------------------------------------

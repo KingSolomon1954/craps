@@ -10,7 +10,7 @@
 #include <cui/ConsoleView.h>
 #include <cui/MenuBetting.h>
 #include <controller/CrapsGame.h>
-#include <controller/CrapsInterface.h>
+#include <controller/CrapsInterfaceReader.h>
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
 #include <gen/Logger.h>
@@ -27,14 +27,14 @@ ScreenCrapsTable::ScreenCrapsTable()
     Gen::ErrorPass ep;
     LOG_TRACE("Entered ScreenCrapsTable::ctor()");
     
-    auto rc = Ctrl::CrapsInterface::getUserPlayer(userPlayerId_, ep);
+    auto rc = Ctrl::CrapsInterfaceReader::getUserPlayer(userPlayerId_, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
         throw std::runtime_error(ep.diag);
     }
 
-    rc = Ctrl::CrapsInterface::getActiveCrapsTable(tableId_, ep);
+    rc = Ctrl::CrapsInterfaceReader::getActiveCrapsTable(tableId_, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
@@ -47,7 +47,7 @@ ScreenCrapsTable::ScreenCrapsTable()
     pMenuBetting_->setOwningScreen(this);
 
     createSubwindows();
-    rc = Ctrl::CrapsInterface::tablePlayers(tableId_, playerIds_, ep);
+    rc = Ctrl::CrapsInterfaceReader::tablePlayers(tableId_, playerIds_, ep);
     assert(playerIds_.size() > 0);
     LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
 }

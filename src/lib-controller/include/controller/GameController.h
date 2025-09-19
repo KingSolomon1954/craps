@@ -6,17 +6,11 @@
 
 #pragma once
 
-#include <memory>
 #include <controller/EventLoop.h>
 #include <controller/GameEvent.h>
 
-namespace Craps {
-    class CrapsTable;
-}
-
 namespace Ctrl {
 
-class ViewIntfc;  // fwd
 class EventLoop;  // fwd
 
 class GameController
@@ -26,7 +20,6 @@ public:
     /// @{
     GameController();
     void prepareForShutdown();
-//  void userSelectsPlayers();
     /// @}
 
     /// @name Modifiers
@@ -42,8 +35,6 @@ private:
     EventLoop eventLoop_;
     
     void dispatchEvent(GameEvent* pBase);
-    void onUserInputLine(GameEvent* pBase);
-    void onUserInputChar(GameEvent* pBase);
 };
 
 /*-----------------------------------------------------------*//**
@@ -52,7 +43,11 @@ private:
 
 @brief Reacts to user input by processing GameEvents.
 
-more ...
+Has these responsibilities:
+
+@li The owner of event ordering.
+@li The only source of correlation IDs
+@lib The router between UI-facing code and model-facing code.
 
 */
 

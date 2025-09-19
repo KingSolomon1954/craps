@@ -1,18 +1,14 @@
 //----------------------------------------------------------------
 //
-// File: ViewIntfc.h
+// File: ViewInterface.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
-#include <memory>
-#include <string>
-#include <craps/CrapsTypes.h>
-
 namespace Ctrl {
 
-class ViewIntfc
+class ViewInterface
 {
 public:
     /// @name Lifecycle
@@ -24,6 +20,12 @@ public:
 
     /// @name Modifiers
     /// @{
+    virtual void emitViewErrorDialog()        = 0;
+    virtual void emitViewMakeBetSuccess()     = 0;
+    virtual void emitViewMakeOddsBetSuccess() = 0;
+    virtual void emitViewRollDice()           = 0;
+    virtual void emitSignalProgramExit()      = 0;
+    /// @}
     /// @}
 
     /// @name Observers
@@ -33,22 +35,15 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class ViewIntfc
+@class ViewInterface
 
-@brief Base interface for controller to issue commands to view(s)
+@brief Model uses these function to build UI Events
 
-more ...
-
+A collection of functions that builds and enqueues GameEvents to inform
+the UI that there are results from a previous request or that the UI
+needs to show something.
 */
 
 } // namespace Ctrl
 
 //----------------------------------------------------------------
-
-
-#if 0
-    virtual void displayMessage(const std::string& msg)              = 0;
-    virtual void displayAboutCraps()                                 = 0;
-    virtual Craps::TableId               promptUserToSelectTable()   = 0;
-    virtual std::vector<Craps::PlayerId> promptUserToSelectPlayers() = 0;
-#endif
