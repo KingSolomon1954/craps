@@ -11,7 +11,6 @@
 #include <controller/Globals.h>
 #include <controller/GameEvent.h>
 #include <controller/GameController.h>
-#include <controller/ViewEventEmitters.h>
 #include <cui/Screen.h>
 #include <cui/ScreenCrapsTable.h>
 #include <gen/Logger.h>
@@ -228,50 +227,57 @@ ConsoleView::makeCenteredWindow(int h, int w)
 }
 
 //----------------------------------------------------------------
-
+//
+// Override ViewInterface. Implements ncurses.
+//
+// Controller calls this upon an error from craps engine command.
+// 
+// 
 void
-ConsoleView::emitViewErrorDialog(Ctrl::EventType orgEventType,
-                                 uint64_t correlationId,
-                                 const std::string& diag)
+ConsoleView::onViewErrorDialog(Ctrl::EventType    orgEventType,
+                               uint64_t           correlationId,
+                               const std::string& diag)
 {
-    Ctrl::ViewEventEmitters::emitViewErrorDialog(
-        orgEventType,
-        correlationId,
-        diag);
+    // Inform all UI listeners
+    // Notify menus/screens of an error, usually puts up an ErrorDialog
+    // uiEvent.correlationId = ev->correlationId;
+    // uiEvent.orgEventType = ev->orgEventType;
+    // uiEvent.diag = ev->diag;
+    // uiEventMgr->publish(uiEvent);
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::emitViewMakeBetSuccess(
+ConsoleView::onViewMakeBetSuccess(
     Craps::BetId betId,
     uint64_t correlationId)
 {
-    Ctrl::ViewEventEmitters::emitViewMakeBetSuccess(betId, correlationId);
+    // Ctrl::ViewEventEmitters::emitViewMakeBetSuccess(betId, correlationId);
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::emitViewMakeOddsBetSuccess()
+ConsoleView::onViewMakeOddsBetSuccess()
 {
-    Ctrl::ViewEventEmitters::emitViewMakeOddsBetSuccess();
+    // Ctrl::ViewEventEmitters::emitViewMakeOddsBetSuccess();
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::emitViewRollDice()
+ConsoleView::onViewRollDice()
 {
-    Ctrl::ViewEventEmitters::emitViewRollDice();
+//    Ctrl::ViewEventEmitters::emitViewRollDice();
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::emitSignalProgramExit()
+ConsoleView::onSignalProgramExit()
 {
-    Ctrl::ViewEventEmitters::emitSignalProgramExit();
+    // Ctrl::ViewEventEmitters::emitSignalProgramExit();
 }
 
 //----------------------------------------------------------------

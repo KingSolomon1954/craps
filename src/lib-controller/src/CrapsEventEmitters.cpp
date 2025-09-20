@@ -58,7 +58,9 @@ CrapsEventEmitters::playerLeaveTable(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI entry point to issue command: make bet  to Craps engine.
+//
 uint64_t
 CrapsEventEmitters::playerMakeBet(
     const Craps::PlayerId& playerId,

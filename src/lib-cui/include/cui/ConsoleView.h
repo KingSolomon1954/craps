@@ -44,18 +44,18 @@ public:
     void inputThreadFunc();        // Input thread -> forward to top
     /// @}
 
-    /// @name EventsGeneration
+    /// @name ViewHandlers
     /// @{
-    void emitViewErrorDialog(
+    void onViewErrorDialog(
         Ctrl::EventType orgEventType,
         uint64_t correlationId,
         const std::string& diag) override;
-    void emitViewMakeBetSuccess(
+    void onViewMakeBetSuccess(
         Craps::BetId betId,
         uint64_t correlationId) override;
-    void emitViewMakeOddsBetSuccess() override;
-    void emitViewRollDice()           override;
-    void emitSignalProgramExit()      override;
+    void onViewMakeOddsBetSuccess() override;
+    void onViewRollDice()           override;
+    void onSignalProgramExit()      override;
     /// @}
 
 

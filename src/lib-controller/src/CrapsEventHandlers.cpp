@@ -39,6 +39,7 @@ CrapsEventHandlers::onPlayerMakeBet(GameEvent* pBase)
 
     if (p == nullptr || pBet == nullptr)
     {
+        // Tell UI of fault
         ep.prepend(diagPrefix("onPlayerMakeBet", "make bet"));
         ViewEventEmitters::emitViewErrorDialog(
             EventType::PlayerMakeBet,
@@ -50,6 +51,7 @@ CrapsEventHandlers::onPlayerMakeBet(GameEvent* pBase)
     // Success path
     Gbl::pUndoMgr->push(std::make_unique<UndoBetAdded>(pBet));
 
+    // Tell UI of success
     ViewEventEmitters::emitViewMakeBetSuccess(
         pBet->betId(),
         ev->correlationId);

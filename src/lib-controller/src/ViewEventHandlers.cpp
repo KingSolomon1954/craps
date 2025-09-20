@@ -6,6 +6,8 @@
 
 #include <controller/ViewEventHandlers.h>
 #include <controller/GameEvent.h>
+#include <controller/Globals.h>
+#include <controller/ViewInterface.h>
 
 using namespace Ctrl;
 
@@ -23,10 +25,9 @@ ViewEventHandlers::onViewErrorDialog(GameEvent* pBase)
     // ev->correlationId;
     // ev->diag;
 
-    // uiEvent.correlationId = ev->correlationId;
-    // uiEvent.orgEventType = ev->orgEventType;
-    // uiEvent.diag = ev->diag;
-    // uiEventMgr->publish(uiEvent);
+    Gbl::pView->onViewErrorDialog(ev->orgEventType,
+                                  ev->correlationId,
+                                  ev->diag);
 }
     
 //----------------------------------------------------------------
