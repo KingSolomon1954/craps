@@ -230,17 +230,24 @@ ConsoleView::makeCenteredWindow(int h, int w)
 //----------------------------------------------------------------
 
 void
-ConsoleView::emitViewErrorDialog()
+ConsoleView::emitViewErrorDialog(Ctrl::EventType orgEventType,
+                                 uint64_t correlationId,
+                                 const std::string& diag)
 {
-    Ctrl::ViewEventEmitters::emitViewErrorDialog();
+    Ctrl::ViewEventEmitters::emitViewErrorDialog(
+        orgEventType,
+        correlationId,
+        diag);
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::emitViewMakeBetSuccess()
+ConsoleView::emitViewMakeBetSuccess(
+    Craps::BetId betId,
+    uint64_t correlationId)
 {
-    Ctrl::ViewEventEmitters::emitViewMakeBetSuccess();
+    Ctrl::ViewEventEmitters::emitViewMakeBetSuccess(betId, correlationId);
 }
 
 //----------------------------------------------------------------

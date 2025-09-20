@@ -13,7 +13,10 @@ using namespace Ctrl;
 // Enqueue ViewErrorDialog event to GameController
 //
 void
-ViewEventEmitters::emitViewErrorDialog()
+ViewEventEmitters::emitViewErrorDialog(
+    EventType orgEventType,
+    uint64_t correlationId,
+    const std::string& diag)
 {
     // TODO
     // Notify menus/screens of an error, usually puts up an ErrorDialog
@@ -24,7 +27,9 @@ ViewEventEmitters::emitViewErrorDialog()
 //----------------------------------------------------------------
 
 void
-ViewEventEmitters::emitViewMakeBetSuccess()
+ViewEventEmitters::emitViewMakeBetSuccess(
+    Craps::BetId betId,
+    uint64_t correlationId)
 {
     // TODO
 }

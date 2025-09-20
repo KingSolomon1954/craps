@@ -52,19 +52,15 @@ QuickBet::applyQuickBet(size_t index)
     else
     {
         // Go through CrapsInterface so bet is logged and undoable.
-        rc = CrapsEventEmitters::playerMakeBet(
+        auto correlationId = CrapsEventEmitters::playerMakeBet(
             pPlayer->getPlayerId(),
             qbe.betName,
             qbe.amount,
-            qbe.pivot,
-            betId,  // return arg
-            ep);
-        if (rc == Gen::ReturnCode::Fail)
-        {
+            qbe.pivot);
+
             // TODO
             // pOwning_->onBetFailed(playerId, ep.diag);
             // showDialogAckError(ep.diag);
-        }
     }
 }
 

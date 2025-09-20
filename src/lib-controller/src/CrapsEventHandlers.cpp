@@ -5,31 +5,62 @@
 //----------------------------------------------------------------
 
 #include <controller/CrapsEventHandlers.h>
+#include <controller/Globals.h>
+#include <controller/PlayerManager.h>
+#include <controller/UndoManager.h>
+#include <controller/ViewEventEmitters.h>
+#include <craps/CrapsTypes.h>
+#include <craps/Player.h>
+#include <gen/ErrorPass.h>
 
 using namespace Ctrl;
 
 //----------------------------------------------------------------
 //
-// Tell model to make a bet, convert event
+// Process event: PlayerMakeBet
+// Tells craps engine to make a bet
 //
 void
-CrapsEventHandlers::onUserMakeBet(GameEvent* pBase)
+CrapsEventHandlers::onPlayerMakeBet(GameEvent* pBase)
 {
-    // TODO
-    // auto rc = model->playerMakeBet()
-    
-    // if rc == success
-    //     ViewEventEmmitters::emitMakeBetSuccess(pBase->correlationId)
-    // else
-    //     ViewEventEmmitters::emitDialogError(pBase->correlationId)
+    auto* ev = dynamic_cast<PlayerMakeBet*>(pBase);
+
+    Gen::ErrorPass ep;
+    Craps::BetPtr pBet;
+
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(ev->playerId, ep);
+    if (p != nullptr)
+    {
+        pBet = p->makeBet(ev->betName,
+                          ev->contractAmount,
+                          ev->pivot,
+                          ep);
+    }
+
+    if (p == nullptr || pBet == nullptr)
+    {
+        ep.prepend(diagPrefix("onPlayerMakeBet", "make bet"));
+        ViewEventEmitters::emitViewErrorDialog(
+            EventType::PlayerMakeBet,
+            ev->correlationId,
+            ep.diag);
+        return;
+    }
+
+    // Success path
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetAdded>(pBet));
+
+    ViewEventEmitters::emitViewMakeBetSuccess(
+        pBet->betId(),
+        ev->correlationId);
 }
-    
+
 //----------------------------------------------------------------
 //
 // Tell model to make an odds bet, convert event
 //
 void
-CrapsEventHandlers::onUserMakeOddsBet(GameEvent* pBase)
+CrapsEventHandlers::onPlayerMakeOddsBet(GameEvent* pBase)
 {
     // TODO
     // auto rc = model->playerMakeOddsBet()
@@ -45,10 +76,26 @@ CrapsEventHandlers::onUserMakeOddsBet(GameEvent* pBase)
 // Tell model to roll dice, convert event
 //
 void
-CrapsEventHandlers::onUserRollDice(GameEvent* pBase)
+CrapsEventHandlers::onPlayerRollDice(GameEvent* pBase)
 {
     // TODO
     // auto rc = Gbl::pTable->rollDice()
 }
     
 //----------------------------------------------------------------
+//
+// Private helper
+//
+std::string
+CrapsEventHandlers::diagPrefix(
+    const std::string& funcName,
+    const std::string& unableToWhat)
+{
+    std::string d = "CrapsEventHandler::" + funcName + 
+                    "(): unable to " + unableToWhat + "; ";
+    return d;
+}
+
+//----------------------------------------------------------------
+
+

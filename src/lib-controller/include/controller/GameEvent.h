@@ -8,14 +8,17 @@
 #include <string>
 #include <chrono>
 #include <memory>
+#include <craps/CrapsTypes.h>
+#include <craps/EnumBetName.h>
+#include <gen/MoneyUtils.h>
 
 namespace Ctrl {
 
 enum class EventType
 {
-    UserMakeBet,
-    UserMakeOddsBet,
-    UserRollDice,
+    PlayerMakeBet,
+    PlayerMakeOddsBet,
+    PlayerRollDice,
     
     ViewErrorDialog,
     ViewMakeBetSuccess,
@@ -33,27 +36,35 @@ struct GameEvent
     virtual EventType type() const = 0;
 };
 
-struct UserMakeBet : public GameEvent
+struct PlayerMakeBet : public GameEvent
 {
-    std::string input;
+    uint64_t        correlationId;
+    Craps::PlayerId playerId;
+    BetName         betName;
+    Gen::Money      contractAmount;
+    size_t          pivot;
+    
     EventType type() const override
     {
-        return EventType::UserMakeBet;
+        return EventType::PlayerMakeBet;
     }
 };
 
-struct UserRollDice : public GameEvent
+struct PlayerRollDice : public GameEvent
 {
     char input;
     EventType type() const override
     {
-        return EventType::UserRollDice;
+        return EventType::PlayerRollDice;
     }
 };
 
 struct ViewErrorDialog : public GameEvent
 {
-    char input;
+    EventType orgEventType;
+    uint64_t correlationId;
+    std::string diag;
+
     EventType type() const override
     {
         return EventType::ViewErrorDialog;

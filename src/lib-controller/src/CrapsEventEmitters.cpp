@@ -6,6 +6,8 @@
 
 #include <controller/CrapsEventEmitters.h>
 #include <controller/AutoFill.h>
+#include <controller/GameController.h>
+#include <controller/GameEvent.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/QuickBet.h>
@@ -57,33 +59,25 @@ CrapsEventEmitters::playerLeaveTable(
 
 //----------------------------------------------------------------
 
-Gen::ReturnCode
+uint64_t
 CrapsEventEmitters::playerMakeBet(
     const Craps::PlayerId& playerId,
     BetName betName,
     Gen::Money contractAmount,
-    unsigned pivot,
-    Craps::BetId& betId,
-    Gen::ErrorPass& ep)
+    size_t pivot)
 {
-    // TODO turn into event
-    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr)
-    {
-        ep.prepend(diagPrefix("playerMakeBet", "make bet"));
-        return Gen::ReturnCode::Fail;
-    }
-    Craps::BetPtr pBet = p->makeBet(betName, contractAmount, pivot, ep);
-    if (pBet == nullptr)
-    {
-        ep.prepend(diagPrefix("playerMakeBet", "make bet"));
-        return Gen::ReturnCode::Fail;
-    }
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetAdded>(pBet));
-    betId = pBet->betId();
-    return Gen::ReturnCode::Success;
-}
+    auto ev = std::make_shared<PlayerMakeBet>();
+    ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
+    ev->playerId = playerId;
+    ev->betName = betName;
+    ev->contractAmount = contractAmount;
+    ev->pivot = pivot;
 
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
+}
+    
 //----------------------------------------------------------------
 //
 // Bet related

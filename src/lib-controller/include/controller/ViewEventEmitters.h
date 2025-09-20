@@ -22,8 +22,11 @@ public:
 
     /// @name Modifiers
     /// @{
-    static void emitViewErrorDialog();
-    static void emitViewMakeBetSuccess();
+    static void emitViewErrorDialog(EventType orgEventType,
+                                    uint64_t correlationId,
+                                    const std::string& diag);
+    static void emitViewMakeBetSuccess(Craps::BetId betId,
+                                       uint64_t correlationId);
     static void emitViewMakeOddsBetSuccess();
     static void emitViewRollDice();
     static void emitSignalProgramExit();

@@ -252,19 +252,15 @@ MenuBetting::doMakeBet(Gen::Money contractAmount)
     assert(rc == Gen::ReturnCode::Success);
 
     // Make the bet
-    rc = Ctrl::CrapsEventEmitters::playerMakeBet(
+    auto correlationId = Ctrl::CrapsEventEmitters::playerMakeBet(
         playerId,
         betName_,
         contractAmount,
-        pivot_,
-        betId,  // return value
-        ep);
-    if (rc == Gen::ReturnCode::Fail)
-    {
-        pOwning_->onBetFailed(playerId, ep.diag);
-        showDialogAckError(ep.diag);
-        return;
-    }
+        pivot_);
+
+// TODO setup to listen for Pub/Sub event
+// EventType::ViewMakeBetSuccess or
+// TODO setup to listen for ViewErrorDialog
     
     // Bet succeeded
     pOwning_->onBetPlaced(playerId, betId);  // Update visuals

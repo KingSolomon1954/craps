@@ -46,8 +46,13 @@ public:
 
     /// @name EventsGeneration
     /// @{
-    void emitViewErrorDialog()        override;
-    void emitViewMakeBetSuccess()     override;
+    void emitViewErrorDialog(
+        Ctrl::EventType orgEventType,
+        uint64_t correlationId,
+        const std::string& diag) override;
+    void emitViewMakeBetSuccess(
+        Craps::BetId betId,
+        uint64_t correlationId) override;
     void emitViewMakeOddsBetSuccess() override;
     void emitViewRollDice()           override;
     void emitSignalProgramExit()      override;

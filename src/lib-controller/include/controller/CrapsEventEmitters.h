@@ -33,13 +33,11 @@ public:
     static Gen::ReturnCode playerLeaveTable(
         const Craps::PlayerId& playerId,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode playerMakeBet(
+    static uint64_t playerMakeBet(
         const Craps::PlayerId& playerId,
         BetName betName,
         Gen::Money contractAmount,
-        unsigned pivot,
-        Craps::BetId& betId,
-        Gen::ErrorPass& ep);
+        size_t pivot);
 
     // Bet related
     static Gen::ReturnCode betSetContractAmount(

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <controller/GameEvent.h>
+#include <string>
 
 namespace Ctrl {
 
@@ -22,14 +23,19 @@ public:
 
     /// @name Modifiers
     /// @{
-    static void onUserMakeBet    (GameEvent* pBase);
-    static void onUserMakeOddsBet(GameEvent* pBase);
-    static void onUserRollDice   (GameEvent* pBase);
+    static void onPlayerMakeBet    (GameEvent* pBase);
+    static void onPlayerMakeOddsBet(GameEvent* pBase);
+    static void onPlayerRollDice   (GameEvent* pBase);
     /// @}
 
     /// @name Observers
     /// @{
     /// @}
+    
+private:
+    static std::string diagPrefix(const std::string& funcName,
+                                  const std::string& unableToWhat);
+    
 };
 
 /*-----------------------------------------------------------*//**

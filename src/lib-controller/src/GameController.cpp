@@ -51,15 +51,23 @@ GameController::dispatchEvent(GameEvent* pBase)
 {
     switch(pBase->type())
     {
-    case EventType::UserMakeBet:            CrapsEventHandlers::onUserMakeBet(pBase);            break;
-    case EventType::UserMakeOddsBet:        CrapsEventHandlers::onUserMakeOddsBet(pBase);        break;
-    case EventType::UserRollDice:           CrapsEventHandlers::onUserRollDice(pBase);           break;
+    case EventType::PlayerMakeBet:          CrapsEventHandlers::onPlayerMakeBet(pBase);            break;
+    case EventType::PlayerMakeOddsBet:      CrapsEventHandlers::onPlayerMakeOddsBet(pBase);        break;
+    case EventType::PlayerRollDice:         CrapsEventHandlers::onPlayerRollDice(pBase);           break;
     case EventType::ViewErrorDialog:        ViewEventHandlers::onViewErrorDialog(pBase);         break;
     case EventType::ViewMakeBetSuccess:     ViewEventHandlers::onViewMakeBetSuccess(pBase);      break;
     case EventType::ViewMakeOddsBetSuccess: ViewEventHandlers::onViewMakeOddsBetSuccess(pBase);  break;
     case EventType::ViewRollDiceCountDown:  ViewEventHandlers::onViewRollDiceCountDown(pBase);   break;
     case EventType::SignalProgramExit:      ViewEventHandlers::onSignalProgramExit(pBase);       break;
     }
+}
+
+//----------------------------------------------------------------
+
+uint64_t
+GameController::nextCorrelationId()
+{
+    return ++correlationId_;
 }
 
 //----------------------------------------------------------------

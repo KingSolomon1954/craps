@@ -25,6 +25,7 @@ public:
     /// @name Modifiers
     /// @{
     void enqueue(GameEvent::GameEventPtr ev);
+    uint64_t nextCorrelationId();
     /// @}
 
     /// @name Observers
@@ -33,6 +34,7 @@ public:
 
 private:
     EventLoop eventLoop_;
+    uint64_t correlationId_ = 0;
     
     void dispatchEvent(GameEvent* pBase);
 };

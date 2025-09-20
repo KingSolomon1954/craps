@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <controller/ViewEventHandlers.h>
+#include <controller/GameEvent.h>
 
 using namespace Ctrl;
 
@@ -15,9 +16,16 @@ using namespace Ctrl;
 void
 ViewEventHandlers::onViewErrorDialog(GameEvent* pBase)
 {
+    auto* ev = dynamic_cast<ViewErrorDialog*>(pBase);
     // TODO
     // Notify menus/screens of an error, usually puts up an ErrorDialog
-    // uiEvent.correlationId = pBase->correlationId;
+    // ev->orgEventType;
+    // ev->correlationId;
+    // ev->diag;
+
+    // uiEvent.correlationId = ev->correlationId;
+    // uiEvent.orgEventType = ev->orgEventType;
+    // uiEvent.diag = ev->diag;
     // uiEventMgr->publish(uiEvent);
 }
     

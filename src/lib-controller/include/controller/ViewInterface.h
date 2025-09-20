@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <string>
+#include <controller/GameEvent.h>
+
 namespace Ctrl {
 
 class ViewInterface
@@ -20,8 +23,13 @@ public:
 
     /// @name Modifiers
     /// @{
-    virtual void emitViewErrorDialog()        = 0;
-    virtual void emitViewMakeBetSuccess()     = 0;
+    virtual void emitViewErrorDialog(
+        EventType orgEventType,
+        uint64_t correlationId,
+        const std::string& diag) = 0;
+    virtual void emitViewMakeBetSuccess(
+        Craps::BetId betId,
+        uint64_t correlationId) = 0;
     virtual void emitViewMakeOddsBetSuccess() = 0;
     virtual void emitViewRollDice()           = 0;
     virtual void emitSignalProgramExit()      = 0;
