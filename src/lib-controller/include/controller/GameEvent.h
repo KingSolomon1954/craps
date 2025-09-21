@@ -17,11 +17,14 @@ namespace Ctrl {
 enum class EventType
 {
     PlayerMakeBet,
+    AutomationMakeBet,
     PlayerMakeOddsBet,
     PlayerRollDice,
     
     ViewErrorDialog,
     ViewMakeBetSuccess,
+    ViewAutomationMakeBetSuccess,
+    ViewAutomationMakeBetError,
     ViewMakeOddsBetSuccess,
     ViewRollDiceCountDown,
     
@@ -50,6 +53,20 @@ struct PlayerMakeBet : public GameEvent
     }
 };
 
+struct AutomationMakeBet : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::PlayerId playerId;
+    BetName         betName;
+    Gen::Money      contractAmount;
+    size_t          pivot;
+    
+    EventType type() const override
+    {
+        return EventType::AutomationMakeBet;
+    }
+};
+
 struct PlayerRollDice : public GameEvent
 {
     char input;
@@ -71,12 +88,38 @@ struct ViewErrorDialog : public GameEvent
     }
 };
 
+struct ViewAutomationMakeBetError : public GameEvent
+{
+    EventType orgEventType;
+    uint64_t correlationId;
+    Craps::PlayerId playerId;
+    std::string diag;
+    EventType type() const override
+    {
+        return EventType::ViewAutomationMakeBetError;
+    }
+};
+
 struct ViewMakeBetSuccess : public GameEvent
 {
-    char input;
+    EventType orgEventType;
+    uint64_t correlationId;
+
     EventType type() const override
     {
         return EventType::ViewMakeBetSuccess;
+    }
+};
+
+struct ViewAutomationMakeBetSuccess : public GameEvent
+{
+    EventType orgEventType;
+    uint64_t correlationId;
+    std::string diag;
+
+    EventType type() const override
+    {
+        return EventType::ViewAutomationMakeBetSuccess;
     }
 };
 

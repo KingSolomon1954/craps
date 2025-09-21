@@ -47,12 +47,20 @@ public:
     /// @name ViewHandlers
     /// @{
     void onViewErrorDialog(
-        Ctrl::EventType orgEventType,
-        uint64_t correlationId,
+        Ctrl::EventType    orgEventType,
+        uint64_t           correlationId,
         const std::string& diag) override;
     void onViewMakeBetSuccess(
         Craps::BetId betId,
-        uint64_t correlationId) override;
+        uint64_t     correlationId) override;
+    void onViewAutomationMakeBetSuccess(
+        Craps::BetId betId,
+        uint64_t     correlationId) override;
+    void onViewAutomationMakeBetError(
+        Ctrl::EventType        orgEventType,
+        uint64_t               correlationId,
+        const Craps::PlayerId& playerId,
+        const std::string&     diag) override;
     void onViewMakeOddsBetSuccess() override;
     void onViewRollDice()           override;
     void onSignalProgramExit()      override;

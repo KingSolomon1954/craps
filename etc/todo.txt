@@ -132,7 +132,7 @@ Display throw history left to right or reverse
 4,2,2,6,8,7
 11,4,2,2,6,8,7
 
-User Input → ConsoleView → GameEvent (UserInputLineEvent) → EventQueue → GameController
+User Input → ConsoleView → GameEvent → EventQueue → GameController
 
     ├── ConsoleView ├── 
     │               │ 
@@ -143,6 +143,11 @@ User Input → ConsoleView → GameEvent (UserInputLineEvent) → EventQueue →
 onViewXxx  - prefix for event handlers originating from Views
 onGameXxx  - prefix for event handlers originating from the game/model
                                             
+
+GameController → GameEvent → EventQueue → ConsoleView → Screen Display
+
+
+
 
 Royal Craps
 -----------
@@ -1443,3 +1448,6 @@ public:
 private:
     UIEventBus::SubscriptionId subId_{0};
 };
+
+
+

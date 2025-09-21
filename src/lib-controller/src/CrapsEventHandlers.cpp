@@ -59,6 +59,43 @@ CrapsEventHandlers::onPlayerMakeBet(GameEvent* pBase)
 
 //----------------------------------------------------------------
 //
+// Process event: AutomationMakeBet
+// Tells craps engine to make a bet
+//
+void
+CrapsEventHandlers::onAutomationMakeBet(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<AutomationMakeBet*>(pBase);
+
+    Gen::ErrorPass ep;
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(ev->playerId, ep);
+    if (!p)
+    {
+        ViewEventEmitters::emitViewAutomationMakeBetError(
+            EventType::AutomationMakeBet,
+            ev->correlationId,
+            ev->playerId,
+            "Player not found");
+        return;
+    }
+
+    auto pBet = p->makeBet(ev->betName, ev->contractAmount, ev->pivot, ep);
+    if (!pBet)
+    {
+        ViewEventEmitters::emitViewAutomationMakeBetError(
+            EventType::AutomationMakeBet,
+            ev->correlationId,
+            ev->playerId,
+            ep.diag);
+        return;
+    }
+
+    ViewEventEmitters::emitViewAutomationMakeBetSuccess(
+        pBet->betId(), ev->correlationId);
+}
+
+//----------------------------------------------------------------
+//
 // Tell model to make an odds bet, convert event
 //
 void

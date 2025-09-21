@@ -82,6 +82,29 @@ CrapsEventEmitters::playerMakeBet(
     
 //----------------------------------------------------------------
 //
+// Automation entry point to issue command: make bet to Craps engine.
+//
+uint64_t
+CrapsEventEmitters::automationMakeBet(
+    const Craps::PlayerId& playerId,
+    BetName betName,
+    Gen::Money contractAmount,
+    size_t pivot)
+{
+    auto ev = std::make_shared<AutomationMakeBet>();
+    ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
+    ev->playerId = playerId;
+    ev->betName = betName;
+    ev->contractAmount = contractAmount;
+    ev->pivot = pivot;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
+}
+    
+//----------------------------------------------------------------
+//
 // Bet related
 //
 //----------------------------------------------------------------

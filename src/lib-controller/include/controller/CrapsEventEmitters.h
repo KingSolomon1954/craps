@@ -38,6 +38,11 @@ public:
         BetName betName,
         Gen::Money contractAmount,
         size_t pivot);
+    static uint64_t automationMakeBet(
+        const Craps::PlayerId& playerId,
+        BetName betName,
+        Gen::Money contractAmount,
+        size_t pivot);
 
     // Bet related
     static Gen::ReturnCode betSetContractAmount(

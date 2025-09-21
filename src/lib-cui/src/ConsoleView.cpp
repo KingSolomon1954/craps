@@ -259,6 +259,28 @@ ConsoleView::onViewMakeBetSuccess(
 //----------------------------------------------------------------
 
 void
+ConsoleView::onViewAutomationMakeBetSuccess(
+    Craps::BetId betId,
+    uint64_t correlationId)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::onViewAutomationMakeBetError(
+    Ctrl::EventType orgEventType,
+    uint64_t correlationId,
+    const Craps::PlayerId& playerId,
+    const std::string& diag)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
 ConsoleView::onViewMakeOddsBetSuccess()
 {
     // Ctrl::ViewEventEmitters::emitViewMakeOddsBetSuccess();

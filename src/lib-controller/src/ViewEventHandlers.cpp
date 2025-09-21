@@ -19,12 +19,6 @@ void
 ViewEventHandlers::onViewErrorDialog(GameEvent* pBase)
 {
     auto* ev = dynamic_cast<ViewErrorDialog*>(pBase);
-    // TODO
-    // Notify menus/screens of an error, usually puts up an ErrorDialog
-    // ev->orgEventType;
-    // ev->correlationId;
-    // ev->diag;
-
     Gbl::pView->onViewErrorDialog(ev->orgEventType,
                                   ev->correlationId,
                                   ev->diag);
@@ -37,6 +31,28 @@ ViewEventHandlers::onViewMakeBetSuccess(GameEvent* pBase)
 {
     // TODO
     // Gbl::pView->
+}
+    
+//----------------------------------------------------------------
+
+void
+ViewEventHandlers::onViewAutomationMakeBetSuccess(GameEvent* pBase)
+{
+    // TODO
+    // Gbl::pView->
+}
+    
+//----------------------------------------------------------------
+
+void
+ViewEventHandlers::onViewAutomationMakeBetError(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<ViewAutomationMakeBetError*>(pBase);
+    Gbl::pView->onViewAutomationMakeBetError(
+        ev->orgEventType,
+        ev->correlationId,
+        ev->playerId,
+        ev->diag);
 }
     
 //----------------------------------------------------------------

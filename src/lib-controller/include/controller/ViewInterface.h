@@ -24,13 +24,21 @@ public:
     /// @name Modifiers
     /// @{
     virtual void onViewErrorDialog(
-        EventType orgEventType,
-        uint64_t correlationId,
-        const std::string& diag) = 0;
+        EventType              orgEventType,
+        uint64_t               correlationId,
+        const std::string&     diag) = 0;
     virtual void onViewMakeBetSuccess(
-        Craps::BetId betId,
-        uint64_t correlationId) = 0;
+        Craps::BetId           betId,
+        uint64_t               correlationId) = 0;
     virtual void onViewMakeOddsBetSuccess() = 0;
+    virtual void onViewAutomationMakeBetSuccess(
+        Craps::BetId           betId,
+        uint64_t               correlationId) = 0;
+    virtual void onViewAutomationMakeBetError(
+        EventType              orgEventType,
+        uint64_t               correlationId,
+        const Craps::PlayerId& playerId,
+        const std::string&     diag) = 0;
     virtual void onViewRollDice()           = 0;
     virtual void onSignalProgramExit()      = 0;
     /// @}

@@ -26,6 +26,7 @@ public:
     static void onPlayerMakeBet    (GameEvent* pBase);
     static void onPlayerMakeOddsBet(GameEvent* pBase);
     static void onPlayerRollDice   (GameEvent* pBase);
+    static void onAutomationMakeBet(GameEvent* pBase);
     /// @}
 
     /// @name Observers

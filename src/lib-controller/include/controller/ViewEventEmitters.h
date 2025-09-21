@@ -7,6 +7,9 @@
 #pragma once
 
 #include <controller/GameEvent.h>
+#include <craps/CrapsTypes.h>
+#include <craps/EnumBetName.h>
+#include <gen/MoneyUtils.h>
 
 namespace Ctrl {
 
@@ -18,19 +21,27 @@ public:
     /// @name Lifecycle
     /// @{
     /// @}
-    /// @}
 
     /// @name Modifiers
     /// @{
-    static void emitViewErrorDialog(EventType orgEventType,
-                                    uint64_t correlationId,
-                                    const std::string& diag);
-    static void emitViewMakeBetSuccess(Craps::BetId betId,
-                                       uint64_t correlationId);
+    static void emitViewErrorDialog(
+        EventType              orgEventType,
+        uint64_t               correlationId,
+        const std::string&     diag);
+    static void emitViewMakeBetSuccess(
+        Craps::BetId           betId,
+        uint64_t               correlationId);
     static void emitViewMakeOddsBetSuccess();
+    static void emitViewAutomationMakeBetSuccess(
+        Craps::BetId           betId,
+        uint64_t               correlationId);
+    static void emitViewAutomationMakeBetError(
+        EventType              orgEventType,
+        uint64_t               correlationId,
+        const Craps::PlayerId& playerId,
+        const std::string&     diag);
     static void emitViewRollDice();
     static void emitSignalProgramExit();
-    /// @}
     /// @}
 
     /// @name Observers
