@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: ViewEventEmitters.cpp
+// File: ViewCommands.cpp
 //
 //----------------------------------------------------------------
 
-#include <controller/ViewEventEmitters.h>
+#include <controller/ViewCommands.h>
 #include <controller/GameController.h>
 #include <controller/Globals.h>
 
@@ -15,7 +15,7 @@ using namespace Ctrl;
 // Enqueue ViewErrorDialog event to GameController
 //
 void
-ViewEventEmitters::emitViewErrorDialog(
+ViewCommands::emitViewErrorDialog(
     EventType          orgEventType,
     uint64_t           correlationId,
     const std::string& diag)
@@ -29,17 +29,61 @@ ViewEventEmitters::emitViewErrorDialog(
 }
 
 //----------------------------------------------------------------
+
+void
+ViewCommands::emitViewMakeBetSuccess(
+    uint64_t correlationId,
+    Craps::BetId betId)
+{
+    auto ev = std::make_shared<ViewMakeBetSuccess>();
+    ev->correlationId = correlationId;
+    ev->betId          = betId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+}
+    
+//----------------------------------------------------------------
+
+void
+ViewCommands::emitViewMakeOddsBetSuccess(
+    uint64_t correlationId,
+    Craps::BetId betId)
+{
+    auto ev = std::make_shared<ViewMakeOddsBetSuccess>();
+    ev->correlationId = correlationId;
+    ev->betId          = betId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+}
+    
+//----------------------------------------------------------------
 //
-// Enqueue ViewAutomationBetError event to GameController
+// Enqueue ViewPlayerBetPlaced event to GameController
 //
 void
-ViewEventEmitters::emitViewAutomationMakeBetError(
+ViewCommands::emitViewMakeBetAutoSuccess(
+    Craps::BetId betId,
+    uint64_t correlationId)
+{
+    auto ev = std::make_shared<ViewMakeBetAutoSuccess>();
+    ev->correlationId = correlationId;
+    ev->betId  = betId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+}
+
+//----------------------------------------------------------------
+//
+// Enqueue ViewMakeBetAutoError event to GameController
+//
+void
+ViewCommands::emitViewMakeBetAutoError(
     EventType              orgEventType,
     uint64_t               correlationId,
     const Craps::PlayerId& playerId,
     const std::string&     diag)
 {
-    auto ev = std::make_shared<ViewAutomationMakeBetError>();
+    auto ev = std::make_shared<ViewMakeBetAutoError>();
     ev->orgEventType  = orgEventType;
     ev->correlationId = correlationId;
     ev->playerId      = playerId;
@@ -51,9 +95,7 @@ ViewEventEmitters::emitViewAutomationMakeBetError(
 //----------------------------------------------------------------
 
 void
-ViewEventEmitters::emitViewMakeBetSuccess(
-    Craps::BetId betId,
-    uint64_t correlationId)
+ViewCommands::emitViewRollDice()
 {
     // TODO
 }
@@ -61,39 +103,7 @@ ViewEventEmitters::emitViewMakeBetSuccess(
 //----------------------------------------------------------------
 
 void
-ViewEventEmitters::emitViewMakeOddsBetSuccess()
-{
-    // TODO
-}
-    
-//----------------------------------------------------------------
-//
-// Enqueue ViewPlayerBetPlaced event to GameController
-//
-void
-ViewEventEmitters::emitViewAutomationMakeBetSuccess(
-    Craps::BetId betId,
-    uint64_t correlationId)
-{
-    auto ev = std::make_shared<ViewAutomationMakeBetSuccess>();
-    ev->orgEventType  = EventType::AutomationMakeBet;
-    ev->correlationId = correlationId;
-
-    Gbl::pGameCtrl->enqueue(ev);
-}
-
-//----------------------------------------------------------------
-
-void
-ViewEventEmitters::emitViewRollDice()
-{
-    // TODO
-}
-    
-//----------------------------------------------------------------
-
-void
-ViewEventEmitters::emitSignalProgramExit()
+ViewCommands::emitViewProgramExit()
 {
     // TODO
 }

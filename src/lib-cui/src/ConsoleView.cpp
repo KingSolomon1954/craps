@@ -228,18 +228,15 @@ ConsoleView::makeCenteredWindow(int h, int w)
 
 //----------------------------------------------------------------
 //
-// Override ViewInterface. Implements ncurses.
+// Show Error Dialog. Overrides ViewInterface. 
 //
-// Controller calls this upon an error from craps engine command.
-// 
-// 
 void
-ConsoleView::onViewErrorDialog(Ctrl::EventType    orgEventType,
-                               uint64_t           correlationId,
-                               const std::string& diag)
+ConsoleView::showErrorDialog(Ctrl::EventType    orgEventType,
+                             uint64_t           correlationId,
+                             const std::string& diag)
 {
     // Inform all UI listeners
-    // Notify menus/screens of an error, usually puts up an ErrorDialog
+    // Notify menus/screens of an error, puts up an ErrorDialog
     // uiEvent.correlationId = ev->correlationId;
     // uiEvent.orgEventType = ev->orgEventType;
     // uiEvent.diag = ev->diag;
@@ -249,17 +246,7 @@ ConsoleView::onViewErrorDialog(Ctrl::EventType    orgEventType,
 //----------------------------------------------------------------
 
 void
-ConsoleView::onViewMakeBetSuccess(
-    Craps::BetId betId,
-    uint64_t correlationId)
-{
-    // Ctrl::ViewEventEmitters::emitViewMakeBetSuccess(betId, correlationId);
-}
-
-//----------------------------------------------------------------
-
-void
-ConsoleView::onViewAutomationMakeBetSuccess(
+ConsoleView::showMakeBetSuccess(
     Craps::BetId betId,
     uint64_t correlationId)
 {
@@ -269,7 +256,27 @@ ConsoleView::onViewAutomationMakeBetSuccess(
 //----------------------------------------------------------------
 
 void
-ConsoleView::onViewAutomationMakeBetError(
+ConsoleView::showMakeOddsBetSuccess(
+    Craps::BetId betId,
+    uint64_t correlationId)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::showMakeBetAutoSuccess(
+    Craps::BetId betId,
+    uint64_t correlationId)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::showMakeBetAutoError(
     Ctrl::EventType orgEventType,
     uint64_t correlationId,
     const Craps::PlayerId& playerId,
@@ -281,25 +288,17 @@ ConsoleView::onViewAutomationMakeBetError(
 //----------------------------------------------------------------
 
 void
-ConsoleView::onViewMakeOddsBetSuccess()
+ConsoleView::showRollDice()
 {
-    // Ctrl::ViewEventEmitters::emitViewMakeOddsBetSuccess();
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleView::onViewRollDice()
+ConsoleView::showProgramExit()
 {
-//    Ctrl::ViewEventEmitters::emitViewRollDice();
-}
-
-//----------------------------------------------------------------
-
-void
-ConsoleView::onSignalProgramExit()
-{
-    // Ctrl::ViewEventEmitters::emitSignalProgramExit();
+    // TODO
 }
 
 //----------------------------------------------------------------

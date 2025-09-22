@@ -16,19 +16,19 @@ namespace Ctrl {
 
 enum class EventType
 {
-    PlayerMakeBet,
-    AutomationMakeBet,
-    PlayerMakeOddsBet,
-    PlayerRollDice,
+    CmdMakeBet,
+    CmdMakeBetAuto,
+    CmdMakeOddsBet,
+    CmdMakeOddsBetAuto,
+    CmdRollDice,
     
     ViewErrorDialog,
     ViewMakeBetSuccess,
-    ViewAutomationMakeBetSuccess,
-    ViewAutomationMakeBetError,
+    ViewMakeBetAutoSuccess,
+    ViewMakeBetAutoError,
     ViewMakeOddsBetSuccess,
     ViewRollDiceCountDown,
-    
-    SignalProgramExit
+    ViewProgramExit
 };
 
 struct GameEvent
@@ -39,7 +39,7 @@ struct GameEvent
     virtual EventType type() const = 0;
 };
 
-struct PlayerMakeBet : public GameEvent
+struct CmdMakeBet : public GameEvent
 {
     uint64_t        correlationId;
     Craps::PlayerId playerId;
@@ -49,11 +49,11 @@ struct PlayerMakeBet : public GameEvent
     
     EventType type() const override
     {
-        return EventType::PlayerMakeBet;
+        return EventType::CmdMakeBet;
     }
 };
 
-struct AutomationMakeBet : public GameEvent
+struct CmdMakeBetAuto : public GameEvent
 {
     uint64_t        correlationId;
     Craps::PlayerId playerId;
@@ -63,16 +63,16 @@ struct AutomationMakeBet : public GameEvent
     
     EventType type() const override
     {
-        return EventType::AutomationMakeBet;
+        return EventType::CmdMakeBetAuto;
     }
 };
 
-struct PlayerRollDice : public GameEvent
+struct CmdRollDice : public GameEvent
 {
     char input;
     EventType type() const override
     {
-        return EventType::PlayerRollDice;
+        return EventType::CmdRollDice;
     }
 };
 
@@ -88,22 +88,10 @@ struct ViewErrorDialog : public GameEvent
     }
 };
 
-struct ViewAutomationMakeBetError : public GameEvent
-{
-    EventType orgEventType;
-    uint64_t correlationId;
-    Craps::PlayerId playerId;
-    std::string diag;
-    EventType type() const override
-    {
-        return EventType::ViewAutomationMakeBetError;
-    }
-};
-
 struct ViewMakeBetSuccess : public GameEvent
 {
-    EventType orgEventType;
     uint64_t correlationId;
+    Craps::BetId betId;
 
     EventType type() const override
     {
@@ -111,29 +99,43 @@ struct ViewMakeBetSuccess : public GameEvent
     }
 };
 
-struct ViewAutomationMakeBetSuccess : public GameEvent
-{
-    EventType orgEventType;
-    uint64_t correlationId;
-    std::string diag;
-
-    EventType type() const override
-    {
-        return EventType::ViewAutomationMakeBetSuccess;
-    }
-};
-
 struct ViewMakeOddsBetSuccess : public GameEvent
 {
-    char input;
+    uint64_t correlationId;
+    Craps::BetId betId;
+
     EventType type() const override
     {
         return EventType::ViewMakeOddsBetSuccess;
     }
 };
 
+struct ViewMakeBetAutoSuccess : public GameEvent
+{
+    uint64_t correlationId;
+    Craps::BetId betId;
+
+    EventType type() const override
+    {
+        return EventType::ViewMakeBetAutoSuccess;
+    }
+};
+
+struct ViewMakeBetAutoError : public GameEvent
+{
+    EventType orgEventType;
+    uint64_t correlationId;
+    Craps::PlayerId playerId;
+    std::string diag;
+    EventType type() const override
+    {
+        return EventType::ViewMakeBetAutoError;
+    }
+};
+
 struct ViewRollDiceCountDown : public GameEvent
 {
+    // TODO
     char input;
     EventType type() const override
     {
@@ -141,12 +143,13 @@ struct ViewRollDiceCountDown : public GameEvent
     }
 };
 
-struct SignalProgramExit : public GameEvent
+struct ViewProgramExit : public GameEvent
 {
+    // TODO
     int signal;
     EventType type() const override
     {
-        return EventType::SignalProgramExit;
+        return EventType::ViewProgramExit;
     }
 };
 

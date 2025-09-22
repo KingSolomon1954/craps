@@ -1380,6 +1380,36 @@ The AutoFill class in controller has these responsibilities:
   it can be edited via configuration menu.
 * deleteAutoFill(BetName betName, size_t pivot, bool oddsBet); shift entries if necessary, no empty slots
 
+Naming Clarity for UI->Model and Model->UI
+------------------------------------------
+
+UI->Model
+
+*    Console/GUI screens issue readXxx() / cmdXxx() functions
+*    readXxx() prefix for CrapsReader (queries model directly),
+*    cmdXxx() prefix for CrapsEventEmitters (explicit "command"),
+*    onXxx() prefix for CrapsEventHandlers (handles event to Model),
+
+Model->UI
+
+*    emitXxx() prefix for ViewEventEmitters (emits event to UI),
+*    onXxx() prefix for ViewEventHandlers (handles event to UI),
+*    showXxx() prefix for ViewInterface (UI updates for GUI/Console).
+*    ConsoleView / GuiView implement showXxx() functions
+
+This gives you a very clear split and the separation makes it impossible
+to confuse an “event” with a “command.”
+
+Class                   Prefix        Direction
+----------------------  ------------  ------------------------
+ViewCommands            emitXxx()     Model → notifies Controller, creates Event
+ViewEventHandlers       onXxx()       Controller → processes Event, call ViewInterface
+ViewInterface           showXxx()     Notifies View (Console or GUI)
+CrapsCommands           cmdXxx()      UI → Controller (commands, createsEvent)
+CrapsEventHandlers      onXxx()       Controller → processes Event, executes model command
+CrapsReaders            readXxx()     UI → Controller (queries model directly read-only info)
+
+
 
 pub/sub event for UI menus and friends
 --------------------------------------

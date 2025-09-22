@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: CrapsEventEmitters.h
+// File: CrapsCommands.h
 //
 // The UI uses this API to interact with the game.
 // It enqueues GameEvents, actually UI events, to the GameController.
@@ -18,71 +18,65 @@
 
 namespace Ctrl {
 
-class CrapsEventEmitters
+class CrapsCommands
 {
 public:    
-    CrapsEventEmitters() = delete;  // Pure static class, no instantiation
+    CrapsCommands() = delete;  // Pure static class, no instantiation
 
     // TODO Eliminate return arg from function signature
 
     // Player related
-    static Gen::ReturnCode playerJoinTable(
+    static Gen::ReturnCode cmdPlayerJoinTable(
         const Craps::PlayerId& playerId,
         const Craps::TableId& tableId,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode playerLeaveTable(
+    static Gen::ReturnCode cmdPlayerLeaveTable(
         const Craps::PlayerId& playerId,
         Gen::ErrorPass& ep);
-    static uint64_t playerMakeBet(
+    static uint64_t cmdMakeBet(
         const Craps::PlayerId& playerId,
         BetName betName,
         Gen::Money contractAmount,
         size_t pivot);
-    static uint64_t automationMakeBet(
+    static uint64_t cmdMakeBetAuto(
         const Craps::PlayerId& playerId,
         BetName betName,
         Gen::Money contractAmount,
         size_t pivot);
 
     // Bet related
-    static Gen::ReturnCode betSetContractAmount(
+    static Gen::ReturnCode cmdBetSetContractAmount(
         const Craps::BetId& betId,
         Gen::Money contractAmount,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetOddsAmount(
+    static Gen::ReturnCode cmdBetSetOddsAmount(
         const Craps::BetId& betId,
         Gen::Money oddsAmount,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode betRemove(
+    static Gen::ReturnCode cmdBetRemove(
         const Craps::BetId& betid,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetOffComeOutRoll(
+    static Gen::ReturnCode cmdBetSetOffComeOutRoll(
         const Craps::BetId& betId,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetOnComeOutRoll(
+    static Gen::ReturnCode cmdBetSetOnComeOutRoll(
         const Craps::BetId& betId,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetHardwayOff(
+    static Gen::ReturnCode cmdBetSetHardwayOff(
         const Craps::BetId& betId,
         Gen::ErrorPass& ep);
-    static Gen::ReturnCode betSetHardwayOn(
+    static Gen::ReturnCode cmdBetSetHardwayOn(
         const Craps::BetId& betId,
         Gen::ErrorPass& ep);
     
     // Table related
-    static Gen::ReturnCode rollDice(
+    static Gen::ReturnCode cmdRollDice(
         const Craps::TableId& tableId,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode undoLastBet(
         Gen::ErrorPass& ep);
 
     // Program control
-    static Gen::ReturnCode getActiveCrapsTable(
-        Craps::TableId& tableId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode getUserPlayer(
-        Craps::PlayerId& playerId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode undoLast(
-        Gen::ErrorPass& ep);
     static void gameTerminate();
     
     // Auto Fill
@@ -94,10 +88,10 @@ public:
         Gen::Money  amount;
     };
 
-    static Gen::ReturnCode setAutoFill(
+    static Gen::ReturnCode cmdSetAutoFill(
             const AutoFillEntry& entry,
             Gen::ErrorPass& ep);
-    static Gen::ReturnCode deleteAutoFill(
+    static Gen::ReturnCode cmdDeleteAutoFill(
             const AutoFillEntry& entry,
             Gen::ErrorPass& ep);
 
@@ -110,17 +104,17 @@ public:
         Gen::Money  amount;
     };
     
-    static Gen::ReturnCode setQuickBet(
+    static Gen::ReturnCode cmdSetQuickBet(
             const QuickBetEntry& entry,
             Gen::ErrorPass& ep);
-    static Gen::ReturnCode applyQuickBet(
+    static Gen::ReturnCode cmdApplyQuickBet(
             size_t index,
             Gen::ErrorPass& ep);
-    static Gen::ReturnCode deleteQuickBet(
+    static Gen::ReturnCode cmdDeleteQuickBet(
             const QuickBetEntry& entry,
             BetName betName,
             Gen::ErrorPass& ep);
-    static Gen::ReturnCode deleteQuickBet(
+    static Gen::ReturnCode cmdDeleteQuickBet(
             size_t index,
             Gen::ErrorPass& ep);
 
@@ -133,7 +127,7 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsEventEmitters
+@class CrapsCommands
 
 @brief UI builds and enqueues an Event to perform against the model
 

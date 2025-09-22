@@ -13,15 +13,15 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 //
-// Tell UI to display ViewErrorDialog
+// Tell UI to display ErrorDialog
 //
 void
 ViewEventHandlers::onViewErrorDialog(GameEvent* pBase)
 {
     auto* ev = dynamic_cast<ViewErrorDialog*>(pBase);
-    Gbl::pView->onViewErrorDialog(ev->orgEventType,
-                                  ev->correlationId,
-                                  ev->diag);
+    Gbl::pView->showErrorDialog(ev->orgEventType,
+                                ev->correlationId,
+                                ev->diag);
 }
     
 //----------------------------------------------------------------
@@ -29,26 +29,26 @@ ViewEventHandlers::onViewErrorDialog(GameEvent* pBase)
 void
 ViewEventHandlers::onViewMakeBetSuccess(GameEvent* pBase)
 {
-    // TODO
-    // Gbl::pView->
+    auto* ev = dynamic_cast<ViewMakeBetSuccess*>(pBase);
+    Gbl::pView->showMakeBetSuccess(ev->betId, ev->correlationId);
 }
     
 //----------------------------------------------------------------
 
 void
-ViewEventHandlers::onViewAutomationMakeBetSuccess(GameEvent* pBase)
+ViewEventHandlers::onViewMakeBetAutoSuccess(GameEvent* pBase)
 {
-    // TODO
-    // Gbl::pView->
+    auto* ev = dynamic_cast<ViewMakeBetSuccess*>(pBase);
+    Gbl::pView->showMakeBetSuccess(ev->betId, ev->correlationId);
 }
     
 //----------------------------------------------------------------
 
 void
-ViewEventHandlers::onViewAutomationMakeBetError(GameEvent* pBase)
+ViewEventHandlers::onViewMakeBetAutoError(GameEvent* pBase)
 {
-    auto* ev = dynamic_cast<ViewAutomationMakeBetError*>(pBase);
-    Gbl::pView->onViewAutomationMakeBetError(
+    auto* ev = dynamic_cast<ViewMakeBetAutoError*>(pBase);
+    Gbl::pView->showMakeBetAutoError(
         ev->orgEventType,
         ev->correlationId,
         ev->playerId,
@@ -82,7 +82,7 @@ ViewEventHandlers::onViewRollDiceCountDown(GameEvent* pBase)
 //----------------------------------------------------------------
 
 void
-ViewEventHandlers::onSignalProgramExit(GameEvent* pBase)
+ViewEventHandlers::onViewProgramExit(GameEvent* pBase)
 {
     // TODO
 }

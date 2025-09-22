@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cstring>
 #include <cassert>
-#include <controller/CrapsInterfaceReader.h>
+#include <controller/CrapsReaders.h>
 #include <cui/ConsoleView.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
@@ -151,12 +151,12 @@ MenuOdds::buildOddsBetEntries()
     Craps::PlayerId playerId;
 
     // Grab playerId
-    auto rc = Ctrl::CrapsInterfaceReader::getUserPlayer(playerId, ep);
+    auto rc = Ctrl::CrapsReaders::getUserPlayer(playerId, ep);
     assert(rc == Gen::ReturnCode::Success);
 
     // Get player's odds capable bets
     std::vector<Craps::BetId> betIds;
-    rc = Ctrl::CrapsInterfaceReader::playerGetOddsBets(playerId, betIds, ep); 
+    rc = Ctrl::CrapsReaders::readPlayerGetOddsBets(playerId, betIds, ep); 
     assert(rc == Gen::ReturnCode::Success);
 
     populateBets(betIds);  // Populate our bets_ struct
@@ -175,12 +175,12 @@ MenuOdds::populateBets(std::vector<Craps::BetId>& betIds)
         BetEntry be;
 
         be.betId = id;
-        Ctrl::CrapsInterfaceReader::betPlayerId      (id, be.playerId,          ep);
-        Ctrl::CrapsInterfaceReader::betName          (id, be.betName,           ep);
-        Ctrl::CrapsInterfaceReader::betPivot         (id, be.pivot,             ep);
-        Ctrl::CrapsInterfaceReader::betContractAmount(id, be.contractAmount,    ep);
-        Ctrl::CrapsInterfaceReader::betOddsAmount    (id, be.currentOddsAmount, ep);
-        Ctrl::CrapsInterfaceReader::betWhenCreated   (id, be.whenCreated,       ep);
+        Ctrl::CrapsReaders::readBetPlayerId      (id, be.playerId,          ep);
+        Ctrl::CrapsReaders::readBetName          (id, be.betName,           ep);
+        Ctrl::CrapsReaders::readBetPivot         (id, be.pivot,             ep);
+        Ctrl::CrapsReaders::readBetContractAmount(id, be.contractAmount,    ep);
+        Ctrl::CrapsReaders::readBetOddsAmount    (id, be.currentOddsAmount, ep);
+        Ctrl::CrapsReaders::readBetWhenCreated   (id, be.whenCreated,       ep);
         
         bets_.push_back(be);
     }

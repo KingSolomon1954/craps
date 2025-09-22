@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: CrapsEventEmitters.cpp
+// File: CrapsCommands.cpp
 //
 //----------------------------------------------------------------
 
-#include <controller/CrapsEventEmitters.h>
+#include <controller/CrapsCommands.h>
 #include <controller/AutoFill.h>
 #include <controller/GameController.h>
 #include <controller/GameEvent.h>
@@ -25,7 +25,7 @@ using namespace Ctrl;
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::playerJoinTable(
+CrapsCommands::cmdPlayerJoinTable(
     const Craps::PlayerId& playerId,
     const Craps::TableId& tableId,
     Gen::ErrorPass& ep)
@@ -43,7 +43,7 @@ CrapsEventEmitters::playerJoinTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::playerLeaveTable(
+CrapsCommands::cmdPlayerLeaveTable(
     const Craps::PlayerId& playerId,
     Gen::ErrorPass& ep)
 {
@@ -62,13 +62,13 @@ CrapsEventEmitters::playerLeaveTable(
 // UI entry point to issue command: make bet  to Craps engine.
 //
 uint64_t
-CrapsEventEmitters::playerMakeBet(
+CrapsCommands::cmdMakeBet(
     const Craps::PlayerId& playerId,
     BetName betName,
     Gen::Money contractAmount,
     size_t pivot)
 {
-    auto ev = std::make_shared<PlayerMakeBet>();
+    auto ev = std::make_shared<CmdMakeBet>();
     ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
     ev->playerId = playerId;
     ev->betName = betName;
@@ -85,13 +85,13 @@ CrapsEventEmitters::playerMakeBet(
 // Automation entry point to issue command: make bet to Craps engine.
 //
 uint64_t
-CrapsEventEmitters::automationMakeBet(
+CrapsCommands::cmdMakeBetAuto(
     const Craps::PlayerId& playerId,
     BetName betName,
     Gen::Money contractAmount,
     size_t pivot)
 {
-    auto ev = std::make_shared<AutomationMakeBet>();
+    auto ev = std::make_shared<CmdMakeBetAuto>();
     ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
     ev->playerId = playerId;
     ev->betName = betName;
@@ -110,7 +110,7 @@ CrapsEventEmitters::automationMakeBet(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::betSetContractAmount(
+CrapsCommands::cmdBetSetContractAmount(
     const Craps::BetId& betId,
     Gen::Money contractAmount,
     Gen::ErrorPass& ep)
@@ -134,7 +134,7 @@ CrapsEventEmitters::betSetContractAmount(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::betSetOddsAmount(
+CrapsCommands::cmdBetSetOddsAmount(
     const Craps::BetId& betId,
     Gen::Money oddsAmount,
     Gen::ErrorPass& ep)
@@ -157,7 +157,7 @@ CrapsEventEmitters::betSetOddsAmount(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::betRemove(
+CrapsCommands::cmdBetRemove(
     const Craps::BetId& betId,
     Gen::ErrorPass& ep)
 {
@@ -180,7 +180,7 @@ CrapsEventEmitters::betRemove(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::betSetOffComeOutRoll(
+CrapsCommands::cmdBetSetOffComeOutRoll(
     const Craps::BetId& betId,
     Gen::ErrorPass& ep)
 {
@@ -199,7 +199,7 @@ CrapsEventEmitters::betSetOffComeOutRoll(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::betSetOnComeOutRoll(
+CrapsCommands::cmdBetSetOnComeOutRoll(
     const Craps::BetId& betId,
     Gen::ErrorPass& ep)
 {
@@ -218,7 +218,7 @@ CrapsEventEmitters::betSetOnComeOutRoll(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::betSetHardwayOff(
+CrapsCommands::cmdBetSetHardwayOff(
     const Craps::BetId& betId,
     Gen::ErrorPass& ep)
 {
@@ -237,7 +237,7 @@ CrapsEventEmitters::betSetHardwayOff(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::betSetHardwayOn(
+CrapsCommands::cmdBetSetHardwayOn(
     const Craps::BetId& betId,
     Gen::ErrorPass& ep)
 {
@@ -260,7 +260,7 @@ CrapsEventEmitters::betSetHardwayOn(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::rollDice(
+CrapsCommands::cmdRollDice(
     const Craps::TableId& tableId,
     Gen::ErrorPass& ep)
 {
@@ -283,7 +283,7 @@ CrapsEventEmitters::rollDice(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::setAutoFill(
+CrapsCommands::cmdSetAutoFill(
     const AutoFillEntry& entry,
     Gen::ErrorPass& ep)
 {
@@ -297,7 +297,7 @@ CrapsEventEmitters::setAutoFill(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::deleteAutoFill(
+CrapsCommands::cmdDeleteAutoFill(
     const AutoFillEntry& entry,
     Gen::ErrorPass& ep)
 {
@@ -315,7 +315,7 @@ CrapsEventEmitters::deleteAutoFill(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::setQuickBet(
+CrapsCommands::cmdSetQuickBet(
     const QuickBetEntry& entry,
     Gen::ErrorPass& ep)
 {
@@ -329,7 +329,7 @@ CrapsEventEmitters::setQuickBet(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::applyQuickBet(
+CrapsCommands::cmdApplyQuickBet(
     size_t index,
     Gen::ErrorPass& ep)
 {
@@ -341,7 +341,7 @@ CrapsEventEmitters::applyQuickBet(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::deleteQuickBet(
+CrapsCommands::cmdDeleteQuickBet(
     const QuickBetEntry& entry,
     BetName betName,
     Gen::ErrorPass& ep)
@@ -356,7 +356,7 @@ CrapsEventEmitters::deleteQuickBet(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::deleteQuickBet(
+CrapsCommands::cmdDeleteQuickBet(
     size_t index,
     Gen::ErrorPass& ep)
 {
@@ -372,7 +372,7 @@ CrapsEventEmitters::deleteQuickBet(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsEventEmitters::undoLast(
+CrapsCommands::undoLastBet(
     Gen::ErrorPass& ep)
 {
     // TODO turn into event
@@ -381,7 +381,7 @@ CrapsEventEmitters::undoLast(
         Gbl::pUndoMgr->undo();
         return Gen::ReturnCode::Success;
     }
-    ep.diag = "CrapsEventEmitters::betUndoLast(): Nothing to undo. "
+    ep.diag = "CrapsCommands::betUndoLast(): Nothing to undo. "
               "Undo stack is empty.";
     return Gen::ReturnCode::Fail;
 }
@@ -389,7 +389,7 @@ CrapsEventEmitters::undoLast(
 //----------------------------------------------------------------
 
 void
-CrapsEventEmitters::gameTerminate()
+CrapsCommands::gameTerminate()
 {
     // TODO
 }
@@ -398,11 +398,11 @@ CrapsEventEmitters::gameTerminate()
 
 // Private helper
 std::string
-CrapsEventEmitters::diagPrefix(
+CrapsCommands::diagPrefix(
     const std::string& funcName,
     const std::string& unableToWhat)
 {
-    std::string d = "CrapsEventEmitters::" + funcName + 
+    std::string d = "CrapsCommands::" + funcName + 
                     "(): unable to " + unableToWhat + "; ";
     return d;
 }

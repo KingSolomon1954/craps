@@ -8,7 +8,7 @@
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/UndoManager.h>
-#include <controller/ViewEventEmitters.h>
+#include <controller/ViewCommands.h>
 #include <craps/CrapsTypes.h>
 #include <craps/Player.h>
 #include <gen/ErrorPass.h>
@@ -17,13 +17,13 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 //
-// Process event: PlayerMakeBet
+// Process event: CmdMakeBet
 // Tells craps engine to make a bet
 //
 void
-CrapsEventHandlers::onPlayerMakeBet(GameEvent* pBase)
+CrapsEventHandlers::onCmdMakeBet(GameEvent* pBase)
 {
-    auto* ev = dynamic_cast<PlayerMakeBet*>(pBase);
+    auto* ev = dynamic_cast<CmdMakeBet*>(pBase);
 
     Gen::ErrorPass ep;
     Craps::BetPtr pBet;
@@ -41,8 +41,8 @@ CrapsEventHandlers::onPlayerMakeBet(GameEvent* pBase)
     {
         // Tell UI of fault
         ep.prepend(diagPrefix("onPlayerMakeBet", "make bet"));
-        ViewEventEmitters::emitViewErrorDialog(
-            EventType::PlayerMakeBet,
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdMakeBet,
             ev->correlationId,
             ep.diag);
         return;
@@ -52,27 +52,25 @@ CrapsEventHandlers::onPlayerMakeBet(GameEvent* pBase)
     Gbl::pUndoMgr->push(std::make_unique<UndoBetAdded>(pBet));
 
     // Tell UI of success
-    ViewEventEmitters::emitViewMakeBetSuccess(
-        pBet->betId(),
-        ev->correlationId);
+    ViewCommands::emitViewMakeBetSuccess(ev->correlationId, pBet->betId());
 }
 
 //----------------------------------------------------------------
 //
-// Process event: AutomationMakeBet
+// Process event: CmdMakeBetAuto
 // Tells craps engine to make a bet
 //
 void
-CrapsEventHandlers::onAutomationMakeBet(GameEvent* pBase)
+CrapsEventHandlers::onCmdMakeBetAuto(GameEvent* pBase)
 {
-    auto* ev = dynamic_cast<AutomationMakeBet*>(pBase);
+    auto* ev = dynamic_cast<CmdMakeBetAuto*>(pBase);
 
     Gen::ErrorPass ep;
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(ev->playerId, ep);
     if (!p)
     {
-        ViewEventEmitters::emitViewAutomationMakeBetError(
-            EventType::AutomationMakeBet,
+        ViewCommands::emitViewMakeBetAutoError(
+            EventType::CmdMakeBet,
             ev->correlationId,
             ev->playerId,
             "Player not found");
@@ -82,24 +80,25 @@ CrapsEventHandlers::onAutomationMakeBet(GameEvent* pBase)
     auto pBet = p->makeBet(ev->betName, ev->contractAmount, ev->pivot, ep);
     if (!pBet)
     {
-        ViewEventEmitters::emitViewAutomationMakeBetError(
-            EventType::AutomationMakeBet,
+        ViewCommands::emitViewMakeBetAutoError(
+            EventType::CmdMakeBetAuto,
             ev->correlationId,
             ev->playerId,
             ep.diag);
         return;
     }
 
-    ViewEventEmitters::emitViewAutomationMakeBetSuccess(
+    ViewCommands::emitViewMakeBetAutoSuccess(
         pBet->betId(), ev->correlationId);
 }
 
 //----------------------------------------------------------------
 //
+// Process event: CmdMakeOddsBet
 // Tell model to make an odds bet, convert event
 //
 void
-CrapsEventHandlers::onPlayerMakeOddsBet(GameEvent* pBase)
+CrapsEventHandlers::onCmdMakeOddsBet(GameEvent* pBase)
 {
     // TODO
     // auto rc = model->playerMakeOddsBet()
@@ -112,10 +111,28 @@ CrapsEventHandlers::onPlayerMakeOddsBet(GameEvent* pBase)
     
 //----------------------------------------------------------------
 //
+// Process event: CmdMakeOddsBetAuto
+// Tell model to make an odds bet, convert event
+//
+void
+CrapsEventHandlers::onCmdMakeOddsBetAuto(GameEvent* pBase)
+{
+    // TODO
+    // auto rc = model->playerMakeOddsBet()
+    
+    // if rc == success
+    //     ViewEventEmmitters::emitMakeOddsBetSuccess(pBase->correlationId)
+    // else
+    //     ViewEventEmmitters::emitDialogError(pBase->correlationId)
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdRollDice
 // Tell model to roll dice, convert event
 //
 void
-CrapsEventHandlers::onPlayerRollDice(GameEvent* pBase)
+CrapsEventHandlers::onCmdRollDice(GameEvent* pBase)
 {
     // TODO
     // auto rc = Gbl::pTable->rollDice()
@@ -136,5 +153,3 @@ CrapsEventHandlers::diagPrefix(
 }
 
 //----------------------------------------------------------------
-
-

@@ -46,27 +46,27 @@ public:
 
     /// @name ViewHandlers
     /// @{
-    void onViewErrorDialog(
+    void showErrorDialog(
         Ctrl::EventType    orgEventType,
         uint64_t           correlationId,
         const std::string& diag) override;
-    void onViewMakeBetSuccess(
+    void showMakeBetSuccess(
         Craps::BetId betId,
         uint64_t     correlationId) override;
-    void onViewAutomationMakeBetSuccess(
+    void showMakeOddsBetSuccess(
         Craps::BetId betId,
         uint64_t     correlationId) override;
-    void onViewAutomationMakeBetError(
+    void showMakeBetAutoSuccess(
+        Craps::BetId betId,
+        uint64_t     correlationId) override;
+    void showMakeBetAutoError(
         Ctrl::EventType        orgEventType,
         uint64_t               correlationId,
         const Craps::PlayerId& playerId,
         const std::string&     diag) override;
-    void onViewMakeOddsBetSuccess() override;
-    void onViewRollDice()           override;
-    void onSignalProgramExit()      override;
+    void showRollDice() override;
+    void showProgramExit() override;
     /// @}
-
-
     
     WINDOW* makeCenteredWindow(int h, int w);
          
@@ -99,7 +99,7 @@ UI Initialization & Screen hierarchy
 @li Each key forwarded to the active screen
 @li Delegates to next or previous screen for rendering/drawing
 @li For pure event dispatch (no console-side logic), it just forwards to
-    ViewEventEmitters.
+    ViewCommands.
 @li For UI-local things (like pushing a new window on success), it acts
     directly.
 */

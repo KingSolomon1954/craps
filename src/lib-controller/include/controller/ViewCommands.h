@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: ViewEventEmitters.h
+// File: ViewCommands.h
 //
 //----------------------------------------------------------------
 
@@ -15,7 +15,7 @@ namespace Ctrl {
 
 class GameEvent;  // fwd
     
-class ViewEventEmitters
+class ViewCommands
 {
 public:
     /// @name Lifecycle
@@ -24,24 +24,27 @@ public:
 
     /// @name Modifiers
     /// @{
+    // Commands issued from the Model to UI
     static void emitViewErrorDialog(
         EventType              orgEventType,
         uint64_t               correlationId,
         const std::string&     diag);
     static void emitViewMakeBetSuccess(
+        uint64_t               correlationId,
+        Craps::BetId           betId);
+    static void emitViewMakeOddsBetSuccess(
+        uint64_t               correlationId,
+        Craps::BetId           betId);
+    static void emitViewMakeBetAutoSuccess(
         Craps::BetId           betId,
         uint64_t               correlationId);
-    static void emitViewMakeOddsBetSuccess();
-    static void emitViewAutomationMakeBetSuccess(
-        Craps::BetId           betId,
-        uint64_t               correlationId);
-    static void emitViewAutomationMakeBetError(
+    static void emitViewMakeBetAutoError(
         EventType              orgEventType,
         uint64_t               correlationId,
         const Craps::PlayerId& playerId,
         const std::string&     diag);
     static void emitViewRollDice();
-    static void emitSignalProgramExit();
+    static void emitViewProgramExit();
     /// @}
 
     /// @name Observers
@@ -51,7 +54,7 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class ViewEventEmitters
+@class ViewCommands
 
 @brief Model uses these function to build UI Events
 

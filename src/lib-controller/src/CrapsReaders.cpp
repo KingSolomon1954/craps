@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: CrapsInterfaceReader.cpp
+// File: CrapsReaders.cpp
 //
 //----------------------------------------------------------------
 
-#include <controller/CrapsInterfaceReader.h>
+#include <controller/CrapsReaders.h>
 #include <controller/AutoFill.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
@@ -29,7 +29,7 @@ using namespace Ctrl;
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerHaveBet(
+CrapsReaders::readPlayerHaveBet(
     const Craps::PlayerId& playerId,
     const Craps::BetId& betId,
     bool& haveBet,
@@ -52,7 +52,7 @@ CrapsInterfaceReader::playerHaveBet(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerGetBets(
+CrapsReaders::readPlayerGetBets(
     const Craps::PlayerId& playerId,
     std::vector<Craps::BetId>& betIds,
     Gen::ErrorPass& ep)
@@ -76,7 +76,7 @@ CrapsInterfaceReader::playerGetBets(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerGetOddsBets(
+CrapsReaders::readPlayerGetOddsBets(
     const Craps::PlayerId& playerId,
     std::vector<Craps::BetId>& betIds,
     Gen::ErrorPass& ep)
@@ -100,7 +100,7 @@ CrapsInterfaceReader::playerGetOddsBets(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerName(
+CrapsReaders::readPlayerName(
     const Craps::PlayerId& playerId,
     std::string& playerName,
     Gen::ErrorPass& ep)
@@ -118,7 +118,7 @@ CrapsInterfaceReader::playerName(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerAmountOnTable(
+CrapsReaders::readPlayerAmountOnTable(
     const Craps::PlayerId& playerId,
     Gen::Money& amount,
     Gen::ErrorPass& ep)
@@ -136,7 +136,7 @@ CrapsInterfaceReader::playerAmountOnTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerNumBetsOnTable(
+CrapsReaders::readPlayerNumBetsOnTable(
     const Craps::PlayerId& playerId,
     unsigned& numBets,
     Gen::ErrorPass& ep)
@@ -154,7 +154,7 @@ CrapsInterfaceReader::playerNumBetsOnTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerBalance(
+CrapsReaders::readPlayerBalance(
     const Craps::PlayerId& playerId,
     Gen::Money& balance,
     Gen::ErrorPass& ep)
@@ -172,7 +172,7 @@ CrapsInterfaceReader::playerBalance(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerLastRollStats(
+CrapsReaders::readPlayerLastRollStats(
     const Craps::PlayerId& playerId,
     Craps::LastRollStats& lastRollStats,
     Gen::ErrorPass& ep)
@@ -190,7 +190,7 @@ CrapsInterfaceReader::playerLastRollStats(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerCurrentStats(
+CrapsReaders::readPlayerCurrentStats(
     const Craps::PlayerId& playerId,
     Craps::PlayerStats& playerCurrentStats,
     Gen::ErrorPass& ep)
@@ -208,7 +208,7 @@ CrapsInterfaceReader::playerCurrentStats(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerAlltimeStats(
+CrapsReaders::readPlayerAlltimeStats(
     const Craps::PlayerId& playerId,
     Craps::PlayerStats& playerAlltimeStats,
     Gen::ErrorPass& ep)
@@ -226,7 +226,7 @@ CrapsInterfaceReader::playerAlltimeStats(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerCurrentStatsBank(
+CrapsReaders::readPlayerCurrentStatsBank(
     const Craps::PlayerId& playerId,
     Craps::BankStats& playerCurrentStatsBank,
     Gen::ErrorPass& ep)
@@ -244,7 +244,7 @@ CrapsInterfaceReader::playerCurrentStatsBank(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::playerSessionHistory(
+CrapsReaders::readPlayerSessionHistory(
     const Craps::PlayerId& playerId,
     Craps::SessionHistory::Sessions& playerSessionHistory,
     Gen::ErrorPass& ep)
@@ -262,7 +262,7 @@ CrapsInterfaceReader::playerSessionHistory(
 //----------------------------------------------------------------
 
 const PlayerManifest::PlayerList&
-CrapsInterfaceReader::playerList()
+CrapsReaders::readPlayerList()
 {
     return Gbl::pPlayerMgr->getPlayerList();
 }
@@ -274,7 +274,7 @@ CrapsInterfaceReader::playerList()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betIsRemovable(
+CrapsReaders::readBetIsRemovable(
     const Craps::BetId& betId,
     bool& isRemovable,
     Gen::ErrorPass& ep)    
@@ -292,7 +292,7 @@ CrapsInterfaceReader::betIsRemovable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betPivot(
+CrapsReaders::readBetPivot(
     const Craps::BetId& betId,
     unsigned& pivot,
     Gen::ErrorPass& ep)
@@ -310,7 +310,7 @@ CrapsInterfaceReader::betPivot(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betPlayerId(
+CrapsReaders::readBetPlayerId(
     const Craps::BetId& betId,
     Craps::PlayerId& playerId,
     Gen::ErrorPass& ep)
@@ -328,7 +328,7 @@ CrapsInterfaceReader::betPlayerId(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betName(
+CrapsReaders::readBetName(
     const Craps::BetId& betId,
     BetName& betName,
     Gen::ErrorPass& ep)
@@ -346,7 +346,7 @@ CrapsInterfaceReader::betName(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betContractAmount(
+CrapsReaders::readBetContractAmount(
     const Craps::BetId& betId,
     Gen::Money& contractAmount,
     Gen::ErrorPass& ep)
@@ -364,7 +364,7 @@ CrapsInterfaceReader::betContractAmount(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betOddsAmount(
+CrapsReaders::readBetOddsAmount(
     const Craps::BetId& betId,
     Gen::Money& oddsAmount,
     Gen::ErrorPass& ep)
@@ -382,7 +382,7 @@ CrapsInterfaceReader::betOddsAmount(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betOffComeOutRoll(
+CrapsReaders::readBetOffComeOutRoll(
     const Craps::BetId& betId,
     bool& offComeOutRoll,
     Gen::ErrorPass& ep)
@@ -401,7 +401,7 @@ CrapsInterfaceReader::betOffComeOutRoll(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betHardwayWorking(
+CrapsReaders::readBetHardwayWorking(
     const Craps::BetId& betId,
     bool& hardwayWorking,
     Gen::ErrorPass& ep)
@@ -419,7 +419,7 @@ CrapsInterfaceReader::betHardwayWorking(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betDistance(
+CrapsReaders::readBetDistance(
     const Craps::BetId& betId,
     unsigned& distance,
     Gen::ErrorPass& ep)
@@ -437,7 +437,7 @@ CrapsInterfaceReader::betDistance(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betWhenCreated(
+CrapsReaders::readBetWhenCreated(
     const Craps::BetId& betId,
     Gen::Timepoint& whenCreated,
     Gen::ErrorPass& ep)
@@ -455,7 +455,7 @@ CrapsInterfaceReader::betWhenCreated(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::betWhenDecided(
+CrapsReaders::readBetWhenDecided(
     const Craps::BetId& betId,
     Gen::Timepoint& whenDecided,
     Gen::ErrorPass& ep)
@@ -477,7 +477,7 @@ CrapsInterfaceReader::betWhenDecided(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableNumPlayers(
+CrapsReaders::readTableNumPlayers(
     const Craps::TableId& tableId,
     unsigned& numPlayers,
     Gen::ErrorPass& ep)
@@ -495,7 +495,7 @@ CrapsInterfaceReader::tableNumPlayers(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tablePoint(
+CrapsReaders::readTablePoint(
     const Craps::TableId& tableId,
     unsigned& point,
     Gen::ErrorPass& ep)
@@ -513,7 +513,7 @@ CrapsInterfaceReader::tablePoint(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableCurrentRoll(
+CrapsReaders::readTableCurrentRoll(
     const Craps::TableId& tableId,
     Craps::Dice& dice,
     Gen::ErrorPass& ep)
@@ -531,7 +531,7 @@ CrapsInterfaceReader::tableCurrentRoll(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableNumRolls(
+CrapsReaders::readTableNumRolls(
     const Craps::TableId& tableId,
     unsigned& numRolls,
     Gen::ErrorPass& ep)
@@ -549,7 +549,7 @@ CrapsInterfaceReader::tableNumRolls(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableAmountOnTable(
+CrapsReaders::readTableAmountOnTable(
     const Craps::TableId& tableId,
     Gen::Money& amount,
     Gen::ErrorPass& ep)
@@ -567,7 +567,7 @@ CrapsInterfaceReader::tableAmountOnTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableNumBetsOnTable(
+CrapsReaders::readTableNumBetsOnTable(
     const Craps::TableId& tableId,
     unsigned& numBets,
     Gen::ErrorPass& ep)
@@ -585,7 +585,7 @@ CrapsInterfaceReader::tableNumBetsOnTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tablePlayers(
+CrapsReaders::readTablePlayers(
     const Craps::TableId& tableId,
     std::vector<Craps::PlayerId>& playerIds,
     Gen::ErrorPass& ep)
@@ -607,7 +607,7 @@ CrapsInterfaceReader::tablePlayers(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableCurrentShooter(
+CrapsReaders::readTableCurrentShooter(
     const Craps::TableId& tableId,
     Craps::PlayerId& playerId,
     Gen::ErrorPass& ep)
@@ -625,7 +625,7 @@ CrapsInterfaceReader::tableCurrentShooter(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableRecentRolls(
+CrapsReaders::readTableRecentRolls(
     const Craps::TableId& tableId,
     std::deque<Craps::Dice>& recentRolls,
     Gen::ErrorPass& ep)
@@ -643,7 +643,7 @@ CrapsInterfaceReader::tableRecentRolls(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableCurrentStats(
+CrapsReaders::readTableCurrentStats(
     const Craps::TableId& tableId,
     Craps::TableStats& currentTableStats,
     Gen::ErrorPass& ep)
@@ -661,7 +661,7 @@ CrapsInterfaceReader::tableCurrentStats(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableAlltimeStats(
+CrapsReaders::readTableAlltimeStats(
     const Craps::TableId& tableId,
     Craps::TableStats& alltimeTableStats,
     Gen::ErrorPass& ep)
@@ -679,7 +679,7 @@ CrapsInterfaceReader::tableAlltimeStats(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableCurrentStatsBank(
+CrapsReaders::readTableCurrentStatsBank(
     const Craps::TableId& tableId,
     Craps::BankStats& currentStatsBank,
     Gen::ErrorPass& ep)
@@ -697,7 +697,7 @@ CrapsInterfaceReader::tableCurrentStatsBank(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableAlltimeStatsBank(
+CrapsReaders::readTableAlltimeStatsBank(
     const Craps::TableId& tableId,
     Craps::BankStats& alltimeStatsBank,
     Gen::ErrorPass& ep)
@@ -715,7 +715,7 @@ CrapsInterfaceReader::tableAlltimeStatsBank(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableLastRollStats(
+CrapsReaders::readTableLastRollStats(
     const Craps::TableId& tableId,
     Craps::LastRollStats& lastRollStats,
     Gen::ErrorPass& ep)
@@ -733,7 +733,7 @@ CrapsInterfaceReader::tableLastRollStats(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableSessionHistory(
+CrapsReaders::readTableSessionHistory(
     const Craps::TableId& tableId,
     Craps::SessionHistory::Sessions& tableSessionHistory,
     Gen::ErrorPass& ep)
@@ -751,7 +751,7 @@ CrapsInterfaceReader::tableSessionHistory(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableIsComeOutRoll(
+CrapsReaders::readTableIsComeOutRoll(
     const Craps::TableId& tableId,
     bool& isComeOutRoll,
     Gen::ErrorPass& ep)
@@ -769,7 +769,7 @@ CrapsInterfaceReader::tableIsComeOutRoll(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableIsBettingOpen(
+CrapsReaders::readTableIsBettingOpen(
     const Craps::TableId& tableId,
     bool& isBettingOpen,
     Gen::ErrorPass& ep)
@@ -787,7 +787,7 @@ CrapsInterfaceReader::tableIsBettingOpen(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableHaveBet(
+CrapsReaders::readTableHaveBet(
     const Craps::TableId& tableId,
     const Craps::BetId& betId,
     bool& haveBet,
@@ -807,7 +807,7 @@ CrapsInterfaceReader::tableHaveBet(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::tableHavePlayer(
+CrapsReaders::readTableHavePlayer(
     const Craps::TableId& tableId,
     const Craps::PlayerId& playerId,
     bool& havePlayer,
@@ -827,7 +827,7 @@ CrapsInterfaceReader::tableHavePlayer(
 //----------------------------------------------------------------
 
 const TableManifest::TableList&
-CrapsInterfaceReader::tableList()
+CrapsReaders::readTableList()
 {
     return Gbl::pTableMgr->getTableList();
 }
@@ -839,7 +839,7 @@ CrapsInterfaceReader::tableList()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::getAutoFill(
+CrapsReaders::getAutoFill(
     AutoFillEntry& entry,
     Gen::ErrorPass& ep)
 {
@@ -858,7 +858,7 @@ CrapsInterfaceReader::getAutoFill(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::getAutoFills(
+CrapsReaders::getAutoFills(
     std::vector<AutoFillEntry>& autoFills,  // return arg
     Gen::ErrorPass& ep)
 {
@@ -881,7 +881,7 @@ CrapsInterfaceReader::getAutoFills(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::getQuickBets(
+CrapsReaders::getQuickBets(
     std::vector<QuickBetEntry>& quickBets,  // return arg
     Gen::ErrorPass& ep)
 {
@@ -904,14 +904,14 @@ CrapsInterfaceReader::getQuickBets(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::getActiveCrapsTable(
+CrapsReaders::getActiveCrapsTable(
     Craps::TableId& tableId,
     Gen::ErrorPass& ep)
 {
     auto* t = Gbl::pTable;
     if (t == nullptr)
     {
-        ep.diag = "CrapsInterfaceReader::getActiveCrapsTable(): nullptr for active table. Coding error.";
+        ep.diag = "CrapsReaders::getActiveCrapsTable(): nullptr for active table. Coding error.";
         return Gen::ReturnCode::Fail;
     }
     tableId = t->getTableId();
@@ -921,14 +921,14 @@ CrapsInterfaceReader::getActiveCrapsTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-CrapsInterfaceReader::getUserPlayer(
+CrapsReaders::getUserPlayer(
     Craps::PlayerId& playerId,
     Gen::ErrorPass& ep)
 {
     auto* p = Gbl::pPlayerMgr->getUserPlayer();
     if (p == nullptr)
     {
-        ep.diag = "CrapsInterfaceReader::getUserPlayer(): nullptr for user/player. Coding error.";
+        ep.diag = "CrapsReaders::getUserPlayer(): nullptr for user/player. Coding error.";
         return Gen::ReturnCode::Fail;
     }
     playerId = p->getPlayerId();
@@ -939,11 +939,11 @@ CrapsInterfaceReader::getUserPlayer(
 
 // Private helper
 std::string
-CrapsInterfaceReader::diagPrefix(
+CrapsReaders::diagPrefix(
     const std::string& funcName,
     const std::string& unableToWhat)
 {
-    std::string d = "CrapsInterfaceReader::" + funcName + 
+    std::string d = "CrapsReaders::" + funcName + 
                     "(): unable to " + unableToWhat + "; ";
     return d;
 }
