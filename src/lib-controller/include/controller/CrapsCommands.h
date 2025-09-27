@@ -30,8 +30,7 @@ public:
         const Craps::PlayerId& playerId,
         const Craps::TableId& tableId);
     static uint64_t cmdPlayerLeaveTable(
-        const Craps::PlayerId& playerId,
-        const Craps::TableId& tableId);
+        const Craps::PlayerId& playerId);
     static uint64_t cmdMakeBet(
         const Craps::PlayerId& playerId,
         BetName betName,

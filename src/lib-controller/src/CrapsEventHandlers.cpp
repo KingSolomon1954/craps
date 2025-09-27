@@ -7,6 +7,7 @@
 #include <controller/CrapsEventHandlers.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
+#include <controller/TableManager.h>
 #include <controller/UndoManager.h>
 #include <controller/ViewCommands.h>
 #include <craps/CrapsTypes.h>
@@ -17,8 +18,8 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 //
-// Process event: CmdMakeBet
-// Tells craps engine to make a bet
+// Process event: CmdPlayerJoinTable
+// Tells craps engine that player wants to join a table
 //
 void
 CrapsEventHandlers::onCmdPlayerJoinTable(GameEvent* pBase)
@@ -31,7 +32,11 @@ CrapsEventHandlers::onCmdPlayerJoinTable(GameEvent* pBase)
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(ev->playerId, ep);
     if (p != nullptr)
     {
-        rc = p->joinTable(Gbl::pTable, ep);
+        auto pTable = Gbl::pTableMgr->getTable(ev->tableId, ep);
+        if (pTable == nullptr)
+        {
+            rc = p->joinTable(pTable, ep);
+        }
     }
 
     if (p == nullptr || rc == Gen::ReturnCode::Fail)
@@ -40,6 +45,39 @@ CrapsEventHandlers::onCmdPlayerJoinTable(GameEvent* pBase)
         ep.prepend(diagPrefix("onCmdPlayerJoinTable", "join table"));
         ViewCommands::emitViewErrorDialog(
             EventType::CmdPlayerJoinTable,
+            ev->correlationId,
+            ep.diag);
+        return;
+    }
+
+    // Tell UI of success
+    ViewCommands::emitViewSuccess(ev->correlationId);
+}
+
+//----------------------------------------------------------------
+//
+// Process event: CmdPlayerLeaveTable
+// Tells craps engine that player wants to join a table
+//
+void
+CrapsEventHandlers::onCmdPlayerLeaveTable(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdPlayerLeaveTable*>(pBase);
+
+    Gen::ErrorPass ep;
+    Gen::ReturnCode rc;
+
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(ev->playerId, ep);
+    if (p != nullptr)
+    {
+        rc = p->leaveTable(ep);
+    }
+    else
+    {
+        // Tell UI of fault
+        ep.prepend(diagPrefix("onCmdPlayerLeaveTable", "join table"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdPlayerLeaveTable,
             ev->correlationId,
             ep.diag);
         return;
@@ -128,13 +166,30 @@ CrapsEventHandlers::onCmdMakeBetAuto(GameEvent* pBase)
 
 //----------------------------------------------------------------
 //
+// Process event: CmdBetSetContractAmount
+// Tell model to set/change the contract amount of a bet
+//
+void
+CrapsEventHandlers::onCmdBetSetContractAmount(GameEvent* pBase)
+{
+    // TODO
+    // auto rc = model->playerMakeOddsBet()
+    
+    // if rc == success
+    //     ViewEventEmmitters::emitMakeOddsBetSuccess(pBase->correlationId)
+    // else
+    //     ViewEventEmmitters::emitDialogError(pBase->correlationId)
+}
+    
+//----------------------------------------------------------------
+//
 // Process event: CmdMakeOddsBet
 // Tell model to make an odds bet, convert event
 //
 void
-CrapsEventHandlers::onCmdMakeOddsBet(GameEvent* pBase)
+CrapsEventHandlers::onCmdBetSetOddsAmount(GameEvent* pBase)
 {
-    // TODO
+    // TODO  CmdBetSetOddsAmount
     // auto rc = model->playerMakeOddsBet()
     
     // if rc == success
@@ -149,7 +204,7 @@ CrapsEventHandlers::onCmdMakeOddsBet(GameEvent* pBase)
 // Tell model to make an odds bet, convert event
 //
 void
-CrapsEventHandlers::onCmdMakeOddsBetAuto(GameEvent* pBase)
+CrapsEventHandlers::onCmdBetSetOddsAmountAuto(GameEvent* pBase)
 {
     // TODO
     // auto rc = model->playerMakeOddsBet()

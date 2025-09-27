@@ -16,14 +16,14 @@ namespace Ctrl {
 
 enum class EventType
 {
-    CmdMakeBet,
-    CmdMakeBetAuto,
-    CmdMakeOddsBet,
-    CmdMakeOddsBetAuto,
-    CmdRollDice,
     CmdPlayerJoinTable,
     CmdPlayerLeaveTable,
+    CmdMakeBet,
+    CmdMakeBetAuto,
     CmdBetSetContractAmount,
+    CmdBetSetOddsAmount,
+    CmdBetSetOddsAmountAuto,
+    CmdRollDice,
     
     ViewErrorDialog,
     ViewSuccess,
@@ -79,13 +79,25 @@ struct CmdMakeBetAuto : public GameEvent
 
 struct CmdBetSetContractAmount : public GameEvent
 {
-    uint64_t        correlationId;
-    Craps::BetId    betId;
-    Gen::Money      contractAmount;
+    uint64_t     correlationId;
+    Craps::BetId betId;
+    Gen::Money   contractAmount;
     
     EventType type() const override
     {
         return EventType::CmdBetSetContractAmount;
+    }
+};
+
+struct CmdBetSetOddsAmount : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::BetId    betId;
+    Gen::Money      oddsAmount;
+    
+    EventType type() const override
+    {
+        return EventType::CmdBetSetOddsAmount;
     }
 };
 
@@ -114,7 +126,6 @@ struct CmdPlayerLeaveTable : public GameEvent
 {
     uint64_t        correlationId;
     Craps::PlayerId playerId;
-    Craps::TableId  tableId;
     EventType type() const override
     {
         return EventType::CmdPlayerLeaveTable;

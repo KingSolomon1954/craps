@@ -51,16 +51,16 @@ GameController::dispatchEvent(GameEvent* pBase)
 {
     switch(pBase->type())
     {
-    case EventType::CmdMakeBet:             CrapsEventHandlers::onCmdMakeBet(pBase);            break;
-    case EventType::CmdMakeBetAuto:         CrapsEventHandlers::onCmdMakeBetAuto(pBase);        break;
-    case EventType::CmdMakeOddsBet:         CrapsEventHandlers::onCmdMakeOddsBet(pBase);        break;
-    case EventType::CmdMakeOddsBetAuto:     CrapsEventHandlers::onCmdMakeOddsBetAuto(pBase);    break;
-    case EventType::CmdRollDice:            CrapsEventHandlers::onCmdRollDice(pBase);           break;
-    case EventType::ViewErrorDialog:        ViewEventHandlers::onViewErrorDialog(pBase);        break;
-    case EventType::ViewMakeBetSuccess:     ViewEventHandlers::onViewMakeBetSuccess(pBase);     break;
-    case EventType::ViewMakeOddsBetSuccess: ViewEventHandlers::onViewMakeOddsBetSuccess(pBase); break;
-    case EventType::ViewRollDiceCountDown:  ViewEventHandlers::onViewRollDiceCountDown(pBase);  break;
-    case EventType::ViewProgramExit:        ViewEventHandlers::onViewProgramExit(pBase);        break;
+    case EventType::CmdMakeBet:              CrapsEventHandlers::onCmdMakeBet(pBase);              break;
+    case EventType::CmdMakeBetAuto:          CrapsEventHandlers::onCmdMakeBetAuto(pBase);          break;
+    case EventType::CmdBetSetOddsAmount:     CrapsEventHandlers::onCmdBetSetOddsAmount(pBase);     break;
+    case EventType::CmdBetSetOddsAmountAuto: CrapsEventHandlers::onCmdBetSetOddsAmountAuto(pBase); break;
+    case EventType::CmdRollDice:             CrapsEventHandlers::onCmdRollDice(pBase);             break;
+    case EventType::ViewErrorDialog:         ViewEventHandlers::onViewErrorDialog(pBase);          break;
+    case EventType::ViewMakeBetSuccess:      ViewEventHandlers::onViewMakeBetSuccess(pBase);       break;
+    case EventType::ViewMakeOddsBetSuccess:  ViewEventHandlers::onViewMakeOddsBetSuccess(pBase);   break;
+    case EventType::ViewRollDiceCountDown:   ViewEventHandlers::onViewRollDiceCountDown(pBase);    break;
+    case EventType::ViewProgramExit:         ViewEventHandlers::onViewProgramExit(pBase);          break;
     }
 }
 

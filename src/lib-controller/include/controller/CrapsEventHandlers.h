@@ -23,12 +23,17 @@ public:
 
     /// @name Modifiers
     /// @{
-    static void onCmdMakeBet        (GameEvent* pBase);
-    static void onCmdMakeBetAuto    (GameEvent* pBase);
-    static void onCmdMakeOddsBet    (GameEvent* pBase);
-    static void onCmdMakeOddsBetAuto(GameEvent* pBase);
-    static void onCmdRollDice       (GameEvent* pBase);
-    static void onCmdPlayerJoinTable(GameEvent* pBase);
+    // Player Related
+    static void onCmdPlayerJoinTable (GameEvent* pBase);
+    static void onCmdPlayerLeaveTable(GameEvent* pBase);
+    static void onCmdMakeBet         (GameEvent* pBase);
+    static void onCmdMakeBetAuto     (GameEvent* pBase);
+    
+    // Bet Related
+    static void onCmdBetSetContractAmount(GameEvent* pBase);
+    static void onCmdBetSetOddsAmount    (GameEvent* pBase);
+    static void onCmdBetSetOddsAmountAuto(GameEvent* pBase);
+    static void onCmdRollDice            (GameEvent* pBase);
     /// @}
 
     /// @name Observers

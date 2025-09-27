@@ -43,13 +43,11 @@ CrapsCommands::cmdPlayerJoinTable(
 
 uint64_t
 CrapsCommands::cmdPlayerLeaveTable(
-    const Craps::PlayerId& playerId,
-    const Craps::TableId&  tableId)
+    const Craps::PlayerId& playerId)
 {
     auto ev = std::make_shared<CmdPlayerLeaveTable>();
     ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
     ev->playerId      = playerId;
-    ev->tableId       = tableId;
 
     Gbl::pGameCtrl->enqueue(ev);
 
@@ -149,7 +147,7 @@ CrapsCommands::cmdBetSetOddsAmount(
     Gen::Money oddsAmount,
     Gen::ErrorPass& ep)
 {
-    // TODO turn into event
+    // TODO turn into event  CmdBetSetOddsAmount
     auto pBet = Gbl::pTable->getBet(betId, ep);
     if (pBet == nullptr)
     {
