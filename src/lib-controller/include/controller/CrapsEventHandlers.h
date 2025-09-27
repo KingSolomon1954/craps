@@ -28,6 +28,7 @@ public:
     static void onCmdMakeOddsBet    (GameEvent* pBase);
     static void onCmdMakeOddsBetAuto(GameEvent* pBase);
     static void onCmdRollDice       (GameEvent* pBase);
+    static void onCmdPlayerJoinTable(GameEvent* pBase);
     /// @}
 
     /// @name Observers

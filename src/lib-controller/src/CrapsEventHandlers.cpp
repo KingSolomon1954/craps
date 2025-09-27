@@ -21,6 +21,40 @@ using namespace Ctrl;
 // Tells craps engine to make a bet
 //
 void
+CrapsEventHandlers::onCmdPlayerJoinTable(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdPlayerJoinTable*>(pBase);
+
+    Gen::ErrorPass ep;
+    Gen::ReturnCode rc;
+
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(ev->playerId, ep);
+    if (p != nullptr)
+    {
+        rc = p->joinTable(Gbl::pTable, ep);
+    }
+
+    if (p == nullptr || rc == Gen::ReturnCode::Fail)
+    {
+        // Tell UI of fault
+        ep.prepend(diagPrefix("onCmdPlayerJoinTable", "join table"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdPlayerJoinTable,
+            ev->correlationId,
+            ep.diag);
+        return;
+    }
+
+    // Tell UI of success
+    ViewCommands::emitViewSuccess(ev->correlationId);
+}
+
+//----------------------------------------------------------------
+//
+// Process event: CmdMakeBet
+// Tells craps engine to make a bet
+//
+void
 CrapsEventHandlers::onCmdMakeBet(GameEvent* pBase)
 {
     auto* ev = dynamic_cast<CmdMakeBet*>(pBase);

@@ -43,6 +43,8 @@ public:
         uint64_t               correlationId,
         const Craps::PlayerId& playerId,
         const std::string&     diag);
+    static void emitViewSuccess(
+        uint64_t               correlationId);
     static void emitViewRollDice();
     static void emitViewProgramExit();
     /// @}

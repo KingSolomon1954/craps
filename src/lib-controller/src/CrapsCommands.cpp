@@ -24,37 +24,36 @@ using namespace Ctrl;
 //
 //----------------------------------------------------------------
 
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdPlayerJoinTable(
     const Craps::PlayerId& playerId,
-    const Craps::TableId& tableId,
-    Gen::ErrorPass& ep)
+    const Craps::TableId&  tableId)
 {
-    // TODO turn into event
-    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr)
-    {
-        ep.prepend(diagPrefix("playerJoinTable", "join table"));
-        return Gen::ReturnCode::Fail;
-    }
-    return p->joinTable(Gbl::pTable, ep);
+    auto ev = std::make_shared<CmdPlayerJoinTable>();
+    ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
+    ev->playerId      = playerId;
+    ev->tableId       = tableId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------
 
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdPlayerLeaveTable(
     const Craps::PlayerId& playerId,
-    Gen::ErrorPass& ep)
+    const Craps::TableId&  tableId)
 {
-    // TODO turn into event
-    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
-    if (p == nullptr)
-    {
-        ep.prepend(diagPrefix("leaveTable", "leave table"));
-        return Gen::ReturnCode::Fail;
-    }
-    return p->leaveTable(ep);
+    auto ev = std::make_shared<CmdPlayerLeaveTable>();
+    ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
+    ev->playerId      = playerId;
+    ev->tableId       = tableId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------
@@ -69,11 +68,11 @@ CrapsCommands::cmdMakeBet(
     size_t pivot)
 {
     auto ev = std::make_shared<CmdMakeBet>();
-    ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
-    ev->playerId = playerId;
-    ev->betName = betName;
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->playerId       = playerId;
+    ev->betName        = betName;
     ev->contractAmount = contractAmount;
-    ev->pivot = pivot;
+    ev->pivot          = pivot;
 
     Gbl::pGameCtrl->enqueue(ev);
 
@@ -92,11 +91,11 @@ CrapsCommands::cmdMakeBetAuto(
     size_t pivot)
 {
     auto ev = std::make_shared<CmdMakeBetAuto>();
-    ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
-    ev->playerId = playerId;
-    ev->betName = betName;
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->playerId       = playerId;
+    ev->betName        = betName;
     ev->contractAmount = contractAmount;
-    ev->pivot = pivot;
+    ev->pivot          = pivot;
 
     Gbl::pGameCtrl->enqueue(ev);
 
@@ -109,12 +108,23 @@ CrapsCommands::cmdMakeBetAuto(
 //
 //----------------------------------------------------------------
 
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdBetSetContractAmount(
     const Craps::BetId& betId,
-    Gen::Money contractAmount,
-    Gen::ErrorPass& ep)
+    Gen::Money contractAmount)
 {
+    auto ev = std::make_shared<CmdBetSetContractAmount>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betId          = betId;
+    ev->contractAmount = contractAmount;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
+}
+
+#if 0
+// move to handler
     // TODO turn into event
     auto pBet = Gbl::pTable->getBet(betId, ep);
     if (pBet == nullptr)
@@ -129,7 +139,7 @@ CrapsCommands::cmdBetSetContractAmount(
         Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
     }
     return rc;
-}
+#endif
 
 //----------------------------------------------------------------
 

@@ -31,6 +31,19 @@ ViewCommands::emitViewErrorDialog(
 //----------------------------------------------------------------
 
 void
+ViewCommands::emitViewSuccess(
+    uint64_t correlationId)
+
+{
+    auto ev = std::make_shared<ViewSuccess>();
+    ev->correlationId = correlationId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+}
+    
+//----------------------------------------------------------------
+
+void
 ViewCommands::emitViewMakeBetSuccess(
     uint64_t correlationId,
     Craps::BetId betId)

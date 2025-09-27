@@ -21,8 +21,12 @@ enum class EventType
     CmdMakeOddsBet,
     CmdMakeOddsBetAuto,
     CmdRollDice,
+    CmdPlayerJoinTable,
+    CmdPlayerLeaveTable,
+    CmdBetSetContractAmount,
     
     ViewErrorDialog,
+    ViewSuccess,
     ViewMakeBetSuccess,
     ViewMakeBetAutoSuccess,
     ViewMakeBetAutoError,
@@ -38,6 +42,12 @@ struct GameEvent
     virtual ~GameEvent() = default;
     virtual EventType type() const = 0;
 };
+
+//----------------------------------------------------------------
+//    
+// Cmd Events 
+//
+//----------------------------------------------------------------
 
 struct CmdMakeBet : public GameEvent
 {
@@ -67,14 +77,55 @@ struct CmdMakeBetAuto : public GameEvent
     }
 };
 
+struct CmdBetSetContractAmount : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::BetId    betId;
+    Gen::Money      contractAmount;
+    
+    EventType type() const override
+    {
+        return EventType::CmdBetSetContractAmount;
+    }
+};
+
 struct CmdRollDice : public GameEvent
 {
+    uint64_t        correlationId;
     char input;
     EventType type() const override
     {
         return EventType::CmdRollDice;
     }
 };
+
+struct CmdPlayerJoinTable : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::PlayerId playerId;
+    Craps::TableId  tableId;
+    EventType type() const override
+    {
+        return EventType::CmdPlayerJoinTable;
+    }
+};
+
+struct CmdPlayerLeaveTable : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::PlayerId playerId;
+    Craps::TableId  tableId;
+    EventType type() const override
+    {
+        return EventType::CmdPlayerLeaveTable;
+    }
+};
+
+//----------------------------------------------------------------
+//    
+// View Events 
+//
+//----------------------------------------------------------------
 
 struct ViewErrorDialog : public GameEvent
 {
@@ -85,6 +136,18 @@ struct ViewErrorDialog : public GameEvent
     EventType type() const override
     {
         return EventType::ViewErrorDialog;
+    }
+};
+
+struct ViewSuccess : public GameEvent // Generic success for most events
+{
+    uint64_t correlationId;
+    Craps::BetId betId;
+    Craps::PlayerId playerId;
+
+    EventType type() const override
+    {
+        return EventType::ViewSuccess;
     }
 };
 

@@ -26,13 +26,12 @@ public:
     // TODO Eliminate return arg from function signature
 
     // Player related
-    static Gen::ReturnCode cmdPlayerJoinTable(
+    static uint64_t cmdPlayerJoinTable(
         const Craps::PlayerId& playerId,
-        const Craps::TableId& tableId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdPlayerLeaveTable(
+        const Craps::TableId& tableId);
+    static uint64_t cmdPlayerLeaveTable(
         const Craps::PlayerId& playerId,
-        Gen::ErrorPass& ep);
+        const Craps::TableId& tableId);
     static uint64_t cmdMakeBet(
         const Craps::PlayerId& playerId,
         BetName betName,
@@ -45,10 +44,9 @@ public:
         size_t pivot);
 
     // Bet related
-    static Gen::ReturnCode cmdBetSetContractAmount(
+    static uint64_t cmdBetSetContractAmount(
         const Craps::BetId& betId,
-        Gen::Money contractAmount,
-        Gen::ErrorPass& ep);
+        Gen::Money contractAmount);
     static Gen::ReturnCode cmdBetSetOddsAmount(
         const Craps::BetId& betId,
         Gen::Money oddsAmount,
