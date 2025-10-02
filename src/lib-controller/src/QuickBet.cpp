@@ -43,11 +43,13 @@ QuickBet::applyQuickBet(size_t index)
             // TODO handle error
         }
         // Go through CrapsCommands so bet is logged and undoable.
-        rc = CrapsCommands::cmdBetSetOddsAmount(betId, qbe.amount, ep);
-        if (rc == Gen::ReturnCode::Fail)
-        {
-            // TODO handle error
-        }
+        auto correlationId = CrapsCommands::cmdBetSetOddsAmount(
+            betId,
+            qbe.amount,
+            ep);
+            // TODO
+            // pOwning_->onBetFailed(playerId, ep.diag);
+            // showDialogAckError(ep.diag);
     }
     else
     {

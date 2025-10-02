@@ -33,7 +33,9 @@ public:
     static void onCmdBetSetContractAmount(GameEvent* pBase);
     static void onCmdBetSetOddsAmount    (GameEvent* pBase);
     static void onCmdBetSetOddsAmountAuto(GameEvent* pBase);
-    static void onCmdRollDice            (GameEvent* pBase);
+
+    // Table Related
+    static void onCmdRollDice(GameEvent* pBase);
     /// @}
 
     /// @name Observers

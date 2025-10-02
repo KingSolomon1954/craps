@@ -10,9 +10,11 @@
 #include <controller/TableManager.h>
 #include <controller/UndoManager.h>
 #include <controller/ViewCommands.h>
+#include <craps/CrapsTable.h>
 #include <craps/CrapsTypes.h>
 #include <craps/Player.h>
 #include <gen/ErrorPass.h>
+#include <cassert>
 
 using namespace Ctrl;
 
@@ -172,13 +174,30 @@ CrapsEventHandlers::onCmdMakeBetAuto(GameEvent* pBase)
 void
 CrapsEventHandlers::onCmdBetSetContractAmount(GameEvent* pBase)
 {
-    // TODO
-    // auto rc = model->playerMakeOddsBet()
+    auto* ev = dynamic_cast<CmdBetSetContractAmount*>(pBase);
     
-    // if rc == success
-    //     ViewEventEmmitters::emitMakeOddsBetSuccess(pBase->correlationId)
-    // else
-    //     ViewEventEmmitters::emitDialogError(pBase->correlationId)
+    Gen::ErrorPass ep;
+    Gen::ReturnCode rc = Gen::ReturnCode::Fail;
+    
+    auto pBet = Gbl::pTable->getBet(ev->betId, ep);
+    if (pBet != nullptr)
+    {
+        rc = pBet->player().setContractAmount(ev->betId, ev->contractAmount, ep);
+    }
+
+    if (pBet == nullptr || rc == Gen::ReturnCode::Fail)
+    {
+        // Tell UI of fault
+        ep.prepend(diagPrefix("onCmdBetSetContractAmount", "setContractAmount"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdBetSetContractAmount,
+            ev->correlationId,
+            ep.diag);
+        return;
+    }
+    
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
+    ViewCommands::emitViewSuccess(ev->correlationId);
 }
     
 //----------------------------------------------------------------
@@ -189,13 +208,30 @@ CrapsEventHandlers::onCmdBetSetContractAmount(GameEvent* pBase)
 void
 CrapsEventHandlers::onCmdBetSetOddsAmount(GameEvent* pBase)
 {
-    // TODO  CmdBetSetOddsAmount
-    // auto rc = model->playerMakeOddsBet()
+    auto* ev = dynamic_cast<CmdBetSetOddsAmount*>(pBase);
     
-    // if rc == success
-    //     ViewEventEmmitters::emitMakeOddsBetSuccess(pBase->correlationId)
-    // else
-    //     ViewEventEmmitters::emitDialogError(pBase->correlationId)
+    Gen::ErrorPass ep;
+    Gen::ReturnCode rc = Gen::ReturnCode::Fail;
+    
+    auto pBet = Gbl::pTable->getBet(ev->betId, ep);
+    if (pBet != nullptr)
+    {
+        rc = pBet->player().setOddsAmount(pBet, ev->oddsAmount, ep);
+    }
+
+    if (pBet == nullptr || rc == Gen::ReturnCode::Fail)
+    {
+        // Tell UI of fault
+        ep.prepend(diagPrefix("onCmdBetSetOddsAmount", "setOddsAmount"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdBetSetOddsAmount,
+            ev->correlationId,
+            ep.diag);
+        return;
+    }
+    
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
+    ViewCommands::emitViewSuccess(ev->correlationId);
 }
     
 //----------------------------------------------------------------
@@ -206,13 +242,49 @@ CrapsEventHandlers::onCmdBetSetOddsAmount(GameEvent* pBase)
 void
 CrapsEventHandlers::onCmdBetSetOddsAmountAuto(GameEvent* pBase)
 {
-    // TODO
-    // auto rc = model->playerMakeOddsBet()
-    
-    // if rc == success
-    //     ViewEventEmmitters::emitMakeOddsBetSuccess(pBase->correlationId)
-    // else
-    //     ViewEventEmmitters::emitDialogError(pBase->correlationId)
+    auto* ev = dynamic_cast<CmdBetSetOddsAmountAuto*>(pBase);
+
+    Gen::ErrorPass ep;
+
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(ev->playerId, ep);
+    if (!p)
+    {
+        ep.prepend(diagPrefix("onCmdBetSetOddsAmountAuto", "setOddsAmount"));
+        ViewCommands::emitViewMakeBetAutoError(
+            EventType::CmdBetSetOddsAmountAuto,
+            ev->correlationId,
+            ev->playerId,
+            ep.diag);
+        return;
+    }
+
+    auto betId = p->getBet(ev->betName, ev->pivot, ep);
+    if (betId == 0)
+    {
+        ep.prepend(diagPrefix("onCmdBetSetOddsAmountAuto", "setOddsAmount"));
+        ViewCommands::emitViewMakeBetAutoError(
+            EventType::CmdBetSetOddsAmountAuto,
+            ev->correlationId,
+            ev->playerId,
+            ep.diag);
+        return;
+    }
+
+    auto pBet = p->getBet(betId, ep);
+    assert(pBet);
+    if (p->setOddsAmount(pBet, ev->oddsAmount, ep) == Gen::ReturnCode::Fail)
+    {
+        ep.prepend(diagPrefix("onCmdBetSetOddsAmountAuto", "setOddsAmount"));
+        ViewCommands::emitViewMakeBetAutoError(
+            EventType::CmdBetSetOddsAmountAuto,
+            ev->correlationId,
+            ev->playerId,
+            ep.diag);
+        return;
+    }
+
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
+    ViewCommands::emitViewMakeBetAutoSuccess(betId, ev->correlationId);
 }
     
 //----------------------------------------------------------------

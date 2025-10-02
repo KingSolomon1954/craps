@@ -121,45 +121,22 @@ CrapsCommands::cmdBetSetContractAmount(
     return ev->correlationId;
 }
 
-#if 0
-// move to handler
-    // TODO turn into event
-    auto pBet = Gbl::pTable->getBet(betId, ep);
-    if (pBet == nullptr)
-    {
-        ep.prepend(diagPrefix("betSetContractAmount", "setContractAmount"));
-        return Gen::ReturnCode::Fail;
-    }
-
-    auto rc = pBet->player().setContractAmount(betId, contractAmount, ep);
-    if (rc == Gen::ReturnCode::Success)
-    {
-        Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
-    }
-    return rc;
-#endif
-
 //----------------------------------------------------------------
 
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdBetSetOddsAmount(
     const Craps::BetId& betId,
     Gen::Money oddsAmount,
     Gen::ErrorPass& ep)
 {
-    // TODO turn into event  CmdBetSetOddsAmount
-    auto pBet = Gbl::pTable->getBet(betId, ep);
-    if (pBet == nullptr)
-    {
-        ep.prepend(diagPrefix("betSetOddsAmount", "setOddsAmount"));
-        return Gen::ReturnCode::Fail;
-    }
-    auto rc = pBet->player().setOddsAmount(pBet, oddsAmount, ep);
-    if (rc == Gen::ReturnCode::Success)
-    {
-        Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
-    }
-    return rc;
+    auto ev = std::make_shared<CmdBetSetOddsAmount>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betId          = betId;
+    ev->oddsAmount     = oddsAmount;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------

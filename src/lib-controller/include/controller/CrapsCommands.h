@@ -46,12 +46,9 @@ public:
     static uint64_t cmdBetSetContractAmount(
         const Craps::BetId& betId,
         Gen::Money contractAmount);
-    static Gen::ReturnCode cmdBetSetOddsAmount(
+    static uint64_t cmdBetSetOddsAmount(
         const Craps::BetId& betId,
         Gen::Money oddsAmount,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdBetRemove(
-        const Craps::BetId& betid,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode cmdBetSetOffComeOutRoll(
         const Craps::BetId& betId,
@@ -64,6 +61,9 @@ public:
         Gen::ErrorPass& ep);
     static Gen::ReturnCode cmdBetSetHardwayOn(
         const Craps::BetId& betId,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode cmdBetRemove(
+        const Craps::BetId& betid,
         Gen::ErrorPass& ep);
     
     // Table related

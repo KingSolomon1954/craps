@@ -101,6 +101,20 @@ struct CmdBetSetOddsAmount : public GameEvent
     }
 };
 
+struct CmdBetSetOddsAmountAuto : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::PlayerId playerId;
+    BetName         betName;
+    Gen::Money      oddsAmount;
+    size_t          pivot;
+    
+    EventType type() const override
+    {
+        return EventType::CmdBetSetOddsAmountAuto;
+    }
+};
+
 struct CmdRollDice : public GameEvent
 {
     uint64_t        correlationId;
