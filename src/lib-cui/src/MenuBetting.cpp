@@ -276,20 +276,13 @@ MenuBetting::doMakeOddsBet(Gen::Money oddsAmount)
     Gen::ErrorPass  ep;
     Craps::PlayerId playerId;
     auto rc = Ctrl::CrapsReaders::getUserPlayer(playerId, ep);
+    assert(rc == Gen::ReturnCode::Success);
 
     // Set or change the odds bet
     auto correlationId = Ctrl::CrapsCommands::cmdBetSetOddsAmount(
         betId_,
-        oddsAmount,
-        ep);
-    
-    if (rc == Gen::ReturnCode::Fail)
-    {
-        pOwning_->onBetFailed(playerId, ep.diag);
-        showDialogAckError(ep.diag);
-        return;
-    }
-    
+        oddsAmount);
+
 // TODO setup to listen for Pub/Sub event
 // EventType::ViewMakeBetSuccess or
 // TODO setup to listen for ViewErrorDialog

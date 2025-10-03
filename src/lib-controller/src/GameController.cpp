@@ -51,10 +51,14 @@ GameController::dispatchEvent(GameEvent* pBase)
 {
     switch(pBase->type())
     {
+    case EventType::CmdPlayerJoinTable:      CrapsEventHandlers::onCmdPlayerJoinTable(pBase);      break;
+    case EventType::CmdPlayerLeaveTable:     CrapsEventHandlers::onCmdPlayerLeaveTable(pBase);     break;
     case EventType::CmdMakeBet:              CrapsEventHandlers::onCmdMakeBet(pBase);              break;
     case EventType::CmdMakeBetAuto:          CrapsEventHandlers::onCmdMakeBetAuto(pBase);          break;
+    case EventType::CmdBetSetContractAmount: CrapsEventHandlers::onCmdBetSetContractAmount(pBase); break;
     case EventType::CmdBetSetOddsAmount:     CrapsEventHandlers::onCmdBetSetOddsAmount(pBase);     break;
-    case EventType::CmdBetSetOddsAmountAuto: CrapsEventHandlers::onCmdBetSetOddsAmountAuto(pBase); break;
+    case EventType::CmdBetSetOffComeOutRoll: CrapsEventHandlers::onCmdBetSetOffComeOutRoll(pBase); break;
+    case EventType::CmdBetSetOnComeOutRoll:  CrapsEventHandlers::onCmdBetSetOnComeOutRoll(pBase);  break;
     case EventType::CmdRollDice:             CrapsEventHandlers::onCmdRollDice(pBase);             break;
     case EventType::ViewErrorDialog:         ViewEventHandlers::onViewErrorDialog(pBase);          break;
     case EventType::ViewMakeBetSuccess:      ViewEventHandlers::onViewMakeBetSuccess(pBase);       break;

@@ -45,8 +45,7 @@ QuickBet::applyQuickBet(size_t index)
         // Go through CrapsCommands so bet is logged and undoable.
         auto correlationId = CrapsCommands::cmdBetSetOddsAmount(
             betId,
-            qbe.amount,
-            ep);
+            qbe.amount);
             // TODO
             // pOwning_->onBetFailed(playerId, ep.diag);
             // showDialogAckError(ep.diag);

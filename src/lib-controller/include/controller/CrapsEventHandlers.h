@@ -32,7 +32,10 @@ public:
     // Bet Related
     static void onCmdBetSetContractAmount(GameEvent* pBase);
     static void onCmdBetSetOddsAmount    (GameEvent* pBase);
-    static void onCmdBetSetOddsAmountAuto(GameEvent* pBase);
+    static void onCmdBetSetOffComeOutRoll(GameEvent* pBase);
+    static void onCmdBetSetOnComeOutRoll (GameEvent* pBase);
+    static void onCmdBetSetHardwayOff    (GameEvent* pBase);
+    static void onCmdBetSetHardwayOn     (GameEvent* pBase);
 
     // Table Related
     static void onCmdRollDice(GameEvent* pBase);

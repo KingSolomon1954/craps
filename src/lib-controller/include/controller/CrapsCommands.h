@@ -48,28 +48,22 @@ public:
         Gen::Money contractAmount);
     static uint64_t cmdBetSetOddsAmount(
         const Craps::BetId& betId,
-        Gen::Money oddsAmount,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdBetSetOffComeOutRoll(
-        const Craps::BetId& betId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdBetSetOnComeOutRoll(
-        const Craps::BetId& betId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdBetSetHardwayOff(
-        const Craps::BetId& betId,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdBetSetHardwayOn(
-        const Craps::BetId& betId,
-        Gen::ErrorPass& ep);
+        Gen::Money oddsAmount);
+    static uint64_t cmdBetSetOffComeOutRoll(
+        const Craps::BetId& betId);
+    static uint64_t cmdBetSetOnComeOutRoll(
+        const Craps::BetId& betId);
+    static uint64_t cmdBetSetHardwayOff(
+        const Craps::BetId& betId);
+    static uint64_t cmdBetSetHardwayOn(
+        const Craps::BetId& betId);
     static Gen::ReturnCode cmdBetRemove(
         const Craps::BetId& betid,
         Gen::ErrorPass& ep);
     
     // Table related
-    static Gen::ReturnCode cmdRollDice(
-        const Craps::TableId& tableId,
-        Gen::ErrorPass& ep);
+    static uint64_t cmdRollDice(
+        const Craps::TableId& tableId);
     static Gen::ReturnCode undoLastBet(
         Gen::ErrorPass& ep);
 
@@ -79,10 +73,10 @@ public:
     // Auto Fill
     struct AutoFillEntry
     {
-        BetName     betName;
-        size_t      pivot;
-        bool        oddsBet;
-        Gen::Money  amount;
+        BetName    betName;
+        size_t     pivot;
+        bool       oddsBet;
+        Gen::Money amount;
     };
 
     static Gen::ReturnCode cmdSetAutoFill(

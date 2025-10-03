@@ -22,7 +22,10 @@ enum class EventType
     CmdMakeBetAuto,
     CmdBetSetContractAmount,
     CmdBetSetOddsAmount,
-    CmdBetSetOddsAmountAuto,
+    CmdBetSetOffComeOutRoll,
+    CmdBetSetOnComeOutRoll,
+    CmdBetSetHardwayOff,
+    CmdBetSetHardwayOn,
     CmdRollDice,
     
     ViewErrorDialog,
@@ -101,24 +104,55 @@ struct CmdBetSetOddsAmount : public GameEvent
     }
 };
 
-struct CmdBetSetOddsAmountAuto : public GameEvent
+struct CmdBetSetOffComeOutRoll : public GameEvent
 {
     uint64_t        correlationId;
-    Craps::PlayerId playerId;
-    BetName         betName;
-    Gen::Money      oddsAmount;
-    size_t          pivot;
+    Craps::BetId    betId;
     
     EventType type() const override
     {
-        return EventType::CmdBetSetOddsAmountAuto;
+        return EventType::CmdBetSetOffComeOutRoll;
+    }
+};
+
+struct CmdBetSetOnComeOutRoll : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::BetId    betId;
+    
+    EventType type() const override
+    {
+        return EventType::CmdBetSetOnComeOutRoll;
+    }
+};
+
+struct CmdBetSetHardwayOff : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::BetId    betId;
+    
+    EventType type() const override
+    {
+        return EventType::CmdBetSetHardwayOff;
+    }
+};
+
+struct CmdBetSetHardwayOn : public GameEvent
+{
+    uint64_t        correlationId;
+    Craps::BetId    betId;
+    
+    EventType type() const override
+    {
+        return EventType::CmdBetSetHardwayOn;
     }
 };
 
 struct CmdRollDice : public GameEvent
 {
-    uint64_t        correlationId;
-    char input;
+    uint64_t       correlationId;
+    Craps::TableId tableId;
+    
     EventType type() const override
     {
         return EventType::CmdRollDice;

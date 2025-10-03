@@ -236,55 +236,114 @@ CrapsEventHandlers::onCmdBetSetOddsAmount(GameEvent* pBase)
     
 //----------------------------------------------------------------
 //
-// Process event: CmdMakeOddsBetAuto
+// Process event: CmdBetSetOffComeOutRoll
 // Tell model to make an odds bet, convert event
 //
 void
-CrapsEventHandlers::onCmdBetSetOddsAmountAuto(GameEvent* pBase)
+CrapsEventHandlers::onCmdBetSetOffComeOutRoll(GameEvent* pBase)
 {
-    auto* ev = dynamic_cast<CmdBetSetOddsAmountAuto*>(pBase);
-
+    auto* ev = dynamic_cast<CmdBetSetOffComeOutRoll*>(pBase);
+    
     Gen::ErrorPass ep;
-
-    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(ev->playerId, ep);
-    if (!p)
+    
+    auto pBet = Gbl::pTable->getBet(ev->betId, ep);
+    if (pBet == nullptr)
     {
-        ep.prepend(diagPrefix("onCmdBetSetOddsAmountAuto", "setOddsAmount"));
-        ViewCommands::emitViewMakeBetAutoError(
-            EventType::CmdBetSetOddsAmountAuto,
+        ep.prepend(diagPrefix("onCmdBetSetOffComeOutRoll", "setOffComeOutRoll"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdBetSetOddsAmount,
             ev->correlationId,
-            ev->playerId,
             ep.diag);
         return;
     }
-
-    auto betId = p->getBet(ev->betName, ev->pivot, ep);
-    if (betId == 0)
+    
+    pBet->setOnComeOutRoll();
+    ViewCommands::emitViewSuccess(ev->correlationId);
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdBetSetOnComeOutRoll
+// Tell model to make an odds bet, convert event
+//
+void
+CrapsEventHandlers::onCmdBetSetOnComeOutRoll(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdBetSetOnComeOutRoll*>(pBase);
+    
+    Gen::ErrorPass ep;
+    
+    auto pBet = Gbl::pTable->getBet(ev->betId, ep);
+    if (pBet == nullptr)
     {
-        ep.prepend(diagPrefix("onCmdBetSetOddsAmountAuto", "setOddsAmount"));
-        ViewCommands::emitViewMakeBetAutoError(
-            EventType::CmdBetSetOddsAmountAuto,
+        ep.prepend(diagPrefix("onCmdBetSetOnComeOutRoll", "setOnComeOutRoll"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdBetSetOddsAmount,
             ev->correlationId,
-            ev->playerId,
             ep.diag);
         return;
     }
-
-    auto pBet = p->getBet(betId, ep);
-    assert(pBet);
-    if (p->setOddsAmount(pBet, ev->oddsAmount, ep) == Gen::ReturnCode::Fail)
+    
+    pBet->setOffComeOutRoll();
+    ViewCommands::emitViewSuccess(ev->correlationId);
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdBetSetHardwayOff
+// Tell model to make an odds bet, convert event
+//
+void
+CrapsEventHandlers::onCmdBetSetHardwayOff(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdBetSetHardwayOff*>(pBase);
+    
+    Gen::ErrorPass ep;
+    
+    auto pBet = Gbl::pTable->getBet(ev->betId, ep);
+    if (pBet == nullptr)
     {
-        ep.prepend(diagPrefix("onCmdBetSetOddsAmountAuto", "setOddsAmount"));
-        ViewCommands::emitViewMakeBetAutoError(
-            EventType::CmdBetSetOddsAmountAuto,
+        ep.prepend(diagPrefix("onCmdBetSetHardwayOff", "setHardwayOff"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdBetSetHardwayOff,
             ev->correlationId,
-            ev->playerId,
             ep.diag);
         return;
     }
-
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedAmount>(pBet));
-    ViewCommands::emitViewMakeBetAutoSuccess(betId, ev->correlationId);
+    
+    pBet->setHardwayOff();
+    ViewCommands::emitViewSuccess(ev->correlationId);
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdBetSetHardwayOn
+// Tell model to make an odds bet, convert event
+//
+void
+CrapsEventHandlers::onCmdBetSetHardwayOn(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdBetSetHardwayOn*>(pBase);
+    
+    Gen::ErrorPass ep;
+    
+    auto pBet = Gbl::pTable->getBet(ev->betId, ep);
+    if (pBet == nullptr)
+    {
+        ep.prepend(diagPrefix("onCmdBetSetHardwayOn", "setHardwayOn"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdBetSetHardwayOn,
+            ev->correlationId,
+            ep.diag);
+        return;
+    }
+    
+    pBet->setHardwayOff();
+    ViewCommands::emitViewSuccess(ev->correlationId);
+    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
 }
     
 //----------------------------------------------------------------
@@ -295,8 +354,22 @@ CrapsEventHandlers::onCmdBetSetOddsAmountAuto(GameEvent* pBase)
 void
 CrapsEventHandlers::onCmdRollDice(GameEvent* pBase)
 {
-    // TODO
-    // auto rc = Gbl::pTable->rollDice()
+    auto* ev = dynamic_cast<CmdRollDice*>(pBase);
+    
+    Gen::ErrorPass ep;
+    auto pTable = Gbl::pTableMgr->getTable(ev->tableId, ep);
+    if (pTable == nullptr)
+    {
+        ep.prepend(diagPrefix("onCmdRollDice", "roll dice"));
+        ViewCommands::emitViewErrorDialog(
+            EventType::CmdRollDice,
+            ev->correlationId,
+            ep.diag);
+        return;
+    }
+    pTable->rollDice();
+    Gbl::pUndoMgr->clear();
+    ViewCommands::emitViewSuccess(ev->correlationId);
 }
     
 //----------------------------------------------------------------

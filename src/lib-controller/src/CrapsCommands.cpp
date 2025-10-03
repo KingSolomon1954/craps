@@ -126,13 +126,72 @@ CrapsCommands::cmdBetSetContractAmount(
 uint64_t
 CrapsCommands::cmdBetSetOddsAmount(
     const Craps::BetId& betId,
-    Gen::Money oddsAmount,
-    Gen::ErrorPass& ep)
+    Gen::Money oddsAmount)
 {
     auto ev = std::make_shared<CmdBetSetOddsAmount>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->betId          = betId;
     ev->oddsAmount     = oddsAmount;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
+}
+
+//----------------------------------------------------------------
+
+uint64_t
+CrapsCommands::cmdBetSetOffComeOutRoll(
+    const Craps::BetId& betId)
+{
+    auto ev = std::make_shared<CmdBetSetOffComeOutRoll>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betId          = betId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
+}
+
+//----------------------------------------------------------------
+
+uint64_t
+CrapsCommands::cmdBetSetOnComeOutRoll(
+    const Craps::BetId& betId)
+{
+    auto ev = std::make_shared<CmdBetSetOnComeOutRoll>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betId          = betId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
+}
+
+//----------------------------------------------------------------
+
+uint64_t
+CrapsCommands::cmdBetSetHardwayOff(
+    const Craps::BetId& betId)
+{
+    auto ev = std::make_shared<CmdBetSetHardwayOff>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betId          = betId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
+}
+
+//----------------------------------------------------------------
+
+uint64_t
+CrapsCommands::cmdBetSetHardwayOn(
+    const Craps::BetId& betId)
+{
+    auto ev = std::make_shared<CmdBetSetHardwayOn>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betId          = betId;
 
     Gbl::pGameCtrl->enqueue(ev);
 
@@ -163,102 +222,22 @@ CrapsCommands::cmdBetRemove(
 }
 
 //----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsCommands::cmdBetSetOffComeOutRoll(
-    const Craps::BetId& betId,
-    Gen::ErrorPass& ep)
-{
-    // TODO turn into event
-    auto pBet = Gbl::pTable->getBet(betId, ep);
-    if (pBet == nullptr)
-    {
-        ep.prepend(diagPrefix("betSetOffComeOutRoll", "set offComeOutRoll flag"));
-        return Gen::ReturnCode::Fail;
-    }
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
-    pBet->setOffComeOutRoll();
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsCommands::cmdBetSetOnComeOutRoll(
-    const Craps::BetId& betId,
-    Gen::ErrorPass& ep)
-{
-    // TODO turn into event
-    auto pBet = Gbl::pTable->getBet(betId, ep);
-    if (pBet == nullptr)
-    {
-        ep.prepend(diagPrefix("betSetOnComeOutRoll", "set onComeOutRoll flag"));
-        return Gen::ReturnCode::Fail;
-    }
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
-    pBet->setOnComeOutRoll();
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsCommands::cmdBetSetHardwayOff(
-    const Craps::BetId& betId,
-    Gen::ErrorPass& ep)
-{
-    // TODO turn into event
-    auto pBet = Gbl::pTable->getBet(betId, ep);
-    if (pBet == nullptr)
-    {
-        ep.prepend(diagPrefix("betSetHardwayOff", "set hardway off flag"));
-        return Gen::ReturnCode::Fail;
-    }
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
-    pBet->setHardwayOff();
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsCommands::cmdBetSetHardwayOn(
-    const Craps::BetId& betId,
-    Gen::ErrorPass& ep)
-{
-    // TODO turn into event
-    auto pBet = Gbl::pTable->getBet(betId, ep);
-    if (pBet == nullptr)
-    {
-        ep.prepend(diagPrefix("betSetHardwayOn", "set hardway on flag"));
-        return Gen::ReturnCode::Fail;
-    }
-    Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
-    pBet->setHardwayOn();
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
 //
 // Table related
 //
 //----------------------------------------------------------------
 
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdRollDice(
-    const Craps::TableId& tableId,
-    Gen::ErrorPass& ep)
+    const Craps::TableId& tableId)
 {
-    // TODO turn into event
-    auto pTable = Gbl::pTableMgr->getTable(tableId, ep);
-    if (pTable == nullptr)
-    {
-        ep.prepend(diagPrefix("rollDice", "roll dice"));
-        return Gen::ReturnCode::Fail;
-    }
-    pTable->rollDice();
-    Gbl::pUndoMgr->clear();
-    return Gen::ReturnCode::Success;
+    auto ev = std::make_shared<CmdRollDice>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->tableId        = tableId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------
