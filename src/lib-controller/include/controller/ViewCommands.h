@@ -25,6 +25,8 @@ public:
     /// @name Modifiers
     /// @{
     // Commands issued from the Model to UI
+    static void emitViewSuccess(
+        uint64_t               correlationId);
     static void emitViewErrorDialog(
         EventType              orgEventType,
         uint64_t               correlationId,
@@ -43,9 +45,11 @@ public:
         uint64_t               correlationId,
         const Craps::PlayerId& playerId,
         const std::string&     diag);
-    static void emitViewSuccess(
-        uint64_t               correlationId);
-    static void emitViewRollDice();
+    static void emitViewRollDiceCountDown(
+        uint64_t               correlationId,
+        const Craps::TableId&  tableId,
+        int                    numSeconds);
+    static void emitViewRollDiceAnimation();
     static void emitViewProgramExit();
     /// @}
 

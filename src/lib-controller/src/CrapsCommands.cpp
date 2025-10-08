@@ -23,7 +23,9 @@ using namespace Ctrl;
 // Player related
 //
 //----------------------------------------------------------------
-
+//
+// User pressed menu for player to join table
+//
 uint64_t
 CrapsCommands::cmdPlayerJoinTable(
     const Craps::PlayerId& playerId,
@@ -40,7 +42,9 @@ CrapsCommands::cmdPlayerJoinTable(
 }
 
 //----------------------------------------------------------------
-
+//
+// User pressed menu for player to leave table
+//
 uint64_t
 CrapsCommands::cmdPlayerLeaveTable(
     const Craps::PlayerId& playerId)
@@ -56,7 +60,7 @@ CrapsCommands::cmdPlayerLeaveTable(
 
 //----------------------------------------------------------------
 //
-// UI entry point to issue command: make bet  to Craps engine.
+// UI - user making a bet
 //
 uint64_t
 CrapsCommands::cmdMakeBet(
@@ -79,7 +83,7 @@ CrapsCommands::cmdMakeBet(
     
 //----------------------------------------------------------------
 //
-// Automation entry point to issue command: make bet to Craps engine.
+// Automation entry point - player making a bet
 //
 uint64_t
 CrapsCommands::cmdMakeBetAuto(
@@ -105,7 +109,9 @@ CrapsCommands::cmdMakeBetAuto(
 // Bet related
 //
 //----------------------------------------------------------------
-
+//
+// UI - user changing/setting contract bet amount
+//
 uint64_t
 CrapsCommands::cmdBetSetContractAmount(
     const Craps::BetId& betId,
@@ -122,7 +128,9 @@ CrapsCommands::cmdBetSetContractAmount(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user changing/setting odds amount on bet
+//
 uint64_t
 CrapsCommands::cmdBetSetOddsAmount(
     const Craps::BetId& betId,
@@ -139,7 +147,9 @@ CrapsCommands::cmdBetSetOddsAmount(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user setting a bet flag
+//
 uint64_t
 CrapsCommands::cmdBetSetOffComeOutRoll(
     const Craps::BetId& betId)
@@ -154,7 +164,9 @@ CrapsCommands::cmdBetSetOffComeOutRoll(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user setting a bet flag
+//
 uint64_t
 CrapsCommands::cmdBetSetOnComeOutRoll(
     const Craps::BetId& betId)
@@ -169,7 +181,9 @@ CrapsCommands::cmdBetSetOnComeOutRoll(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user setting a bet flag
+//
 uint64_t
 CrapsCommands::cmdBetSetHardwayOff(
     const Craps::BetId& betId)
@@ -184,7 +198,9 @@ CrapsCommands::cmdBetSetHardwayOff(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user setting a bet flag
+//
 uint64_t
 CrapsCommands::cmdBetSetHardwayOn(
     const Craps::BetId& betId)
@@ -199,7 +215,9 @@ CrapsCommands::cmdBetSetHardwayOn(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user wants to remove a bet
+//
 Gen::ReturnCode
 CrapsCommands::cmdBetRemove(
     const Craps::BetId& betId,
@@ -226,7 +244,9 @@ CrapsCommands::cmdBetRemove(
 // Table related
 //
 //----------------------------------------------------------------
-
+//
+// UI - user wants to roll dice
+//
 uint64_t
 CrapsCommands::cmdRollDice(
     const Craps::TableId& tableId)
@@ -245,7 +265,9 @@ CrapsCommands::cmdRollDice(
 // Auto Fills
 //
 //----------------------------------------------------------------
-
+//
+// UI - user is configuring auto fill for a bet
+//
 Gen::ReturnCode
 CrapsCommands::cmdSetAutoFill(
     const AutoFillEntry& entry,
@@ -253,13 +275,15 @@ CrapsCommands::cmdSetAutoFill(
 {
     // TODO turn into event
     AutoFill::AutoFillEntry afe =
-        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
+        {entry.betName, entry.pivot, entry.oddsBet, entry.amount};
     AutoFill::instance()->setAutoFill(afe);
     return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user is deleting auto fill for a bet
+//
 Gen::ReturnCode
 CrapsCommands::cmdDeleteAutoFill(
     const AutoFillEntry& entry,
@@ -277,7 +301,9 @@ CrapsCommands::cmdDeleteAutoFill(
 // Quick Bets
 //
 //----------------------------------------------------------------
-
+//
+// UI - user is configuring a quick bet
+//
 Gen::ReturnCode
 CrapsCommands::cmdSetQuickBet(
     const QuickBetEntry& entry,
@@ -291,7 +317,9 @@ CrapsCommands::cmdSetQuickBet(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user is applying a quick bet
+//
 Gen::ReturnCode
 CrapsCommands::cmdApplyQuickBet(
     size_t index,
@@ -303,7 +331,9 @@ CrapsCommands::cmdApplyQuickBet(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user is deleting a quick bet (looking it up)
+//
 Gen::ReturnCode
 CrapsCommands::cmdDeleteQuickBet(
     const QuickBetEntry& entry,
@@ -318,7 +348,9 @@ CrapsCommands::cmdDeleteQuickBet(
 }
 
 //----------------------------------------------------------------
-
+//
+// UI - user is deleting a quick bet (index already in hand)
+//
 Gen::ReturnCode
 CrapsCommands::cmdDeleteQuickBet(
     size_t index,
@@ -334,7 +366,9 @@ CrapsCommands::cmdDeleteQuickBet(
 // Program related
 //
 //----------------------------------------------------------------
-
+//
+// UI - user wants to undo last bet
+//
 Gen::ReturnCode
 CrapsCommands::undoLastBet(
     Gen::ErrorPass& ep)

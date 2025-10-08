@@ -28,13 +28,14 @@ enum class EventType
     CmdBetSetHardwayOn,
     CmdRollDice,
     
-    ViewErrorDialog,
     ViewSuccess,
+    ViewErrorDialog,
     ViewMakeBetSuccess,
     ViewMakeBetAutoSuccess,
     ViewMakeBetAutoError,
     ViewMakeOddsBetSuccess,
     ViewRollDiceCountDown,
+    ViewRollDiceAnimation,
     ViewProgramExit
 };
 
@@ -257,11 +258,23 @@ struct ViewMakeBetAutoError : public GameEvent
 
 struct ViewRollDiceCountDown : public GameEvent
 {
-    // TODO
-    char input;
+    uint64_t       correlationId;
+    Craps::TableId tableId;
+    int            numSeconds;
+    
     EventType type() const override
     {
         return EventType::ViewRollDiceCountDown;
+    }
+};
+
+struct ViewRollDiceAnimation : public GameEvent
+{
+    uint64_t       correlationId;
+    
+    EventType type() const override
+    {
+        return EventType::ViewRollDiceAnimation;
     }
 };
 

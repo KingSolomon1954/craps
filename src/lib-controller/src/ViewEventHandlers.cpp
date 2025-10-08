@@ -13,6 +13,17 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 //
+// Tell UI that a general Craps command was successful
+//
+void
+ViewEventHandlers::onViewSuccess(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<ViewErrorDialog*>(pBase);
+    Gbl::pView->showSuccess(ev->orgEventType, ev->correlationId);
+}
+    
+//----------------------------------------------------------------
+//
 // Tell UI to display ErrorDialog
 //
 void
@@ -66,17 +77,19 @@ ViewEventHandlers::onViewMakeOddsBetSuccess(GameEvent* pBase)
 //----------------------------------------------------------------
 
 void
-ViewEventHandlers::onViewRollDice(GameEvent* pBase)
+ViewEventHandlers::onViewRollDiceCountDown(GameEvent* pBase)
 {
-    // TODO
+    auto* ev = dynamic_cast<ViewRollDiceCountDown*>(pBase);
+    Gbl::pView->showRollDiceCountDown(ev->correlationId, ev->numSeconds);
 }
     
 //----------------------------------------------------------------
 
 void
-ViewEventHandlers::onViewRollDiceCountDown(GameEvent* pBase)
+ViewEventHandlers::onViewRollDiceAnimation(GameEvent* pBase)
 {
-    // TODO
+    auto* ev = dynamic_cast<ViewRollDiceAnimation*>(pBase);
+    Gbl::pView->showRollDiceAnimation(ev->correlationId);
 }
     
 //----------------------------------------------------------------

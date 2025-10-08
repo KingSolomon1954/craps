@@ -179,7 +179,7 @@ ConsoleView::redrawUnlocked()
 void
 ConsoleView::inputThreadFunc()
 {
-    nodelay(stdscr, TRUE);    
+    nodelay(stdscr, TRUE);
     while (running_)
     {
 //      LOG_TRACE("ConsoleView::inputThreadFunc() before wgetch()");
@@ -204,7 +204,7 @@ ConsoleView::inputThreadFunc()
 
 
 //----------------------------------------------------------------
-// 
+//
 // Create a new window centered on the screen
 // @param h Desired height
 // @param w Desired width
@@ -227,8 +227,18 @@ ConsoleView::makeCenteredWindow(int h, int w)
 }
 
 //----------------------------------------------------------------
+
+void
+ConsoleView::showSuccess(
+    Ctrl::EventType orgEventType,
+    uint64_t correlationId)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
 //
-// Show Error Dialog. Overrides ViewInterface. 
+// Show Error Dialog. Overrides ViewInterface.
 //
 void
 ConsoleView::showErrorDialog(Ctrl::EventType    orgEventType,
@@ -288,7 +298,17 @@ ConsoleView::showMakeBetAutoError(
 //----------------------------------------------------------------
 
 void
-ConsoleView::showRollDice()
+ConsoleView::showRollDiceCountDown(
+    uint64_t correlationId,
+    int      numSeconds)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleView::showRollDiceAnimation(uint64_t correlationId)
 {
     // TODO
 }
@@ -313,5 +333,3 @@ ConsoleView::utf8_enabled()
 }
 
 //----------------------------------------------------------------
-
-

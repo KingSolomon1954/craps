@@ -23,6 +23,9 @@ public:
 
     /// @name Modifiers
     /// @{
+    virtual void showSuccess(
+        EventType              orgEventType,
+        uint64_t               correlationId) = 0;
     virtual void showErrorDialog(
         EventType              orgEventType,
         uint64_t               correlationId,
@@ -41,7 +44,11 @@ public:
         uint64_t               correlationId,
         const Craps::PlayerId& playerId,
         const std::string&     diag) = 0;
-    virtual void showRollDice() = 0;
+    virtual void showRollDiceCountDown(
+        uint64_t               correlationId,
+        int                    numSeconds) = 0;
+    virtual void showRollDiceAnimation(
+        uint64_t               correlationId) = 0;
     virtual void showProgramExit() = 0;
     /// @}
     /// @}

@@ -22,13 +22,14 @@ public:
 
     /// @name Modifiers
     /// @{
+    static void onViewSuccess           (GameEvent* pBase);
     static void onViewErrorDialog       (GameEvent* pBase);
     static void onViewMakeBetSuccess    (GameEvent* pBase);
     static void onViewMakeBetAutoSuccess(GameEvent* pBase);
     static void onViewMakeBetAutoError  (GameEvent* pBase);
     static void onViewMakeOddsBetSuccess(GameEvent* pBase);
-    static void onViewRollDice          (GameEvent* pBase);
     static void onViewRollDiceCountDown (GameEvent* pBase);
+    static void onViewRollDiceAnimation (GameEvent* pBase);
     static void onViewProgramExit       (GameEvent* pBase);
     /// @}
 

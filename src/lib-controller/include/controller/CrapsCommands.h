@@ -23,7 +23,7 @@ class CrapsCommands
 public:    
     CrapsCommands() = delete;  // Pure static class, no instantiation
 
-    // TODO Eliminate return arg from function signature
+    // TODO Eliminate remaining return args from function signature
 
     // Player related
     static uint64_t cmdPlayerJoinTable(

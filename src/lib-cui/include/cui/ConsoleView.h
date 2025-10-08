@@ -18,7 +18,7 @@
 namespace Cui {
 
 class Screen;  // fwd
-    
+
 class ConsoleView : public Ctrl::ViewInterface
 {
 public:
@@ -46,6 +46,9 @@ public:
 
     /// @name ViewHandlers
     /// @{
+    void showSuccess(
+        Ctrl::EventType    orgEventType,
+        uint64_t           correlationId) override;
     void showErrorDialog(
         Ctrl::EventType    orgEventType,
         uint64_t           correlationId,
@@ -64,14 +67,18 @@ public:
         uint64_t               correlationId,
         const Craps::PlayerId& playerId,
         const std::string&     diag) override;
-    void showRollDice() override;
+    void showRollDiceCountDown(
+        uint64_t               correlationId,
+        int                    numSeconds) override;
+    void showRollDiceAnimation(
+        uint64_t               correlationId) override;
     void showProgramExit() override;
     /// @}
-    
+
     WINDOW* makeCenteredWindow(int h, int w);
-         
+
     bool useUnicodePips = false;
-    
+
 private:
     std::vector<Screen*> stack_;                                     // non-owning stack
     std::mutex stackMx_;

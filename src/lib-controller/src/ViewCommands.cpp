@@ -12,7 +12,21 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 //
-// Enqueue ViewErrorDialog event to GameController
+// Enqueue generic ViewSuccess event to the EventLoop
+//
+void
+ViewCommands::emitViewSuccess(
+    uint64_t correlationId)
+{
+    auto ev = std::make_shared<ViewSuccess>();
+    ev->correlationId = correlationId;
+
+    Gbl::pGameCtrl->enqueue(ev);
+}
+
+//----------------------------------------------------------------
+//
+// Enqueue ViewErrorDialog event to the EventLoop
 //
 void
 ViewCommands::emitViewErrorDialog(
@@ -29,20 +43,9 @@ ViewCommands::emitViewErrorDialog(
 }
 
 //----------------------------------------------------------------
-
-void
-ViewCommands::emitViewSuccess(
-    uint64_t correlationId)
-
-{
-    auto ev = std::make_shared<ViewSuccess>();
-    ev->correlationId = correlationId;
-
-    Gbl::pGameCtrl->enqueue(ev);
-}
-    
-//----------------------------------------------------------------
-
+//
+// Enqueue ViewMakeBetSuccess event to the EventLoop
+//
 void
 ViewCommands::emitViewMakeBetSuccess(
     uint64_t correlationId,
@@ -54,9 +57,11 @@ ViewCommands::emitViewMakeBetSuccess(
 
     Gbl::pGameCtrl->enqueue(ev);
 }
-    
-//----------------------------------------------------------------
 
+//----------------------------------------------------------------
+//
+// Enqueue ViewMakeOddsBetSuccess event to the EventLoop
+//
 void
 ViewCommands::emitViewMakeOddsBetSuccess(
     uint64_t correlationId,
@@ -68,10 +73,10 @@ ViewCommands::emitViewMakeOddsBetSuccess(
 
     Gbl::pGameCtrl->enqueue(ev);
 }
-    
+
 //----------------------------------------------------------------
 //
-// Enqueue ViewPlayerBetPlaced event to GameController
+// Enqueue ViewMakeBetAutoSuccess event to the EventLoop
 //
 void
 ViewCommands::emitViewMakeBetAutoSuccess(
@@ -87,7 +92,7 @@ ViewCommands::emitViewMakeBetAutoSuccess(
 
 //----------------------------------------------------------------
 //
-// Enqueue ViewMakeBetAutoError event to GameController
+// Enqueue ViewMakeBetAutoError event to the EventLoop
 //
 void
 ViewCommands::emitViewMakeBetAutoError(
@@ -106,13 +111,33 @@ ViewCommands::emitViewMakeBetAutoError(
 }
 
 //----------------------------------------------------------------
-
+//
+// Enqueue ViewRollDiceCountDown event to the EventLoop
+//
 void
-ViewCommands::emitViewRollDice()
+ViewCommands::emitViewRollDiceCountDown(
+    uint64_t correlationId,
+    const Craps::TableId& tableId,
+    int numSeconds)
+{
+    auto ev = std::make_shared<ViewRollDiceCountDown>();
+    ev->correlationId = correlationId;
+    ev->tableId       = tableId;
+    ev->numSeconds    = numSeconds;
+
+    Gbl::pGameCtrl->enqueue(ev);
+}
+
+//----------------------------------------------------------------
+//
+// Enqueue ViewRollDiceAnimation event to the EventLoop
+//
+void
+ViewCommands::emitViewRollDiceAnimation()
 {
     // TODO
 }
-    
+
 //----------------------------------------------------------------
 
 void
