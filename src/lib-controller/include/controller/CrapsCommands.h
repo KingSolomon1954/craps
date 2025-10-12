@@ -70,44 +70,30 @@ public:
     // Program control
     static void gameTerminate();
     
-    // Auto Fill
-    struct AutoFillEntry
-    {
-        BetName    betName;
-        size_t     pivot;
-        bool       oddsBet;
-        Gen::Money amount;
-    };
-
-    static Gen::ReturnCode cmdSetAutoFill(
-            const AutoFillEntry& entry,
-            Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdDeleteAutoFill(
-            const AutoFillEntry& entry,
-            Gen::ErrorPass& ep);
-
-    // Quick Bet
-    struct QuickBetEntry
-    {
-        BetName     betName;
-        size_t      pivot;
-        bool        oddsBet;
-        Gen::Money  amount;
-    };
-    
-    static Gen::ReturnCode cmdSetQuickBet(
-            const QuickBetEntry& entry,
-            Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdApplyQuickBet(
-            size_t index,
-            Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdDeleteQuickBet(
-            const QuickBetEntry& entry,
-            BetName betName,
-            Gen::ErrorPass& ep);
-    static Gen::ReturnCode cmdDeleteQuickBet(
-            size_t index,
-            Gen::ErrorPass& ep);
+    static uint64_t cmdSetAutoFill(
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount);
+    static uint64_t cmdDeleteAutoFill(
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount);
+    static uint64_t cmdSetQuickBet(
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount);
+    static uint64_t cmdApplyQuickBet(
+        size_t index);
+    static uint64_t cmdDeleteQuickBetByLookup(
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount);
+    static uint64_t cmdDeleteQuickBetByIndex(
+        size_t index);
 
 private:
     // Private helpers

@@ -18,10 +18,10 @@ void
 ViewCommands::emitViewSuccess(
     uint64_t correlationId)
 {
-    auto ev = std::make_shared<ViewSuccess>();
+    auto ev = std::make_unique<ViewSuccess>();
     ev->correlationId = correlationId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 }
 
 //----------------------------------------------------------------
@@ -34,12 +34,12 @@ ViewCommands::emitViewErrorDialog(
     uint64_t           correlationId,
     const std::string& diag)
 {
-    auto ev = std::make_shared<ViewErrorDialog>();
+    auto ev = std::make_unique<ViewErrorDialog>();
     ev->orgEventType  = orgEventType;
     ev->correlationId = correlationId;
     ev->diag          = diag;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 }
 
 //----------------------------------------------------------------
@@ -51,11 +51,11 @@ ViewCommands::emitViewMakeBetSuccess(
     uint64_t correlationId,
     Craps::BetId betId)
 {
-    auto ev = std::make_shared<ViewMakeBetSuccess>();
+    auto ev = std::make_unique<ViewMakeBetSuccess>();
     ev->correlationId = correlationId;
     ev->betId          = betId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 }
 
 //----------------------------------------------------------------
@@ -67,11 +67,11 @@ ViewCommands::emitViewMakeOddsBetSuccess(
     uint64_t correlationId,
     Craps::BetId betId)
 {
-    auto ev = std::make_shared<ViewMakeOddsBetSuccess>();
+    auto ev = std::make_unique<ViewMakeOddsBetSuccess>();
     ev->correlationId = correlationId;
     ev->betId          = betId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 }
 
 //----------------------------------------------------------------
@@ -83,11 +83,11 @@ ViewCommands::emitViewMakeBetAutoSuccess(
     Craps::BetId betId,
     uint64_t correlationId)
 {
-    auto ev = std::make_shared<ViewMakeBetAutoSuccess>();
+    auto ev = std::make_unique<ViewMakeBetAutoSuccess>();
     ev->correlationId = correlationId;
     ev->betId  = betId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 }
 
 //----------------------------------------------------------------
@@ -101,13 +101,13 @@ ViewCommands::emitViewMakeBetAutoError(
     const Craps::PlayerId& playerId,
     const std::string&     diag)
 {
-    auto ev = std::make_shared<ViewMakeBetAutoError>();
+    auto ev = std::make_unique<ViewMakeBetAutoError>();
     ev->orgEventType  = orgEventType;
     ev->correlationId = correlationId;
     ev->playerId      = playerId;
     ev->diag          = diag;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 }
 
 //----------------------------------------------------------------
@@ -120,12 +120,12 @@ ViewCommands::emitViewRollDiceCountDown(
     const Craps::TableId& tableId,
     int numSeconds)
 {
-    auto ev = std::make_shared<ViewRollDiceCountDown>();
+    auto ev = std::make_unique<ViewRollDiceCountDown>();
     ev->correlationId = correlationId;
     ev->tableId       = tableId;
     ev->numSeconds    = numSeconds;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 }
 
 //----------------------------------------------------------------

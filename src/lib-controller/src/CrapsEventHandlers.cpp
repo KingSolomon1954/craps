@@ -5,8 +5,10 @@
 //----------------------------------------------------------------
 
 #include <controller/CrapsEventHandlers.h>
+#include <controller/AutoFill.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
+#include <controller/QuickBet.h>
 #include <controller/TableManager.h>
 #include <controller/UndoManager.h>
 #include <controller/ViewCommands.h>
@@ -344,6 +346,103 @@ CrapsEventHandlers::onCmdBetSetHardwayOn(GameEvent* pBase)
     pBet->setHardwayOff();
     ViewCommands::emitViewSuccess(ev->correlationId);
     Gbl::pUndoMgr->push(std::make_unique<UndoBetModifiedFlags>(pBet));
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdSetAutoFill
+// Tell controller to create/set an auto fill entry
+//
+void
+CrapsEventHandlers::onCmdSetAutoFill(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdSetAutoFill*>(pBase);
+    
+    AutoFill::AutoFillEntry afe =
+        {ev->betName, ev->pivot, ev->oddsBet, ev->amount};
+    AutoFill::instance()->setAutoFill(afe);
+
+    // TODO determine whether auto fill should be undo'able
+    ViewCommands::emitViewSuccess(ev->correlationId);
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdDeleteAutoFill
+// Tell controller to create/set an auto fill entry
+//
+void
+CrapsEventHandlers::onCmdDeleteAutoFill(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdDeleteAutoFill*>(pBase);
+    
+    AutoFill::AutoFillEntry afe =
+        {ev->betName, ev->pivot, ev->oddsBet, ev->amount};
+    AutoFill::instance()->deleteAutoFill(afe);
+
+    // TODO determine whether auto fill should be undo'able
+    ViewCommands::emitViewSuccess(ev->correlationId);
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdSetQuickBet
+// Tell controller to create/set a QuickBet entry
+//
+void
+CrapsEventHandlers::onCmdSetQuickBet(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdSetQuickBet*>(pBase);
+    
+    QuickBet::QuickBetEntry qbe =
+        {ev->betName, ev->pivot, ev->oddsBet, ev->amount};
+    QuickBet::instance()->setQuickBet(qbe);
+
+    // TODO determine whether auto fill should be undo'able
+    ViewCommands::emitViewSuccess(ev->correlationId);
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdApplyQuickBet
+// Tell controller to apply a QuickBet entry
+//
+void
+CrapsEventHandlers::onCmdApplyQuickBet(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdApplyQuickBet*>(pBase);
+    QuickBet::instance()->applyQuickBet(ev->index);
+    ViewCommands::emitViewSuccess(ev->correlationId);
+}
+
+//----------------------------------------------------------------
+//
+// Process event: CmdDeletetQuickBetByLookup
+// Tell controller to delete a QuickBet entry
+//
+void
+CrapsEventHandlers::onCmdDeleteQuickBetByLookup(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdDeleteQuickBetByLookup*>(pBase);
+    QuickBet::QuickBetEntry qbe =
+        {ev->betName, ev->pivot, ev->oddsBet, ev->amount};
+    QuickBet::instance()->deleteQuickBet(qbe);
+    // TODO determine whether deleting a quick bet should be undo'able
+    ViewCommands::emitViewSuccess(ev->correlationId);
+}
+    
+//----------------------------------------------------------------
+//
+// Process event: CmdDeletetQuickBetByIndex
+// Tell controller to delete a QuickBet entry
+//
+void
+CrapsEventHandlers::onCmdDeleteQuickBetByIndex(GameEvent* pBase)
+{
+    auto* ev = dynamic_cast<CmdDeleteQuickBetByIndex*>(pBase);
+    QuickBet::instance()->deleteQuickBet(ev->index);
+    // TODO determine whether deleting a quick bet should be undo'able
+    ViewCommands::emitViewSuccess(ev->correlationId);
 }
     
 //----------------------------------------------------------------

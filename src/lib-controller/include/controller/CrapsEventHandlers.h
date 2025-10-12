@@ -30,12 +30,18 @@ public:
     static void onCmdMakeBetAuto     (GameEvent* pBase);
     
     // Bet Related
-    static void onCmdBetSetContractAmount(GameEvent* pBase);
-    static void onCmdBetSetOddsAmount    (GameEvent* pBase);
-    static void onCmdBetSetOffComeOutRoll(GameEvent* pBase);
-    static void onCmdBetSetOnComeOutRoll (GameEvent* pBase);
-    static void onCmdBetSetHardwayOff    (GameEvent* pBase);
-    static void onCmdBetSetHardwayOn     (GameEvent* pBase);
+    static void onCmdBetSetContractAmount  (GameEvent* pBase);
+    static void onCmdBetSetOddsAmount      (GameEvent* pBase);
+    static void onCmdBetSetOffComeOutRoll  (GameEvent* pBase);
+    static void onCmdBetSetOnComeOutRoll   (GameEvent* pBase);
+    static void onCmdBetSetHardwayOff      (GameEvent* pBase);
+    static void onCmdBetSetHardwayOn       (GameEvent* pBase);
+    static void onCmdSetAutoFill           (GameEvent* pBase);
+    static void onCmdDeleteAutoFill        (GameEvent* pBase);
+    static void onCmdSetQuickBet           (GameEvent* pBase);
+    static void onCmdApplyQuickBet         (GameEvent* pBase);
+    static void onCmdDeleteQuickBetByLookup(GameEvent* pBase);
+    static void onCmdDeleteQuickBetByIndex (GameEvent* pBase);
 
     // Table Related
     static void onCmdRollDice(GameEvent* pBase);

@@ -32,11 +32,12 @@ AutoFills need to save/read from user config
 
 Implement initial ScreenCrapsTable draw window
 
-Change API for controller events (emitters, handlers, readers)
 Fix CrapsEventEmitters to issue event and get response
 Implement correlationId in GameController
 Implement controller events for commands that change state
 
+(Done) Change API for controller events (emitters, handlers, readers)
+(Done) Switch to unique_ptr for event loop ovnership
 (Done) ConsoleView delegates to ViewEventEmitter
 (Done) ConsoleView inherits from ViewInterface
 (Done) Implement controller events infrastructure, emitters, handlers, reader

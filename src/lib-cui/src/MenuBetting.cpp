@@ -443,16 +443,15 @@ MenuBetting::setResumeState()
 void
 MenuBetting::autoFillCallback(Gen::Money amount)
 {
-    Gen::ErrorPass ep;
-    Ctrl::CrapsCommands::AutoFillEntry afe =
-        {betName_, pivot_, isOddsBet_, amount};
-
+    uint64_t correlationId = 0;
     if (amount == 0)
     {
-        Ctrl::CrapsCommands::cmdDeleteAutoFill(afe, ep);
+        correlationId = Ctrl::CrapsCommands::cmdDeleteAutoFill(
+            betName_, pivot_, isOddsBet_, amount);
         return;
     }
-    Ctrl::CrapsCommands::cmdSetAutoFill(afe, ep);
+    correlationId = Ctrl::CrapsCommands::cmdSetAutoFill(
+        betName_, pivot_, isOddsBet_, amount);
 }
 
 //----------------------------------------------------------------
@@ -463,10 +462,8 @@ MenuBetting::autoFillCallback(Gen::Money amount)
 void
 MenuBetting::quickBetCallback(Gen::Money amount)
 {
-    Gen::ErrorPass ep;
-    Ctrl::CrapsCommands::QuickBetEntry qbe =
-        {betName_, pivot_, isOddsBet_, amount};
-    Ctrl::CrapsCommands::cmdSetQuickBet(qbe, ep);
+    auto correlationId = Ctrl::CrapsCommands::cmdSetQuickBet(
+            betName_, pivot_, isOddsBet_, amount);
 }
 
 //----------------------------------------------------------------

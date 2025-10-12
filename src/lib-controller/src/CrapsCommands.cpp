@@ -5,7 +5,6 @@
 //----------------------------------------------------------------
 
 #include <controller/CrapsCommands.h>
-#include <controller/AutoFill.h>
 #include <controller/GameController.h>
 #include <controller/GameEvent.h>
 #include <controller/Globals.h>
@@ -31,12 +30,12 @@ CrapsCommands::cmdPlayerJoinTable(
     const Craps::PlayerId& playerId,
     const Craps::TableId&  tableId)
 {
-    auto ev = std::make_shared<CmdPlayerJoinTable>();
+    auto ev = std::make_unique<CmdPlayerJoinTable>();
     ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
     ev->playerId      = playerId;
     ev->tableId       = tableId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -49,11 +48,11 @@ uint64_t
 CrapsCommands::cmdPlayerLeaveTable(
     const Craps::PlayerId& playerId)
 {
-    auto ev = std::make_shared<CmdPlayerLeaveTable>();
+    auto ev = std::make_unique<CmdPlayerLeaveTable>();
     ev->correlationId = Gbl::pGameCtrl->nextCorrelationId();
     ev->playerId      = playerId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -69,14 +68,14 @@ CrapsCommands::cmdMakeBet(
     Gen::Money contractAmount,
     size_t pivot)
 {
-    auto ev = std::make_shared<CmdMakeBet>();
+    auto ev = std::make_unique<CmdMakeBet>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->playerId       = playerId;
     ev->betName        = betName;
     ev->contractAmount = contractAmount;
     ev->pivot          = pivot;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -92,14 +91,14 @@ CrapsCommands::cmdMakeBetAuto(
     Gen::Money contractAmount,
     size_t pivot)
 {
-    auto ev = std::make_shared<CmdMakeBetAuto>();
+    auto ev = std::make_unique<CmdMakeBetAuto>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->playerId       = playerId;
     ev->betName        = betName;
     ev->contractAmount = contractAmount;
     ev->pivot          = pivot;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -117,12 +116,12 @@ CrapsCommands::cmdBetSetContractAmount(
     const Craps::BetId& betId,
     Gen::Money contractAmount)
 {
-    auto ev = std::make_shared<CmdBetSetContractAmount>();
+    auto ev = std::make_unique<CmdBetSetContractAmount>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->betId          = betId;
     ev->contractAmount = contractAmount;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -136,12 +135,12 @@ CrapsCommands::cmdBetSetOddsAmount(
     const Craps::BetId& betId,
     Gen::Money oddsAmount)
 {
-    auto ev = std::make_shared<CmdBetSetOddsAmount>();
+    auto ev = std::make_unique<CmdBetSetOddsAmount>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->betId          = betId;
     ev->oddsAmount     = oddsAmount;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -154,11 +153,11 @@ uint64_t
 CrapsCommands::cmdBetSetOffComeOutRoll(
     const Craps::BetId& betId)
 {
-    auto ev = std::make_shared<CmdBetSetOffComeOutRoll>();
+    auto ev = std::make_unique<CmdBetSetOffComeOutRoll>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->betId          = betId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -171,11 +170,11 @@ uint64_t
 CrapsCommands::cmdBetSetOnComeOutRoll(
     const Craps::BetId& betId)
 {
-    auto ev = std::make_shared<CmdBetSetOnComeOutRoll>();
+    auto ev = std::make_unique<CmdBetSetOnComeOutRoll>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->betId          = betId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -188,11 +187,11 @@ uint64_t
 CrapsCommands::cmdBetSetHardwayOff(
     const Craps::BetId& betId)
 {
-    auto ev = std::make_shared<CmdBetSetHardwayOff>();
+    auto ev = std::make_unique<CmdBetSetHardwayOff>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->betId          = betId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -205,11 +204,11 @@ uint64_t
 CrapsCommands::cmdBetSetHardwayOn(
     const Craps::BetId& betId)
 {
-    auto ev = std::make_shared<CmdBetSetHardwayOn>();
+    auto ev = std::make_unique<CmdBetSetHardwayOn>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->betId          = betId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -251,11 +250,11 @@ uint64_t
 CrapsCommands::cmdRollDice(
     const Craps::TableId& tableId)
 {
-    auto ev = std::make_shared<CmdRollDice>();
+    auto ev = std::make_unique<CmdRollDice>();
     ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
     ev->tableId        = tableId;
 
-    Gbl::pGameCtrl->enqueue(ev);
+    Gbl::pGameCtrl->enqueue(std::move(ev));
 
     return ev->correlationId;
 }
@@ -268,32 +267,46 @@ CrapsCommands::cmdRollDice(
 //
 // UI - user is configuring auto fill for a bet
 //
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdSetAutoFill(
-    const AutoFillEntry& entry,
-    Gen::ErrorPass& ep)
+    BetName    betName,
+    size_t     pivot,
+    bool       oddsBet,
+    Gen::Money amount)
 {
-    // TODO turn into event
-    AutoFill::AutoFillEntry afe =
-        {entry.betName, entry.pivot, entry.oddsBet, entry.amount};
-    AutoFill::instance()->setAutoFill(afe);
-    return Gen::ReturnCode::Success;
+    auto ev = std::make_unique<CmdSetAutoFill>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betName        = betName;
+    ev->pivot          = pivot;
+    ev->oddsBet        = oddsBet;
+    ev->amount         = amount;
+
+    Gbl::pGameCtrl->enqueue(std::move(ev));
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------
 //
 // UI - user is deleting auto fill for a bet
 //
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdDeleteAutoFill(
-    const AutoFillEntry& entry,
-    Gen::ErrorPass& ep)
+    BetName    betName,
+    size_t     pivot,
+    bool       oddsBet,
+    Gen::Money amount)
 {
-    // TODO turn into event
-    AutoFill::AutoFillEntry afe =
-        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
-    AutoFill::instance()->deleteAutoFill(afe);
-    return Gen::ReturnCode::Success;
+    auto ev = std::make_unique<CmdDeleteAutoFill>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betName        = betName;
+    ev->pivot          = pivot;
+    ev->oddsBet        = oddsBet;
+    ev->amount         = amount;
+
+    Gbl::pGameCtrl->enqueue(std::move(ev));
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------
@@ -304,61 +317,80 @@ CrapsCommands::cmdDeleteAutoFill(
 //
 // UI - user is configuring a quick bet
 //
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdSetQuickBet(
-    const QuickBetEntry& entry,
-    Gen::ErrorPass& ep)
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount)
 {
-    // TODO turn into event
-    QuickBet::QuickBetEntry qbe =
-        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
-    QuickBet::instance()->setQuickBet(qbe);
-    return Gen::ReturnCode::Success;
+    auto ev = std::make_unique<CmdSetQuickBet>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betName        = betName;
+    ev->pivot          = pivot;
+    ev->oddsBet        = oddsBet;
+    ev->amount         = amount;
+
+    Gbl::pGameCtrl->enqueue(std::move(ev));
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------
 //
 // UI - user is applying a quick bet
 //
-Gen::ReturnCode
+uint64_t
 CrapsCommands::cmdApplyQuickBet(
-    size_t index,
-    Gen::ErrorPass& ep)
+    size_t index)
 {
-    // TODO turn into event
-    QuickBet::instance()->applyQuickBet(index);
-    return Gen::ReturnCode::Success;
+    auto ev = std::make_unique<CmdApplyQuickBet>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->index          = index;
+
+    Gbl::pGameCtrl->enqueue(std::move(ev));
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------
 //
 // UI - user is deleting a quick bet (looking it up)
 //
-Gen::ReturnCode
-CrapsCommands::cmdDeleteQuickBet(
-    const QuickBetEntry& entry,
-    BetName betName,
-    Gen::ErrorPass& ep)
+uint64_t
+CrapsCommands::cmdDeleteQuickBetByLookup(
+    BetName    betName,
+    size_t     pivot,
+    bool       oddsBet,
+    Gen::Money amount)
 {
-    // TODO turn into event
-    QuickBet::QuickBetEntry qbe =
-        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
-    QuickBet::instance()->deleteQuickBet(qbe);
-    return Gen::ReturnCode::Success;
+    auto ev = std::make_unique<CmdDeleteQuickBetByLookup>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->betName        = betName;
+    ev->pivot          = pivot;
+    ev->oddsBet        = oddsBet;
+    ev->amount         = amount;
+
+    Gbl::pGameCtrl->enqueue(std::move(ev));
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------
 //
 // UI - user is deleting a quick bet (index already in hand)
 //
-Gen::ReturnCode
-CrapsCommands::cmdDeleteQuickBet(
-    size_t index,
-    Gen::ErrorPass& ep)
+uint64_t
+CrapsCommands::cmdDeleteQuickBetByIndex(
+    size_t index)
 {
-    // TODO turn into event
-    QuickBet::instance()->deleteQuickBet(index);
-    return Gen::ReturnCode::Success;
+    auto ev = std::make_unique<CmdDeleteQuickBetByIndex>();
+    ev->correlationId  = Gbl::pGameCtrl->nextCorrelationId();
+    ev->index          = index;
+
+    Gbl::pGameCtrl->enqueue(std::move(ev));
+
+    return ev->correlationId;
 }
 
 //----------------------------------------------------------------

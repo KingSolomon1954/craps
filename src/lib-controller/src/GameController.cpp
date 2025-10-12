@@ -41,7 +41,7 @@ GameController::prepareForShutdown()
 void
 GameController::enqueue(GameEvent::GameEventPtr ev)
 {
-    eventLoop_.enqueue(ev);
+    eventLoop_.enqueue(std::move(ev));
 }
 
 //----------------------------------------------------------------

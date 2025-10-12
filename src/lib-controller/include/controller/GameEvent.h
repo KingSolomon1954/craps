@@ -27,6 +27,12 @@ enum class EventType
     CmdBetSetHardwayOff,
     CmdBetSetHardwayOn,
     CmdRollDice,
+    CmdSetAutoFill,
+    CmdDeleteAutoFill,
+    CmdSetQuickBet,
+    CmdApplyQuickBet,
+    CmdDeleteQuickBetByLookup,
+    CmdDeleteQuickBetByIndex,
     
     ViewSuccess,
     ViewErrorDialog,
@@ -41,7 +47,7 @@ enum class EventType
 
 struct GameEvent
 {
-    using GameEventPtr = std::shared_ptr<GameEvent>;
+    using GameEventPtr = std::unique_ptr<GameEvent>;
     
     virtual ~GameEvent() = default;
     virtual EventType type() const = 0;
@@ -178,6 +184,84 @@ struct CmdPlayerLeaveTable : public GameEvent
     EventType type() const override
     {
         return EventType::CmdPlayerLeaveTable;
+    }
+};
+
+struct CmdSetAutoFill : public GameEvent
+{
+    uint64_t    correlationId;
+    BetName     betName;
+    size_t      pivot;
+    bool        oddsBet;
+    Gen::Money  amount;
+
+    EventType type() const override
+    {
+        return EventType::CmdSetAutoFill;
+    }
+};
+
+struct CmdDeleteAutoFill : public GameEvent
+{
+    uint64_t    correlationId;
+    BetName     betName;
+    size_t      pivot;
+    bool        oddsBet;
+    Gen::Money  amount;
+
+    EventType type() const override
+    {
+        return EventType::CmdDeleteAutoFill;
+    }
+};
+
+struct CmdSetQuickBet : public GameEvent
+{
+    uint64_t    correlationId;
+    BetName     betName;
+    size_t      pivot;
+    bool        oddsBet;
+    Gen::Money  amount;
+
+    EventType type() const override
+    {
+        return EventType::CmdSetQuickBet;
+    }
+};
+
+struct CmdApplyQuickBet : public GameEvent
+{
+    uint64_t    correlationId;
+    size_t      index;
+
+    EventType type() const override
+    {
+        return EventType::CmdApplyQuickBet;
+    }
+};
+
+struct CmdDeleteQuickBetByLookup : public GameEvent
+{
+    uint64_t    correlationId;
+    BetName     betName;
+    size_t      pivot;
+    bool        oddsBet;
+    Gen::Money  amount;
+
+    EventType type() const override
+    {
+        return EventType::CmdDeleteQuickBetByLookup;
+    }
+};
+
+struct CmdDeleteQuickBetByIndex : public GameEvent
+{
+    uint64_t    correlationId;
+    size_t      index;
+
+    EventType type() const override
+    {
+        return EventType::CmdDeleteQuickBetByIndex;
     }
 };
 
