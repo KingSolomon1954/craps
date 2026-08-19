@@ -105,6 +105,7 @@ CrapsGame::enableFileLogging()
     }
 
     // First logging entry in file.
+    Gen::Logger::instance().logInfo("--------------------------------------");
     Gen::Logger::instance().logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
 }
 
