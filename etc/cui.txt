@@ -1,0 +1,1518 @@
+Console User Interface Design
+─────────────────────────────
+
+User Input → ConsoleView → GameEvent → EventQueue → GameController
+
+    ├── ConsoleView ├── 
+    │               │ 
+    │               ├──>  Generate Event -->  EventLoop
+    │               │
+    ├── GuiView  ── ├
+
+onViewXxx  - prefix for event handlers originating from Views
+onGameXxx  - prefix for event handlers originating from the game/model
+                                            
+
+GameController → GameEvent → EventQueue → ConsoleView → Screen Display
+
+
+
+
+Startup Handling
+----------------
+
+                  ┌───────────────┐
+                  │   First Run   │
+                  └───────┬───────┘
+                          │
+                 configuration?
+                          │
+                    ┌─────┴─────┐
+                    │           │
+                  setup       already
+                              configured
+                    │           │
+                    └─────┬─────┘
+                          ▼
+                    Restore Game
+                          │
+                          ▼
+                    Betting Menu
+
+
+┌──────────────────────────────────────┐
+│ Craps                                │
+├──────────────────────────────────────┤
+│                                      │
+│ A previous game was found.           │
+│                                      │
+│ [r] Resume previous game             │
+│ [n] Start a new game                 │
+│ [c] Configure                        │
+│ [q] Quit                             │
+│                                      │
+└──────────────────────────────────────┘
+
+
+┌──────────────────────────────────────┐
+│ Craps                                │
+├──────────────────────────────────────┤
+│                                      │
+│ Welcome to RoyalCraps!               │
+│                                      │
+│ Initial configuration is required.   │
+│                                      │
+│ [c] Configure                        │
+│ [q] Quit                             │
+│                                      │
+└──────────────────────────────────────┘
+
+
+Startup Configuration Menu
+
+┌────────────────────────────┐
+│ Startup Configuration      │
+├────────────────────────────┤
+│ [p] Create New Player      │
+│ [s] Select Table           │
+│ [esc] Back                 │
+└────────────────────────────┘
+
+For startup terminal mode:
+
+If < 80×24:
+    Show a clear error: "Terminal too small (need at least 80x24).
+    Resize and restart."
+
+
+3. Subwindow Allocation in Code
+
+Example in C++ (ncurses):
+
+int termRows, termCols;
+getmaxyx(stdscr, termRows, termCols);
+
+if (termRows < 24 || termCols < 80) {
+    endwin();
+    std::cerr << "Terminal too small (need at least 80x24)\n";
+    exit(1);
+}
+
+4. Mouse Click Mapping (Maybe support)
+
+Ncurses mouse events give you y and x coordinates.
+You can identify where the click happened:
+
+MEVENT event;
+if (getmouse(&event) == OK) {
+    if (event.y == 0) { /* Table info click */ }
+    else if (event.y == 1) { /* Roll history click */ }
+    else if (event.y >= 2 && event.y < termRows - 2) { /* Table layout */ }
+    else if (event.y == termRows - 2) { /* Player info click */ }
+    else if (event.y == termRows - 1) { /* Command line */ }
+}
+
+6. Redraw Strategy
+
+    Each zone redraws only when its data changes.
+
+    Table layout will update more often (bets moving, dice animation, etc.).
+
+    Command line is interactive — redrawn on every keystroke.
+
+This makes performance snappy even in 80×24.
+
+7. Resizing (Maybe support)
+
+    Catch SIGWINCH
+
+    Recalculate all subwindow dimensions
+
+    Redraw everything
+
+    If below minimum, pause game with resize prompt
+
+
+Player Subwindow
+────────────────
+
+I'm updating the player subwindow to have an additional row so that
+now the player subwindow has the following information:
+  * row 1: Player name (plus indicator if player is currently the shooter)
+  * row 2: dashed line separator, so info is not so disjoint from name
+  * row 3: Current balance, and balance difference from start of session +/-
+  * row 4: total number of bets, number of winning bets, number of losing bets
+  * row 5: num bets and amount currently on the table
+  * row 6: last roll: net win/lose, amount won, amount lost
+
+Labels and formatting a bit more terse to fit larger numbers.
+Player subwindow is selectable maybe by clicking or command such that any
+player can appear here, or perhaps an F-key cycles through players. Here's
+example of the updated player subwindow .
+    
+┬─────────────────────────────┐
+│ Player: Nathan (shooter)    │
+│ - - - - - - - - - - - - - - │
+│ Bal: $2,000 (+880)          │
+│ NumBets: 55 (21W, 34L)      │
+│ Pct: 38.18% win 61.81% lose │
+│ On table: 3 bets, $320      │
+│ Last: +$80,180W,100L        │
+├─────────────────────────────┤
+
+House Subwindow
+───────────────
+
+I'm adding an additional subwindow for house information.
+This is a right side window located immediately beneath the Player subwindow.
+The command window moves below this house subwindow.
+  * row 1: house bank balance difference from start of session +/-
+  * row 2: total number of bets, number of winning bets, number of losing bets
+  * row 3: num bets and amount currently on the table
+  * row 4: last roll: net win/lose, amount won, amount lost
+
+┬─────────────────────────────┐
+│ House Bal: +$2,050          │
+│ NumBets: 128 (68W, 60L)     │
+│ Pct: 53.12% win 46.87% lose │
+│ On table: 12 bets, $1,520   │
+│ Last: -$100,300W,200L       │
+├─────────────────────────────┤
+
+History Subwindow
+─────────────────
+
+
+Start with simple single value for Dice History, want deeper history
+showing on screen.
+
+│ 4, 7, 6, 12, 11, 8, 9, 7, 7, 4, 8, 8, 10, 7, 6, 7, 2, 11, 6, 5, 12 │
+│ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 │
+│ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4  │
+
+Allow user configuration option for showing individual die as part
+of dice history.
+
+│ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │
+
+
+Full Table View
+───────────────
+
+Table layout has three sections for bets. Each section has a list of bets
+along with an indication of which player has made that bet. Within each
+section, there are 6 columns of o's, one for each player (up to 6 players)
+indicating if a player has made a bet.  o's in each column are color
+coded to agree with assigned color of a player.  o's do not appear in a
+column unless there's a bet for it on the table.  For passline, come,
+dontpass, and dontcome bets, if the player has also made an odds bet,
+then instead of an "o", a bullet or filled in "o"is shown. Notice a
+header row over the columns; has the first initial of the player's name,
+(in this example 5 players Nathan, Arthur, Paige, Lenny, Winnifred),
+also color coded over their column.
+
+0   ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
+1   │ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
+2   ├──────────┴────────────┴──────────────────┴─────────────────────────┤   ⚄ + ⚂  →  7               │
+3   │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
+4   ├────────────────────────┬──────────────────────┬────────────────────┤                             │ 
+5   │                        │                      │                    │                             │
+6   │            N A P L W   │          N A P L W   │        N A P L W   │                             │
+7   │ PassLine   o o o o o o │ Place4   o o o o o o │ Buy4   o o o o o o │                             │
+8   │ Come       o o o o o o │ Place5   o o o o o o │ Buy5   o o o o o o │                             │
+9   │ Come4      o o o o o o │ Place6   o o o o o o │ Buy6   o o o o o o │                             │
+10  │ Come5      o o o o o o │ Place8   o o o o o o │ Buy8   o o o o o o │                             │
+11  │ Come6      o o o o o o │ Place9   o o o o o o │ Buy9   o o o o o o │                             │
+12  │ Come8      o o o o o o │ Place10  o o o o o o │ Buy10  o o o o o o │                             │  
+13  │ Come9      o o o o o o │ Hard4    o o o o o o │ Lay4   o o o o o o │                             │
+14  │ Come10     o o o o o o │ Hard6    o o o o o o │ Lay5   o o o o o o │                             │
+15  │ DontPass   o o o o o o │ Hard8    o o o o o o │ Lay6   o o o o o o │                             │
+16  │ DontCome   o o o o o o │ Hard10   o o o o o o │ Lay8   o o o o o o │                             │
+17  │ DontCome4  o o o o o o │ C&E      o o o o o o │ Lay9   o o o o o o │                             │
+18  │ DontCome5  o o o o o o │ Field    o o o o o o │ Lay10  o o o o o o │                             │
+19  │ DontCome6  o o o o o o │                      │ AnyC   o o o o o o │                             │
+20  │ DontCome8  o o o o o o │                      │ Any7   o o o o o o │                             │
+21  │ DontCome9  o o o o o o │                      │ Horn   o o o o o o │                             │
+22  │ DontCome10 o o o o o o │                      │ World  o o o o o o │                             │
+23  │                        │                      │                    │23                           │
+24  ├────────────────────────┴──────────────────────┴────────────────────┼─────────────────────────────┤
+25  │ Nathan wins PassLine bet, +$200                                    │ House Bal: +$2,050          │
+26  │ Come out roll                                                      │ NumBets: 128 (68W, 60L)     │
+27  │ Shooter rolls a 6(3,3), point is 6                                 │ Pct: 53.1% win, 46.8% lose  │
+28  │ Arthur bets $20 on Hard 4 and 10                                   │ Last: -$100,300W,200L       │
+29  │ Nathan bets $50 PassLine odds                                      │ On table: 12 bets, $1,520   │
+30  │ Arthur places $50 come bet                                         ├─────────────────────────────┤ 
+31  │ Arthur places $10 Field bet                                        │ Player: Nathan (shooter)    │
+32  │ Winnifred placed $100 field bet                                    │ - - - - - - - - - - - - - - │
+33  │ Lenny places $500 DontCome                                         │ Bal: $2,000 (+880)          │
+34  │ Nathan places $200 come bet                                        │ NumBets: 55 (21W, 34L)      │
+35  │ Paige places $10 on Field                                          │ Pct: 38.1% win, 61.8% lose  │
+36  │ Another message                                                    │ Last Roll: +$80,180W,100L   │
+37  │ Another message                                                    │ On table: 3 bets, $320      │
+37  ├────────────────────────────────────────────────────────────────────┴─────────────────────────────┤
+38  │ [C] CONTROL        [B] BETTING       [V] VIEW       [S] STATS      |      [H] Help      [Q] Quit │
+39  └──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Focused Player View
+───────────────────
+
+0   ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
+1   │ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
+2   ├──────────┴────────────┴──────────────────┴─────────────────────────┤   ⚄ + ⚂  →  7               │
+3   │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
+4   ├──────────────────┬─────────┬─────────┬─────────┬─────────┬─────────┤                             │ 
+5   │ Nathan:     4    │    5    │     6   │    8    │    9    │    10   │                             │
+6   │ Place    1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+7   │ Come     1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+8   │ Odds     1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+9   │ DontCome 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+10  │ Odds     1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+11  │ Buy      1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+12  │ Lay      1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+13  │ Hardways 1000000 │         │ 1000000 │ 1000000 │         │ 1000000 │                             │
+14  ├──────────────────┴─────────┴─────────┴─────────┴─────────┴─────────┤                             │
+15  │                                Field                               │                             │
+16  │                        2  3  4  9  10  11  12                      │                             │
+17  │                               1000000                              │                             │
+18  ├────────────────────────────────────────────────────────────────────┤                             │
+19  │ AnyCraps  1000000             C&E  1000000         Horn   1000000  │                             │
+20  │ Any7      1000000                                  World  1000000  │                             │
+21  ├───────────────────────────────────┬────────────────────────────────┤                             │
+22  │ Come     10000000                 │ DontCome 1000000               │                             │
+23  │ PassLine 10000000  Odds 10000000  │ DontPass 1000000  Odds 1000000 │                             │
+24  ├───────────────────────────────────┴────────────────────────────────┼─────────────────────────────┤
+25  │ Nathan wins PassLine bet, +$200                                    │ House Bal: +$2,050          │
+26  │ Shooter rolls a 6, point is set                                    │ NumBets: 128 (68W, 60L)     │
+27  │ Arthur bets $20 on Hard 4 and 10                                   │ Pct: 53.1% win, 46.8% lose  │
+28  │ Nathan bets $50 PassLine odds                                      │ Last: -$100,300W,200L       │
+29  │ Arthur places $50 come bet                                         │ On table: 12 bets, $1,520   │
+30  │ Arthur places $10 Field bet                                        ├─────────────────────────────┤
+31  │ Winnifred placed $100 field bet                                    │ Player: Nathan (shooter)    │
+32  │ Lenny places $500 DontCome                                         │ - - - - - - - - - - - - - - │
+33  │ Nathan places $200 come bet                                        │ Bal: $2,000 (+880)          │
+34  │ Paige places $10 on Field                                          │ NumBets: 55 (21W, 34L)      │
+35  │ Another message row                                                │ Pct: 38.1% win, 61.8% lose  │
+36  │ Another message                                                    │ Last Roll: +$80,180W,100L   │
+37  │ Another message                                                    │ On table: 3 bets, $320      │
+37  ├────────────────────────────────────────────────────────────────────┴─────────────────────────────┤
+38  │ [C] CONTROL     [B] BETTING     [V] VIEW: Nathan    [S] STATS      |      [H] Help      [Q] Quit │
+39  └──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Dice Drawing
+────────────
+
+┌─────┐
+│     │
+│  ●  │
+│     │
+└─────┘
+
+┌─────┐
+│ ●   │
+│     │
+│   ● │
+└─────┘
+
+┌─────┐
+│ ●   │
+│  ●  │
+│   ● │
+└─────┘
+
+┌─────┐
+│ ● ● │
+│     │
+│ ● ● │
+└─────┘
+
+┌─────┐
+│ ● ● │
+│  ●  │
+│ ● ● │
+└─────┘
+
+┌─────┐
+│ ● ● │
+│ ● ● │
+│ ● ● │
+└─────┘
+
+
+Undo Capability
+───────────────
+
+Supported (stack-based undo, limited to bet actions)
+
+* Scope: only bet state (no configuration, no gameplay state, no rolls).
+* Granularity: one atomic bet change = one undo step.
+* Kinds of changes that can be undone:
+
+  * new bet placed
+  * existing bet modified (amount, odds, flags)
+  * bet removed
+
+* Ordering: last-in, first-out (classic undo stack).
+* Lifetime: undo stack is cleared after each roll, so you can only 
+  undo the current betting decisions before the dice are rolled.
+
+Not supported (explicit exclusions)
+
+* Undoing out of order changes (no random-access undo).
+* Redo.
+* Anything outside of bets (like table config, game options).
+
+Implications for implementation
+
+* Each action on bets needs to push a reversible “snapshot” command
+  object onto the undo stack.  e.g. "BetAdded {id, betData}",
+  "BetModified {id, oldAmount, newAmount}", "BetRemoved {id, betData}".
+* When an undo is executed, the prior state of that bet is restored.
+
+Menus
+─────
+
+Menu behaviors:
+
+1. Top-level modes replace or overlay the current table view.
+2. Popup menus overlay the current view.
+3. A popup owns its child popup/dialog.
+4. ESC closes the current popup.
+5. A successful action closes the current popup and returns
+   according to its return policy.
+6. Sticky parent remains available after child completion.
+7. Ephemeral parent is discarded after child completion.
+8. Dynamic menus contain only currently valid choices.
+9. One-choice dynamic menus may be bypassed.
+10. Top-level navigation is always available from the table.
+11. Stats are full-screen modes.
+12. Betting is the default command context on table views.
+
+Once those rules are explicit, I think the implementation becomes
+substantially easier—and, importantly, your individual
+onPlayerXXX()/event handlers won't have to know anything about the
+increasingly complicated popup hierarchy.
+
+The game opens up on the Craps table view using the last
+played Craps game. Player can go to the Control Menu to
+switch to a different game player. The default opening view is the
+Focused Player View.  Betting Menu key bindings are active.
+
+
+Menu Hierarchy
+
+                    ┌───────────────┐                  ┌───────────────┐
+                    │   TABLE VIEW  │                  │     STATS     │
+                    └───────┬───────┘                  ├───────────────┤
+                            │                          │ Player        │
+           ┌────────────────┼────────────────┐         │ Betting       │
+           │                │                │         │ Dice          │
+           ▼                ▼                ▼         │ History       │
+       CONTROL           BETTING            VIEW       └───────────────┘
+           │                │
+           │                ├── Amount
+           │                ├── Odds
+           │                │    └── Amount
+           │                ├── Place
+           │                │    └── Amount
+           │                ├── Hardways
+           │                │    └── Amount
+           │                ├── Bet Flags
+           │                │    └── Which Bet
+           │                ├── Quick Bet
+           │                └── Remove Bet
+           │
+           └── Configure
+                 ├── Roll History
+                 ├── Quick Bets
+                 └── Auto Bets
+
+
+Navigation Model
+
+                         GAME                        
+                          │
+       ┌──────────────────┼──────────────────┬──────────────────────┐
+       │                  │                  │                      │
+    CONTROL            BETTING             VIEW                   STATS                
+       │                  │                  │                      │                  
+    popups             popups             views        ┌────────────┼─────────────┐    
+                                                       │            │             │    
+                                                    Player       Table         Session 
+                                                     Stats        Stats         History
+         
+
+Betting Menu
+────────────
+
+[B] Betting Menu
+
+    ┌───────────────────────┐
+    │ Betting Menu          │
+    ├───────────────────────┤
+    │ [p] Pass Line         │
+    │ [c] Come Bet          │
+    │ [d] Dont Pass         │
+    │ [k] Dont Come         │
+    │ [o] Odds Bet          │
+    │ [l] Place Bet         │
+    │ [h] Hardways          │
+    │ [f] Field Bet         │
+    │ [e] C&E Bet           │
+    │ [a] Any Craps         │
+    │ [7] Any 7             │
+    │ [n] Horn Bet          │
+    │ [w] World Bet         │
+    │ [g] Bet Flags         │
+    │ [q] Quick Bet         │
+    │ [x] Remove Bets       │
+    │ [u] Undo Last         │
+    │ [r] Roll Dice         │
+    │ [B] Show Betting Menu │
+    │ [esc] Back            │
+    └───────────────────────┘
+
+    [p] PassLine
+        pop-up "Amount" dialogue subwindow
+    [c] Come
+        pop-up "Amount" dialogue subwindow
+    [d] DontPass
+        pop-up "Amount" dialogue subwindow
+    [k] DontCome
+        pop-up "Amount" dialogue subwindow
+    [o] odds
+        pop-up "Which Odds Bet" menu
+        presents a dynamic built list of player's odds 
+        capable bets (sorted most recent first). Uses
+        1,2,3,4,5,6... indexing to make selection
+        
+        ┌───────────────────────┐
+        │ Which Odds Bet        │
+        ├───────────────────────┤
+        │ [1] Pass Line 6       │
+        │ [2] Come Bet 8        │
+        │ [3] Don't Pass 10     │
+        │ [esc] Back            │
+        └───────────────────────┘
+
+        This pop-up can be skipped altogether
+        if player has only 1 odds capable bet.
+        Instead go straight to the the amount dialogue.
+
+        Have to decide if "Which Odds Bet" menu is
+        sticky, meaning after selecting an odds bet and
+        filling out the "Amount" dialogue, the "Which Odds Bet"
+        menu hangs around for another selection. Leaning towards
+        disappearing, because odds bets are usually made only
+        once and seldom changed. Not too inconvenient for the 
+        player to select "Odds Bet" again from the betting menu 
+        to make or change or another odds bet.
+    [l] Place Bet
+        pop-up "Place Which Number" menu
+
+        ┌────────────────────┐
+        │ Place Which Number │
+        ├────────────────────┤
+        │ [4] Place 4        │
+        │ [5] Place 5        │
+        │ [6] Place 6        │
+        │ [8] Place 8        │
+        │ [9] Place 9        │
+        │ [0] Place 10       │
+        │ [esc] Back         │
+        └────────────────────┘
+
+        "Place Which Number" menu is sticky, meaning after selecting a
+        number and making a bet, the menu hangs around so player can
+        make another place bet.
+
+        Future - consider menu options for inside/outside type
+        bets placing multiple numbers at once using a single
+        amount divided across numbers.
+    [h] Hardways ...
+        pop-up "Which Hardway" menu
+
+        ┌───────────────┐
+        │ Which Hardway │
+        ├───────────────┤
+        │ [4] Hard 4    │
+        │ [6] Hard 6    │
+        │ [8] Hard 8    │
+        │ [0] Hard 10   │
+        │ [esc] Back    │
+        └───────────────┘
+
+        "Which Hardway" menu is not sticky, meaning after selecting a
+        number and making a bet, the menu disappears, going back to
+        the betting view
+
+        Future - consider options for multiple hardways at once.
+        Player enters an amount used for each hardway number in
+        selection.
+        
+        ┌───────────────────┐
+        │ Which Hardway     │
+        ├───────────────────┤
+        │ [4] Hard 4        │
+        │ [6] Hard 6        │
+        │ [8] Hard 8        │
+        │ [0] Hard 10       │
+        │ [a] Hard 4,6,8,10 │
+        │ [b] Hard 6,8      │
+        │ [c] Hard 4,10     │
+        │ [esc] Back        │
+        └───────────────────┘
+        
+    [f] Field
+        pop-up "Amount" subwindow
+    [e] C&E
+        pop-up "Amount" subwindow
+    [a] AnyCraps
+        pop-up "Amount" subwindow
+    [7] Any7
+        pop-up "Amount" subwindow
+    [n] Horn
+        pop-up "Amount" subwindow
+    [w] World
+        pop-up "Amount" subwindow
+    [g] Bet Flags
+        pop-up "Bet Flags" menu
+
+        ┌──────────────────────────┐
+        │ Bet Flags                │
+        ├──────────────────────────┤
+        │ [1] Set Odds Not-Working │
+        │ [2] Set Odds Working     │
+        │ [3] Set Bets Not-Working │
+        │ [4] Set Bets Working     │
+        │ [esc] Back               │
+        └──────────────────────────┘
+
+        Dynamic built menu of qualifying bets
+        ┌───────────────────────┐
+        │ Set Odds Not-Working  │
+        │ Which Bets            │
+        ├───────────────────────┤
+        │ [a] All               │
+        │ [1] Pass Line 6       │
+        │ [2] Come Bet 8        │
+        │ [3] Don't Pass 10     │
+        │ [esc] Back            │
+        └───────────────────────┘
+
+        Dynamic built menu of qualifying bets
+        ┌───────────────────┐
+        │ Set Odds Working  │
+        │ Which Bets        │
+        ├───────────────────┤
+        │ [a] All           │
+        │ [1] Pass Line 6   │
+        │ [2] Come Bet 8    │
+        │ [3] Don't Pass 10 │
+        │ [esc] Back        │
+        └───────────────────┘
+
+        Dynamic built menu of qualifying bets
+        ┌──────────────────────┐
+        │ Set Bets Not Working │
+        │ Which Bets           │
+        ├──────────────────────┤
+        │ [a] All              │
+        │ [1] Come Bet 8       │
+        │ [2] Come Bet 4       │
+        │ [3] Come Bet 10      │
+        │ [4] Place 6          │
+        │ [5] Place 8          │
+        │ [esc] Back           │
+        └──────────────────────┘
+
+        Dynamic built menu of qualifying bets
+        ┌──────────────────┐
+        │ Set Bets Working │
+        │ Which Bets       │
+        ├──────────────────┤
+        │ [a] All          │
+        │ [1] Come Bet 8   │
+        │ [2] Come Bet 4   │
+        │ [3] Come Bet 10  │
+        │ [4] Place 6      │
+        │ [5] Place 8      │
+        │ [esc] Back       │
+        └──────────────────┘
+
+        All the Set Flag Bet menus are not sticky, so after selection
+        return is to the Betting menu, not the Bet Flags menu.
+    [q] Quick Bet
+
+        Dynamic built menu of quick bets configured prior
+        by the player via the configure menu.
+
+        ┌─────────────────────┐
+        │ Quick Bets          │
+        ├─────────────────────┤
+        │ [a] Pass Line $5    │
+        │ [b] Dont Pass $10   │
+        │ [c] Come Bet  $5    │
+        │ [d] Dont Come $10   │
+        │ [e] Place 6   $12   │
+        │ [f] Place 8   $12   │
+        │ [esc] Back          │
+        └─────────────────────┘
+
+        The several Quick Bets menus are not sticky. After selection
+        return is to the Betting menu, not the Bet Flags menu.
+
+    [x] Remove Bets
+        Dynamic built menu of player's qualifying bets
+        
+        ┌───────────────────────┐
+        │ Remove Bets           │
+        ├───────────────────────┤
+        │ [a] All               │
+        │ [b] Dont Pass         │
+        │ [c] Dont Pass Odds    │
+        │ [d] Dont Come 6       │
+        │ [e] Dont Come 6 Odds  │
+        │ [f] Dont Come 8       │
+        │ [g] Dont Come 8 Odds  │
+        │ [h] Dont Come 10      │
+        │ [i] Dont Come 10 Odds │
+        │ [j] Pass Line Odds    │
+        │ [k] Place 6           │
+        │ [l] Place 8           │
+        │ [esc] Back            │
+        └───────────────────────┘
+
+    [u] Undo Last Bet
+        pop-up confirmation dialogue. Show which bet
+        will be undone.
+        Or pop-up dialogue saying there is no undo to be undone.
+    [r] Roll Dice
+    [B] Shows the Betting Menu
+        Brings it back visible so user can see different
+        betting choices.
+    
+Control Menu
+────────────
+
+    ┌────────────────────────┐
+    │ Control Menu           │
+    ├────────────────────────┤
+    │ [p] Pause              │ 
+    │ [r] Resume             │
+    │ [j] Player Join Table  │
+    │ [l] Player Leave Table │
+    │ [s] Select Table       │
+    │ [c] Configure          │
+    │ [esc] Back             │
+    └────────────────────────┘
+
+    [p] Pause  (shown only when running)
+        Future - need some sort of indication of paused/running
+        Return to sticky Control Menu
+    [r] Resume (shown only when paused)
+        Return to sticky Control Menu
+    
+    [j] Player Join Table
+        Dynamic built menu of available players, 
+        restricted to TBD entries.
+
+        ┌─────────────────────────────────┐
+        │ Choose Player to Join           │
+        ├─────────────────────────────────┤
+        │ [n] Nathan the Newbie           │
+        │ [a] Arthur the Amazing          │
+        │ [p] Paige the Place Bet Wizard  │
+        │ [l] Lenny the Dark Side Champ   │
+        │ [w] Winnie the Winner           │
+        │ [k] King Royal the Supreme      │
+        │ [esc] Back                      │
+        └─────────────────────────────────┘
+
+        Return to sticky Control Menu
+
+    [l] Player Leave Table
+        Dynamic built menu of players currently at the table.
+    
+        ┌─────────────────────────────────┐
+        │ Choose Player to Leave          │
+        ├─────────────────────────────────┤
+        │ [n] Nathan the Newbie           │
+        │ [p] Paige the Place Bet Wizard  │
+        │ [l] Lenny the Dark Side Champ   │
+        │ [w] Winnie the Winner           │
+        │ [k] King Royal the Supreme      │
+        │ [esc] Back                      │
+        └─────────────────────────────────┘
+
+        Return to sticky Control Menu
+
+    [s] Switch Tables
+        Dynamic built menu of available tables.
+
+        ┌─────────────────────────────────┐
+        │ Select Table to Play            │
+        ├─────────────────────────────────┤
+        │ [a] Las Vegas Daytime           │
+        │ [b] Las Vegas High Roller       │
+        │ [c] Las Vegas 10x Odds          │
+        │ [esc] Back                      │
+        └─────────────────────────────────┘
+
+        Return to sticky Control Menu
+
+    [c] Configure
+
+        ┌─────────────────────────┐
+        │ Configure               │
+        ├─────────────────────────┤
+        │ [f] Format Roll History │
+        │ [q] Quick Bets          │
+        │ [a] Auto Bets           │
+        │ [t] Timed Rolls         │
+        │ [esc] Back              │
+        └─────────────────────────┘
+
+        [f] Format Roll History
+            Static menu of choices for formatting roll history line
+            
+            ┌─────────────────────────────────────┐
+            │ Format Roll History                 │
+            ├─────────────────────────────────────┤
+            │ [1]   7(3,4) 8(4,4) 6(3,3), 10(6,5) │
+            │ [2]   7(34) 8(44) 6(33) 10(65)      │
+            │ [3]   7,8,6,10                      │
+            │ [4]   7 8 6 10                      │
+            │ [esc] Back                          │
+            └─────────────────────────────────────┘
+
+            Return to sticky Configure Menu
+
+        [q] Quick Bet Setup
+            Dynamically built menu
+            Asterisk means quick bet is already set
+            OK to select it anyway to change amount
+            Enter an amount of zero to remove quick bet
+
+            ┌─────────────────┐
+            │ Quick Bet Setup │
+            ├─────────────────┤
+            │ [p] Pass Line*  │
+            │ [c] Come Bet*   │
+            │ [d] Dont Pass   │
+            │ [k] Dont Come   │
+            │ [f] Field Bet   │
+            │ [4] Place 4     │
+            │ [5] Place 5     │
+            │ [6] Place 6*    │
+            │ [8] Place 8*    │
+            │ [9] Place 9     │
+            │ [0] Place 10    │
+            │ [s] Hard 4      │
+            │ [t] Hard 6      │
+            │ [u] Hard 8      │
+            │ [v] Hard 10     │
+            │ [e] C&E Bet     │
+            │ [a] Any Craps   │
+            │ [7] Any 7       │
+            │ [h] Horn Bet    │
+            │ [w] World Bet   │
+            │ [r] Remove All  │
+            │ [esc] Back      │
+            │                 │
+            │ * = configured  │
+            └─────────────────┘
+
+            Selection bring up "Amount" dialog.
+            Returns to sticky Configure Menu
+
+        [a] Auto Bet Setup
+            Make bets automatically according to player rules and
+            table conditions
+            Future - TODO
+        [t] Timed Rolls
+            Future - TODO
+        
+View Menu
+─────────
+
+    ┌──────────────────────────┐
+    │ View Menu                │
+    ├──────────────────────────┤
+    │ [f] Full Table View      │
+    │ [n] Player Focus (next)  │
+    │ [p] Player Focus (prev)  │
+    └──────────────────────────┘
+
+    [f] Full Table View
+        Redraws screen to Full Table View.
+    [n] Focused Player View (next)
+        Redraws screen to Focused Table View.
+        If already on Focused Table View, then advance
+        the screen to show the next player at table, else
+        bring up user player.
+    [p] Focused Player View (prev)
+        Redraws screen to Focused Table View.
+        If already on Focused Table View, then advance
+        the screen to show the previous player at table, else
+        bring up user player.
+
+    Control returns to Betting state and Betting view
+    Betting menu is active
+
+Stats Menu
+──────────
+
+    ┌──────────────────────────────────┐
+    │ Stats Menu                       │
+    ├──────────────────────────────────┤
+    │ [n] Player Stats          (next) │
+    │ [p] Player Stats          (prev) │
+    │ [t] Table Betting Stats   (next) │
+    │ [u] Table Betting Stats   (prev) │
+    │ [d] Table Dice Stats      (next) │
+    │ [e] Table Dice Stats      (prev) │
+    │ [s] Table Session History (next) │
+    │ [h] Table Session History (prev) │
+    │ [S] Show Stats Menu              │
+    │ [esc] Back                       │
+    └──────────────────────────────────┘
+
+    [n] Player Stats (next)
+        Show and/or advance through different players stats
+        If already showing, then advance
+        to next player stats, else
+        bring up user player stats.
+    [p] Player Stats (prev)
+        Show and/or advance through different players stats
+        If already showing, then advance
+        to previous player stats, else
+        bring up user player stats.
+    [t] Table Betting Stats (next)
+        Show and/or advance through different tables' betting stats
+        If already showing, then advance
+        to next table betting stats, else
+        bring up current table betting stats.
+
+        Show the following two key selections on the Table Betting Stats
+        screen. Want to allow user to switch between viewing alltime
+        stats or current session stats. Could code these two input
+        keys hidden in Stats Menu so key press is seen there. Upon key
+        press, test visibility of Table Betting Stats and if so react,
+        otherwise ignore.
+        
+        [a] alltime (default)
+        [c] current session
+
+        Current Session or Alltime is remembered when advancing
+        through tables.
+    [u] Table Betting Stats (prev)
+        Show and/or advance through different tables' betting stats
+        If already showing, then advance
+        to previous table betting stats, else
+        bring up current table betting stats.
+        Same description as with [t] above.
+    [d] Table Dice Stats (next)
+        Show and/or advance through different tables' dice stats
+        If already showing, then advance
+        to next table dice stats, else
+        bring up current table dice stats.
+    [e] Table Dice Stats (prev)
+        Show and/or advance through different tables' dice stats
+        If already showing, then advance
+        to previous table dice stats, else
+        bring up current table dice stats.
+    [s] Table Session History (next)
+        Show and/or advance through different tables' session history.
+        If already showing, then advance
+        to next table's session history, else
+        bring up current table's session history.
+    [h] Table Session History (prev)
+        Show and/or advance through different tables' session history.
+        If already showing, then advance
+        to previous table's session history, else
+        bring up current table's session history.
+    [S] Show Stats Menu
+        Brings it back visible so user can see different
+        stat choices.
+
+    Abbreviated Sample Stats Screen showing bottom nav/keys
+
+0   ┌──────────────────────────────────────────────────────────────────────────────┐
+1   │ Table Betting Statistics                                                     │
+.   │                                                                              │
+.   │                         ... statistics ...                                   │
+.   │                                                                              │
+.   │                                                                              │
+35  ├──────────────────────────────────────────────────────────────────────────────┤
+36  │ [N] Next Table   [P] Prev Table   [A] All Time   [C] Session   [ESC] Back    │
+37  ├──────────────────────────────────────────────────────────────────────────────┤
+38  │ [C] CONTROL   [B] BETTING   [V] VIEW   [S] STATS   │   [H] Help [Q] Quit     │
+39  └──────────────────────────────────────────────────────────────────────────────┘
+
+
+    Sample Table Session History Screen
+    
+    Shows summary stats across all sessions.
+    Shows per session summary stats
+    Full screen, Future - support arrow key row-based scrolling up down
+
+0   ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+1   │ Table Session History - Las Vegas Daytime                    │ Current Balance: $100,000,000,000 │ 
+2   │                                                                                                  │
+3   │ Start Bal: $10,000,000   Max Intake: $11,111,111  Max Payout: $11,111,111                        │
+3   │ Num Sessions: 1,000      Avg Bets/Session: 121    Avg Duration: 0d 01:33:08                      │
+4   │ Avg Intake: $23,000,000  Avg Payout: $1,000       Avg Ending Balance: $1000                      │
+5   ├──────────────────────────────────────────────────────────────────────────────────────────────────┤    
+6   │ Date                Duration    Bets   Intake   Payout  Net W/L   Ending Bal    Players          │
+7   │ ─────────────────── ─────────── ─────  ──────── ─────── ───────── ────────────  ───────          │ 
+8   │ 2025-07-12T09:29:56 0d 01:33:08   112    246222  334577    +88355 111222333444        6          │
+9   │ 2025-05-12T08:05:44 0d 00:22:11    24      1009     950       +59 111222333555        6          │
+10  │ ...                                                                                              │
+11  │ ...                                                                                              │
+12  │ ...                                                                                              │
+13  │                                                                                                  │
+14  │                                                                                                  │
+15  │                                                                                                  │
+16  │                                                                                                  │
+17  │                                                                                                  │
+18  │                                                                                                  │
+19  │                                                                                                  │
+20  │                                                                                                  │
+21  │                                                                                                  │
+22  │                                                                                                  │
+23  │                                                                                                  │
+24  │                                                                                                  │
+25  │                                                                                                  │
+26  │                                                                                                  │
+27  │                                                                                                  │
+28  │                                                                                                  │
+29  │                                                                                                  │
+30  │                                                                                                  │
+31  │                                                                                                  │
+32  │                                                                                                  │
+33  │                                                                                                  │
+34  │ ... arrow key scrolling ...                                                                      │
+35  ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+36  │ [N] Next Table   [P] Prev Table     [↑] Scroll Up     [↓] Scroll Down                 [ESC] Back │
+37  ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+38  │ [C] CONTROL     [B] BETTING     [V] VIEW            [S] STATS      |      [H] Help      [Q] Quit │
+39  └──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+[N] Next Table   [P] Prev Table   [↑] Scroll Up   [↓] Scroll Down   [ESC] Back
+──────────────────────────────────────────────────────────────────────────────
+[C] CONTROL     [B] BETTING     [V] VIEW     [S] STATS     | [H] Help [Q] Quit
+
+Enter Amount Dialogue Box
+─────────────────────────
+
+With respect to the popup subwindow for entering bet amounts, it has some
+special behaviors that I'm still thinking through.  Since it is already
+focused on a particular bet and amount, it is natural to use it to help
+configure some automatic behaviors.
+
+The Amount Entry subwindow will support two menu entries
+such that if selected it uses the current entry value for:
+
+* setting the auto fill value for the current bet type, to be used for
+  default filling future bets of this type with the given amount.
+      
+* using the current bet type and amount to configure a quick bet. A
+  quick bet is shortcut that is assigned to a particular bet and amount,
+  and is given a fixed menu entry on the quick bet menu.  So for
+  example, the user presses 'q' (quick bet menu) followed by 'a' (the
+  first configured quick bet) could mean make a Place Bet on the 6 for
+  100.
+
+┌──────────────────────────┐
+│ Place Bet on 6           │
+├──────────────────────────┤
+│                          │
+│ Enter amount: 100        │
+│                          │
+│ [enter] Submit Bet       │
+│                          │
+│ [s] Save as AutoFill     │
+│ [q] Save as Quick Bet    │
+│                          │
+│ [esc] Back               │
+│                          │
+└──────────────────────────┘
+
+Amount.returnTarget = PlaceMenu
+Amount.returnTarget = BettingMenu
+
+Help Menu
+─────────
+
+┌────────────────────────────────┐
+│ Help Menu                      │
+├────────────────────────────────┤
+│ [m] User Manual                │
+│ [r] Craps Rules                │
+│ [esc] Back                     │
+└────────────────────────────────┘
+
+
+
+-------------------------------------------------------------
+
+18. One architectural point I'd strongly recommend
+
+Don't make your controller handlers responsible for understanding popup hierarchy.
+
+In other words, avoid code like:
+
+onOddsBet()
+{
+    ...
+    if (onlyOneBet)
+        ...
+    else
+        ...
+    
+    if (sticky)
+        ...
+    else
+        ...
+}
+
+Instead, I'd let the UI/menu layer own:
+
+Menu stack
+Parent
+Child
+Return behavior
+ESC
+Sticky/ephemeral behavior
+
+while the controller continues to deal with commands/events.
+
+
+-------------------------------------------------------------
+
+
+17. Your dynamic menus suggest a useful abstraction
+
+You have quite a few:
+
+Which Odds Bet
+Which Place Number
+Which Hardway
+Which Player
+Which Table
+Which Quick Bet
+Which Bet to Remove
+Which Bet to Set Working
+...
+
+They're all variations on:
+
+    Display a list of choices and invoke an action associated with the selected choice.
+
+I'd be tempted to have a generic menu model along the lines of:
+
+struct MenuItem
+{
+    char key;
+    std::string text;
+    std::function<void()> action;
+};
+
+with:
+
+class PopupMenu
+{
+    std::string title;
+    std::vector<MenuItem> items;
+    bool sticky;
+};
+
+Then dynamically generated menus don't need special UI infrastructure.
+
+The data that builds the menu is what changes.
+
+That seems particularly compatible with your existing event architecture.
+
+
+------------------------------------------------------
+
+Suggestion:
+
+    Let ESC always back out just one level (as you have now).
+
+    But also allow b (or something) as a shortcut back to the Betting Menu, regardless of depth.
+    This avoids “ESC fatigue.”
+
+Quick Bets
+
+When building a menu of quick bet choices, there will also need to be a
+controller function to obtain the current quick bets. This will also be
+necessary when editing quick bets via the configuration menu.
+
+For CUI, when a quick bet is set from the DialogAmountEntry, it is
+automatically assigned the next available slot in the quick bet
+list. I'm thinking the slots are associated with a single digit number
+starting at '1', so therefore 1,2,3,4,5,6,7,8,9. If we want to support
+more than just 9 quick bets then slots beyond 9 would be associated with
+single alpha character 'a','b','c' and so on. But in the spirit and
+purpose of quick bets I think a max of 9 is probably sufficient and will
+satisfy user convenience.
+
+The QuickBet class in controller has these responsibilities:
+
+* maintains a list of quick bets. std::list or std::vector is fine
+* works off of indexes, not key mappings
+* UI is responsible for presenting key mappings to quick bets if
+  any. Could be numbers or alphas or just highlighted entry or pointer
+  position.
+* applyQuickBet(size_t index);
+* setQuickBet(BetName betName, size_t pivot, bool oddsBet, Gen::Money amount);
+* deleteQuickBet(BetName betName, size_t pivot, bool oddsBet); shift entries if necessary, no empty slots
+* deleteQuickBet(size_t index); shift entries if necessary, no empty slots
+* getQuickBets() - returns a vector of quick bet entries
+
+Auto Fill
+
+The AutoFill class in controller has these responsibilities:
+
+* maintains a list of auto fill bets. std::vector is fine
+* amount = getAutoFill(BetName betName, size_t pivot, bool oddsBet);
+* setAutoFill(BetName betName, size_t pivot, bool oddsBet, Gen::Money amount);
+  replaces amount if the entry already exists
+* getAutoFills() - returns the vector of auto fill entries - so
+  it can be edited via configuration menu.
+* deleteAutoFill(BetName betName, size_t pivot, bool oddsBet); shift entries if necessary, no empty slots
+
+Naming Clarity for UI->Model and Model->UI
+------------------------------------------
+
+UI->Model
+
+*    Console/GUI screens issue readXxx() / cmdXxx() functions
+*    readXxx() prefix for CrapsReader (queries model directly),
+*    cmdXxx() prefix for CrapsEventEmitters (explicit "command"),
+*    onXxx() prefix for CrapsEventHandlers (handles event to Model),
+
+Model->UI
+
+*    emitXxx() prefix for ViewEventEmitters (emits event to UI),
+*    onXxx() prefix for ViewEventHandlers (handles event to UI),
+*    showXxx() prefix for ViewInterface (UI updates for GUI/Console).
+*    ConsoleView / GuiView implement showXxx() functions
+
+This gives you a very clear split and the separation makes it impossible
+to confuse an “event” with a “command.”
+
+Class                   Prefix        Direction
+----------------------  ------------  ------------------------
+ViewCommands            emitXxx()     Model → notifies Controller, creates Event
+ViewEventHandlers       onXxx()       Controller → processes Event, call ViewInterface
+ViewInterface           showXxx()     Notifies View (Console or GUI)
+CrapsCommands           cmdXxx()      UI → Controller (commands, createsEvent)
+CrapsEventHandlers      onXxx()       Controller → processes Event, executes model command
+CrapsReaders            readXxx()     UI → Controller (queries model directly read-only info)
+
+
+
+pub/sub event for UI menus and friends
+--------------------------------------
+
+class UIEventBus {
+public:
+    using Handler = std::function<void(const GameEvent&)>;
+    using SubscriptionId = size_t;
+
+    static UIEventBus& instance() {
+        static UIEventBus bus;
+        return bus;
+    }
+
+    // subscribe: returns a token you can use to unsubscribe
+    SubscriptionId subscribe(EventType type, Handler handler) {
+        auto id = nextId_++;
+        subscribers_[type].emplace_back(id, std::move(handler));
+        return id;
+    }
+
+    void unsubscribe(EventType type, SubscriptionId id) {
+        auto& vec = subscribers_[type];
+        vec.erase(
+            std::remove_if(vec.begin(), vec.end(),
+                [id](auto& pair) { return pair.first == id; }),
+            vec.end()
+        );
+    }
+
+    void publish(const GameEvent& ev) {
+        auto it = subscribers_.find(ev.type());
+        if (it != subscribers_.end()) {
+            for (auto& [id, handler] : it->second) {
+                handler(ev);
+            }
+        }
+    }
+
+private:
+    size_t nextId_{0};
+    std::unordered_map<EventType,
+        std::vector<std::pair<SubscriptionId, Handler>>> subscribers_;
+};
+
+
+Menus use it like this:
+
+class MenuBetting {
+public:
+    void onActivate() {
+        subId_ = UIEventBus::instance().subscribe(
+            EventType::ViewErrorDialog,
+            [this](const GameEvent& ev) {
+                if (ev.correlationId == myCorrelationId_) {
+                    showError(ev.message);
+                }
+            }
+        );
+    }
+
+    void onDeactivate() {
+        UIEventBus::instance().unsubscribe(EventType::ViewErrorDialog, subId_);
+    }
+
+private:
+    UIEventBus::SubscriptionId subId_{0};
+};
+
+
+
+
+-----------------------------------------------------------------------------
+
+Older stuff no longer relevant
+
+-----------------------------------------------------------------------------
+
+I'd like to pursue a variation on your recommendation.
+
+The top row is dedicated to table info and shows:
+  * current point, or 0 if coming out (frequently looked at so appears first)
+  * number of dice rolls so far (4 or 5 digits?)
+  * table name  (only looked at a couple of times, so can be out of the way, centered in its field)
+  * table min/max/odds (looked at only occasionally)
+  * (future) if playing with a countdown timer to next roll then 
+    I'd make room for that on this line, and move min/max/odds to a
+    menu entry or accessible via command 
+  
+Second row dedicated to roll history
+  * latest roll appears left most, others shift right
+  * format is selectable, example is showing one possible format
+  * if line is selected, then screen overlay shows full history
+
+Next to last row is the player row. Shows:
+  * Player name
+  * Current balance  
+  * balance difference from start of session +/-
+  * amount currently in bets on the table
+  * amount won on last roll
+  * amount lost on last roll
+  * player row is selectable maybe by clicking or command such that any
+    player can appear here, or perhaps an F-key cycles through players
+    
+Last row is command line as you suggest
+
+Here's my cut at this:
+
+┌────────────────────────────────────────────────────────────────────────┐
+│Point:10 | Roll:  273 | Las Vegas Strip     | min:$5 max:$2,000 odds:5x │
+├────────────────────────────────────────────────────────────────────────┤
+│4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4) 4(2,2) │
+├────────────────────────────────────────────────────────────────────────┤
+
+                         table layout here
+
+├────────────────────────────────────────────────────────────────────────┤
+│ Nathan: bal: $2,000 (+880) Betting: $320            Win: $220 Lose: $0 │
+├────────────────────────────────────────────────────────────────────────┤
+│ > command line here                                                    │
+└────────────────────────────────────────────────────────────────────────┘
+
+100x36
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ Point:10 | Roll:  273 | Las Vegas Strip       | min:$5 max:$2,000 odds:5x  Timer:--s │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4) 4(2,2) 8(4,4) 6(2,4)│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                      │
+│                       ( Craps Table Layout — 18 rows high )                          │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+│                                                                                      │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ MESSAGE: Welcome to Royal Craps!                                                     │
+│ MESSAGE: Nathan placed $20 on Pass Line                                              │
+│ MESSAGE: Shooter rolled a 6 — point is now 6                                         │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Nathan: bal: $2,000 (+880)  Betting: $320   Win: $220  Lose: $0                      │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ > command line here                                                                  │
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+
+┌────────────────────┐     ┌───────────────────┐
+│ Betting Menu       │     │ Betting Menu      │
+├────────────────────┤     ├───────────────────┤
+│ PassLine   "p"     │     │ 1. PassLine       │ 
+│ Come Bet   "c"     │     │ 2. Come Bet       │ 
+│ DontPass   "d"     │     │ 3. DontPass       │ 
+│ DontCome   "k"     │     │ 4. DontCome       │ 
+│ Odds Bet   "o" ... │     │ 5. Odds Bet   ... │ 
+│ Place Bet  "l" ... │     │ 6. Place Bet  ... │ 
+│ Hardways   "h" ... │     │ 7. Hardways   ... │ 
+│ Field Bet  "f"     │     │ 8. Field Bet      │ 
+│ C&E Bet    "e"     │     │ 9. C&E Bet        │ 
+│ AnyCraps   "a"     │     │ a. AnyCraps       │ 
+│ Any7 Bet   "7"     │     │ b. Any7 Bet       │ 
+│ Horn Bet   "n"     │     │ c. Horn Bet       │ 
+│ World Bet  "w"     │     │ d. World Bet      │ 
+│ Bet Flags  "t" ... │     │ e. Bet Flags  ... │ 
+│ Quick Bet  "q" ... │     │ f. Quick Bet  ... │ 
+│ Remove Bet "x" ... │     │ g. Remove Bet ... │ 
+│ Undo Last  "u"     │     │ h. Undo Last      │ 
+│ Roll Dice  "r"     │     │ r. Roll Dice      │ 
+└────────────────────┘     └───────────────────┘ 
+
+
+
+Rendered by ncurses program
+
+0  ┌─[Header]────────────────────────────────────────────────────────────┬─[Animation]────────────────┐
+1  │Header text here                                                     │Animation area              │
+2  ├─[History]───────────────────────────────────────────────────────────┤                            │
+3  │History entry                                                        │                            │
+4  ├─[Table]─────────────────────────────────────────────────────────────┤                            │
+5  │Table content...                                                     │                            │
+6  │                                                                     │                            │
+7  │                                                                     │                            │
+8  │                                                                     │                            │
+9  │                                                                     │                            │
+10 │                                                                     │                            │
+11 │                                                                     │                            │
+12 │                                                                     │                            │
+13 │                                                                     │                            │
+14 │                                                                     │                            │
+15 │                                                                     │                            │
+16 │                                                                     │                            │
+17 │                                                                     │                            │
+18 │                                                                     │                            │
+19 │                                                                     │                            │
+20 │                                                                     │                            │
+21 │                                                                     │                            │
+22 │                                                                     │                            │
+23 ├─[Message]───────────────────────────────────────────────────────────┼─[House]────────────────────┤
+24 │Messages go here                                                     │House: $1000                │
+25 │                                                                     │                            │
+26 │                                                                     │                            │
+27 │                                                                     │                            │
+28 │                                                                     │                            │
+29 │                                                                     ├─[Player]───────────────────┤
+30 │                                                                     │Player: $500                │
+31 │                                                                     │                            │
+32 │                                                                     │                            │
+33 │                                                                     │                            │
+34 │                                                                     │                            │
+35 │                                                                     │                            │
+36 │                                                                     │                            │
+37 └─────────────────────────────────────────────────────────────────────┴────────────────────────────┘
+
+
+
+22 rows content, 2 border rows
+┌───────────────────────┬──────────────────────────┐
+│ Pass Line o o o o o o │ Don't Pass   o o o o o o │
+│ Come      o o o o o o │ Dont Come    o o o o o o │
+│ Come 4    o o o o o o │ Dont Come 4  o o o o o o │
+│ Come 5    o o o o o o │ Dont Come 5  o o o o o o │
+│ Come 6    o o o o o o │ Dont Come 6  o o o o o o │
+│ Come 8    o o o o o o │ Dont Come 8  o o o o o o │
+│ Come 9    o o o o o o │ Dont Come 9  o o o o o o │
+│ Come 10   o o o o o o │ Dont Come 10 o o o o o o │
+│ Buy 4     o o o o o o │ Lay 4        o o o o o o │
+│ Buy 5     o o o o o o │ Lay 5        o o o o o o │
+│ Buy 6     o o o o o o │ Lay 6        o o o o o o │
+│ Buy 8     o o o o o o │ Lay 8        o o o o o o │
+│ Buy 9     o o o o o o │ Lay 9        o o o o o o │
+│ Buy 10    o o o o o o │ Lay 10       o o o o o o │
+│ Place 4   o o o o o o │ Hard 4       o o o o o o │
+│ Place 5   o o o o o o │ Hard 6       o o o o o o │
+│ Place 6   o o o o o o │ Hard 8       o o o o o o │
+│ Place 8   o o o o o o │ Hard 10      o o o o o o │
+│ Place 9   o o o o o o │ Any 7        o o o o o o │
+│ Field     o o o o o o │ Any Craps    o o o o o o │
+│ C&E       o o o o o o │ Horn         o o o o o o │
+└───────────────────────┴──────────────────────────┘
+
+I think this fits in minimal size 2 column adaptive layout
+
+19 rows content, 2 border rows, 77 columns
+┌───────────────────────┬───────────────────────────┬───────────────────────┐
+│           N A P L W   │              N A P L W    │           N A P L W   │
+│ Pass Line o o o o o o │ Don't Pass   o o o o o o  │ Hard 4    o o o o o o │
+│ Come      o o o o o o │ Dont Come    o o o o o o  │ Hard 6    o o o o o o │
+│ Come 4    o o o o o o │ Dont Come 4  o o o o o o  │ Hard 8    o o o o o o │
+│ Come 5    o o o o o o │ Dont Come 5  o o o o o o  │ Hard 10   o o o o o o │
+│ Come 6    o o o o o o │ Dont Come 6  o o o o o o  │ C&E       o o o o o o │
+│ Come 8    o o o o o o │ Dont Come 8  o o o o o o  │ Any 7     o o o o o o │
+│ Come 9    o o o o o o │ Dont Come 9  o o o o o o  │ Any Craps o o o o o o │
+│ Come 10   o o o o o o │ Dont Come 10 o o o o o o  │ Field     o o o o o o │
+│ Buy 4     o o o o o o │ Lay 4        o o o o o o  │                       │
+│ Buy 5     o o o o o o │ Lay 5        o o o o o o  │                       │
+│ Buy 6     o o o o o o │ Lay 6        o o o o o o  │                       │
+│ Buy 8     o o o o o o │ Lay 8        o o o o o o  │                       │
+│ Buy 9     o o o o o o │ Lay 9        o o o o o o  │                       │
+│ Buy 10    o o o o o o │ Lay 10       o o o o o o  │                       │
+│ Place 4   o o o o o o │ Place 8      o o o o o o  │                       │
+│ Place 5   o o o o o o │ Place 9      o o o o o o  │                       │
+│ Place 6   o o o o o o │ Place 10     o o o o o o  │                       │
+└───────────────────────┴───────────────────────────┴───────────────────────┘
+
+I've been experimenting with several table layouts to find one that fits
+in the minimum 100x36 terminal size. It must include all the bets that
+the game supports as well as the max number of players (6). I've come up
+with this one which I think works.
+
+Table layout: 18 rows content, 2 border rows, 70 columns
+
+┌────────────────────────┬──────────────────────┬────────────────────┐
+│                        │                      │                    │
+│            N A P L W   │          N A P L W   │        N A P L W   │
+│ PassLine   o o o o o o │ Place4   o o o o o o │ Buy4   o o o o o o │
+│ Come       o o o o o o │ Place5   o o o o o o │ Buy5   o o o o o o │
+│ Come4      o o o o o o │ Place6   o o o o o o │ Buy6   o o o o o o │
+│ Come5      o o o o o o │ Place8   o o o o o o │ Buy8   o o o o o o │
+│ Come6      o o o o o o │ Place9   o o o o o o │ Buy9   o o o o o o │
+│ Come8      o o o o o o │ Place10  o o o o o o │ Buy10  o o o o o o │
+│ Come9      o o o o o o │ Hard4    o o o o o o │ Lay4   o o o o o o │
+│ Come10     o o o o o o │ Hard6    o o o o o o │ Lay5   o o o o o o │
+│ DontPass   o o o o o o │ Hard8    o o o o o o │ Lay6   o o o o o o │
+│ DontCome   o o o o o o │ Hard10   o o o o o o │ Lay8   o o o o o o │
+│ DontCome4  o o o o o o │ C&E      o o o o o o │ Lay9   o o o o o o │
+│ DontCome5  o o o o o o │ Field    o o o o o o │ Lay10  o o o o o o │
+│ DontCome6  o o o o o o │                      │ AnyC   o o o o o o │
+│ DontCome8  o o o o o o │                      │ Any7   o o o o o o │
+│ DontCome9  o o o o o o │                      │                    │
+│ DontCome10 o o o o o o │                      │                    │
+└────────────────────────┴──────────────────────┴────────────────────┘
+

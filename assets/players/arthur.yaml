@@ -609,7 +609,7 @@ BetStats:
     total: 0
     max: 0
 SessionStats:
-  numSessionsAlltime: 31
+  numSessionsAlltime: 38
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 00:03:48
   history:
@@ -655,3 +655,45 @@ SessionStats:
       numPlayers: 1
       date: 2026-08-11T06:44:58.342202362
       duration: 0d 00:00:03
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-08-19T17:13:13.748531629
+      duration: 0d 00:00:20
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-08-19T17:21:19.987650110
+      duration: 0d 00:00:04
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-08-19T17:21:52.813453784
+      duration: 0d 00:00:05
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-08-19T17:30:22.836419942
+      duration: 0d 00:00:03
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-08-19T17:33:07.842533198
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-08-19T17:35:42.931575612
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-08-19T17:37:26.421239546
+      duration: 0d 00:00:01

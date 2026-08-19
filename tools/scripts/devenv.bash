@@ -34,6 +34,7 @@ alias bt="${CNTR_TECH} exec -it -w /work/\$(basename \$(pwd))              ${_GC
 alias bd="${CNTR_TECH} exec -it -w /work/\$(basename \$(pwd))/_build/debug ${_GCC_CNTR}"
 alias bp="${CNTR_TECH} exec -it -w /work/\$(basename \$(pwd))/_build/prod  ${_GCC_CNTR}"
 alias bbash="echo 'Use ctrl-p ctrl-q to quit'; ${CNTR_TECH} exec -it -w /work/\$(basename \$(pwd)) ${_GCC_CNTR} bash"
+alias run-royalcraps='podman exec -it -w /work/craps/_build/debug gcc14-tools bin/royalcraps --sys-config-dir /work/craps/assets/ --usr-config-dir /work/craps/assets/'
 
 unset _GCC_IMG
 unset _GCC_CNTR
