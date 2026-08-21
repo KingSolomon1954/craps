@@ -20,7 +20,7 @@ public:
     /// @{
     /// @}
     
-    /// @name Modifers
+    /// @name Modifiers
     /// @{
     static std::string toUpper(const std::string& s1);
     static std::string toLower(const std::string& s1);
