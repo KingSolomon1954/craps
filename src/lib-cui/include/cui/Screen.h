@@ -32,7 +32,7 @@ public:
     virtual ScreenType type() const;
     
     // Required
-    virtual void draw() = 0;    // call wnoutrefresh() on owned windows
+    virtual void draw() = 0;  // calls wnoutrefresh() on owned windows
     virtual void handleKey(int ch) = 0;
 
 protected:

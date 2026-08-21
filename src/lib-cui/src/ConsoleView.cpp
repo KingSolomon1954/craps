@@ -48,6 +48,10 @@ ConsoleView::~ConsoleView()
 void
 ConsoleView::init()
 {
+    // TODO handle size of user window
+    // int termRows, termCols;
+    // getmaxyx(stdscr, termRows, termCols);
+
     initscr();
     cbreak();
     noecho();

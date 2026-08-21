@@ -46,7 +46,7 @@ ScreenCrapsTable::ScreenCrapsTable()
     pMenuBetting_->setRootMenu(true);
     pMenuBetting_->setOwningScreen(this);
 
-    createSubwindows();
+    createContentWindows();
     rc = Ctrl::CrapsReaders::readTablePlayers(tableId_, playerIds_, ep);
     assert(playerIds_.size() > 0);
     LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
@@ -77,7 +77,7 @@ ScreenCrapsTable::~ScreenCrapsTable()
 //----------------------------------------------------------------
 
 void
-ScreenCrapsTable::createSubwindows()
+ScreenCrapsTable::createContentWindows()
 {
     // TODO handle size of user window
     // int termRows, termCols;
@@ -89,15 +89,15 @@ ScreenCrapsTable::createSubwindows()
     int rightInnerW = L::rightW - 2;
 
     // Left column
-    w_.header      = makeSubwin(0,             L::rowHistory,  leftInnerW, Column::Left);
-    w_.history     = makeSubwin(L::rowHistory, L::rowTable,    leftInnerW, Column::Left);
-    w_.table       = makeSubwin(L::rowTable,   L::rowMessage,  leftInnerW, Column::Left);
-    w_.message     = makeSubwin(L::rowMessage, L::totalRows-1, leftInnerW, Column::Left);
+    w_.header      = makeContentWindow(0,             L::rowHistory,  leftInnerW, Column::Left);
+    w_.history     = makeContentWindow(L::rowHistory, L::rowTable,    leftInnerW, Column::Left);
+    w_.table       = makeContentWindow(L::rowTable,   L::rowMessage,  leftInnerW, Column::Left);
+    w_.message     = makeContentWindow(L::rowMessage, L::totalRows-1, leftInnerW, Column::Left);
     
     // Right column
-    w_.animation   = makeSubwin(0,             L::rowMessage,  rightInnerW, Column::Right);
-    w_.houseBrief  = makeSubwin(L::rowMessage, L::rowPlayer,   rightInnerW, Column::Right);
-    w_.playerBrief = makeSubwin(L::rowPlayer,  L::totalRows-1, rightInnerW, Column::Right);
+    w_.animation   = makeContentWindow(0,             L::rowMessage,  rightInnerW, Column::Right);
+    w_.houseBrief  = makeContentWindow(L::rowMessage, L::rowPlayer,   rightInnerW, Column::Right);
+    w_.playerBrief = makeContentWindow(L::rowPlayer,  L::totalRows-1, rightInnerW, Column::Right);
 
     assert(w_.header      != nullptr);
     assert(w_.history     != nullptr);
@@ -111,7 +111,7 @@ ScreenCrapsTable::createSubwindows()
 //----------------------------------------------------------------
 
 WINDOW*
-ScreenCrapsTable::makeSubwin(
+ScreenCrapsTable::makeContentWindow(
     int topDivider,
     int bottomDivider,
     int innerW,
@@ -134,17 +134,19 @@ ScreenCrapsTable::draw()
 // std::cout << "Howie 48 ScreenCrapsTable::draw() \n";
 // std::this_thread::sleep_for(std::chrono::seconds(2));
 
-   drawFrame();
-   
-   drawHeader();
-   drawHistory();
-   drawTable();
-   drawMessages();
-   drawAnimation();
-   drawHouseBrief();
-   drawPlayerBrief();
+    drawBorders();
 
-   // doupdate();  called by ConsoleView
+    drawHeader();
+    drawHistory();
+    drawTable();
+    drawMessages();
+    drawAnimation();
+    drawHouseBrief();
+    drawPlayerBrief();
+
+    // ConsoleView::populateNavBar()
+
+    // doupdate();  called by ConsoleView
 
     // When time comes, use conditional test for pip drawing
     // auto pip = [&](int y, int x) {
@@ -160,7 +162,7 @@ ScreenCrapsTable::draw()
 //----------------------------------------------------------------
 
 void
-ScreenCrapsTable::drawFrame()
+ScreenCrapsTable::drawBorders()
 {
     using L = Layout;
 
@@ -214,6 +216,7 @@ ScreenCrapsTable::drawFrame()
         eraseConnectorsAllPlayers();
         drawConnectorsOnePlayer();
     }
+    
     wnoutrefresh(stdscr);
 }
 
@@ -319,6 +322,7 @@ void
 ScreenCrapsTable::drawHeader()
 {
     LOG_TRACE("ScreenCrapsTable::drawHeader()");
+    werase(w_.header);
     mvwprintw(w_.header,  0, 0, "Header text here");
     wnoutrefresh(w_.header);
 }
@@ -328,6 +332,7 @@ ScreenCrapsTable::drawHeader()
 void
 ScreenCrapsTable::drawHistory()
 {
+    werase(w_.history);
     mvwprintw(w_.history,  0, 0, "Roll history here");
     wnoutrefresh(w_.history);
 }
@@ -337,6 +342,7 @@ ScreenCrapsTable::drawHistory()
 void
 ScreenCrapsTable::drawTable()
 {
+    werase(w_.table);
     mvwprintw(w_.table,  0, 0, "Table View here");
     if (tableView_ == TableView::AllPlayers)
     {
@@ -371,6 +377,7 @@ ScreenCrapsTable::drawTableOnePlayer()
 
 void ScreenCrapsTable::drawMessages()
 {
+    werase(w_.message);
     mvwprintw(w_.message,  0, 0, "Message area here");
     wnoutrefresh(w_.message);
 }
@@ -379,6 +386,7 @@ void ScreenCrapsTable::drawMessages()
 
 void ScreenCrapsTable::drawAnimation()
 {
+    werase(w_.animation);
     mvwprintw(w_.animation,  0, 0, "Animation area here");
     wnoutrefresh(w_.animation);
 }
@@ -387,6 +395,7 @@ void ScreenCrapsTable::drawAnimation()
 
 void ScreenCrapsTable::drawHouseBrief()
 {
+    werase(w_.houseBrief);
     mvwprintw(w_.houseBrief,  0, 0, "House brief here");
     wnoutrefresh(w_.houseBrief);
 }
@@ -395,6 +404,7 @@ void ScreenCrapsTable::drawHouseBrief()
 
 void ScreenCrapsTable::drawPlayerBrief()
 {
+    werase(w_.playerBrief);
     mvwprintw(w_.playerBrief,  0, 0, "Player brief here");
     wnoutrefresh(w_.playerBrief);
 }

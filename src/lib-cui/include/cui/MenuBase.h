@@ -1,3 +1,22 @@
+
+
+
+
+// class MenuBase : public ViewSurface
+// {
+// public:
+//     ~MenuBase() override = default;
+
+//     void draw() override;
+//     void handleKey(int ch) override;
+
+// protected:
+//     virtual void drawMenu() = 0;
+//     virtual void handleMenuKey(int ch) = 0;
+// };
+
+
+
 //----------------------------------------------------------------
 //
 // File: MenuBase.h

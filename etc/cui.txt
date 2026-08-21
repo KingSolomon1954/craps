@@ -16,6 +16,56 @@ onGameXxx  - prefix for event handlers originating from the game/model
 GameController → GameEvent → EventQueue → ConsoleView → Screen Display
 
 
+CUI Classes
+───────────
+
+Ctrl::ViewInterface = interface through which the controller tells the UI what to show
+Cui::ConsoleManager = orchestrates the surfaces
+Cui::ViewSurface = an actual visible interactive UI surface
+Cui::ScreenBase = full-screen surface
+Cui::MenuBase = popup/menu surface
+Cui::DialogBase = popup/menu surface
+
+
+                         Ctrl::ViewInterface
+                                ▲
+                                │
+                         ConsoleManager (manages stack of ViewSurface*)
+                                │
+                                │ Has a virtual ViewSurface
+                                │
+                           ViewSurface
+                                ▲
+                                │
+                 ┌──────────────┼──────────────┐
+                 │              │              │
+            ScreenBase      MenuBase       DialogBase
+                 │              │              │
+            ┌────┴────┐     ┌───┴─────┐    ┌───┴─────┐
+            │         │     │         │    │         │
+         CrapsTable  Stats Betting Control Amount  Confirm
+
+
+ViewSurface
+    ├── ScreenBase
+    │     ├── ScreenCrapsTable
+    │     ├── ScreenPlayerStats
+    │     ├── ScreenTableStats
+    │     └── ...
+    │
+    ├── MenuBase
+    │     ├── MenuBetting
+    │     ├── MenuControl
+    │     ├── MenuView
+    │     ├── MenuStats
+    │     ├── MenuConfigure
+    │     ├── MenuOddsBet
+    │     └── ...
+    │
+    └── DialogBase
+          ├── DialogAmount
+          ├── DialogConfirm
+          └── ...
 
 
 Startup Handling
@@ -132,6 +182,49 @@ This makes performance snappy even in 80×24.
 
     If below minimum, pause game with resize prompt
 
+Vocabulary with ncurses
+───────────────────────
+
+| Term               | Meaning                                                                  |
+| ------------------ | ------------------------------------------------------------------------ |
+| **Screen**         | An entire application-level UI screen                                    |
+| **`stdscr`**       | ncurses' root `WINDOW*`                                                  |
+| **`WINDOW`**       | ncurses' rectangular character buffer/object                             |
+| **content window** | One of your `WINDOW*` areas used by a Screen                             |
+| **subwindow**      | Preferably reserve for actual ncurses `subwin()`/`derwin()` windows      |
+| **frame**          | Borders/dividers/junctions drawn around the Screen                       |
+| **navigation bar** | Persistent application-level UI component                                |
+| **popup**          | Temporary application-level UI component                                 |
+| **dialog**         | Temporary application-level UI component requesting/displaying something |
+
+Screen Drawing Rules
+────────────────────
+
+The full-screen layout/frame owns all borders, dividers, corners, and
+junction characters. Content subwindows own only their interior
+contents.
+
+The persistent navigation bar owns its own rectangular area/window, but
+its boundary is still drawn by the full-screen frame/layout.
+
+So the ownership model looks like this, for example:
+
+Screen
+│
+├── Frame/Layout
+│     └── all borders, dividers, corners, junctions
+│
+├── Content windows
+│     ├── Header
+│     ├── History
+│     ├── Table
+│     ├── Messages
+│     ├── Animation
+│     ├── House
+│     └── Player
+│
+└── Navigation window
+      └── navigation contents
 
 Player Subwindow
 ────────────────
@@ -182,7 +275,6 @@ The command window moves below this house subwindow.
 History Subwindow
 ─────────────────
 
-
 Start with simple single value for Dice History, want deeper history
 showing on screen.
 
@@ -196,8 +288,8 @@ of dice history.
 │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │
 
 
-Full Table View
-───────────────
+All Players View
+────────────────
 
 Table layout has three sections for bets. Each section has a list of bets
 along with an indication of which player has made that bet. Within each
@@ -234,7 +326,7 @@ also color coded over their column.
 20  │ DontCome8  o o o o o o │                      │ Any7   o o o o o o │                             │
 21  │ DontCome9  o o o o o o │                      │ Horn   o o o o o o │                             │
 22  │ DontCome10 o o o o o o │                      │ World  o o o o o o │                             │
-23  │                        │                      │                    │23                           │
+23  │                        │                      │                    │                             │
 24  ├────────────────────────┴──────────────────────┴────────────────────┼─────────────────────────────┤
 25  │ Nathan wins PassLine bet, +$200                                    │ House Bal: +$2,050          │
 26  │ Come out roll                                                      │ NumBets: 128 (68W, 60L)     │
@@ -253,8 +345,8 @@ also color coded over their column.
 38  │ [C] CONTROL        [B] BETTING       [V] VIEW       [S] STATS      |      [H] Help      [Q] Quit │
 39  └──────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-Focused Player View
-───────────────────
+One Player View
+───────────────
 
 0   ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
 1   │ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
@@ -835,26 +927,26 @@ Control Menu
 View Menu
 ─────────
 
-    ┌──────────────────────────┐
-    │ View Menu                │
-    ├──────────────────────────┤
-    │ [f] Full Table View      │
-    │ [n] Player Focus (next)  │
-    │ [p] Player Focus (prev)  │
-    └──────────────────────────┘
+    ┌───────────────────────┐
+    │ View Menu             │
+    ├───────────────────────┤
+    │ [f] All Players       │
+    │ [n] One Player (next) │
+    │ [p] One Player (prev) │
+    └───────────────────────┘
 
-    [f] Full Table View
-        Redraws screen to Full Table View.
-    [n] Focused Player View (next)
-        Redraws screen to Focused Table View.
-        If already on Focused Table View, then advance
+    [f] All Players View
+        Redraws screen to All Players table view.
+    [n] One Player View (next)
+        Redraws screen to One Player table View.
+        If already on One Player view, then advance
         the screen to show the next player at table, else
-        bring up user player.
-    [p] Focused Player View (prev)
-        Redraws screen to Focused Table View.
-        If already on Focused Table View, then advance
+        bring up One Player view.
+    [p] One Player View (prev)
+        Redraws screen to One Player table View.
+        If already on One Player view, then advance
         the screen to show the previous player at table, else
-        bring up user player.
+        bring up One Player view.
 
     Control returns to Betting state and Betting view
     Betting menu is active
@@ -954,7 +1046,8 @@ Stats Menu
     
     Shows summary stats across all sessions.
     Shows per session summary stats
-    Full screen, Future - support arrow key row-based scrolling up down
+    Full screen
+    Future - support arrow key row-based scrolling up down
 
 0   ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
 1   │ Table Session History - Las Vegas Daytime                    │ Current Balance: $100,000,000,000 │ 
@@ -963,10 +1056,10 @@ Stats Menu
 3   │ Num Sessions: 1,000      Avg Bets/Session: 121    Avg Duration: 0d 01:33:08                      │
 4   │ Avg Intake: $23,000,000  Avg Payout: $1,000       Avg Ending Balance: $1000                      │
 5   ├──────────────────────────────────────────────────────────────────────────────────────────────────┤    
-6   │ Date                Duration    Bets   Intake   Payout  Net W/L   Ending Bal    Players          │
-7   │ ─────────────────── ─────────── ─────  ──────── ─────── ───────── ────────────  ───────          │ 
-8   │ 2025-07-12T09:29:56 0d 01:33:08   112    246222  334577    +88355 111222333444        6          │
-9   │ 2025-05-12T08:05:44 0d 00:22:11    24      1009     950       +59 111222333555        6          │
+6   │ Date                Duration     Rolls Bets   Intake   Payout  Net W/L   Ending Bal    Players   │
+7   │ ─────────────────── ─────────── ────── ─────  ──────── ─────── ───────── ────────────  ───────   │ 
+8   │ 2025-07-12T09:29:56 0d 01:33:08   156    112    246222  334577    +88355 111222333444        6   │
+9   │ 2025-05-12T08:05:44 0d 00:22:11    77     24      1009     950       +59 111222333555        6   │
 10  │ ...                                                                                              │
 11  │ ...                                                                                              │
 12  │ ...                                                                                              │

@@ -105,17 +105,17 @@ private:
     MenuBetting*     pMenuBetting_ = nullptr;
     std::vector<Craps::PlayerId> playerIds_;
     
-    ScreenCrapsTable();  // private ctor
+    ScreenCrapsTable();  // ctor is private 
     void cycleTableView();
 
-    // Drawing screen borders/frame
-    void drawFrame();
+    // Drawing screen borders
+    void drawBorders();
     void drawConnectorsAllPlayers();
     void drawConnectorsOnePlayer();
     void eraseConnectorsAllPlayers();
     void eraseConnectorsOnePlayer();
     
-    // Drawing table subwindow
+    // Drawing table windows
     void drawHeader();
     void drawHistory();
     void drawTable();
@@ -127,14 +127,14 @@ private:
     void drawTableOnePlayer();
     Craps::PlayerId getPlayerAt(size_t index);
 
-    // Draw Amount subwindow
+    // Draw Amount windows
     // TODO
 
-    void createSubwindows();
-    WINDOW* makeSubwin(int topDivider,
-                       int bottomDivider,
-                       int innerW,
-                       Column col);
+    void createContentWindows();
+    WINDOW* makeContentWindow(int topDivider,
+                              int bottomDivider,
+                              int innerW,
+                              Column col);
 };
 
 // TODO: subscribe to players leaving/joining table
