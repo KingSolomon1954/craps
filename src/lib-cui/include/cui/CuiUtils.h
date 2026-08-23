@@ -14,11 +14,8 @@ namespace Cui {
 
 class CuiUtils
 {
-    /// @name Lifecycle
-    /// @{
-    /// @}
-
-    /// @name Modifiers
+public:
+    /// @name CUI Utilities
     /// @{
     static WINDOW* newContentWindow(
         int topRow,
@@ -30,13 +27,11 @@ class CuiUtils
         int borderBotRow,
         int borderLeftCol,
         int borderRightCol);
-    /// @}
-
-    /// @name Observers
-    /// @{
+    static WINDOW* makeCenteredWindow(
+        int h,
+        int w);
     /// @}
 };
-
 
 /*-----------------------------------------------------------*//**
 

@@ -35,9 +35,8 @@ CuiUtils::newContentWindow(
     int botRow,
     int leftCol,
     int rightCol)
-
 {
-    int height = botRow - topRow - 1;
+    int height = botRow   - topRow  + 1;
     int width  = rightCol - leftCol + 1;
     int startY = topRow;
     int startX = leftCol;
@@ -74,12 +73,35 @@ CuiUtils::newContentWindowByBorder(
     int borderRightCol)
 
 {
-    int height = borderBotRow   - borderTopRow  - 1;
-    int width  = borderRightCol - borderLeftCol - 1;
+    int height = (borderBotRow   - 1) - (borderTopRow  - 1) + 1;
+    int width  = (borderRightCol - 1) - (borderLeftCol - 1) + 1;
     int startY = borderTopRow  + 1;
     int startX = borderLeftCol + 1;
 
     return newwin(height, width, startY, startX);
+}
+
+//----------------------------------------------------------------
+//
+// Create a new window centered on the screen
+// @param h Desired height
+// @param w Desired width
+// @return A new WINDOW* positioned at the center
+//
+WINDOW*
+CuiUtils::makeCenteredWindow(int h, int w)
+{
+    int max_h, max_w;
+    getmaxyx(stdscr, max_h, max_w);
+
+    // Clamp requested size to screen size
+    if (h > max_h) h = max_h;
+    if (w > max_w) w = max_w;
+
+    int start_y = (max_h - h) / 2;
+    int start_x = (max_w - w) / 2;
+
+    return newwin(h, w, start_y, start_x);
 }
 
 //----------------------------------------------------------------

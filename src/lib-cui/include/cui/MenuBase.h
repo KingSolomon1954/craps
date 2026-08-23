@@ -1,22 +1,3 @@
-
-
-
-
-// class MenuBase : public ViewSurface
-// {
-// public:
-//     ~MenuBase() override = default;
-
-//     void draw() override;
-//     void handleKey(int ch) override;
-
-// protected:
-//     virtual void drawMenu() = 0;
-//     virtual void handleMenuKey(int ch) = 0;
-// };
-
-
-
 //----------------------------------------------------------------
 //
 // File: MenuBase.h
@@ -25,40 +6,35 @@
 
 #pragma once
 
-#include <cui/Screen.h>
+#include <cui/ViewSurface>
 
 namespace Cui {
+
+class WINDOW; // fwd
 
 class MenuBase : public Screen
 {
 public:
     /// @name Lifecycle
     /// @{
-    MenuBase(int h, int w);
-   ~MenuBase();
+   ~MenuBase() override = default;
     /// @}
 
     /// @name Modifiers
     /// @{
     void draw()            override;
     void handleKey(int ch) override;
-    void toggle();
-    void setRootMenu(bool root);
     /// @}
 
     /// @name Observers
     /// @{
-    Screen::ScreenType type() const override;
     /// @}
 
 protected:
     virtual void drawMenu()            = 0;
     virtual void handleMenuKey(int ch) = 0;
 
-    WINDOW* w_       = nullptr;
-    bool visible_    = false;
-    bool isRoot_     = false;
-    bool isCanceled_ = false;
+    WINDOW* w_ = nullptr;
 
 private:
 };
@@ -67,23 +43,26 @@ private:
 
 @class MenuBase
 
-@brief Base class for menus
+@brief Specialized surface type for menu screens
 
-Responsibilities of MenuBase
-
-@li knows if it’s visible or not,
-
-@li toggles on spacebar,
-
-@li can optionally handle ESC differently depending on whether it’s the
-    root menu or a child menu.
-
-@li draws itself to present menu options
-
-@li processes key presses and takes action
+@li Implements virtual ViewSurface interface
+@li Provides logic common for all menu UI classes
 
 */
 
 } // namespace Cui
 
 //----------------------------------------------------------------
+
+
+
+
+#ifdef 0
+    // From old MenuBase
+    void toggle();
+    void setRootMenu(bool root);
+    Screen::ScreenType type() const override;
+    bool visible_    = false;
+    bool isRoot_     = false;
+    bool isCanceled_ = false;
+#endif

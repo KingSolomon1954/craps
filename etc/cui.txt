@@ -25,6 +25,7 @@ Cui::ViewSurface = an actual visible interactive UI surface
 Cui::ScreenBase = full-screen surface
 Cui::MenuBase = popup/menu surface
 Cui::DialogBase = popup/menu surface
+Cui::CrapsUI = which craps surfaces exist and how they are composed
 
 
                          Ctrl::ViewInterface
@@ -44,6 +45,11 @@ Cui::DialogBase = popup/menu surface
             ┌────┴────┐     ┌───┴─────┐    ┌───┴─────┐
             │         │     │         │    │         │
          CrapsTable  Stats Betting Control Amount  Confirm
+
+            └─────────┴─────┴───┬─────┴────┴─────────┘
+                                │
+                             CrapsUI
+                         creates/owns them
 
 
 ViewSurface
@@ -196,6 +202,28 @@ Vocabulary with ncurses
 | **navigation bar** | Persistent application-level UI component                                |
 | **popup**          | Temporary application-level UI component                                 |
 | **dialog**         | Temporary application-level UI component requesting/displaying something |
+
+
+| Term                | Use it for                                                                     |
+| ------------------- | ------------------------------------------------------------------------------ |
+| **`draw()`**        | The virtual entry point on `ViewSurface`                                       |
+| **`drawBorders()`** | Drawing static/structural borders and junctions                                |
+| **`populate()`**    | Filling a window with its complete current contents                            |
+| **`update()`**      | Changing only dynamic data within an already-populated window                  |
+| **`refresh()`**     | **Don't use as your application method name**; reserve it for ncurses concepts |
+
+wrefresh(win); Take the contents of this WINDOW and make them appear on the physical terminal.
+wnoutrefresh(win); Copy the contents of this WINDOW into the virtual screen (newscr) without actually updating the terminal yet.
+doupdate(); actually updates the physical terminal based on the virtual screen.
+
+draw = render entry point
+drawBorders = structural rendering
+populate = completely fill contents
+update = incrementally change window contents
+transfer = move window contents to the ncurses' virtual/backing screen
+
+refresh = reserve for ncurses
+doupdate = ncurses' final terminal update
 
 Screen Drawing Rules
 ────────────────────

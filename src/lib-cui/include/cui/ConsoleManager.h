@@ -1,28 +1,119 @@
+//----------------------------------------------------------------
+//
+// File: ConsoleManager.h
+//
+//----------------------------------------------------------------
 
+#pragma once
 
+#include <controller/ViewInterface.h>
+#include <atomic>
+#include <unordered_map>
+#include <string>
+#include <thread>
+#include <vector>
+#include <mutex>
+#include <ncurses.h>
 
-class ConsoleManager : public ViewInterface
+namespace Cui {
+
+class ViewSurface;  // fwd
+
+class ConsoleManager : public Ctrl::ViewInterface
 {
-private:
-    std::vector<ViewSurface*> stack_;
-
 public:
-    void setSurface(ViewSurface*);
-    void pushSurface(ViewSurface*);
-    void popSurface();
+    /// @name Lifecycle
+    /// @{
+    ConsoleManager();
+   ~ConsoleManager();
+    static ConsoleManager* instance();
+    void init() override;
+    void prepareForShutdown() override;
+    /// @}
 
-    void redraw();
+    /// @name StackOps
+    /// @{
+    void setSurface (ViewSurface* pSurface);  // clear stack, push this (replace)
+    void pushSurface(ViewSurface* pSurface);  // overlay (pauses previous top)
+    void popSurface();                        // remove top, resume new top if any
     void handleKey(int ch);
+    
+    /// @}
+
+    /// @name InputHandling
+    /// @{
+    void inputThreadFunc(); // Input thread -> forward to top
+    /// @}
+
+    /// @name ViewHandlers
+    /// @{
+    void showSuccess(
+        Ctrl::EventType    orgEventType,
+        uint64_t           correlationId) override;
+    void showErrorDialog(
+        Ctrl::EventType    orgEventType,
+        uint64_t           correlationId,
+        const std::string& diag) override;
+    void showMakeBetSuccess(
+        Craps::BetId betId,
+        uint64_t     correlationId) override;
+    void showMakeOddsBetSuccess(
+        Craps::BetId betId,
+        uint64_t     correlationId) override;
+    void showMakeBetAutoSuccess(
+        Craps::BetId betId,
+        uint64_t     correlationId) override;
+    void showMakeBetAutoError(
+        Ctrl::EventType        orgEventType,
+        uint64_t               correlationId,
+        const Craps::PlayerId& playerId,
+        const std::string&     diag) override;
+    void showRollDiceCountDown(
+        uint64_t               correlationId,
+        int                    numSeconds) override;
+    void showRollDiceAnimation(
+        uint64_t               correlationId) override;
+    void showProgramExit() override;
+    /// @}
+
+    // Move this elsewhere, maybe CuiUtils
+    WINDOW* makeCenteredWindow(int h, int w);
+
+    bool useUnicodePips = false;
+
+private:
+    std::vector<ViewSurface*> stack_;    // non-owning stack
+    std::mutex stackMx_;
+    std::atomic<bool> running_{true};
+    std::thread inputThread_;
+
+    bool utf8_enabled();
 };
 
+/*-----------------------------------------------------------*//**
 
+@class ConsoleManager
 
-/* The nice thing is that ConsoleManager doesn't care. */
+@brief Console interaction with the user.
 
-/* It simply does: */
+Responsibilities of ConsoleView:
 
-/* surface->handleKey(ch); */
+@li UI Runtime
+@li UI Initialization & Screen hierarchy
+@li The main entry point for CUI ncurses
+@li Implements the UI run loop
+@li Implements the UI ViewInterface
+@li Owns/orchestrates the active surface view stack and ncurses lifecycle
+@li Initialize and shut down the ncurses environment safely
+@li Manages view surfaces, pushing/popping, unaware of whether
+    it's dealing with a screen, menu, or dialog box.
+@li Asynchronous input thread to obtain keys
+@li Each key forwarded to the active screen
+@li Delegates to next or previous screen for rendering/drawing
+@li Dispatches events (no console-side logic). Just forwards them to
+    Controller::ViewCommands.
+*/
 
-/* and: */
+} // namespace Cui
 
-/* surface->draw(); */
+//----------------------------------------------------------------

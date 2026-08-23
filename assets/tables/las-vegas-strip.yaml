@@ -938,9 +938,9 @@ RollStats:
     count: 0
     maxRepeats: 0
 SessionStats:
-  numSessionsAlltime: 83
+  numSessionsAlltime: 94
   firstSessionDate: 2025-06-25T14:30:00.000000000
-  longestSessionAlltime: 0d 02:24:31
+  longestSessionAlltime: 0d 04:17:54
   history:
     - numBets: 0
       amtIntake: 0
@@ -1056,3 +1056,69 @@ SessionStats:
       numPlayers: 0
       date: 2026-08-20T20:11:16.110617898
       duration: 0d 02:24:31
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:02:06.247837411
+      duration: 0d 00:07:57
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:10:06.672053940
+      duration: 0d 00:07:23
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:17:33.093461872
+      duration: 0d 00:04:31
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:22:06.010386792
+      duration: 0d 00:03:16
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:25:32.318525480
+      duration: 0d 00:05:58
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:31:32.926025437
+      duration: 0d 00:01:13
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:32:48.479933682
+      duration: 0d 00:01:21
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:34:37.907822959
+      duration: 0d 00:02:15
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-21T21:36:54.752099856
+      duration: 0d 01:39:06
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-22T21:46:55.626981566
+      duration: 0d 00:00:16
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-08-22T22:31:39.087567121
+      duration: 0d 04:17:54
