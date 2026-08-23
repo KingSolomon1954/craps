@@ -173,8 +173,8 @@ ConsoleManager::showSuccess(
 //
 void
 ConsoleManager::showErrorDialog(Ctrl::EventType    orgEventType,
-                             uint64_t           correlationId,
-                             const std::string& diag)
+                                uint64_t           correlationId,
+                                const std::string& diag)
 {
     // Inform all UI listeners
     // Notify menus/screens of an error, puts up an ErrorDialog

@@ -10,9 +10,9 @@
 using namespace Cui;
 
 //----------------------------------------------------------------
-
-/* Draws something like this.
-
+//
+// Draw outer most border and all the ScreenCrapsTable rectangles.
+/*    
  ┌──────────────────────────────────────┬──────────────┐
  │              Header                  │    Dice      │
  ├──────────────────────────────────────┤  Animation   │
@@ -27,12 +27,11 @@ using namespace Cui;
  │                                      │ Player Brief │
  └──────────────────────────────────────┴──────────────┘
 
-  This is drawn only once. The individual areas are each their own
-  window class and later modify (and restore) their immediate boxing
-  borders top/bottom/left/right as necessary with junctions to align
-  with internal element field boundaries. And the NavBar window class
-  will attach itself to the bottom by drawing and adjusting its outer
-  border to overwrite "T's" instead of corners.
+  This layout is drawn once. Then the individual areas/rectangles are
+  each their own window class and they will soon modify their boxing
+  rectangle as necessary with junctions to align with internal element
+  separators. The NavBar window class will draw itself and attach to the
+  bottom of LayoutCrapsScreen.
 
  ├                                                     ┤
  │                        NavBar                       │
@@ -42,26 +41,32 @@ using namespace Cui;
 void
 LayoutCrapsScreen::draw()
 {
-    using S = Layout;
-    using L = LayoutCrapsScreen;
+    using O = LayoutConsole;
+    using C = LayoutCrapsScreen;
 
-    box(stdscr, 0, 0);  // 0,0 uses default chars vert and horiz char
+    // But stdscr might be larger than we want our Craps Table
+    // So don't use box(), or wborder()
+    // box(stdscr, 0, 0);  // 0,0 uses default chars vert and horiz char
 
-#if 0    
-    // Draw full screen outside borders. 4 lines.
-    mvhline(S::screenBorderRowTop, S::screenBorderColLeft,  ACS_HLINE, S::screenWidth);
-    mvhline(S::screenBorderRowBot, S::screenBorderColLeft,  ACS_HLINE, S::screenWidth);
-    mvvline(S::screenBorderRowTop, S::screenBorderColLeft,  ACS_VLINE, S::screenHeight);
-    mvvline(S::screenBorderRowTop, S::screenBorderColRight, ACS_VLINE, S::screenHeight);
-
-    // Patch up outer four corners
-    mvaddch(S::screenBorderRowTop, S::screenBorderColLeft,  ACS_ULCORNER);
-    mvaddch(S::screenBorderRowTop, S::screenBorderColRight, ACS_URCORNER);
-    mvaddch(S::screenBorderRowBot, S::screenBorderColLeft,  ACS_LLCORNER);
-    mvaddch(S::screenBorderRowBot, S::screenBorderColRight, ACS_LRCORNER);
-#endif
     
-    // Internal Horizontal lines
+    // Draw the border encapsulating the minimum size layout. This works
+    // even if stdscr is larger than the minimum craps table size. Avoid
+    // functions box() and wborder() which use stdscr dimensions
+    // which are likely larger than the CrapsTableScreen since stdscr
+    // is auto initialized to the terminal window size.
+
+    mvhline(O::contentRowTop, O::contentColLeft,  ACS_HLINE, O::contentWidth);
+    mvhline(O::contentRowBot, O::contentColLeft,  ACS_HLINE, O::contentWidth);
+    mvvline(O::contentRowTop, O::contentColLeft,  ACS_VLINE, O::contentHeight);
+    mvvline(O::contentRowTop, O::contentColRight, ACS_VLINE, O::contentHeight);
+
+    // Now the four corners
+    mvaddch(O::contentRowTop, O::contentColLeft,  ACS_ULCORNER);
+    mvaddch(O::contentRowTop, O::contentColRight, ACS_URCORNER);
+    mvaddch(O::contentRowBot, O::contentColLeft,  ACS_LLCORNER);
+    mvaddch(O::contentRowBot, O::contentColRight, ACS_LRCORNER);
+    
+    // Horizontal lines
     mvhline(L::rollHistBorderTopRow,    L::rollHistBorderLeftCol,    ACS_HLINE, L::rollHistBorderRightCol    - L::rollHistBorderLeftCol    + 1);
     mvhline(L::playerAreaBorderTopRow,  L::playerAreaBorderLeftCol,  ACS_HLINE, L::playerAreaBorderRightCol  - L::playerAreaBorderLeftCol  + 1);
     mvhline(L::messageBorderTopRow,     L::messageBorderLeftCol,     ACS_HLINE, L::messageBorderRightCol     - L::messageBorderLeftCol     + 1);

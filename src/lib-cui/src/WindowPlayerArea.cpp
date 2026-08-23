@@ -33,7 +33,7 @@ PlayerArea::PlayerArea()
 
 //----------------------------------------------------------------
 
-PlayerArea::~PlayerArea()
+WindowPlayerArea::~WindowPlayerArea()
 {
     if (pWindow_ != nullptr)
     {
@@ -46,9 +46,9 @@ PlayerArea::~PlayerArea()
 // Move window contents to ncurses virtual backing store
 //
 void
-PlayerArea::transfer();
+WindowPlayerArea::transfer();
 {
-    wnoutrefresh(stdscr);
+    wnoutrefresh(pWindow_);
 }
 
 //----------------------------------------------------------------

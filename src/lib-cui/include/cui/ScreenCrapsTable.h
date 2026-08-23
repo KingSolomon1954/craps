@@ -46,22 +46,26 @@ private:
     Craps::PlayerId  userPlayerId_;
     Craps::TableId   tableId_;
     std::string      lineBuffer_;
-    PlayerArea       playerArea_ = PlayerArea::AllPlayers;
-    size_t           onePlayerIndex_ = 0;  // For cycling thru players
     MenuBetting*     pMenuBetting_ = nullptr;
     std::vector<Craps::PlayerId> playerIds_;
+
+    // Window Classes
+    Header*      pHeader_;
+    RollHistory* pRollHistory_;
+    WindowPlayerArea*  pPlayerArea_;
+    Messages*    pMessages_;
+    Animation*   pAnimation_;
+    HouseBrief*  pHouseBrief_;
+    PlayerBrief* pPlayerBrief_;
     
     ScreenCrapsTable();  // ctor is private
     
-    void cyclePlayerArea();
-
     void drawCrapsScreen();
     void transfer();  // Move window contents to ncurses backing store
     
     // Populating table windows
     void populateHeader();
     void populateRollHistory();
-    void populatePlayerArea();
     void populateMessages();
     void populateAnimation();
     void populateHouseBrief();

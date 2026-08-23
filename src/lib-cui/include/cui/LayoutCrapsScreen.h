@@ -8,8 +8,6 @@
 
 namespace Cui {
     
-// ScreenCrapsTable owns the geometry of all its windows.
-    
 struct LayoutCrapsScreen
 {
     // Header Window occupies rows 0-2, cols 0-69

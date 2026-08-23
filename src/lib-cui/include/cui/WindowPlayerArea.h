@@ -7,19 +7,20 @@
 #pragma once
 
 #include <cui/LayoutCrapsScreen.h>
+#include <cassert>
 
 namespace Cui
 {
 
 struct WINDOW; // fwd
     
-class PlayerArea
+class WindowPlayerArea
 {
 public:
     /// @name Lifecycle
     /// @{
-    PlayerArea();
-   ~PlayerArea();
+    WindowPlayerArea();
+   ~WindowPlayerArea();
     /// @}
 
     /// @name Modifiers
@@ -45,12 +46,12 @@ private:
         static constexpr int playerAreaHeight   = playerAreaBotRow   - playerAreaTopRow  + 1;
         static constexpr int playerAreaWidth    = playerAreaRightCol - playerAreaLeftCol + 1;
 
-        // static constexpr int playerAreaTopRow   = 5;
-        // static constexpr int playerAreaBotRow   = 23;
-        // static constexpr int playerAreaLeftCol  = 1;
-        // static constexpr int playerAreaRightCol = 68;
-        // static constexpr int playerAreaHeight   = 19;
-        // static constexpr int playerAreaWidth    = 67;
+        static_assert(playerAreaTopRow   == 5);
+        static_assert(playerAreaBotRow   == 23);
+        static_assert(playerAreaLeftCol  == 1);
+        static_assert(playerAreaRightCol == 68);
+        static_assert(playerAreaHeight   == 19);
+        static_assert(playerAreaWidth    == 67);
     };        
 
     struct LayoutAllPlayers

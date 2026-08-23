@@ -40,15 +40,14 @@ ScreenCrapsTable::ScreenCrapsTable()
         throw std::runtime_error(ep.diag);
     }
 
+    rc = Ctrl::CrapsReaders::readTablePlayers(tableId_, playerIds_, ep);
+    assert(playerIds_.size() > 0);
+
     // Obtain our root menu and give it a pointer back to us.
     pMenuBetting_ = MenuBetting::instance();
     pMenuBetting_->setRootMenu(true);
     pMenuBetting_->setOwningScreen(this);
 
-    createContentWindows();
-
-    rc = Ctrl::CrapsReaders::readTablePlayers(tableId_, playerIds_, ep);
-    assert(playerIds_.size() > 0);
     LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
 }
 
@@ -95,9 +94,9 @@ ScreenCrapsTable::transfer();
 void
 ScreenCrapsTable::drawCrapsScreen()
 {
-    werase(pWindow_);
+    werase(stdscr);
     
-    LayoutCrapsScreen::drawBorders();
+    LayoutCrapsScreen::draw();
 
     pHeader_      ->draw();
     pRollHistory_ ->draw();
@@ -109,7 +108,7 @@ ScreenCrapsTable::drawCrapsScreen()
     ConsoleManager::getNavWindow()->draw();
 
     transfer(); 
-    doupdate(); // Paint the actual terminal screen
+    doupdate(); // Paint the physical screen
 }
 
 //----------------------------------------------------------------
