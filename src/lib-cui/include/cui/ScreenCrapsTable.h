@@ -6,10 +6,15 @@
 
 #pragma once
 
-#include <ncurses.h>
 #include <cui/ScreenBase.h>
-#include <cui/ConsoleLayout.h>
-#include <craps/CrapsTypes.h>
+#include <cui/WindowHeader.h>
+#include <cui/WindowRollHistory.h>
+#include <cui/WindowWindowPlayerArea.h>
+#include <cui/WindowMessages.h>
+#include <cui/WindowAnimation.h>
+#include <cui/WindowHouseBrief.h>
+#include <cui/WindowPlayerBrief.h>
+#include <ncurses.h>
 
 namespace Cui {
 
@@ -21,59 +26,40 @@ public:
     /// @name Lifecycle
     /// @{
    ~ScreenCrapsTable() override;
-    static ScreenCrapsTable* instance();
     /// @}
     
     /// @name Modifiers
     /// @{
     void draw()            override;  // from ViewSurface
     void onAttach()        override;  // from ViewSurface
+    void onDetach()        override;  // from ViewSurface
+    void onPause()         override;  // from ViewSurface
+    void onResume()        override;  // from ViewSurface
     void handleKey(int ch) override;  // from ViewSurface
     /// @}
 
-    void onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid);
-    void onBetFailed(const Craps::PlayerId& pid, const std::string& reason);
-    void onPlayerJoined(const Craps::PlayerId& pid);
-    void onPlayerLeft  (const Craps::PlayerId& pid);
-
     /// @name Observers
     /// @{
+    static ScreenCrapsTable* instance();
     /// @}
 
 private:
-
     // Order doesn't matter    
-    Craps::PlayerId  userPlayerId_;
-    Craps::TableId   tableId_;
-    std::string      lineBuffer_;
-    MenuBetting*     pMenuBetting_ = nullptr;
-    std::vector<Craps::PlayerId> playerIds_;
 
-    // Window Classes
-    Header*      pHeader_;
-    RollHistory* pRollHistory_;
-    WindowPlayerArea*  pPlayerArea_;
-    Messages*    pMessages_;
-    Animation*   pAnimation_;
-    HouseBrief*  pHouseBrief_;
-    PlayerBrief* pPlayerBrief_;
+    WindowHeader           wHeader_;
+    WindowRollHistory      wRollHistory_;
+    WindowWindowPlayerArea wPlayerArea_;
+    WindowMessages         wMessages_;
+    WindowAnimation        wAnimation_;
+    WindowHouseBrief       wHouseBrief_;
+    WindowPlayerBrief      wPlayerBrief_;
     
-    ScreenCrapsTable();  // ctor is private
+    std::string            lineBuffer_;
+    MenuBetting*           pMenuBetting_ = nullptr;
     
+    ScreenCrapsTable();  // private ctor
     void drawCrapsScreen();
-    void transfer();  // Move window contents to ncurses backing store
-    
-    // Populating table windows
-    void populateHeader();
-    void populateRollHistory();
-    void populateMessages();
-    void populateAnimation();
-    void populateHouseBrief();
-    void populatePlayerBrief();
-    void populateAllPlayers();
-    void populateOnePlayer();
-    
-    Craps::PlayerId getPlayerAt(size_t index);
+    void drawNavBar();
 };
 
 /*-----------------------------------------------------------*//**
@@ -88,7 +74,6 @@ private:
 @li screen-level junctions
 @li overall composition
 
- 
 */
 
 // TODO: subscribe to players leaving/joining table

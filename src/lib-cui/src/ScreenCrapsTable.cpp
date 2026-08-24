@@ -6,43 +6,17 @@
 
 #include <cui/ScreenCrapsTable.h>
 #include <cui/LayoutCrapsScreen.h>
-#include <cui/CuiUtils.h>
-#include <controller/CrapsGame.h>
-#include <controller/CrapsReaders.h>
-#include <gen/ErrorPass.h>
-#include <gen/ReturnCode.h>
 #include <gen/Logger.h>
 #include <cassert>
 
 using namespace Cui;
 
-#include <iostream>
-#include <chrono>
-
 //----------------------------------------------------------------
 
 ScreenCrapsTable::ScreenCrapsTable()
 {
-    Gen::ErrorPass ep;
     LOG_TRACE("Entered ScreenCrapsTable::ctor()");
     
-    auto rc = Ctrl::CrapsReaders::getUserPlayer(userPlayerId_, ep);
-    if (rc == Gen::ReturnCode::Fail)
-    {
-        ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
-        throw std::runtime_error(ep.diag);
-    }
-
-    rc = Ctrl::CrapsReaders::getActiveCrapsTable(tableId_, ep);
-    if (rc == Gen::ReturnCode::Fail)
-    {
-        ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
-        throw std::runtime_error(ep.diag);
-    }
-
-    rc = Ctrl::CrapsReaders::readTablePlayers(tableId_, playerIds_, ep);
-    assert(playerIds_.size() > 0);
-
     // Obtain our root menu and give it a pointer back to us.
     pMenuBetting_ = MenuBetting::instance();
     pMenuBetting_->setRootMenu(true);
@@ -78,18 +52,10 @@ ScreenCrapsTable::draw()  // Override
 
 //----------------------------------------------------------------
 //
-// Move window contents to ncurses virtual backing store
-//
-void
-
-ScreenCrapsTable::transfer();
-{
-    wnoutrefresh(stdscr);
-}
-
-//----------------------------------------------------------------
-//
 // Internal entry point to draw craps screen.
+//
+// Each draw() does its own transfer()
+// Caller is responsible for eventual doupdate()
 //
 void
 ScreenCrapsTable::drawCrapsScreen()
@@ -98,18 +64,108 @@ ScreenCrapsTable::drawCrapsScreen()
     
     LayoutCrapsScreen::draw();
 
-    pHeader_      ->draw();
-    pRollHistory_ ->draw();
-    pPlayerArea_  ->draw();
-    pMessages_    ->draw();
-    pAnimation_   ->draw();
-    pHouseBrief_  ->draw();
-    pPlayerBrief_ ->draw();
-    ConsoleManager::getNavWindow()->draw();
-
-    transfer(); 
-    doupdate(); // Paint the physical screen
+    wHeader_.draw();
+    wRollHistory_.draw();
+    wPlayerArea_.draw();
+    wMessages_.draw();
+    wAnimation_.draw();
+    wHouseBrief_.draw();
+    wPlayerBrief_.draw();
+    drawNavBar();
 }
+
+//----------------------------------------------------------------
+//
+// What might be done in onAttach()
+//
+// * Start a timer/animation associated with the surface.
+// * Subscribe to events that should only be received while
+//   the surface is active.
+// * Reset transient interaction state.
+// * Establish the initial input mode.
+// * Set the NavBar/context for the surface, if you decide to do
+//   that there.
+// * Trigger an initial data acquisition if appropriate.
+//    
+void
+ScreenCrapsTable::onAttach()
+{
+    LOG_TRACE("ScreenCrapsTable::onAttach()");
+    // TODO
+    // Maybe get the user player. Maybe user changed via the
+    // control menu. Should be listening for new user events.
+}
+
+//----------------------------------------------------------------
+//
+// Basically undo what was done during onAttach()
+//
+void
+ScreenCrapsTable::onDetach()
+{
+    LOG_TRACE("ScreenCrapsTable::onDetach()");
+    // TODO
+}
+
+//----------------------------------------------------------------
+//
+// Stop timers if any and so on.
+//
+void
+ScreenCrapsTable::onPause()
+{
+    LOG_TRACE("ScreenCrapsTable::onPause()");
+    // TODO
+}
+
+//----------------------------------------------------------------
+//
+// Start/restart timers if any and so on.
+//
+void
+ScreenCrapsTable::onResume()
+{
+    LOG_TRACE("ScreenCrapsTable::onResume()");
+    // TODO
+}
+
+//----------------------------------------------------------------
+//
+// Input is handled by menu MenuBetting.
+//
+void
+ScreenCrapsTable::handleKey(int ch)
+{
+    (void) ch;
+    LOG_TRACE("ScreenCrapsTable::handleKey() should "
+              "not get here:(" + std::to_string(ch) + ")");
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::drawNavBar()
+{
+    auto pWin = WindowNavBar::instance();
+    
+    pWin->clear();
+    pWin->display(
+    "[C] Control [B] BETTING [V] View [S] Stats | [H] Help [Q] Quit");
+}
+
+//----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+#if 0
 
 //----------------------------------------------------------------
 
@@ -167,96 +223,6 @@ void ScreenCrapsTable::populatePlayerBrief()
     mvwprintw(w_.playerBrief,  0, 0, "Player brief here");
     wnoutrefresh(w_.playerBrief);
 }
-
-//----------------------------------------------------------------
-
-Craps::PlayerId
-ScreenCrapsTable::getPlayerAt(size_t index)
-{
-    // TODO lookup
-    return 0;
-}
-
-//----------------------------------------------------------------
-//
-// Menu processing calls these onXxx functions for redrawing
-// Redrawing functions. Prefixed with onXxx called by Menu processing
-//
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid)
-{
-    // TODO
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::onBetFailed(const Craps::PlayerId& pid,
-                              const std::string& reason)
-{
-    // TODO
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::onPlayerJoined(const Craps::PlayerId& pid)
-{
-    // TODO
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::onPlayerLeft(const Craps::PlayerId& pid)
-{
-    // TODO
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::onAttach()
-{
-    LOG_TRACE("ScreenCrapsTable::onAttach()");
-    view_.pushScreen(pMenuBetting_);
-
-    
-    drawCrapsScreen();
-    drawBorders();
-    header.drawLayout();
-    rollHistory.drawLayout();
-    playerArea.drawLayout();
-    ...
-}
-
-//----------------------------------------------------------------
-//
-// Input is handled by menu MenuBetting.
-//
-void
-ScreenCrapsTable::handleKey(int ch)
-{
-    (void) ch;
-    LOG_TRACE("ScreenCrapsTable::handleKey() should "
-              "not get here:(" + std::to_string(ch) + ")");
-}
-
-//----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-#if 0
 
 //----------------------------------------------------------------
 //
@@ -353,6 +319,8 @@ ScreenCrapsTable::drawInputPrompt()
 }
 
 //----------------------------------------------------------------
+
+#include <controller/CrapsGame.h>
 
 void
 ScreenCrapsTable::menuInputBetting(int ch)

@@ -5,13 +5,14 @@
 //----------------------------------------------------------------
 
 #include <cui/ConsoleManager.h>
-#include <cassert>
-#include <chrono>
-#include <locale.h>
+#include <cui/ViewSurface.h>
 #include <controller/Globals.h>
 #include <controller/GameEvent.h>
 #include <controller/GameController.h>
 #include <gen/Logger.h>
+#include <cassert>
+#include <chrono>
+#include <locale.h>
 
 using namespace Cui;
 using namespace std::chrono_literals;
@@ -21,7 +22,7 @@ using namespace std::chrono_literals;
 ConsoleManager::ConsoleManager()
 {
     setlocale(LC_ALL, "");   // enable locale detection
-    useUnicodePips = utf8_enabled();
+    useUnicodePips_ = utf8_enabled();
     LOG_DEBUG("useUnicodePips: " + std::to_string(useUnicodePips));
 }
 
@@ -62,8 +63,6 @@ ConsoleManager::init()
     start_color();
     use_default_colors();
 
-    setSurface(ViewSurface* pSurface); // Starting screen for the game
-
     inputThread_ = std::thread(&ConsoleManager::inputThreadFunc, this);
 }
 
@@ -89,6 +88,15 @@ ConsoleManager::prepareForShutdown()
 //----------------------------------------------------------------
 
 void
+ConsoleManager::draw(ViewSurface* pSurface)
+{
+    pSurface->draw();
+    doupdate();  // Paint the physical screen
+}
+
+//----------------------------------------------------------------
+
+void
 ConsoleManager::setSurface(ViewSurface* pSurface)
 {
     std::lock_guard<std::mutex> lock(stackMx_);
@@ -96,7 +104,7 @@ ConsoleManager::setSurface(ViewSurface* pSurface)
     stack_.clear();
     stack_.push_back(pSurface);
     pSurface->onAttach();
-    pSurface->draw();
+    draw(pSurface);
 }
 
 //----------------------------------------------------------------
@@ -108,7 +116,7 @@ ConsoleManager::pushSurface(ViewSurface* pSurface)
     if (!stack_.empty()) stack_.back()->onPause();
     stack_.push_back(pSurface);
     pSurface->onAttach();
-    pSurface->draw();
+    draw(pSurface);
 }
 
 //----------------------------------------------------------------
@@ -127,7 +135,7 @@ ConsoleManager::popSurface()
     {
         stack_.back()->onResume();
     }
-    pSurface->draw();
+    draw(pSurface);
 }
 
 //----------------------------------------------------------------
@@ -156,6 +164,33 @@ ConsoleManager::inputThreadFunc()
         }
     }
 }
+
+//----------------------------------------------------------------
+
+bool
+ConsoleManager::utf8_enabled()
+{
+    const char* loc = setlocale(LC_CTYPE, nullptr);
+    if (!loc) return false;
+    std::string s(loc);
+    return s.find("UTF-8") != std::string::npos || s.find("utf8") != std::string::npos;
+}
+
+//----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------
+
+Consider later all these "show" functions when event handling
+is re-architected. OK to stay here for now.
 
 //----------------------------------------------------------------
 
@@ -250,17 +285,6 @@ void
 ConsoleManager::showProgramExit()
 {
     // TODO
-}
-
-//----------------------------------------------------------------
-
-bool
-ConsoleManager::utf8_enabled()
-{
-    const char* loc = setlocale(LC_CTYPE, nullptr);
-    if (!loc) return false;
-    std::string s(loc);
-    return s.find("UTF-8") != std::string::npos || s.find("utf8") != std::string::npos;
 }
 
 //----------------------------------------------------------------

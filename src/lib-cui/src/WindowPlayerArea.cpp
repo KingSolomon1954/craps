@@ -4,24 +4,20 @@ a//----------------------------------------------------------------
 //
 //----------------------------------------------------------------
 
+#include <cui/WindowPlayerArea.h>
+#include <cui/CuiUtils.h>
+#include <controller/CrapsReaders.h>
+#include <gen/ErrorPass.h>
+#include <gen/Logger.h>
 #include <ncurses.h>
-#include <cassert>
 
-/*
-update()
-    Incrementally modify selected content.
+using namespace Cui;
 
-transfer()
-    Move window contents to the ncurses virtual/backing screen.
-
-doupdate()
-    ncurses operation to update physical terminal screen
-*/
-    
 //----------------------------------------------------------------
 
-PlayerArea::PlayerArea()
+WindowPlayerArea::WindowPlayerArea()
 {
+    initPlayers();
     pWindow_ = newwin(
         Layout::playerAreaHeight,
         Layout::playerAreaWidth,
@@ -33,7 +29,30 @@ PlayerArea::PlayerArea()
 
 //----------------------------------------------------------------
 
-WindowPlayerArea::~WindowPlayerArea()
+void
+WindowPlayerArea::initPlayers()
+{
+    auto rc = Ctrl::CrapsReaders::getUserPlayer(curPlayerId_, ep);
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("WindowPlayerArea::ScreenCrapsTable(): unable to init; ");
+        throw std::runtime_error(ep.diag);
+    }
+
+    rc = Ctrl::CrapsReaders::getActiveCrapsTable(tableId_, ep);
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
+        throw std::runtime_error(ep.diag);
+    }
+
+    rc = Ctrl::CrapsReaders::readTablePlayers(tableId_, playerIds_, ep);
+    assert(playerIds_.size() > 0);
+}
+
+//----------------------------------------------------------------
+
+WindowWindowPlayerArea::~WindowPlayerArea()
 {
     if (pWindow_ != nullptr)
     {
@@ -42,24 +61,16 @@ WindowPlayerArea::~WindowPlayerArea()
 }
 
 //----------------------------------------------------------------
-//
-// Move window contents to ncurses virtual backing store
-//
-void
-WindowPlayerArea::transfer();
-{
-    wnoutrefresh(pWindow_);
-}
-
-//----------------------------------------------------------------
 
 void
 WindowPlayerArea::draw()
 {
     werase(pWindow_);
+    
     drawBorders();
+    drawStaticContent();
     populate();
-    transfer();
+    CuiUtils::transfer(pWindow_);
 }
 
 //----------------------------------------------------------------
@@ -67,14 +78,12 @@ WindowPlayerArea::draw()
 // The outer border of PlayerArea is smooth and already drawn by
 // ScreenCrapsTable. Here we modify the outer borders to place
 // junctions that mate with our internal lines and fields.
-// And we draw any static inner separators and borders.
 //    
 void
 WindowPlayerArea::drawBorders()
 {
     drawExternalJunctions();
     drawInternalBorders();
-    drawStaticContent();
 }
 
 //----------------------------------------------------------------
@@ -82,7 +91,7 @@ WindowPlayerArea::drawBorders()
 void
 WindowPlayerArea::drawExternalJunctions()
 {
-    if (playerArea_ == PlayerArea::AllPlayers)
+    if (currentFocus_ == OneOrAll::AllPlayers)
     {
         eraseExternalJunctionsOnePlayer();
         drawExternalJunctionsAllPlayers();
@@ -196,9 +205,14 @@ void
 WindowPlayerArea::drawInternalBorders()
 {
     // No need to erase, window was cleared before this
-    playerArea_ == PlayerArea::AllPlayers ?
-        drawInternalBordersAllPlayers() :
+    if (currentFocus_ == OneOrAll::AllPlayers)
+    {
+        drawInternalBordersAllPlayers();
+    }
+    else
+    {
         drawInternalBordersOnePlayer();
+    }
 }
 
 //----------------------------------------------------------------
@@ -218,13 +232,20 @@ WindowPlayerArea::drawInternalBordersOnePlayer()
 }
 
 //----------------------------------------------------------------
-
+//
+// Draw static field contents
+//
 void
 WindowPlayerArea::drawStaticContent()
 {
-    playerArea_ == PlayerArea::AllPlayers ?
-        drawStaticContentAllPlayers() :
+    if (currentFocus_ == OneOrAll::AllPlayers)
+    {
+        drawStaticContentAllPlayers();
+    }
+    else
+    {
         drawStaticContentOnePlayer();
+    }
 }
 
 //----------------------------------------------------------------
@@ -245,63 +266,186 @@ WindowPlayerArea::drawStaticContentOnePlayer()
 
 //----------------------------------------------------------------
 //
-// Populates displayable content of all dynamic fields
+// Updates all dynamic field content.
 //
 void
 WindowPlayerArea::populate()
 {
     mvwprintw(pWindow_, 0, 0, "Player Area View here");
-    
-    playerArea_ == PlayerArea::AllPlayers ?
-        populateAllPlayers() :
+    if (currentFocus_ == OneOrAll::AllPlayers)
+    {
+        populateAllPlayers();
+    }
+    else
+    {
         populateOnePlayer();
+    }
 }
 
 //----------------------------------------------------------------
-
+//
+// Updates all dynamic fields in this view.
+//
 void
 WindowPlayerArea::populateAllPlayers()
 {
+    // Updates all dynamic fields in this view.
     // TODO
+    // updatePassLineBets()
+    // updateFieldBets()
+    // updateFieldBets()
+    // updateXxx()
+    // ...
 }
 
 //----------------------------------------------------------------
-
+//
+// Updates all dynamic fields in this view
+//
 void
 WindowPlayerArea::populateOnePlayer()
 {
     // TODO
+    // updatePassLineBets()
+    // updateFieldBets()
+    // updateFieldBets()
+    // updateXxx()
+    // ...
 }
 
 //----------------------------------------------------------------
-//
-// TODO This changes to support next and previous instead of cycle
-// TODO hook into menu processing
-//
-void
-WindowPlayerArea::cyclePlayerArea()
+
+Craps::PlayerId
+WindowPlayerArea::getNextPlayerId(const Craps::PlayerId& pid)
 {
-    if (playerArea_ == PlayerArea::AllPlayers)
+    if (playerIds_.empty())
     {
-        // Switch to first player
-        playerArea_ = PlayerArea::OnePlayer;
-        onePlayerIndex_ = 0;
+        throw std::runtime_error("playerIds_ is empty");
+    }
+
+    auto it = std::find(playerIds_.begin(), playerIds_.end(), pid);
+
+    if (it == playerIds_.end())
+    {
+        throw std::runtime_error("Current player was not found");
+    }
+
+    ++it;
+
+    // Wrap around from the last player to the first.
+    if (it == playerIds_.end())
+    {
+        it = playerIds_.begin();
+    }
+
+    return *it;
+}
+
+//----------------------------------------------------------------
+
+Craps::PlayerId
+WindowPlayerArea::getPrevPlayerId(const Craps::PlayerId& pid)
+{
+    if (playerIds_.empty())
+    {
+        throw std::runtime_error("playerIds_ is empty");
+    }
+
+    auto it = std::find(playerIds_.begin(), playerIds_.end(), pid);
+
+    if (it == playerIds_.end())
+    {
+        throw std::runtime_error("Current player was not found");
+    }
+
+    // Wrap around from the first player to the last.
+    if (it == playerIds.begin())
+    {
+        it = playerIds_.end();
+    }
+
+    --it;
+
+    return *it;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerArea::nextPlayer()
+{
+    advancePlayer(true);
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerArea::prevPlayer()
+{
+    advancePlayer(false);
+}
+    
+//----------------------------------------------------------------
+void
+WindowPlayerArea::advancePlayer(bool next)
+{
+    if (currentFocus_ == OneOrAll::AllPlayers)
+    {
+        currentFocus_ = OneOrAll::OnePlayer;
+        werase(pWindow_);
+        drawBorders();
+        drawStaticContent();
+        populateOnePlayer();
+        CuiUtils::transfer(pWindow_);
+        return;
+    }
+    
+    // Else already in OnePlayer view, advance to next or prev player
+
+    Craps::PlayerId pid;
+    if (next)
+    {
+        pid = getNextPlayerId(curPlayerId_);
     }
     else
     {
-        // Already in OnePlayer mode
-        if (onePlayerIndex_ + 1 < playerIds_.size())
-        {
-            ++onePlayerIndex_;
-        }
-        else
-        {
-            // After last player → back to allPlayers
-            playerArea_ = PlayerArea::AllPlayers;
-            onePlayerIndex_ = 0;
-        }
+        pid = getPrevPlayerId(curPlayerId_);
     }
+    if (pid == curPlayerId_)
+    {
+        return; // No next or prev player to display, stay on current
+    }
+    
+    curPlayerId_ = pid;
+    populateOnePlayer();
+    CuiUtils::transfer(pWindow_);
 }
 
 //----------------------------------------------------------------
 
+void
+WindowPlayerArea::onPlayerJoined(const Craps::PlayerId& pid)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerArea::onPlayerLeft(const Craps::PlayerId& pid)
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+#if 0
+
+void WindowPlayerArea::updateBankroll()
+{
+    mvwprintw(pWindow_, row, col, "%-10s", formatted);
+}
+
+#endif
+
+//----------------------------------------------------------------

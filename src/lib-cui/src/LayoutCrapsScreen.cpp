@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/LayoutCrapsScreen.h>
+#include <cui/CuiUtils.h>
 #include <ncurses.h>
 
 using namespace Cui;
@@ -47,7 +48,6 @@ LayoutCrapsScreen::draw()
     // But stdscr might be larger than we want our Craps Table
     // So don't use box(), or wborder()
     // box(stdscr, 0, 0);  // 0,0 uses default chars vert and horiz char
-
     
     // Draw the border encapsulating the minimum size layout. This works
     // even if stdscr is larger than the minimum craps table size. Avoid
@@ -80,7 +80,7 @@ LayoutCrapsScreen::draw()
     mvvline(L::playerBriefBorderTopRow, L::playerBriefBorderLeftCol, ACS_VLINE, L::playerBriefBorderBotRow - L::playerBriefBorderTopRow + 1);
 
     // Junctions on top border
-    mvaddch(L::headerBorderTopRow, L::headerBorderRightCol,  ACS_TTEE);
+    mvaddch(L::headerBorderTopRow, L::headerBorderRightCol, ACS_TTEE);
 
     // Junctions on left border
     mvaddch(L::rollHistBorderTopRow,   L::rollHistBorderLeftCol,   ACS_LTEE);
@@ -99,6 +99,8 @@ LayoutCrapsScreen::draw()
     mvaddch(L::messageBorderTopRow,     L::messageBorderRightCol,    ACS_PLUS);
     mvaddch(L::playerBriefBorderTopRow, L::playerBriefBorderLeftCol, ACS_LTEE);
     mvaddch(L::playerBriefBorderBotRow, L::playerBriefBorderLeftCol, ACS_BTEE);
+
+    CuiUtils::transfer(stdscr);
 }
 
 //----------------------------------------------------------------

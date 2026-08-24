@@ -12,11 +12,14 @@
 
 namespace Cui {
 
+struct WINDOW;  // fwd
+    
 class CuiUtils
 {
 public:
     /// @name CUI Utilities
     /// @{
+    static void transfer(WINDOW* pWin);
     static WINDOW* newContentWindow(
         int topRow,
         int botRow,

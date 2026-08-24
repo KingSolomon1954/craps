@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cui/LayoutCrapsScreen.h>
+#include <craps/CrapsTypes.h>
 #include <cassert>
 
 namespace Cui
@@ -26,7 +27,10 @@ public:
     /// @name Modifiers
     /// @{
     void draw();
-    void update();
+    void onPlayerJoined(const Craps::PlayerId& pid);
+    void onPlayerLeft  (const Craps::PlayerId& pid);
+    void onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid);
+    void onBetFailed(const Craps::PlayerId& pid, const std::string& reason);
     /// @}
 
     /// @name Observers
@@ -76,17 +80,21 @@ private:
         static constexpr int rowLineBets = 21;
     };
 
-    enum class PlayerArea
+    enum class OneOrAll
     {
-        AllPlayers,
-        OnePlayer
+        OnePlayer,
+        AllPlayers
     };
 
     WINDOW* pWindow_ = nullptr;  // The ncurses window
-    PlayerArea playerArea_ = PlayerArea::AllPlayers;
-    
+    Craps::PlayerId  curPlayerId_;
+    Craps::TableId   tableId_;
+    std::vector<Craps::PlayerId> playerIds_;
+    OneOrAll currentFocus_ = OneOrAll::AllPlayers;
+
+    void initPlayers();
     void drawBorders();
-    void drawExteralJunctions();
+    void drawExternalJunctions();
     void drawExternalJunctionsAllPlayers();
     void drawExternalJunctionsOnePlayer();
     void eraseExternalJunctionsAllPlayers();
@@ -102,10 +110,11 @@ private:
     void populateAllPlayers();
     void populateOnePlayer();
     
-    void cyclePlayerArea();  // TODO change into next and previous
-    // size_t           onePlayerIndex_ = 0;  // For cycling thru players
-    // auto playerId = playerIds_[onePlayerIndex_];
-
+    void nextPlayer();
+    void prevPlayer();
+    void advancePlayer();
+    Craps::PlayerId getNextPlayerId(const Craps::PlayerId& pid) const;
+    Craps::PlayerId getPrevPlayerId(const Craps::PlayerId& pid) const;
 };
 
 } // namespace Cui

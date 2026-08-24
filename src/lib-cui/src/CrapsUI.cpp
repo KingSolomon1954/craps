@@ -6,71 +6,42 @@
 
 
 
-void CrapsUI::init()
+void
+CrapsUI::init()
 {
-    pConsoleMgr_->init();
-
     createSurfaces();
-
-    pConsoleMgr_->setSurface(screenCrapsTable_.get());
+    auto pConsoleMgr = ConsoleManager::instance();
+    pConsoleMgr->init(); // ncurses init, 
+    pConsoleMgr->setSurface(ScreenCrapsTable_.instance());
 }
-
-
-void CrapsUI::run()
-{
-    pConsoleMgr_->run();
-}
-
-
-void createSurfaces()
-{
-    pConsoleMgr_       = ConsoleManager::instance();
-    pScreenCrapsTable_ = ScreenCrapsTable::instance();
-    pBettingMenu_      = MenuBetting::instance();
-    pSessionHistory_   = StatsSessionHistory::instance();
-    ...
-}
-
 
 //----------------------------------------------------------------
 
 void
-ScreenCrapsTable::createContentWindows()
+CrapsUI::run()
 {
-    using L = LayoutCrapsScreen;
-
-    w_.header      = CuiUtils::newContentWindow(L::headerWinTopRow,      L::headerWinBotRow,      L::headerWinLeftCol,      L::headerWinRightCol);
-    w_.rollHistory = CuiUtils::newContentWindow(L::rollHistWinTopRow,    L::rollHistWinBotRow,    L::rollHistWinLeftCol,    L::rollHistWinRightCol);
-    w_.playerArea  = CuiUtils::newContentWindow(L::playerAreaWinTopRow,  L::playerAreaWinBotRow,  L::playerAreaWinLeftCol,  L::playerAreaWinRightCol);
-    w_.message     = CuiUtils::newContentWindow(L::messageWinTopRow,     L::messageWinBotRow,     L::messageWinLeftCol,     L::messageWinRightCol);
-    w_.animation   = CuiUtils::newContentWindow(L::animationWinTopRow,   L::animationWinBotRow,   L::animationWinLeftCol,   L::animationWinRightCol);
-    w_.houseBrief  = CuiUtils::newContentWindow(L::houseBriefWinTopRow,  L::houseBriefWinBotRow,  L::houseBriefWinLeftCol,  L::houseBriefWinRightCol);
-    w_.playerBrief = CuiUtils::newContentWindow(L::playerBriefWinTopRow, L::playerBriefWinBotRow, L::playerBriefWinLeftCol, L::playerBriefWinRightCol);
-
-    assert(w_.header      != nullptr);
-    assert(w_.rollHistory != nullptr);
-    assert(w_.playerArea  != nullptr);
-    assert(w_.message     != nullptr);
-    assert(w_.animation   != nullptr);
-    assert(w_.houseBrief  != nullptr);
-    assert(w_.playerBrief != nullptr);
+    ConsoleManager::instance()->run();
 }
 
-ScreenCrapsTable::~ScreenCrapsTable()
+//----------------------------------------------------------------
+
+void
+createSurfaces()
 {
-    if (w_.header)      delwin(w_.header);
-    if (w_.rollHistory) delwin(w_.rollHistory);
-    if (w_.playerArea)  delwin(w_.playerArea);
-    if (w_.message)     delwin(w_.message);
-    if (w_.animation)   delwin(w_.animation);
-    if (w_.houseBrief)  delwin(w_.houseBrief);
-    if (w_.playerBrief) delwin(w_.playerBrief);
+    ? pBettingMenu_           = MenuBetting::instance();
+
+    // Create themselves, no need for class member vars for each.
+    auto w1 = ScreenCrapsTable::instance();
+    auto w2 = ScreenDiceStats::instance();
+    auto w3 = ScreenSessionsStats::instance();
+    auto w4 = ScreenPlayerStats::instance();
+    auto w5 = ScreenSessionHistory::instance();
+    ...
 }
 
+//----------------------------------------------------------------
 
-// ConsoleView::populateNavBar()
-
-// doupdate();  called by ConsoleView
+#if 0
 
 
 // TODO Move this to WindowDiceAnimation
@@ -149,3 +120,4 @@ ScreenCrapsTable::~ScreenCrapsTable()
         static constexpr int diceWidth = 7;
 
 
+#endif

@@ -225,6 +225,7 @@ transfer = move window contents to the ncurses' virtual/backing screen
 refresh = reserve for ncurses
 doupdate = ncurses' final terminal update
 
+
 Screen Drawing Rules
 ────────────────────
 
@@ -958,12 +959,12 @@ View Menu
     ┌───────────────────────┐
     │ View Menu             │
     ├───────────────────────┤
-    │ [f] All Players       │
+    │ [a] All Players       │
     │ [n] One Player (next) │
     │ [p] One Player (prev) │
     └───────────────────────┘
 
-    [f] All Players View
+    [a] All Players View
         Redraws screen to All Players table view.
     [n] One Player View (next)
         Redraws screen to One Player table View.

@@ -4,9 +4,24 @@
 //
 //---------------------------------------------------------------
 
-#include "cui/CuiUtils.h"  // Our interface
+#include <cui/CuiUtils.h>  // Our interface
+#include <ncurses>
 
 using namespace Cui;
+
+/*-----------------------------------------------------------*//**
+
+Move window contents to ncurses virtual backing store
+
+@param[in] pWin
+    The ncurses window of interest.
+
+*/
+void
+CuiUtils::transfer(WINDOW* pWin)
+{
+    wnoutrefresh(pWin);
+}
 
 /*-----------------------------------------------------------*//**
 

@@ -27,8 +27,8 @@ public:
     ConsoleManager();
    ~ConsoleManager();
     static ConsoleManager* instance();
-    void init() override;
-    void prepareForShutdown() override;
+    void init()               override;  // from ViewInterface
+    void prepareForShutdown() override;  // from ViewInterface
     /// @}
 
     /// @name StackOps
@@ -36,6 +36,7 @@ public:
     void setSurface (ViewSurface* pSurface);  // clear stack, push this (replace)
     void pushSurface(ViewSurface* pSurface);  // overlay (pauses previous top)
     void popSurface();                        // remove top, resume new top if any
+    void draw(ViewSurface* pSurface);
     void handleKey(int ch);
     
     /// @}
@@ -76,17 +77,14 @@ public:
     void showProgramExit() override;
     /// @}
 
-    // Move this elsewhere, maybe CuiUtils
-    WINDOW* makeCenteredWindow(int h, int w);
-
-    bool useUnicodePips = false;
+    bool useUnicodePips_ = false;
 
 private:
     std::vector<ViewSurface*> stack_;    // non-owning stack
     std::mutex stackMx_;
     std::atomic<bool> running_{true};
     std::thread inputThread_;
-
+    
     bool utf8_enabled();
 };
 
