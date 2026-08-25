@@ -6,24 +6,23 @@
 
 #pragma once
 
-#include <cui/ViewSurface>
+#include <cui/ViewSurface.h>
+#include <ncurses>
 
 namespace Cui {
 
 class WINDOW; // fwd
 
-class MenuBase : public Screen
+class MenuBase : public ViewSurface
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuBase() override = default;
+   ~MenuBase() { if (pWin_) delwin(pWin_); }
     /// @}
 
     /// @name Modifiers
     /// @{
-    void draw()            override;
-    void handleKey(int ch) override;
     /// @}
 
     /// @name Observers
@@ -31,19 +30,17 @@ public:
     /// @}
 
 protected:
-    virtual void drawMenu()            = 0;
-    virtual void handleMenuKey(int ch) = 0;
-
-    WINDOW* w_ = nullptr;
+    WINDOW* pWin_ = nullptr;
 
 private:
+    
 };
 
 /*-----------------------------------------------------------*//**
 
 @class MenuBase
 
-@brief Specialized surface type for menu screens
+@brief Specialized surface type for menus 
 
 @li Implements virtual ViewSurface interface
 @li Provides logic common for all menu UI classes
