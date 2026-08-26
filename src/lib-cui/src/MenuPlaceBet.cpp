@@ -5,7 +5,6 @@
 //----------------------------------------------------------------
 
 #include <cui/MenuPlaceBet.h>
-#include <cstring>
 #include <cassert>
 
 using namespace Cui;

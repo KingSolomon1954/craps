@@ -22,7 +22,7 @@ public:
     /// @{
     void draw()             override;
     void handleKey(int ch)  override;
-    bool shouldSkip() const override;
+    // bool shouldSkip() const override;  base class default is good
     /// @}
 
     /// @name Observers

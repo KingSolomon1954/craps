@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: MenuView.h
+// File: MenuPlayerViews.h
 //
 //----------------------------------------------------------------
 
@@ -10,12 +10,12 @@
 
 namespace Cui {
 
-class MenuView : public MenuBase
+class MenuPlayerViews : public MenuBase
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuViewBet();
+   ~MenuPlayerViewsBet();
     /// @}
 
     /// @name Modifiers
@@ -27,7 +27,7 @@ public:
 
     /// @name Observers
     /// @{
-    static MenuView& instance();
+    static MenuPlayerViews& instance();
     /// @}
     
 private:
@@ -39,7 +39,7 @@ private:
         static constexpr int winWidth  = 25;
     };
 
-    MenuView();  // Private ctor
+    MenuPlayerViews();  // Private ctor
     void fillWindow();
     void allPlayers();
     void nextPlayer();
@@ -49,11 +49,11 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class MenuView
+@class MenuPlayerViews
 
 @brief Display choices for switching Player views
 
-Responsibilities of MenuView:
+Responsibilities of MenuPlayerViews:
 
 @li Key bindings for the menu
 

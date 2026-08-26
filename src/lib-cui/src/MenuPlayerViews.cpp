@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: MenuView.cpp
+// File: MenuPlayerViews.cpp
 //
 //----------------------------------------------------------------
 
-#include <cui/MenuView.h>
+#include <cui/MenuPlayerViews.h>
 #include <cstring>
 #include <cassert>
 
@@ -12,7 +12,7 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-MenuView::MenuView()
+MenuPlayerViews::MenuPlayerViews()
 {
     createWindow();
     fillWindow();
@@ -20,16 +20,16 @@ MenuView::MenuView()
 
 //----------------------------------------------------------------
 
-MenuView&
-MenuView::instance()
+MenuPlayerViews&
+MenuPlayerViews::instance()
 {
-    static MenuView menu;
+    static MenuPlayerViews menu;
     return menu;
 }
 
 //----------------------------------------------------------------
 
-MenuView::createWindow()
+MenuPlayerViews::createWindow()
 {
     using L = Layout;
     pWin_ = newwin(L::winHeight, L::winWidth, L::winStartY, L::winStartX);
@@ -37,13 +37,13 @@ MenuView::createWindow()
     if (pWin_ == nullptr)
     {
         throw std::runtime_error(
-            "Unable to create ncurses MenuView window");
+            "Unable to create ncurses MenuPlayerViews window");
     }
 }
 
 //----------------------------------------------------------------
 
-MenuView::~MenuView()
+MenuPlayerViews::~MenuPlayerViews()
 {
     // pWin_ is delwin() in MenuBase
 }
@@ -65,7 +65,7 @@ MenuView::~MenuView()
 // 7  └───────────────────────┘
 //
 void
-MenuView::fillWindow()
+MenuPlayerViews::fillWindow()
 {
     using L = Layout;
     
@@ -114,7 +114,7 @@ MenuPivot::handleKey(int ch)
 //----------------------------------------------------------------
 
 void
-MenuView::allPlayers()
+MenuPlayerViews::allPlayers()
 {
     ScreenCrapsTable::instance().setAllPlayersView();
     setOperationResult(OperationResult::success);
@@ -124,7 +124,7 @@ MenuView::allPlayers()
 //----------------------------------------------------------------
 
 void
-MenuView::nextPlayer()
+MenuPlayerViews::nextPlayer()
 {
     ScreenCrapsTable::instance().setNextPlayerView();
     setOperationResult(OperationResult::success);
@@ -134,7 +134,7 @@ MenuView::nextPlayer()
 //----------------------------------------------------------------
 
 void
-MenuView::nextPlayer()
+MenuPlayerViews::nextPlayer()
 {
     ScreenCrapsTable::instance().setPrevPlayerView();
     setOperationResult(OperationResult::success);
@@ -144,7 +144,7 @@ MenuView::nextPlayer()
 //----------------------------------------------------------------
 
 void
-MenuView::back()
+MenuPlayerViews::back()
 {
     // Set our own state in base class to reflect cancel.
     // Also informs parent surfaces of the state of operation.

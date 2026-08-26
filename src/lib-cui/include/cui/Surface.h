@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: ViewSurface.h
+// File: Surface.h
 //
 //----------------------------------------------------------------
 
@@ -9,7 +9,7 @@
 namespace Cui
 {
 
-class ViewSurface
+class Surface
 {
 public:
     enum class OperationResult
@@ -20,7 +20,7 @@ public:
         success
     };
     
-    virtual ~ViewSurface() = default;
+    virtual ~Surface() = default;
 
     virtual void draw() = 0;
     virtual void handleKey(int ch) = 0;
@@ -40,7 +40,7 @@ public:
     //   that there.
     // * Trigger an initial data acquisition if appropriate.
     //    
-    virtual void onAttach(ViewSurface* pParent)
+    virtual void onAttach(Surface* pParent)
     {
         pParentSurface_  = pParent;
         operationResult_ = OperationResult::unset;
@@ -87,19 +87,19 @@ public:
     }
     
 protected:
-    ViewSurface* pParentSurface_     = nullptr;
+    Surface* pParentSurface_         = nullptr;
     OperationResult operationResult_ = OperationResult::unset;
 };
 
 /*-----------------------------------------------------------*//**
 
-@class ViewSurface
+@class Surface
 
 @brief Common abstraction for anything occupying a visible/input surface
 
 @li Provides a generic UI surface contract
-@li Allow ConsoleManager to work with just surface abstractions.
-@li Has no knowledge of ScreenBase, MenuBase, or DialogBase.
+@li Allow ConsoleManager to work with just surface abstractions
+@li Has no knowledge of ScreenBase, MenuBase, or DialogBase
 
 */
 

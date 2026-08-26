@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include <cui/ViewSurface.h>
+#include <cui/Surface.h>
 
 namespace Cui {
 
 class WINDOW; // fwd
 
-class MenuBase : public ViewSurface
+class MenuBase : public Surface
 {
 public:
     /// @name Lifecycle
@@ -41,7 +41,7 @@ private:
 
 @brief Specialized surface type for menus 
 
-@li Implements virtual ViewSurface interface
+@li Implements virtual Surface interface
 @li Provides logic common for all menu UI classes
 
 */

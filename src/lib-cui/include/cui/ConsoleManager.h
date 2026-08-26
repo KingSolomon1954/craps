@@ -17,7 +17,7 @@
 
 namespace Cui {
 
-class ViewSurface;  // fwd
+class Surface;  // fwd
 
 class ConsoleManager : public Ctrl::ViewInterface
 {
@@ -33,10 +33,10 @@ public:
 
     /// @name StackOps
     /// @{
-    void setSurface (ViewSurface* pSurface);  // clear stack, push this (replace)
-    void pushSurface(ViewSurface* pSurface);  // overlay (pauses previous top)
+    void setSurface (Surface* pSurface);  // clear stack, push this (replace)
+    void pushSurface(Surface* pSurface);  // overlay (pauses previous top)
     void popSurface();                        // remove top, resume new top if any
-    void draw(ViewSurface* pSurface);
+    void draw(Surface* pSurface);
     void handleKey(int ch);
     
     /// @}
@@ -81,7 +81,7 @@ public:
     bool useUnicodePips_ = false;
 
 private:
-    std::vector<ViewSurface*> stack_;    // non-owning stack
+    std::vector<Surface*> stack_;    // non-owning stack
     std::mutex stackMx_;
     std::atomic<bool> running_{true};
     std::thread inputThread_;

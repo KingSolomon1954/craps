@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/ConsoleManager.h>
-#include <cui/ViewSurface.h>
+#include <cui/Surface.h>
 #include <controller/Globals.h>
 #include <controller/GameEvent.h>
 #include <controller/GameController.h>
@@ -38,8 +38,8 @@ ConsoleManager::~ConsoleManager()
 ConsoleManager&
 ConsoleManager::instance()
 {
-    static ConsoleManager consoleMgr;
-    return consoleMgr;
+    static ConsoleManager mgr;
+    return mgr;
 }
 
 //----------------------------------------------------------------
@@ -88,7 +88,7 @@ ConsoleManager::prepareForShutdown()
 //----------------------------------------------------------------
 
 void
-ConsoleManager::draw(ViewSurface* pSurface)
+ConsoleManager::draw(Surface* pSurface)
 {
     pSurface->draw();
     doupdate();  // Paint the physical screen
@@ -97,7 +97,7 @@ ConsoleManager::draw(ViewSurface* pSurface)
 //----------------------------------------------------------------
 
 void
-ConsoleManager::setSurface(ViewSurface* pSurface)
+ConsoleManager::setSurface(Surface* pSurface)
 {
     std::lock_guard<std::mutex> lock(stackMx_);
     for (auto* s : stack_) s->onDetach();
@@ -110,9 +110,9 @@ ConsoleManager::setSurface(ViewSurface* pSurface)
 //----------------------------------------------------------------
 
 void
-ConsoleManager::pushSurface(ViewSurface* pSurface)
+ConsoleManager::pushSurface(Surface* pSurface)
 {
-    ViewSurface* pParent = nullptr;
+    Surface* pParent = nullptr;
     if (!stack_.empty())
     {
         pParent = stack_.back();

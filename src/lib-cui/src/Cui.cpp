@@ -1,45 +1,32 @@
 //----------------------------------------------------------------
 //
-// File: CrapsUi.cpp
+// File: Cui.cpp
 //
 //----------------------------------------------------------------
 
+#include <cui/Cui.h>
 
 
 void
-CrapsUI::init()
+Cui::init()
 {
-    createSurfaces();
-    auto pConsoleMgr = ConsoleManager::instance();
-    pConsoleMgr->init(); // ncurses init, 
-    pConsoleMgr->setSurface(ScreenCrapsTable_.instance());
+    auto& mgr = ConsoleManager::instance();
+    mgr.init(); // ncurses init, 
+    mgr.setSurface(&ScreenCrapsTable::instance());
 }
 
 //----------------------------------------------------------------
 
 void
-CrapsUI::run()
+Cui::run()
 {
-    ConsoleManager::instance()->run();
+    ConsoleManager::instance().run();
 }
 
 //----------------------------------------------------------------
 
-void
-createSurfaces()
-{
-    ? pBettingMenu_           = MenuBetting::instance();
 
-    // Create themselves, no need for class member vars for each.
-    auto w1 = ScreenCrapsTable::instance();
-    auto w2 = ScreenDiceStats::instance();
-    auto w3 = ScreenSessionsStats::instance();
-    auto w4 = ScreenPlayerStats::instance();
-    auto w5 = ScreenSessionHistory::instance();
-    ...
-}
 
-//----------------------------------------------------------------
 
 #if 0
 

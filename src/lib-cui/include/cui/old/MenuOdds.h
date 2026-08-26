@@ -33,20 +33,24 @@ public:
     
     /// @name Lifecycle
     /// @{
+    static MenuOdds& instance();
    ~MenuOdds();
     /// @}
 
     /// @name Modifiers
     /// @{
-    void draw()            override;
-    void handleKey(int ch) override;
+    void clearState();
     /// @}
 
     /// @name Observers
     /// @{
-    static MenuOdds& instance();
+    Results getResults() const;
     /// @}
     
+protected:
+    void drawMenu()            override;
+    void handleMenuKey(int ch) override;
+
 private:
     struct BetEntry
     {
@@ -69,16 +73,7 @@ private:
     Bets            bets_;
     
     MenuOdds();  // Private ctor
-
     
-    std::vector<std::string>& entries
-    
-    std::pair<int, int> calculateSize() const;
-    void windowResize(int numEntries, int longestEntry);
-
-
-
-
     void buildOddsBets();
     void doSelection(BetEntry& bet);
     void sortBetsByCreated();

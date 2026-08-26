@@ -332,9 +332,9 @@ header row over the columns; has the first initial of the player's name,
 (in this example 5 players Nathan, Arthur, Paige, Lenny, Winnifred),
 also color coded over their column.
 
-0   ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
-1   │ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
-2   ├──────────┴────────────┴──────────────────┴─────────────────────────┤   ⚄ + ⚂  →  7               │
+0   ┌──────────┬───────────┬──────────────────┬──────────────────────────┬─────────────────────────────┐
+1   │ Point 10 │ Roll  273 │ Las Vegas Strip  │min $5 max $2000 odds 10x │   🎲 Rolling... 🎲          │ 
+2   ├──────────┴───────────┴──────────────────┴──────────────────────────┤   ⚄ + ⚂  →  7               │
 3   │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
 4   ├────────────────────────┬──────────────────────┬────────────────────┤                             │ 
 5   │                        │                      │                    │                             │
@@ -377,9 +377,9 @@ also color coded over their column.
 One Player View
 ───────────────
 
-0   ┌──────────┬────────────┬──────────────────┬─────────────────────────┬─────────────────────────────┐
-1   │ Point:10 │ Roll:  273 │ Las Vegas Strip  │ min:$5 max:$2000 odds:5x│   🎲 Rolling... 🎲          │ 
-2   ├──────────┴────────────┴──────────────────┴─────────────────────────┤   ⚄ + ⚂  →  7               │
+0   ┌──────────┬───────────┬──────────────────┬──────────────────────────┬─────────────────────────────┐
+1   │ Point 10 │ Roll  273 │ Las Vegas Strip  │min $5 max $2000 odds 10x │   🎲 Rolling... 🎲          │ 
+2   ├──────────┴───────────┴──────────────────┴──────────────────────────┤   ⚄ + ⚂  →  7               │
 3   │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
 4   ├──────────────────┬─────────┬─────────┬─────────┬─────────┬─────────┤                             │ 
 5   │ Nathan:     4    │    5    │     6   │    8    │    9    │    10   │                             │
@@ -593,13 +593,13 @@ Betting Menu
     └───────────────────────┘
 
     [p] PassLine
-        pop-up "Amount" dialogue subwindow
+        pop-up "Amount" dialog subwindow
     [c] Come
-        pop-up "Amount" dialogue subwindow
+        pop-up "Amount" dialog subwindow
     [d] DontPass
-        pop-up "Amount" dialogue subwindow
+        pop-up "Amount" dialog subwindow
     [k] DontCome
-        pop-up "Amount" dialogue subwindow
+        pop-up "Amount" dialog subwindow
     [o] odds
         pop-up "Which Odds Bet" menu
         presents a dynamic built list of player's odds 
@@ -617,11 +617,11 @@ Betting Menu
 
         This pop-up can be skipped altogether
         if player has only 1 odds capable bet.
-        Instead go straight to the the amount dialogue.
+        Instead go straight to the the amount dialog.
 
         Have to decide if "Which Odds Bet" menu is
         sticky, meaning after selecting an odds bet and
-        filling out the "Amount" dialogue, the "Which Odds Bet"
+        filling out the "Amount" dialog, the "Which Odds Bet"
         menu hangs around for another selection. Leaning towards
         disappearing, because odds bets are usually made only
         once and seldom changed. Not too inconvenient for the 
@@ -804,9 +804,9 @@ Betting Menu
         └───────────────────────┘
 
     [u] Undo Last Bet
-        pop-up confirmation dialogue. Show which bet
+        pop-up confirmation dialog. Show which bet
         will be undone.
-        Or pop-up dialogue saying there is no undo to be undone.
+        Or pop-up dialog saying there is no undo to be undone.
     [r] Roll Dice
     [B] Shows the Betting Menu
         Brings it back visible so user can see different
@@ -1125,8 +1125,8 @@ Stats Menu
 ──────────────────────────────────────────────────────────────────────────────
 [C] CONTROL     [B] BETTING     [V] VIEW     [S] STATS     | [H] Help [Q] Quit
 
-Enter Amount Dialogue Box
-─────────────────────────
+Enter Amount Dialog Box
+───────────────────────
 
 With respect to the popup subwindow for entering bet amounts, it has some
 special behaviors that I'm still thinking through.  Since it is already

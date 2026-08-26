@@ -6,12 +6,12 @@
 
 #include <cui/MenuOdds.h>
 #include <algorithm>
+#include <cstring>
+#include <cassert>
 #include <controller/CrapsReaders.h>
 #include <cui/ConsoleView.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
-#include <cstring>
-#include <cassert>
 
 using namespace Cui;
 
@@ -40,7 +40,7 @@ MenuOdds::~MenuOdds()
 
 //----------------------------------------------------------------
 //
-// Draw the menu
+// Draw the menu prompts
 //
 // Overrides menu base class.
 //
@@ -49,35 +49,21 @@ MenuOdds::~MenuOdds()
 // 
 // Looks something like this:
 //     
-// 0   ┌────────────────────────────────┐
-// 1   │ Which Odds Bet                 │
-// 2   ├────────────────────────────────┤
-// 3   │ [1] Pass Line 6 ($200, $0)     │
-// 4   │ [2] Come Bet 8 ($1000, $3,000) │
-// 5   │ [3] Don't Pass 10 ($500, $500) │
-// 6   │ [esc] Back                     │
-// 7   └────────────────────────────────┘
+//     +---------------------------------+
+//     | Make Odds Bet                   |
+//     |                                 |
+//     | 1 - Come 6      ($200, $0)      |
+//     | 2 - DontPass 10 ($1000, $3,000) |
+//     | 3 - PassLine 8  ($500, $500)    |
+//     | 4 - DontCome 6  ($100, 0)       |
+//     | ESC - cancel                    |
+//     |                                 |
+//     | Select:                         |
+//     +---------------------------------+
 // 
 void
-MenuOdds::draw()
+MenuOdds::drawMenu()
 {
-    werase(pWin_);
-
-    height, width = gatherEntries();
-    drawBorders();
-    drawStaticContent();
-    populate();
-    CuiUtils::transfer(pWin_);
-}
-
-
-see example activate/deactivate at bottom of file
-
-//----------------------------------------------------------------
-
-
-    
-    
     assert(w_ && "MenuOdds: WINDOW not initialized");
 
     const std::string title{"Make Odds Bet"};
@@ -408,174 +394,3 @@ MenuOdds::clearState()
 }    
 
 //----------------------------------------------------------------
-
-
-#if 0
-
-The usual pattern is:
-
-    Calculate the required height and width.
-    Create the window if it does not exist.
-    Resize and move it if it already exists.
-    Clear and redraw its contents.
-
--------------------
-Activate/Deactivate
--------------------
-
-class NcursesMenu
-{
-public:
-    NcursesMenu(int y, int x)
-        : y_(y), x_(x)
-    {
-    }
-
-    ~NcursesMenu()
-    {
-        destroyWindow();
-    }
-
-    void activate(const std::vector<std::string>& entries)
-    {
-        entries_ = entries;
-
-        const auto [height, width] = calculateSize();
-
-        if (window_ == nullptr) {
-            window_ = newwin(height, width, y_, x_);
-
-            if (window_ == nullptr) {
-                throw std::runtime_error("Unable to create menu window");
-            }
-        }
-        else {
-            wresize(window_, height, width);
-            mvwin(window_, y_, x_);
-        }
-
-        draw();
-        active_ = true;
-    }
-
-    void deactivate()
-    {
-        if (window_ == nullptr || !active_) {
-            return;
-        }
-
-        // Erase the menu's current contents from the virtual screen.
-        werase(window_);
-        wnoutrefresh(window_);
-
-        // Ensure the underlying window redraws the area previously covered
-        // by the menu. This assumes backgroundWindow_ is set.
-        if (backgroundWindow_ != nullptr) {
-            touchwin(backgroundWindow_);
-            wnoutrefresh(backgroundWindow_);
-        }
-
-        doupdate();
-
-        active_ = false;
-    }
-
-    void setBackgroundWindow(WINDOW* backgroundWindow)
-    {
-        backgroundWindow_ = backgroundWindow;
-    }
-
-    int getch()
-    {
-        if (window_ == nullptr || !active_) {
-            return ERR;
-        }
-
-        return wgetch(window_);
-    }
-
-private:
-    std::pair<int, int> calculateSize() const
-    {
-        constexpr int horizontalPadding = 4; // two spaces on each side
-        constexpr int borderRows = 2;
-
-        int width = 0;
-
-        for (const auto& entry : entries_) {
-            width = std::max(
-                width,
-                static_cast<int>(entry.size()));
-        }
-
-        // Add room for the two border columns and horizontal padding.
-        width += horizontalPadding + 2;
-
-        // At least two columns inside the border.
-        width = std::max(width, 4);
-
-        const int height =
-            static_cast<int>(entries_.size()) + borderRows;
-
-        return {height, width};
-    }
-
-    void draw()
-    {
-        werase(window_);
-        box(window_, 0, 0);
-
-        for (std::size_t row = 0; row < entries_.size(); ++row) {
-            mvwaddnstr(
-                window_,
-                static_cast<int>(row) + 1,
-                2,
-                entries_[row].c_str(),
-                getmaxx(window_) - 3);
-        }
-
-        wnoutrefresh(window_);
-        doupdate();
-    }
-
-    void destroyWindow()
-    {
-        if (window_ != nullptr) {
-            delwin(window_);
-            window_ = nullptr;
-        }
-    }
-
-private:
-    WINDOW* window_ = nullptr;
-    WINDOW* backgroundWindow_ = nullptr;
-
-    std::vector<std::string> entries_;
-
-    int y_;
-    int x_;
-    bool active_ = false;
-};
-
-
-* Use it like this:
-
-NcursesMenu menu(5, 10);
-menu.setBackgroundWindow(mainWindow);
-
-menu.activate({
-    "[4] Place 4",
-    "[5] Place 5",
-    "[6] Place 6",
-    "[8] Place 8",
-    "[9] Place 9",
-    "[0] Place 10",
-    "[esc] Back"
-});
-
-// Read input while active.
-int ch = menu.getch();
-
-menu.deactivate();
-
-#endif

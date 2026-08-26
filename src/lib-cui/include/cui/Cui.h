@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: CrapsUi.h
+// File: Cui.h
 //
 //----------------------------------------------------------------
 
@@ -11,27 +11,27 @@
 namespace Cui
 {
     
-class CrapsUI
+class Cui
 {
 public:
-    CrapsUI() = default;
-   ~CrapsUI() = default;
+    Cui() = default;
+   ~Cui() = default;
    
     void init();
     void run();
     
 private:
-    void createSurfaces();
-};
 
+};
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsUi
+@class Cui
 
-@brief Specialized surface type for full screens
+@brief Main entry point for CUI library
 
-@li Provides the generic UI surface contract for full screens.
+@li The entry point into CUI processing.
+@li This is the class the Controller library pulls in.
 
 */
 

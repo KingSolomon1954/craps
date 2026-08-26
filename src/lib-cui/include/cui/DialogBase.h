@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: ScreenBase.h
+// File: DialogBase.h
 //
 //----------------------------------------------------------------
 
@@ -8,17 +8,18 @@
 
 #include <cui/Surface.h>
 
-namespace Cui
-{
+namespace Cui {
 
-class ScreenBase : public Surface
+class WINDOW; // fwd
+
+class DialogBase : public Surface
 {
 public:
     /// @name Lifecycle
     /// @{
-    ~ScreenBase() override = default;
+   ~DialogBase() { if (pWin_) delwin(pWin_); }
     /// @}
-    
+
     /// @name Modifiers
     /// @{
     /// @}
@@ -27,21 +28,24 @@ public:
     /// @{
     /// @}
 
-    // Screen-specific behaviors used by all screens...
-};
+protected:
+    WINDOW* pWin_ = nullptr;
 
+private:
+    
+};
 
 /*-----------------------------------------------------------*//**
 
-@class ScreenBase
+@class DialogBase
 
-@brief Specialized surface type for full screens
+@brief Specialized surface type for dialog boxes
 
-@li Provides the generic UI surface contract for full screens.
+@li Implements virtual Surface interface
+@li Provides logic common for all dialog classes
 
 */
 
 } // namespace Cui
 
 //----------------------------------------------------------------
-

@@ -30,12 +30,12 @@ public:
     
     /// @name Modifiers
     /// @{
-    void draw()            override;  // from ViewSurface
-    void onPause()         override;  // from ViewSurface
-    void onResume()        override;  // from ViewSurface
-    void handleKey(int ch) override;  // from ViewSurface
-    void onDetach()        override;  // from ViewSurface
-    void onAttach(ViewSurface* pParent) override;  // from ViewSurface
+    void draw()                     override;  // from Surface
+    void onPause()                  override;  // from Surface
+    void onResume()                 override;  // from Surface
+    void handleKey(int ch)          override;  // from Surface
+    void onDetach()                 override;  // from Surface
+    void onAttach(Surface* pParent) override;  // from Surface
 
     void setAllPlayersView();
     void setNextPlayerView();
@@ -58,11 +58,7 @@ private:
     WindowHouseBrief       wHouseBrief_;
     WindowPlayerBrief      wPlayerBrief_;
     
-    std::string            lineBuffer_;
-    MenuBetting*           pMenuBetting_ = nullptr;
-    
     ScreenCrapsTable();  // private ctor
-    void drawCrapsScreen();
     void drawNavBar();
 };
 

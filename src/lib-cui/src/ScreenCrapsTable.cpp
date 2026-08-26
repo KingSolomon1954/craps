@@ -43,22 +43,12 @@ ScreenCrapsTable::~ScreenCrapsTable()
 //----------------------------------------------------------------
 //
 // External entry point to draw screen.
-//
-void
-ScreenCrapsTable::draw()  // Override
-{
-    drawCrapsScreen();
-}
-
-//----------------------------------------------------------------
-//
-// Internal entry point to draw craps screen.
-//
-// Each draw() does its own transfer()
+// 
+// Each window draw() below does its own transfer()
 // Caller is responsible for eventual doupdate()
 //
 void
-ScreenCrapsTable::drawCrapsScreen()
+ScreenCrapsTable::draw()  // Override
 {
     werase(stdscr);
     
@@ -145,7 +135,7 @@ ScreenCrapsTable::setPrevPlayerView()
 // * Trigger an initial data acquisition if appropriate.
 //    
 void
-ScreenCrapsTable::onAttach(ViewSurface* pParent)
+ScreenCrapsTable::onAttach(Surface* pParent)
 {
     LOG_TRACE("ScreenCrapsTable::onAttach()");
     // TODO
@@ -275,6 +265,9 @@ ScreenCrapsTable::handleMenuInput(int ch)
 //
 // Gather then interpret command line input
 //
+
+std::string lineBuffer_;
+
 void
 ScreenCrapsTable::handleLineInput(int ch)
 {
