@@ -26,7 +26,8 @@ public:
 
     /// @name Modifiers
     /// @{
-    void draw();
+    void draw() override;
+    
     void onPlayerJoined(const Craps::PlayerId& pid);
     void onPlayerLeft  (const Craps::PlayerId& pid);
     void onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid);

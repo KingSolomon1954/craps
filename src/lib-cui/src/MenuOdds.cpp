@@ -49,34 +49,37 @@ MenuOdds::~MenuOdds()
 // 
 // Looks something like this:
 //     
-// 0   ┌────────────────────────────────┐
-// 1   │ Which Odds Bet                 │
-// 2   ├────────────────────────────────┤
-// 3   │ [1] Pass Line 6 ($200, $0)     │
-// 4   │ [2] Come Bet 8 ($1000, $3,000) │
-// 5   │ [3] Don't Pass 10 ($500, $500) │
-// 6   │ [esc] Back                     │
-// 7   └────────────────────────────────┘
+// 0   ┌─────────────────────────────────┐
+// 1   │ Which Odds Bet                  │
+// 2   ├─────────────────────────────────┤
+// 3   │ [1] Pass Line 6 ($200, $0)      │
+// 4   │ [2] Come Bet 8 ($1,000, $3,000) │
+// 5   │ [3] Don't Pass 10 ($500, $500)  │
+// 6   │ [esc] Back                      │
+// 7   └─────────────────────────────────┘
 // 
 void
 MenuOdds::draw()
 {
+    gatherEntries();
+    formatEntries();
+    windowResize();
+        
     werase(pWin_);
-
-    height, width = gatherEntries();
     drawBorders();
     drawStaticContent();
     populate();
     CuiUtils::transfer(pWin_);
 }
 
-
-see example activate/deactivate at bottom of file
+see example dynamic menu activate/deactivate at bottom of file
 
 //----------------------------------------------------------------
 
 
-    
+
+
+
     
     assert(w_ && "MenuOdds: WINDOW not initialized");
 

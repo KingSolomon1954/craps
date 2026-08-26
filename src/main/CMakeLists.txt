@@ -41,6 +41,15 @@ target_link_libraries(ncurses-animation
     PRIVATE ncursesw
 )
 
+add_executable(ncurses-dynamic-menu
+    src/snippets/ncurses-dynamic-menu.cpp
+)
+
+target_link_libraries(ncurses-dynamic-menu
+    PRIVATE ncursesw
+)
+
+
 # add_executable(dialog-amount-entry
 #     src/snippets/dialog-amount-entry.cpp
 # )

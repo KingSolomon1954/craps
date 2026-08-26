@@ -71,10 +71,13 @@ private:
     MenuOdds();  // Private ctor
 
     
-    std::vector<std::string>& entries
-    
-    std::pair<int, int> calculateSize() const;
-    void windowResize(int numEntries, int longestEntry);
+    std::vector<std::string>& formatedEntries_
+    void gatherEntries();
+    void formatEntries();
+    void windowResize();
+    void drawBorders();
+    void drawStaticContent();
+    void populate();
 
 
 

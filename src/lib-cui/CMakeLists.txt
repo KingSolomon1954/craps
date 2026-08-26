@@ -5,16 +5,19 @@
 # -----------------------------------------------------------------
 
 add_library(cui STATIC
-    src/ConsoleView.cpp
+    src/ConsoleManager.cpp
+    src/Cui.cpp
     src/CuiUtils.cpp
     src/DialogAckError.cpp
     src/DialogAmountEntry.cpp
-    src/MenuBase.cpp
+    src/LayoutCrapsScreen.cpp
     src/MenuBetting.cpp
     src/MenuOdds.cpp
-    src/MenuPivot.cpp
-    src/Screen.cpp
+    src/MenuPlaceBet.cpp
+    src/MenuPlayerViews.cpp
     src/ScreenCrapsTable.cpp
+    src/WindowNavBar.cpp
+    src/WindowPlayerArea.cpp
 )
 
 target_include_directories(cui
