@@ -31,6 +31,9 @@ public:
     void onPlayerLeft  (const Craps::PlayerId& pid);
     void onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid);
     void onBetFailed(const Craps::PlayerId& pid, const std::string& reason);
+    void nextPlayer();
+    void prevPlayer();
+    void allPlayers();
     /// @}
 
     /// @name Observers
@@ -86,9 +89,9 @@ private:
         AllPlayers
     };
 
-    WINDOW* pWindow_ = nullptr;  // The ncurses window
-    Craps::PlayerId  curPlayerId_;
-    Craps::TableId   tableId_;
+    WINDOW* pWin_ = nullptr;  // The ncurses window
+    Craps::PlayerId curPlayerId_;
+    Craps::TableId  tableId_;
     std::vector<Craps::PlayerId> playerIds_;
     OneOrAll currentFocus_ = OneOrAll::AllPlayers;
 
@@ -109,9 +112,6 @@ private:
     void populate();
     void populateAllPlayers();
     void populateOnePlayer();
-    
-    void nextPlayer();
-    void prevPlayer();
     void advancePlayer();
     Craps::PlayerId getNextPlayerId(const Craps::PlayerId& pid) const;
     Craps::PlayerId getPrevPlayerId(const Craps::PlayerId& pid) const;

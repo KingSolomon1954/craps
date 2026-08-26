@@ -35,11 +35,11 @@ ConsoleManager::~ConsoleManager()
 
 //----------------------------------------------------------------
 
-ConsoleManager*
+ConsoleManager&
 ConsoleManager::instance()
 {
     static ConsoleManager consoleMgr;
-    return &consoleMgr;
+    return consoleMgr;
 }
 
 //----------------------------------------------------------------
@@ -103,7 +103,7 @@ ConsoleManager::setSurface(ViewSurface* pSurface)
     for (auto* s : stack_) s->onDetach();
     stack_.clear();
     stack_.push_back(pSurface);
-    pSurface->onAttach();
+    pSurface->onAttach(nullptr);  // No parent to attach to.
     draw(pSurface);
 }
 
@@ -112,10 +112,17 @@ ConsoleManager::setSurface(ViewSurface* pSurface)
 void
 ConsoleManager::pushSurface(ViewSurface* pSurface)
 {
-    std::lock_guard<std::mutex> lock(stackMx_);
-    if (!stack_.empty()) stack_.back()->onPause();
-    stack_.push_back(pSurface);
-    pSurface->onAttach();
+    ViewSurface* pParent = nullptr;
+    if (!stack_.empty())
+    {
+        pParent = stack_.back();
+        pParent->onPause();
+    }
+    {
+        std::lock_guard<std::mutex> lock(stackMx_);
+        stack_.push_back(pSurface);
+    }
+    pSurface->onAttach(pParent);
     draw(pSurface);
 }
 
@@ -124,18 +131,33 @@ ConsoleManager::pushSurface(ViewSurface* pSurface)
 void
 ConsoleManager::popSurface()
 {
-    std::lock_guard<std::mutex> lock(stackMx_);
-    if (stack_.empty()) return;
-
-    auto* pSurface = stack_.back();
-    stack_.pop_back();
-    pSurface->onDetach();
-
-    if (!stack_.empty())
     {
-        stack_.back()->onResume();
+        std::lock_guard<std::mutex> lock(stackMx_);
+        if (stack_.empty()) return;
+
+        auto* pSurface = stack_.back();
+        stack_.pop_back();
+        pSurface->onDetach();
+
+        if (!stack_.empty())
+        {
+            stack_.back()->onResume();
+        }
     }
-    draw(pSurface);
+    draw(stack_.back());
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleManager::popSurfaces()
+{
+    while (stack_.size() > 1)
+    {
+        popSurface();
+        auto* pSurface = stack_.back();
+        if (!pSurface->shouldSkip()) break;
+    }
 }
 
 //----------------------------------------------------------------

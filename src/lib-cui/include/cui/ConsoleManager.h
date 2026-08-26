@@ -26,9 +26,9 @@ public:
     /// @{
     ConsoleManager();
    ~ConsoleManager();
-    static ConsoleManager* instance();
     void init()               override;  // from ViewInterface
     void prepareForShutdown() override;  // from ViewInterface
+    static ConsoleManager& instance();
     /// @}
 
     /// @name StackOps
@@ -40,6 +40,7 @@ public:
     void handleKey(int ch);
     
     /// @}
+
 
     /// @name InputHandling
     /// @{

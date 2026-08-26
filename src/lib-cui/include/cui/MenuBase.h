@@ -7,7 +7,6 @@
 #pragma once
 
 #include <cui/ViewSurface.h>
-#include <ncurses>
 
 namespace Cui {
 
@@ -50,16 +49,3 @@ private:
 } // namespace Cui
 
 //----------------------------------------------------------------
-
-
-
-
-#ifdef 0
-    // From old MenuBase
-    void toggle();
-    void setRootMenu(bool root);
-    Screen::ScreenType type() const override;
-    bool visible_    = false;
-    bool isRoot_     = false;
-    bool isCanceled_ = false;
-#endif

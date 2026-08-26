@@ -27,11 +27,11 @@ ScreenCrapsTable::ScreenCrapsTable()
 
 //----------------------------------------------------------------
 
-ScreenCrapsTable*
+ScreenCrapsTable&
 ScreenCrapsTable::instance()
 {
-    static ScreenCrapsTable screenCrapsTable;
-    return &screenCrapsTable;
+    static ScreenCrapsTable& screenCrapsTable;
+    return screenCrapsTable;
 }
 
 //----------------------------------------------------------------
@@ -76,6 +76,63 @@ ScreenCrapsTable::drawCrapsScreen()
 
 //----------------------------------------------------------------
 //
+// ScreenCrapsTable does not process keys directly. MenuBetting owns
+// and handles keyboard processing while this surface is active.
+//
+void
+ScreenCrapsTable::handleKey(int ch)
+{
+    (void)ch;
+    LOG_TRACE("ScreenCrapsTable::handleKey() should "
+              "not get here:(" + std::to_string(ch) + ")");
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::drawNavBar()
+{
+    auto nav = WindowNavBar::instance();
+    
+    nav.clear();
+    nav.configure(
+    "[C] Control [B] BETTING [V] View [S] Stats | [H] Help [Q] Quit");
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::setAllPlayersView()
+{
+    wPlayerArea_.allPlayers();
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::setNextPlayerView()
+{
+    wPlayerArea_.nextPlayer();
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::setPrevPlayerView()
+{
+    wPlayerArea_.prevPlayer();
+}
+
+//----------------------------------------------------------------
+
+
+
+#if 0
+
+// Not currently used. Just here a while for reference.
+
+//----------------------------------------------------------------
+//
 // What might be done in onAttach()
 //
 // * Start a timer/animation associated with the surface.
@@ -88,7 +145,7 @@ ScreenCrapsTable::drawCrapsScreen()
 // * Trigger an initial data acquisition if appropriate.
 //    
 void
-ScreenCrapsTable::onAttach()
+ScreenCrapsTable::onAttach(ViewSurface* pParent)
 {
     LOG_TRACE("ScreenCrapsTable::onAttach()");
     // TODO
@@ -129,36 +186,7 @@ ScreenCrapsTable::onResume()
     // TODO
 }
 
-//----------------------------------------------------------------
-//
-// Input is handled by menu MenuBetting.
-//
-void
-ScreenCrapsTable::handleKey(int ch)
-{
-    (void) ch;
-    LOG_TRACE("ScreenCrapsTable::handleKey() should "
-              "not get here:(" + std::to_string(ch) + ")");
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::drawNavBar()
-{
-    auto pWin = WindowNavBar::instance();
-    
-    pWin->clear();
-    pWin->display(
-    "[C] Control [B] BETTING [V] View [S] Stats | [H] Help [Q] Quit");
-}
-
-//----------------------------------------------------------------
-
-
-
-
-
+#endif
 
 
 

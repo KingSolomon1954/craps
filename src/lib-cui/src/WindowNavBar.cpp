@@ -15,32 +15,32 @@ using namespace Cui;
 
 WindowNavBar::WindowNavBar()
 {
-    pWindow_ = newwin(
+    pWin_ = newwin(
         Layout::navHeight,
         Layout::navWidth,
         Layout::navTopRow,
         Layout::navLeftCol);
     
-    assert(pWindow_ != nullptr);
+    assert(pWin_ != nullptr);
 }
 
 //----------------------------------------------------------------
 
 WindowWindowNavBar::~WindowNavBar()
 {
-    if (pWindow_ != nullptr)
+    if (pWin_ != nullptr)
     {
-        delwin(pWindow_);
+        delwin(pWin_);
     }
 }
 
 //----------------------------------------------------------------
 
-WindowWindowNavBar*
+WindowWindowNavBar&
 WindowWindowNavBar::instance()
 {
     static WindowNavBar navBar;
-    return &navBar;
+    return navBar;
 }
 
 //----------------------------------------------------------------
@@ -50,7 +50,7 @@ WindowWindowNavBar::instance()
 void
 WindowNavBar::transfer();
 {
-    wnoutrefresh(pWindow_);
+    wnoutrefresh(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -58,11 +58,11 @@ WindowNavBar::transfer();
 void
 WindowNavBar::draw()
 {
-    werase(pWindow_);
+    werase(pWin_);
     drawBorders();
     drawStaticContent();
     populate();
-    CuiUtils::transfer(pWindow_);
+    CuiUtils::transfer(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -136,7 +136,7 @@ WindowNavBar::drawStaticContent()
 void
 WindowNavBar::populate()
 {
-    mvwprintw(pWindow_, 0, 0, "Nav Bar here");
+    mvwprintw(pWin_, 0, 0, "Nav Bar here");
     // Updates all dynamic fields in this view.
     // TODO
     // updatePassLineBets()
@@ -161,7 +161,77 @@ WindowNavBar::configure()
 void
 WindowNavBar::clear()
 {
-    werase(pWindow_);
+    werase(pWin_);
 }
 
 //----------------------------------------------------------------
+//
+// Returns true if key was processed, otherwise false.
+//
+bool
+WindowNavBar::handleKey(int ch)
+{
+    switch(ch)
+    {
+    case 'C': doControl(); return true; break;
+    case 'B': doBetting(); return true; break;
+    case 'V': doView();    return true; break;
+    case 'S': doStats();   return true; break;
+    case 'H': doHelp();    return true; break;
+    case 'Q': doQuit();    return true; break;
+    default:  return false;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowNavBar::doControl()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+WindowNavBar::doBetting()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+WindowNavBar::doView()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+WindowNavBar::doStats()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+WindowNavBar::doHelp()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+WindowNavBar::doQuit()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+

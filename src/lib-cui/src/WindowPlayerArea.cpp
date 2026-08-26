@@ -18,13 +18,13 @@ using namespace Cui;
 WindowPlayerArea::WindowPlayerArea()
 {
     initPlayers();
-    pWindow_ = newwin(
+    pWin_ = newwin(
         Layout::playerAreaHeight,
         Layout::playerAreaWidth,
         Layout::playerAreaTopRow,
         Layout::playerAreaLeftCol);
     
-    assert(pWindow_ != nullptr);
+    assert(pWin_ != nullptr);
 }
 
 //----------------------------------------------------------------
@@ -54,9 +54,9 @@ WindowPlayerArea::initPlayers()
 
 WindowWindowPlayerArea::~WindowPlayerArea()
 {
-    if (pWindow_ != nullptr)
+    if (pWin_ != nullptr)
     {
-        delwin(pWindow_);
+        delwin(pWin_);
     }
 }
 
@@ -65,12 +65,12 @@ WindowWindowPlayerArea::~WindowPlayerArea()
 void
 WindowPlayerArea::draw()
 {
-    werase(pWindow_);
+    werase(pWin_);
     
     drawBorders();
     drawStaticContent();
     populate();
-    CuiUtils::transfer(pWindow_);
+    CuiUtils::transfer(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -271,7 +271,7 @@ WindowPlayerArea::drawStaticContentOnePlayer()
 void
 WindowPlayerArea::populate()
 {
-    mvwprintw(pWindow_, 0, 0, "Player Area View here");
+    mvwprintw(pWin_, 0, 0, "Player Area View here");
     if (currentFocus_ == OneOrAll::AllPlayers)
     {
         populateAllPlayers();
@@ -384,7 +384,51 @@ WindowPlayerArea::prevPlayer()
 {
     advancePlayer(false);
 }
+
+//----------------------------------------------------------------
+//
+// Called from MenuView when user wants to switch player view.
+// After MenuView unwinds, we'll redraw PlayerArea IAW new focus.
+//
+void
+WindowPlayerArea::allPlayers()
+{
+    if (currentFocus_ == OneOrAll::OnePlayer)
+    {
+        currentFocus_ = OneOrAll::AllPlayers;
+        werase(pWin_);
+        drawBorders();
+        drawStaticContent();
+    }
     
+    populateAllPlayers();
+    CuiUtils::transfer(pWin_);
+}
+
+//----------------------------------------------------------------
+//
+// Called from MenuView when user wants to switch player view.
+// After MenuView unwinds, we'll redraw PlayerArea IAW new focus.
+//
+void
+WindowPlayerArea::setNextPlayerView()
+{
+    nextPlayer();
+}
+
+
+//----------------------------------------------------------------
+//
+// Called from MenuView when user wants to switch player view.
+// After MenuView unwinds, we'll redraw PlayerArea IAW new focus.
+//
+void
+WindowPlayerArea::setPrevPlayerView()
+{
+    prevPlayer();
+}
+
+
 //----------------------------------------------------------------
 void
 WindowPlayerArea::advancePlayer(bool next)
@@ -392,11 +436,11 @@ WindowPlayerArea::advancePlayer(bool next)
     if (currentFocus_ == OneOrAll::AllPlayers)
     {
         currentFocus_ = OneOrAll::OnePlayer;
-        werase(pWindow_);
+        werase(pWin_);
         drawBorders();
         drawStaticContent();
         populateOnePlayer();
-        CuiUtils::transfer(pWindow_);
+        CuiUtils::transfer(pWin_);
         return;
     }
     
@@ -418,7 +462,7 @@ WindowPlayerArea::advancePlayer(bool next)
     
     curPlayerId_ = pid;
     populateOnePlayer();
-    CuiUtils::transfer(pWindow_);
+    CuiUtils::transfer(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -436,16 +480,5 @@ WindowPlayerArea::onPlayerLeft(const Craps::PlayerId& pid)
 {
     // TODO
 }
-
-//----------------------------------------------------------------
-
-#if 0
-
-void WindowPlayerArea::updateBankroll()
-{
-    mvwprintw(pWindow_, row, col, "%-10s", formatted);
-}
-
-#endif
 
 //----------------------------------------------------------------

@@ -959,19 +959,19 @@ View Menu
     ┌───────────────────────┐
     │ View Menu             │
     ├───────────────────────┤
-    │ [a] All Players       │
-    │ [n] One Player (next) │
-    │ [p] One Player (prev) │
+    │ [A] All Players       │
+    │ [N] One Player (next) │
+    │ [P] One Player (prev) │
     └───────────────────────┘
 
-    [a] All Players View
+    [A] All Players View
         Redraws screen to All Players table view.
-    [n] One Player View (next)
+    [N] One Player View (next)
         Redraws screen to One Player table View.
         If already on One Player view, then advance
         the screen to show the next player at table, else
         bring up One Player view.
-    [p] One Player View (prev)
+    [P] One Player View (prev)
         Redraws screen to One Player table View.
         If already on One Player view, then advance
         the screen to show the previous player at table, else

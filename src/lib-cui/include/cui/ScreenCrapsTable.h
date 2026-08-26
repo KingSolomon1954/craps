@@ -31,16 +31,20 @@ public:
     /// @name Modifiers
     /// @{
     void draw()            override;  // from ViewSurface
-    void onAttach()        override;  // from ViewSurface
-    void onDetach()        override;  // from ViewSurface
     void onPause()         override;  // from ViewSurface
     void onResume()        override;  // from ViewSurface
     void handleKey(int ch) override;  // from ViewSurface
+    void onDetach()        override;  // from ViewSurface
+    void onAttach(ViewSurface* pParent) override;  // from ViewSurface
+
+    void setAllPlayersView();
+    void setNextPlayerView();
+    void setPrevPlayerView();
     /// @}
 
     /// @name Observers
     /// @{
-    static ScreenCrapsTable* instance();
+    static ScreenCrapsTable& instance();
     /// @}
 
 private:

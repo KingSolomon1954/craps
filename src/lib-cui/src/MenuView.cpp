@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: MenuPlaceBet.cpp
+// File: MenuView.cpp
 //
 //----------------------------------------------------------------
 
-#include <cui/MenuPlaceBet.h>
+#include <cui/MenuView.h>
 #include <cstring>
 #include <cassert>
 
@@ -12,7 +12,7 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-MenuPlaceBet::MenuPlaceBet()
+MenuView::MenuView()
 {
     createWindow();
     fillWindow();
@@ -20,16 +20,16 @@ MenuPlaceBet::MenuPlaceBet()
 
 //----------------------------------------------------------------
 
-MenuPlaceBet&
-MenuPlaceBet::instance()
+MenuView&
+MenuView::instance()
 {
-    static MenuPlaceBet menu;
+    static MenuView menu;
     return menu;
 }
 
 //----------------------------------------------------------------
 
-MenuPlaceBet::createWindow()
+MenuView::createWindow()
 {
     using L = Layout;
     pWin_ = newwin(L::winHeight, L::winWidth, L::winStartY, L::winStartX);
@@ -37,13 +37,13 @@ MenuPlaceBet::createWindow()
     if (pWin_ == nullptr)
     {
         throw std::runtime_error(
-            "Unable to create ncurses MenuPlaceBet window");
+            "Unable to create ncurses MenuView window");
     }
 }
 
 //----------------------------------------------------------------
 
-MenuPlaceBet::~MenuPlaceBet()
+MenuView::~MenuView()
 {
     // pWin_ is delwin() in MenuBase
 }
@@ -55,20 +55,17 @@ MenuPlaceBet::~MenuPlaceBet()
 // Later, multiple calls to draw() just transfers the already
 // filled window.
 //
-// 0  ┌────────────────────┐
-// 1  │ Place Which Number │
-// 2  ├────────────────────┤
-// 3  │ [4] Place 4        │
-// 4  │ [5] Place 5        │
-// 5  │ [6] Place 6        │
-// 6  │ [8] Place 8        │
-// 7  │ [9] Place 9        │
-// 8  │ [0] Place 10       │
-// 9  │ [esc] Back         │
-// 10 └────────────────────┘
-
+// 0  ┌───────────────────────┐
+// 1  │ View Menu             │
+// 2  ├───────────────────────┤
+// 3  │ [A] All Players       │
+// 4  │ [N] One Player (next) │
+// 5  │ [P] One Player (prev) │
+// 6  │ [esc] Back            │
+// 7  └───────────────────────┘
+//
 void
-MenuPlaceBet::fillWindow()
+MenuView::fillWindow()
 {
     using L = Layout;
     
@@ -81,15 +78,12 @@ MenuPlaceBet::fillWindow()
     mvwaddch(pWin_, 2, L::winWidth - 1, ACS_RTEE);
 
     // Static contents. The border occupies row 0/10 and column 0/21.
-    mvwaddstr(win, 1, 2, "Place Which Number");
+    mvwaddstr(win, 1, 2, "View Menu");
 
-    mvwaddstr(pWin_, 3, 2, "[4] Place 4");
-    mvwaddstr(pWin_, 4, 2, "[5] Place 5");
-    mvwaddstr(pWin_, 5, 2, "[6] Place 6");
-    mvwaddstr(pWin_, 6, 2, "[8] Place 8");
-    mvwaddstr(pWin_, 7, 2, "[9] Place 9");
-    mvwaddstr(pWin_, 8, 2, "[0] Place 10");
-    mvwaddstr(pWin_, 9, 2, "[esc] Back");
+    mvwaddstr(pWin_, 3, 2, "[A] All Players");
+    mvwaddstr(pWin_, 4, 2, "[N] One Player (next)");
+    mvwaddstr(pWin_, 5, 2, "[P] One PLayer (prev)");
+    mvwaddstr(pWin_, 6, 2, "[esc] Back");
 }
 
 //----------------------------------------------------------------
@@ -110,58 +104,47 @@ MenuPivot::handleKey(int ch)
 {
     switch(ch)
     {
-    case '4': process(4);  break;
-    case '5': process(5);  break;
-    case '6': process(6);  break;
-    case '8': process(8);  break;
-    case '9': process(9);  break;
-    case '0': process(10); break;
-    case 27:  back();      break;
+    case 'A': allPlayers(); break;
+    case 'N': nextPlayer(); break;
+    case 'P': prevPlayer(); break;
+    case 27:  back();       break;
     }
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlaceBet::process(int pivot)
+MenuView::allPlayers()
 {
-    pivot_ = pivot;
-    populateCarrier();
-    getAmount();
+    ScreenCrapsTable::instance().setAllPlayersView();
+    setOperationResult(OperationResult::success);
+    ConsoleManager::popSurfaces();
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlaceBet::populateCarrier()
+MenuView::nextPlayer()
 {
-    CarrierBet::clear();
-    CarrierBet::setBetType(CrapsBet::PlaceBet);
-    CarrierBet::setPivot(pivot_);
+    ScreenCrapsTable::instance().setNextPlayerView();
+    setOperationResult(OperationResult::success);
+    ConsoleManager::popSurfaces();
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlaceBet::getAmount()
+MenuView::nextPlayer()
 {
-    prepAmount();
-    ConsoleManager::pushSurface(AmountDialog);
-}
-
-//----------------------------------------------------------------
-
-void prepAmount()
-{
-    DialogBetAmount::setPrompt("Place Bet on %s", pivot_);
-    auto amount = getAutoFillAmount(PlaceBet, pivot_);
-    DialogBetAmount::preFill(amount);
+    ScreenCrapsTable::instance().setPrevPlayerView();
+    setOperationResult(OperationResult::success);
+    ConsoleManager::popSurfaces();
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlaceBet::back()
+MenuView::back()
 {
     // Set our own state in base class to reflect cancel.
     // Also informs parent surfaces of the state of operation.
@@ -169,7 +152,6 @@ MenuPlaceBet::back()
     // when unwinding the menu stack.
     //
     setOperationResult(OperationResult::cancel);
-    
     ConsoleManager::popSurfaces();
 }
 

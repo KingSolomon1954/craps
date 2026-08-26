@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: MenuPlaceBet.h
+// File: MenuView.h
 //
 //----------------------------------------------------------------
 
@@ -10,12 +10,12 @@
 
 namespace Cui {
 
-class MenuPlaceBet : public MenuBase
+class MenuView : public MenuBase
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuPlaceBet();
+   ~MenuViewBet();
     /// @}
 
     /// @name Modifiers
@@ -27,7 +27,7 @@ public:
 
     /// @name Observers
     /// @{
-    static MenuPlaceBet& instance();
+    static MenuView& instance();
     /// @}
     
 private:
@@ -35,26 +35,25 @@ private:
     {
         static constexpr int winStartX = 10;        
         static constexpr int winStartY = 40;
-        static constexpr int winHeight = 11;
-        static constexpr int winWidth  = 22;
+        static constexpr int winHeight = 8;
+        static constexpr int winWidth  = 25;
     };
 
-    MenuPlaceBet();  // Private ctor
+    MenuView();  // Private ctor
     void fillWindow();
-    void process(int num);
-    void prepAmount();
-    void populateCarrier();
-    void getAmount();
+    void allPlayers();
+    void nextPlayer();
+    void prevPlayer();
     void back();
 };
 
 /*-----------------------------------------------------------*//**
 
-@class MenuPivot
+@class MenuView
 
-@brief Display choices for bet Pivots
+@brief Display choices for switching Player views
 
-Responsibilities of MenuPivot:
+Responsibilities of MenuView:
 
 @li Key bindings for the menu
 
@@ -63,8 +62,6 @@ Responsibilities of MenuPivot:
 @li Takes action on input keys 
 
 @li Renders the menu on screen
-
-@li Functions to establish defaults and fill values
 
 */
 

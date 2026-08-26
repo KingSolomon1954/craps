@@ -20,7 +20,6 @@ public:
     /// @{
     WindowNavBar();
    ~WindowNavBar();
-    static ScreenCrapsTable* instance();
     /// @}
 
     /// @name Modifiers
@@ -28,11 +27,12 @@ public:
     void draw();
     void configure();
     void clear();
+    bool handleKey(int ch);
     /// @}
 
     /// @name Observers
     /// @{
-    static WindowNavBar* instance();
+    static WindowNavBar& instance();
     /// @}
     
 private:
@@ -62,7 +62,7 @@ private:
         static_assert(navWidth    == 98);
     };        
 
-    WINDOW* pWindow_ = nullptr;  // The ncurses window
+    WINDOW* pWin_ = nullptr;  // The ncurses window
 
     void drawBorders();
     void drawExternalBorder();

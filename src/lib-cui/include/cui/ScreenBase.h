@@ -14,7 +14,18 @@ namespace Cui
 class ScreenBase : public ViewSurface
 {
 public:
+    /// @name Lifecycle
+    /// @{
     ~ScreenBase() override = default;
+    /// @}
+    
+    /// @name Modifiers
+    /// @{
+    /// @}
+
+    /// @name Observers
+    /// @{
+    /// @}
 
     // Screen-specific behaviors used by all screens...
 };
