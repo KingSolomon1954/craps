@@ -41,20 +41,20 @@ private:
 
     MenuPlaceBet();  // Private ctor
     void fillWindow();
-    void process(int num);
-    void prepAmount();
+    void processSelection(int num);
     void populateCarrier();
-    void getAmount();
-    void back();
+    void prepDialogAmount();
+    void activateDialogAmount();
+    void quit();
 };
 
 /*-----------------------------------------------------------*//**
 
-@class MenuPivot
+@class MenuPlaceBet
 
-@brief Display choices for bet Pivots
+@brief Display choices for Place Bets
 
-Responsibilities of MenuPivot:
+Responsibilities of MenuPlaceBet
 
 @li Key bindings for the menu
 

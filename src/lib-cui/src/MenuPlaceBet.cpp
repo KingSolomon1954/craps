@@ -109,58 +109,57 @@ MenuPivot::handleKey(int ch)
 {
     switch(ch)
     {
-    case '4': process(4);  break;
-    case '5': process(5);  break;
-    case '6': process(6);  break;
-    case '8': process(8);  break;
-    case '9': process(9);  break;
-    case '0': process(10); break;
-    case 27:  back();      break;
+    case '4': processSelection(4);  break;
+    case '5': processSelection(5);  break;
+    case '6': processSelection(6);  break;
+    case '8': processSelection(8);  break;
+    case '9': processSelection(9);  break;
+    case '0': processSelection(10); break;
+    case 27:  quit();               break;
     }
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlaceBet::process(int pivot)
+MenuPlaceBet::processSelection(int pivot)
 {
-    pivot_ = pivot;
-    populateCarrier();
-    getAmount();
+    populateCarrier(pivot);
+    prepDialogAmount(pivot);
+    activateDialogAmount();
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlaceBet::populateCarrier()
+MenuPlaceBet::populateCarrier(int pivot)
 {
     CarrierBet::clear();
     CarrierBet::setBetType(CrapsBet::PlaceBet);
-    CarrierBet::setPivot(pivot_);
+    CarrierBet::setPivot(pivot);
 }
 
 //----------------------------------------------------------------
 
-void
-MenuPlaceBet::getAmount()
+void prepDialogAmount(int pivot)
 {
-    prepAmount();
-    ConsoleManager::pushSurface(AmountDialog);
-}
-
-//----------------------------------------------------------------
-
-void prepAmount()
-{
-    DialogBetAmount::setPrompt("Place Bet on %s", pivot_);
-    auto amount = getAutoFillAmount(PlaceBet, pivot_);
+    DialogBetAmount::setPrompt("Place Bet on %s", pivot);
+    auto amount = getAutoFillAmount(BetType::PlaceBet, pivot);
     DialogBetAmount::preFill(amount);
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlaceBet::back()
+MenuPlaceBet::activateDialogAmount()
+{
+    ConsoleManager::pushSurface(AmountDialog);
+}
+
+//----------------------------------------------------------------
+
+void
+MenuPlaceBet::quit()
 {
     // Set our own state in base class to reflect cancel.
     // Also informs parent surfaces of the state of operation.

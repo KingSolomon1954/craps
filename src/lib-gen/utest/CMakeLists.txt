@@ -9,6 +9,7 @@ find_package(Boost REQUIRED COMPONENTS asio)
 add_executable(gen-ut
     utest-gen-main.cpp
     BuildInfoTest.cpp
+    EventManagerTest.cpp
     MoneyTest.cpp
     MoneyUtilsTest.cpp
     MultiLayerConfigTest.cpp

@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <iostream>
 #include <ncurses.h>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -55,21 +54,15 @@ public:
 
     void draw()
     {
-        gatherEntries();
+        gatherBets();
         buildMenuEntries();
         windowResize();
-        
+
         werase(pWin_);
         drawBorders();
         drawStaticContent();
         populate();
         wnoutrefresh(pWin_);
-        doupdate();
-        
-// getch();    
-//      wrefresh(pWin_);
-//      wrefresh(pWin_);
-//      refresh();
     }
     
 private:
@@ -90,13 +83,14 @@ private:
     static constexpr std::string_view MenuHotKeys =
         "123456789abcdefghijklmnopqrstuvwxyz";
 
-    void gatherEntries()
+    void gatherBets()
     {
-        // builds vector of structs holding odds bets
+        // builds vector of structs holding active odds bets
         // calls into controller in actual game
-        // get player id of interest
-        // get vector of player's odds capable bets
+        // gets player id of interest
+        // gets vector of player's odds capable bets
         // Here just simulate obtaining various odds bets
+        // from hard coded structs
         activeOddsBets_.clear();
 //      activeOddsBets_ = fillOddsBets1();
         activeOddsBets_ = fillOddsBets2();
@@ -116,24 +110,44 @@ private:
     void buildMenuEntries()
     {
         menuEntries_.clear();
+        buildMenuBets();
+        addQuitEntry();
+    }
 
+    void buildMenuBets()
+    {
         for (size_t i = 0; i < activeOddsBets_.size(); ++i)
         {
+            const char hotKey = indexToHotKey(i);
+            
             menuEntries_.push_back({
-                .hotKey = indexToHotKey(i),
+                .hotKey = hotKey,
                 .betId  = activeOddsBets_[i].betId,
-                .text   = formatBet(activeOddsBets_[i])
+                .text   = formatHotKey(hotKey) + " " +
+                          formatBet(activeOddsBets_[i])
             });
         }
     }
 
+    char indexToHotKey(size_t index)
+    {
+        if (index >= MenuHotKeys.size())
+            throw std::out_of_range("Too many menu entries");
+
+        return MenuHotKeys[index];
+    }
+
+    void addQuitEntry()
+    {
+        menuEntries_.push_back({.hotKey = 27, .betId = 0, .text = "[esc] Back"});
+    }
+        
     std::string formatBet(const BetInfo& bet)
     {
         std::string name   = convertToLabel(bet.betName);
         std::string amt    = formatAmount(bet);
         std::string pivot  = formatPivot(bet);
-        std::string hotKey = formatHotKey("?");
-        return hotKey + " " + name + " " + pivot + " " + amt;
+        return name + " " + pivot + " " + amt;
     }
 
     std::string formatAmount(const BetInfo& bet)
@@ -148,9 +162,9 @@ private:
         return std::to_string(bet.pivot);
     }
     
-    std::string formatHotKey(std::string k)
+    std::string formatHotKey(const char hotKey)
     {
-        return "[" + k + "]";
+        return "[" + std::string(1, hotKey) + "]";
     }
     
     std::string convertToLabel(const std::string& s)
@@ -166,8 +180,6 @@ private:
     {
         const auto [height, width] = calcSize();
 
-        std::cout << "height:" << height << "width:" << width << std::endl;
-        
         if (pWin_ == nullptr)
         {
             pWin_ = newwin(height, width, winBorderTopCol_, winBorderTopRow_);
@@ -208,7 +220,7 @@ private:
         int height, width;
         getmaxyx(pWin_, height, width);
 
-        // Draw the horizontal separator below the title.
+        // Horizontal separator below the title.
         mvwhline(pWin_, 2, 1, ACS_HLINE, width - 2);
         mvwaddch(pWin_, 2, 0, ACS_LTEE);
         mvwaddch(pWin_, 2, width - 1, ACS_RTEE);
@@ -228,33 +240,18 @@ private:
         }
     }
     
-    char indexToHotKey(size_t index)
-    {
-        if (index >= MenuHotKeys.size())
-            throw std::out_of_range("Too many menu entries");
-
-        return MenuHotKeys[index];
-    }
-
-    std::optional<size_t>
-    hotKeyToIndex(int ch, size_t numEntries)
-    {
-        const auto pos = MenuHotKeys.find(static_cast<char>(ch));
-
-        if (pos == std::string_view::npos || pos >= numEntries)
-        {
-            return std::nullopt;
-        }
-
-        return pos;
-    }    
-    
     //----------------------------------------------------------------
     //
     // Override surface base class
     //
     void handleKey(int ch)
     {
+        if (ch == 27)  // escape
+        {
+            quit();
+            return;
+        }
+                          
         auto it = std::find_if(
             menuEntries_.begin(),
             menuEntries_.end(),
@@ -263,11 +260,76 @@ private:
                 return entry.hotKey == ch;
             });
 
-        if (it == menuEntries_.end())
-            return;
+        if (it == menuEntries_.end()) return;
 
-        // TODO
-        // selectBet(it->betId);
+        processSelection(it->betId);
+    }
+
+    //----------------------------------------------------------------
+
+    void quit()
+    {
+        // Set our own state in base class to reflect cancel.
+        // Also informs parent surfaces of the state of operation.
+        // In turn, parent menus can decide if they are skipped
+        // when unwinding the menu stack.
+        //
+        // setOperationResult(OperationResult::cancel);
+        // ConsoleManager::popSurfaces();
+    }
+
+    //----------------------------------------------------------------
+
+    void processSelection(int betId)
+    {
+        const BetInfo& bet = findBet(betId);
+        populateCarrier(bet);
+        prepDialogAmount(bet);
+        activateDialogAmount();
+    }
+
+    //----------------------------------------------------------------
+
+    BetInfo& findBet(int betId)
+    {
+        auto it = std::find_if(
+            activeOddsBets_.begin(),
+            activeOddsBets_.end(),
+            [betId](const BetInfo& bet)
+            {
+                return bet.betId == betId;
+            });
+
+        if (it == activeOddsBets_.end())
+        {
+            throw std::runtime_error(
+                "Unable to match betId. Programmer error.");
+        }
+    }
+
+    //----------------------------------------------------------------
+
+    void populateCarrier(const BetInfo& bet)
+    {
+        // CarrierBet::clear();
+        // CarrierBet::setBetType(bet.betName);
+        // CarrierBet::setPivot(bet.pivot);
+    }
+
+    //----------------------------------------------------------------
+
+    void prepDialogAmount(const BetInfo& bet)
+    {
+        // DialogBetAmount::setPrompt("Odds on %s", pivot_);
+        // auto amount = getAutoFillAmount(OddsBet, pivot_);
+        // DialogBetAmount::preFill(amount);
+    }
+
+    //----------------------------------------------------------------
+
+    void activateDialogAmount()
+    {
+        // ConsoleManager::pushSurface(AmountDialog);
     }
 
 };  // class DynamicMenu
@@ -297,176 +359,3 @@ int main()
 }
 
 //----------------------------------------------------------------
-
-
-
-
-
-
-
-#if 0
-
-    // Test writing into each window
-    mvwprintw(w.header,  0, 0, "Header text here");
-    mvwprintw(w.history, 0, 0, "History entry");
-    mvwprintw(w.table,   0, 0, "Table content...");
-    mvwprintw(w.message, 0, 0, "Messages go here");
-
-    mvwprintw(w.animation, 0, 0, "Animation area");
-    mvwprintw(w.house,     0, 0, "House: $1000");
-    mvwprintw(w.player,    0, 0, "Player: $500");
-    mvwprintw(w.command,   0, 0, "Command>");
-
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-/*
-
-0  ┌─[Header]────────────────────────────────────────────────────────────┬─[Animation]────────────────┐
-1  │Header text here                                                     │Animation area              │
-2  ├─[History]───────────────────────────────────────────────────────────┤                            │
-3  │History entry                                                        │                            │
-4  ├─[Table]─────────────────────────────────────────────────────────────┤                            │
-5  │Table content...                                                     │                            │
-6  │                                                                     │                            │
-7  │                                                                     │                            │
-8  │                                                                     │                            │
-9  │                                                                     │                            │
-10 │                                                                     │                            │
-11 │                                                                     │                            │
-12 │                                                                     │                            │
-13 │                                                                     │                            │
-14 │                                                                     │                            │
-15 │                                                                     │                            │
-16 │                                                                     │                            │
-17 │                                                                     │                            │
-18 │                                                                     │                            │
-19 │                                                                     │                            │
-20 │                                                                     │                            │
-21 │                                                                     │                            │
-22 │                                                                     │                            │
-23 ├─[Message]───────────────────────────────────────────────────────────┼─[House]────────────────────┤
-24 │Messages go here                                                     │House: $1000                │25 │                                                                     │                            │
-26 │                                                                     │                            │
-27 │                                                                     │                            │
-28 │                                                                     ├─[Player]───────────────────┤
-29 │                                                                     │Player: $500                │
-30 │                                                                     │                            │
-31 │                                                                     │                            │
-32 │                                                                     │                            │
-33 │                                                                     │                            │
-34 │                                                                     │                            │
-35 │                                                                     ├─[Command]──────────────────┤
-36 │                                                                     │Command>                    │
-37 └─────────────────────────────────────────────────────────────────────┴────────────────────────────┘
-38  Press any key to exit...
-
-*/
-
-#if 0
-    // builds vector of formatted strings for menu display
-    void formatEntries()
-    {
-        StringVec labels;
-        StringVec amounts;
-        StringVec hotKeys;
-        
-        formatLabels(labels);
-        formatAmounts(amounts);
-        formatHotKeys(hotKeys);
-        formatFinal(hotKeys, labels, amounts);
-    }
-
-    void formatLabels(StringVec& labels)
-    {
-        for (size_t i = 0; i < activeOddsBets_.size(); ++i)
-        {
-            auto& bet = activeOddsBets_[i];
-            std::string s = convertToLabel(bet.betName) + " " +
-                            std::to_string(bet.pivot);
-            labels.push_back(s);
-        }
-    }
-    
-    std::string formatHotKey(?);
-
-    void formatAmounts(StringVec& amounts)
-    {
-        for (size_t i = 0; i < activeOddsBets_.size(); ++i)
-        {
-            auto& bet = activeOddsBets__[i];
-            std::string s = "($" + std::to_string(bet.contractAmount);
-            s += ", $" + std::to_string(bet.currentOddsAmount) + ")";
-            amounts.push_back(s);
-        }
-    }
-    
-    void formatHotKeys(StringVec& hotKeys)
-    {
-        for (size_t i = 0; i < activeOddsBets_.size(); ++i)
-        {
-            std::string s = std::string("[") + hotKeyFromIndex(i) + "]";
-            hotKeys.push_back(s);
-        }
-    }
-
-    void formatFinal(StringVec& hotKeys, StringVec& labels, StringVec& amounts)
-    {
-        menuEntries_.clear();
-        for (size_t i = 0; i < labels.size(); ++i)
-        {
-            std::string s = hotKeys[i] + " " + labels[i] + " " + amounts[i];
-            menuEntries_.push_back(s);
-        }
-        finalEntries_.push_back("[esc] back");
-    }
-
-    //----------------------------------------------------------------
-    //
-    // Turn vector index into a single digit character for the prompt
-    //
-    char hotKeyFromIndex(size_t idx)
-    {
-        // There's a max of 12 odds bets in Craps
-        assert(idx <= 11);
-        
-        if (idx < 9)
-            return static_cast<char>('1' + idx);  // 0→'1', 8→'9'
-        else
-            return static_cast<char>('a' + (idx - 9));  // 9→'a', 11→'c'
-    }
-
-    //----------------------------------------------------------------
-    //
-    // Turn single digit hotKey into vector index
-    //
-    size_t hotKeyToIndex(int ch)
-    {
-        if ch 
-        // '1'..'9'
-        if (ch >= '1' && ch <= '9')
-        {
-            return ch - '1';  // '1' → 0
-        }
-
-        // 'a'..'c' (case-insensitive)
-        if (ch >= 'a' && ch <= 'c')
-        {
-            return '9' + (ch - 'a');  // 'a' → 9
-        }
-        return -1; // Invalid
-    }
-
-#endif

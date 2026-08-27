@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: MenuOdds.h
+// File: MenuOddsBet.h
 //
 //----------------------------------------------------------------
 
@@ -15,25 +15,12 @@
 
 namespace Cui {
 
-class ConsoleView;  // fwd
-    
-class MenuOdds : public MenuBase
+class MenuOddsBet : public MenuBase
 {
 public:
-    struct Results
-    {
-        bool            canceled;
-        Craps::PlayerId playerId;
-        BetName         betName;
-        Craps::BetId    betId;
-        size_t          pivot;
-        Gen::Money      contractAmount;
-        Gen::Money      currentOddsAmount;
-    };
-    
     /// @name Lifecycle
     /// @{
-   ~MenuOdds();
+   ~MenuOddsBet();
     /// @}
 
     /// @name Modifiers
@@ -44,11 +31,13 @@ public:
 
     /// @name Observers
     /// @{
-    static MenuOdds& instance();
+    static MenuOddsBet& instance();
     /// @}
     
 private:
-    struct BetEntry
+    MenuOddsBet();  // Private ctor
+
+    struct BetInfo
     {
         Craps::PlayerId playerId;
         Craps::BetId    betId;
@@ -58,51 +47,62 @@ private:
         Gen::Money      currentOddsAmount;
         Gen::Timepoint  whenCreated;
     };
-    using Bets = std::vector<BetEntry>;
-
+    struct MenuEntry
+    {
+        char         hotKey;
+        Craps::BetId betId;
+        std::string  text;
+    };
+    
+    using Bets        = std::vector<BetInfo>;
+    using BetIdList   = std::vector<Craps::BetId>;
+    using MenuEntries = std::vector<MenuEntry>;
+    
     Craps::PlayerId playerId_;
-    BetName         betName_;
-    Craps::BetId    betId_;
-    size_t          pivot_;
-    Gen::Money      contractAmount_;
-    Gen::Money      currentOddsAmount_;
-    Bets            bets_;
+    Bets            activeOddsBets_;
+    MenuEntries     menuEntries_;
+    int winBorderTopCol_ = 20;  // TODO from CUI layout
+    int winBorderTopRow_ = 10;  // TODO from CUI layout
     
-    MenuOdds();  // Private ctor
+    // Gathering bets
+    void gatherBets();
+    void getPlayerId();
+    void gatherBetsInfo();
+    void getBetIdList(BetIdList& betIdList);
+    void gatherBetsDetail(const BetIdList& betIdList);
+    void sortBetsByCreated();
 
-    
-    std::vector<std::string>& formatedEntries_
-    void gatherEntries();
-    void formatEntries();
+    // Creating menu entries
+    void buildMenuEntries();
+    void buildMenuBets();
+    char indexToHotKey(size_t index);
+    std::string formatBet   (const BetInfo& bet);
+    std::string formatAmount(const BetInfo& bet);
+    std::string formatPivot (const BetInfo& bet);
+    std::string formatHotKey(const char hotKey);
+
+    // Window creation and drawing
     void windowResize();
+    std::pair<int, int> calcSize() const;
     void drawBorders();
     void drawStaticContent();
     void populate();
 
-
-
-
-    void buildOddsBets();
-    void doSelection(BetEntry& bet);
-    void sortBetsByCreated();
-    int  betIndexFromKey(int ch, size_t betCount);
-    char betKeyFromIndex(size_t idx);
-    void buildOddsBetEntries();
-    void buildMenuEntries(std::vector<std::string>& entries);
-    void renderMenuEntries(const std::vector<std::string>& entries, int startRow);
-    int  getLongestEntry(const std::vector<std::string>& entries,
-                         const std::string& title,
-                         const std::string&  prompt) const;
-    void populateBets(std::vector<Craps::BetId>& betIds);
+    // Processing hotKeys
+    void quit();
+    void processSelection(const Craps::BetId& betId);
+    BetInfo& findBet(const Craps::BetId& betId);
+    void populateCarrier(const BetInfo& bet);
+    void prepDialogAmount(const BetInfo& bet);
 };
 
 /*-----------------------------------------------------------*//**
 
-@class MenuOdds
+@class MenuOddsBet
 
 @brief Display choices for making odds bets
 
-Responsibilities of MenuOdds:
+Responsibilities of MenuOddsBet:
 
 @li Key bindings for the menu
 

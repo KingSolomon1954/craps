@@ -30,6 +30,8 @@ public:
 
 protected:
     WINDOW* pWin_ = nullptr;
+    static constexpr std::string_view MenuHotKeys =
+        "123456789abcdefghijklmnopqrstuvwxyz";
 
 private:
     
