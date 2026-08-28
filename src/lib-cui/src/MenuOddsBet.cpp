@@ -339,7 +339,7 @@ MenuOddsBet::quit()
     // In turn, parent menus can decide if they are skipped
     // when unwinding the menu stack.
     //
-    setOperationResult(OperationResult::cancel);  // base class
+    setOperationResult(OperationResult::Cancel);  // base class
     ConsoleManager::instance().popSurfaces();
 }
 

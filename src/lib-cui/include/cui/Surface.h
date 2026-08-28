@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <ncurses.h>
+
 namespace Cui
 {
 
@@ -14,16 +16,17 @@ class Surface
 public:
     enum class OperationResult
     {
-        unset,
-        cancel,
-        error,
-        success
+        Unset,
+        Cancel,
+        Error,
+        Success
     };
     
     virtual ~Surface() = default;
 
     virtual void draw() = 0;
     virtual void handleKey(int ch) = 0;
+    
     virtual void onPause()  {};
     virtual void onResume() {};
 
@@ -43,7 +46,7 @@ public:
     virtual void onAttach(Surface* pParent)
     {
         pParentSurface_  = pParent;
-        operationResult_ = OperationResult::unset;
+        operationResult_ = OperationResult::Unset;
     }
     
     //----------------------------------------------------------------
@@ -74,7 +77,7 @@ public:
     //
     // Return true if this surface should be skipped when unwinding
     // the stack. Some surfaces in the call chain should not regain
-    // control depending on the success or failure of the
+    // control depending on the success or failure of the overall
     // operation. ConsolerManager calls this on each surface when
     // popping surfaces.
     //
@@ -86,9 +89,19 @@ public:
         return false;
     }
     
+    virtual void releaseNcursesResources()
+    {
+        if (pWin_ != nullptr)
+        {
+            delwin(pWin_);
+            pWin_ = nullptr;
+        }
+    }
+
 protected:
+    WINDOW*  pWin_                   = nullptr;
     Surface* pParentSurface_         = nullptr;
-    OperationResult operationResult_ = OperationResult::unset;
+    OperationResult operationResult_ = OperationResult::Unset;
 };
 
 /*-----------------------------------------------------------*//**

@@ -16,7 +16,7 @@ class ScreenBase : public Surface
 public:
     /// @name Lifecycle
     /// @{
-    ~ScreenBase() override = default;
+   ~ScreenBase() = default;
     /// @}
     
     /// @name Modifiers

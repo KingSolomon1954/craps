@@ -84,6 +84,13 @@ private:
     std::mutex stackMx_;
     std::atomic<bool> running_{true};
     std::thread inputThread_;
+
+    using SurfaceList = std::vector<Surface*>;
+    SurfaceList surfaces_;
+    
+    void shutdownNcursesResources();
+    void shutdownInputThread();
+    void registerSurface(Surface* pSurface);
     
     bool utf8_enabled();
 };

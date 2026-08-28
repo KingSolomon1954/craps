@@ -16,7 +16,9 @@ using namespace Cui;
 ScreenCrapsTable::ScreenCrapsTable()
 {
     LOG_TRACE("Entered ScreenCrapsTable::ctor()");
-    
+
+    createWindow();
+
     // Obtain our root menu and give it a pointer back to us.
     pMenuBetting_ = MenuBetting::instance();
     pMenuBetting_->setRootMenu(true);
@@ -36,8 +38,12 @@ ScreenCrapsTable::instance()
 
 //----------------------------------------------------------------
 
-ScreenCrapsTable::~ScreenCrapsTable()
+void
+ScreenCrapsTable::createWindow()
 {
+    using L = LayoutCrapsScreen;
+    
+    pWin_ = newwin(L::height, L::width, L::leftCol, L::topRow);
 }
 
 //----------------------------------------------------------------
@@ -50,7 +56,7 @@ ScreenCrapsTable::~ScreenCrapsTable()
 void
 ScreenCrapsTable::draw()  // Override
 {
-    werase(stdscr);
+    werase(pWin_);
     
     LayoutCrapsScreen::draw();
 

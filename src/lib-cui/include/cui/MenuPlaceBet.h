@@ -15,7 +15,7 @@ class MenuPlaceBet : public MenuBase
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuPlaceBet();
+   ~MenuPlaceBet() = default;
     /// @}
 
     /// @name Modifiers
@@ -40,6 +40,7 @@ private:
     };
 
     MenuPlaceBet();  // Private ctor
+    void createWindow();
     void fillWindow();
     void processSelection(int num);
     void populateCarrier();

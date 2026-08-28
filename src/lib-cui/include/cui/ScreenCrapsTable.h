@@ -18,14 +18,12 @@
 
 namespace Cui {
 
-class MenuBetting;  // fwd
-    
 class ScreenCrapsTable : public ScreenBase
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~ScreenCrapsTable() override;
+   ~ScreenCrapsTable() = default;
     /// @}
     
     /// @name Modifiers
@@ -50,6 +48,10 @@ public:
 private:
     // Order doesn't matter    
 
+    // These window classes are not Surfaces.
+    // They don't get pushed/popped or process input keys.
+    // But they do have their own ncurses WINDOW*.
+    // 
     WindowHeader           wHeader_;
     WindowRollHistory      wRollHistory_;
     WindowWindowPlayerArea wPlayerArea_;

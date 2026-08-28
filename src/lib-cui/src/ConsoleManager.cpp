@@ -30,7 +30,9 @@ ConsoleManager::ConsoleManager()
 
 ConsoleManager::~ConsoleManager()
 {
-    prepareForShutdown();
+    shutdownInputThread();
+    shutdownNcursesResources();
+    endwin();
 }
 
 //----------------------------------------------------------------
@@ -69,7 +71,7 @@ ConsoleManager::init()
 //----------------------------------------------------------------
 
 void
-ConsoleManager::prepareForShutdown()
+ConsoleManager::shutdownInputThread()
 {
     running_ = false;
     if (inputThread_.joinable())
@@ -82,9 +84,40 @@ ConsoleManager::prepareForShutdown()
         for (auto* s : stack_) s->onDetach();
         stack_.clear();
     }
-    endwin();
 }
 
+//----------------------------------------------------------------
+
+void
+ConsoleManager::shutdownNcursesResources()
+{
+    for (auto* surface : surfaces_)
+    {
+        surface->shutdownNcursesResources();
+    }
+    surfaces_.clear();
+}
+
+//----------------------------------------------------------------
+//
+// Called from ViewInterface
+//
+void
+ConsoleManager::prepareForShutdown()
+{
+}
+
+//----------------------------------------------------------------
+
+void
+ConsoleManager::registerSurface(Surface* pSurface)
+{
+    if (std::find(surfaces_.begin(), surfaces_.end(), pSurface)
+        == surfaces_.end())
+    {
+        surfaces_.push_back(pSurface);
+    }
+}
 //----------------------------------------------------------------
 
 void
@@ -105,6 +138,7 @@ ConsoleManager::setSurface(Surface* pSurface)
     stack_.push_back(pSurface);
     pSurface->onAttach(nullptr);  // No parent to attach to.
     draw(pSurface);
+    registerSurface(pSurface)
 }
 
 //----------------------------------------------------------------

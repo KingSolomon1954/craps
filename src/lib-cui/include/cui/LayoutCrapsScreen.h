@@ -6,10 +6,19 @@
 
 #pragma once
 
+struct WINDOW; // fwd
+
 namespace Cui {
     
 struct LayoutCrapsScreen
 {
+    static constexpr int height   = LayoutConsole::minRows;
+    static constexpr int width    = LayoutConsole::minCols;
+    static constexpr int leftCol  = 0;
+    static constexpr int rightCol = width - 1;
+    static constexpr int topRow   = 0;
+    static constexpr int botRow   = height - 1;
+    
     // Header Window occupies rows 0-2, cols 0-69
     static constexpr int headerBorderTopRow   = 0;
     static constexpr int headerBorderBotRow   = 2;
@@ -52,7 +61,7 @@ struct LayoutCrapsScreen
     static constexpr int playerBriefBorderLeftCol  = 69;
     static constexpr int playerBriefBorderRightCol = 99;
 
-    static void draw();
+    static void draw(WINDOW* pWin);
 };
 
 } // namespace Cui

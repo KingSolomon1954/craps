@@ -1,4 +1,4 @@
-[>61;7600;1c
+
 Write script to copy files/assets to install locations
 Design EventQueue and Events
 
@@ -30,12 +30,23 @@ Add world bet
 QuickBets need to save/read from user config
 AutoFills need to save/read from user config
 
-Implement initial ScreenCrapsTable draw window
-
 Fix CrapsEventEmitters to issue event and get response
 Implement correlationId in GameController
 Implement controller events for commands that change state
 
+In CUI, need full screen windows to draw with pWin_
+In CUI, need geometry management/control over menu placement
+In CUI, need Surface base class to own pWin_
+In CUI, need Surface base class to implement releaseNcursesResources()
+In CUI, ConsoleManager needs to collect unique surface pointers.
+In CUI, ConsoleManager needs a prepareForShutdown() over the collection.
+In CUI, switch to lib-gen EventManager. Eliminate 2 different event managers.
+In CUI, need DialogBase
+In CUI, need DialogBetAmount
+In Controller, need redesign for interface and event handlers
+
+
+(Done) Implement initial ScreenCrapsTable draw window
 (Done) Change API for controller events (emitters, handlers, readers)
 (Done) Switch to unique_ptr for event loop ovnership
 (Done) ConsoleView delegates to ViewEventEmitter

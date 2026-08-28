@@ -5,6 +5,8 @@
 //----------------------------------------------------------------
 
 #include <cui/MenuPlaceBet.h>
+#include <cui/CarrierBet.h>
+#include <craps/EnumBetName.h>
 #include <cassert>
 
 using namespace Cui;
@@ -28,6 +30,7 @@ MenuPlaceBet::instance()
 
 //----------------------------------------------------------------
 
+void
 MenuPlaceBet::createWindow()
 {
     using L = Layout;
@@ -38,13 +41,6 @@ MenuPlaceBet::createWindow()
         throw std::runtime_error(
             "Unable to create ncurses MenuPlaceBet window");
     }
-}
-
-//----------------------------------------------------------------
-
-MenuPlaceBet::~MenuPlaceBet()
-{
-    // pWin_ is delwin() in MenuBase
 }
 
 //----------------------------------------------------------------
@@ -80,7 +76,7 @@ MenuPlaceBet::fillWindow()
     mvwaddch(pWin_, 2, L::winWidth - 1, ACS_RTEE);
 
     // Static contents. The border occupies row 0/10 and column 0/21.
-    mvwaddstr(win, 1, 2, "Place Which Number");
+    mvwaddstr(pWin_, 1, 2, "Place Which Number");
 
     mvwaddstr(pWin_, 3, 2, "[4] Place 4");
     mvwaddstr(pWin_, 4, 2, "[5] Place 5");
@@ -94,7 +90,7 @@ MenuPlaceBet::fillWindow()
 //----------------------------------------------------------------
 
 void
-MenuPivot::draw()
+MenuPlaceBet::draw()
 {
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
@@ -105,7 +101,7 @@ MenuPivot::draw()
 // Override surface base class
 //
 void
-MenuPivot::handleKey(int ch)
+MenuPlaceBet::handleKey(int ch)
 {
     switch(ch)
     {
@@ -134,9 +130,10 @@ MenuPlaceBet::processSelection(int pivot)
 void
 MenuPlaceBet::populateCarrier(int pivot)
 {
-    CarrierBet::clear();
-    CarrierBet::setBetType(CrapsBet::PlaceBet);
-    CarrierBet::setPivot(pivot);
+    auto cb = CarrierBet::instance();
+    cb.clear();
+    cb.setBetType(BetName::PlaceBet);
+    cb.setPivot(pivot);
 }
 
 //----------------------------------------------------------------

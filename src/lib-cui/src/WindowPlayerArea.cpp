@@ -57,6 +57,7 @@ WindowWindowPlayerArea::~WindowPlayerArea()
     if (pWin_ != nullptr)
     {
         delwin(pWin_);
+        pWin_ = nullptr;
     }
 }
 

@@ -8,7 +8,6 @@
 
 #include <cui/Surface.h>
 #include <string_view>
-#include <ncurses.h>
 
 namespace Cui {
 
@@ -17,7 +16,7 @@ class MenuBase : public Surface
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuBase() { if (pWin_) delwin(pWin_); }
+   ~MenuBase() = default;
     /// @}
 
     /// @name Modifiers
@@ -29,7 +28,6 @@ public:
     /// @}
 
 protected:
-    WINDOW* pWin_ = nullptr;
     static constexpr std::string_view MenuHotKeys =
         "123456789abcdefghijklmnopqrstuvwxyz";
 
