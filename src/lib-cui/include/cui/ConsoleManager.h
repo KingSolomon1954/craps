@@ -35,10 +35,9 @@ public:
     /// @{
     void setSurface (Surface* pSurface);  // clear stack, push this (replace)
     void pushSurface(Surface* pSurface);  // overlay (pauses previous top)
-    void popSurface();                        // remove top, resume new top if any
+    void popSurface ();                   // remove top, resume new top if any
+    void popSurfaces();                   // remove top until menu claim control
     void draw(Surface* pSurface);
-    void handleKey(int ch);
-    
     /// @}
 
 

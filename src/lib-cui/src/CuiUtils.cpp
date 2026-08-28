@@ -5,7 +5,6 @@
 //---------------------------------------------------------------
 
 #include <cui/CuiUtils.h>  // Our interface
-#include <ncurses>
 
 using namespace Cui;
 

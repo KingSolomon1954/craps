@@ -65,7 +65,7 @@ MenuPlaceBet::~MenuPlaceBet()
 // 8  │ [0] Place 10       │
 // 9  │ [esc] Back         │
 // 10 └────────────────────┘
-
+//
 void
 MenuPlaceBet::fillWindow()
 {

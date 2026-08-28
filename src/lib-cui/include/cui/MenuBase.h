@@ -7,10 +7,10 @@
 #pragma once
 
 #include <cui/Surface.h>
+#include <string_view>
+#include <ncurses.h>
 
 namespace Cui {
-
-class WINDOW; // fwd
 
 class MenuBase : public Surface
 {

@@ -12,8 +12,6 @@
 
 namespace Cui {
 
-struct WINDOW;  // fwd
-    
 class CuiUtils
 {
 public:

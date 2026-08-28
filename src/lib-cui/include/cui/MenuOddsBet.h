@@ -20,7 +20,7 @@ class MenuOddsBet : public MenuBase
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuOddsBet();
+   ~MenuOddsBet() = default;
     /// @}
 
     /// @name Modifiers
@@ -35,7 +35,7 @@ public:
     /// @}
     
 private:
-    MenuOddsBet();  // Private ctor
+    MenuOddsBet() = default;  // Private ctor, instead use instance()
 
     struct BetInfo
     {
@@ -76,6 +76,7 @@ private:
     void buildMenuEntries();
     void buildMenuBets();
     char indexToHotKey(size_t index);
+    void addQuitEntry();
     std::string formatBet   (const BetInfo& bet);
     std::string formatAmount(const BetInfo& bet);
     std::string formatPivot (const BetInfo& bet);
@@ -94,6 +95,7 @@ private:
     BetInfo& findBet(const Craps::BetId& betId);
     void populateCarrier(const BetInfo& bet);
     void prepDialogAmount(const BetInfo& bet);
+    void activateDialogAmount();
 };
 
 /*-----------------------------------------------------------*//**

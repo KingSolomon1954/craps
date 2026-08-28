@@ -64,7 +64,7 @@ public:
     // to decide whether they retain control later upon unwinding the
     // stack or should be skipped. See ConsoleManager::popSurfaces().
     // 
-    virtual setOperationResult(OperationResult r)
+    virtual void setOperationResult(OperationResult r)
     {
         operationResult_ = r;
         if (pParentSurface_) pParentSurface_->setOperationResult(r);

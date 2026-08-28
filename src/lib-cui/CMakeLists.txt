@@ -5,6 +5,7 @@
 # -----------------------------------------------------------------
 
 add_library(cui STATIC
+    src/CarrierBet.cpp
     src/ConsoleManager.cpp
     src/Cui.cpp
     src/CuiUtils.cpp
@@ -12,7 +13,7 @@ add_library(cui STATIC
     src/DialogAmountEntry.cpp
     src/LayoutCrapsScreen.cpp
     src/MenuBetting.cpp
-    src/MenuOdds.cpp
+    src/MenuOddsBet.cpp
     src/MenuPlaceBet.cpp
     src/MenuPlayerViews.cpp
     src/ScreenCrapsTable.cpp

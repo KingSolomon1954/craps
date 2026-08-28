@@ -195,8 +195,9 @@ Important behaviors:
 @li Handler callbacks execute serially on the single worker thread.
     If one callback blocks, later events wait.
 
-@example
+1. Example: Unnamed subscriber callback function
 
+@@code
 struct DiceRolled
 {
     int value;
@@ -212,9 +213,143 @@ events.subscribe<DiceRolled>(
     });
 
 events.publish(DiceRolled{6});
+@endcode
 
-@endexample
-    
+2. Example: Named subscriber callback function
+
+There are times you want to subscribe and dispatch to a named
+function within the source file. 
+
+Define a named function whose parameter matches the event type
+Then subscribe it using its address
+
+@code
+void handleDiceRolled(const DiceRolled& event)
+{
+    std::cout << "Rolled: " << event.value << '\n';
+}
+
+events.subscribe<DiceRolled>(&handleDiceRolled);
+@endcode
+
+3. Example: Using std::function()
+
+A function pointer converts to the std::function<void(const
+DiceRolled&)> parameter automatically. So You can also write the
+equivalent with an explicit std::function: cpp
+
+@code
+events.subscribe<DiceRolled>(
+    std::function<void(const DiceRolled&)>{handleDiceRolled});
+@endcode
+
+
+4. Example: For a function declared in another source file
+
+Place its declaration in a header:
+
+@code
+// DiceHandlers.h
+#pragma once
+
+void handleDiceRolled(const DiceRolled& event);
+@endcode
+
+Define it in a .cpp file:
+
+@code
+// DiceHandlers.cpp
+#include "DiceHandlers.h"
+#include <iostream>
+
+void handleDiceRolled(const DiceRolled& event)
+{
+    std::cout << "Rolled: " << event.value << '\n';
+}
+@endcode
+
+Then subscribe normally:
+
+@code
+#include "DiceHandlers.h"
+
+Gen::EventManager events;
+
+events.subscribe<DiceRolled>(&handleDiceRolled);
+@endcode
+
+5. Example: For a static member function:
+
+@code
+class DiceHandlers
+{
+public:
+    static void onDiceRolled(const DiceRolled& event);
+};
+
+void DiceHandlers::onDiceRolled(const DiceRolled& event)
+{
+    std::cout << "Rolled: " << event.value << '\n';
+}
+@endcode
+
+Subscribe to it like this:
+
+@code
+events.subscribe<DiceRolled>(&DiceHandlers::onDiceRolled);
+@endcode
+
+5. Example: For a non-static member function
+
+Use a lambda that captures the object:
+
+@code
+class Game
+{
+public:
+    void onDiceRolled(const DiceRolled& event)
+    {
+        std::cout << "Game received: " << event.value << '\n';
+    }
+};
+
+Game game;
+
+events.subscribe<DiceRolled>(
+    [&game](const DiceRolled& event)
+    {
+        game.onDiceRolled(event);
+    });
+@endcode
+
+Because EventManager stores the handler until it is destroyed, game
+must remain alive for as long as the subscription can be invoked. A
+safer option is to capture a std::weak_ptr when the receiving object is
+managed by std::shared_ptr:
+
+@code
+class Game
+{
+public:
+    void onDiceRolled(const DiceRolled& event)
+    {
+        std::cout << "Game received: " << event.value << '\n';
+    }
+};
+
+auto game = std::make_shared<Game>();
+std::weak_ptr<Game> weakGame = game;
+
+events.subscribe<DiceRolled>(
+    [weakGame](const DiceRolled& event)
+    {
+        if (auto game = weakGame.lock())
+        {
+            game->onDiceRolled(event);
+        }
+    });
+@endcode
+
 */
 
 } // namespace Gen
