@@ -29,6 +29,22 @@ ScreenCrapsTable::ScreenCrapsTable()
 
 //----------------------------------------------------------------
 
+void
+ScreenCrapsTable::releaseNcursesResources()
+{
+    wHeader_.releaseNcursesResources();
+    wRollHistory_.releaseNcursesResources();
+    wPlayerArea_.releaseNcursesResources();
+    wMessages_.releaseNcursesResources();
+    wAnimation_.releaseNcursesResources();
+    wHouseBrief_.releaseNcursesResources();
+    wPlayerBrief_.releaseNcursesResources();
+    
+    Surface::releaseNcursesResources();  // Execute base implementation    
+}
+
+//----------------------------------------------------------------
+
 ScreenCrapsTable&
 ScreenCrapsTable::instance()
 {
@@ -117,6 +133,14 @@ void
 ScreenCrapsTable::setPrevPlayerView()
 {
     wPlayerArea_.prevPlayer();
+}
+
+//----------------------------------------------------------------
+
+WINDOW*
+ScreenCrapsTable::lendWindow()
+{
+    return pWin_;
 }
 
 //----------------------------------------------------------------

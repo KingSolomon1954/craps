@@ -8,20 +8,18 @@
 
 #include <cui/LayoutCrapsScreen.h>
 #include <craps/CrapsTypes.h>
-#include <cassert>
 
 namespace Cui
 {
 
-struct WINDOW; // fwd
-    
 class WindowPlayerArea
 {
 public:
     /// @name Lifecycle
     /// @{
     WindowPlayerArea();
-   ~WindowPlayerArea();
+   ~WindowPlayerArea() = default;
+    void releaseNcursesResources();
     /// @}
 
     /// @name Modifiers
@@ -90,7 +88,6 @@ private:
         AllPlayers
     };
 
-    WINDOW* pWin_ = nullptr;  // The ncurses window
     Craps::PlayerId curPlayerId_;
     Craps::TableId  tableId_;
     std::vector<Craps::PlayerId> playerIds_;
@@ -99,10 +96,10 @@ private:
     void initPlayers();
     void drawBorders();
     void drawExternalJunctions();
-    void drawExternalJunctionsAllPlayers();
-    void drawExternalJunctionsOnePlayer();
-    void eraseExternalJunctionsAllPlayers();
-    void eraseExternalJunctionsOnePlayer();
+    void drawExternalJunctionsAllPlayers (WINDOW* pLendWin);
+    void drawExternalJunctionsOnePlayer  (WINDOW* pLendWin);
+    void eraseExternalJunctionsAllPlayers(WINDOW* pLendWin);
+    void eraseExternalJunctionsOnePlayer (WINDOW* pLendWin);
     void drawInternalBorder();
     void drawInternalBordersAllPlayers()
     void drawInternalBordersOnePlayer()

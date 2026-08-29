@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <cui/LayoutConsole>
 #include <cassert>
 
 namespace Cui
@@ -19,7 +20,7 @@ public:
     /// @name Lifecycle
     /// @{
     WindowNavBar();
-   ~WindowNavBar();
+   ~WindowNavBar() = default;
     /// @}
 
     /// @name Modifiers
@@ -38,21 +39,15 @@ public:
 private:
     struct Layout
     {
-        // Nav Bar occupies rows 38-40, cols 0-99
-        static constexpr int navBorderRowTop   = 38;
-        static constexpr int navBorderRowBot   = 40;
-        static constexpr int navBorderColLeft  = 0;
-        static constexpr int navBorderColRight = 99;
-        static constexpr int navBorderHeight   = navBorderBotRow   - navBorderTopRow  + 1;
-        static constexpr int navBorderWidth    = navBorderRightCol - navBorderLeftCol + 1;
-
+        using C = LayoutConsole;
+        
         // Sizing and location of Window based on LayoutConsole
-        static constexpr int navTopRow   = navBorderRowTop   + 1;
-        static constexpr int navBotRow   = navBorderBotRow   - 1;
-        static constexpr int navLeftCol  = navBorderLeftCol  + 1;
-        static constexpr int navRightCol = navBorderRightCol - 1;
-        static constexpr int navHeight   = navBorderHeight   - 2;
-        static constexpr int navWidth    = navBorderWidth    - 2;
+        static constexpr int navTopRow   = C::navBorderTopRow   + 1;
+        static constexpr int navBotRow   = C::navBorderBotRow   - 1;
+        static constexpr int navLeftCol  = C::navBorderLeftCol  + 1;
+        static constexpr int navRightCol = C::navBorderRightCol - 1;
+        static constexpr int navHeight   = C::navBorderHeight   - 2;
+        static constexpr int navWidth    = C::navBorderWidth    - 2;
 
         static_assert(navTopRow   == 39);
         static_assert(navBotRow   == 39);

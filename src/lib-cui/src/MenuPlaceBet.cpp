@@ -6,6 +6,8 @@
 
 #include <cui/MenuPlaceBet.h>
 #include <cui/CarrierBet.h>
+#include <cui/ConsoleManager.h>
+#include <cui/CuiUtils.h>
 #include <craps/EnumBetName.h>
 #include <cassert>
 
@@ -118,6 +120,20 @@ MenuPlaceBet::handleKey(int ch)
 //----------------------------------------------------------------
 
 void
+MenuPlaceBet::quit()
+{
+    // Set our own state in base class to reflect cancel.
+    // Also informs parent surfaces of the state of operation.
+    // In turn, parent menus can decide if they are skipped
+    // when unwinding the menu stack.
+    //
+    setOperationResult(OperationResult::Cancel);  // base class
+    ConsoleManager::instance().popSurfaces();
+}
+
+//----------------------------------------------------------------
+
+void
 MenuPlaceBet::processSelection(int pivot)
 {
     populateCarrier(pivot);
@@ -132,7 +148,7 @@ MenuPlaceBet::populateCarrier(int pivot)
 {
     auto cb = CarrierBet::instance();
     cb.clear();
-    cb.setBetType(BetName::PlaceBet);
+    cb.setBetType(BetName::Place);
     cb.setPivot(pivot);
 }
 
@@ -140,9 +156,10 @@ MenuPlaceBet::populateCarrier(int pivot)
 
 void prepDialogAmount(int pivot)
 {
-    DialogBetAmount::setPrompt("Place Bet on %s", pivot);
-    auto amount = getAutoFillAmount(BetType::PlaceBet, pivot);
-    DialogBetAmount::preFill(amount);
+    // TODO
+    // DialogBetAmount::setPrompt("Place Bet on %s", pivot);
+    // auto amount = getAutoFillAmount(BetType::PlaceBet, pivot);
+    // DialogBetAmount::preFill(amount);
 }
 
 //----------------------------------------------------------------
@@ -150,22 +167,8 @@ void prepDialogAmount(int pivot)
 void
 MenuPlaceBet::activateDialogAmount()
 {
-    ConsoleManager::pushSurface(AmountDialog);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuPlaceBet::quit()
-{
-    // Set our own state in base class to reflect cancel.
-    // Also informs parent surfaces of the state of operation.
-    // In turn, parent menus can decide if they are skipped
-    // when unwinding the menu stack.
-    //
-    setOperationResult(OperationResult::cancel);
-    
-    ConsoleManager::popSurfaces();
+    // TODO
+    // ConsoleManager::pushSurface(AmountDialog);
 }
 
 //----------------------------------------------------------------

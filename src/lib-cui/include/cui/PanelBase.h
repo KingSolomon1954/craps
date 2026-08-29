@@ -1,25 +1,33 @@
 //----------------------------------------------------------------
 //
-// File: DialogBase.h
+// File: PanelBase.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
-#include <cui/Surface.h>
+#include <ncurses.h>
 
 namespace Cui {
 
-class DialogBase : public Surface
+class PanelBase
 {
 public:
     /// @name Lifecycle
     /// @{
-    ~DialogBase() = default;
+   ~PanelBase() = default;
     /// @}
 
     /// @name Modifiers
     /// @{
+    virtual void releaseNcursesResources()
+    {
+        if (pWin_ != nullptr)
+        {
+            delwin(pWin_);
+            pWin_ = nullptr;
+        }
+    }
     /// @}
 
     /// @name Observers
@@ -27,6 +35,7 @@ public:
     /// @}
 
 protected:
+   
 
 private:
     
@@ -34,12 +43,14 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class DialogBase
+@class PanelBase
 
-@brief Specialized surface type for dialog boxes
+@brief A Window physically contained within a Surface
 
-@li Implements virtual Surface interface
-@li Provides logic common for all dialog classes
+A bounded rectangular region that forms part of a larger UI.
+
+@li Implements virtual Panel interface
+@li Provides logic common for all Panel Window classes
 
 */
 

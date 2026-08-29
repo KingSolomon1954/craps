@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/LayoutCrapsScreen.h>
+#include <cui/LayoutConsole.h>
 #include <cui/CuiUtils.h>
 #include <ncurses.h>
 
@@ -12,31 +13,26 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 //
-// Draw outer most border and all the ScreenCrapsTable rectangles.
+// Draw borders and all the ScreenCrapsTable rectangles.
 /*    
- ┌──────────────────────────────────────┬──────────────┐
- │              Header                  │    Dice      │
- ├──────────────────────────────────────┤  Animation   │
- │           Roll History               │              │
- ├──────────────────────────────────────┤              │
- │                                      │              │
- │          Player Area                 │              │
- │                                      │              │
- ├──────────────────────────────────────┼──────────────┤
- │             Messages                 │ House Brief  │
- │                                      ├──────────────┤
- │                                      │ Player Brief │
- └──────────────────────────────────────┴──────────────┘
+   ┌──────────────────────────────────────┬──────────────┐
+   │              Header                  │    Dice      │
+   ├──────────────────────────────────────┤  Animation   │
+   │           Roll History               │              │
+   ├──────────────────────────────────────┤              │
+   │                                      │              │
+   │          Player Area                 │              │
+   │                                      │              │
+   ├──────────────────────────────────────┼──────────────┤
+   │             Messages                 │ House Brief  │
+   │                                      ├──────────────┤
+   │                                      │ Player Brief │
+   ├──────────────────────────────────────┴──────────────┤                                                     ┤
+   │                        NavBar                       │
+   └─────────────────────────────────────────────────────┘
 
-  This layout is drawn once. Then the individual areas/rectangles are
-  each their own window class and they will soon modify their boxing
-  rectangle as necessary with junctions to align with internal element
-  separators. The NavBar window class will draw itself and attach to the
-  bottom of LayoutCrapsScreen.
-
- ├                                                     ┤
- │                        NavBar                       │
- └─────────────────────────────────────────────────────┘
+   This layout is drawn once. Then the individual
+   areas/rectangles are each their own window class.
 */
 
 void
@@ -53,7 +49,7 @@ LayoutCrapsScreen::draw(WINDOW* pWin)
     mvwhline(pWin_, L::messageBorderTopRow,     L::messageBorderLeftCol,     0, L::messageBorderRightCol     - L::messageBorderLeftCol     + 1);
     mvwhline(pWin_, L::houseBriefBorderTopRow,  L::houseBriefBorderLeftCol,  0, L::houseBriefBorderRightCol  - L::houseBriefBorderLeftCol  + 1);
     mvwhline(pWin_, L::playerBriefBorderTopRow, L::playerBriefBorderLeftCol, 0, L::playerBriefBorderRightCol - L::playerBriefBorderLeftCol + 1);
-    mvwhline(pWin_, L::navBarBorderTopRow,      L::navBarBorderLeftCol,      0, L::navBarBorderRightCol      - L::navBarBorderLeftCol      + 1);
+    mvwhline(pWin_, O::navBarBorderTopRow,      O::navBarBorderLeftCol,      0, O::navBorderRightCol         - O::navBarBorderLeftCol      + 1);
 
     // Vertical lines
     mvwvline(pWin, L::animationBorderTopRow,   L::animationBorderLeftCol,   0, L::animationBorderBotRow   - L::animationBorderTopRow   + 1);
@@ -67,12 +63,10 @@ LayoutCrapsScreen::draw(WINDOW* pWin)
     mvwaddch(pWin_, L::rollHistBorderTopRow,   L::rollHistBorderLeftCol,   ACS_LTEE);
     mvwaddch(pWin_, L::playerAreaBorderTopRow, L::playerAreaBorderLeftCol, ACS_LTEE);
     mvwaddch(pWin_, L::messageBorderTopRow,    L::messageBorderLeftCol,    ACS_LTEE);
-    mvwaddch(pWin_, L::messageBorderBotRow,    L::messageBorderLeftCol,    ACS_LTEE);
 
     // Junctions on right border
     mvwaddch(pWin_, L::houseBriefBorderTopRow,  L::houseBriefBorderRightCol,  ACS_RTEE);
     mvwaddch(pWin_, L::playerBriefBorderTopRow, L::playerBriefBorderRightCol, ACS_RTEE);
-    mvwaddch(pWin_, L::navBarBorderTopRow,      L::navBarBorderRightCol,      ACS_RTEE);
 
     // Junctions at column split
     mvwaddch(pWin_, L::rollHistBorderTopRow,    L::rollHistBorderRightCol,   ACS_RTEE);
@@ -81,7 +75,11 @@ LayoutCrapsScreen::draw(WINDOW* pWin)
     mvwaddch(pWin_, L::playerBriefBorderTopRow, L::playerBriefBorderLeftCol, ACS_LTEE);
     mvwaddch(pWin_, L::playerBriefBorderBotRow, L::playerBriefBorderLeftCol, ACS_BTEE);
 
-    CuiUtils::transfer(stdscr);
+    // Navbar junctions
+    mvwaddch(pWin_, O::navBarBorderTopRow, O::navBarBorderLeftCol,  ACS_LTEE);
+    mvwaddch(pWin_, O::navBarBorderTopRow, O::navBarBorderRightCol, ACS_RTEE);
+
+    CuiUtils::transfer(pWin_);
 }
 
 //----------------------------------------------------------------

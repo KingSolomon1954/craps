@@ -44,16 +44,6 @@ WindowWindowNavBar::instance()
 }
 
 //----------------------------------------------------------------
-//
-// Move window contents to ncurses virtual backing store
-//
-void
-WindowNavBar::transfer();
-{
-    wnoutrefresh(pWin_);
-}
-
-//----------------------------------------------------------------
 
 void
 WindowNavBar::draw()

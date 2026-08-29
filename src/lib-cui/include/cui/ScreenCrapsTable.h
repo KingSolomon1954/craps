@@ -24,6 +24,7 @@ public:
     /// @name Lifecycle
     /// @{
    ~ScreenCrapsTable() = default;
+    void releaseNcursesResources() override;
     /// @}
     
     /// @name Modifiers
@@ -35,9 +36,11 @@ public:
     void onDetach()                 override;  // from Surface
     void onAttach(Surface* pParent) override;  // from Surface
 
-    void setAllPlayersView();
-    void setNextPlayerView();
-    void setPrevPlayerView();
+    void setAllPlayersView();                  // MenuPlayerViews calls this
+    void setNextPlayerView();                  // MenuPlayerViews calls this
+    void setPrevPlayerView();                  // MenuPlayerViews calls this
+    
+    WINDOW* lendWindow();                      // Just for WindowPlayerArea
     /// @}
 
     /// @name Observers

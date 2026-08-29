@@ -108,7 +108,12 @@ ConsoleManager::prepareForShutdown()
 }
 
 //----------------------------------------------------------------
-
+//
+// Keep a collection of unique surface pointers.
+//
+// Used when shutting down in order to issue delwin() before ncurses
+// disappears. Can't control static order singleton class destructors.
+// 
 void
 ConsoleManager::registerSurface(Surface* pSurface)
 {
@@ -156,6 +161,7 @@ ConsoleManager::pushSurface(Surface* pSurface)
         std::lock_guard<std::mutex> lock(stackMx_);
         stack_.push_back(pSurface);
     }
+    registerSurface(pSurface);
     pSurface->onAttach(pParent);
     draw(pSurface);
 }

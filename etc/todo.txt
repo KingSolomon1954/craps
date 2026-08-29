@@ -34,18 +34,27 @@ Fix CrapsEventEmitters to issue event and get response
 Implement correlationId in GameController
 Implement controller events for commands that change state
 
-In CUI, need full screen windows to draw with pWin_
 In CUI, need geometry management/control over menu placement
-In CUI, need Surface base class to own pWin_
-In CUI, need Surface base class to implement releaseNcursesResources()
-In CUI, ConsoleManager needs to collect unique surface pointers.
-In CUI, ConsoleManager needs a prepareForShutdown() over the collection.
 In CUI, switch to lib-gen EventManager. Eliminate 2 different event managers.
 In CUI, need DialogBase
 In CUI, need DialogBetAmount
+In CUI, need MenuBetting implementation
 In Controller, need redesign for interface and event handlers
 
-
+(Done) EventManager available as a lib-gen class
+(Done) Implement WindowPlayerArea inital drawing and switch one/all player
+(Done) Implement first cut at WindowNavBar 
+(Done) Surface base class to implement releaseNcursesResources()
+(Done) ConsoleManager provides pParent surface to form operation change
+(Done) Implemented first dynamic menu MenuOddsBet
+(Done) Implemented first static menu MenuPlaceBet
+(Done) Implement CarrierBet, to pass down menu chain
+(Done) Surface base class to own pWin_
+(Done) Implement ScreenBase, MenuBase, Surface
+(Done) ConsoleManager needs to collect unique surface pointers.
+(Done) ConsoleManager needs a prepareForShutdown() over the collection.
+(Done) ConsoleView -> ConsoleManager
+(Done) ScreenTableCraps to use its own pWin_, not stdscr
 (Done) Implement initial ScreenCrapsTable draw window
 (Done) Change API for controller events (emitters, handlers, readers)
 (Done) Switch to unique_ptr for event loop ovnership

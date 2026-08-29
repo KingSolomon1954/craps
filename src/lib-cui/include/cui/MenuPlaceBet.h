@@ -43,8 +43,8 @@ private:
     void createWindow();
     void fillWindow();
     void processSelection(int num);
-    void populateCarrier();
-    void prepDialogAmount();
+    void populateCarrier (int pivot);
+    void prepDialogAmount(int pivot);
     void activateDialogAmount();
     void quit();
 };

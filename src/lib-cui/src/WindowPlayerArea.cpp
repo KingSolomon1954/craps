@@ -6,6 +6,7 @@ a//----------------------------------------------------------------
 
 #include <cui/WindowPlayerArea.h>
 #include <cui/CuiUtils.h>
+#include <cui/ScreenCrapsTable.h>
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
@@ -35,14 +36,14 @@ WindowPlayerArea::initPlayers()
     auto rc = Ctrl::CrapsReaders::getUserPlayer(curPlayerId_, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
-        ep.prepend("WindowPlayerArea::ScreenCrapsTable(): unable to init; ");
+        ep.prepend("WindowPlayerArea::initPlayers(): unable to init; ");
         throw std::runtime_error(ep.diag);
     }
 
     rc = Ctrl::CrapsReaders::getActiveCrapsTable(tableId_, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
-        ep.prepend("ScreenCrapsTable::ScreenCrapsTable(): unable to init; ");
+        ep.prepend("WindowPlayerArea::initPlayers() unable to init; ");
         throw std::runtime_error(ep.diag);
     }
 
@@ -52,7 +53,8 @@ WindowPlayerArea::initPlayers()
 
 //----------------------------------------------------------------
 
-WindowWindowPlayerArea::~WindowPlayerArea()
+void
+WindowPlayerArea::releaseNcursesResources()
 {
     if (pWin_ != nullptr)
     {
@@ -88,37 +90,43 @@ WindowPlayerArea::drawBorders()
 }
 
 //----------------------------------------------------------------
-
+//
+// We need to touch up border junctions to mate with our internal
+// lines. But the border is outside of our window. Ask ScreenCrapsTable
+// to lends us its pWin_ so we can touch up border junctions.
+//
 void
 WindowPlayerArea::drawExternalJunctions()
 {
+    WINDOW* pLendWin ScreenCrapsTable::instance().lendWindow();
     if (currentFocus_ == OneOrAll::AllPlayers)
     {
-        eraseExternalJunctionsOnePlayer();
-        drawExternalJunctionsAllPlayers();
+        eraseExternalJunctionsOnePlayer(pLendWin);
+        drawExternalJunctionsAllPlayers(pLendWin);
     }
     else
     {
-        eraseExternalJunctionsAllPlayers();
-        drawExternalJunctionsOnePlayer();
+        eraseExternalJunctionsAllPlayers(pLendWin);
+        drawExternalJunctionsOnePlayer(pLendWin);
     }
+    CuiUtils::transfer(pLendWin);
 }
 
 //----------------------------------------------------------------
 //
-// Write junctions for outer borders for all players view
+// Fix up junctions for outer borders for all players view
 //
 void
-WindowPlayerArea::drawExternalJunctionsAllPlayers()
+WindowPlayerArea::drawExternalJunctionsAllPlayers(WINDOW* pLendWin)
 {
-    using L = LayoutCrapsScreen;;
+    using L = LayoutCrapsScreen;
     using A = LayoutAllPlayers;
     
     // Has 4 junctions to apply
-    mvaddch(L::playerAreaBorderTopRow, A::col2, ACS_TTEE);
-    mvaddch(L::playerAreaBorderTopRow, A::col3, ACS_TTEE);
-    mvaddch(L::playerAreaBorderBotRow, A::col2, ACS_BTEE);
-    mvaddch(L::playerAreaBorderBotRow, A::col3, ACS_BTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, A::col2, ACS_TTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, A::col3, ACS_TTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderBotRow, A::col2, ACS_BTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderBotRow, A::col3, ACS_BTEE);
 }
 
 //----------------------------------------------------------------
@@ -126,16 +134,16 @@ WindowPlayerArea::drawExternalJunctionsAllPlayers()
 // Restores player area junctions to a smooth rectangle
 //
 void
-WindowPlayerArea::eraseExternalJunctionsAllPlayers()
+WindowPlayerArea::eraseExternalJunctionsAllPlayers(WINDOW* pLendWin)
 {
     using L = LayoutCrapsScreen;
     using A = LayoutAllPlayers;
     
     // Has 4 junctions to restore
-    mvaddch(L::playerAreaBorderTopRow, A::col2, ACS_HLINE);
-    mvaddch(L::playerAreaBorderTopRow, A::col3, ACS_HLINE);
-    mvaddch(L::playerAreaBorderBotRow, A::col2, ACS_HLINE);
-    mvaddch(L::playerAreaBorderBotRow, A::col3, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, A::col2, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, A::col3, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderBotRow, A::col2, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderBotRow, A::col3, ACS_HLINE);
 }
 
 //----------------------------------------------------------------
@@ -143,30 +151,30 @@ WindowPlayerArea::eraseExternalJunctionsAllPlayers()
 // Fix up junctions for outer borders for one player view
 //
 void
-WindowPlayerArea::drawExternalJunctionsOnePlayer()
+WindowPlayerArea::drawExternalJunctionsOnePlayer(WINDOW* pLendWin)
 {
     using L = LayoutCrapsScreen;
     using O = LayoutOnePlayer;
 
     // Top border
-    mvaddch(L::playerAreaBorderTopRow, O::col2, ACS_TTEE);
-    mvaddch(L::playerAreaBorderTopRow, O::col3, ACS_TTEE);
-    mvaddch(L::playerAreaBorderTopRow, O::col4, ACS_TTEE);
-    mvaddch(L::playerAreaBorderTopRow, O::col5, ACS_TTEE);
-    mvaddch(L::playerAreaBorderTopRow, O::col6, ACS_TTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col2, ACS_TTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col3, ACS_TTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col4, ACS_TTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col5, ACS_TTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col6, ACS_TTEE);
 
     // Bottom border
-    mvaddch(L::playerAreaBorderBotRow, O::lineBetSplitCol, ACS_BTEE);
+    mvwaddch(pLendWin, L::playerAreaBorderBotRow, O::lineBetSplitCol, ACS_BTEE);
 
     // Left border    
-    mvaddch(O::rowField,    L::playerAreaBorderLeftCol, ACS_LTEE);
-    mvaddch(O::rowCraps,    L::playerAreaBorderLeftCol, ACS_LTEE);
-    mvaddch(O::rowLineBets, L::playerAreaBorderLeftCol, ACS_LTEE);
+    mvwaddch(pLendWin, O::rowField,    L::playerAreaBorderLeftCol, ACS_LTEE);
+    mvwaddch(pLendWin, O::rowCraps,    L::playerAreaBorderLeftCol, ACS_LTEE);
+    mvwaddch(pLendWin, O::rowLineBets, L::playerAreaBorderLeftCol, ACS_LTEE);
     
     // Right border    
-    mvaddch(O::rowField,    L::playerAreaBorderRightCol, ACS_RTEE);
-    mvaddch(O::rowCraps,    L::playerAreaBorderRightCol, ACS_RTEE);
-    mvaddch(O::rowLineBets, L::playerAreaBorderRightCol, ACS_RTEE);
+    mvwaddch(pLendWin, O::rowField,    L::playerAreaBorderRightCol, ACS_RTEE);
+    mvwaddch(pLendWin, O::rowCraps,    L::playerAreaBorderRightCol, ACS_RTEE);
+    mvwaddch(pLendWin, O::rowLineBets, L::playerAreaBorderRightCol, ACS_RTEE);
 }
 
 //----------------------------------------------------------------
@@ -174,30 +182,30 @@ WindowPlayerArea::drawExternalJunctionsOnePlayer()
 // Restores table area junctions to a smooth square
 //
 void
-WindowPlayerArea::eraseExternalJunctionsOnePlayer()
+WindowPlayerArea::eraseExternalJunctionsOnePlayer(WINDOW* pLendWin)
 {
     using L = LayoutCrapsScreen;
     using O = LayoutOnePlayer;
 
     // Top border
-    mvaddch(L::playerAreaBorderTopRow, O::col2, ACS_HLINE);
-    mvaddch(L::playerAreaBorderTopRow, O::col3, ACS_HLINE);
-    mvaddch(L::playerAreaBorderTopRow, O::col4, ACS_HLINE);
-    mvaddch(L::playerAreaBorderTopRow, O::col5, ACS_HLINE);
-    mvaddch(L::playerAreaBorderTopRow, O::col6, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col2, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col3, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col4, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col5, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderTopRow, O::col6, ACS_HLINE);
 
     // Bottom border
-    mvaddch(L::playerAreaBorderBotRow, O::lineBetSplitCol, ACS_HLINE);
+    mvwaddch(pLendWin, L::playerAreaBorderBotRow, O::lineBetSplitCol, ACS_HLINE);
 
     // Left border    
-    mvaddch(O::rowField,    L::playerAreaBorderLeftCol, ACS_VLINE);
-    mvaddch(O::rowCraps,    L::playerAreaBorderLeftCol, ACS_VLINE);
-    mvaddch(O::rowLineBets, L::playerAreaBorderLeftCol, ACS_VLINE);
+    mvwaddch(pLendWin, O::rowField,    L::playerAreaBorderLeftCol, ACS_VLINE);
+    mvwaddch(pLendWin, O::rowCraps,    L::playerAreaBorderLeftCol, ACS_VLINE);
+    mvwaddch(pLendWin, O::rowLineBets, L::playerAreaBorderLeftCol, ACS_VLINE);
     
     // Right border    
-    mvaddch(O::rowField,    L::playerAreaBorderRightCol, ACS_VLINE);
-    mvaddch(O::rowCraps,    L::playerAreaBorderRightCol, ACS_VLINE);
-    mvaddch(O::rowLineBets, L::playerAreaBorderRightCol, ACS_VLINE);
+    mvwaddch(pLendWin, O::rowField,    L::playerAreaBorderRightCol, ACS_VLINE);
+    mvwaddch(pLendWin, O::rowCraps,    L::playerAreaBorderRightCol, ACS_VLINE);
+    mvwaddch(pLendWin, O::rowLineBets, L::playerAreaBorderRightCol, ACS_VLINE);
 }
 
 //----------------------------------------------------------------
@@ -431,6 +439,7 @@ WindowPlayerArea::setPrevPlayerView()
 
 
 //----------------------------------------------------------------
+
 void
 WindowPlayerArea::advancePlayer(bool next)
 {
