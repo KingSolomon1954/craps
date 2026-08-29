@@ -7,14 +7,13 @@
 #pragma once
 
 #include <cui/ScreenBase.h>
-#include <cui/WindowHeader.h>
-#include <cui/WindowRollHistory.h>
-#include <cui/WindowWindowPlayerArea.h>
-#include <cui/WindowMessages.h>
-#include <cui/WindowAnimation.h>
-#include <cui/WindowHouseBrief.h>
-#include <cui/WindowPlayerBrief.h>
-#include <ncurses.h>
+// #include <cui/WindowHeader.h>
+// #include <cui/WindowRollHistory.h>
+// #include <cui/WindowWindowPlayerArea.h>
+// #include <cui/WindowMessages.h>
+// #include <cui/WindowAnimation.h>
+// #include <cui/WindowHouseBrief.h>
+// #include <cui/WindowPlayerBrief.h>
 
 namespace Cui {
 

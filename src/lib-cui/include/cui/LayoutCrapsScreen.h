@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <cui/LayoutConsole.h>
+#include <cassert>
+
 struct WINDOW; // fwd
 
 namespace Cui {

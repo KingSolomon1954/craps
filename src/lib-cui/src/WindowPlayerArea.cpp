@@ -1,4 +1,4 @@
-a//----------------------------------------------------------------
+//----------------------------------------------------------------
 //
 // File: WindowPlayerArea.cpp
 //
@@ -49,18 +49,6 @@ WindowPlayerArea::initPlayers()
 
     rc = Ctrl::CrapsReaders::readTablePlayers(tableId_, playerIds_, ep);
     assert(playerIds_.size() > 0);
-}
-
-//----------------------------------------------------------------
-
-void
-WindowPlayerArea::releaseNcursesResources()
-{
-    if (pWin_ != nullptr)
-    {
-        delwin(pWin_);
-        pWin_ = nullptr;
-    }
 }
 
 //----------------------------------------------------------------

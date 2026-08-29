@@ -20,6 +20,7 @@ public:
 
     /// @name Modifiers
     /// @{
+    virtual void draw() override;
     virtual void releaseNcursesResources()
     {
         if (pWin_ != nullptr)

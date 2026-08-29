@@ -19,20 +19,22 @@ public:
     /// @{
     WindowPlayerArea();
    ~WindowPlayerArea() = default;
-    void releaseNcursesResources();
     /// @}
 
     /// @name Modifiers
     /// @{
     void draw() override;
     
+    void nextPlayer();
+    void prevPlayer();
+    void allPlayers();
+    /// @}
+
+    /// @name EventHandlers
     void onPlayerJoined(const Craps::PlayerId& pid);
     void onPlayerLeft  (const Craps::PlayerId& pid);
     void onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid);
     void onBetFailed(const Craps::PlayerId& pid, const std::string& reason);
-    void nextPlayer();
-    void prevPlayer();
-    void allPlayers();
     /// @}
 
     /// @name Observers
@@ -57,7 +59,7 @@ private:
         static_assert(playerAreaLeftCol  == 1);
         static_assert(playerAreaRightCol == 68);
         static_assert(playerAreaHeight   == 19);
-        static_assert(playerAreaWidth    == 67);
+        static_assert(playerAreaWidth    == 68);
     };        
 
     struct LayoutAllPlayers
