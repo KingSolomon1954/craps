@@ -6,13 +6,15 @@
 
 #pragma once
 
+#include <cui/PanelBase.h>
 #include <cui/LayoutCrapsScreen.h>
 #include <craps/CrapsTypes.h>
+#include <vector>
 
 namespace Cui
 {
 
-class WindowPlayerArea
+    class WindowPlayerArea : PanelBase
 {
 public:
     /// @name Lifecycle
@@ -28,6 +30,8 @@ public:
     void nextPlayer();
     void prevPlayer();
     void allPlayers();
+
+    
     /// @}
 
     /// @name EventHandlers
@@ -102,9 +106,9 @@ private:
     void drawExternalJunctionsOnePlayer  (WINDOW* pLendWin);
     void eraseExternalJunctionsAllPlayers(WINDOW* pLendWin);
     void eraseExternalJunctionsOnePlayer (WINDOW* pLendWin);
-    void drawInternalBorder();
-    void drawInternalBordersAllPlayers()
-    void drawInternalBordersOnePlayer()
+    void drawInternalBorders();
+    void drawInternalBordersAllPlayers();
+    void drawInternalBordersOnePlayer();
     void drawStaticContent();
     void drawStaticContentAllPlayers();
     void drawStaticContentOnePlayer();
@@ -112,7 +116,7 @@ private:
     void populate();
     void populateAllPlayers();
     void populateOnePlayer();
-    void advancePlayer();
+    void advancePlayer(bool next);
     Craps::PlayerId getNextPlayerId(const Craps::PlayerId& pid) const;
     Craps::PlayerId getPrevPlayerId(const Craps::PlayerId& pid) const;
 };

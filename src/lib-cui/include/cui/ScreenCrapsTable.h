@@ -35,10 +35,6 @@ public:
     void onDetach()                 override;  // from Surface
     void onAttach(Surface* pParent) override;  // from Surface
 
-    void setAllPlayersView();                  // MenuPlayerViews calls this
-    void setNextPlayerView();                  // MenuPlayerViews calls this
-    void setPrevPlayerView();                  // MenuPlayerViews calls this
-    
     WINDOW* lendWindow();                      // Just for WindowPlayerArea
     /// @}
 
@@ -54,13 +50,13 @@ private:
     // They don't get pushed/popped or process input keys.
     // But they do have their own ncurses WINDOW*.
     // 
-    WindowHeader           wHeader_;
-    WindowRollHistory      wRollHistory_;
-    WindowWindowPlayerArea wPlayerArea_;
-    WindowMessages         wMessages_;
-    WindowAnimation        wAnimation_;
-    WindowHouseBrief       wHouseBrief_;
-    WindowPlayerBrief      wPlayerBrief_;
+//    WindowHeader           wHeader_;
+//    WindowRollHistory      wRollHistory_;
+//    WindowWindowPlayerArea wPlayerArea_;
+//    WindowMessages         wMessages_;
+//    WindowAnimation        wAnimation_;
+//    WindowHouseBrief       wHouseBrief_;
+//    WindowPlayerBrief      wPlayerBrief_;
     
     ScreenCrapsTable();  // private ctor
     void drawNavBar();

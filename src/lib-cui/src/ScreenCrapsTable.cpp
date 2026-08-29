@@ -113,30 +113,6 @@ ScreenCrapsTable::drawNavBar()
 
 //----------------------------------------------------------------
 
-void
-ScreenCrapsTable::setAllPlayersView()
-{
-    wPlayerArea_.allPlayers();
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::setNextPlayerView()
-{
-    wPlayerArea_.nextPlayer();
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::setPrevPlayerView()
-{
-    wPlayerArea_.prevPlayer();
-}
-
-//----------------------------------------------------------------
-
 WINDOW*
 ScreenCrapsTable::lendWindow()
 {

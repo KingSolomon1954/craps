@@ -33,6 +33,7 @@ WindowPlayerArea::WindowPlayerArea()
 void
 WindowPlayerArea::initPlayers()
 {
+    Gen::ErrorPass ep;
     auto rc = Ctrl::CrapsReaders::getUserPlayer(curPlayerId_, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
@@ -86,7 +87,7 @@ WindowPlayerArea::drawBorders()
 void
 WindowPlayerArea::drawExternalJunctions()
 {
-    WINDOW* pLendWin ScreenCrapsTable::instance().lendWindow();
+    WINDOW* pLendWin = ScreenCrapsTable::instance().lendWindow();
     if (currentFocus_ == OneOrAll::AllPlayers)
     {
         eraseExternalJunctionsOnePlayer(pLendWin);
@@ -313,7 +314,7 @@ WindowPlayerArea::populateOnePlayer()
 //----------------------------------------------------------------
 
 Craps::PlayerId
-WindowPlayerArea::getNextPlayerId(const Craps::PlayerId& pid)
+WindowPlayerArea::getNextPlayerId(const Craps::PlayerId& pid) const
 {
     if (playerIds_.empty())
     {
@@ -341,7 +342,7 @@ WindowPlayerArea::getNextPlayerId(const Craps::PlayerId& pid)
 //----------------------------------------------------------------
 
 Craps::PlayerId
-WindowPlayerArea::getPrevPlayerId(const Craps::PlayerId& pid)
+WindowPlayerArea::getPrevPlayerId(const Craps::PlayerId& pid) const
 {
     if (playerIds_.empty())
     {
@@ -356,7 +357,7 @@ WindowPlayerArea::getPrevPlayerId(const Craps::PlayerId& pid)
     }
 
     // Wrap around from the first player to the last.
-    if (it == playerIds.begin())
+    if (it == playerIds_.begin())
     {
         it = playerIds_.end();
     }
@@ -367,7 +368,9 @@ WindowPlayerArea::getPrevPlayerId(const Craps::PlayerId& pid)
 }
 
 //----------------------------------------------------------------
-
+//
+// Switch to OnePlayer View. If already showing, goto next player
+//
 void
 WindowPlayerArea::nextPlayer()
 {
@@ -375,7 +378,9 @@ WindowPlayerArea::nextPlayer()
 }
 
 //----------------------------------------------------------------
-
+//
+// Switch to OnePlayer View. If already showing, goto prev player
+//
 void
 WindowPlayerArea::prevPlayer()
 {
@@ -384,8 +389,7 @@ WindowPlayerArea::prevPlayer()
 
 //----------------------------------------------------------------
 //
-// Called from MenuView when user wants to switch player view.
-// After MenuView unwinds, we'll redraw PlayerArea IAW new focus.
+// Switch to AllPlayers View. If already showing, just re-populate.
 //
 void
 WindowPlayerArea::allPlayers()
@@ -401,30 +405,6 @@ WindowPlayerArea::allPlayers()
     populateAllPlayers();
     CuiUtils::transfer(pWin_);
 }
-
-//----------------------------------------------------------------
-//
-// Called from MenuView when user wants to switch player view.
-// After MenuView unwinds, we'll redraw PlayerArea IAW new focus.
-//
-void
-WindowPlayerArea::setNextPlayerView()
-{
-    nextPlayer();
-}
-
-
-//----------------------------------------------------------------
-//
-// Called from MenuView when user wants to switch player view.
-// After MenuView unwinds, we'll redraw PlayerArea IAW new focus.
-//
-void
-WindowPlayerArea::setPrevPlayerView()
-{
-    prevPlayer();
-}
-
 
 //----------------------------------------------------------------
 

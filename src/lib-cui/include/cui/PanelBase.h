@@ -20,7 +20,7 @@ public:
 
     /// @name Modifiers
     /// @{
-    virtual void draw() override;
+    virtual void draw() = 0;
     virtual void releaseNcursesResources()
     {
         if (pWin_ != nullptr)
@@ -36,8 +36,8 @@ public:
     /// @}
 
 protected:
-   
-
+    WINDOW* pWin_;
+    
 private:
     
 };
