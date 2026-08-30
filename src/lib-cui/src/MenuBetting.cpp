@@ -33,11 +33,11 @@ MenuBetting::MenuBetting()
 
 //----------------------------------------------------------------
 
-MenuBetting*
+MenuBetting&
 MenuBetting::instance()
 {
-    static MenuBetting menuBetting;
-    return &menuBetting;
+    static MenuBetting menu;
+    return menu;
 }
 
 //----------------------------------------------------------------

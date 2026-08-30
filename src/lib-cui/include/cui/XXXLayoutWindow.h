@@ -27,7 +27,7 @@ public:
     LayoutWindow& operator=(const LayoutWindow&) = delete;
 
 private:
-    explicit LayoutWindow()
+    LayoutWindow()
     {
         // pWin_ is guaranteed non-null here
         ...

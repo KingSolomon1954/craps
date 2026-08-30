@@ -5,7 +5,15 @@
 //----------------------------------------------------------------
 
 #include <cui/ScreenCrapsTable.h>
+#include <cui/ConsoleManager.h>
 #include <cui/LayoutCrapsScreen.h>
+// #include <cui/WindowTitleBar.h>
+// #include <cui/WindowRollHistory.h>
+// #include <cui/WindowWindowPlayerArea.h>
+// #include <cui/WindowMessages.h>
+// #include <cui/WindowAnimation.h>
+// #include <cui/WindowHouseBrief.h>
+// #include <cui/WindowPlayerBrief.h>
 #include <cui/WindowNavBar.h>
 #include <gen/Logger.h>
 
@@ -21,12 +29,8 @@ ScreenCrapsTable::ScreenCrapsTable()
     newWindow(L::height, L::width,          // In base class
               L::topRow, L::leftCol,
               "ScreenCrapsTable");
-
-    // Obtain our root menu and give it a pointer back to us.
-    pMenuBetting_ = MenuBetting::instance();
-    pMenuBetting_->setRootMenu(true);
-    pMenuBetting_->setOwningScreen(this);
-
+    LayoutCrapsScreen::init(pWin_);
+    
     LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
 }
 
@@ -35,15 +39,15 @@ ScreenCrapsTable::ScreenCrapsTable()
 void
 ScreenCrapsTable::releaseNcursesResources()
 {
-//    wHeader_.releaseNcursesResources();
-//    wRollHistory_.releaseNcursesResources();
-//    wPlayerArea_.releaseNcursesResources();
-//    wMessages_.releaseNcursesResources();
-//    wAnimation_.releaseNcursesResources();
-//    wHouseBrief_.releaseNcursesResources();
-//    wPlayerBrief_.releaseNcursesResources();
+//    WindowTitleBar::instance().releaseNcursesResources();
+//    WindowRollHistory::instance().releaseNcursesResources();
+//    WindowPlayerArea::instance().releaseNcursesResources();
+//    WindowMessages::instance().releaseNcursesResources();
+//    WindowAnimation::instance().releaseNcursesResources();
+//    WindowHouseBrief::instance().releaseNcursesResources();
+//    WindowPlayerBrief::instance().releaseNcursesResources();
 //    
-    Surface::releaseNcursesResources();  // Execute base implementation    
+    Surface::releaseNcursesResources();  // Invoke base class implementation
 }
 
 //----------------------------------------------------------------
@@ -67,29 +71,16 @@ ScreenCrapsTable::draw()  // Override
 {
     werase(pWin_);
     
-    LayoutCrapsScreen::draw(pWin_);
+    LayoutCrapsScreen::instance().draw();
 
-//     wHeader_.draw();
-//     wRollHistory_.draw();
-//     wPlayerArea_.draw();
-//     wMessages_.draw();
-//     wAnimation_.draw();
-//     wHouseBrief_.draw();
-//     wPlayerBrief_.draw();
+//     WindowTitleBar::instance().draw();
+//     WindowRollHistory::instance().draw();
+//     WindowPlayerArea::instance().draw();
+//     WindowMessages::instance().draw();
+//     WindowAnimation::instance().draw();
+//     WindowHouseBrief::instance().draw();
+//     WindowPlayerBrief::instance().draw();
     drawNavBar();
-}
-
-//----------------------------------------------------------------
-//
-// ScreenCrapsTable does not process keys directly. MenuBetting owns
-// and handles keyboard processing while this surface is active.
-//
-void
-ScreenCrapsTable::handleKey(int ch)
-{
-    (void)ch;
-    LOG_TRACE("ScreenCrapsTable::handleKey() should "
-              "not get here:(" + std::to_string(ch) + ")");
 }
 
 //----------------------------------------------------------------
@@ -107,10 +98,28 @@ ScreenCrapsTable::drawNavBar()
 
 //----------------------------------------------------------------
 
-WINDOW*
-ScreenCrapsTable::lendWindow()
+void
+ScreenCrapsTable::onAttach(Surface* pParent)
 {
-    return pWin_;
+    LOG_TRACE("ScreenCrapsTable::onAttach()");
+    (void)pParent;
+
+    // TODO 
+    // ConsoleManager::pushSurface(MenuBetting::instance());
+}
+
+//----------------------------------------------------------------
+//
+// ScreenCrapsTable does not process keys directly. MenuBetting owns
+// and handles keyboard processing while this surface is active.
+// Needed here to satisfy Surface pure virtual interface.
+//
+void
+ScreenCrapsTable::handleKey(int ch)
+{
+    (void)ch;
+    LOG_TRACE("ScreenCrapsTable::handleKey() should "
+              "not get here:(" + std::to_string(ch) + ")");
 }
 
 //----------------------------------------------------------------
@@ -120,28 +129,6 @@ ScreenCrapsTable::lendWindow()
 #if 0
 
 // Not currently used. Just here a while for reference.
-
-//----------------------------------------------------------------
-//
-// What might be done in onAttach()
-//
-// * Start a timer/animation associated with the surface.
-// * Subscribe to events that should only be received while
-//   the surface is active.
-// * Reset transient interaction state.
-// * Establish the initial input mode.
-// * Set the NavBar/context for the surface, if you decide to do
-//   that there.
-// * Trigger an initial data acquisition if appropriate.
-//    
-void
-ScreenCrapsTable::onAttach(Surface* pParent)
-{
-    LOG_TRACE("ScreenCrapsTable::onAttach()");
-    // TODO
-    // Maybe get the user player. Maybe user changed via the
-    // control menu. Should be listening for new user events.
-}
 
 //----------------------------------------------------------------
 //
@@ -178,69 +165,7 @@ ScreenCrapsTable::onResume()
 
 #endif
 
-
-
-
-
-
 #if 0
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::populateHeader()
-{
-    LOG_TRACE("ScreenCrapsTable::populateHeader()");
-    werase(w_.header);
-    mvwprintw(w_.header,  0, 0, "Header text here");
-    wnoutrefresh(w_.header);
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::populateRollHistory()
-{
-    werase(w_.rollHistory);
-    mvwprintw(w_.rollHistory,  0, 0, "Roll history here");
-    wnoutrefresh(w_.rollHistory);
-}
-
-//----------------------------------------------------------------
-
-void ScreenCrapsTable::populateMessages()
-{
-    werase(w_.message);
-    mvwprintw(w_.message,  0, 0, "Message area here");
-    wnoutrefresh(w_.message);
-}
-
-//----------------------------------------------------------------
-
-void ScreenCrapsTable::populateAnimation()
-{
-    werase(w_.animation);
-    mvwprintw(w_.animation,  0, 0, "Animation area here");
-    wnoutrefresh(w_.animation);
-}
-
-//----------------------------------------------------------------
-
-void ScreenCrapsTable::populateHouseBrief()
-{
-    werase(w_.houseBrief);
-    mvwprintw(w_.houseBrief,  0, 0, "House brief here");
-    wnoutrefresh(w_.houseBrief);
-}
-
-//----------------------------------------------------------------
-
-void ScreenCrapsTable::populatePlayerBrief()
-{
-    werase(w_.playerBrief);
-    mvwprintw(w_.playerBrief,  0, 0, "Player brief here");
-    wnoutrefresh(w_.playerBrief);
-}
 
 //----------------------------------------------------------------
 //

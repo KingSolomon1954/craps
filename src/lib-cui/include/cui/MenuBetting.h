@@ -26,12 +26,11 @@ public:
     /// @name Lifecycle
     /// @{
    ~MenuBetting();
-    static MenuBetting* instance();
+    static MenuBetting& instance();
     /// @}
 
     /// @name Modifiers
     /// @{
-    void setOwningScreen(ScreenCrapsTable* pOwning);
     void onResume() override;
     /// @}
 

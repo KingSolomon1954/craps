@@ -7,13 +7,6 @@
 #pragma once
 
 #include <cui/ScreenBase.h>
-// #include <cui/WindowHeader.h>
-// #include <cui/WindowRollHistory.h>
-// #include <cui/WindowWindowPlayerArea.h>
-// #include <cui/WindowMessages.h>
-// #include <cui/WindowAnimation.h>
-// #include <cui/WindowHouseBrief.h>
-// #include <cui/WindowPlayerBrief.h>
 
 namespace Cui {
 
@@ -29,13 +22,11 @@ public:
     /// @name Modifiers
     /// @{
     void draw()                     override;  // from Surface
+    void handleKey(int ch)          override;  // from Surface
     void onPause()                  override;  // from Surface
     void onResume()                 override;  // from Surface
-    void handleKey(int ch)          override;  // from Surface
     void onDetach()                 override;  // from Surface
     void onAttach(Surface* pParent) override;  // from Surface
-
-    WINDOW* lendWindow();                      // Just for WindowPlayerArea
     /// @}
 
     /// @name Observers
@@ -44,20 +35,6 @@ public:
     /// @}
 
 private:
-    // Order doesn't matter    
-
-    // These window classes are not Surfaces.
-    // They don't get pushed/popped or process input keys.
-    // But they do have their own ncurses WINDOW*.
-    // 
-//    WindowHeader           wHeader_;
-//    WindowRollHistory      wRollHistory_;
-//    WindowWindowPlayerArea wPlayerArea_;
-//    WindowMessages         wMessages_;
-//    WindowAnimation        wAnimation_;
-//    WindowHouseBrief       wHouseBrief_;
-//    WindowPlayerBrief      wPlayerBrief_;
-    
     ScreenCrapsTable();  // private ctor
     void drawNavBar();
 };
@@ -66,18 +43,16 @@ private:
 
 @class ScreenCrapsTable
 
-@brief Craps Table Screen implementation
+@brief Craps Table Screen
 
-@li owns size of each window
-@li relationship between windows
+@li owns size of each Panel (in LayoutCrapsScreen)
+@li relationship between Panels
 @li screen-level borders
 @li screen-level junctions
-@li overall composition
+@li overall composition of its Panels
+@li does not perform key input. MenuBetting does that.
 
 */
-
-// TODO: subscribe to players leaving/joining table
-// TODO: update PlayerList upon notification
 
 //----------------------------------------------------------------
 

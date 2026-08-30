@@ -38,9 +38,15 @@ In CUI, need geometry management/control over menu placement
 In CUI, switch to lib-gen EventManager. Eliminate 2 different event managers.
 In CUI, need DialogBase
 In CUI, need DialogBetAmount
-In CUI, need MenuBetting implementation
 In Controller, need redesign for interface and event handlers
+Need MenuBetting implementation
+Hook up ScreenCrapsTable::onAttach(MenuBetting)
 
+(Done) LayoutCrapsScreen draw all Panel borders and fix-up on behalf of Panels
+(Done) LayoutCrapsScreen made into a static class
+(Done) Fix up NavBar to be a Panel
+(Done) Use single layout class that all Panels reference
+(Done) PaneBase class for Windows attached to full screens
 (Done) EventManager available as a lib-gen class
 (Done) Implement WindowPlayerArea inital drawing and switch one/all player
 (Done) Implement first cut at WindowNavBar 

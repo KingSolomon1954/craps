@@ -1,4 +1,4 @@
-a//----------------------------------------------------------------
+//----------------------------------------------------------------
 //
 // File: WindowNavBar.cpp
 //
@@ -6,6 +6,7 @@ a//----------------------------------------------------------------
 
 #include <cui/WindowNavBar.h>
 #include <cui/CuiUtils.h>
+#include <cui/LayoutConsole.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
 
@@ -15,15 +16,15 @@ using namespace Cui;
 
 WindowNavBar::WindowNavBar()
 {
-    newWindow(Layout::navHeight, Layout::navWidth,
+    newWindow(Layout::navHeight, Layout::navWidth,          // In base class
               Layout::navTopRow, Layout::navLeftCol,
               "WindowNavBar");
 }
 
 //----------------------------------------------------------------
 
-WindowWindowNavBar&
-WindowWindowNavBar::instance()
+WindowNavBar&
+WindowNavBar::instance()
 {
     static WindowNavBar navBar;
     return navBar;
@@ -35,64 +36,9 @@ void
 WindowNavBar::draw()
 {
     werase(pWin_);
-    drawBorders();
     drawStaticContent();
     populate();
     CuiUtils::transfer(pWin_);
-}
-
-//----------------------------------------------------------------
-
-void
-WindowNavBar::drawBorders()
-{
-    drawExternalBorder();
-    drawExternalJunctions();
-    drawInternalBorders();
-}
-
-//----------------------------------------------------------------
-
-void
-WindowNavBar::drawExternalBorder()
-{
-    using C = LayoutConsole;
-
-    // Top border line is already there from previous full screen drawing.
-    // Leave it alone. We have no changes to it.
-    
-    // Horizontal line at bottom of screen
-    mvwhline(pWin_, C::navBorderRowBot, C::navBorderColLeft, ACS_HLINE, C::navBorderWidth);
-
-    // Two vertical lines at each side of the screen
-    mvwaddch(pWin_, C::navBorderRowTop + 1, C::navBorderColLeft,   ACS_VLINE);
-    mvwaddch(pWin_, C::navBorderRowTop + 1, C::navBorderColRight,  ACS_VLINE);
-
-    // The bottom left and right cornners.
-    mvwaddch(pWin_, C::navBorderRowBot, C::navBorderColLeft,  ACS_LLCORNER);
-    mvwaddch(pWin_, C::navBorderRowBot, C::navBorderColRight, ACS_LRCORNER);
-}
-
-//----------------------------------------------------------------
-
-void
-WindowNavBar::drawExternalJunctions()
-{
-    using L = Layout;;
-    using C = LayoutConsole;
-    
-    // Now replace the two top corners with "T's" to properly mate
-    // with Message and Player Brief border lines.
-    mvwaddch(pWin_, C::navBorderRowTop, C::navBorderColLeft,  ACS_LTEE);
-    mvwaddch(pWin_, C::navBorderRowTop, C::navBorderColRight, ACS_RTEE);
-}
-
-//----------------------------------------------------------------
-
-void
-WindowNavBar::drawInternalBorders()
-{
-    // TODO
 }
 
 //----------------------------------------------------------------
@@ -127,7 +73,7 @@ WindowNavBar::populate()
 // Allow caller to specify the content of the nav bar window.
 //
 void
-WindowNavBar::configure()
+WindowNavBar::configure(const std::string& textLine)
 {
     // TODO
 }

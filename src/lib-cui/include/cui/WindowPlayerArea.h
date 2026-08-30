@@ -30,8 +30,6 @@ public:
     void nextPlayer();
     void prevPlayer();
     void allPlayers();
-
-    
     /// @}
 
     /// @name EventHandlers
@@ -66,28 +64,6 @@ private:
         static_assert(playerAreaWidth    == 68);
     };        
 
-    struct LayoutAllPlayers
-    {
-        static constexpr int col1 = 0;
-        static constexpr int col2 = 25;
-        static constexpr int col3 = 48;
-    };
-    
-    struct LayoutOnePlayer
-    {
-        static constexpr int col1 = 0;
-        static constexpr int col2 = 19;
-        static constexpr int col3 = 29;
-        static constexpr int col4 = 39;
-        static constexpr int col5 = 49;
-        static constexpr int col6 = 59;
-        static constexpr int lineBetSplitCol = 59;
-
-        static constexpr int rowField    = 14;
-        static constexpr int rowCraps    = 18;
-        static constexpr int rowLineBets = 21;
-    };
-
     enum class OneOrAll
     {
         OnePlayer,
@@ -100,12 +76,7 @@ private:
     OneOrAll currentFocus_ = OneOrAll::AllPlayers;
 
     void initPlayers();
-    void drawBorders();
     void drawExternalJunctions();
-    void drawExternalJunctionsAllPlayers (WINDOW* pLendWin);
-    void drawExternalJunctionsOnePlayer  (WINDOW* pLendWin);
-    void eraseExternalJunctionsAllPlayers(WINDOW* pLendWin);
-    void eraseExternalJunctionsOnePlayer (WINDOW* pLendWin);
     void drawInternalBorders();
     void drawInternalBordersAllPlayers();
     void drawInternalBordersOnePlayer();
@@ -119,6 +90,10 @@ private:
     void advancePlayer(bool next);
     Craps::PlayerId getNextPlayerId(const Craps::PlayerId& pid) const;
     Craps::PlayerId getPrevPlayerId(const Craps::PlayerId& pid) const;
+
+// TODO: subscribe to players leaving/joining table
+// TODO: update PlayerList upon notification
+
 };
 
 } // namespace Cui

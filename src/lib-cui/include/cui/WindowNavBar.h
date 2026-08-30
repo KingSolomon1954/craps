@@ -17,14 +17,13 @@ class WindowNavBar : PanelBase
 public:
     /// @name Lifecycle
     /// @{
-    WindowNavBar();
    ~WindowNavBar() = default;
     /// @}
 
     /// @name Modifiers
     /// @{
     void draw() override;
-    void configure();
+    void configure(const std::string& testLine);
     void clear();
     bool handleKey(int ch);
     /// @}
@@ -37,9 +36,8 @@ public:
 private:
     struct Layout
     {
+        // Derive our ncurses WINDOW dimensions
         using C = LayoutConsole;
-        
-        // Sizing and location of Window based on LayoutConsole
         static constexpr int navTopRow   = C::navBorderTopRow   + 1;
         static constexpr int navBotRow   = C::navBorderBotRow   - 1;
         static constexpr int navLeftCol  = C::navBorderLeftCol  + 1;
@@ -53,16 +51,18 @@ private:
         static_assert(navRightCol == 98);
         static_assert(navHeight   == 1);
         static_assert(navWidth    == 98);
-    };        
-
-    WINDOW* pWin_ = nullptr;  // The ncurses window
-
-    void drawBorders();
-    void drawExternalBorder();
-    void drawExternalJunctions();
-    void drawInternalBorder();
+    };
+    
+    WindowNavBar();         // private ctor
     void drawStaticContent();
     void populate();
+
+    void doControl();
+    void doBetting();
+    void doView();
+    void doStats();
+    void doHelp();
+    void doQuit();
 };
 
 } // namespace Cui
