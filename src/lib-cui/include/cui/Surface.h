@@ -7,6 +7,9 @@
 #pragma once
 
 #include <ncurses.h>
+#include <cassert>
+#include <stdexcept>
+#include <string>
 
 namespace Cui
 {
@@ -95,6 +98,20 @@ public:
         {
             delwin(pWin_);
             pWin_ = nullptr;
+        }
+    }
+
+    virtual void newWindow(int nlines, int ncols,
+                           int topRow, int leftCol,
+                           const std::string& surfaceName)
+    {
+        pWin_ = newwin(nlines, ncols, topRow, leftCol);
+        if (pWin_ == nullptr)
+        {
+            assert(pWin_ != nullptr);
+            std::string s = "Surface::newWindow(): "
+                            "Unable to create ncurses WINDOW for: ";
+            throw std::runtime_error(s + surfaceName);
         }
     }
 

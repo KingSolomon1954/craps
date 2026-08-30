@@ -6,8 +6,8 @@
 
 #include <cui/ScreenCrapsTable.h>
 #include <cui/LayoutCrapsScreen.h>
+#include <cui/WindowNavBar.h>
 #include <gen/Logger.h>
-#include <cassert>
 
 using namespace Cui;
 
@@ -17,7 +17,10 @@ ScreenCrapsTable::ScreenCrapsTable()
 {
     LOG_TRACE("Entered ScreenCrapsTable::ctor()");
 
-    createWindow();
+    using L = LayoutCrapsScreen;
+    newWindow(L::height, L::width,          // In base class
+              L::topRow, L::leftCol,
+              "ScreenCrapsTable");
 
     // Obtain our root menu and give it a pointer back to us.
     pMenuBetting_ = MenuBetting::instance();
@@ -32,14 +35,14 @@ ScreenCrapsTable::ScreenCrapsTable()
 void
 ScreenCrapsTable::releaseNcursesResources()
 {
-    wHeader_.releaseNcursesResources();
-    wRollHistory_.releaseNcursesResources();
-    wPlayerArea_.releaseNcursesResources();
-    wMessages_.releaseNcursesResources();
-    wAnimation_.releaseNcursesResources();
-    wHouseBrief_.releaseNcursesResources();
-    wPlayerBrief_.releaseNcursesResources();
-    
+//    wHeader_.releaseNcursesResources();
+//    wRollHistory_.releaseNcursesResources();
+//    wPlayerArea_.releaseNcursesResources();
+//    wMessages_.releaseNcursesResources();
+//    wAnimation_.releaseNcursesResources();
+//    wHouseBrief_.releaseNcursesResources();
+//    wPlayerBrief_.releaseNcursesResources();
+//    
     Surface::releaseNcursesResources();  // Execute base implementation    
 }
 
@@ -48,18 +51,8 @@ ScreenCrapsTable::releaseNcursesResources()
 ScreenCrapsTable&
 ScreenCrapsTable::instance()
 {
-    static ScreenCrapsTable& screenCrapsTable;
+    static ScreenCrapsTable screenCrapsTable;
     return screenCrapsTable;
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::createWindow()
-{
-    using L = LayoutCrapsScreen;
-    
-    pWin_ = newwin(L::height, L::width, L::leftCol, L::topRow);
 }
 
 //----------------------------------------------------------------
@@ -74,15 +67,15 @@ ScreenCrapsTable::draw()  // Override
 {
     werase(pWin_);
     
-    LayoutCrapsScreen::draw();
+    LayoutCrapsScreen::draw(pWin_);
 
-    wHeader_.draw();
-    wRollHistory_.draw();
-    wPlayerArea_.draw();
-    wMessages_.draw();
-    wAnimation_.draw();
-    wHouseBrief_.draw();
-    wPlayerBrief_.draw();
+//     wHeader_.draw();
+//     wRollHistory_.draw();
+//     wPlayerArea_.draw();
+//     wMessages_.draw();
+//     wAnimation_.draw();
+//     wHouseBrief_.draw();
+//     wPlayerBrief_.draw();
     drawNavBar();
 }
 
@@ -109,6 +102,7 @@ ScreenCrapsTable::drawNavBar()
     nav.clear();
     nav.configure(
     "[C] Control [B] BETTING [V] View [S] Stats | [H] Help [Q] Quit");
+    nav.draw();
 }
 
 //----------------------------------------------------------------

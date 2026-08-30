@@ -7,6 +7,9 @@
 #pragma once
 
 #include <ncurses.h>
+#include <cassert>
+#include <stdexcept>
+#include <string>
 
 namespace Cui {
 
@@ -21,6 +24,21 @@ public:
     /// @name Modifiers
     /// @{
     virtual void draw() = 0;
+    
+    virtual void newWindow(int nlines, int ncols,
+                           int topRow, int leftCol,
+                           const std::string& panelName)
+    {
+        pWin_ = newwin(nlines, ncols, topRow, leftCol);
+        if (pWin_ == nullptr)
+        {
+            assert(pWin_ != nullptr);
+            std::string s = "PanelBase::newWindow(): "
+                            "Unable to create ncurses WINDOW for: ";
+            throw std::runtime_error(s + panelName);
+        }
+    }
+
     virtual void releaseNcursesResources()
     {
         if (pWin_ != nullptr)
@@ -36,7 +54,7 @@ public:
     /// @}
 
 protected:
-    WINDOW* pWin_;
+    WINDOW* pWin_ = nullptr;
     
 private:
     
@@ -46,12 +64,14 @@ private:
 
 @class PanelBase
 
-@brief A Window physically contained within a Surface
+@brief A Window physically contained within a full screen Surface
 
-A bounded rectangular region that forms part of a larger UI.
-
-@li Implements virtual Panel interface
-@li Provides logic common for all Panel Window classes
+@li Concrete Panel classes are owned their full screen window
+@li Panels do not draw borders
+@li Panels are placed inside borders already drawn by 
+    their full screen owner
+@li Base class contains the ncurses pWin_ WINDOW*
+@li Provides cleanup logic common to all Panels
 
 */
 

@@ -15,23 +15,9 @@ using namespace Cui;
 
 WindowNavBar::WindowNavBar()
 {
-    pWin_ = newwin(
-        Layout::navHeight,
-        Layout::navWidth,
-        Layout::navTopRow,
-        Layout::navLeftCol);
-    
-    assert(pWin_ != nullptr);
-}
-
-//----------------------------------------------------------------
-
-WindowWindowNavBar::~WindowNavBar()
-{
-    if (pWin_ != nullptr)
-    {
-        delwin(pWin_);
-    }
+    newWindow(Layout::navHeight, Layout::navWidth,
+              Layout::navTopRow, Layout::navLeftCol,
+              "WindowNavBar");
 }
 
 //----------------------------------------------------------------
@@ -76,15 +62,15 @@ WindowNavBar::drawExternalBorder()
     // Leave it alone. We have no changes to it.
     
     // Horizontal line at bottom of screen
-    mvhline(C::navBorderRowBot, C::navBorderColLeft, ACS_HLINE, C::navBorderWidth);
+    mvwhline(pWin_, C::navBorderRowBot, C::navBorderColLeft, ACS_HLINE, C::navBorderWidth);
 
     // Two vertical lines at each side of the screen
-    mvaddch(C::navBorderRowTop + 1, C::navBorderColLeft,   ACS_VLINE);
-    mvaddch(C::navBorderRowTop + 1, C::navBorderColRight,  ACS_VLINE);
+    mvwaddch(pWin_, C::navBorderRowTop + 1, C::navBorderColLeft,   ACS_VLINE);
+    mvwaddch(pWin_, C::navBorderRowTop + 1, C::navBorderColRight,  ACS_VLINE);
 
     // The bottom left and right cornners.
-    mvaddch(C::navBorderRowBot, C::navBorderColLeft,  ACS_LLCORNER);
-    mvaddch(C::navBorderRowBot, C::navBorderColRight, ACS_LRCORNER);
+    mvwaddch(pWin_, C::navBorderRowBot, C::navBorderColLeft,  ACS_LLCORNER);
+    mvwaddch(pWin_, C::navBorderRowBot, C::navBorderColRight, ACS_LRCORNER);
 }
 
 //----------------------------------------------------------------
@@ -97,8 +83,8 @@ WindowNavBar::drawExternalJunctions()
     
     // Now replace the two top corners with "T's" to properly mate
     // with Message and Player Brief border lines.
-    mvaddch(C::navBorderRowTop, C::navBorderColLeft,  ACS_LTEE);
-    mvaddch(C::navBorderRowTop, C::navBorderColRight, ACS_RTEE);
+    mvwaddch(pWin_, C::navBorderRowTop, C::navBorderColLeft,  ACS_LTEE);
+    mvwaddch(pWin_, C::navBorderRowTop, C::navBorderColRight, ACS_RTEE);
 }
 
 //----------------------------------------------------------------

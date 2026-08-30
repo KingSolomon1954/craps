@@ -6,15 +6,13 @@
 
 #pragma once
 
-#include <cui/LayoutConsole>
-#include <cassert>
+#include <cui/PanelBase.h>
+#include <cui/LayoutConsole.h>
 
 namespace Cui
 {
-
-struct WINDOW; // fwd
     
-class WindowNavBar
+class WindowNavBar : PanelBase
 {
 public:
     /// @name Lifecycle
@@ -25,7 +23,7 @@ public:
 
     /// @name Modifiers
     /// @{
-    void draw();
+    void draw() override;
     void configure();
     void clear();
     bool handleKey(int ch);

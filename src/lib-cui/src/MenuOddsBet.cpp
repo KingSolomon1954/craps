@@ -234,11 +234,8 @@ MenuOddsBet::windowResize()
 
     if (pWin_ == nullptr)
     {
-        pWin_ = newwin(height, width, winBorderTopCol_, winBorderTopRow_);
-        if (pWin_ == nullptr)
-        {
-            throw std::runtime_error("Unable to create menu window");
-        }
+        newWindow(height, width, winBorderTopCol_,    // In base class
+                  winBorderTopRow_, "MenuOddsBet");
     }
     else
     {

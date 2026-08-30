@@ -10,7 +10,6 @@
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
-#include <ncurses.h>
 
 using namespace Cui;
 
@@ -19,13 +18,11 @@ using namespace Cui;
 WindowPlayerArea::WindowPlayerArea()
 {
     initPlayers();
-    pWin_ = newwin(
-        Layout::playerAreaHeight,
-        Layout::playerAreaWidth,
-        Layout::playerAreaTopRow,
-        Layout::playerAreaLeftCol);
-    
-    assert(pWin_ != nullptr);
+    newWindow(Layout::playerAreaHeight,           // In base class
+              Layout::playerAreaWidth,
+              Layout::playerAreaTopRow,
+              Layout::playerAreaLeftCol,
+              "WindowPlayerArea");
 }
 
 //----------------------------------------------------------------
