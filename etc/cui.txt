@@ -16,16 +16,55 @@ onGameXxx  - prefix for event handlers originating from the game/model
 GameController → GameEvent → EventQueue → ConsoleView → Screen Display
 
 
+Physical Folder Organization
+────────────────────────────
+
+include/cui/
+    base/
+        DialogBase.h
+        MenuBase.h
+        PanelBase.h
+        ScreenBase.h
+        SurfaceBase.h
+
+    dialogs/
+        DialogAckError.h
+        DialogAmountEntry.h
+
+    layouts/
+        LayoutConsole.h
+        LayoutCrapsScreen.h
+        LayoutPlayerArea.h
+        
+    menus/
+        MenuBetting.h
+        MenuOddsBet.h
+        MenuPlaceBet.h
+        MenuPlayerViews.h
+
+    panels/
+        WindowNavBar.h
+        WindowPlayerArea.h
+
+    screens/
+        ScreenCrapsTable.h
+
+CarrierBet        
+ConsoleManager.h
+CuiUtils.h
+CuiMain.h
+
 CUI Classes
 ───────────
 
 Ctrl::ViewInterface = interface through which the controller tells the UI what to show
 Cui::ConsoleManager = orchestrates the surfaces
-Cui::ViewSurface = an actual visible interactive UI surface
+Cui::SurfaceBase = top most abstraction for all window classes
 Cui::ScreenBase = full-screen surface
 Cui::MenuBase = popup/menu surface
+Cui::PanelBase = rectangular window that's part of a full screen
 Cui::DialogBase = popup/menu surface
-Cui::CrapsUI = which craps surfaces exist and how they are composed
+Cui::CrapsMain = main entry point for CUI
 
 
                          Ctrl::ViewInterface

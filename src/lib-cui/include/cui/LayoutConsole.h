@@ -34,18 +34,6 @@ struct LayoutConsole
     static constexpr int navBorderRightCol = rightCol;
     static constexpr int navBorderHeight   = navBorderBotRow   - navBorderTopRow  + 1;
     static constexpr int navBorderWidth    = navBorderRightCol - navBorderLeftCol + 1;
-
-#if 0
-// TODO howie remove    
-    // Content area occupies rows 0-37, cols 0-99
-    static constexpr int contentTopRow   = 0;
-    static constexpr int contentBotRow   = 37;
-    static constexpr int contentLeftCol  = 0;
-    static constexpr int contentRightCol = 99;
-    static constexpr int contentHeight   = contentBotRow   - contentTopRow  + 1;
-    static constexpr int contentWidth    = contentRightCol - contentLeftCol + 1;
-#endif
-
 };
 
 } // namespace Cui

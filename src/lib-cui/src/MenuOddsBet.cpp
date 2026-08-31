@@ -52,9 +52,9 @@ MenuOddsBet::draw()
     gatherBets();
     buildMenuEntries();
     
-    if (shortCircuit())  // Only one odds bet? then skip this menu
+    if (shortCircuit())
     {
-        return;
+        return;   // Only one odds bet? then skip this menu
     }
     
     windowResize();
@@ -166,7 +166,7 @@ MenuOddsBet::buildMenuEntries()
 {
     menuEntries_.clear();
     buildMenuBets();
-    addBackEntry();
+    addBackEntry();  // Add the entry to cancel
 }
 
 //----------------------------------------------------------------
@@ -193,8 +193,8 @@ char
 MenuOddsBet::indexToHotKey(size_t index)
 {
     if (index >= MenuHotKeys.size())
-        throw std::out_of_range("Too many menu entries");
-
+        throw std::out_of_range("MenuOddsBet::indexToHotKey() "
+                                "Too many menu entries");
     return MenuHotKeys[index];
 }
 
