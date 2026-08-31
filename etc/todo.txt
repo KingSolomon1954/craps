@@ -26,7 +26,6 @@ Minimum bets are wrong. Allow $1 bets for proposition bets,
 hardways, fix min field bet.
 
 Add world bet
-
 QuickBets need to save/read from user config
 AutoFills need to save/read from user config
 
@@ -42,6 +41,7 @@ In Controller, need redesign for interface and event handlers
 Need MenuBetting implementation
 Hook up ScreenCrapsTable::onAttach(MenuBetting)
 
+(Done) Add shortCircuit() to MenuOddsBet to skip menu if only one odds bet
 (Done) LayoutCrapsScreen draw all Panel borders and fix-up on behalf of Panels
 (Done) LayoutCrapsScreen made into a static class
 (Done) Fix up NavBar to be a Panel

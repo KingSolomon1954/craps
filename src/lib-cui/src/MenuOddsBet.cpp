@@ -13,7 +13,6 @@
 #include <gen/ErrorPass.h>
 #include <algorithm>
 #include <cassert>
-#include <cstring>
 #include <ncurses.h>
 
 using namespace Cui;
@@ -52,14 +51,33 @@ MenuOddsBet::draw()
 {
     gatherBets();
     buildMenuEntries();
-
+    
+    if (shortCircuit())  // Only one odds bet? then skip this menu
+    {
+        return;
+    }
+    
     windowResize();
-        
     werase(pWin_);
     drawBorders();
     drawStaticContent();
     populate();
     CuiUtils::transfer(pWin_);
+}
+
+//----------------------------------------------------------------
+
+bool
+MenuOddsBet::shortCircuit()
+{
+    shouldSkip_ = false;
+    if (menuEntries_.size() == 2)
+    {
+        shouldSkip_ = true;
+        processSelection(menuEntries_[1].betId);
+        return true;
+    }
+    return false;
 }
 
 //----------------------------------------------------------------
@@ -148,7 +166,7 @@ MenuOddsBet::buildMenuEntries()
 {
     menuEntries_.clear();
     buildMenuBets();
-    addQuitEntry();
+    addBackEntry();
 }
 
 //----------------------------------------------------------------
@@ -183,9 +201,9 @@ MenuOddsBet::indexToHotKey(size_t index)
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::addQuitEntry()
+MenuOddsBet::addBackEntry()
 {
-    menuEntries_.push_back({.hotKey = 27, .betId = 0, .text = "[esc] Back"});
+    menuEntries_.push_back({.hotKey = 27, .betId = 0, .text = "[. or esc] Back"});
 }
 
 //----------------------------------------------------------------
@@ -310,7 +328,7 @@ MenuOddsBet::handleKey(int ch)
 {
     if (ch == 27)  // escape
     {
-        quit();
+        back();
         return;
     }
 
@@ -329,7 +347,7 @@ MenuOddsBet::handleKey(int ch)
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::quit()
+MenuOddsBet::back()
 {
     // Set our own state in base class to reflect cancel.
     // Also informs parent surfaces of the state of operation.

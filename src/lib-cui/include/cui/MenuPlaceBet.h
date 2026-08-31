@@ -33,10 +33,12 @@ public:
 private:
     struct Layout
     {
+        static constexpr int height = 11;
+        static constexpr int width  = 22;
+
+        // TODO - get these from geometry manager
         static constexpr int winStartX = 10;        
         static constexpr int winStartY = 40;
-        static constexpr int winHeight = 11;
-        static constexpr int winWidth  = 22;
     };
 
     MenuPlaceBet();  // Private ctor
@@ -46,7 +48,7 @@ private:
     void populateCarrier (int pivot);
     void prepDialogAmount(int pivot);
     void activateDialogAmount();
-    void quit();
+    void back();
 };
 
 /*-----------------------------------------------------------*//**
@@ -58,13 +60,9 @@ private:
 Responsibilities of MenuPlaceBet
 
 @li Key bindings for the menu
-
 @li Process input keys 
-
 @li Takes action on input keys 
-
 @li Renders the menu on screen
-
 @li Functions to establish defaults and fill values
 
 */

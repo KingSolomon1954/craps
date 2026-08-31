@@ -7,25 +7,16 @@
 #pragma once
 
 #include <cui/MenuBase.h>
-#include <gen/MoneyUtils.h>
 #include <craps/EnumBetName.h>
-#include <craps/CrapsTypes.h>
-#include <cui/DialogAmountEntry.h>
 
 namespace Cui {
 
-class ConsoleView;        // fwd
-class ScreenCrapsTable;   // fwd
-class DialogAckError;     // fwd
-class MenuPivot;          // fwd
-class MenuOdds;           // fwd
-    
 class MenuBetting : public MenuBase
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuBetting();
+   ~MenuBetting() = default;
     static MenuBetting& instance();
     /// @}
 
@@ -39,76 +30,55 @@ public:
     /// @}
     
 protected:
-    void drawMenu()            override;
-    void handleMenuKey(int ch) override;
+    void draw()            override;
+    void handleKey(int ch) override;
 
 private:
-    enum class ResumeState
+    struct Layout
     {
-        None,
-        WaitingOnBetAmount,
-        WaitingOnOddsSelection,
-        WaitingOnOddsAmount,
-        WaitingOnPivot,
-        WaitingOnDialogAckError
+        static constexpr int height = 23;
+        static constexpr int width  = 25;
+
+        // TODO - get these from geometry manager
+        static constexpr int winStartX = 10;        
+        static constexpr int winStartY = 40;
     };
-    
-    ScreenCrapsTable*  pOwning_              = nullptr;
-    DialogAmountEntry* pDlgAmount_           = nullptr;
-    DialogAckError*    pDlgError_            = nullptr;
-    MenuPivot*         pMenuPivot_           = nullptr;
-    MenuOdds*          pMenuOdds_            = nullptr;
-    ResumeState        resumeState_          = ResumeState::None;
-    ResumeState        postDialogErrorState_ = ResumeState::None;
-    size_t             pivot_                = 0;
-    bool               isOddsBet_            = false;
-    BetName            betName_;
-    Craps::BetId       betId_;
-    
-    MenuBetting();  // private ctor
 
-    void showMenuPivot();
-    void showMenuOdds();
-    void showDialogAmountEntry();
-    void showDialogAckError(const std::string& diag);
-    
-    void resumeBetAmount();
-    void resumeOddsAmount();
-    void resumeOddsSelection();
-    void resumeMenuPivot();
-    void resumeDialogAckError();
-    void setResumeState();
-    void setResumeState(ResumeState s);
-    
+    BetName betName_ = BetName::Invalid;
+
+    MenuBetting();  // Private ctor
+    void createWindow();
+    void fillWindow();
+
+    // Input handling
     void doBets(BetName betName);
+    void doGetAmount();
+    void doGetPivot();
     void doOddsBets();
-    void doMakeBet(Gen::Money contractAmount);
-    void doMakeOddsBet(Gen::Money oddsAmount);
-    
-    void clearState();
-    void setAmountTitle();
-    void setFillAmount();
-    void setQuickBet();
-
-    void autoFillCallback(Gen::Money amount);
-    void quickBetCallback(Gen::Money amount);
+    void doBetFlags();
+    void doRemoveBets();
+    void doUndoLastBet();
+    void doQuickBet();
+    void doRollDice();
+    void populateCarrier();
+    void prepDialogAmount();
+    void activateDialogAmount();
+    void activateMenuPivot();
+    void back();
 };
 
 /*-----------------------------------------------------------*//**
 
 @class MenuBetting
 
-@brief Root menu for ScreeCrapsTable class
+@brief Menu for full ScreenCrapsTable
 
-Responsibilities of MenuBetting:
-
-@li Key bindings for the menu
-
-@li Process input keys 
-
-@li Takes action on input keys 
-
+@li Owns a ncurses WINDOW
+@li Draws the menu into the window
 @li Renders the menu on screen
+@li Key bindings for the menu
+@li Process input keys 
+@li Takes action on input keys 
 
 */
 

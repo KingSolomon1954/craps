@@ -85,11 +85,11 @@ public:
     // popping surfaces.
     //
     // The default in the base class here is not to skip, otherwise
-    // a concrete class should override this function.
+    // a concrete class should set the shouldSkip_ variable as needed.
     //
     virtual bool shouldSkip() const
     {
-        return false;
+        return shouldSkip_;
     }
     
     virtual void releaseNcursesResources()
@@ -119,6 +119,7 @@ protected:
     WINDOW*  pWin_                   = nullptr;
     Surface* pParentSurface_         = nullptr;
     OperationResult operationResult_ = OperationResult::Unset;
+    bool shouldSkip_                 = false;
 };
 
 /*-----------------------------------------------------------*//**

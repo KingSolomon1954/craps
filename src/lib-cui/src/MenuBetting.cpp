@@ -6,29 +6,20 @@
 
 #include <cui/MenuBetting.h>
 
+#include <cui/CarrierBet.h>
+#include <cui/ConsoleManager.h>
+#include <cui/CuiUtils.h>
+#include <cui/WindowNavBar.h>
 #include <cassert>
-#include <controller/CrapsCommands.h>
-#include <controller/CrapsReaders.h>
-#include <craps/EnumBetName.h>
-#include <cui/ConsoleView.h>
-#include <cui/DialogAckError.h>
-#include <cui/DialogAmountEntry.h>
-#include <cui/ScreenCrapsTable.h>
-#include <cui/MenuPivot.h>
-#include <cui/MenuOdds.h>
 
 using namespace Cui;
 
 //----------------------------------------------------------------
 
 MenuBetting::MenuBetting()
-    : MenuBase(1, 1)  // Placeholder, resized in drawMenu()
 {
-    // Obtain common menus/dialog screens and cache them
-    auto* pDlgAmount_ = DialogAmountEntry::instance();
-    auto* pMenuPivot_ = MenuPivot::instance();
-    auto* pMenuOdds_  = MenuOdds::instance();
-    auto* pDlgError_  = DialogAckError::instance();
+    createWindow();
+    fillWindow();
 }
 
 //----------------------------------------------------------------
@@ -42,16 +33,89 @@ MenuBetting::instance()
 
 //----------------------------------------------------------------
 
-MenuBetting::~MenuBetting()
+void
+MenuBetting::createWindow()
 {
+    using L = Layout;
+    newWindow(L::height,    L::width,
+              L::winStartY, L::winStartX,
+              "MenuBetting");
+}
+
+//----------------------------------------------------------------
+//
+// Fills in the window like this, just this once at init time.
+//
+// Later, multiple calls to draw() just transfers the already
+// filled window.
+//
+//    0123456789012345678901234
+// 0  ┌───────────────────────┐
+// 1  │ Betting Menu          │
+// 2  ├───────────────────────┤
+// 3  │ [p] Pass Line         │
+// 4  │ [c] Come Bet          │
+// 5  │ [d] Dont Pass         │
+// 6  │ [k] Dont Come         │
+// 7  │ [o] Odds Bet          │
+// 8  │ [l] Place Bet         │
+// 9  │ [h] Hardways          │
+// 10 │ [f] Field Bet         │
+// 11 │ [e] C&E Bet           │
+// 12 │ [a] Any Craps         │
+// 13 │ [7] Any 7             │
+// 14 │ [n] Horn Bet          │
+// 15 │ [w] World Bet         │
+// 16 │ [g] Bet Flags         │
+// 17 │ [q] Quick Bet         │
+// 18 │ [x] Remove Bets       │
+// 19 │ [u] Undo Last         │
+// 20 │ [r] Roll Dice         │
+// 21 │ [. or esc] Back       │
+// 22 └───────────────────────┘
+//
+void
+MenuBetting::fillWindow()
+{
+    using L = Layout;
+
+    box(pWin_, 0, 0);
+
+    // Horizontal separator below the title
+    mvwhline(pWin_, 2, 1, ACS_HLINE, L::width - 2);
+    mvwaddch(pWin_, 2, 0, ACS_LTEE);
+    mvwaddch(pWin_, 2, L::width - 1, ACS_RTEE);
+
+    mvwaddstr(pWin_, 1, 2, "Betting Menu");
+
+    mvwaddstr(pWin_, 3,  2, "[p] Pass Line");
+    mvwaddstr(pWin_, 4,  2, "[c] Come Bet");
+    mvwaddstr(pWin_, 5,  2, "[d] Dont Pass");
+    mvwaddstr(pWin_, 6,  2, "[k] Dont Come");
+    mvwaddstr(pWin_, 7,  2, "[o] Odds Bet");
+    mvwaddstr(pWin_, 8,  2, "[l] Place Bet");
+    mvwaddstr(pWin_, 9,  2, "[h] Hardways");
+    mvwaddstr(pWin_, 10, 2, "[f] Field Bet");
+    mvwaddstr(pWin_, 11, 2, "[e] C&E Bet");
+    mvwaddstr(pWin_, 12, 2, "[a] Any Craps");
+    mvwaddstr(pWin_, 13, 2, "[7] Any 7");
+    mvwaddstr(pWin_, 14, 2, "[n] Horn Bet");
+    mvwaddstr(pWin_, 15, 2, "[w] World Bet (todo)");
+    mvwaddstr(pWin_, 16, 2, "[g] Bet Flags");
+    mvwaddstr(pWin_, 17, 2, "[q] Quick Bet");
+    mvwaddstr(pWin_, 18, 2, "[x] Remove Bets");
+    mvwaddstr(pWin_, 19, 2, "[u] Undo Last");
+    mvwaddstr(pWin_, 20, 2, "[r] Roll Dice");
+    mvwaddstr(pWin_, 21, 2, "[esc] Back");
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBetting::setOwningScreen(ScreenCrapsTable* pOwning)
+MenuBetting::draw()
 {
-    pOwning_ = pOwning;
+    // Just reuse already filled window over and over
+    CuiUtils::transfer(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -59,23 +123,10 @@ MenuBetting::setOwningScreen(ScreenCrapsTable* pOwning)
 // Override menu base class
 //
 void
-MenuBetting::drawMenu()
+MenuBetting::handleKey(int ch)
 {
-    // TODO
-    mvwprintw(w_, 0, 0, "Betting Menu:");
-    mvwprintw(w_, 1, 2, "1) Pass Line Bet");
-    mvwprintw(w_, 2, 2, "2) Don't Pass");
-    // etc.
-}
+    betName_ = BetName::Invalid;
 
-//----------------------------------------------------------------
-//
-// Override menu base class
-//
-void
-MenuBetting::handleMenuKey(int ch)
-{
-    clearState();
     switch (ch)
     {
     case 'p': doBets(BetName::PassLine); break;
@@ -89,15 +140,16 @@ MenuBetting::handleMenuKey(int ch)
     case 'a': doBets(BetName::AnyCraps); break;
     case '7': doBets(BetName::AnySeven); break;
     case 'n': doBets(BetName::Horn);     break;
+//  case 'w': doBets(BetName::World);    break;
     case 'o': doOddsBets();              break;
-    // TODO add more...
-    // case 'x': doRemoveBet();          break;
-    // case 't': doBetFlags();           break;
-    // case 'q': doQuickBet();           break;
-    // case 'r': doRollDice();           break;
-    // case 'u': doUndoLastBet();        break;
-    // case '.': doControlMenu();        break;
-    // case 'v': doViewMenu();           break;
+    case 'g': doBetFlags();              break;
+    case 'x': doRemoveBets();            break;
+    case 'u': doUndoLastBet();           break;
+    case 'q': doQuickBet();              break;
+    case 'r': doRollDice();              break;
+    case '.':
+    case  27: back();                    break;
+    default: WindowNavBar::instance().handleKey(ch); break;
     }
 }
 
@@ -107,6 +159,7 @@ void
 MenuBetting::doBets(BetName betName)
 {
     betName_ = betName;
+
     switch(betName_)
     {
     case BetName::PassLine:
@@ -117,10 +170,74 @@ MenuBetting::doBets(BetName betName)
     case BetName::CandE:
     case BetName::AnyCraps:
     case BetName::AnySeven:
-    case BetName::Horn:      showDialogAmountEntry(); break;
-    case BetName::Place:     
-    case BetName::Hardway:   showMenuPivot();         break;
+    // case BetName::World:
+    case BetName::Horn:      doGetAmount(); break;
+    case BetName::Place:
+    case BetName::Hardway:   doGetPivot();  break;
+    default: assert(true);
+             throw std::runtime_error("MenuBetting::doBets() "
+                 "missing case block for bet name: " +
+                 EnumBetName::toString(betName_));
+             break;
     }
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::doGetAmount()
+{
+    populateCarrier();
+    prepDialogAmount();
+    activateDialogAmount();
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::doGetPivot()
+{
+    populateCarrier();
+    activateMenuPivot();
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::populateCarrier()
+{
+    auto cb = CarrierBet::instance();
+    cb.clear();
+    cb.setBetType(betName_);
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::prepDialogAmount()
+{
+    // TODO
+    // DialogBetAmount::setPrompt("Amount for %s" bet, EnumBetName::toString(betName_));
+    // auto amount = getAutoFillAmount(betName_);
+    // DialogBetAmount::preFill(amount);
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::activateDialogAmount()
+{
+    // TODO
+    // ConsoleManager::pushSurface(AmountDialog);
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::activateMenuPivot()
+{
+    // TODO
+    // ConsoleManager::pushSurface(MenuPivot);
 }
 
 //----------------------------------------------------------------
@@ -128,356 +245,68 @@ MenuBetting::doBets(BetName betName)
 void
 MenuBetting::doOddsBets()
 {
-    showMenuOdds();
-}
-
-//----------------------------------------------------------------
-//
-// Override Screen base class
-// Called when MenuBetting regains focus
-// In most cases DialogAmountEntry screen finished
-//
-void
-MenuBetting::onResume()
-{
-    switch (resumeState_)
-    {
-    case ResumeState::None:                    /* do nothing */        break;
-    case ResumeState::WaitingOnBetAmount:      resumeBetAmount();      break;
-    case ResumeState::WaitingOnOddsAmount:     resumeOddsAmount();     break;
-    case ResumeState::WaitingOnOddsSelection:  resumeOddsSelection();  break;
-    case ResumeState::WaitingOnPivot:          resumeMenuPivot();      break;
-    case ResumeState::WaitingOnDialogAckError: resumeDialogAckError(); break;
-    }
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBetting::resumeBetAmount()
+MenuBetting::doBetFlags()
 {
-    // Back from DialogAmountEntry
-    auto rs = pDlgAmount_->getResults();
-    
-    if (rs.canceled)
-    {
-        setResumeState(ResumeState::None);
-        view_.popScreen();
-        return;
-    }
-    doMakeBet(rs.amount);
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBetting::resumeOddsAmount()
+MenuBetting::doRemoveBets()
 {
-    // Back from DialogAmountEntry
-    auto rs = pDlgAmount_->getResults();
-    
-    if (rs.canceled)
-    {
-        setResumeState(ResumeState::None);
-        view_.popScreen();
-        return;
-    }
-
-    doMakeOddsBet(rs.amount);
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBetting::resumeOddsSelection()
+MenuBetting::doUndoLastBet()
 {
-    // Back from MenuOdds, now we know which bet to set odds on
-    auto rs = pMenuOdds_->getResults();
-
-    if (rs.canceled)
-    {
-        setResumeState(ResumeState::None);
-        view_.popScreen();
-        return;
-    }
-    
-    betName_   = rs.betName;  // PassLine, Come, DontPass, DontCome
-    betId_     = rs.betId;
-    pivot_     = rs.pivot;    // 4,5,6,8,9,10
-    isOddsBet_ = true;
-    
-    showDialogAmountEntry();
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBetting::resumeMenuPivot()
+MenuBetting::doQuickBet()
 {
-    // Back from MenuPivot 
-    auto rs = pMenuPivot_->getResults();
-
-    if (rs.canceled)
-    {
-        setResumeState(ResumeState::None);
-        view_.popScreen();
-        return;
-    }
-    
-    pivot_ = rs.pivot;
-    showDialogAmountEntry();
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBetting::resumeDialogAckError()
+MenuBetting::doRollDice()
 {
-    // Error dialog was dismissed, restore "return-to" state
-    resumeState_ = postDialogErrorState_;
-    postDialogErrorState_ = ResumeState::None;
-}
-        
-//----------------------------------------------------------------
-
-void
-MenuBetting::doMakeBet(Gen::Money contractAmount)
-{
-    Gen::ErrorPass  ep;
-    Craps::BetId    betId;
-    Craps::PlayerId playerId;
-
-    // Grab playerId
-    auto rc = Ctrl::CrapsReaders::getUserPlayer(playerId, ep);
-    assert(rc == Gen::ReturnCode::Success);
-
-    // Make the bet
-    auto correlationId = Ctrl::CrapsCommands::cmdMakeBet(
-        playerId,
-        betName_,
-        contractAmount,
-        pivot_);
-
-// TODO setup to listen for Pub/Sub event
-// EventType::ViewMakeBetSuccess or
-// TODO setup to listen for ViewErrorDialog
-    
-    // Bet succeeded
-    pOwning_->onBetPlaced(playerId, betId);  // Update visuals
-    setResumeState(ResumeState::None);
-    view_.popScreen();
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuBetting::doMakeOddsBet(Gen::Money oddsAmount)
+MenuBetting::back()
 {
-    Gen::ErrorPass  ep;
-    Craps::PlayerId playerId;
-    auto rc = Ctrl::CrapsReaders::getUserPlayer(playerId, ep);
-    assert(rc == Gen::ReturnCode::Success);
+    // Set our own state in base class to reflect cancel.
+    // Also informs parent surfaces of the state of operation.
+    // In turn, parent menus can decide if they are skipped
+    // when unwinding the menu stack. But we're the topmost menu.
 
-    // Set or change the odds bet
-    auto correlationId = Ctrl::CrapsCommands::cmdBetSetOddsAmount(
-        betId_,
-        oddsAmount);
+    // No need to setOperationResult, we have no parent.
+    // setOperationResult(OperationResult::Cancel);  // base class
 
-// TODO setup to listen for Pub/Sub event
-// EventType::ViewMakeBetSuccess or
-// TODO setup to listen for ViewErrorDialog
-    
-    // Bet succeeded
-    pOwning_->onBetPlaced(playerId, betId_);  // Update visuals
-    setResumeState(ResumeState::None);
-    view_.popScreen();
+    // We're the topmost menu, nothing to pop
+    // ConsoleManager::instance().popSurfaces();
+
+    // But we do want to hide the MenuBetting if it's visible.
+
+    // TODO
 }
 
 //----------------------------------------------------------------
-
-void
-MenuBetting::showDialogAmountEntry()
-{
-    // Bring up DialogAmountEntry
-    pDlgAmount_->clearState();
-    setAmountTitle();
-    setFillAmount();
-    setQuickBet();
-    setResumeState();
-    view_.pushScreen(pDlgAmount_);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::showMenuPivot()
-{
-    // Bring up next level menu to obtain pivot
-    assert(betName_ == BetName::Place || betName_ == BetName::Hardway);
-    pMenuPivot_->setUpFor(betName_);
-    setResumeState(ResumeState::WaitingOnPivot);
-    view_.pushScreen(pMenuPivot_);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::showMenuOdds()
-{
-    // Bring up next level menu to present choices for odds bets
-    pMenuOdds_->clearState();
-    setResumeState(ResumeState::WaitingOnOddsSelection);
-    view_.pushScreen(pMenuOdds_);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::showDialogAckError(const std::string& diag)
-{
-    pDlgError_->setMessage(diag);
-    postDialogErrorState_ = resumeState_;
-    setResumeState(ResumeState::WaitingOnDialogAckError);
-    view_.pushScreen(pDlgError_);
-}
-
-//----------------------------------------------------------------
-//
-// Forming titles like this:
-//
-//     "PassLine Bet"
-//     "Place Bet on 6"
-//     "Hardway Bet on 6"
-//     "Odds on PassLine 6"
-//     "Odds on Come 6"
-//     "Odds on DontPass 6"
-//     "Odds on DontCome 6"
-//    
-void
-MenuBetting::setAmountTitle()
-{
-    std::string betName  = EnumBetName::toString(betName_);
-    std::string pivotStr = std::to_string(pivot_);
-    std::string title;
-
-    if (isOddsBet_)
-    {
-        title = "Odds on " + betName + " " + pivotStr;
-    }
-    else
-    {
-        title = betName + " Bet";
-        if (pivot_ != 0)
-        {
-            title += " on " + pivotStr;
-        }
-    }
-    pDlgAmount_->setTitle(title);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::setFillAmount()
-{
-    pDlgAmount_->registerAutoFillCallback(
-        [this](Gen::Money amount) { autoFillCallback(amount); }
-    );
-
-    Gen::Money fillAmount = 0;
-    Gen::ErrorPass ep;
-    Ctrl::CrapsReaders::AutoFillEntry afe =
-        {betName_, pivot_, isOddsBet_, 0};
-    auto rc = Ctrl::CrapsReaders::getAutoFill(afe, ep);
-    if (rc == Gen::ReturnCode::Success)
-    {
-        fillAmount = afe.amount;
-    }
-    else
-    {
-        // TODO 
-        // fillAmount = tableMinimum(betName_);
-    }
-
-    pDlgAmount_->setFillAmount(fillAmount);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::setQuickBet()
-{
-    pDlgAmount_->registerQuickBetCallback(
-        [this](Gen::Money amount) { quickBetCallback(amount); }
-    );
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::setResumeState(ResumeState s)
-{
-    resumeState_ = s;
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::setResumeState()
-{
-    if (isOddsBet_)
-    {
-        setResumeState(ResumeState::WaitingOnOddsAmount);
-    }
-    else
-    {
-        setResumeState(ResumeState::WaitingOnBetAmount);
-    }
-}
-
-//----------------------------------------------------------------
-//
-// The DialogAmountEntry calls this when user presses
-// 'a' to create an auto fill entry using the current bet and amount.
-//
-void
-MenuBetting::autoFillCallback(Gen::Money amount)
-{
-    uint64_t correlationId = 0;
-    if (amount == 0)
-    {
-        correlationId = Ctrl::CrapsCommands::cmdDeleteAutoFill(
-            betName_, pivot_, isOddsBet_, amount);
-        return;
-    }
-    correlationId = Ctrl::CrapsCommands::cmdSetAutoFill(
-        betName_, pivot_, isOddsBet_, amount);
-}
-
-//----------------------------------------------------------------
-//
-// The DialogAmountEntry calls this when user presses
-// 'q' to set quick bet using the current bet and amount.
-//
-void
-MenuBetting::quickBetCallback(Gen::Money amount)
-{
-    auto correlationId = Ctrl::CrapsCommands::cmdSetQuickBet(
-            betName_, pivot_, isOddsBet_, amount);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::clearState()
-{
-    pivot_                = 0;
-    betName_              = BetName::Invalid;
-    betId_                = 0;
-    resumeState_          = ResumeState::None;
-    postDialogErrorState_ = ResumeState::None;
-    isOddsBet_            = false;
-}    
-
-//----------------------------------------------------------------
-

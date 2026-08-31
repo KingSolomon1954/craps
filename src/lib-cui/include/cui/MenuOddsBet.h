@@ -76,13 +76,15 @@ private:
     void buildMenuEntries();
     void buildMenuBets();
     char indexToHotKey(size_t index);
-    void addQuitEntry();
+    void addBackEntry();
     std::string formatBet   (const BetInfo& bet);
     std::string formatAmount(const BetInfo& bet);
     std::string formatPivot (const BetInfo& bet);
     std::string formatHotKey(const char hotKey);
 
-    // Window creation and drawing
+    bool shortCircuit();
+
+// Window creation and drawing
     void windowResize();
     std::pair<int, int> calcSize() const;
     void drawBorders();
@@ -90,7 +92,7 @@ private:
     void populate();
 
     // Processing hotKeys
-    void quit();
+    void back();
     void processSelection(const Craps::BetId& betId);
     BetInfo& findBet(const Craps::BetId& betId);
     void populateCarrier(const BetInfo& bet);
