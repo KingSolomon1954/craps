@@ -4,12 +4,12 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/MenuBetting.h>
+#include <cui/menus/MenuBetting.h>
 
 #include <cui/CarrierBet.h>
 #include <cui/ConsoleManager.h>
 #include <cui/CuiUtils.h>
-#include <cui/WindowNavBar.h>
+#include <cui/panels/WindowNavBar.h>
 #include <cassert>
 
 using namespace Cui;

@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/DialogAckError.h>
+#include <cui/dialogs/DialogAckError.h>
 #include <cassert>
 #include <cstring>
 #include <cui/ConsoleView.h>

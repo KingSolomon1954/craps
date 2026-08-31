@@ -7,18 +7,18 @@
 add_library(cui STATIC
     src/CarrierBet.cpp
     src/ConsoleManager.cpp
-    src/Cui.cpp
+    src/CuiMain.cpp
     src/CuiUtils.cpp
-    src/DialogAckError.cpp
-    src/DialogAmountEntry.cpp
-    src/LayoutCrapsScreen.cpp
-    src/MenuBetting.cpp
-    src/MenuOddsBet.cpp
-    src/MenuPlaceBet.cpp
-    src/MenuPlayerViews.cpp
-    src/ScreenCrapsTable.cpp
-    src/WindowNavBar.cpp
-    src/WindowPlayerArea.cpp
+#   src/dialogs/DialogAckError.cpp
+#   src/dialogs/DialogAmountEntry.cpp
+    src/layouts/LayoutCrapsScreen.cpp
+    src/menus/MenuBetting.cpp
+    src/menus/MenuOddsBet.cpp
+    src/menus/MenuPlaceBet.cpp
+    src/menus/MenuNavBarViews.cpp
+    src/screens/ScreenCrapsTable.cpp
+    src/panels/WindowNavBar.cpp
+    src/panels/WindowPlayerArea.cpp
 )
 
 target_include_directories(cui

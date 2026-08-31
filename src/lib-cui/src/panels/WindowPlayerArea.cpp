@@ -4,9 +4,9 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/WindowPlayerArea.h>
-#include <cui/LayoutCrapsScreen.h>
-#include <cui/LayoutPlayerArea.h>
+#include <cui/panels/WindowPlayerArea.h>
+#include <cui/layouts/LayoutCrapsScreen.h>
+#include <cui/layouts/LayoutPlayerArea.h>
 #include <cui/CuiUtils.h>
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
@@ -24,6 +24,15 @@ WindowPlayerArea::WindowPlayerArea()
               Layout::playerAreaTopRow,
               Layout::playerAreaLeftCol,
               "WindowPlayerArea");
+}
+
+//----------------------------------------------------------------
+
+WindowPlayerArea&
+WindowPlayerArea::instance()
+{
+    static WindowPlayerArea wpa;
+    return wpa;
 }
 
 //----------------------------------------------------------------

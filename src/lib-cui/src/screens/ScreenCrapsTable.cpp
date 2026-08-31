@@ -4,17 +4,17 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/ScreenCrapsTable.h>
+#include <cui/screens/ScreenCrapsTable.h>
 #include <cui/ConsoleManager.h>
-#include <cui/LayoutCrapsScreen.h>
-// #include <cui/WindowTitleBar.h>
-// #include <cui/WindowRollHistory.h>
-// #include <cui/WindowWindowPlayerArea.h>
-// #include <cui/WindowMessages.h>
-// #include <cui/WindowAnimation.h>
-// #include <cui/WindowHouseBrief.h>
-// #include <cui/WindowPlayerBrief.h>
-#include <cui/WindowNavBar.h>
+#include <cui/layouts/LayoutCrapsScreen.h>
+// #include <cui/panles/WindowTitleBar.h>
+// #include <cui/panles/WindowRollHistory.h>
+// #include <cui/panles/WindowWindowPlayerArea.h>
+// #include <cui/panles/WindowMessages.h>
+// #include <cui/panles/WindowAnimation.h>
+// #include <cui/panles/WindowHouseBrief.h>
+// #include <cui/panles/WindowPlayerBrief.h>
+#include <cui/panels/WindowNavBar.h>
 #include <gen/Logger.h>
 
 using namespace Cui;
@@ -47,7 +47,7 @@ ScreenCrapsTable::releaseNcursesResources()
 //    WindowHouseBrief::instance().releaseNcursesResources();
 //    WindowPlayerBrief::instance().releaseNcursesResources();
 //    
-    Surface::releaseNcursesResources();  // Invoke base class implementation
+    SurfaceBase::releaseNcursesResources();  // Invoke base class implementation
 }
 
 //----------------------------------------------------------------
@@ -99,7 +99,7 @@ ScreenCrapsTable::drawNavBar()
 //----------------------------------------------------------------
 
 void
-ScreenCrapsTable::onAttach(Surface* pParent)
+ScreenCrapsTable::onAttach(SurfaceBase* pParent)
 {
     LOG_TRACE("ScreenCrapsTable::onAttach()");
     (void)pParent;

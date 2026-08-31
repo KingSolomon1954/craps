@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: Cui.h
+// File: CuiMain.h
 //
 //----------------------------------------------------------------
 
@@ -9,14 +9,13 @@
 namespace Cui
 {
     
-class Cui
+class CuiMain
 {
 public:
-    Cui() = default;
-   ~Cui() = default;
+    CuiMain() = default;
+   ~CuiMain() = default;
    
     void init();
-    void run();
     
 private:
 
@@ -24,12 +23,12 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class Cui
+@class CuiMain
 
 @brief Main entry point for CUI library
 
 @li The entry point into CUI processing.
-@li This is the class the Controller library pulls in.
+@li Controller library pulls in this class to start it off
 
 */
 

@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/ConsoleManager.h>
-#include <cui/Surface.h>
+#include <cui/bases/SurfaceBase.h>
 #include <controller/Globals.h>
 #include <controller/GameEvent.h>
 #include <controller/GameController.h>
@@ -23,7 +23,7 @@ ConsoleManager::ConsoleManager()
 {
     setlocale(LC_ALL, "");   // enable locale detection
     useUnicodePips_ = utf8_enabled();
-    LOG_DEBUG("useUnicodePips: " + std::to_string(useUnicodePips));
+    LOG_DEBUG("useUnicodePips: " + std::to_string(useUnicodePips_));
 }
 
 //----------------------------------------------------------------
@@ -93,7 +93,7 @@ ConsoleManager::shutdownNcursesResources()
 {
     for (auto* surface : surfaces_)
     {
-        surface->shutdownNcursesResources();
+        surface->releaseNcursesResources();
     }
     surfaces_.clear();
 }
@@ -115,7 +115,7 @@ ConsoleManager::prepareForShutdown()
 // disappears. Can't control static order singleton class destructors.
 // 
 void
-ConsoleManager::registerSurface(Surface* pSurface)
+ConsoleManager::registerSurface(SurfaceBase* pSurface)
 {
     if (std::find(surfaces_.begin(), surfaces_.end(), pSurface)
         == surfaces_.end())
@@ -126,7 +126,7 @@ ConsoleManager::registerSurface(Surface* pSurface)
 //----------------------------------------------------------------
 
 void
-ConsoleManager::draw(Surface* pSurface)
+ConsoleManager::draw(SurfaceBase* pSurface)
 {
     pSurface->draw();
     doupdate();  // Paint the physical screen
@@ -135,7 +135,7 @@ ConsoleManager::draw(Surface* pSurface)
 //----------------------------------------------------------------
 
 void
-ConsoleManager::setSurface(Surface* pSurface)
+ConsoleManager::setSurface(SurfaceBase* pSurface)
 {
     std::lock_guard<std::mutex> lock(stackMx_);
     for (auto* s : stack_) s->onDetach();
@@ -143,15 +143,15 @@ ConsoleManager::setSurface(Surface* pSurface)
     stack_.push_back(pSurface);
     pSurface->onAttach(nullptr);  // No parent to attach to.
     draw(pSurface);
-    registerSurface(pSurface)
+    registerSurface(pSurface);
 }
 
 //----------------------------------------------------------------
 
 void
-ConsoleManager::pushSurface(Surface* pSurface)
+ConsoleManager::pushSurface(SurfaceBase* pSurface)
 {
-    Surface* pParent = nullptr;
+    SurfaceBase* pParent = nullptr;
     if (!stack_.empty())
     {
         pParent = stack_.back();
@@ -251,8 +251,8 @@ ConsoleManager::utf8_enabled()
 
 //----------------------------------------------------------------
 
-Consider later all these "show" functions when event handling
-is re-architected. OK to stay here for now.
+// Consider later all these "show" functions when event handling
+// is re-architected. OK to stay here for now.
 
 //----------------------------------------------------------------
 

@@ -1,21 +1,21 @@
 //----------------------------------------------------------------
 //
-// File: MenuPlayerViews.h
+// File: MenuNavBarViews.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
-#include <cui/MenuBase.h>
+#include <cui/bases/MenuBase.h>
 
 namespace Cui {
 
-class MenuPlayerViews : public MenuBase
+class MenuNavBarViews : public MenuBase
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuPlayerViewsBet();
+   ~MenuNavBarViews();
     /// @}
 
     /// @name Modifiers
@@ -27,7 +27,7 @@ public:
 
     /// @name Observers
     /// @{
-    static MenuPlayerViews& instance();
+    static MenuNavBarViews& instance();
     /// @}
     
 private:
@@ -39,7 +39,8 @@ private:
         static constexpr int winWidth  = 25;
     };
 
-    MenuPlayerViews();  // Private ctor
+    MenuNavBarViews();  // Private ctor
+    void createWindow();
     void fillWindow();
     void allPlayers();
     void nextPlayer();
@@ -49,19 +50,18 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class MenuPlayerViews
+@class MenuNavBarViews
 
-@brief Display choices for switching Player views
+@brief Display choices for switching Player Views.
+
+Comes from the NavBar
 
 Responsibilities of MenuPlayerViews:
 
 @li Key bindings for the menu
-
 @li Process input keys 
-
 @li Takes action on input keys 
-
-@li Renders the menu on screen
+@li Draws the menu
 
 */
 

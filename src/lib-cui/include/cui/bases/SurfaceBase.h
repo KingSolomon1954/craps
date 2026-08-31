@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: Surface.h
+// File: SurfaceBase.h
 //
 //----------------------------------------------------------------
 
@@ -14,7 +14,7 @@
 namespace Cui
 {
 
-class Surface
+class SurfaceBase
 {
 public:
     enum class OperationResult
@@ -25,7 +25,7 @@ public:
         Success
     };
     
-    virtual ~Surface() = default;
+    virtual ~SurfaceBase() = default;
 
     virtual void draw() = 0;
     virtual void handleKey(int ch) = 0;
@@ -46,7 +46,7 @@ public:
     //   that there.
     // * Trigger an initial data acquisition if appropriate.
     //    
-    virtual void onAttach(Surface* pParent)
+    virtual void onAttach(SurfaceBase* pParent)
     {
         pParentSurface_  = pParent;
         operationResult_ = OperationResult::Unset;
@@ -109,22 +109,22 @@ public:
         if (pWin_ == nullptr)
         {
             assert(pWin_ != nullptr);
-            std::string s = "Surface::newWindow(): "
+            std::string s = "SurfaceBase::newWindow(): "
                             "Unable to create ncurses WINDOW for: ";
             throw std::runtime_error(s + surfaceName);
         }
     }
 
 protected:
-    WINDOW*  pWin_                   = nullptr;
-    Surface* pParentSurface_         = nullptr;
+    WINDOW*      pWin_               = nullptr;
+    SurfaceBase* pParentSurface_     = nullptr;
     OperationResult operationResult_ = OperationResult::Unset;
     bool shouldSkip_                 = false;
 };
 
 /*-----------------------------------------------------------*//**
 
-@class Surface
+@class SurfaceBase
 
 @brief Common abstraction for anything occupying a visible/input surface
 

@@ -4,9 +4,9 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/LayoutCrapsScreen.h>
-#include <cui/LayoutConsole.h>
-#include <cui/LayoutPlayerArea.h>
+#include <cui/layouts/LayoutCrapsScreen.h>
+#include <cui/layouts/LayoutConsole.h>
+#include <cui/layouts/LayoutPlayerArea.h>
 #include <cui/CuiUtils.h>
 #include <stdexcept>
 

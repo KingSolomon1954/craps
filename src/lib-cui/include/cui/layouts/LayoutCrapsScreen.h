@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cui/LayoutConsole.h>
+#include <cui/layouts/LayoutConsole.h>
 #include <ncurses.h>
 #include <cassert>
 

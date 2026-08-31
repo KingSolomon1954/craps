@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/MenuPlaceBet.h>
+#include <cui/menus/MenuPlaceBet.h>
 
 #include <cui/CarrierBet.h>
 #include <cui/ConsoleManager.h>

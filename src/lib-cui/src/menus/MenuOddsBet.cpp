@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/MenuOddsBet.h>
+#include <cui/menus/MenuOddsBet.h>
 #include <controller/CrapsReaders.h>
 #include <cui/CarrierBet.h>
 #include <cui/ConsoleManager.h>

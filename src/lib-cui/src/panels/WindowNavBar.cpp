@@ -4,9 +4,9 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/WindowNavBar.h>
+#include <cui/panels/WindowNavBar.h>
 #include <cui/CuiUtils.h>
-#include <cui/LayoutConsole.h>
+#include <cui/layouts/LayoutConsole.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
 

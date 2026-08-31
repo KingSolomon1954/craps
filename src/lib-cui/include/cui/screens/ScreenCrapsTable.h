@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cui/ScreenBase.h>
+#include <cui/bases/ScreenBase.h>
 
 namespace Cui {
 
@@ -21,12 +21,12 @@ public:
     
     /// @name Modifiers
     /// @{
-    void draw()                     override;  // from Surface
-    void handleKey(int ch)          override;  // from Surface
-    void onPause()                  override;  // from Surface
-    void onResume()                 override;  // from Surface
-    void onDetach()                 override;  // from Surface
-    void onAttach(Surface* pParent) override;  // from Surface
+    void draw()                         override;  // from Surface
+    void handleKey(int ch)              override;  // from Surface
+    void onPause()                      override;  // from Surface
+    void onResume()                     override;  // from Surface
+    void onDetach()                     override;  // from Surface
+    void onAttach(SurfaceBase* pParent) override;  // from Surface
     /// @}
 
     /// @name Observers

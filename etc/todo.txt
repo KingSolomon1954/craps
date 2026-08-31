@@ -40,8 +40,8 @@ In CUI, need DialogBetAmount
 In Controller, need redesign for interface and event handlers
 Need MenuBetting implementation
 Hook up ScreenCrapsTable::onAttach(MenuBetting)
-Organize lib-cui into subfolders.
 
+(Done) Organize lib-cui into subfolders
 (Done) Add shortCircuit() to MenuOddsBet to skip menu if only one odds bet
 (Done) LayoutCrapsScreen draw all Panel borders and fix-up on behalf of Panels
 (Done) LayoutCrapsScreen made into a static class

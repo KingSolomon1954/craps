@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <cui/PanelBase.h>
-#include <cui/LayoutCrapsScreen.h>
+#include <cui/bases/PanelBase.h>
+#include <cui/layouts/LayoutCrapsScreen.h>
 #include <craps/CrapsTypes.h>
 #include <vector>
 
@@ -41,6 +41,7 @@ public:
 
     /// @name Observers
     /// @{
+    static WindowPlayerArea& instance();
     /// @}
     
 private:

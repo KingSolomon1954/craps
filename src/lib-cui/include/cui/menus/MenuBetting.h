@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cui/MenuBase.h>
+#include <cui/bases/MenuBase.h>
 #include <craps/EnumBetName.h>
 
 namespace Cui {

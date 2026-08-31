@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <cui/PanelBase.h>
-#include <cui/LayoutConsole.h>
+#include <cui/bases/PanelBase.h>
+#include <cui/layouts/LayoutConsole.h>
 
 namespace Cui
 {

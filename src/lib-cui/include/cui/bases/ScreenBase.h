@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include <cui/Surface.h>
+#include <cui/bases/SurfaceBase.h>
 
 namespace Cui
 {
 
-class ScreenBase : public Surface
+class ScreenBase : public SurfaceBase
 {
 public:
     /// @name Lifecycle
@@ -29,7 +29,6 @@ public:
 
     // Screen-specific behaviors used by all screens...
 };
-
 
 /*-----------------------------------------------------------*//**
 

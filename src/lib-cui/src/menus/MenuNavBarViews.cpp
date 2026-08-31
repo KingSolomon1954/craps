@@ -1,18 +1,20 @@
 //----------------------------------------------------------------
 //
-// File: MenuPlayerViews.cpp
+// File: MenuNavBarViews.cpp
 //
 //----------------------------------------------------------------
 
-#include <cui/MenuPlayerViews.h>
-#include <cstring>
+#include <cui/menus/MenuNavBarViews.h>
+#include <cui/panels/WindowPlayerArea.h>
+#include <cui/ConsoleManager.h>
+#include <cui/CuiUtils.h>
 #include <cassert>
 
 using namespace Cui;
 
 //----------------------------------------------------------------
 
-MenuPlayerViews::MenuPlayerViews()
+MenuNavBarViews::MenuNavBarViews()
 {
     createWindow();
     fillWindow();
@@ -20,16 +22,17 @@ MenuPlayerViews::MenuPlayerViews()
 
 //----------------------------------------------------------------
 
-MenuPlayerViews&
-MenuPlayerViews::instance()
+MenuNavBarViews&
+MenuNavBarViews::instance()
 {
-    static MenuPlayerViews menu;
+    static MenuNavBarViews menu;
     return menu;
 }
 
 //----------------------------------------------------------------
 
-MenuPlayerViews::createWindow()
+void
+MenuNavBarViews::createWindow()
 {
     using L = Layout;
     pWin_ = newwin(L::winHeight, L::winWidth, L::winStartY, L::winStartX);
@@ -37,13 +40,13 @@ MenuPlayerViews::createWindow()
     if (pWin_ == nullptr)
     {
         throw std::runtime_error(
-            "Unable to create ncurses MenuPlayerViews window");
+            "Unable to create ncurses MenuNavBarViews window");
     }
 }
 
 //----------------------------------------------------------------
 
-MenuPlayerViews::~MenuPlayerViews()
+MenuNavBarViews::~MenuNavBarViews()
 {
     // pWin_ is delwin() in MenuBase
 }
@@ -65,7 +68,7 @@ MenuPlayerViews::~MenuPlayerViews()
 // 7  └───────────────────────┘
 //
 void
-MenuPlayerViews::fillWindow()
+MenuNavBarViews::fillWindow()
 {
     using L = Layout;
     
@@ -78,7 +81,7 @@ MenuPlayerViews::fillWindow()
     mvwaddch(pWin_, 2, L::winWidth - 1, ACS_RTEE);
 
     // Static contents. The border occupies row 0/10 and column 0/21.
-    mvwaddstr(win, 1, 2, "View Menu");
+    mvwaddstr(pWin_, 1, 2, "View Menu");
 
     mvwaddstr(pWin_, 3, 2, "[A] All Players");
     mvwaddstr(pWin_, 4, 2, "[N] One Player (next)");
@@ -89,7 +92,7 @@ MenuPlayerViews::fillWindow()
 //----------------------------------------------------------------
 
 void
-MenuPivot::draw()
+MenuNavBarViews::draw()
 {
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
@@ -100,7 +103,7 @@ MenuPivot::draw()
 // Override surface base class
 //
 void
-MenuPivot::handleKey(int ch)
+MenuNavBarViews::handleKey(int ch)
 {
     switch(ch)
     {
@@ -114,45 +117,45 @@ MenuPivot::handleKey(int ch)
 //----------------------------------------------------------------
 
 void
-MenuPlayerViews::allPlayers()
+MenuNavBarViews::allPlayers()
 {
-    ScreenCrapsTable::instance().setAllPlayersView();
-    setOperationResult(OperationResult::success);
-    ConsoleManager::popSurfaces();
+    WindowPlayerArea::instance().allPlayers();
+    setOperationResult(OperationResult::Success);
+    ConsoleManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlayerViews::nextPlayer()
+MenuNavBarViews::nextPlayer()
 {
-    ScreenCrapsTable::instance().setNextPlayerView();
-    setOperationResult(OperationResult::success);
-    ConsoleManager::popSurfaces();
+    WindowPlayerArea::instance().nextPlayer();
+    setOperationResult(OperationResult::Success);
+    ConsoleManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlayerViews::nextPlayer()
+MenuNavBarViews::prevPlayer()
 {
-    ScreenCrapsTable::instance().setPrevPlayerView();
-    setOperationResult(OperationResult::success);
-    ConsoleManager::popSurfaces();
+    WindowPlayerArea::instance().prevPlayer();
+    setOperationResult(OperationResult::Success);
+    ConsoleManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPlayerViews::back()
+MenuNavBarViews::back()
 {
     // Set our own state in base class to reflect cancel.
     // Also informs parent surfaces of the state of operation.
     // In turn, parent menus can decide if they are skipped
     // when unwinding the menu stack.
     //
-    setOperationResult(OperationResult::cancel);
-    ConsoleManager::popSurfaces();
+    setOperationResult(OperationResult::Cancel);
+    ConsoleManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------

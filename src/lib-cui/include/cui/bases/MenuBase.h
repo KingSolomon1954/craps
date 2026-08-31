@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include <cui/Surface.h>
+#include <cui/bases/SurfaceBase.h>
 #include <string_view>
 
 namespace Cui {
 
-class MenuBase : public Surface
+class MenuBase : public SurfaceBase
 {
 public:
     /// @name Lifecycle

@@ -1,29 +1,23 @@
 //----------------------------------------------------------------
 //
-// File: Cui.cpp
+// File: CuiMain.cpp
 //
 //----------------------------------------------------------------
 
-#include <cui/Cui.h>
+#include <cui/CuiMain.h>
 #include <cui/ConsoleManager.h>
-#include <cui/ScreenCrapsTable.h>
+#include <cui/screens/ScreenCrapsTable.h>
+
+using namespace Cui;
 
 //----------------------------------------------------------------
 
 void
-Cui::init()
+CuiMain::init()
 {
-    auto mgr = ConsoleManager::instance();
+    auto& mgr = ConsoleManager::instance();
     mgr.init(); // ncurses init, 
     mgr.setSurface(&ScreenCrapsTable::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-Cui::run()
-{
-    ConsoleManager::instance().run();
 }
 
 //----------------------------------------------------------------
