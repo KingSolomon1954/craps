@@ -112,9 +112,42 @@ ViewSurface
           ├── DialogConfirm
           └── ...
 
+Startup Behavior (Doing This)
+─────────────────────────────
 
-Startup Handling
-----------------
+First Running
+    missing last saved game
+    straight to ScreenCrapsTable
+    player is given the name "Unamed"
+    player bank is 10,000
+    default table "Las Vegas Daytime"
+    game over -> auto saved under "Unamed"
+    player can Control -> Configure -> Rename Player
+        Current player is renamed
+    player can Control -> Configure -> New Player
+        Prompt for new player name
+        Current player is saved
+        player is given new name
+        player bank is 10,000
+        table is whatever table is in use
+    player can Control -> Configure -> Choose Player
+        first running, player list will be empty
+        tell player "No other players to choose from at this time."
+
+Second Running and Onward
+    load last saved game
+    straight to ScreenCrapsTable
+    pick up where left off
+    player can Control -> Configure -> Choose Player
+        prompt for player to choose
+        current player is saved
+        newly choosen player is loaded along with his table
+    player can Control -> Configure -> New Player
+    player can Control -> Configure -> Rename
+
+
+Startup Behavior option 2 (No Doing This)
+─────────────────────────────────────────
 
                   ┌───────────────┐
                   │   First Run   │
@@ -133,7 +166,6 @@ Startup Handling
                           │
                           ▼
                     Betting Menu
-
 
 ┌──────────────────────────────────────┐
 │ Craps                                │
@@ -861,9 +893,12 @@ Control Menu
     ├────────────────────────┤
     │ [p] Pause              │
     │ [r] Resume             │
-    │ [j] Player Join Table  │
-    │ [l] Player Leave Table │
-    │ [s] Select Table       │
+    │ [j] Buddy Joins Table  │
+    │ [l] Buddy Leaves Table │
+    │ [p] Rename Player      │
+    │ [s] Switch To Player   │
+    │ [c] Create New Player  │
+    │ [t] Select Table       │
     │ [c] Configure          │
     │ [esc] Back             │
     └────────────────────────┘
@@ -874,29 +909,32 @@ Control Menu
     [r] Resume (shown only when paused)
         Return to sticky Control Menu
 
-    [j] Player Join Table
-        Dynamic built menu of available players,
-        restricted to TBD entries.
+    [j] Buddy Joins Table
+        Dynamic built menu of available stock players
+        Game is delivered with stock players
+        6 players max, current player + 5 buddy players.
 
         ┌─────────────────────────────────┐
-        │ Choose Player to Join           │
+        │ Choose Buddy to Join            │
         ├─────────────────────────────────┤
         │ [n] Nathan the Newbie           │
         │ [a] Arthur the Amazing          │
         │ [p] Paige the Place Bet Wizard  │
-        │ [l] Lenny the Dark Side Champ   │
+        │ [l] Lenny the Dont Sider Slider │
         │ [w] Winnie the Winner           │
-        │ [k] King Royal the Supreme      │
+        │ [k] King Solomon the Supreme    │
+        │ [b] Brian the Better Better     │
+        │ [d] Dani on Vacation            │
         │ [esc] Back                      │
         └─────────────────────────────────┘
 
         Return to sticky Control Menu
 
-    [l] Player Leave Table
-        Dynamic built menu of players currently at the table.
+    [l] Buddy Leaves Table
+        Dynamic built menu of buddies currently at the table.
 
         ┌─────────────────────────────────┐
-        │ Choose Player to Leave          │
+        │ Choose Buddy to Leave           │
         ├─────────────────────────────────┤
         │ [n] Nathan the Newbie           │
         │ [p] Paige the Place Bet Wizard  │
@@ -908,15 +946,43 @@ Control Menu
 
         Return to sticky Control Menu
 
-    [s] Switch Tables
+    [p] Rename Player
+        ┌─────────────────────────────────┐
+        │ Rename: Queen Solomon           │
+        ├─────────────────────────────────┤
+        │__________<text entry>___________│
+        ├─────────────────────────────────┤
+        │ [esc] back              [enter] │
+        └─────────────────────────────────┘
+        
+    [s] Switch To Player
+        ┌─────────────────────────────────┐
+        │ Switch to Player                │
+        ├─────────────────────────────────┤
+        │ [1] Queen Solomon               │
+        │ [2] John                        │
+        │ [3] Bill                        │
+        │ [esc] back                      │
+        └─────────────────────────────────┘
+
+    [c] Create New Player
+        ┌─────────────────────────────────┐
+        │ New Player Name                 │
+        ├─────────────────────────────────┤
+        │__________<text entry>___________│
+        ├─────────────────────────────────┤
+        │ [esc] back              [enter] │
+        └─────────────────────────────────┘
+    
+    [s] Select Table
         Dynamic built menu of available tables.
 
         ┌─────────────────────────────────┐
         │ Select Table to Play            │
         ├─────────────────────────────────┤
-        │ [a] Las Vegas Daytime           │
-        │ [b] Las Vegas High Roller       │
-        │ [c] Las Vegas 10x Odds          │
+        │ [1] Las Vegas Daytime           │
+        │ [2] Las Vegas High Roller       │
+        │ [3] Las Vegas 10x Odds          │
         │ [esc] Back                      │
         └─────────────────────────────────┘
 

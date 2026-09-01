@@ -76,3 +76,12 @@ run-ncurses-dynamic-menu:  # Execute on container
 run-ncurses-dynamic-menu-local:  # Execute on local host
 	@$(STARTING_FOLDER) \
 	_build/debug/bin/ncurses-dynamic-menu
+
+run-ncurses-too-small-resize:  # Execute on container
+	podman exec -it -w $(WORKDIR) \
+	    -e LANG=en_US_UTF-8 -e LC_ALL=en_US.UTF-8 \
+	    gcc14-tools bin/ncurses-too-small-resize
+
+run-ncurses-too-small-resize-local:  # Execute on local host
+	@$(STARTING_FOLDER) \
+	_build/debug/bin/ncurses-too-small-resize

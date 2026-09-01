@@ -24,6 +24,7 @@ target_link_libraries(royalcraps
     PRIVATE gui
 )
 
+#------------------
 
 add_executable(ncurses-snippet
     src/snippets/ncurses-snippet.cpp
@@ -33,6 +34,8 @@ target_link_libraries(ncurses-snippet
     PRIVATE ncursesw
 )
 
+#------------------
+
 add_executable(ncurses-animation
     src/snippets/ncurses-animation.cpp
 )
@@ -41,6 +44,8 @@ target_link_libraries(ncurses-animation
     PRIVATE ncursesw
 )
 
+#------------------
+
 add_executable(ncurses-dynamic-menu
     src/snippets/ncurses-dynamic-menu.cpp
 )
@@ -48,6 +53,20 @@ add_executable(ncurses-dynamic-menu
 target_link_libraries(ncurses-dynamic-menu
     PRIVATE ncursesw
 )
+
+#------------------
+
+add_executable(ncurses-too-small-resize
+    src/snippets/ncurses-too-small-resize.cpp
+)
+
+target_link_libraries(ncurses-too-small-resize
+    PRIVATE ncursesw
+)
+
+#------------------
+
+
 
 
 # add_executable(dialog-amount-entry

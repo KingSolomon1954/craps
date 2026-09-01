@@ -938,7 +938,7 @@ RollStats:
     count: 0
     maxRepeats: 0
 SessionStats:
-  numSessionsAlltime: 103
+  numSessionsAlltime: 104
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 04:17:54
   history:
@@ -1176,3 +1176,9 @@ SessionStats:
       numPlayers: 0
       date: 2026-08-26T16:40:31.341874387
       duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-09-01T04:32:25.965602050
+      duration: 0d 00:00:11
