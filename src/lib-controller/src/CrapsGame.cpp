@@ -20,7 +20,7 @@
 #include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
 #include <craps/EventManager.h>
-#include <cui/ConsoleView.h>
+#include <cui/CuiMain.h>
 
 using namespace Ctrl;
 
@@ -56,7 +56,7 @@ CrapsGame::CrapsGame(int argc, char* argv[])
 
     signalHandler_.waitForTerminate();  // Blocks until signal
 
-    Gbl::pView->prepareForShutdown();
+    shutdownView();
     Gbl::pGameCtrl->prepareForShutdown();
     Gbl::pTable->prepareForShutdown();
 }
@@ -176,7 +176,6 @@ CrapsGame::initView()
 {
     auto p = getView();
     Gbl::pView = p;
-    Gbl::pView->init();
     return p;
 }
 
@@ -196,9 +195,14 @@ ViewInterface*
 CrapsGame::getView()
 {
     std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();
-    if (v == "console") return new Cui::ConsoleView();
-//  if (v == "cmdline") return new Cli::CmdLineView();
-//  if (v == "graphical") return Gui::GuiView();
+    if (v == "console")
+    {
+        auto& cui = Cui::CuiMain::instance();
+        cui.init();
+        cui.run();
+        return &cui.getView();
+    }
+//  if (v == "graphical") return Gui::GuiMain()instance().getView();
 
     std::string diag = "Invalid value for config parameter:\"" +
         std::string(ConfigManager::KeyViewType) +
@@ -207,6 +211,25 @@ CrapsGame::getView()
         
     throw std::invalid_argument(diag);
     return nullptr;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsGame::shutdownView()
+{
+    std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();
+    if (v == "console")
+    {
+        Cui::CuiMain::instance().prepareForShutdown();
+        return;
+    }
+    
+//  if (v == "graphical")
+//  {
+//      Gui::GuiMain::instance().prepareForShutdown();
+//      return;
+//  }
 }
 
 //----------------------------------------------------------------

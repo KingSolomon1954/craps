@@ -14,13 +14,6 @@ namespace Ctrl {
 class ViewInterface
 {
 public:
-    /// @name Lifecycle
-    /// @{
-    virtual void init() = 0;
-    virtual void prepareForShutdown() = 0;
-    /// @}
-    /// @}
-
     /// @name Modifiers
     /// @{
     virtual void showSuccess(

@@ -61,7 +61,8 @@ private:
     Ctrl::EventLoop*      initEventLoop();
     
     Ctrl::ViewInterface*  getView();
-    void enableFileLogging();
+    void                  shutdownView();
+    void                  enableFileLogging();
 };
 
 /*-----------------------------------------------------------*//**

@@ -5,15 +5,15 @@
 //----------------------------------------------------------------
 
 #include <cui/screens/ScreenCrapsTable.h>
-#include <cui/ConsoleManager.h>
+#include <cui/SurfaceManager.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
-// #include <cui/panles/WindowTitleBar.h>
-// #include <cui/panles/WindowRollHistory.h>
-// #include <cui/panles/WindowWindowPlayerArea.h>
-// #include <cui/panles/WindowMessages.h>
-// #include <cui/panles/WindowAnimation.h>
-// #include <cui/panles/WindowHouseBrief.h>
-// #include <cui/panles/WindowPlayerBrief.h>
+// #include <cui/panels/WindowTitleBar.h>
+// #include <cui/panels/WindowRollHistory.h>
+// #include <cui/panels/WindowWindowPlayerArea.h>
+// #include <cui/panels/WindowMessages.h>
+// #include <cui/panels/WindowAnimation.h>
+// #include <cui/panels/WindowHouseBrief.h>
+// #include <cui/panels/WindowPlayerBrief.h>
 #include <cui/panels/WindowNavBar.h>
 #include <gen/Logger.h>
 
@@ -105,7 +105,7 @@ ScreenCrapsTable::onAttach(SurfaceBase* pParent)
     (void)pParent;
 
     // TODO 
-    // ConsoleManager::pushSurface(MenuBetting::instance());
+    // SurfaceManager::pushSurface(MenuBetting::instance());
 }
 
 //----------------------------------------------------------------
@@ -121,14 +121,6 @@ ScreenCrapsTable::handleKey(int ch)
     LOG_TRACE("ScreenCrapsTable::handleKey() should "
               "not get here:(" + std::to_string(ch) + ")");
 }
-
-//----------------------------------------------------------------
-
-
-
-#if 0
-
-// Not currently used. Just here a while for reference.
 
 //----------------------------------------------------------------
 //
@@ -163,9 +155,16 @@ ScreenCrapsTable::onResume()
     // TODO
 }
 
-#endif
+//----------------------------------------------------------------
+
+
+
+
+
 
 #if 0
+
+// Move this somewhere AmountDialog ? 
 
 //----------------------------------------------------------------
 //

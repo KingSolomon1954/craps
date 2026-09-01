@@ -7,7 +7,7 @@
 #include <cui/menus/MenuPlaceBet.h>
 
 #include <cui/CarrierBet.h>
-#include <cui/ConsoleManager.h>
+#include <cui/SurfaceManager.h>
 #include <cui/CuiUtils.h>
 #include <craps/EnumBetName.h>
 
@@ -124,7 +124,7 @@ MenuPlaceBet::back()
     // when unwinding the menu stack.
     //
     setOperationResult(OperationResult::Cancel);  // base class
-    ConsoleManager::instance().popSurfaces();
+    SurfaceManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------
@@ -165,7 +165,7 @@ void
 MenuPlaceBet::activateDialogAmount()
 {
     // TODO
-    // ConsoleManager::pushSurface(AmountDialog);
+    // SurfaceManager::pushSurface(AmountDialog);
 }
 
 //----------------------------------------------------------------

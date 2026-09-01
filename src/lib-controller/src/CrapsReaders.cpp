@@ -39,9 +39,8 @@ CrapsReaders::readPlayerHaveBet(
     if (pBet == nullptr)
     {
         ep.prepend(diagPrefix("playerHaveBet", "retrieve player bet"));
-        Gen::ReturnCode::Fail;
         haveBet = false;
-        return;
+        return Gen::ReturnCode::Fail;
     }
     haveBet = (pBet->player().getPlayerId() == playerId);
     return Gen::ReturnCode::Success;    

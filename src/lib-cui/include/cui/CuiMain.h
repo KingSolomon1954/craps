@@ -6,19 +6,31 @@
 
 #pragma once
 
+#include <cui/CuiView.h>
+
 namespace Cui
 {
     
 class CuiMain
 {
 public:
-    CuiMain() = default;
    ~CuiMain() = default;
    
+    static CuiMain& instance();
+    
     void init();
+    void run();
+    void prepareForShutdown();
+    
+    CuiView& getView();
     
 private:
-
+    bool useUnicodePips_ = false;
+    
+    CuiMain() = default;
+    void initLocale();
+    void initNcurses();
+    bool utf8_enabled();
 };
 
 /*-----------------------------------------------------------*//**
@@ -28,6 +40,7 @@ private:
 @brief Main entry point for CUI library
 
 @li The entry point into CUI processing.
+@li Ncurses initializaiton
 @li Controller library pulls in this class to start it off
 
 */

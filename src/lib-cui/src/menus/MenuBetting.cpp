@@ -7,7 +7,7 @@
 #include <cui/menus/MenuBetting.h>
 
 #include <cui/CarrierBet.h>
-#include <cui/ConsoleManager.h>
+#include <cui/SurfaceManager.h>
 #include <cui/CuiUtils.h>
 #include <cui/panels/WindowNavBar.h>
 #include <cassert>

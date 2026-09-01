@@ -6,7 +6,7 @@
 
 #include <cui/menus/MenuNavBarViews.h>
 #include <cui/panels/WindowPlayerArea.h>
-#include <cui/ConsoleManager.h>
+#include <cui/SurfaceManager.h>
 #include <cui/CuiUtils.h>
 #include <cassert>
 
@@ -121,7 +121,7 @@ MenuNavBarViews::allPlayers()
 {
     WindowPlayerArea::instance().allPlayers();
     setOperationResult(OperationResult::Success);
-    ConsoleManager::instance().popSurfaces();
+    SurfaceManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------
@@ -131,7 +131,7 @@ MenuNavBarViews::nextPlayer()
 {
     WindowPlayerArea::instance().nextPlayer();
     setOperationResult(OperationResult::Success);
-    ConsoleManager::instance().popSurfaces();
+    SurfaceManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------
@@ -141,7 +141,7 @@ MenuNavBarViews::prevPlayer()
 {
     WindowPlayerArea::instance().prevPlayer();
     setOperationResult(OperationResult::Success);
-    ConsoleManager::instance().popSurfaces();
+    SurfaceManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------
@@ -155,7 +155,7 @@ MenuNavBarViews::back()
     // when unwinding the menu stack.
     //
     setOperationResult(OperationResult::Cancel);
-    ConsoleManager::instance().popSurfaces();
+    SurfaceManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------

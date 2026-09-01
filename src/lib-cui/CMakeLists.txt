@@ -6,9 +6,10 @@
 
 add_library(cui STATIC
     src/CarrierBet.cpp
-    src/ConsoleManager.cpp
     src/CuiMain.cpp
     src/CuiUtils.cpp
+    src/CuiView.cpp
+    src/SurfaceManager.cpp
 #   src/dialogs/DialogAckError.cpp
 #   src/dialogs/DialogAmountEntry.cpp
     src/layouts/LayoutCrapsScreen.cpp

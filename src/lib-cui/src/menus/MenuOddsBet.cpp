@@ -7,8 +7,8 @@
 #include <cui/menus/MenuOddsBet.h>
 #include <controller/CrapsReaders.h>
 #include <cui/CarrierBet.h>
-#include <cui/ConsoleManager.h>
 #include <cui/CuiUtils.h>
+#include <cui/SurfaceManager.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
 #include <algorithm>
@@ -355,7 +355,7 @@ MenuOddsBet::back()
     // when unwinding the menu stack.
     //
     setOperationResult(OperationResult::Cancel);  // base class
-    ConsoleManager::instance().popSurfaces();
+    SurfaceManager::instance().popSurfaces();
 }
 
 //----------------------------------------------------------------
@@ -418,7 +418,7 @@ void
 MenuOddsBet::activateDialogAmount()
 {
     // TODO
-    // ConsoleManager::pushSurface(AmountDialog::instance());
+    // SurfaceManager::pushSurface(AmountDialog::instance());
 }
 
 //----------------------------------------------------------------
