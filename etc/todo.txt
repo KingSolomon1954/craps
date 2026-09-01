@@ -40,7 +40,11 @@ In CUI, need DialogBetAmount
 In Controller, need redesign for interface and event handlers
 Need MenuBetting implementation
 Hook up ScreenCrapsTable::onAttach(MenuBetting)
+Implement "Uknown" player start up logic
+Fix ScreenCrapsTable initial drawing
+Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 
+(Done) Add startup terminal resizing to CUI logic
 (Done) Organize lib-cui into subfolders
 (Done) Add shortCircuit() to MenuOddsBet to skip menu if only one odds bet
 (Done) LayoutCrapsScreen draw all Panel borders and fix-up on behalf of Panels

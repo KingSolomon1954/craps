@@ -18,7 +18,7 @@ void initNcurses()
 // this (most graphical emulators do; tmux/screen and some consoles don't).
 static void requestTerminalResize(int rows, int cols)
 {
-    printf("\033[8;%d;%d t", rows, cols);
+    printf("\033[8;%d;%dt", rows, cols);
     fflush(stdout);
 }
 
@@ -57,7 +57,7 @@ bool ensureMinimumTerminalSize(int minRows, int minCols)
 
     // Give the terminal a moment to act on the request and deliver
     // SIGWINCH before we re-check.
-    napms(1000);
+    napms(200);
     
     if (is_term_resized(minRows, minCols)) {
         resize_term(minRows, minCols);
@@ -86,10 +86,8 @@ int main()
 
     if (!ensureMinimumTerminalSize(kMinRows, kMinCols)) {
         endwin();
-        napms(1000);
         std::fprintf(stderr, "Terminal too small; exiting.\n");
         fflush(stdout);
-        napms(1000);
         return EXIT_FAILURE;
     }
 

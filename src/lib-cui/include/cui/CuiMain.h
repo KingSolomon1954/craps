@@ -31,6 +31,10 @@ private:
     void initLocale();
     void initNcurses();
     bool utf8_enabled();
+    void requestTerminalResize    (int rows,     int cols);
+    bool promptUserToResize       (int haveRows, int haveCols,
+                                   int needRows, int needCols);
+    bool ensureMinimumTerminalSize(int minRows,  int minCols);
 };
 
 /*-----------------------------------------------------------*//**

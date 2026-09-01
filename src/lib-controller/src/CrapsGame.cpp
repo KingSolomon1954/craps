@@ -202,7 +202,11 @@ CrapsGame::getView()
         cui.run();
         return &cui.getView();
     }
-//  if (v == "graphical") return Gui::GuiMain()instance().getView();
+    if (v == "graphical")
+    {
+        // TODO return Gui::GuiMain()instance().getView();
+        return;
+    }
 
     std::string diag = "Invalid value for config parameter:\"" +
         std::string(ConfigManager::KeyViewType) +
@@ -225,11 +229,11 @@ CrapsGame::shutdownView()
         return;
     }
     
-//  if (v == "graphical")
-//  {
-//      Gui::GuiMain::instance().prepareForShutdown();
-//      return;
-//  }
+    if (v == "graphical")
+    {
+        // TODO Gui::GuiMain::instance().prepareForShutdown();
+        return;
+    }
 }
 
 //----------------------------------------------------------------
