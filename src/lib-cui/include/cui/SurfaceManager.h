@@ -25,6 +25,7 @@ public:
     static SurfaceManager& instance();
     void run();
     void prepareForShutdown();
+    void registerForShutdown(SurfaceBase* pSurface);
     /// @}
 
     /// @name StackOps
@@ -51,7 +52,6 @@ private:
     
     SurfaceManager() = default;
     void inputThreadFunc();
-    void registerSurface(SurfaceBase* pSurface);
     void shutdownNcursesResources();
     void shutdownInputThread();
 };

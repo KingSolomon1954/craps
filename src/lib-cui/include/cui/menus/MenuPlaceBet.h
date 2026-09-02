@@ -43,6 +43,7 @@ private:
 
     MenuPlaceBet();  // Private ctor
     void createWindow();
+    void registerWindow();
     void fillWindow();
     void processSelection(int num);
     void populateCarrier (int pivot);

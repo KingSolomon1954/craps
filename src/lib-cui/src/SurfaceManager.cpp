@@ -55,6 +55,8 @@ SurfaceManager::shutdownNcursesResources()
 {
     for (auto* surface : surfaces_)
     {
+        
+        LOG_TRACE("shutdownNcursesResources() " + surface->surfaceName() + " calling releaseNcursesResources()");
         surface->releaseNcursesResources();
     }
     surfaces_.clear();
@@ -77,14 +79,17 @@ SurfaceManager::prepareForShutdown()
 // disappears. Can't control static order singleton class destructors.
 // 
 void
-SurfaceManager::registerSurface(SurfaceBase* pSurface)
+SurfaceManager::registerForShutdown(SurfaceBase* pSurface)
 {
-    if (std::find(surfaces_.begin(), surfaces_.end(), pSurface)
-        == surfaces_.end())
-    {
-        surfaces_.push_back(pSurface);
-    }
+    surfaces_.push_back(pSurface);
+
+//    if (std::find(surfaces_.begin(), surfaces_.end(), pSurface)
+//        == surfaces_.end())
+//    {
+//        surfaces_.push_back(pSurface);
+//    }
 }
+
 //----------------------------------------------------------------
 
 void
@@ -103,9 +108,8 @@ SurfaceManager::setSurface(SurfaceBase* pSurface)
     for (auto* s : stack_) s->onDetach();
     stack_.clear();
     stack_.push_back(pSurface);
-    pSurface->onAttach(nullptr);  // No parent to attach to.
     draw(pSurface);
-    registerSurface(pSurface);
+    pSurface->onAttach(nullptr);  // No parent to attach to.
 }
 
 //----------------------------------------------------------------
@@ -113,6 +117,7 @@ SurfaceManager::setSurface(SurfaceBase* pSurface)
 void
 SurfaceManager::pushSurface(SurfaceBase* pSurface)
 {
+    LOG_TRACE("SurfaceManager::pushSurface() pushing " + pSurface->surfaceName());
     SurfaceBase* pParent = nullptr;
     if (!stack_.empty())
     {
@@ -123,7 +128,6 @@ SurfaceManager::pushSurface(SurfaceBase* pSurface)
         std::lock_guard<std::mutex> lock(stackMx_);
         stack_.push_back(pSurface);
     }
-    registerSurface(pSurface);
     pSurface->onAttach(pParent);
     draw(pSurface);
 }
@@ -167,15 +171,16 @@ SurfaceManager::popSurfaces()
 void
 SurfaceManager::inputThreadFunc()
 {
+    LOG_TRACE("SurfaceManager::inputThreadFunc() started");
     nodelay(stdscr, TRUE);
     while (running_)
     {
-//      LOG_TRACE("SurfaceManager::inputThreadFunc() before wgetch()");
+        LOG_TRACE("SurfaceManager::inputThreadFunc() before wgetch()");
         int ch = wgetch(stdscr);
-//      LOG_TRACE("SurfaceManager::inputThreadFunc() after wgetch(" + std::to_string(ch) + ")");
+        LOG_TRACE("SurfaceManager::inputThreadFunc() after wgetch(" + std::to_string(ch) + ")");
         if (ch == ERR)
         {
-//          LOG_TRACE("SurfaceManager::inputThreadFunc() sleeping");
+            LOG_TRACE("SurfaceManager::inputThreadFunc() sleeping");
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
             continue;
         }

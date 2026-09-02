@@ -25,30 +25,10 @@ using namespace Cui;
 ScreenCrapsTable::ScreenCrapsTable()
 {
     LOG_TRACE("Entered ScreenCrapsTable::ctor()");
-
-    using L = LayoutCrapsScreen;
-    newWindow(L::height, L::width,          // In base class
-              L::topRow, L::leftCol,
-              "ScreenCrapsTable");
-    LayoutCrapsScreen::init(pWin_);
-    
+    createWindow();
+    fillWindow();
+    registerWindow();
     LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::releaseNcursesResources()
-{
-//    WindowTitleBar::instance().releaseNcursesResources();
-//    WindowRollHistory::instance().releaseNcursesResources();
-//    WindowPlayerArea::instance().releaseNcursesResources();
-//    WindowMessages::instance().releaseNcursesResources();
-//    WindowAnimation::instance().releaseNcursesResources();
-//    WindowHouseBrief::instance().releaseNcursesResources();
-//    WindowPlayerBrief::instance().releaseNcursesResources();
-//    
-    SurfaceBase::releaseNcursesResources();  // Invoke base class implementation
 }
 
 //----------------------------------------------------------------
@@ -58,6 +38,35 @@ ScreenCrapsTable::instance()
 {
     static ScreenCrapsTable screenCrapsTable;
     return screenCrapsTable;
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::createWindow()
+{
+    using L = LayoutCrapsScreen;
+    newWindow(L::height, L::width,          // In base class
+              L::topRow, L::leftCol,
+              "ScreenCrapsTable");
+    SurfaceManager::instance().registerForShutdown(this);
+}
+    
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::fillWindow()
+{
+    LayoutCrapsScreen::init(pWin_);
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::registerWindow()
+{
+    SurfaceManager::instance().registerForShutdown(this);
+    surfaceName_ = "ScreenCrapsTable";
 }
 
 //----------------------------------------------------------------
@@ -105,8 +114,8 @@ ScreenCrapsTable::onAttach(SurfaceBase* pParent)
     LOG_TRACE("ScreenCrapsTable::onAttach()");
     (void)pParent;
 
-//    MenuBetting& mb = MenuBetting::instance();
-//    SurfaceManager::instance().pushSurface(&mb);
+    MenuBetting& mb = MenuBetting::instance();
+    SurfaceManager::instance().pushSurface(&mb);
 }
 
 //----------------------------------------------------------------

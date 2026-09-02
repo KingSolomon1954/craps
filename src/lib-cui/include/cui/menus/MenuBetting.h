@@ -17,18 +17,17 @@ public:
     /// @name Lifecycle
     /// @{
    ~MenuBetting() = default;
-    static MenuBetting& instance();
     /// @}
 
     /// @name Modifiers
     /// @{
     void draw()            override;
     void handleKey(int ch) override;
-    void onResume()        override;
     /// @}
 
     /// @name Observers
     /// @{
+    static MenuBetting& instance();
     /// @}
     
 private:
@@ -46,6 +45,7 @@ private:
 
     MenuBetting();  // Private ctor
     void createWindow();
+    void registerWindow();
     void fillWindow();
 
     // Input handling

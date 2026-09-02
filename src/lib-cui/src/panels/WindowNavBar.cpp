@@ -7,6 +7,7 @@
 #include <cui/panels/WindowNavBar.h>
 #include <cui/CuiUtils.h>
 #include <cui/layouts/LayoutConsole.h>
+#include <cui/SurfaceManager.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
 
@@ -16,9 +17,28 @@ using namespace Cui;
 
 WindowNavBar::WindowNavBar()
 {
+    createWindow();
+    registerWindow();
+}
+
+//----------------------------------------------------------------
+
+void
+WindowNavBar::createWindow()
+{
     newWindow(Layout::navHeight, Layout::navWidth,          // In base class
               Layout::navTopRow, Layout::navLeftCol,
               "WindowNavBar");
+}
+
+
+//----------------------------------------------------------------
+
+void
+WindowNavBar::registerWindow()
+{
+    SurfaceManager::instance().registerForShutdown(this);
+    surfaceName_ = "MenuBetting";
 }
 
 //----------------------------------------------------------------
@@ -90,20 +110,18 @@ WindowNavBar::clear()
 //
 // Returns true if key was processed, otherwise false.
 //
-bool
+void
 WindowNavBar::handleKey(int ch)
 {
     switch(ch)
     {
-    case 'C': doControl(); return true; break;
-    case 'B': doBetting(); return true; break;
-    case 'V': doView();    return true; break;
-    case 'S': doStats();   return true; break;
-    case 'H': doHelp();    return true; break;
-    case 'Q': doQuit();    return true; break;
-    default:  return false;
+    case 'C': doControl(); break;
+    case 'B': doBetting(); break;
+    case 'V': doView();    break;
+    case 'S': doStats();   break;
+    case 'H': doHelp();    break;
+    case 'Q': doQuit();    break;
     }
-    return false;
 }
 
 //----------------------------------------------------------------

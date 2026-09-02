@@ -15,14 +15,13 @@ class MenuNavBarViews : public MenuBase
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuNavBarViews();
+   ~MenuNavBarViews() = default;
     /// @}
 
     /// @name Modifiers
     /// @{
     void draw()             override;
     void handleKey(int ch)  override;
-    bool shouldSkip() const override;
     /// @}
 
     /// @name Observers
@@ -41,6 +40,7 @@ private:
 
     MenuNavBarViews();  // Private ctor
     void createWindow();
+    void registerWindow();
     void fillWindow();
     void allPlayers();
     void nextPlayer();

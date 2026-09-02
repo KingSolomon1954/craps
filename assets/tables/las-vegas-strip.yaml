@@ -938,28 +938,10 @@ RollStats:
     count: 0
     maxRepeats: 0
 SessionStats:
-  numSessionsAlltime: 134
+  numSessionsAlltime: 137
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 04:17:54
   history:
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2026-08-21T21:34:37.907822959
-      duration: 0d 00:02:15
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2026-08-21T21:36:54.752099856
-      duration: 0d 01:39:06
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2026-08-22T21:46:55.626981566
-      duration: 0d 00:00:16
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
@@ -1206,3 +1188,21 @@ SessionStats:
       numPlayers: 0
       date: 2026-09-02T07:38:26.909890238
       duration: 0d 00:00:10
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-09-02T14:42:31.263799889
+      duration: 0d 00:00:06
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-09-02T18:12:44.693498791
+      duration: 0d 00:00:05
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-09-02T18:18:11.363318353
+      duration: 0d 00:00:02

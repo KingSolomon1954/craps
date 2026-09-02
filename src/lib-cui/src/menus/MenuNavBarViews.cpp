@@ -17,7 +17,8 @@ using namespace Cui;
 MenuNavBarViews::MenuNavBarViews()
 {
     createWindow();
-    fillWindow();
+    registerWindow();
+    fillWindow();    
 }
 
 //----------------------------------------------------------------
@@ -34,21 +35,20 @@ MenuNavBarViews::instance()
 void
 MenuNavBarViews::createWindow()
 {
-    using L = Layout;
-    pWin_ = newwin(L::winHeight, L::winWidth, L::winStartY, L::winStartX);
-    
-    if (pWin_ == nullptr)
-    {
-        throw std::runtime_error(
-            "Unable to create ncurses MenuNavBarViews window");
-    }
+    using L = Layout;    
+    newWindow(L::winHeight, L::winWidth,
+              L::winStartY, L::winStartX,
+              "MenuNaveBarViews");
+    SurfaceManager::instance().registerForShutdown(this);
 }
 
 //----------------------------------------------------------------
 
-MenuNavBarViews::~MenuNavBarViews()
+void
+MenuNavBarViews::registerWindow()
 {
-    // pWin_ is delwin() in MenuBase
+    SurfaceManager::instance().registerForShutdown(this);
+    surfaceName_ = "MenuNavBarViews";
 }
 
 //----------------------------------------------------------------

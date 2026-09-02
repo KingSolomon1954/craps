@@ -23,9 +23,9 @@ public:
     /// @name Modifiers
     /// @{
     void draw() override;
+    void handleKey(int ch) override;
     void configure(const std::string& testLine);
     void clear();
-    bool handleKey(int ch);
     /// @}
 
     /// @name Observers
@@ -54,6 +54,8 @@ private:
     };
     
     WindowNavBar();         // private ctor
+    void createWindow();
+    void registerWindow();
     void drawStaticContent();
     void populate();
 

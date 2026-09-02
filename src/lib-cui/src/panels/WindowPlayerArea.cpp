@@ -8,6 +8,7 @@
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/layouts/LayoutPlayerArea.h>
 #include <cui/CuiUtils.h>
+#include <cui/SurfaceManager.h>
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
@@ -19,11 +20,7 @@ using namespace Cui;
 WindowPlayerArea::WindowPlayerArea()
 {
     initPlayers();
-    newWindow(Layout::playerAreaHeight,           // In base class
-              Layout::playerAreaWidth,
-              Layout::playerAreaTopRow,
-              Layout::playerAreaLeftCol,
-              "WindowPlayerArea");
+    createWindow();
 }
 
 //----------------------------------------------------------------
@@ -33,6 +30,29 @@ WindowPlayerArea::instance()
 {
     static WindowPlayerArea wpa;
     return wpa;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerArea::createWindow()
+{
+    newWindow(Layout::playerAreaHeight,           // In base class
+              Layout::playerAreaWidth,
+              Layout::playerAreaTopRow,
+              Layout::playerAreaLeftCol,
+              "WindowPlayerArea");
+    SurfaceManager::instance().registerForShutdown(this);
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerArea::registerWindow()
+{
+    
+    SurfaceManager::instance().registerForShutdown(this);
+    surfaceName_ = "WindowPlayerArea";
 }
 
 //----------------------------------------------------------------
@@ -184,6 +204,7 @@ WindowPlayerArea::populate()
 void
 WindowPlayerArea::populateAllPlayers()
 {
+    mvwprintw(pWin_, 0, 0, "All Players here");
     // Updates all dynamic fields in this view.
     // TODO
     // updatePassLineBets()
@@ -200,6 +221,7 @@ WindowPlayerArea::populateAllPlayers()
 void
 WindowPlayerArea::populateOnePlayer()
 {
+    mvwprintw(pWin_, 0, 0, "One Player here");
     // TODO
     // updatePassLineBets()
     // updateFieldBets()

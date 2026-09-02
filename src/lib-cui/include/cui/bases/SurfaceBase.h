@@ -115,7 +115,13 @@ public:
         }
     }
 
+    const std::string& surfaceName() const
+    {
+        return surfaceName_;
+    }
+
 protected:
+    std::string  surfaceName_        = "not set";
     WINDOW*      pWin_               = nullptr;
     SurfaceBase* pParentSurface_     = nullptr;
     OperationResult operationResult_ = OperationResult::Unset;

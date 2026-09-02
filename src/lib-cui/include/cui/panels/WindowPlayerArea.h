@@ -19,7 +19,6 @@ namespace Cui
 public:
     /// @name Lifecycle
     /// @{
-    WindowPlayerArea();
    ~WindowPlayerArea() = default;
     /// @}
 
@@ -76,7 +75,10 @@ private:
     std::vector<Craps::PlayerId> playerIds_;
     OneOrAll currentFocus_ = OneOrAll::AllPlayers;
 
+    WindowPlayerArea();    // Private ctor
     void initPlayers();
+    void createWindow();
+    void registerWindow();
     void drawExternalJunctions();
     void drawInternalBorders();
     void drawInternalBordersAllPlayers();

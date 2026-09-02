@@ -13,9 +13,25 @@
 #include <gen/ErrorPass.h>
 #include <algorithm>
 #include <cassert>
-#include <ncurses.h>
 
 using namespace Cui;
+
+//----------------------------------------------------------------
+
+MenuOddsBet::MenuOddsBet()
+{
+    // No createWindow() here, uses dynamic WINDOW*
+    registerWindow();
+}
+
+//----------------------------------------------------------------
+
+void
+MenuOddsBet::registerWindow()
+{
+    SurfaceManager::instance().registerForShutdown(this);
+    surfaceName_ = "MenuOddsBet";
+}
 
 //----------------------------------------------------------------
 

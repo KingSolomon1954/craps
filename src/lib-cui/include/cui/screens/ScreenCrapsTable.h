@@ -16,7 +16,6 @@ public:
     /// @name Lifecycle
     /// @{
    ~ScreenCrapsTable() = default;
-    void releaseNcursesResources() override;
     /// @}
     
     /// @name Modifiers
@@ -36,6 +35,9 @@ public:
 
 private:
     ScreenCrapsTable();  // private ctor
+    void createWindow();
+    void registerWindow();
+    void fillWindow();
     void drawNavBar();
 };
 

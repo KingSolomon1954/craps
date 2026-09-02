@@ -35,7 +35,8 @@ public:
     /// @}
     
 private:
-    MenuOddsBet() = default;  // Private ctor, instead use instance()
+    MenuOddsBet();  // Private ctor
+    void registerWindow();
 
     struct BetInfo
     {
