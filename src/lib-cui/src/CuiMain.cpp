@@ -8,6 +8,7 @@
 #include <cui/SurfaceManager.h>
 #include <cui/screens/ScreenCrapsTable.h>
 #include <cui/layouts/LayoutConsole.h>
+#include <controller/Globals.h>
 #include <cstdio>
 #include <cstdlib>
 #include <locale.h>
@@ -105,7 +106,7 @@ CuiMain::promptUserToResize(int haveRows, int haveCols,
                             int needRows, int needCols)
 {
     clear();
-    mvprintw(0, 0, "Terminal is too small for Craps.");
+    mvprintw(0, 0, "Terminal is too small for %s", Gbl::appNameScreen);
     mvprintw(1, 0, "Have: %d rows x %d cols", haveRows, haveCols);
     mvprintw(2, 0, "Need: %d rows x %d cols", needRows, needCols);
     mvprintw(4, 0, "Resize automatically? [y/n]: ");

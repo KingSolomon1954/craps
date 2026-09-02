@@ -44,6 +44,9 @@ Implement "Uknown" player start up logic
 Fix ScreenCrapsTable initial drawing
 Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 
+(Done) Logger initialization, turn off console logging just before view
+(Done) Fix logger writing to file
+(Done) Logger supports writing to file and console same time
 (Done) Add startup terminal resizing to CUI logic
 (Done) Organize lib-cui into subfolders
 (Done) Add shortCircuit() to MenuOddsBet to skip menu if only one odds bet

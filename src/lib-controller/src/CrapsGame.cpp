@@ -46,11 +46,12 @@ CrapsGame::CrapsGame(int argc, char* argv[])
     instancePtr_ = this;
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
     std::unique_ptr<Ctrl::ConfigManager>  pCfg(initConfigManager(argc, argv)); (void) pCfg;
-    enableFileLogging();                  // Only after config manager.
+    setupLogging();                       // After config
     std::unique_ptr<Craps::EventManager>  pEventMgr(initEventManager());       (void) pEventMgr;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
     std::unique_ptr<Ctrl::UndoManager>    pUndoMgr(initUndoManager());         (void) pUndoMgr;
+    disableConsoleLogging();              // No more writing to screen
     std::unique_ptr<Ctrl::ViewInterface>  pView(initView());                   (void) pView;
     std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
 
@@ -80,7 +81,7 @@ CrapsGame::terminateApp()
 //----------------------------------------------------------------
 
 void
-CrapsGame::enableFileLogging()
+CrapsGame::setupLogging()
 {
     assert(Gbl::pConfigMgr != nullptr);
     
@@ -88,25 +89,26 @@ CrapsGame::enableFileLogging()
     std::string d = Gbl::pConfigMgr->getString(ConfigManager::KeyDirsUsrLog).value();
     std::string f = "/" + Gbl::appNameExec + ".log";
     
-    // After next statement, all logging will be seen only in file.
     Gen::Logger::instance().setOutputFile(d + f);
 
-    // Set up logging filters IAW config.
     bool debug = Gbl::pConfigMgr->getBool(ConfigManager::KeyDebugLogging).value();
-    if (!debug)
-    {
-        Gen::Logger::instance().setDebugLevel(false);
-    }
+    Gen::Logger::instance().setDebugLevel(debug);
     
     bool trace = Gbl::pConfigMgr->getBool(ConfigManager::KeyTraceLogging).value();
-    if (trace)
-    {
-        Gen::Logger::instance().setTraceLevel(true);
-    }
+    Gen::Logger::instance().setTraceLevel(trace);
 
-    // First logging entry in file.
+    // First logging entry
     Gen::Logger::instance().logInfo("--------------------------------------");
     Gen::Logger::instance().logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
+    Gen::Logger::instance().logInfo("--------------------------------------");
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsGame::disableConsoleLogging()
+{
+    Gen::Logger::instance().disableConsoleLogging();
 }
 
 //----------------------------------------------------------------
@@ -205,7 +207,7 @@ CrapsGame::getView()
     if (v == "graphical")
     {
         // TODO return Gui::GuiMain()instance().getView();
-        return;
+        return nullptr;
     }
 
     std::string diag = "Invalid value for config parameter:\"" +

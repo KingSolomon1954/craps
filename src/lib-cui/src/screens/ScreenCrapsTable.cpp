@@ -7,6 +7,7 @@
 #include <cui/screens/ScreenCrapsTable.h>
 #include <cui/SurfaceManager.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <cui/menus/MenuBetting.h>
 // #include <cui/panels/WindowTitleBar.h>
 // #include <cui/panels/WindowRollHistory.h>
 // #include <cui/panels/WindowWindowPlayerArea.h>
@@ -104,8 +105,8 @@ ScreenCrapsTable::onAttach(SurfaceBase* pParent)
     LOG_TRACE("ScreenCrapsTable::onAttach()");
     (void)pParent;
 
-    // TODO 
-    // SurfaceManager::pushSurface(MenuBetting::instance());
+//    MenuBetting& mb = MenuBetting::instance();
+//    SurfaceManager::instance().pushSurface(&mb);
 }
 
 //----------------------------------------------------------------

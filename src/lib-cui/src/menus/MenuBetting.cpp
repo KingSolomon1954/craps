@@ -5,11 +5,11 @@
 //----------------------------------------------------------------
 
 #include <cui/menus/MenuBetting.h>
-
 #include <cui/CarrierBet.h>
 #include <cui/SurfaceManager.h>
 #include <cui/CuiUtils.h>
 #include <cui/panels/WindowNavBar.h>
+#include <gen/Logger.h>
 #include <cassert>
 
 using namespace Cui;
@@ -127,6 +127,8 @@ MenuBetting::handleKey(int ch)
 {
     betName_ = BetName::Invalid;
 
+    LOG_TRACE("MenuBetting::handleKey() key=" + std::to_string(ch));
+    
     switch (ch)
     {
     case 'p': doBets(BetName::PassLine); break;

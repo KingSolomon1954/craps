@@ -22,17 +22,15 @@ public:
 
     /// @name Modifiers
     /// @{
-    void onResume() override;
+    void draw()            override;
+    void handleKey(int ch) override;
+    void onResume()        override;
     /// @}
 
     /// @name Observers
     /// @{
     /// @}
     
-protected:
-    void draw()            override;
-    void handleKey(int ch) override;
-
 private:
     struct Layout
     {

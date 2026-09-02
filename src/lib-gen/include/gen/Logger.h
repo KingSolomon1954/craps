@@ -24,12 +24,17 @@ public:
     void logWarn (const std::string& msg);
     void logError(const std::string& msg);
 
-    // Runtime toggling of debug and trace logging.
-    void setDebugLevel(bool onOff);  // on enables debug output, def = on
-    void setTraceLevel(bool onOff);  // on enables trace output, def = off
+    void enableConsoleLogging();
+    void disableConsoleLogging();
+    
+    void setDebugLevel(bool onOff);
+    void setTraceLevel(bool onOff);
 
+    bool isDebugOn() const;
+    bool isTraceOn() const;
+    
 private:
-    bool debugOn_ = true;
+    bool debugOn_ = false;
     bool traceOn_ = false;
 
     enum class Level
@@ -42,7 +47,9 @@ private:
     };
 
     std::ofstream out_;
-
+    bool consoleEnabled_ = true;
+    
+    Logger() = default;
     void log(Level level, const std::string& message);
     std::string timestamp() const;
     std::string levelToString(Level level) const;

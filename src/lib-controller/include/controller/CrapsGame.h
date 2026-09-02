@@ -62,7 +62,8 @@ private:
     
     Ctrl::ViewInterface*  getView();
     void                  shutdownView();
-    void                  enableFileLogging();
+    void                  setupLogging();
+    void                  disableConsoleLogging();
 };
 
 /*-----------------------------------------------------------*//**

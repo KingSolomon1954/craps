@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <gen/Logger.h>
+#include <cassert>
 #include <chrono>
 #include <iomanip>
 #include <sstream>
@@ -26,6 +27,34 @@ void
 Logger::setOutputFile(const std::string& filename)
 {
     out_.open(filename, std::ios::app);
+
+    if (!out_.is_open())
+    {
+        int error_number = errno;
+
+        std::string diag = "Unable to open '" + filename + "': " +
+            std::strerror(error_number) + " errno: " +
+            std::to_string(error_number);
+        throw std::runtime_error(diag);
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+Logger::enableConsoleLogging()
+{
+    if (!consoleEnabled_) log(Level::Info, "Console logging enabled");
+    consoleEnabled_ = true;
+}
+
+//----------------------------------------------------------------
+
+void
+Logger::disableConsoleLogging()
+{
+    if (consoleEnabled_) log(Level::Info, "Console logging disabled");
+    consoleEnabled_ = false;
 }
 
 //----------------------------------------------------------------
@@ -83,21 +112,19 @@ Logger::logError(const std::string& msg)
 void
 Logger::log(Level level, const std::string& message)
 {
+    assert(out_.is_open());  // User must have already set output file
+           
     std::string ts = timestamp();
     std::string label = " [" + levelToString(level) + "] ";
 
-    if (out_.is_open())
+    // Always write to file
+    out_ << ts << std::left << std::setw(9) <<label << message << std::endl;
+
+    if (consoleEnabled_)  // Write to console if enabled
     {
-        // Write to file (no color)
-        out_ << ts << std::left << std::setw(9) <<label << message << '\n';
-    }
-    else
-    {
-        // Write to console with color
-        std::ostream& stream = std::cerr;
-        stream << ts << levelColor(level)
+        std::cout << ts << levelColor(level)
                << std::left << std::setw(9) << label
-               << rang::style::reset << message << '\n';
+               << rang::style::reset << message << std::endl;
     }
 }
 
@@ -162,7 +189,7 @@ Logger::levelColor(Level level) const
 void
 Logger::setDebugLevel(bool onOff)
 {
-    debugOn_ = (onOff == true);
+    debugOn_ = onOff;
 }
 
 //----------------------------------------------------------------
@@ -170,7 +197,23 @@ Logger::setDebugLevel(bool onOff)
 void
 Logger::setTraceLevel(bool onOff)
 {
-    traceOn_ = (onOff == true);
+    traceOn_ = onOff;
+}
+
+//----------------------------------------------------------------
+
+bool
+Logger::isDebugOn() const
+{
+    return debugOn_;
+}
+
+//----------------------------------------------------------------
+
+bool
+Logger::isTraceOn() const
+{
+    return traceOn_;
 }
 
 //----------------------------------------------------------------
