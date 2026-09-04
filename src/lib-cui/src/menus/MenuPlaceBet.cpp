@@ -108,9 +108,10 @@ MenuPlaceBet::draw()
 //
 // Override surface base class
 //
-void
+bool
 MenuPlaceBet::handleKey(int ch)
 {
+    bool handled = true;
     switch(ch)
     {
     case '4': processSelection(4);  break;
@@ -120,8 +121,10 @@ MenuPlaceBet::handleKey(int ch)
     case '9': processSelection(9);  break;
     case '0': processSelection(10); break;
     case '.':
-    case 27:  back();               break;
+    case 27 : back();               break;
+    default : handled = false;      break;
     }
+    return handled;
 }
 
 //----------------------------------------------------------------

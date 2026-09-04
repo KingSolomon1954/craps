@@ -110,18 +110,21 @@ WindowNavBar::clear()
 //
 // Returns true if key was processed, otherwise false.
 //
-void
+bool
 WindowNavBar::handleKey(int ch)
 {
+    bool handled = true;
     switch(ch)
     {
-    case 'C': doControl(); break;
-    case 'B': doBetting(); break;
-    case 'V': doView();    break;
-    case 'S': doStats();   break;
-    case 'H': doHelp();    break;
-    case 'Q': doQuit();    break;
+    case 'C': doControl();     break;
+    case 'B': doBetting();     break;
+    case 'V': doView();        break;
+    case 'S': doStats();       break;
+    case 'H': doHelp();        break;
+    case 'Q': doQuit();        break;
+    default : handled = false; break;
     }
+    return handled;
 }
 
 //----------------------------------------------------------------

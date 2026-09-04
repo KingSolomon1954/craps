@@ -8,10 +8,8 @@
 #include <cui/bases/SurfaceBase.h>
 #include <gen/Logger.h>
 #include <cassert>
-#include <chrono>
 
 using namespace Cui;
-using namespace std::chrono_literals;
 
 //----------------------------------------------------------------
 
@@ -20,32 +18,6 @@ SurfaceManager::instance()
 {
     static SurfaceManager mgr;
     return mgr;
-}
-
-//----------------------------------------------------------------
-
-void
-SurfaceManager::run()
-{
-    inputThread_ = std::thread(&SurfaceManager::inputThreadFunc, this);
-}
-
-//----------------------------------------------------------------
-
-void
-SurfaceManager::shutdownInputThread()
-{
-    running_ = false;
-    if (inputThread_.joinable())
-    {
-        inputThread_.join();
-    }
-
-    {
-        std::lock_guard<std::mutex> lk(stackMx_);
-        for (auto* s : stack_) s->onDetach();
-        stack_.clear();
-    }
 }
 
 //----------------------------------------------------------------
@@ -67,7 +39,6 @@ SurfaceManager::shutdownNcursesResources()
 void
 SurfaceManager::prepareForShutdown()
 {
-    shutdownInputThread();
     shutdownNcursesResources();
 }
 
@@ -82,12 +53,14 @@ void
 SurfaceManager::registerForShutdown(SurfaceBase* pSurface)
 {
     surfaces_.push_back(pSurface);
+}
 
-//    if (std::find(surfaces_.begin(), surfaces_.end(), pSurface)
-//        == surfaces_.end())
-//    {
-//        surfaces_.push_back(pSurface);
-//    }
+//----------------------------------------------------------------
+
+void
+SurfaceManager::draw()
+{
+    draw(stack_.back());
 }
 
 //----------------------------------------------------------------
@@ -104,12 +77,23 @@ SurfaceManager::draw(SurfaceBase* pSurface)
 void
 SurfaceManager::setSurface(SurfaceBase* pSurface)
 {
-    std::lock_guard<std::mutex> lock(stackMx_);
-    for (auto* s : stack_) s->onDetach();
-    stack_.clear();
-    stack_.push_back(pSurface);
+    SurfaceList oldSurfaces;
+
+    {
+        std::lock_guard<std::mutex> lock(stackMx_);
+
+        oldSurfaces = stack_;
+        stack_.clear();
+        stack_.push_back(pSurface);
+    }
+
+    for (auto* s : oldSurfaces)
+    {
+        s->onDetach();
+    }
+    pSurface->onAttach(nullptr);
+
     draw(pSurface);
-    pSurface->onAttach(nullptr);  // No parent to attach to.
 }
 
 //----------------------------------------------------------------
@@ -137,20 +121,24 @@ SurfaceManager::pushSurface(SurfaceBase* pSurface)
 void
 SurfaceManager::popSurface()
 {
+    SurfaceBase* pSurface = nullptr;
+    SurfaceBase* pResumed = nullptr;
+
     {
         std::lock_guard<std::mutex> lock(stackMx_);
-        if (stack_.empty()) return;
 
-        auto* pSurface = stack_.back();
+        if (stack_.size() <= 1) return;
+
+        pSurface = stack_.back();
         stack_.pop_back();
-        pSurface->onDetach();
 
-        if (!stack_.empty())
-        {
-            stack_.back()->onResume();
-        }
+        pResumed = stack_.back();
     }
-    draw(stack_.back());
+
+    pSurface->onDetach();
+    pResumed->onResume();
+
+    draw(pResumed);
 }
 
 //----------------------------------------------------------------
@@ -158,40 +146,40 @@ SurfaceManager::popSurface()
 void
 SurfaceManager::popSurfaces()
 {
-    while (stack_.size() > 1)
+    while (true)
     {
+        SurfaceBase* pSurface = nullptr;
+
+        {
+            std::lock_guard<std::mutex> lock(stackMx_);
+            if (stack_.size() <= 1) return;
+            pSurface = stack_.back();
+        }
+
         popSurface();
-        auto* pSurface = stack_.back();
-        if (!pSurface->shouldSkip()) break;
+
+        SurfaceBase* pCurrent = nullptr;
+
+        {
+            std::lock_guard<std::mutex> lock(stackMx_);
+            if (!stack_.empty()) pCurrent = stack_.back();
+        }
+
+        if (!pCurrent || !pCurrent->shouldSkip()) return;
     }
 }
 
 //----------------------------------------------------------------
 
-void
-SurfaceManager::inputThreadFunc()
+bool
+SurfaceManager::handleKey(int ch)
 {
-    LOG_TRACE("SurfaceManager::inputThreadFunc() started");
-    nodelay(stdscr, TRUE);
-    while (running_)
+    if (!stack_.empty())
     {
-        LOG_TRACE("SurfaceManager::inputThreadFunc() before wgetch()");
-        int ch = wgetch(stdscr);
-        LOG_TRACE("SurfaceManager::inputThreadFunc() after wgetch(" + std::to_string(ch) + ")");
-        if (ch == ERR)
-        {
-            LOG_TRACE("SurfaceManager::inputThreadFunc() sleeping");
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            continue;
-        }
-
-        std::lock_guard<std::mutex> lk(stackMx_);
-        if (!stack_.empty())
-        {
-            LOG_TRACE("SurfaceManager::inputThreadFunc() calling handlekey(" + std::to_string(ch) + ")");
-            stack_.back()->handleKey(ch);
-        }
+        LOG_TRACE("SurfaceManager::handleKey() calling handlekey(" + std::to_string(ch) + ")");
+        return stack_.back()->handleKey(ch);
     }
+    return false;
 }
 
 //----------------------------------------------------------------

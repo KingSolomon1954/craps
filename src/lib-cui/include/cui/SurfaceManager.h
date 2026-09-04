@@ -23,7 +23,6 @@ public:
     /// @{
    ~SurfaceManager() = default;
     static SurfaceManager& instance();
-    void run();
     void prepareForShutdown();
     void registerForShutdown(SurfaceBase* pSurface);
     /// @}
@@ -34,7 +33,8 @@ public:
     void pushSurface(SurfaceBase* pSurface);  // overlay (pauses previous top)
     void popSurface ();                       // remove top, resume new top if any
     void popSurfaces();                       // remove top until menu claim control
-    void draw(SurfaceBase* pSurface);
+    bool handleKey(int ch);
+    void draw();
     /// @}
 
     /// @name InputHandling
@@ -45,15 +45,12 @@ private:
     // Order doesn't matter
     std::vector<SurfaceBase*> stack_;    // non-owning stack
     std::mutex stackMx_;
-    std::atomic<bool> running_{true};
-    std::thread inputThread_;
     using SurfaceList = std::vector<SurfaceBase*>;
     SurfaceList surfaces_;
     
     SurfaceManager() = default;
-    void inputThreadFunc();
     void shutdownNcursesResources();
-    void shutdownInputThread();
+    void draw(SurfaceBase* pSurface);
 };
 
 /*-----------------------------------------------------------*//**

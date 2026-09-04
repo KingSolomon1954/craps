@@ -23,7 +23,7 @@ public:
     /// @name Modifiers
     /// @{
     void draw() override;
-    void handleKey(int ch) override;
+    bool handleKey(int ch) override;
     void configure(const std::string& testLine);
     void clear();
     /// @}

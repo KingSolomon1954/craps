@@ -59,7 +59,7 @@ MenuOddsBet::instance()
 // 3   │ [1] Pass Line 6 ($200, $0)      │
 // 4   │ [2] Come Bet 8 ($1,000, $3,000) │
 // 5   │ [3] Don't Pass 10 ($500, $500)  │
-// 6   │ [esc] Back                      │
+// 6   │ [. or esc] Back                 │
 // 7   └─────────────────────────────────┘
 // 
 void
@@ -339,13 +339,13 @@ MenuOddsBet::populate()
 //
 // Override menu base class
 //
-void
+bool
 MenuOddsBet::handleKey(int ch)
 {
     if (ch == 27)  // escape
     {
         back();
-        return;
+        return true;
     }
 
     auto it = std::find_if(
@@ -355,9 +355,10 @@ MenuOddsBet::handleKey(int ch)
             return entry.hotKey == ch;
         });
 
-    if (it == menuEntries_.end()) return;
+    if (it == menuEntries_.end()) return false;
 
     processSelection(it->betId);
+    return true;
 }
 
 //----------------------------------------------------------------

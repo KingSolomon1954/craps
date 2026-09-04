@@ -102,16 +102,19 @@ MenuNavBarViews::draw()
 //
 // Override surface base class
 //
-void
+bool
 MenuNavBarViews::handleKey(int ch)
 {
+    bool handled = true;
     switch(ch)
     {
-    case 'A': allPlayers(); break;
-    case 'N': nextPlayer(); break;
-    case 'P': prevPlayer(); break;
-    case 27:  back();       break;
+    case 'A': allPlayers();    break;
+    case 'N': nextPlayer();    break;
+    case 'P': prevPlayer();    break;
+    case 27 : back();          break;
+    default : handled = false; break;
     }
+    return handled;
 }
 
 //----------------------------------------------------------------

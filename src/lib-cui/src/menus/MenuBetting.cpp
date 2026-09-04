@@ -117,7 +117,7 @@ MenuBetting::fillWindow()
     mvwaddstr(pWin_, 18, 2, "[x] Remove Bets");
     mvwaddstr(pWin_, 19, 2, "[u] Undo Last");
     mvwaddstr(pWin_, 20, 2, "[r] Roll Dice");
-    mvwaddstr(pWin_, 21, 2, "[esc] Back");
+    mvwaddstr(pWin_, 21, 2, "[. or esc] Back");
 }
 
 //----------------------------------------------------------------
@@ -131,12 +131,24 @@ MenuBetting::draw()
 
 //----------------------------------------------------------------
 //
+// Special entry point for ScreenCrapsTable. Allows MenuBetting
+// to be hidden on screen yet still make bets
+//
+bool
+MenuBetting::handleShortcut(int ch)
+{
+    return handleKey(ch);
+}
+
+//----------------------------------------------------------------
+//
 // Override menu base class
 //
-void
+bool
 MenuBetting::handleKey(int ch)
 {
     betName_ = BetName::Invalid;
+    bool handled = true;
 
     LOG_TRACE("MenuBetting::handleKey() key=" + std::to_string(ch));
     
@@ -162,8 +174,9 @@ MenuBetting::handleKey(int ch)
     case 'r': doRollDice();              break;
     case '.':
     case  27: back();                    break;
-    default: WindowNavBar::instance().handleKey(ch); break;
+    default : handled = false;           break;
     }
+    return handled;
 }
 
 //----------------------------------------------------------------
@@ -187,11 +200,12 @@ MenuBetting::doBets(BetName betName)
     case BetName::Horn:      doGetAmount(); break;
     case BetName::Place:
     case BetName::Hardway:   doGetPivot();  break;
-    default: assert(true);
-             throw std::runtime_error("MenuBetting::doBets() "
-                 "missing case block for bet name: " +
-                 EnumBetName::toString(betName_));
-             break;
+    default:
+        assert(true);
+        throw std::runtime_error("MenuBetting::doBets() "
+             "missing case block for bet name: " +
+             EnumBetName::toString(betName_));
+        break;
     }
 }
 

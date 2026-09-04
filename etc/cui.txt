@@ -1,20 +1,47 @@
-Console User Interface Design
-─────────────────────────────
-
-User Input → ConsoleView → GameEvent → EventQueue → GameController
-
-    ├── ConsoleView ├──
-    │               │
-    │               ├──>  Generate Event -->  EventLoop
-    │               │
-    ├── GuiView  ── ├
-
-onViewXxx  - prefix for event handlers originating from Views
-onGameXxx  - prefix for event handlers originating from the game/model
+Console User Interface (CUI) Design
+───────────────────────────────────
 
 
-GameController → GameEvent → EventQueue → ConsoleView → Screen Display
+Workflow Overview
+─────────────────
 
+                   ┌───────────────────────┐
+                   │    Game Controller    │
+                   │      thread(s)        │
+                   └───────────┬───────────┘
+                               │
+                               │ Ctrl::ViewInterface
+                               ▼
+                   ┌───────────────────────┐
+                   │     Cui::CuiView      │ Implements ViewInterface
+                   │                       │
+                   └───────────┬───────────┘
+                               │
+                               │ UI work (enqueue work orders)
+                               ▼
+                      ┌─────────────────┐
+                      │ Cui:: CuiThread │
+                      │                 │
+                      │   Work Queue    │
+Keyboard ────────────►│        ↓        │
+                      │    execute()    │
+                      └────────┬────────┘
+                               │
+                               ▼
+                      ┌─────────────────┐
+                      │ SurfaceManager  │
+                      │                 │
+                      │ surface stack   │
+                      │ lifecycle       │
+                      │ rendering       │
+                      └────────┬────────┘
+                               │
+                               ▼
+                            ncurses
+
+The CuiThread is the only additional thread in the CUI.  Its purpose of
+this thread is to sequentialize all access to ncurses.
+It reads keyboard input and manipulates CUI objects.
 
 Physical Folder Organization
 ────────────────────────────
@@ -49,49 +76,43 @@ include/cui/
     screens/
         ScreenCrapsTable.h
 
-CarrierBet        
-ConsoleManager.h
-CuiUtils.h
-CuiMain.h
-
 CUI Classes
 ───────────
 
-Ctrl::ViewInterface = interface through which the controller tells the UI what to show
-Cui::ConsoleManager = orchestrates the surfaces
-Cui::SurfaceBase = top most abstraction for all window classes
-Cui::ScreenBase = full-screen surface
-Cui::MenuBase = popup/menu surface
-Cui::PanelBase = rectangular window that's part of a full screen
-Cui::DialogBase = popup/menu surface
-Cui::CrapsMain = main entry point for CUI
-
+Cui::CuiMain - owns startup/shutdown orchestration
+Cui::CuiView - adapter between the controller event world and the CUI work queue
+Cui::CuiThread - owns a work queue loop, sequentialized access to ncurses
+Cui::CuiUtils - convenient helpers
+Cui::SurfaceManager - owns surfaces, implements stack pushing/popping
+Cui::SurfaceBase - top most abstraction for all window classes
+Cui::ScreenBase - base class for full-screen surfaces
+Cui::MenuBase - base class for menu surfaces
+Cui::PanelBase - base class for rectangular windows that form a full screen
+Cui::DialogBase - base class for dialog surfaces
+Cui::CarrierBet - a struct menus use to pass around bet info
 
                          Ctrl::ViewInterface
                                 ▲
                                 │
-                         ConsoleManager (manages stack of ViewSurface*)
+                         SurfaceManager (manages stack of Surfaces)
                                 │
-                                │ Has a virtual ViewSurface
+                                │ Works with SurfaceBase
                                 │
-                           ViewSurface
+                             Surface
                                 ▲
                                 │
-                 ┌──────────────┼──────────────┐
-                 │              │              │
-            ScreenBase      MenuBase       DialogBase
-                 │              │              │
-            ┌────┴────┐     ┌───┴─────┐    ┌───┴─────┐
-            │         │     │         │    │         │
-         CrapsTable  Stats Betting Control Amount  Confirm
-
-            └─────────┴─────┴───┬─────┴────┴─────────┘
-                                │
-                             CrapsUI
-                         creates/owns them
+         ┌─────────────┬────────┴───────┬────────────────┐
+         │             │                │                │
+     ScreenBase     MenuBase        DialogBase       PanelBase
+         │             │                │                │
+    ┌────┴────┐    ┌───┴─────┐      ┌───┴─────┐    ┌─────┴─────┐
+    │  Table  │    │ Betting │      │ Amount  │    │ Animation │
+    │  Stats  │    │  Place  │      │  Error  │    │    ...    │
+    │   ...   │    │  ...    │      │  ...    │    │    ...    │
+    └─────────┘    └─────────┘      └─────────┘    └───────────┘
 
 
-ViewSurface
+Surfaces
     ├── ScreenBase
     │     ├── ScreenCrapsTable
     │     ├── ScreenPlayerStats
@@ -105,6 +126,11 @@ ViewSurface
     │     ├── MenuStats
     │     ├── MenuConfigure
     │     ├── MenuOddsBet
+    │     └── ...
+    │
+    ├── PanelBase
+    │     ├── WinwoPlayerArea
+    │     ├── WindowRollHistory
     │     └── ...
     │
     └── DialogBase
@@ -207,57 +233,9 @@ Startup Configuration Menu
 
 For startup terminal mode:
 
-If < 80×24:
-    Show a clear error: "Terminal too small (need at least 80x24).
-    Resize and restart."
-
-
-3. Subwindow Allocation in Code
-
-Example in C++ (ncurses):
-
-int termRows, termCols;
-getmaxyx(stdscr, termRows, termCols);
-
-if (termRows < 24 || termCols < 80) {
-    endwin();
-    std::cerr << "Terminal too small (need at least 80x24)\n";
-    exit(1);
-}
-
-4. Mouse Click Mapping (Maybe support)
-
-Ncurses mouse events give you y and x coordinates.
-You can identify where the click happened:
-
-MEVENT event;
-if (getmouse(&event) == OK) {
-    if (event.y == 0) { /* Table info click */ }
-    else if (event.y == 1) { /* Roll history click */ }
-    else if (event.y >= 2 && event.y < termRows - 2) { /* Table layout */ }
-    else if (event.y == termRows - 2) { /* Player info click */ }
-    else if (event.y == termRows - 1) { /* Command line */ }
-}
-
-6. Redraw Strategy
-
-    Each zone redraws only when its data changes.
-
-    Table layout will update more often (bets moving, dice animation, etc.).
-
-    Command line is interactive — redrawn on every keystroke.
-
-This makes performance snappy even in 80×24.
-
-7. Resizing (Maybe support)
-
-    Catch SIGWINCH
-
-    Recalculate all subwindow dimensions
-
-    Redraw everything
-
-    If below minimum, pause game with resize prompt
+If < minimum craps games size then
+    Prompt user to offer automatic terminal resizing,
+    if no, then suggest manually resizing to min and then exit.
 
 Vocabulary with ncurses
 ───────────────────────
@@ -267,25 +245,28 @@ Vocabulary with ncurses
 | **Screen**         | An entire application-level UI screen                                    |
 | **`stdscr`**       | ncurses' root `WINDOW*`                                                  |
 | **`WINDOW`**       | ncurses' rectangular character buffer/object                             |
-| **content window** | One of your `WINDOW*` areas used by a Screen                             |
-| **subwindow**      | Preferably reserve for actual ncurses `subwin()`/`derwin()` windows      |
-| **frame**          | Borders/dividers/junctions drawn around the Screen                       |
+| **subwindow**      | Not used, use with actual ncurses `subwin()`/`derwin()` windows          |
+| **frame**          | Not used, Borders/dividers/junctions drawn around the Screen             |
+| **panel**          | One of the `WINDOW*` areas used by a Screen                              |
 | **navigation bar** | Persistent application-level UI component                                |
 | **popup**          | Temporary application-level UI component                                 |
 | **dialog**         | Temporary application-level UI component requesting/displaying something |
 
-
 | Term                | Use it for                                                                     |
 | ------------------- | ------------------------------------------------------------------------------ |
-| **`draw()`**        | The virtual entry point on `ViewSurface`                                       |
+| **`draw()`**        | The virtual entry point on a `Surface`                                         |
 | **`drawBorders()`** | Drawing static/structural borders and junctions                                |
 | **`populate()`**    | Filling a window with its complete current contents                            |
 | **`update()`**      | Changing only dynamic data within an already-populated window                  |
 | **`refresh()`**     | **Don't use as your application method name**; reserve it for ncurses concepts |
 
-wrefresh(win); Take the contents of this WINDOW and make them appear on the physical terminal.
-wnoutrefresh(win); Copy the contents of this WINDOW into the virtual screen (newscr) without actually updating the terminal yet.
-doupdate(); actually updates the physical terminal based on the virtual screen.
+wrefresh(win); Take the contents of this WINDOW and make them appear on
+               the physical terminal.
+
+wnoutrefresh(win); Copy the contents of this WINDOW into the virtual
+               screen (newscr) without actually updating the terminal
+               yet.  doupdate(); actually updates the physical terminal
+               based on the virtual screen.
 
 draw = render entry point
 drawBorders = structural rendering
@@ -295,7 +276,6 @@ transfer = move window contents to the ncurses' virtual/backing screen
 
 refresh = reserve for ncurses
 doupdate = ncurses' final terminal update
-
 
 Screen Drawing Rules
 ────────────────────
@@ -311,10 +291,10 @@ So the ownership model looks like this, for example:
 
 Screen
 │
-├── Frame/Layout
+├── Border/Frame/Layout
 │     └── all borders, dividers, corners, junctions
 │
-├── Content windows
+├── Content windows (Panels)
 │     ├── TitleBar
 │     ├── History
 │     ├── Table
@@ -326,22 +306,10 @@ Screen
 └── Navigation window
       └── navigation contents
 
-Player Subwindow
-────────────────
+Player Brief Panel
+──────────────────
 
-I'm updating the player subwindow to have an additional row so that
-now the player subwindow has the following information:
-  * row 1: Player name (plus indicator if player is currently the shooter)
-  * row 2: dashed line separator, so info is not so disjoint from name
-  * row 3: Current balance, and balance difference from start of session +/-
-  * row 4: total number of bets, number of winning bets, number of losing bets
-  * row 5: num bets and amount currently on the table
-  * row 6: last roll: net win/lose, amount won, amount lost
-
-Labels and formatting a bit more terse to fit larger numbers.
-Player subwindow is selectable maybe by clicking or command such that any
-player can appear here, or perhaps an F-key cycles through players. Here's
-example of the updated player subwindow .
+The Player Brief Panel looks as follows:
 
 ┬─────────────────────────────┐
 │ Player: Nathan (shooter)    │
@@ -353,16 +321,10 @@ example of the updated player subwindow .
 │ Last: +$80,180W,100L        │
 ├─────────────────────────────┤
 
-House Subwindow
-───────────────
+House Brief Panel
+─────────────────
 
-I'm adding an additional subwindow for house information.
-This is a right side window located immediately beneath the Player subwindow.
-The command window moves below this house subwindow.
-  * row 1: house bank balance difference from start of session +/-
-  * row 2: total number of bets, number of winning bets, number of losing bets
-  * row 3: num bets and amount currently on the table
-  * row 4: last roll: net win/lose, amount won, amount lost
+The House Brief Panel looks as follows:
 
 ┬─────────────────────────────┐
 │ House Bal: +$2,050          │
@@ -375,15 +337,12 @@ The command window moves below this house subwindow.
 History Subwindow
 ─────────────────
 
-Start with simple single value for Dice History, want deeper history
-showing on screen.
+Start with simple single value for dice roll history. Support
+configuration options to select different formatting.
 
 │ 4, 7, 6, 12, 11, 8, 9, 7, 7, 4, 8, 8, 10, 7, 6, 7, 2, 11, 6, 5, 12 │
-│ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 │
-│ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4  │
 
-Allow user configuration option for showing individual die as part
-of dice history.
+or
 
 │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │
 
@@ -579,61 +538,17 @@ Menu behaviors:
 9. One-choice dynamic menus may be bypassed.
 10. Top-level navigation is always available from the table.
 11. Stats are full-screen modes.
-12. Betting is the default command context on table views.
+12. Betting is the default context on ScreenCrapsTable view.
 
 Once those rules are explicit, I think the implementation becomes
 substantially easier—and, importantly, your individual
 onPlayerXXX()/event handlers won't have to know anything about the
 increasingly complicated popup hierarchy.
 
-The game opens up on the Craps table view using the last
-played Craps game. Player can go to the Control Menu to
-switch to a different game player. The default opening view is the
-Focused Player View.  Betting Menu key bindings are active.
-
-
-Menu Hierarchy
-
-                    ┌───────────────┐                  ┌───────────────┐
-                    │   TABLE VIEW  │                  │     STATS     │
-                    └───────┬───────┘                  ├───────────────┤
-                            │                          │ Player        │
-           ┌────────────────┼────────────────┐         │ Betting       │
-           │                │                │         │ Dice          │
-           ▼                ▼                ▼         │ History       │
-       CONTROL           BETTING            VIEW       └───────────────┘
-           │                │
-           │                ├── Amount
-           │                ├── Odds
-           │                │    └── Amount
-           │                ├── Place
-           │                │    └── Amount
-           │                ├── Hardways
-           │                │    └── Amount
-           │                ├── Bet Flags
-           │                │    └── Which Bet
-           │                ├── Quick Bet
-           │                └── Remove Bet
-           │
-           └── Configure
-                 ├── Roll History
-                 ├── Quick Bets
-                 └── Auto Bets
-
-
-Navigation Model
-
-                         GAME
-                          │
-       ┌──────────────────┼──────────────────┬──────────────────────┐
-       │                  │                  │                      │
-    CONTROL            BETTING             VIEW                   STATS
-       │                  │                  │                      │
-    popups             popups             views        ┌────────────┼─────────────┐
-                                                       │            │             │
-                                                    Player       Table         Session
-                                                     Stats        Stats         History
-
+The game opens up on the Craps table view using the last played Craps
+game. Player can go to the Control Menu to switch to a different game
+player. The default opening view is the Focused Player View.  Betting
+Menu key bindings are active.
 
 Betting Menu
 ────────────
@@ -1284,38 +1199,15 @@ Help Menu
 
 
 
--------------------------------------------------------------
 
-18. One architectural point I'd strongly recommend
 
-Don't make your controller handlers responsible for understanding popup hierarchy.
 
-In other words, avoid code like:
 
-onOddsBet()
-{
-    ...
-    if (onlyOneBet)
-        ...
-    else
-        ...
 
-    if (sticky)
-        ...
-    else
-        ...
-}
 
-Instead, I'd let the UI/menu layer own:
 
-Menu stack
-Parent
-Child
-Return behavior
-ESC
-Sticky/ephemeral behavior
 
-while the controller continues to deal with commands/events.
+
 
 
 -------------------------------------------------------------
@@ -1520,108 +1412,6 @@ private:
 Older stuff no longer relevant
 
 -----------------------------------------------------------------------------
-
-I'd like to pursue a variation on your recommendation.
-
-The top row is dedicated to table info and shows:
-  * current point, or 0 if coming out (frequently looked at so appears first)
-  * number of dice rolls so far (4 or 5 digits?)
-  * table name  (only looked at a couple of times, so can be out of the way, centered in its field)
-  * table min/max/odds (looked at only occasionally)
-  * (future) if playing with a countdown timer to next roll then
-    I'd make room for that on this line, and move min/max/odds to a
-    menu entry or accessible via command
-
-Second row dedicated to roll history
-  * latest roll appears left most, others shift right
-  * format is selectable, example is showing one possible format
-  * if line is selected, then screen overlay shows full history
-
-Next to last row is the player row. Shows:
-  * Player name
-  * Current balance
-  * balance difference from start of session +/-
-  * amount currently in bets on the table
-  * amount won on last roll
-  * amount lost on last roll
-  * player row is selectable maybe by clicking or command such that any
-    player can appear here, or perhaps an F-key cycles through players
-
-Last row is command line as you suggest
-
-Here's my cut at this:
-
-┌────────────────────────────────────────────────────────────────────────┐
-│Point:10 | Roll:  273 | Las Vegas Strip     | min:$5 max:$2,000 odds:5x │
-├────────────────────────────────────────────────────────────────────────┤
-│4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4) 4(2,2) │
-├────────────────────────────────────────────────────────────────────────┤
-
-                         table layout here
-
-├────────────────────────────────────────────────────────────────────────┤
-│ Nathan: bal: $2,000 (+880) Betting: $320            Win: $220 Lose: $0 │
-├────────────────────────────────────────────────────────────────────────┤
-│ > command line here                                                    │
-└────────────────────────────────────────────────────────────────────────┘
-
-100x36
-┌──────────────────────────────────────────────────────────────────────────────────────┐
-│ Point:10 | Roll:  273 | Las Vegas Strip       | min:$5 max:$2,000 odds:5x  Timer:--s │
-├──────────────────────────────────────────────────────────────────────────────────────┤
-│ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4) 4(2,2) 8(4,4) 6(2,4)│
-├──────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                      │
-│                       ( Craps Table Layout — 18 rows high )                          │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-│                                                                                      │
-├──────────────────────────────────────────────────────────────────────────────────────┤
-│ MESSAGE: Welcome to Royal Craps!                                                     │
-│ MESSAGE: Nathan placed $20 on Pass Line                                              │
-│ MESSAGE: Shooter rolled a 6 — point is now 6                                         │
-├──────────────────────────────────────────────────────────────────────────────────────┤
-│ Nathan: bal: $2,000 (+880)  Betting: $320   Win: $220  Lose: $0                      │
-├──────────────────────────────────────────────────────────────────────────────────────┤
-│ > command line here                                                                  │
-└──────────────────────────────────────────────────────────────────────────────────────┘
-
-
-
-
-
-┌────────────────────┐     ┌───────────────────┐
-│ Betting Menu       │     │ Betting Menu      │
-├────────────────────┤     ├───────────────────┤
-│ PassLine   "p"     │     │ 1. PassLine       │
-│ Come Bet   "c"     │     │ 2. Come Bet       │
-│ DontPass   "d"     │     │ 3. DontPass       │
-│ DontCome   "k"     │     │ 4. DontCome       │
-│ Odds Bet   "o" ... │     │ 5. Odds Bet   ... │
-│ Place Bet  "l" ... │     │ 6. Place Bet  ... │
-│ Hardways   "h" ... │     │ 7. Hardways   ... │
-│ Field Bet  "f"     │     │ 8. Field Bet      │
-│ C&E Bet    "e"     │     │ 9. C&E Bet        │
-│ AnyCraps   "a"     │     │ a. AnyCraps       │
-│ Any7 Bet   "7"     │     │ b. Any7 Bet       │
-│ Horn Bet   "n"     │     │ c. Horn Bet       │
-│ World Bet  "w"     │     │ d. World Bet      │
-│ Bet Flags  "t" ... │     │ e. Bet Flags  ... │
-│ Quick Bet  "q" ... │     │ f. Quick Bet  ... │
-│ Remove Bet "x" ... │     │ g. Remove Bet ... │
-│ Undo Last  "u"     │     │ h. Undo Last      │
-│ Roll Dice  "r"     │     │ r. Roll Dice      │
-└────────────────────┘     └───────────────────┘
 
 
 

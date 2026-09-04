@@ -24,9 +24,9 @@ public:
 
     /// @name Modifiers
     /// @{
-    void handleKey(int ch) override  // Satisfy SurfaceBase
+    bool handleKey(int ch) override  // Satisfy SurfaceBase
     {
-        // Empty, 
+        return false;
     }
     /// @}
 

@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/CuiMain.h>
+#include <cui/CuiThread.h>
 #include <cui/SurfaceManager.h>
 #include <cui/screens/ScreenCrapsTable.h>
 #include <cui/layouts/LayoutConsole.h>
@@ -169,9 +170,10 @@ CuiMain::ensureMinimumTerminalSize(int minRows, int minCols)
 void
 CuiMain::run()
 {
+    (void) CuiThread::instance();
+    
     auto& mgr = SurfaceManager::instance();
     mgr.setSurface(&ScreenCrapsTable::instance());
-    SurfaceManager::instance().run();
 }
 
 //----------------------------------------------------------------

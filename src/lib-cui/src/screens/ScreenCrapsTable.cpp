@@ -114,22 +114,9 @@ ScreenCrapsTable::onAttach(SurfaceBase* pParent)
     LOG_TRACE("ScreenCrapsTable::onAttach()");
     (void)pParent;
 
-    MenuBetting& mb = MenuBetting::instance();
-    SurfaceManager::instance().pushSurface(&mb);
-}
-
-//----------------------------------------------------------------
-//
-// ScreenCrapsTable does not process keys directly. MenuBetting owns
-// and handles keyboard processing while this surface is active.
-// Needed here to satisfy Surface pure virtual interface.
-//
-void
-ScreenCrapsTable::handleKey(int ch)
-{
-    (void)ch;
-    LOG_TRACE("ScreenCrapsTable::handleKey() should "
-              "not get here:(" + std::to_string(ch) + ")");
+    // establish state
+    // start timers if appropriate
+    // configure relationships
 }
 
 //----------------------------------------------------------------
@@ -163,6 +150,40 @@ ScreenCrapsTable::onResume()
 {
     LOG_TRACE("ScreenCrapsTable::onResume()");
     // TODO
+}
+
+//----------------------------------------------------------------
+//
+// ScreenCrapsTable does not process keys directly. MenuBetting owns
+// and handles keyboard processing while this surface is active.
+// Needed here to satisfy Surface pure virtual interface.
+//
+bool
+ScreenCrapsTable::handleKey(int ch)
+{
+    switch (ch)
+    {
+    case 'b':
+    case 'B':
+        showBettingMenu();
+        return true;
+
+    default:
+        if (MenuBetting::instance().handleShortcut(ch))
+            return true;
+
+        if (WindowNavBar::instance().handleKey(ch))
+            return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::showBettingMenu()
+{
+    SurfaceManager::instance().pushSurface(&MenuBetting::instance());
 }
 
 //----------------------------------------------------------------

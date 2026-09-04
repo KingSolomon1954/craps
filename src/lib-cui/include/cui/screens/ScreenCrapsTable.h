@@ -21,7 +21,7 @@ public:
     /// @name Modifiers
     /// @{
     void draw()                         override;  // from Surface
-    void handleKey(int ch)              override;  // from Surface
+    bool handleKey(int ch)              override;  // from Surface
     void onPause()                      override;  // from Surface
     void onResume()                     override;  // from Surface
     void onDetach()                     override;  // from Surface
@@ -39,6 +39,7 @@ private:
     void registerWindow();
     void fillWindow();
     void drawNavBar();
+    void showBettingMenu();
 };
 
 /*-----------------------------------------------------------*//**

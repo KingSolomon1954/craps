@@ -28,7 +28,7 @@ public:
     virtual ~SurfaceBase() = default;
 
     virtual void draw() = 0;
-    virtual void handleKey(int ch) = 0;
+    virtual bool handleKey(int ch) = 0;
     
     virtual void onPause()  {};
     virtual void onResume() {};

@@ -26,7 +26,7 @@ public:
     /// @name Modifiers
     /// @{
     void draw()            override;
-    void handleKey(int ch) override;
+    bool handleKey(int ch) override;
     /// @}
 
     /// @name Observers

@@ -7,6 +7,7 @@
 add_library(cui STATIC
     src/CarrierBet.cpp
     src/CuiMain.cpp
+    src/CuiThread.cpp
     src/CuiUtils.cpp
     src/CuiView.cpp
     src/SurfaceManager.cpp
