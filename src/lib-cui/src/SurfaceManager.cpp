@@ -27,7 +27,6 @@ SurfaceManager::shutdownNcursesResources()
 {
     for (auto* surface : surfaces_)
     {
-        
         LOG_TRACE("shutdownNcursesResources() " + surface->surfaceName() + " calling releaseNcursesResources()");
         surface->releaseNcursesResources();
     }

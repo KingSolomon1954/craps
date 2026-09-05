@@ -14,20 +14,18 @@ namespace Cui
 class CuiMain
 {
 public:
+    CuiMain();
    ~CuiMain() = default;
    
     static CuiMain& instance();
-    
-    void init();
-    void run();
     void prepareForShutdown();
-    
     CuiView& getView();
     
 private:
     bool useUnicodePips_ = false;
     
-    CuiMain() = default;
+    void init();
+    void run();
     void initLocale();
     void initNcurses();
     bool utf8_enabled();

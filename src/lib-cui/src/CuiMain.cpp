@@ -18,6 +18,14 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
+CuiMain::CuiMain()
+{
+    init();
+    run();
+}
+
+//----------------------------------------------------------------
+
 CuiMain&
 CuiMain::instance()
 {
@@ -170,8 +178,10 @@ CuiMain::ensureMinimumTerminalSize(int minRows, int minCols)
 void
 CuiMain::run()
 {
+    // Start the CUI thread 
     (void) CuiThread::instance();
     
+    // Install the ScreenCrapsTable as the starting surface
     auto& mgr = SurfaceManager::instance();
     mgr.setSurface(&ScreenCrapsTable::instance());
 }
@@ -186,7 +196,9 @@ CuiMain::prepareForShutdown()
 }
 
 //----------------------------------------------------------------
-
+//
+// Called by Ctrl::GameMain 
+//
 CuiView&
 CuiMain::getView()
 {

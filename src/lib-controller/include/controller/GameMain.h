@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: CrapsGame.h
+// File: GameMain.h
 //
 //----------------------------------------------------------------
 
@@ -27,27 +27,27 @@ class TableManager;   // fwd
 class ViewInterface;  // fwd
 class UndoManager;    // fwd
     
-class CrapsGame
+class GameMain
 {
 public:
     /// @name Lifecycle
     /// @{
-    CrapsGame(int argc, char* argv[]);
-   ~CrapsGame() = default;
+    GameMain(int argc, char* argv[]);
+   ~GameMain() = default;
     void terminateApp();
     /// @}
 
     /// @name Modifiers
     /// @{
-    static CrapsGame* instance();
     /// @}
 
     /// @name Observers
     /// @{
+    static GameMain* instance();
     /// @}
 
 private:
-    static CrapsGame*     instancePtr_;
+    static GameMain*      instancePtr_;
     Gen::SignalHandler    signalHandler_;
     
     Gen::BuildInfo*       initBuildInfo();
@@ -68,7 +68,7 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsGame
+@class GameMain
 
 @brief Craps Game Top Level class.
 

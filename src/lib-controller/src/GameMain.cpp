@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: CrapsGame.cpp
+// File: GameMain.cpp
 //
 //----------------------------------------------------------------
 
-#include <controller/CrapsGame.h>
+#include <controller/GameMain.h>
 #include <cassert>
 #include <iostream>
 #include <rang.hpp>
@@ -24,7 +24,7 @@
 
 using namespace Ctrl;
 
-CrapsGame* CrapsGame::instancePtr_ = nullptr;
+GameMain* GameMain::instancePtr_ = nullptr;
 
 /*-----------------------------------------------------------*//**
 
@@ -41,7 +41,7 @@ Constructor
 All these unique_ptr's on the stack manage the lifetime of globals.
 
 */
-CrapsGame::CrapsGame(int argc, char* argv[])
+GameMain::GameMain(int argc, char* argv[])
 {
     instancePtr_ = this;
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
@@ -64,8 +64,8 @@ CrapsGame::CrapsGame(int argc, char* argv[])
 
 //----------------------------------------------------------------
 
-CrapsGame*
-CrapsGame::instance()
+GameMain*
+GameMain::instance()
 {
     return instancePtr_;
 }
@@ -73,7 +73,7 @@ CrapsGame::instance()
 //----------------------------------------------------------------
 
 void
-CrapsGame::terminateApp()
+GameMain::terminateApp()
 {
     signalHandler_.terminate();
 }
@@ -81,7 +81,7 @@ CrapsGame::terminateApp()
 //----------------------------------------------------------------
 
 void
-CrapsGame::setupLogging()
+GameMain::setupLogging()
 {
     assert(Gbl::pConfigMgr != nullptr);
     
@@ -106,7 +106,7 @@ CrapsGame::setupLogging()
 //----------------------------------------------------------------
 
 void
-CrapsGame::disableConsoleLogging()
+GameMain::disableConsoleLogging()
 {
     Gen::Logger::instance().disableConsoleLogging();
 }
@@ -114,7 +114,7 @@ CrapsGame::disableConsoleLogging()
 //----------------------------------------------------------------
 
 Gen::BuildInfo*
-CrapsGame::initBuildInfo()
+GameMain::initBuildInfo()
 {
     auto p = new Gen::BuildInfo(Gbl::appNameScreen);
     Gbl::pBuildInfo = p;
@@ -124,7 +124,7 @@ CrapsGame::initBuildInfo()
 //----------------------------------------------------------------
 
 Ctrl::ConfigManager*
-CrapsGame::initConfigManager(int argc, char* argv[])
+GameMain::initConfigManager(int argc, char* argv[])
 {
     auto* p = new Ctrl::ConfigManager(argc, argv);
     Gbl::pConfigMgr = p;
@@ -134,7 +134,7 @@ CrapsGame::initConfigManager(int argc, char* argv[])
 //----------------------------------------------------------------
 
 Craps::EventManager*
-CrapsGame::initEventManager()
+GameMain::initEventManager()
 {
     auto p = new Craps::EventManager();
     Gbl::pEventMgr = p;
@@ -144,7 +144,7 @@ CrapsGame::initEventManager()
 //----------------------------------------------------------------
 
 TableManager*
-CrapsGame::initTableManager()
+GameMain::initTableManager()
 {
     auto p = new TableManager();  // And creates initial CrapsTable
     Gbl::pTableMgr = p;
@@ -154,7 +154,7 @@ CrapsGame::initTableManager()
 //----------------------------------------------------------------
 
 PlayerManager*
-CrapsGame::initPlayerManager()
+GameMain::initPlayerManager()
 {
     auto p = new PlayerManager();
     Gbl::pPlayerMgr = p;
@@ -164,7 +164,7 @@ CrapsGame::initPlayerManager()
 //----------------------------------------------------------------
 
 UndoManager*
-CrapsGame::initUndoManager()
+GameMain::initUndoManager()
 {
     auto p = new UndoManager();
     Gbl::pUndoMgr = p;
@@ -174,7 +174,7 @@ CrapsGame::initUndoManager()
 //----------------------------------------------------------------
 
 ViewInterface*
-CrapsGame::initView()
+GameMain::initView()
 {
     auto p = getView();
     Gbl::pView = p;
@@ -184,7 +184,7 @@ CrapsGame::initView()
 //----------------------------------------------------------------
 
 GameController*
-CrapsGame::initGameController()
+GameMain::initGameController()
 {
     auto p = new GameController();
     Gbl::pGameCtrl = p;
@@ -194,19 +194,19 @@ CrapsGame::initGameController()
 //----------------------------------------------------------------
 
 ViewInterface*
-CrapsGame::getView()
+GameMain::getView()
 {
     std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();
     if (v == "console")
     {
         auto& cui = Cui::CuiMain::instance();
-        cui.init();
-        cui.run();
         return &cui.getView();
     }
     if (v == "graphical")
     {
-        // TODO return Gui::GuiMain()instance().getView();
+        // TODO
+        // TODO auto& gui = Gui::GuiMain::instance();
+        // TODO return &gui.getView();
         return nullptr;
     }
 
@@ -222,7 +222,7 @@ CrapsGame::getView()
 //----------------------------------------------------------------
 
 void
-CrapsGame::shutdownView()
+GameMain::shutdownView()
 {
     std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();
     if (v == "console")
