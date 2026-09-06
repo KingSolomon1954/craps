@@ -15,6 +15,10 @@ class DialogBase : public Surface
 public:
     /// @name Lifecycle
     /// @{
+    DialogBase(std::string surfaceName)
+        : SurfaceBase(std::move(surfaceName))
+    {
+    }
     ~DialogBase() = default;
     /// @}
 

@@ -8,7 +8,7 @@
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/layouts/LayoutPlayerArea.h>
 #include <cui/CuiUtils.h>
-#include <stdexcept>
+#include <cassert>
 
 using namespace Cui;
 
@@ -21,10 +21,7 @@ using namespace Cui;
 void
 LayoutCrapsScreen::init(WINDOW* pWin)
 {
-    if (pWin_)
-    {
-        throw std::logic_error("LayoutWindow already initialized");
-    }
+    assert(pWin_ == nullptr);
     pWin_ = pWin;
 }
 
@@ -33,12 +30,7 @@ LayoutCrapsScreen::init(WINDOW* pWin)
 LayoutCrapsScreen&
 LayoutCrapsScreen::instance()
 {
-    if (!pWin_)
-    {
-        throw std::logic_error("LayoutCrapsScreen::init() must be called first");
-    }
-    
-    // Only reached, therefore only constructed, if pWin_ is set
+    assert(pWin_);
     static LayoutCrapsScreen lcs;
     return lcs;
 }
@@ -111,6 +103,7 @@ LayoutCrapsScreen::draw()
     // Navbar junctions
     mvwaddch(pWin_, C::navBorderTopRow, C::navBorderLeftCol,  ACS_LTEE);
     mvwaddch(pWin_, C::navBorderTopRow, C::navBorderRightCol, ACS_RTEE);
+    assert(C::navBorderRightCol == 99);
 
     CuiUtils::transfer(pWin_);
 }

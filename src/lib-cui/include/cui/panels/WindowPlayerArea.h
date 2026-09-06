@@ -44,6 +44,7 @@ public:
     /// @}
     
 private:
+    
     struct Layout
     {
         using L = LayoutCrapsScreen;
@@ -78,7 +79,6 @@ private:
     WindowPlayerArea();    // Private ctor
     void initPlayers();
     void createWindow();
-    void registerWindow();
     void drawExternalJunctions();
     void drawInternalBorders();
     void drawInternalBordersAllPlayers();

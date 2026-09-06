@@ -17,9 +17,10 @@ using namespace Cui;
 //----------------------------------------------------------------
 
 MenuBetting::MenuBetting()
+    : MenuBase("MenuBetting")
 {
+    LOG_TRACE("MenuBetting::constructor() ");
     createWindow();
-    registerWindow();
     fillWindow();
 }
 
@@ -39,18 +40,7 @@ MenuBetting::createWindow()
 {
     using L = Layout;
     newWindow(L::height,    L::width,
-              L::winStartY, L::winStartX,
-              "MenuBetting");
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::registerWindow()
-{
-    
-    SurfaceManager::instance().registerForShutdown(this);
-    surfaceName_ = "MenuBetting";
+              L::winStartY, L::winStartX);
 }
 
 //----------------------------------------------------------------
@@ -125,6 +115,7 @@ MenuBetting::fillWindow()
 void
 MenuBetting::draw()
 {
+    LOG_TRACE("MenuBetting::draw() ");
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
 }
@@ -214,6 +205,7 @@ MenuBetting::doBets(BetName betName)
 void
 MenuBetting::doGetAmount()
 {
+    LOG_TRACE("MenuBetting::doGetAmount() " + EnumBetName::toString(betName_));
     populateCarrier();
     prepDialogAmount();
     activateDialogAmount();

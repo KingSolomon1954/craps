@@ -7,9 +7,6 @@
 #pragma once
 
 #include <cui/bases/SurfaceBase.h>
-#include <ncurses.h>
-#include <cassert>
-#include <stdexcept>
 #include <string>
 
 namespace Cui {
@@ -19,6 +16,10 @@ class PanelBase : public SurfaceBase
 public:
     /// @name Lifecycle
     /// @{
+    PanelBase(std::string surfaceName)
+        : SurfaceBase(std::move(surfaceName))
+    {
+    }
    ~PanelBase() = default;
     /// @}
 

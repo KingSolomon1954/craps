@@ -55,7 +55,6 @@ private:
     
     WindowNavBar();         // private ctor
     void createWindow();
-    void registerWindow();
     void drawStaticContent();
     void populate();
 

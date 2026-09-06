@@ -40,7 +40,6 @@ private:
 
     MenuNavBarViews();  // Private ctor
     void createWindow();
-    void registerWindow();
     void fillWindow();
     void allPlayers();
     void nextPlayer();

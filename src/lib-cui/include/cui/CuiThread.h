@@ -51,14 +51,15 @@ private:
 
 @class CuiThread
 
-@brief CuiThread processes CUI work orders and also obtains keypresses
-        and manipulates surfaces 
+@brief CuiThread processes CUI work orders and also obtains
+       keypresses and manipulates surfaces 
 
 CuiThread is the only class that is allowed to call into ncurses,
 including reading key presses.
 
 Responsibilities of CuiThread:
 
+@li Primary job is to serialize all CUI/ncurses work.
 @li Implements a thread loop to enqueue keys and process work orders
 @li Works closely with SurfaceManager
 */

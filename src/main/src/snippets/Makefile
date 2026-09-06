@@ -27,13 +27,15 @@ run-royalcraps:  # Execute on container
 	    -e LANG=en_US_UTF-8 -e LC_ALL=en_US.UTF-8 \
 	    gcc14-tools bin/royalcraps \
 	    --sys-config-dir /work/craps/assets/ \
-	    --usr-config-dir /work/craps/assets/
+	    --usr-config-dir /work/craps/assets/ \
+	--debug --trace
 
 run-royalcraps-local:  # Execute on local host
 	@$(STARTING_FOLDER) \
 	_build/debug/bin/royalcraps \
 	    --sys-config-dir assets/ \
-	    --usr-config-dir assets/
+	    --usr-config-dir assets/ \
+	--debug --trace
 
 #-----------------------------
 #

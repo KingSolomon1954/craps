@@ -46,7 +46,6 @@ private:
 
     MenuBetting();  // Private ctor
     void createWindow();
-    void registerWindow();
     void fillWindow();
 
     // Input handling

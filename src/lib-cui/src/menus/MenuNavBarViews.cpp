@@ -15,9 +15,9 @@ using namespace Cui;
 //----------------------------------------------------------------
 
 MenuNavBarViews::MenuNavBarViews()
+    : MenuBase("MenuNavBarViews")
 {
     createWindow();
-    registerWindow();
     fillWindow();    
 }
 
@@ -37,18 +37,7 @@ MenuNavBarViews::createWindow()
 {
     using L = Layout;    
     newWindow(L::winHeight, L::winWidth,
-              L::winStartY, L::winStartX,
-              "MenuNaveBarViews");
-    SurfaceManager::instance().registerForShutdown(this);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuNavBarViews::registerWindow()
-{
-    SurfaceManager::instance().registerForShutdown(this);
-    surfaceName_ = "MenuNavBarViews";
+              L::winStartY, L::winStartX);
 }
 
 //----------------------------------------------------------------

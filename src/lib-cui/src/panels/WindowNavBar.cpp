@@ -16,9 +16,9 @@ using namespace Cui;
 //----------------------------------------------------------------
 
 WindowNavBar::WindowNavBar()
+    : PanelBase("WindowNavBar")
 {
     createWindow();
-    registerWindow();
 }
 
 //----------------------------------------------------------------
@@ -27,18 +27,7 @@ void
 WindowNavBar::createWindow()
 {
     newWindow(Layout::navHeight, Layout::navWidth,          // In base class
-              Layout::navTopRow, Layout::navLeftCol,
-              "WindowNavBar");
-}
-
-
-//----------------------------------------------------------------
-
-void
-WindowNavBar::registerWindow()
-{
-    SurfaceManager::instance().registerForShutdown(this);
-    surfaceName_ = "MenuBetting";
+              Layout::navTopRow, Layout::navLeftCol);
 }
 
 //----------------------------------------------------------------

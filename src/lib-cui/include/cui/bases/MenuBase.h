@@ -16,6 +16,10 @@ class MenuBase : public SurfaceBase
 public:
     /// @name Lifecycle
     /// @{
+    explicit MenuBase(std::string surfaceName)
+        : SurfaceBase(std::move(surfaceName))
+    {
+    }
    ~MenuBase() = default;
     /// @}
 

@@ -36,7 +36,6 @@ public:
 private:
     ScreenCrapsTable();  // private ctor
     void createWindow();
-    void registerWindow();
     void fillWindow();
     void drawNavBar();
     void showBettingMenu();

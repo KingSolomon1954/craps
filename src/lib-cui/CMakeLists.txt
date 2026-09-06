@@ -13,6 +13,7 @@ add_library(cui STATIC
     src/SurfaceManager.cpp
 #   src/dialogs/DialogAckError.cpp
 #   src/dialogs/DialogAmountEntry.cpp
+    src/bases/SurfaceBase.cpp
     src/layouts/LayoutCrapsScreen.cpp
     src/menus/MenuBetting.cpp
     src/menus/MenuOddsBet.cpp

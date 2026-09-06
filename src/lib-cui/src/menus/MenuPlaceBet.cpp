@@ -16,9 +16,9 @@ using namespace Cui;
 //----------------------------------------------------------------
 
 MenuPlaceBet::MenuPlaceBet()
+    : MenuBase("MenuPlaceBet")
 {
     createWindow();
-    registerWindow();
     fillWindow();
 }
 
@@ -37,19 +37,8 @@ void
 MenuPlaceBet::createWindow()
 {
     using L = Layout;
-    newWindow(L::height, L::width,
-              L::winStartY, L::winStartX,
-              "MenuPlaceBet");
-    SurfaceManager::instance().registerForShutdown(this);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuPlaceBet::registerWindow()
-{
-    SurfaceManager::instance().registerForShutdown(this);
-    surfaceName_ = "MenuPlaceBet";
+    newWindow(L::height,    L::width,
+              L::winStartY, L::winStartX);
 }
 
 //----------------------------------------------------------------

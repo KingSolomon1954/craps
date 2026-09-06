@@ -23,11 +23,11 @@ using namespace Cui;
 //----------------------------------------------------------------
 
 ScreenCrapsTable::ScreenCrapsTable()
+    : ScreenBase("ScreenCrapsTable")
 {
     LOG_TRACE("Entered ScreenCrapsTable::ctor()");
     createWindow();
     fillWindow();
-    registerWindow();
     LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
 }
 
@@ -45,11 +45,10 @@ ScreenCrapsTable::instance()
 void
 ScreenCrapsTable::createWindow()
 {
+    LOG_TRACE("ScreenCrapsTable::createWindow() ");
     using L = LayoutCrapsScreen;
     newWindow(L::height, L::width,          // In base class
-              L::topRow, L::leftCol,
-              "ScreenCrapsTable");
-    SurfaceManager::instance().registerForShutdown(this);
+              L::topRow, L::leftCol);
 }
     
 //----------------------------------------------------------------
@@ -58,15 +57,6 @@ void
 ScreenCrapsTable::fillWindow()
 {
     LayoutCrapsScreen::init(pWin_);
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::registerWindow()
-{
-    SurfaceManager::instance().registerForShutdown(this);
-    surfaceName_ = "ScreenCrapsTable";
 }
 
 //----------------------------------------------------------------
@@ -107,7 +97,9 @@ ScreenCrapsTable::drawNavBar()
 }
 
 //----------------------------------------------------------------
-
+//
+// Notification that we've been attached
+//
 void
 ScreenCrapsTable::onAttach(SurfaceBase* pParent)
 {
@@ -121,6 +113,7 @@ ScreenCrapsTable::onAttach(SurfaceBase* pParent)
 
 //----------------------------------------------------------------
 //
+// Notification that we've been removed from screen.
 // Basically undo what was done during onAttach()
 //
 void
@@ -132,6 +125,7 @@ ScreenCrapsTable::onDetach()
 
 //----------------------------------------------------------------
 //
+// Surface remains on the stack but is covered.
 // Stop timers if any and so on.
 //
 void
@@ -143,6 +137,7 @@ ScreenCrapsTable::onPause()
 
 //----------------------------------------------------------------
 //
+// Notification that we've become the active surface again.
 // Start/restart timers if any and so on.
 //
 void

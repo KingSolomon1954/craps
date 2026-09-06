@@ -178,12 +178,8 @@ CuiMain::ensureMinimumTerminalSize(int minRows, int minCols)
 void
 CuiMain::run()
 {
-    // Start the CUI thread 
-    (void) CuiThread::instance();
-    
-    // Install the ScreenCrapsTable as the starting surface
-    auto& mgr = SurfaceManager::instance();
-    mgr.setSurface(&ScreenCrapsTable::instance());
+    (void) CuiThread::instance();  // Start the CUI thread 
+    SurfaceManager::instance().setSurface(&ScreenCrapsTable::instance());
 }
 
 //----------------------------------------------------------------
@@ -192,6 +188,7 @@ void
 CuiMain::prepareForShutdown()
 {
     SurfaceManager::instance().prepareForShutdown();
+    CuiThread::instance().shutdown();
     endwin();
 }
 

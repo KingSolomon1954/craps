@@ -19,18 +19,9 @@ using namespace Cui;
 //----------------------------------------------------------------
 
 MenuOddsBet::MenuOddsBet()
+    : MenuBase("MenuOddsBet")
 {
     // No createWindow() here, uses dynamic WINDOW*
-    registerWindow();
-}
-
-//----------------------------------------------------------------
-
-void
-MenuOddsBet::registerWindow()
-{
-    SurfaceManager::instance().registerForShutdown(this);
-    surfaceName_ = "MenuOddsBet";
 }
 
 //----------------------------------------------------------------
@@ -268,8 +259,7 @@ MenuOddsBet::windowResize()
 
     if (pWin_ == nullptr)
     {
-        newWindow(height, width, winBorderTopCol_,    // In base class
-                  winBorderTopRow_, "MenuOddsBet");
+        newWindow(height, width, winBorderTopCol_, winBorderTopRow_);
     }
     else
     {

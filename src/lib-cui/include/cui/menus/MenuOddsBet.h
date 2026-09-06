@@ -36,7 +36,6 @@ public:
     
 private:
     MenuOddsBet();  // Private ctor
-    void registerWindow();
 
     struct BetInfo
     {

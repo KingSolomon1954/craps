@@ -18,6 +18,7 @@ using namespace Cui;
 //----------------------------------------------------------------
 
 WindowPlayerArea::WindowPlayerArea()
+    : PanelBase("WindowPlayerArea")
 {
     initPlayers();
     createWindow();
@@ -40,19 +41,7 @@ WindowPlayerArea::createWindow()
     newWindow(Layout::playerAreaHeight,           // In base class
               Layout::playerAreaWidth,
               Layout::playerAreaTopRow,
-              Layout::playerAreaLeftCol,
-              "WindowPlayerArea");
-    SurfaceManager::instance().registerForShutdown(this);
-}
-
-//----------------------------------------------------------------
-
-void
-WindowPlayerArea::registerWindow()
-{
-    
-    SurfaceManager::instance().registerForShutdown(this);
-    surfaceName_ = "WindowPlayerArea";
+              Layout::playerAreaLeftCol);
 }
 
 //----------------------------------------------------------------

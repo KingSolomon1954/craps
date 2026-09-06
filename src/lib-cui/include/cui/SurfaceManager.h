@@ -44,7 +44,6 @@ public:
 private:
     // Order doesn't matter
     std::vector<SurfaceBase*> stack_;    // non-owning stack
-    std::mutex stackMx_;
     using SurfaceList = std::vector<SurfaceBase*>;
     SurfaceList surfaces_;
     

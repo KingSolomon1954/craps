@@ -609,7 +609,7 @@ BetStats:
     total: 0
     max: 0
 SessionStats:
-  numSessionsAlltime: 94
+  numSessionsAlltime: 171
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 04:17:54
   history:
@@ -617,299 +617,299 @@ SessionStats:
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-08-21T21:25:32.363551777
-      duration: 0d 00:05:58
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-21T21:31:32.970411263
-      duration: 0d 00:01:13
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-21T21:32:48.525763434
-      duration: 0d 00:01:21
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-21T21:34:37.955310784
-      duration: 0d 00:02:15
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-21T21:36:54.799007794
-      duration: 0d 01:39:06
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-22T21:46:55.674882606
-      duration: 0d 00:00:16
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-22T22:31:39.136202961
-      duration: 0d 04:17:54
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-26T13:51:38.333943706
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-26T14:06:25.710543211
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-26T14:14:15.992722549
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-26T14:17:30.331387834
+      date: 2026-09-06T18:03:59.967762451
       duration: 0d 00:00:01
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-08-26T16:33:41.058360668
+      date: 2026-09-06T18:04:05.335062987
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:07.829984879
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:12.448076821
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:15.592228985
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:19.143079044
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:35.606772623
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:40.046504744
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:43.998895977
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:47.847197580
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:51.885517431
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:55.335686070
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:04:57.847699550
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:05:01.056980858
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:05:04.095408616
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:05:07.380877563
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:05:10.119398835
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:05:12.615694031
       duration: 0d 00:00:03
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-08-26T16:34:13.372049280
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-08-26T16:34:41.495774165
+      date: 2026-09-06T18:05:52.916933416
       duration: 0d 00:00:02
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-08-26T16:40:06.546718097
+      date: 2026-09-06T18:05:58.302585408
       duration: 0d 00:00:01
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-08-26T16:40:31.397748069
+      date: 2026-09-06T18:06:01.703846897
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:06:06.718681420
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:06:42.178438200
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:06:50.391093394
       duration: 0d 00:00:01
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-01T04:32:26.061789659
-      duration: 0d 00:00:11
+      date: 2026-09-06T18:06:54.421994612
+      duration: 0d 00:00:01
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-01T19:53:49.479060525
-      duration: 0d 00:00:05
+      date: 2026-09-06T18:06:58.201629472
+      duration: 0d 00:00:00
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-01T19:54:03.682250252
-      duration: 0d 00:00:10
+      date: 2026-09-06T18:07:01.384063635
+      duration: 0d 00:00:01
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-01T20:11:08.255454407
-      duration: 0d 00:00:48
+      date: 2026-09-06T18:07:05.416149734
+      duration: 0d 00:00:01
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-02T04:07:07.122618267
-      duration: 0d 00:00:14
+      date: 2026-09-06T18:07:09.917502953
+      duration: 0d 00:00:01
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-02T04:20:05.597918873
-      duration: 0d 00:00:07
+      date: 2026-09-06T18:07:14.438772044
+      duration: 0d 00:00:00
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-02T04:28:02.056509985
-      duration: 0d 00:00:05
+      date: 2026-09-06T18:07:17.326898299
+      duration: 0d 00:00:39
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-02T04:32:24.701131025
-      duration: 0d 00:00:15
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T04:32:46.063339048
-      duration: 0d 00:00:13
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T04:36:42.888970529
+      date: 2026-09-06T18:08:00.678674386
       duration: 0d 00:00:06
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
       numPlayers: 1
-      date: 2026-09-02T05:04:37.993868445
+      date: 2026-09-06T18:08:07.822697960
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:08:13.351111889
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:08:15.955189108
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:08:18.538359473
+      duration: 0d 00:02:22
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:10:43.658953237
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:10:47.515724143
+      duration: 0d 00:00:03
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:10:52.614812972
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:10:57.081737336
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:01.492284541
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:06.196305112
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:09.948516560
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:11.956760973
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:14.363150226
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:17.909791970
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:20.405591512
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:23.764438064
+      duration: 0d 00:00:21
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:11:46.981627970
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-06T18:16:05.189499259
       duration: 0d 00:00:08
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:05:41.112412708
-      duration: 0d 00:00:03
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:06:55.693734969
-      duration: 0d 00:00:07
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:08:40.056694551
-      duration: 0d 00:00:10
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:17:26.145624965
-      duration: 0d 00:00:05
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:20:53.288056273
-      duration: 0d 00:00:23
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:27:14.873598001
-      duration: 0d 00:00:30
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:28:47.177324007
-      duration: 0d 00:02:03
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:36:50.572430250
-      duration: 0d 00:00:11
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:44:17.684811148
-      duration: 0d 00:00:06
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T05:55:24.157591715
-      duration: 0d 00:00:03
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T06:40:24.070554973
-      duration: 0d 00:00:09
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T06:59:20.954887362
-      duration: 0d 00:00:10
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T07:05:30.618133084
-      duration: 0d 00:00:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T07:12:48.824402552
-      duration: 0d 00:00:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T07:16:13.120871863
-      duration: 0d 00:00:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T07:25:47.506775849
-      duration: 0d 00:00:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T07:27:36.398414085
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T07:30:02.684365379
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T07:32:41.955023258
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T07:38:26.970813859
-      duration: 0d 00:00:10
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T14:42:31.326865167
-      duration: 0d 00:00:06
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T18:12:44.754618294
-      duration: 0d 00:00:05
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-02T18:18:11.424909162
-      duration: 0d 00:00:02

@@ -27,7 +27,8 @@ SurfaceManager::shutdownNcursesResources()
 {
     for (auto* surface : surfaces_)
     {
-        LOG_TRACE("shutdownNcursesResources() " + surface->surfaceName() + " calling releaseNcursesResources()");
+        LOG_TRACE("SurfaceManager::shutdownNcursesResources() calling " +
+                  surface->surfaceName() + "->releaseNcursesResources()");
         surface->releaseNcursesResources();
     }
     surfaces_.clear();
@@ -51,6 +52,8 @@ SurfaceManager::prepareForShutdown()
 void
 SurfaceManager::registerForShutdown(SurfaceBase* pSurface)
 {
+    LOG_TRACE("SurfaceManager::registerForShutdown() " + pSurface->surfaceName());
+    SurfaceList oldSurfaces;
     surfaces_.push_back(pSurface);
 }
 
@@ -67,8 +70,11 @@ SurfaceManager::draw()
 void
 SurfaceManager::draw(SurfaceBase* pSurface)
 {
+//  napms(20);
     pSurface->draw();
+//    napms(100);
     doupdate();  // Paint the physical screen
+//    napms(100);
 }
 
 //----------------------------------------------------------------
@@ -76,15 +82,12 @@ SurfaceManager::draw(SurfaceBase* pSurface)
 void
 SurfaceManager::setSurface(SurfaceBase* pSurface)
 {
+    LOG_TRACE("SurfaceManager::setSurface() " + pSurface->surfaceName());
     SurfaceList oldSurfaces;
 
-    {
-        std::lock_guard<std::mutex> lock(stackMx_);
-
-        oldSurfaces = stack_;
-        stack_.clear();
-        stack_.push_back(pSurface);
-    }
+    oldSurfaces = stack_;
+    stack_.clear();
+    stack_.push_back(pSurface);
 
     for (auto* s : oldSurfaces)
     {
@@ -107,10 +110,7 @@ SurfaceManager::pushSurface(SurfaceBase* pSurface)
         pParent = stack_.back();
         pParent->onPause();
     }
-    {
-        std::lock_guard<std::mutex> lock(stackMx_);
-        stack_.push_back(pSurface);
-    }
+    stack_.push_back(pSurface);
     pSurface->onAttach(pParent);
     draw(pSurface);
 }
@@ -123,16 +123,13 @@ SurfaceManager::popSurface()
     SurfaceBase* pSurface = nullptr;
     SurfaceBase* pResumed = nullptr;
 
-    {
-        std::lock_guard<std::mutex> lock(stackMx_);
+    if (stack_.size() <= 1) return;
 
-        if (stack_.size() <= 1) return;
+    pSurface = stack_.back();
+    stack_.pop_back();
+    LOG_TRACE("SurfaceManager::popSurface() popping " + pSurface->surfaceName());
 
-        pSurface = stack_.back();
-        stack_.pop_back();
-
-        pResumed = stack_.back();
-    }
+    pResumed = stack_.back();
 
     pSurface->onDetach();
     pResumed->onResume();
@@ -145,25 +142,18 @@ SurfaceManager::popSurface()
 void
 SurfaceManager::popSurfaces()
 {
+    LOG_TRACE("SurfaceManager::popSurfaces()");
     while (true)
     {
         SurfaceBase* pSurface = nullptr;
 
-        {
-            std::lock_guard<std::mutex> lock(stackMx_);
-            if (stack_.size() <= 1) return;
-            pSurface = stack_.back();
-        }
+        if (stack_.size() <= 1) return;
+        pSurface = stack_.back();
 
         popSurface();
 
         SurfaceBase* pCurrent = nullptr;
-
-        {
-            std::lock_guard<std::mutex> lock(stackMx_);
-            if (!stack_.empty()) pCurrent = stack_.back();
-        }
-
+        if (!stack_.empty()) pCurrent = stack_.back();
         if (!pCurrent || !pCurrent->shouldSkip()) return;
     }
 }
