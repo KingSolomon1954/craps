@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cui/WorkOrder.h>
+#include <gen/EdgeEvent.h>
 #include <condition_variable>
 #include <deque>
 #include <mutex>
@@ -45,6 +46,7 @@ private:
     std::condition_variable condition_;
     std::thread thread_;
     std::thread::id threadId_;
+    Gen::EdgeEvent threadStarted_;
 };
 
 /*-----------------------------------------------------------*//**

@@ -10,6 +10,7 @@ find_package(yaml-cpp REQUIRED)
 
 add_library(gen STATIC
     src/BuildInfo.cpp
+    src/EdgeEvent.cpp
     src/ErrorPass.cpp
     src/FileUtils.cpp
     src/Logger.cpp

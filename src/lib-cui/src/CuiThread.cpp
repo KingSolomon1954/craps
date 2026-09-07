@@ -6,6 +6,7 @@
 
 #include <cui/CuiThread.h>
 #include <cui/SurfaceManager.h>
+#include <gen/Logger.h>
 
 #include <ncurses.h>
 #include <chrono>
@@ -17,8 +18,8 @@ using namespace Cui;
 CuiThread::CuiThread()
 {
     thread_ = std::thread(&CuiThread::cuiThreadFunc, this);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));    
-// std::this_thread::yield();
+    threadStarted_.wait();  // Allow thread to start
+    LOG_TRACE("CuiThread::cuiThread() leaving ctor");
 }
 
 //----------------------------------------------------------------
@@ -63,9 +64,7 @@ CuiThread::shutdown()
     }
 
     condition_.notify_one();
-
-    if (thread_.joinable())
-        thread_.join();
+    if (thread_.joinable()) thread_.join();
 }
 
 //----------------------------------------------------------------
@@ -73,9 +72,14 @@ CuiThread::shutdown()
 void
 CuiThread::cuiThreadFunc()
 {
-    threadId_ = std::this_thread::get_id();    
+    LOG_TRACE("CuiThread::cuiThreadFunc() running ");
+    
+    threadId_ = std::this_thread::get_id();
+    threadStarted_.signal();
+    
     nodelay(stdscr, TRUE);
-
+    flushinp();  // Guarantee no keys yet. Buggy without this.
+    
     while (true)
     {
         while (true)  // Read every key currently available.
