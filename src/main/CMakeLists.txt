@@ -24,6 +24,25 @@ target_link_libraries(royalcraps
     PRIVATE gui
 )
 
+# Address Sanitizer flags
+# add_library(asan_options INTERFACE)
+
+# target_compile_options(asan_options INTERFACE
+#     -fsanitize=address
+#     -fno-omit-frame-pointer
+#     -g
+# )
+
+# target_link_options(asan_options INTERFACE
+#     -fsanitize=address
+# )
+
+# target_link_libraries(gen PRIVATE asan_options)
+# target_link_libraries(craps PRIVATE asan_options)
+# target_link_libraries(cui PRIVATE asan_options)
+# target_link_libraries(controller PRIVATE asan_options)
+# target_link_libraries(royalcraps PRIVATE asan_options)
+
 #------------------
 
 add_executable(ncurses-snippet

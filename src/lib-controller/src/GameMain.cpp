@@ -52,7 +52,7 @@ GameMain::GameMain(int argc, char* argv[])
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
     std::unique_ptr<Ctrl::UndoManager>    pUndoMgr(initUndoManager());         (void) pUndoMgr;
     disableConsoleLogging();              // No more writing to screen
-    std::unique_ptr<Ctrl::ViewInterface>  pView(initView());                   (void) pView;
+    initView();
     std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
 
     signalHandler_.waitForTerminate();  // Blocks until signal
