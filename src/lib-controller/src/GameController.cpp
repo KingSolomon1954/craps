@@ -27,7 +27,7 @@ GameController::GameController()
 //----------------------------------------------------------------
 
 void
-GameController::prepareForShutdown()
+GameController::shutdown()
 {
     eventLoop_.stop();
 }

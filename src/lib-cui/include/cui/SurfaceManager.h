@@ -23,7 +23,7 @@ public:
     /// @{
    ~SurfaceManager() = default;
     static SurfaceManager& instance();
-    void prepareForShutdown();
+    void shutdown();
     void registerForShutdown(SurfaceBase* pSurface);
     /// @}
 

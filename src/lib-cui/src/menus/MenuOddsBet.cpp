@@ -133,7 +133,6 @@ MenuOddsBet::getBetIdList(BetIdList& betIdList)
 void
 MenuOddsBet::gatherBetsDetail(const BetIdList& betIdList)
 {
-    // TODO CrapsReaders needs to return a struct of Bet details
     Gen::ErrorPass ep;
     
     activeOddsBets_.clear();

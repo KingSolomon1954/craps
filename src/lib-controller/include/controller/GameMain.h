@@ -61,9 +61,10 @@ private:
     Ctrl::EventLoop*      initEventLoop();
     
     Ctrl::ViewInterface*  getView();
-    void                  shutdownView();
     void                  setupLogging();
     void                  disableConsoleLogging();
+    void                  explicitShutdown();
+    void                  shutdownView();
 };
 
 /*-----------------------------------------------------------*//**
@@ -74,8 +75,10 @@ private:
 
 Responsibiities:
 
-* initialize Configuration
-* initializes Globals
+@li owns Globals classes
+@li manages lifetime of Globals
+@li initialization and shutdown
+@li main thread blocking and signal handling
 
 */
 

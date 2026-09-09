@@ -38,7 +38,11 @@ Constructor
 
 @internal
 
-All these unique_ptr's on the stack manage the lifetime of globals.
+Constructor does not return until the game is over. It initializes all
+the non-trivial classes in specific order, then it blocks forever
+waiting on a signal. The signal indicates the game is over. It then
+invokes an explicit shutdown order. The unique_ptrs go out of scope upon
+returning and their destructors are called.
 
 */
 GameMain::GameMain(int argc, char* argv[])
@@ -57,9 +61,7 @@ GameMain::GameMain(int argc, char* argv[])
 
     signalHandler_.waitForTerminate();  // Blocks until signal
 
-    shutdownView();
-    Gbl::pGameCtrl->prepareForShutdown();
-    Gbl::pTable->prepareForShutdown();
+    explicitShutdown();
 }
 
 //----------------------------------------------------------------
@@ -227,15 +229,32 @@ GameMain::shutdownView()
     std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();
     if (v == "console")
     {
-        Cui::CuiMain::instance().prepareForShutdown();
+        Cui::CuiMain::instance().shutdown();
         return;
     }
     
     if (v == "graphical")
     {
-        // TODO Gui::GuiMain::instance().prepareForShutdown();
+        // TODO Gui::GuiMain::instance().shutdown();
         return;
     }
 }
 
 //----------------------------------------------------------------
+
+void
+GameMain::explicitShutdown()
+{
+    Gbl::pGameCtrl->shutdown();
+    shutdownView();
+    Gbl::pTable->shutdown();
+    // Gbl::pEventMgr    ->shutdown();  // N/A
+    // Gbl::pUndoMgr     ->shutdown();  // N/A
+    // Gbl::pPlayerMgr   ->shutdown();  // N/A
+    // Gbl::pTableMgr    ->shutdown();  // N/A
+    // Gbl::pConfigMgr   ->shutdown();  // N/A
+    // Gbl::pBuildInfo   ->shutdown();  // N/A
+}
+
+//----------------------------------------------------------------
+

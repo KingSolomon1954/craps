@@ -212,22 +212,18 @@ CrapsTable::close()
 //  disable timers, etc
 //
 void
-CrapsTable::prepareForShutdown()
+CrapsTable::shutdown()
 {
     // First, clear out players
     auto playersCopy = players_;      // copy of player list
     for (auto& player : playersCopy)
     {
         // Give players opportunity to cleanup on their own
-        player->prepareForShutdown(); // will modify original players_
+        player->shutdown(); // will modify original players_
     }
 
-    if (getNumBetsOnTable() > 0)
-    {
-        // boo boo problem, players did not clean up
-        assert(false);
-    }
-    close();
+    assert(getNumBetsOnTable() == 0);  // boo boo problem
+    close();  // merges stats, creates session entry, saves files
 }
 
 //----------------------------------------------------------------

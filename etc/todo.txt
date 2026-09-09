@@ -39,11 +39,12 @@ In CUI, need DialogBase
 In CUI, need DialogBetAmount
 In Controller, need redesign for interface and event handlers
 Need MenuBetting implementation
-Hook up ScreenCrapsTable::onAttach(MenuBetting)
-Implement "Uknown" player start up logic
-Fix ScreenCrapsTable initial drawing
+Implement "Unknown" player start up logic
 Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 
+(Done) Hook up ScreenCrapsTable::onAttach(MenuBetting)
+(Done) Fix ScreenCrapsTable initial corrupted drawing
+(Done) Add/fix explicit shutdown in GameMain
 (Done) Logger initialization, turn off console logging just before view
 (Done) Fix logger writing to file
 (Done) Logger supports writing to file and console same time

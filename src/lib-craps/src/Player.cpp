@@ -171,7 +171,7 @@ Player::fromYAML(const YAML::Node& node)
 //  Save to files, disable timers, etc
 //
 void
-Player::prepareForShutdown()
+Player::shutdown()
 {
     Gen::ErrorPass ep;
     (void) leaveTable(ep);

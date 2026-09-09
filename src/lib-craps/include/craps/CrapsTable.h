@@ -36,6 +36,7 @@ public:
                const TableConfig& config,
                EventManager&      eventMgr);
    ~CrapsTable() = default;
+    void shutdown();
     static CrapsTable* fromString(std::string        yaml,
                                   const TableId&     tableId,
                                   const TableConfig& config,
@@ -66,7 +67,6 @@ public:
     void rollDice();
     void resetStats();
     void close();               // Shutdown table, switching to different table
-    void prepareForShutdown();  // Shutdown table, exiting program
     /// @}
 
     /// @name Observers

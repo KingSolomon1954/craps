@@ -185,9 +185,9 @@ CuiMain::run()
 //----------------------------------------------------------------
 
 void
-CuiMain::prepareForShutdown()
+CuiMain::shutdown()
 {
-    SurfaceManager::instance().prepareForShutdown();
+    SurfaceManager::instance().shutdown();
     CuiThread::instance().shutdown();
     endwin();
 }

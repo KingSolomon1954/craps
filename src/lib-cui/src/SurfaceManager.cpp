@@ -37,7 +37,7 @@ SurfaceManager::shutdownNcursesResources()
 //----------------------------------------------------------------
 
 void
-SurfaceManager::prepareForShutdown()
+SurfaceManager::shutdown()
 {
     shutdownNcursesResources();
 }

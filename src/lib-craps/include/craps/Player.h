@@ -42,6 +42,7 @@ public:
            const PlayerConfig& config,   // name will come from file
            EventManager&       eventMgr);
    ~Player() = default;
+    void shutdown();
 
     static Player* createPlayer(const std::string&  playerName,  // Creates
                                 const PlayerConfig& config,      // a fresh
@@ -77,7 +78,6 @@ public:
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
     void resetStats();
-    void prepareForShutdown();  // Shutdown, exiting program
     /// @}
 
     /// @name Observers

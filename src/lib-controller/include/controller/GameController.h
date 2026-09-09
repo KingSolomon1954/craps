@@ -19,7 +19,7 @@ public:
     /// @name Lifecycle
     /// @{
     GameController();
-    void prepareForShutdown();
+    void shutdown();
     /// @}
 
     /// @name Modifiers

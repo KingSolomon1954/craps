@@ -18,7 +18,7 @@ public:
    ~CuiMain() = default;
    
     static CuiMain& instance();
-    void prepareForShutdown();
+    void shutdown();
     CuiView& getView();
     
 private:
