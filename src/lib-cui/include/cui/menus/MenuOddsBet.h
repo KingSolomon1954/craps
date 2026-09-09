@@ -35,8 +35,6 @@ public:
     /// @}
     
 private:
-    MenuOddsBet();  // Private ctor
-
     struct BetInfo
     {
         Craps::PlayerId playerId;
@@ -63,7 +61,10 @@ private:
     MenuEntries     menuEntries_;
     int winBorderTopCol_ = 20;  // TODO from CUI layout
     int winBorderTopRow_ = 10;  // TODO from CUI layout
-    
+
+private:    
+    MenuOddsBet();  // Private ctor
+
     // Gathering bets
     void gatherBets();
     void getPlayerId();
@@ -84,8 +85,8 @@ private:
 
     bool shortCircuit();
 
-// Window creation and drawing
-    void windowResize();
+    // Window creation and drawing
+    void resizeWindow();
     std::pair<int, int> calcSize() const;
     void drawBorders();
     void drawStaticContent();

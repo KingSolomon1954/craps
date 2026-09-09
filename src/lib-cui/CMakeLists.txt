@@ -11,6 +11,7 @@ add_library(cui STATIC
     src/CuiUtils.cpp
     src/CuiView.cpp
     src/SurfaceManager.cpp
+    src/dialogs/DialogConfirm.cpp
 #   src/dialogs/DialogAckError.cpp
 #   src/dialogs/DialogAmountEntry.cpp
     src/bases/SurfaceBase.cpp

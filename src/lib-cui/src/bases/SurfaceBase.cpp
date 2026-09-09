@@ -69,12 +69,12 @@ SurfaceBase::onResume()
 
 //----------------------------------------------------------------
 //
-// Our immediate child surface is informing us of
-// success/failure/error of the operation. The state is
-// remembered here in the base class. We also propagate the state
-// up the call chain of menus to our parent. This allows menus
-// to decide whether they retain control later upon unwinding the
-// stack or should be skipped. See ConsoleManager::popSurfaces().
+// Our immediate child surface is informing us of success/failure/error
+// of the operation. The state is remembered here in the base class. We
+// also propagate the state up the call chain of surfaces to our
+// parent. This allows a surface to decide whether they retain control
+// later upon unwinding the stack or should be skipped. See
+// SurfaceManager::popSurfaces().
 // 
 void
 SurfaceBase::setOperationResult(OperationResult r)
@@ -88,7 +88,7 @@ SurfaceBase::setOperationResult(OperationResult r)
 // Return true if this surface should be skipped when unwinding
 // the stack. Some surfaces in the call chain should not regain
 // control depending on the success or failure of the overall
-// operation. ConsolerManager calls this on each surface when
+// operation. SurfaceManager calls this on each surface when
 // popping surfaces.
 //
 // The default in the base class here is not to skip, otherwise

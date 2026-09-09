@@ -70,11 +70,8 @@ SurfaceManager::draw()
 void
 SurfaceManager::draw(SurfaceBase* pSurface)
 {
-//  napms(20);
     pSurface->draw();
-//    napms(100);
     doupdate();  // Paint the physical screen
-//    napms(100);
 }
 
 //----------------------------------------------------------------
@@ -172,3 +169,50 @@ SurfaceManager::handleKey(int ch)
 }
 
 //----------------------------------------------------------------
+
+SurfaceBase*
+SurfaceManager::activeSurface() const
+{
+    return stack_.back();
+}
+
+//----------------------------------------------------------------
+
+
+
+#if 0
+
+
+
+void SurfaceManager::assignLocation(SurfaceBase* pSurface,
+                                    SurfaceBase* pParent)
+{
+    auto locationInfo = pSurface->locationInfo();
+    
+    SurfaceLocationManager::Request request;
+    request.size       = {locationInfo.height, locationInfo.width};
+    request.kind       = {locationInfo.kind};
+    request.direction  = {locationInfo.direction};
+
+    std::string parentName;
+    if (pParent) parentName = pParent->surfaceName();
+    auto position = locationMgr_.findPosition(request, parentName, surfaceName);
+    if (!position) throw ...;
+    pSurface->setLocation(position->row, position->col);
+}
+
+void SurfaceManager::pushSurface(SurfaceBase* pSurface)
+{
+    auto pParent = activeSurface();
+    assignLocation(pSurface, pParent);
+
+    stack_.push_back(pSurface);
+
+    surface->onAttach(pParent);
+    surface->draw();
+}
+
+
+virtual WindowRect SurfaceBase::getWindowRect(pWin);
+
+#endif

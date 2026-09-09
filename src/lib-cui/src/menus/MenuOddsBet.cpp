@@ -64,7 +64,7 @@ MenuOddsBet::draw()
         return;   // Only one odds bet? then skip this menu
     }
     
-    windowResize();
+    resizeWindow();
     werase(pWin_);
     drawBorders();
     drawStaticContent();
@@ -252,7 +252,7 @@ MenuOddsBet::formatHotKey(const char hotKey)
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::windowResize()
+MenuOddsBet::resizeWindow()
 {
     const auto [height, width] = calcSize();
 
@@ -275,7 +275,7 @@ MenuOddsBet::calcSize() const
     constexpr int rowsAbove  = 3; // Top border + title area
     constexpr int rowsBelow  = 1; // bottom border
     constexpr int borderCols = 2; // 2 vertical borders
-    constexpr int blankCols  = 2; // 2 empty columns adjacent ot borders
+    constexpr int blankCols  = 2; // 2 empty columns adjacent to borders
 
     int height = menuEntries_.size() + rowsAbove + rowsBelow;
 

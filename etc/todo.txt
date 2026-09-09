@@ -35,13 +35,14 @@ Implement controller events for commands that change state
 
 In CUI, need geometry management/control over menu placement
 In CUI, switch to lib-gen EventManager. Eliminate 2 different event managers.
-In CUI, need DialogBase
 In CUI, need DialogBetAmount
 In Controller, need redesign for interface and event handlers
 Need MenuBetting implementation
 Implement "Unknown" player start up logic
 Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 
+(Done) In CUI, write ConfirmDialog class
+(Done) In CUI, need DialogBase
 (Done) Hook up ScreenCrapsTable::onAttach(MenuBetting)
 (Done) Fix ScreenCrapsTable initial corrupted drawing
 (Done) Add/fix explicit shutdown in GameMain

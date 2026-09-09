@@ -6,16 +6,16 @@
 
 #pragma once
 
-#include <cui/Surface.h>
+#include <cui/bases/SurfaceBase.h>
 
 namespace Cui {
 
-class DialogBase : public Surface
+class DialogBase : public SurfaceBase
 {
 public:
     /// @name Lifecycle
     /// @{
-    DialogBase(std::string surfaceName)
+    explicit DialogBase(std::string surfaceName)
         : SurfaceBase(std::move(surfaceName))
     {
     }

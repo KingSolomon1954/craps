@@ -20,7 +20,9 @@ public:
         Unset,
         Cancel,
         Error,
-        Success
+        Success,
+        Yes,
+        No
     };
 
     explicit SurfaceBase(std::string surfaceName);

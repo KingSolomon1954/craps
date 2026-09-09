@@ -50,6 +50,7 @@ private:
     SurfaceManager() = default;
     void shutdownNcursesResources();
     void draw(SurfaceBase* pSurface);
+    SurfaceBase* activeSurface() const;
 };
 
 /*-----------------------------------------------------------*//**
