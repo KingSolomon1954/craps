@@ -6,16 +6,15 @@
 
 #include <cui/LocationManager.h>
 #include <cui/layouts/LayoutConsole.h>
-#include <cassert>
 
 using namespace Cui;
 
 //----------------------------------------------------------------
 
-LocationManager()
+LocationManager::LocationManager()
+    : screenRows_(LayoutConsole::height),
+      screenCols_(LayoutConsole::width)
 {
-    screenRows_ = LayoutConsole::height;
-    screenCols_ = LayoutConsole::width;
 }
 
 /*-----------------------------------------------------------*//**
@@ -26,39 +25,49 @@ The resulting position is registered under surfaceName so that
 subsequent placement requests consider the new surface occupied.
 
 @return std::nullopt if no suitable position is available, otherwise
-        the position the surface should be place at.
+        the position the surface should be placed at.
 
 */
 std::optional<WindowPosition>
 LocationManager::findPosition(const Request& request,
                               const std::string& parentName,
-                              const std::string& surfaceName) const
+                              const std::string& surfaceName)
 {
-    std::optonal<WindowPosition> position;
-    
-    if (request.kind == PlacementKind::Dialog)
+    std::optional<WindowPosition> position;
+
+    if (request.kind == LocationKind::Dialog)
     {
         position = findDialogPosition(request);
     }
     else if (!parentName.empty())
     {
-        auto parentRect = getRec(parentName);
+        const auto parentRect = getRect(parentName);
+
         if (parentRect)
-            position = findMenuPosition(request, parentRect);
+        {
+            position = findMenuPosition(request, *parentRect);
+        }
     }
     else
     {
-        // Independent popup
+        // Independent popup.
         position = findIndependentPosition(request);
     }
 
-    if (!position) return std::nullopt;
-    
-    WindowRect rect{
-        position->row, position->col,
-        request.size.rows, request.size.cols};
-    
+    if (!position)
+        return std::nullopt;
+
+    const WindowRect rect{
+        position->row,
+        position->col,
+        request.size.rows,
+        request.size.cols
+    };
+
+    // A surface name should identify one active window. If this
+    // surface is already registered, replace its old location.
     windows_[surfaceName] = rect;
+
     return position;
 }
 
@@ -67,50 +76,104 @@ LocationManager::findPosition(const Request& request,
 std::optional<WindowPosition>
 LocationManager::findDialogPosition(const Request& request) const
 {
-    const int row = (screenRows_ - size.rows) / 2;
-    const int col = (screenCols_ - size.cols) / 2;
+    const int row = (screenRows_ - request.size.rows) / 2;
+    const int col = (screenCols_ - request.size.cols) / 2;
 
-    WindowRect rect{row, col, size.rows, size.cols};
+    const WindowRect rect{
+        row, col,
+        request.size.rows,
+        request.size.cols
+    };
 
-    if (fitsOnScreen(rect) && !isOccupied(rect))
+    if (fitsOnScreen(rect) && !overlapsExisting(rect))
     {
         return WindowPosition{row, col};
     }
+
+    return std::nullopt;
 }
 
 //----------------------------------------------------------------
 
 std::optional<WindowPosition>
 LocationManager::findMenuPosition(const Request& request,
-                                  const std::string& parentName) const
+                                  const WindowRect& parentRect) const
 {
-    if (!parentName.empty())
+    // Preferred direction.
+    if (request.direction == Direction::Right)
     {
-        const auto& rect = getRectByName(parentName);
+        const WindowRect candidate{
+            parentRect.row,
+            parentRect.right() + 1,
+            request.size.rows,
+            request.size.cols
+        };
 
-        // Preferred: right of parent.
-        if (request.direction == Direction::Right)
+        if (fitsOnScreen(candidate) && !overlapsExisting(candidate))
         {
-            WindowRect candidate{rect.row, rect.right() + 1,
-                                 size.rows,  size.cols};
-
-            if (fitsOnScreen(candidate) && !isOccupied(candidate))
-                return WindowPosition{candidate.row, candidate.col};
+            return WindowPosition{
+                candidate.row,
+                candidate.col
+            };
         }
-
-        // Fallback: left of parent.
-        {
-            WindowRect candidate{rect.row, rect.col - size.cols,
-                                 size.rows,  size.cols};
-
-            if (fitsOnScreen(candidate) && !isOccupied(candidate))
-                return WindowPosition{candidate.row, candidate.col};
-        }
-
-        // TODO Add more attempts to find a position
     }
 
-    // Do we need generic fallback here?
+    if (request.direction == Direction::Left)
+    {
+        const WindowRect candidate{
+            parentRect.row,
+            parentRect.col - request.size.cols,
+            request.size.rows,
+            request.size.cols
+        };
+
+        if (fitsOnScreen(candidate) && !overlapsExisting(candidate))
+        {
+            return WindowPosition{
+                candidate.row,
+                candidate.col
+            };
+        }
+    }
+
+    // Try the opposite horizontal direction.
+    if (request.direction == Direction::Right)
+    {
+        const WindowRect candidate{
+            parentRect.row,
+            parentRect.col - request.size.cols,
+            request.size.rows,
+            request.size.cols
+        };
+
+        if (fitsOnScreen(candidate) && !overlapsExisting(candidate))
+        {
+            return WindowPosition{
+                candidate.row,
+                candidate.col
+            };
+        }
+    }
+    else
+    {
+        const WindowRect candidate{
+            parentRect.row,
+            parentRect.right() + 1,
+            request.size.rows,
+            request.size.cols
+        };
+
+        if (fitsOnScreen(candidate) && !overlapsExisting(candidate))
+        {
+            return WindowPosition{
+                candidate.row,
+                candidate.col
+            };
+        }
+    }
+
+    // TODO: additional placement strategies.
+
     return std::nullopt;
 }
 
@@ -119,13 +182,20 @@ LocationManager::findMenuPosition(const Request& request,
 std::optional<WindowPosition>
 LocationManager::findIndependentPosition(const Request& request) const
 {
-    const int row = (screenRows_ - size.rows) / 2;
-    const int col = (screenCols_ - size.cols) / 2;
+    const int row = (screenRows_ - request.size.rows) / 2;
+    const int col = (screenCols_ - request.size.cols) / 2;
 
-    WindowRect candidate{row, col, size.rows, size.cols};
+    const WindowRect candidate{
+        row,
+        col,
+        request.size.rows,
+        request.size.cols
+    };
 
-    if (fitsOnScreen(candidate) && !isOccupied(candidate))
+    if (fitsOnScreen(candidate) && !overlapsExisting(candidate))
+    {
         return WindowPosition{row, col};
+    }
 
     return std::nullopt;
 }
@@ -135,7 +205,19 @@ LocationManager::findIndependentPosition(const Request& request) const
 bool
 LocationManager::fitsOnScreen(const WindowRect& rect) const
 {
-    // TODO
+    if (rect.row < 0 || rect.col < 0)
+        return false;
+
+    if (rect.rows <= 0 || rect.cols <= 0)
+        return false;
+
+    if (rect.bottom() >= screenRows_)
+        return false;
+
+    if (rect.right() >= screenCols_)
+        return false;
+
+    return true;
 }
 
 //----------------------------------------------------------------
@@ -143,15 +225,32 @@ LocationManager::fitsOnScreen(const WindowRect& rect) const
 bool
 LocationManager::overlapsExisting(const WindowRect& rect) const
 {
-    // TODO
+    for (const auto& [surfaceName, existing] : windows_)
+    {
+        const bool separated =
+            rect.right()      < existing.col ||
+            existing.right()  < rect.col     ||
+            rect.bottom()     < existing.row ||
+            existing.bottom() < rect.row;
+
+        if (!separated)
+            return true;
+    }
+
+    return false;
 }
 
 //----------------------------------------------------------------
 
-void
-LocationManager::reserve(std::string id, WindowRect rect)
+std::optional<WindowRect>
+LocationManager::getRect(const std::string& surfaceName) const
 {
-    // TODO
+    const auto it = windows_.find(surfaceName);
+
+    if (it == windows_.end())
+        return std::nullopt;
+
+    return it->second;
 }
 
 //----------------------------------------------------------------
@@ -159,7 +258,7 @@ LocationManager::reserve(std::string id, WindowRect rect)
 void
 LocationManager::release(const std::string& surfaceName)
 {
-    // TODO
+    windows_.erase(surfaceName);
 }
 
 //----------------------------------------------------------------

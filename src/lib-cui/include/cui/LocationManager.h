@@ -7,8 +7,9 @@
 #pragma once
 
 #include <cui/CuiStructs.h>
-#include <unordered_map>
+#include <optional>
 #include <string>
+#include <unordered_map>
 
 namespace Cui
 {
@@ -44,7 +45,8 @@ public:
     struct Request
     {
         WindowSize size;
-        LocationKind kind = LocationKind::Popup;
+        LocationKind kind = LocationKind::Menu;
+        Direction direction = Direction::Right;
     };
     
     LocationManager();
@@ -52,14 +54,14 @@ public:
     std::optional<WindowPosition>
     findPosition(const Request& request,
                  const std::string& parentName,
-                 const std::string& surfaceName) const;
+                 const std::string& surfaceName);
 
     void release(const std::string& surfaceName);
 
 private:
     std::optional<WindowPosition>
     findMenuPosition(const Request& request,
-                     const std::string& parentName) const;
+                     const WindowRect& parentRect) const;
 
     std::optional<WindowPosition>
     findDialogPosition(const Request& request) const;
@@ -67,8 +69,9 @@ private:
     std::optional<WindowPosition>
     findIndependentPosition(const Request& request) const;
 
-    void reserve(std::string id, WindowRect rect);
-    
+    std::optional<WindowRect>
+    getRect(const std::string& surfaceName) const;
+
     bool fitsOnScreen    (const WindowRect& rect) const;
     bool overlapsExisting(const WindowRect& rect) const;
 
@@ -82,9 +85,16 @@ private:
 
 @class LocationManager
 
-@brief todo
+@brief Decides where a new window rectangle should go.
 
-@li todo
+Using already registered rectangles, LocationManager
+decides where a new rectangle should go.
+
+@li knows screen dimensions
+@li knows rectangles of active surfaces
+@li finds best position
+@li reserves successful position
+@li releases position when surface disappears
 
 */
     
