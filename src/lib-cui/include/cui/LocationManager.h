@@ -17,42 +17,10 @@ namespace Cui
 class LocationManager
 {
 public:
-    enum class Direction
-    {
-        Right,
-        Left,
-        Below,
-        Above
-    };
-
-    enum class LocationKind
-    {
-        Menu,
-        Dialog,
-        Overlay,
-        Panel,
-        FullScreen
-    };
-
-    struct LocationInfo
-    {
-        int          height;
-        int          width;
-        LocationKind kind;
-        Direction    direction;
-    };
-
-    struct Request
-    {
-        WindowSize size;
-        LocationKind kind = LocationKind::Menu;
-        Direction direction = Direction::Right;
-    };
-    
     LocationManager();
 
     std::optional<WindowPosition>
-    findPosition(const Request& request,
+    findPosition(const LocationRequest& request,
                  const std::string& parentName,
                  const std::string& surfaceName);
 
@@ -60,14 +28,14 @@ public:
 
 private:
     std::optional<WindowPosition>
-    findMenuPosition(const Request& request,
+    findMenuPosition(const LocationRequest& request,
                      const WindowRect& parentRect) const;
 
     std::optional<WindowPosition>
-    findDialogPosition(const Request& request) const;
+    findDialogPosition(const LocationRequest& request) const;
 
     std::optional<WindowPosition>
-    findIndependentPosition(const Request& request) const;
+    findIndependentPosition(const LocationRequest& request) const;
 
     std::optional<WindowRect>
     getRect(const std::string& surfaceName) const;

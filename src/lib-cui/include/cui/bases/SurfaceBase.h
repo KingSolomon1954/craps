@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <cui/CuiStructs.h>
 #include <ncurses.h>
 #include <string>
 
@@ -40,6 +41,8 @@ public:
     virtual void releaseNcursesResources();
     virtual void newWindow(int nlines, int ncols,
                            int topRow, int leftCol);
+    virtual void setLocation(WindowPosition position);
+    virtual LocationRequest getLocationRequest() const;
 
     const std::string& surfaceName() const;
 

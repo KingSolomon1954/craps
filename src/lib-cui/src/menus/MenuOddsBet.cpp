@@ -56,15 +56,11 @@ MenuOddsBet::instance()
 void
 MenuOddsBet::draw()
 {
-    gatherBets();
-    buildMenuEntries();
-    
     if (shortCircuit())
     {
         return;   // Only one odds bet? then skip this menu
     }
     
-    resizeWindow();
     werase(pWin_);
     drawBorders();
     drawStaticContent();
@@ -252,40 +248,86 @@ MenuOddsBet::formatHotKey(const char hotKey)
 //----------------------------------------------------------------
 
 void
+MenuOddsBet::onAttach(SurfaceBase* pParent)
+{
+    SurfaceBase::onAttach(pParent);
+    gatherBets();
+    buildMenuEntries();
+    calcSize();           // Determine our height/width
+                          // winSize_ is now populated
+    // Next, surface manager will ask for our locationRequest
+}
+
+//----------------------------------------------------------------
+
+void
 MenuOddsBet::resizeWindow()
 {
-    const auto [height, width] = calcSize();
-
     if (pWin_ == nullptr)
     {
-        newWindow(height, width, winBorderTopCol_, winBorderTopRow_);
+        newWindow(winSize_.rows,
+                  winSize_.cols,
+                  winPos_.row,
+                  winPos_.col);
     }
     else
     {
-        wresize(pWin_, height, width);
-        mvwin(pWin_, winBorderTopCol_, winBorderTopRow_);
+        wresize(pWin_, winSize_.rows, winSize_.cols);
+        mvwin(pWin_, winPos_.row, winPos_.col);
     }
 }
 
 //----------------------------------------------------------------
 
-std::pair<int, int>
-MenuOddsBet::calcSize() const
+void
+MenuOddsBet::calcSize()
 {
     constexpr int rowsAbove  = 3; // Top border + title area
     constexpr int rowsBelow  = 1; // bottom border
     constexpr int borderCols = 2; // 2 vertical borders
     constexpr int blankCols  = 2; // 2 empty columns adjacent to borders
 
-    int height = menuEntries_.size() + rowsAbove + rowsBelow;
+    winSize_.rows = menuEntries_.size() + rowsAbove + rowsBelow;
 
     int width = 0;
     for (const auto& e : menuEntries_)
     {
         width = std::max(width, static_cast<int>(e.text.size()));
     }
-    width += blankCols + borderCols;
-    return {height, width};
+    winSize_.cols = width + blankCols + borderCols;
+}
+
+//----------------------------------------------------------------
+//
+// SurfaceManager wants our window size and more.
+// This occurs in context of SurfaceManager::pushSurface()
+// SurfaceManager informs us shortly of our screen position.
+// See setLocation() below. 
+//
+LocationRequest
+MenuOddsBet::getLocationRequest() const
+{
+    LocationRequest req;
+    req.kind      = LocationKind::Menu;
+    req.size.rows = winSize_.rows;
+    req.size.cols = winSize_.cols;
+    req.direction = Direction::Right;
+    return req;
+}
+
+//----------------------------------------------------------------
+//
+// SurfaceManager tells us our location.
+// This occurs in context of SurfaceManager::pushSurface().
+// We now have enough information to create/resize our
+// ncurses WINDOW. Following this, SurfaceManager will
+// call draw() on us.
+//
+void
+MenuOddsBet::setLocation(WindowPosition pos)
+{
+    winPos_ = {pos.row, pos.col};
+    resizeWindow();
 }
 
 //----------------------------------------------------------------

@@ -6,10 +6,8 @@
 
 #pragma once
 
-#include <atomic>
-#include <mutex>
+#include <cui/LocationManager.h>
 #include <string>
-#include <thread>
 #include <vector>
 
 namespace Cui {
@@ -46,31 +44,29 @@ private:
     std::vector<SurfaceBase*> stack_;    // non-owning stack
     using SurfaceList = std::vector<SurfaceBase*>;
     SurfaceList surfaces_;
+    LocationManager locationMgr_;
     
     SurfaceManager() = default;
     void shutdownNcursesResources();
     void draw(SurfaceBase* pSurface);
     SurfaceBase* activeSurface() const;
+    void assignLocation(SurfaceBase* pSurface, SurfaceBase* pParent);
 };
 
 /*-----------------------------------------------------------*//**
 
 @class SurfaceManager
 
-@brief Manages surfaces and keyboard input thread.
+@brief Manages the active CUI surface stack and surface lifecycle.
 
-Responsibilities of SurfaceView:
+@li Maintains the active surface stack
+@li Manages surface attach, detach, pause, and resume operations
+@li Coordinates surface placement through LocationManager
+@li Creates and releases ncurses windows for surfaces
+@li Dispatches keyboard input to the active surface
+@li Draws the active surface
+@li Manages ncurses resource shutdown
 
-@li Implements the UI run loop
-@li Owns/orchestrates the active surface view stack and ncurses lifecycle
-@li Initialize and shut down the ncurses environment safely
-@li Manages view surfaces, pushing/popping, unaware of whether
-    it's dealing with a screen, menu, or dialog box.
-@li Asynchronous input thread to obtain keys
-@li Each key forwarded to the active screen
-@li Delegates to next or previous screen for rendering/drawing
-@li Dispatches events (no console-side logic). Just forwards them to
-    Controller::ViewCommands.
 */
 
 } // namespace Cui

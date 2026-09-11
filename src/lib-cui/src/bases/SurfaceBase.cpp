@@ -130,6 +130,26 @@ SurfaceBase::releaseNcursesResources()
 
 //----------------------------------------------------------------
 
+void
+SurfaceBase::setLocation(WindowPosition position)
+{
+    // Empty
+}
+
+//----------------------------------------------------------------
+
+LocationRequest
+SurfaceBase::getLocationRequest() const
+{
+    return LocationRequest{
+        .size = {0, 0},
+        .kind = LocationKind::Menu,
+        .direction = Direction::Right
+    };
+}
+
+//----------------------------------------------------------------
+
 const std::string&
 SurfaceBase::surfaceName() const
 {

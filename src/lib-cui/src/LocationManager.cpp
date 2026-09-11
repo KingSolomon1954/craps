@@ -6,6 +6,7 @@
 
 #include <cui/LocationManager.h>
 #include <cui/layouts/LayoutConsole.h>
+#include <cassert>
 
 using namespace Cui;
 
@@ -29,11 +30,12 @@ subsequent placement requests consider the new surface occupied.
 
 */
 std::optional<WindowPosition>
-LocationManager::findPosition(const Request& request,
+LocationManager::findPosition(const LocationRequest& request,
                               const std::string& parentName,
                               const std::string& surfaceName)
 {
     std::optional<WindowPosition> position;
+    assert(request.size.rows > 0 && request.size.cols > 0);
 
     if (request.kind == LocationKind::Dialog)
     {
@@ -74,7 +76,7 @@ LocationManager::findPosition(const Request& request,
 //----------------------------------------------------------------
 
 std::optional<WindowPosition>
-LocationManager::findDialogPosition(const Request& request) const
+LocationManager::findDialogPosition(const LocationRequest& request) const
 {
     const int row = (screenRows_ - request.size.rows) / 2;
     const int col = (screenCols_ - request.size.cols) / 2;
@@ -96,7 +98,7 @@ LocationManager::findDialogPosition(const Request& request) const
 //----------------------------------------------------------------
 
 std::optional<WindowPosition>
-LocationManager::findMenuPosition(const Request& request,
+LocationManager::findMenuPosition(const LocationRequest& request,
                                   const WindowRect& parentRect) const
 {
     // Preferred direction.
@@ -180,7 +182,7 @@ LocationManager::findMenuPosition(const Request& request,
 //----------------------------------------------------------------
 
 std::optional<WindowPosition>
-LocationManager::findIndependentPosition(const Request& request) const
+LocationManager::findIndependentPosition(const LocationRequest& request) const
 {
     const int row = (screenRows_ - request.size.rows) / 2;
     const int col = (screenCols_ - request.size.cols) / 2;

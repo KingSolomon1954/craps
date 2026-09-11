@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cui/bases/MenuBase.h>
+#include <cui/CuiStructs.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
 #include <gen/MoneyUtils.h>
@@ -25,8 +26,11 @@ public:
 
     /// @name Modifiers
     /// @{
-    void draw()            override;
-    bool handleKey(int ch) override;
+    void draw()                                override;
+    bool handleKey(int ch)                     override;
+    void onAttach(SurfaceBase* pParent)        override;
+    void setLocation(WindowPosition pos)       override;
+    LocationRequest getLocationRequest() const override;
     /// @}
 
     /// @name Observers
@@ -59,9 +63,9 @@ private:
     Craps::PlayerId playerId_;
     Bets            activeOddsBets_;
     MenuEntries     menuEntries_;
-    int winBorderTopCol_ = 20;  // TODO from CUI layout
-    int winBorderTopRow_ = 10;  // TODO from CUI layout
-
+    WindowSize      winSize_;
+    WindowPosition  winPos_;
+    
 private:    
     MenuOddsBet();  // Private ctor
 
@@ -86,8 +90,8 @@ private:
     bool shortCircuit();
 
     // Window creation and drawing
+    void calcSize();
     void resizeWindow();
-    std::pair<int, int> calcSize() const;
     void drawBorders();
     void drawStaticContent();
     void populate();

@@ -75,7 +75,9 @@ SurfaceManager::draw(SurfaceBase* pSurface)
 }
 
 //----------------------------------------------------------------
-
+//
+// FullScreen surfaces use this. No window placement.
+//
 void
 SurfaceManager::setSurface(SurfaceBase* pSurface)
 {
@@ -96,19 +98,22 @@ SurfaceManager::setSurface(SurfaceBase* pSurface)
 }
 
 //----------------------------------------------------------------
-
+//
+// Menu/Dialog/Overlya/etc. LocationManager placement
+//
 void
 SurfaceManager::pushSurface(SurfaceBase* pSurface)
 {
-    LOG_TRACE("SurfaceManager::pushSurface() pushing " + pSurface->surfaceName());
-    SurfaceBase* pParent = nullptr;
-    if (!stack_.empty())
-    {
-        pParent = stack_.back();
-        pParent->onPause();
-    }
+    LOG_TRACE("SurfaceManager::pushSurface() pushing " +
+              pSurface->surfaceName());
+
+    auto pParent = activeSurface();
+
     stack_.push_back(pSurface);
+
     pSurface->onAttach(pParent);
+    assignLocation(pSurface, pParent);
+
     draw(pSurface);
 }
 
@@ -127,7 +132,7 @@ SurfaceManager::popSurface()
     LOG_TRACE("SurfaceManager::popSurface() popping " + pSurface->surfaceName());
 
     pResumed = stack_.back();
-
+    locationMgr_.release(pSurface->surfaceName());
     pSurface->onDetach();
     pResumed->onResume();
 
@@ -157,6 +162,29 @@ SurfaceManager::popSurfaces()
 
 //----------------------------------------------------------------
 
+void
+SurfaceManager::assignLocation(SurfaceBase* pSurface,
+                               SurfaceBase* pParent)
+{
+    std::string parentName;
+    if (pParent) parentName = pParent->surfaceName();
+    
+    auto position = locationMgr_.findPosition(
+        pSurface->getLocationRequest(),
+        parentName,
+        pSurface->surfaceName());
+
+    if (!position)
+    {
+        // TODO report no placement error.
+        assert(position != std::nullopt);
+        return;
+    }
+    pSurface->setLocation(*position);
+}
+
+//----------------------------------------------------------------
+
 bool
 SurfaceManager::handleKey(int ch)
 {
@@ -173,46 +201,8 @@ SurfaceManager::handleKey(int ch)
 SurfaceBase*
 SurfaceManager::activeSurface() const
 {
+    if (stack_.empty()) return nullptr;
     return stack_.back();
 }
 
 //----------------------------------------------------------------
-
-
-
-#if 0
-
-
-
-void SurfaceManager::assignLocation(SurfaceBase* pSurface,
-                                    SurfaceBase* pParent)
-{
-    auto locationInfo = pSurface->locationInfo();
-    
-    SurfaceLocationManager::Request request;
-    request.size       = {locationInfo.height, locationInfo.width};
-    request.kind       = {locationInfo.kind};
-    request.direction  = {locationInfo.direction};
-
-    std::string parentName;
-    if (pParent) parentName = pParent->surfaceName();
-    auto position = locationMgr_.findPosition(request, parentName, surfaceName);
-    if (!position) throw ...;
-    pSurface->setLocation(position->row, position->col);
-}
-
-void SurfaceManager::pushSurface(SurfaceBase* pSurface)
-{
-    auto pParent = activeSurface();
-    assignLocation(pSurface, pParent);
-
-    stack_.push_back(pSurface);
-
-    surface->onAttach(pParent);
-    surface->draw();
-}
-
-
-virtual WindowRect SurfaceBase::getWindowRect(pWin);
-
-#endif
