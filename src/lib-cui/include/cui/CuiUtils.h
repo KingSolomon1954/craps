@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <cui/CuiStructs.h>
 #include <ncurses.h>
 
 //----------------------------------------------------------------
@@ -18,19 +19,9 @@ public:
     /// @name CUI Utilities
     /// @{
     static void transfer(WINDOW* pWin);
-    static WINDOW* newContentWindow(
-        int topRow,
-        int botRow,
-        int leftCol,
-        int rightCol);
-    static WINDOW* newContentWindowByBorder(
-        int borderTopRow,
-        int borderBotRow,
-        int borderLeftCol,
-        int borderRightCol);
-    static WINDOW* makeCenteredWindow(
-        int h,
-        int w);
+    static WINDOW* makeCenteredWindow(WINDOW* pWin, int h, int w);
+    static WindowRect centerRect(WINDOW* pWin, WindowSize size);
+    static WindowRect getWindowRect(WINDOW* pWin);
     /// @}
 };
 

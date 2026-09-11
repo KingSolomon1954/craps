@@ -103,10 +103,10 @@ SurfaceBase::shouldSkip() const
 //----------------------------------------------------------------
 
 void
-SurfaceBase::newWindow(int nlines, int ncols,
-                       int topRow, int leftCol)
+SurfaceBase::newWindow(int rows, int cols,
+                       int row,  int col)
 {
-    pWin_ = newwin(nlines, ncols, topRow, leftCol);
+    pWin_ = newwin(rows, cols, row, col);
     if (pWin_ == nullptr)
     {
         assert(pWin_ != nullptr);
@@ -114,6 +114,14 @@ SurfaceBase::newWindow(int nlines, int ncols,
                         "create ncurses WINDOW for: " + surfaceName_;
         throw std::runtime_error(s);
     }
+}
+
+//----------------------------------------------------------------
+
+void
+SurfaceBase::newWindow(WindowRect rect)
+{
+    newWindow(rect.rows, rect.cols, rect.row, rect.col);
 }
 
 //----------------------------------------------------------------

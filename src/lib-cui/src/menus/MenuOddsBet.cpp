@@ -273,7 +273,7 @@ MenuOddsBet::resizeWindow()
     else
     {
         wresize(pWin_, winSize_.rows, winSize_.cols);
-        mvwin(pWin_, winPos_.row, winPos_.col);
+        mvwin  (pWin_, winPos_.row, winPos_.col);
     }
 }
 
@@ -326,7 +326,7 @@ MenuOddsBet::getLocationRequest() const
 void
 MenuOddsBet::setLocation(WindowPosition pos)
 {
-    winPos_ = {pos.row, pos.col};
+    winPos_ = pos;
     resizeWindow();
 }
 

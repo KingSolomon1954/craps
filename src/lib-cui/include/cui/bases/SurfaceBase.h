@@ -39,8 +39,9 @@ public:
     virtual void setOperationResult(OperationResult r);
     virtual bool shouldSkip() const;
     virtual void releaseNcursesResources();
-    virtual void newWindow(int nlines, int ncols,
-                           int topRow, int leftCol);
+    virtual void newWindow(WindowRect rect);
+    virtual void newWindow(int rows, int cols,
+                           int row,  int col);
     virtual void setLocation(WindowPosition position);
     virtual LocationRequest getLocationRequest() const;
 
