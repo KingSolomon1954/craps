@@ -39,7 +39,7 @@ public:
     virtual void setOperationResult(OperationResult r);
     virtual bool shouldSkip() const;
     virtual void releaseNcursesResources();
-    virtual void newWindow(WindowRect rect);
+    virtual void resize(const WindowSize& size, const WindowPosition& pos);
     virtual void newWindow(int rows, int cols,
                            int row,  int col);
     virtual void setLocation(WindowPosition position);

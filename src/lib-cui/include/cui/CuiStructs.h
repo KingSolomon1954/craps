@@ -44,9 +44,9 @@ enum class LocationKind
 {
     Menu,
     Dialog,
-    Overlay,
     Panel,
-    FullScreen
+    FullScreen,
+    Independent
 };
 
 struct LocationRequest

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cui/bases/MenuBase.h>
+#include <cui/CuiStructs.h>
 #include <craps/EnumBetName.h>
 
 namespace Cui {
@@ -23,29 +24,22 @@ public:
     /// @{
     void draw()            override;
     bool handleKey(int ch) override;
-    bool handleShortcut(int ch);
+    void setLocation(WindowPosition pos)       override;
     /// @}
 
     /// @name Observers
     /// @{
     static MenuBetting& instance();
+    LocationRequest getLocationRequest() const override;
     /// @}
     
 private:
-    struct Layout
-    {
-        static constexpr int height = 23;
-        static constexpr int width  = 25;
+    WindowPosition  winPos_;
+    WindowSize      winSize_ = {23, 25};  // rows, cols
+    BetName         betName_ = BetName::Invalid;
 
-        // TODO - get these from geometry manager
-        static constexpr int winStartX = 10;        
-        static constexpr int winStartY = 40;
-    };
-
-    BetName betName_ = BetName::Invalid;
-
+private:    
     MenuBetting();  // Private ctor
-    void createWindow();
     void fillWindow();
 
     // Input handling

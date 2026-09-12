@@ -166,20 +166,15 @@ void
 SurfaceManager::assignLocation(SurfaceBase* pSurface,
                                SurfaceBase* pParent)
 {
-    std::string parentName;
-    if (pParent) parentName = pParent->surfaceName();
+    assert(pParent); assert(pSurface);
     
     auto position = locationMgr_.findPosition(
         pSurface->getLocationRequest(),
-        parentName,
+        pParent->surfaceName(),
         pSurface->surfaceName());
 
-    if (!position)
-    {
-        // TODO report no placement error.
-        assert(position != std::nullopt);
-        return;
-    }
+    // findPosition() itself throws if position is null
+    
     pSurface->setLocation(*position);
 }
 
@@ -203,6 +198,14 @@ SurfaceManager::activeSurface() const
 {
     if (stack_.empty()) return nullptr;
     return stack_.back();
+}
+
+//----------------------------------------------------------------
+
+bool
+SurfaceManager::isActiveSurface(SurfaceBase* pSurface) const
+{
+    return (activeSurface() == pSurface);
 }
 
 //----------------------------------------------------------------

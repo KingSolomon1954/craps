@@ -119,9 +119,19 @@ SurfaceBase::newWindow(int rows, int cols,
 //----------------------------------------------------------------
 
 void
-SurfaceBase::newWindow(WindowRect rect)
+SurfaceBase::resize(const WindowSize& size, const WindowPosition& pos)
 {
-    newWindow(rect.rows, rect.cols, rect.row, rect.col);
+    if (pWin_ == nullptr)
+    {
+        assert(pWin_ != nullptr);
+        std::string s = "SurfaceBase::resize(): null pWin_. Unable to "
+                        "resize WINDOW for: " + surfaceName_;
+        throw std::runtime_error(s);
+    }
+    assert(size.rows > 0 && size.cols > 0);
+    
+    wresize(pWin_, size.rows, size.cols);
+    mvwin  (pWin_, pos.row, pos.col);
 }
 
 //----------------------------------------------------------------

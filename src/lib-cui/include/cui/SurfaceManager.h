@@ -32,11 +32,13 @@ public:
     void popSurface ();                       // remove top, resume new top if any
     void popSurfaces();                       // remove top until menu claim control
     bool handleKey(int ch);
-    void draw();
+    SurfaceBase* activeSurface() const;
+    bool isActiveSurface(SurfaceBase* pSurface) const;
     /// @}
 
-    /// @name InputHandling
+    /// @name Draw
     /// @{
+    void draw();
     /// @}
 
 private:
@@ -46,10 +48,10 @@ private:
     SurfaceList surfaces_;
     LocationManager locationMgr_;
     
+private:
     SurfaceManager() = default;
     void shutdownNcursesResources();
     void draw(SurfaceBase* pSurface);
-    SurfaceBase* activeSurface() const;
     void assignLocation(SurfaceBase* pSurface, SurfaceBase* pParent);
 };
 

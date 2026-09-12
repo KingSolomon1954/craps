@@ -30,12 +30,12 @@ public:
     bool handleKey(int ch)                     override;
     void onAttach(SurfaceBase* pParent)        override;
     void setLocation(WindowPosition pos)       override;
-    LocationRequest getLocationRequest() const override;
     /// @}
 
     /// @name Observers
     /// @{
     static MenuOddsBet& instance();
+    LocationRequest getLocationRequest() const override;
     /// @}
     
 private:
@@ -63,8 +63,8 @@ private:
     Craps::PlayerId playerId_;
     Bets            activeOddsBets_;
     MenuEntries     menuEntries_;
-    WindowSize      winSize_;
     WindowPosition  winPos_;
+    WindowSize      winSize_;
     
 private:    
     MenuOddsBet();  // Private ctor

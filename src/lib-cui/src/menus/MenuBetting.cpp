@@ -19,9 +19,11 @@ using namespace Cui;
 MenuBetting::MenuBetting()
     : MenuBase("MenuBetting")
 {
-    LOG_TRACE("MenuBetting::constructor() ");
-    createWindow();
+    LOG_TRACE("Entered MenuBetting::constructor() ");
+    // Create an initial WINDOW at location 0,0. Gets resized later.
+    newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
     fillWindow();
+    LOG_TRACE("Leaving MenuBetting::constructor() ");
 }
 
 //----------------------------------------------------------------
@@ -31,16 +33,6 @@ MenuBetting::instance()
 {
     static MenuBetting menu;
     return menu;
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::createWindow()
-{
-    using L = Layout;
-    newWindow(L::height,    L::width,
-              L::winStartY, L::winStartX);
 }
 
 //----------------------------------------------------------------
@@ -78,14 +70,12 @@ MenuBetting::createWindow()
 void
 MenuBetting::fillWindow()
 {
-    using L = Layout;
-
     box(pWin_, 0, 0);
 
     // Horizontal separator below the title
-    mvwhline(pWin_, 2, 1, ACS_HLINE, L::width - 2);
+    mvwhline(pWin_, 2, 1, ACS_HLINE, winSize_.cols - 2);
     mvwaddch(pWin_, 2, 0, ACS_LTEE);
-    mvwaddch(pWin_, 2, L::width - 1, ACS_RTEE);
+    mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 
     mvwaddstr(pWin_, 1, 2, "Betting Menu");
 
@@ -111,6 +101,39 @@ MenuBetting::fillWindow()
 }
 
 //----------------------------------------------------------------
+//
+// SurfaceManager wants our window size and more.
+// This occurs in context of SurfaceManager::pushSurface()
+// SurfaceManager informs us shortly of our screen position.
+// See setLocation() below. 
+//
+LocationRequest
+MenuBetting::getLocationRequest() const
+{
+    LocationRequest req;
+    req.kind      = LocationKind::Menu;
+    req.size.rows = winSize_.rows;
+    req.size.cols = winSize_.cols;
+    req.direction = Direction::Right;
+    return req;
+}
+
+//----------------------------------------------------------------
+//
+// SurfaceManager tells us our location.
+// This occurs in context of SurfaceManager::pushSurface().
+// We now have enough information to create/resize our
+// ncurses WINDOW. Following this, SurfaceManager will
+// call draw() on us.
+//
+void
+MenuBetting::setLocation(WindowPosition pos)
+{
+    winPos_ = pos;
+    resize(winSize_, winPos_);
+}
+
+//----------------------------------------------------------------
 
 void
 MenuBetting::draw()
@@ -118,17 +141,6 @@ MenuBetting::draw()
     LOG_TRACE("MenuBetting::draw() ");
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
-}
-
-//----------------------------------------------------------------
-//
-// Special entry point for ScreenCrapsTable. Allows MenuBetting
-// to be hidden on screen yet still make bets
-//
-bool
-MenuBetting::handleShortcut(int ch)
-{
-    return handleKey(ch);
 }
 
 //----------------------------------------------------------------
@@ -308,24 +320,34 @@ MenuBetting::doRollDice()
 }
 
 //----------------------------------------------------------------
-
+//
+// MenuBetting::back() has unique behavior due to being
+// invisible or not.
+// 
+// When MenuBetting is the active surface:
+//     back() means make the menu invisible
+//     MenuBetting is popped off the surface stack
+//     Thereby MenuBetting is invisible to the user
+//     ScreenCrapsTable keyHandler() takes over
+//     ScreenCrapsTable keys are passed to MenuBetting anyway
+//     No need to setOperationResult(), as there is no unwinding
+//     No need to set shouldSkip(), as there is no undwinding
+//    
+// When MenuBetting is not the active surface:
+//     back() takes no action
+//     ScreenCrapsTable is already the visible surface
+//     No need to setOperationResult() as there is no unwinding
+//     No need to set shouldSkip() as there is no unwinding
+//    
 void
 MenuBetting::back()
 {
-    // Set our own state in base class to reflect cancel.
-    // Also informs parent surfaces of the state of operation.
-    // In turn, parent menus can decide if they are skipped
-    // when unwinding the menu stack. But we're the topmost menu.
+    if (SurfaceManager::instance().isActiveSurface(this))
+    {
+        SurfaceManager::instance().popSurface();  // Become invisible
+    }
 
-    // No need to setOperationResult, we have no parent.
-    // setOperationResult(OperationResult::Cancel);  // base class
-
-    // We're the topmost menu, nothing to pop
-    // ConsoleManager::instance().popSurfaces();
-
-    // But we do want to hide the MenuBetting if it's visible.
-
-    // TODO
+    // Else ignore key, nothing to do. ScreenCrapsTable is visible
 }
 
 //----------------------------------------------------------------

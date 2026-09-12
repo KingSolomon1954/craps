@@ -21,7 +21,9 @@ using namespace Cui;
 MenuOddsBet::MenuOddsBet()
     : MenuBase("MenuOddsBet")
 {
-    // No createWindow() here, uses dynamic WINDOW*
+    // Create an initial WINDOW at location 0,0. Gets resized later.
+    newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
+    // Dynamically built menu, so no initial fillWindow();
 }
 
 //----------------------------------------------------------------
@@ -261,25 +263,6 @@ MenuOddsBet::onAttach(SurfaceBase* pParent)
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::resizeWindow()
-{
-    if (pWin_ == nullptr)
-    {
-        newWindow(winSize_.rows,
-                  winSize_.cols,
-                  winPos_.row,
-                  winPos_.col);
-    }
-    else
-    {
-        wresize(pWin_, winSize_.rows, winSize_.cols);
-        mvwin  (pWin_, winPos_.row, winPos_.col);
-    }
-}
-
-//----------------------------------------------------------------
-
-void
 MenuOddsBet::calcSize()
 {
     constexpr int rowsAbove  = 3; // Top border + title area
@@ -327,7 +310,7 @@ void
 MenuOddsBet::setLocation(WindowPosition pos)
 {
     winPos_ = pos;
-    resizeWindow();
+    resize(winSize_, winPos_);
 }
 
 //----------------------------------------------------------------

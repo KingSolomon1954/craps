@@ -26,8 +26,12 @@ ScreenCrapsTable::ScreenCrapsTable()
     : ScreenBase("ScreenCrapsTable")
 {
     LOG_TRACE("Entered ScreenCrapsTable::ctor()");
-    createWindow();
-    fillWindow();
+    
+    using L = LayoutCrapsScreen;
+    newWindow(L::height, L::width,
+              L::topRow, L::leftCol);
+    LayoutCrapsScreen::init(pWin_);
+    
     LOG_TRACE("Leaving ScreenCrapsTable::ctor()");
 }
 
@@ -38,25 +42,6 @@ ScreenCrapsTable::instance()
 {
     static ScreenCrapsTable screenCrapsTable;
     return screenCrapsTable;
-}
-
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::createWindow()
-{
-    LOG_TRACE("ScreenCrapsTable::createWindow() ");
-    using L = LayoutCrapsScreen;
-    newWindow(L::height, L::width,          // In base class
-              L::topRow, L::leftCol);
-}
-    
-//----------------------------------------------------------------
-
-void
-ScreenCrapsTable::fillWindow()
-{
-    LayoutCrapsScreen::init(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -164,7 +149,7 @@ ScreenCrapsTable::handleKey(int ch)
         return true;
 
     default:
-        if (MenuBetting::instance().handleShortcut(ch))
+        if (MenuBetting::instance().handleKey(ch))
             return true;
 
         if (WindowNavBar::instance().handleKey(ch))
@@ -178,6 +163,11 @@ ScreenCrapsTable::handleKey(int ch)
 void
 ScreenCrapsTable::showBettingMenu()
 {
+    if (SurfaceManager::instance().isActiveSurface(&MenuBetting::instance()))
+    {
+        return; // Already visible
+    }
+    
     SurfaceManager::instance().pushSurface(&MenuBetting::instance());
 }
 

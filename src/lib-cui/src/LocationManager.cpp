@@ -6,6 +6,7 @@
 
 #include <cui/LocationManager.h>
 #include <cui/layouts/LayoutConsole.h>
+#include <gen/Logger.h>
 #include <cassert>
 
 using namespace Cui;
@@ -34,42 +35,48 @@ LocationManager::findPosition(const LocationRequest& request,
                               const std::string& parentName,
                               const std::string& surfaceName)
 {
-    std::optional<WindowPosition> position;
     assert(request.size.rows > 0 && request.size.cols > 0);
+    std::optional<WindowPosition> position;
 
     if (request.kind == LocationKind::Dialog)
     {
         position = findDialogPosition(request);
     }
-    else if (!parentName.empty())
+    
+    if (request.kind == LocationKind::Menu)
     {
-        const auto parentRect = getRect(parentName);
-
-        if (parentRect)
+        auto pr = getRect(parentName);
+        if (!pr)
         {
-            position = findMenuPosition(request, *parentRect);
+            // Not in collection, so assume full screen parent
+            position = WindowPosition{0, 0};
+        }
+        else
+        {
+            position = findMenuPosition(request, *pr);
+            LOG_TRACE("findPosition() back from findMenuPosition");
         }
     }
-    else
+    
+    if (request.kind == LocationKind::Independent)
     {
-        // Independent popup.
         position = findIndependentPosition(request);
     }
 
     if (!position)
-        return std::nullopt;
+    {
+        LOG_TRACE("findPosition() returning std::nullopt");
+        assert(position);
+        throw std::runtime_error("LocationManager::findPosition() Unable "
+            "to find  position for: " + surfaceName + " parent: " + parentName);
+    }
 
-    const WindowRect rect{
-        position->row,
-        position->col,
-        request.size.rows,
-        request.size.cols
-    };
-
-    // A surface name should identify one active window. If this
-    // surface is already registered, replace its old location.
-    windows_[surfaceName] = rect;
-
+    
+    // Add or replace existing rectangle location
+    windows_[surfaceName] = {position->row,
+                             position->col,
+                             request.size.rows,
+                             request.size.cols};
     return position;
 }
 
@@ -247,6 +254,7 @@ LocationManager::overlapsExisting(const WindowRect& rect) const
 std::optional<WindowRect>
 LocationManager::getRect(const std::string& surfaceName) const
 {
+    LOG_TRACE("getRect() looking for " + surfaceName);
     const auto it = windows_.find(surfaceName);
 
     if (it == windows_.end())
