@@ -23,7 +23,8 @@ public:
         Error,
         Success,
         Yes,
-        No
+        No,
+        Acknowledged
     };
 
     explicit SurfaceBase(std::string surfaceName);

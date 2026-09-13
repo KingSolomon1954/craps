@@ -78,7 +78,8 @@ ScreenCrapsTable::drawNavBar()
     
     nav.clear();
     nav.configure(
-    "[C] Control [B] BETTING [V] View [S] Stats | [H] Help [Q] Quit");
+//  0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 
+    " [C] Control   [B] BETTING   [V] View   [S] Stats                   |         [H] Help   [Q] Quit");
     nav.draw();
 }
 

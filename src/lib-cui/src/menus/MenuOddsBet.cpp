@@ -37,56 +37,6 @@ MenuOddsBet::instance()
 
 //----------------------------------------------------------------
 //
-// Draw the menu
-//
-// Overrides menu base class.
-//
-// Dynamically builds the menu prompts from list of player's odds bets.
-// Shows only active odds capable bets (sorted most recent first).
-// 
-// Looks something like this:
-//     
-// 0   ┌─────────────────────────────────┐
-// 1   │ Which Odds Bet                  │
-// 2   ├─────────────────────────────────┤
-// 3   │ [1] Pass Line 6 ($200, $0)      │
-// 4   │ [2] Come Bet 8 ($1,000, $3,000) │
-// 5   │ [3] Don't Pass 10 ($500, $500)  │
-// 6   │ [. or esc] Back                 │
-// 7   └─────────────────────────────────┘
-// 
-void
-MenuOddsBet::draw()
-{
-    if (shortCircuit())
-    {
-        return;   // Only one odds bet? then skip this menu
-    }
-    
-    werase(pWin_);
-    drawBorders();
-    drawStaticContent();
-    populate();
-    CuiUtils::transfer(pWin_);
-}
-
-//----------------------------------------------------------------
-
-bool
-MenuOddsBet::shortCircuit()
-{
-    shouldSkip_ = false;
-    if (menuEntries_.size() == 2)
-    {
-        shouldSkip_ = true;
-        processSelection(menuEntries_[1].betId);
-        return true;
-    }
-    return false;
-}
-
-//----------------------------------------------------------------
-//
 // Create a vector of bets that are odds capable.
 //
 void
@@ -315,19 +265,66 @@ MenuOddsBet::setLocation(WindowPosition pos)
 }
 
 //----------------------------------------------------------------
+//
+// Draw the menu
+//
+// Overrides menu base class.
+//
+// Dynamically builds the menu prompts from list of player's odds bets.
+// Shows only active odds capable bets (sorted most recent first).
+// 
+// Looks something like this:
+//     
+// 0   ┌─────────────────────────────────┐
+// 1   │ Which Odds Bet                  │
+// 2   ├─────────────────────────────────┤
+// 3   │ [1] Pass Line 6 ($200, $0)      │
+// 4   │ [2] Come Bet 8 ($1,000, $3,000) │
+// 5   │ [3] Don't Pass 10 ($500, $500)  │
+// 6   │ [. or esc] Back                 │
+// 7   └─────────────────────────────────┘
+// 
+void
+MenuOddsBet::draw()
+{
+    if (shortCircuit())
+    {
+        return;   // Only one odds bet? then skip this menu
+    }
+    
+    werase(pWin_);
+    drawBorders();
+    drawStaticContent();
+    populate();
+    CuiUtils::transfer(pWin_);
+}
+
+//----------------------------------------------------------------
+
+bool
+MenuOddsBet::shortCircuit()
+{
+    shouldSkip_ = false;
+    if (menuEntries_.size() == 2)
+    {
+        shouldSkip_ = true;
+        processSelection(menuEntries_[1].betId);
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
 
 void
 MenuOddsBet::drawBorders()
 {
     box(pWin_, 0, 0);
 
-    int height, width;
-    getmaxyx(pWin_, height, width);
-
     // Horizontal separator below the title.
-    mvwhline(pWin_, 2, 1, ACS_HLINE, width - 2);
+    mvwhline(pWin_, 2, 1, ACS_HLINE, winSize_.cols - 2);
     mvwaddch(pWin_, 2, 0, ACS_LTEE);
-    mvwaddch(pWin_, 2, width - 1, ACS_RTEE);
+    mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 }
 
 //----------------------------------------------------------------

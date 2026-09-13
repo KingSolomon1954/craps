@@ -74,7 +74,7 @@ private:
     Craps::PlayerId curPlayerId_;
     Craps::TableId  tableId_;
     std::vector<Craps::PlayerId> playerIds_;
-    OneOrAll currentFocus_ = OneOrAll::AllPlayers;
+    OneOrAll currentFocus_ = OneOrAll::OnePlayer;
 
     WindowPlayerArea();    // Private ctor
     void initPlayers();

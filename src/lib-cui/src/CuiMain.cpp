@@ -178,8 +178,12 @@ CuiMain::ensureMinimumTerminalSize(int minRows, int minCols)
 void
 CuiMain::run()
 {
-    (void) CuiThread::instance();  // Start the CUI thread 
-    SurfaceManager::instance().setSurface(&ScreenCrapsTable::instance());
+    (void) CuiThread::instance();  // Start the CUI thread
+    WorkOrder work = {.type = Type::SetSurface,
+                      .pSurface = &ScreenCrapsTable::instance()};
+    CuiThread::instance().enqueueWork(work);
+
+//    SurfaceManager::instance().setSurface(&ScreenCrapsTable::instance());
 }
 
 //----------------------------------------------------------------

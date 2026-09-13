@@ -18,14 +18,7 @@ using namespace Cui;
 WindowNavBar::WindowNavBar()
     : PanelBase("WindowNavBar")
 {
-    createWindow();
-}
-
-//----------------------------------------------------------------
-
-void
-WindowNavBar::createWindow()
-{
+    // Create ncurses WINDOW. WindowNavBar is a fixed size and location.
     newWindow(Layout::navHeight, Layout::navWidth,          // In base class
               Layout::navTopRow, Layout::navLeftCol);
 }
@@ -57,7 +50,7 @@ WindowNavBar::draw()
 void
 WindowNavBar::drawStaticContent()
 {
-    // TODO
+    // Empty
 }
 
 //----------------------------------------------------------------
@@ -67,14 +60,7 @@ WindowNavBar::drawStaticContent()
 void
 WindowNavBar::populate()
 {
-    mvwprintw(pWin_, 0, 0, "Nav Bar here");
-    // Updates all dynamic fields in this view.
-    // TODO
-    // updatePassLineBets()
-    // updateFieldBets()
-    // updateFieldBets()
-    // updateXxx()
-    // ...
+    mvwprintw(pWin_, 0, 0, textLine_.c_str());
 }
 
 //----------------------------------------------------------------
@@ -84,7 +70,7 @@ WindowNavBar::populate()
 void
 WindowNavBar::configure(const std::string& textLine)
 {
-    // TODO
+    textLine_ = textLine;
 }
 
 //----------------------------------------------------------------

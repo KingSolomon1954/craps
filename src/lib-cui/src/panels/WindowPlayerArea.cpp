@@ -177,7 +177,6 @@ WindowPlayerArea::drawStaticContentOnePlayer()
 void
 WindowPlayerArea::populate()
 {
-    mvwprintw(pWin_, 0, 0, "Player Area View here");
     if (currentFocus_ == OneOrAll::AllPlayers)
     {
         populateAllPlayers();
@@ -195,7 +194,7 @@ WindowPlayerArea::populate()
 void
 WindowPlayerArea::populateAllPlayers()
 {
-    mvwprintw(pWin_, 0, 0, "All Players here");
+    mvwprintw(pWin_, 0, 0, "All Players Area");
     // Updates all dynamic fields in this view.
     // TODO
     // updatePassLineBets()
@@ -212,7 +211,7 @@ WindowPlayerArea::populateAllPlayers()
 void
 WindowPlayerArea::populateOnePlayer()
 {
-    mvwprintw(pWin_, 0, 0, "One Player here");
+    mvwprintw(pWin_, 0, 0, "One Player Area");
     // TODO
     // updatePassLineBets()
     // updateFieldBets()

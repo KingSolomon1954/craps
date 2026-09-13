@@ -12,9 +12,10 @@ add_library(cui STATIC
     src/CuiView.cpp
     src/LocationManager.cpp
     src/SurfaceManager.cpp
-    src/dialogs/DialogConfirm.cpp
 #   src/dialogs/DialogAckError.cpp
 #   src/dialogs/DialogAmountEntry.cpp
+    src/dialogs/DialogConfirm.cpp
+    src/dialogs/DialogMessage.cpp
     src/bases/SurfaceBase.cpp
     src/layouts/LayoutCrapsScreen.cpp
     src/menus/MenuBetting.cpp

@@ -133,21 +133,29 @@ CuiThread::processWorkQueue()
 //----------------------------------------------------------------
 
 void
-CuiThread::processWorkOrder(const WorkOrder& workOrder)
+CuiThread::processWorkOrder(const WorkOrder& wo)
 {
     // TODO
-    switch (workOrder.type)
+    switch (wo.type)
     {
     case (Type::Key):
-        SurfaceManager::instance().handleKey(workOrder.key);
+        SurfaceManager::instance().handleKey(wo.key);
         break;
         
     case (Type::Draw):
         SurfaceManager::instance().draw();
         break;
         
+    case (Type::SetSurface):
+        SurfaceManager::instance().setSurface(wo.pSurface);
+        break;
+        
     case (Type::PopSurface):
         SurfaceManager::instance().popSurface();
+        break;
+        
+    case (Type::PushSurface):
+        SurfaceManager::instance().pushSurface(wo.pSurface);
         break;
     }
 }

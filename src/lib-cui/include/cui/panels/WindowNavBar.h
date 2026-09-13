@@ -24,7 +24,7 @@ public:
     /// @{
     void draw() override;
     bool handleKey(int ch) override;
-    void configure(const std::string& testLine);
+    void configure(const std::string& textLine);
     void clear();
     /// @}
 
@@ -32,6 +32,9 @@ public:
     /// @{
     static WindowNavBar& instance();
     /// @}
+    
+private:
+    std::string textLine_;
     
 private:
     struct Layout
@@ -54,7 +57,6 @@ private:
     };
     
     WindowNavBar();         // private ctor
-    void createWindow();
     void drawStaticContent();
     void populate();
 
