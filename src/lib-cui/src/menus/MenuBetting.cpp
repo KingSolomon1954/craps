@@ -20,7 +20,7 @@ MenuBetting::MenuBetting()
     : MenuBase("MenuBetting")
 {
     LOG_TRACE("Entered MenuBetting::constructor() ");
-    // Create an initial WINDOW at location 0,0. Gets resized later.
+    // Create an initial WINDOW at location 0,0. Gets positioned later.
     newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
     fillWindow();
     LOG_TRACE("Leaving MenuBetting::constructor() ");
@@ -129,8 +129,8 @@ MenuBetting::getLocationRequest() const
 void
 MenuBetting::setLocation(WindowPosition pos)
 {
-    winPos_ = pos;
-    resize(winSize_, winPos_);
+    winPos_ = pos;   // MenuBetting is fixed size
+    repos(winPos_);  // Just need position
 }
 
 //----------------------------------------------------------------
@@ -139,8 +139,7 @@ void
 MenuBetting::draw()
 {
     LOG_TRACE("MenuBetting::draw() ");
-    // Just reuse already filled window over and over
-    CuiUtils::transfer(pWin_);
+    CuiUtils::transfer(pWin_); // Reuse already filled window over and over
 }
 
 //----------------------------------------------------------------

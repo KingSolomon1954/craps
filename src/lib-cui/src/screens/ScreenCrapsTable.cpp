@@ -8,9 +8,10 @@
 #include <cui/SurfaceManager.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/menus/MenuBetting.h>
+#include <cui/menus/MenuNavBarViews.h>
 // #include <cui/panels/WindowTitleBar.h>
 // #include <cui/panels/WindowRollHistory.h>
-// #include <cui/panels/WindowWindowPlayerArea.h>
+#include <cui/panels/WindowPlayerArea.h>
 // #include <cui/panels/WindowMessages.h>
 // #include <cui/panels/WindowAnimation.h>
 // #include <cui/panels/WindowHouseBrief.h>
@@ -60,7 +61,7 @@ ScreenCrapsTable::draw()  // Override
 
 //     WindowTitleBar::instance().draw();
 //     WindowRollHistory::instance().draw();
-//     WindowPlayerArea::instance().draw();
+       WindowPlayerArea::instance().draw();
 //     WindowMessages::instance().draw();
 //     WindowAnimation::instance().draw();
 //     WindowHouseBrief::instance().draw();
@@ -147,6 +148,9 @@ ScreenCrapsTable::handleKey(int ch)
     case 'B':
         showBettingMenu();
         return true;
+    case 'V':
+        showNavBarViewsMenu();
+        return true;
 
     default:
         if (MenuBetting::instance().handleKey(ch))
@@ -169,6 +173,19 @@ ScreenCrapsTable::showBettingMenu()
     }
     
     SurfaceManager::instance().pushSurface(&MenuBetting::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+ScreenCrapsTable::showNavBarViewsMenu()
+{
+    if (SurfaceManager::instance().isActiveSurface(&MenuNavBarViews::instance()))
+    {
+        return; // Already visible
+    }
+    
+    SurfaceManager::instance().pushSurface(&MenuNavBarViews::instance());
 }
 
 //----------------------------------------------------------------

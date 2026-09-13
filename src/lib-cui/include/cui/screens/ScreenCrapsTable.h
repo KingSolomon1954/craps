@@ -37,6 +37,7 @@ private:
     ScreenCrapsTable();  // private ctor
     void drawNavBar();
     void showBettingMenu();
+    void showNavBarViewsMenu();
 };
 
 /*-----------------------------------------------------------*//**

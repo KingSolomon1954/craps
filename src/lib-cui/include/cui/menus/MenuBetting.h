@@ -22,9 +22,9 @@ public:
 
     /// @name Modifiers
     /// @{
-    void draw()            override;
-    bool handleKey(int ch) override;
-    void setLocation(WindowPosition pos)       override;
+    void draw()                          override;
+    bool handleKey(int ch)               override;
+    void setLocation(WindowPosition pos) override;
     /// @}
 
     /// @name Observers

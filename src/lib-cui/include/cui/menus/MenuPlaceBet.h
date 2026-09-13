@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cui/bases/MenuBase.h>
+#include <cui/CuiStructs.h>
 
 namespace Cui {
 
@@ -20,28 +21,23 @@ public:
 
     /// @name Modifiers
     /// @{
-    void draw()             override;
-    bool handleKey(int ch)  override;
+    void draw()                          override;
+    bool handleKey(int ch)               override;
+    void setLocation(WindowPosition pos) override;
     /// @}
 
     /// @name Observers
     /// @{
     static MenuPlaceBet& instance();
+    LocationRequest getLocationRequest() const override;
     /// @}
     
 private:
-    struct Layout
-    {
-        static constexpr int height = 11;
-        static constexpr int width  = 22;
+    WindowPosition  winPos_;
+    WindowSize      winSize_ = {11, 22};  // rows, cols
 
-        // TODO - get these from geometry manager
-        static constexpr int winStartX = 10;        
-        static constexpr int winStartY = 40;
-    };
-
+private:
     MenuPlaceBet();  // Private ctor
-    void createWindow();
     void fillWindow();
     void processSelection(int num);
     void populateCarrier (int pivot);

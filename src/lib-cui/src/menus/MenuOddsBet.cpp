@@ -310,7 +310,8 @@ void
 MenuOddsBet::setLocation(WindowPosition pos)
 {
     winPos_ = pos;
-    resize(winSize_, winPos_);
+    resize(winSize_);  // Dynamic menu needs resizing
+    repos(winPos_);    // and repositioning
 }
 
 //----------------------------------------------------------------

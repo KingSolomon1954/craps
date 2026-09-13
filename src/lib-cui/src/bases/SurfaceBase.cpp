@@ -119,7 +119,7 @@ SurfaceBase::newWindow(int rows, int cols,
 //----------------------------------------------------------------
 
 void
-SurfaceBase::resize(const WindowSize& size, const WindowPosition& pos)
+SurfaceBase::resize(const WindowSize& size)
 {
     if (pWin_ == nullptr)
     {
@@ -131,7 +131,22 @@ SurfaceBase::resize(const WindowSize& size, const WindowPosition& pos)
     assert(size.rows > 0 && size.cols > 0);
     
     wresize(pWin_, size.rows, size.cols);
-    mvwin  (pWin_, pos.row, pos.col);
+}
+
+//----------------------------------------------------------------
+
+void
+SurfaceBase::repos(const WindowPosition& pos)
+{
+    if (pWin_ == nullptr)
+    {
+        assert(pWin_ != nullptr);
+        std::string s = "SurfaceBase::repos(): null pWin_. Unable to "
+                        "position WINDOW for: " + surfaceName_;
+        throw std::runtime_error(s);
+    }
+    // TODO maybe add assert that size is not bigger than full screen
+    mvwin(pWin_, pos.row, pos.col);
 }
 
 //----------------------------------------------------------------

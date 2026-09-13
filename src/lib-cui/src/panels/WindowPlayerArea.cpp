@@ -158,6 +158,7 @@ void
 WindowPlayerArea::drawStaticContentAllPlayers()
 {
     // TODO
+    mvwprintw(pWin_, 0, 0, "All Plavers View");
 }
 
 //----------------------------------------------------------------
@@ -166,6 +167,7 @@ void
 WindowPlayerArea::drawStaticContentOnePlayer()
 {
     // TODO
+    mvwprintw(pWin_, 0, 0, "One Plaver View");
 }
 
 //----------------------------------------------------------------

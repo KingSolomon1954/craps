@@ -18,7 +18,8 @@ using namespace Cui;
 MenuPlaceBet::MenuPlaceBet()
     : MenuBase("MenuPlaceBet")
 {
-    createWindow();
+    // Create an initial WINDOW at location 0,0. Gets positioned later.
+    newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
     fillWindow();
 }
 
@@ -29,16 +30,6 @@ MenuPlaceBet::instance()
 {
     static MenuPlaceBet menu;
     return menu;
-}
-
-//----------------------------------------------------------------
-
-void
-MenuPlaceBet::createWindow()
-{
-    using L = Layout;
-    newWindow(L::height,    L::width,
-              L::winStartY, L::winStartX);
 }
 
 //----------------------------------------------------------------
@@ -64,14 +55,12 @@ MenuPlaceBet::createWindow()
 void
 MenuPlaceBet::fillWindow()
 {
-    using L = Layout;
-    
     box(pWin_, 0, 0);
 
     // Horizontal separator below the title
-    mvwhline(pWin_, 2, 1, ACS_HLINE, L::width - 2);
+    mvwhline(pWin_, 2, 1, ACS_HLINE, winSize_.cols - 2);
     mvwaddch(pWin_, 2, 0, ACS_LTEE);
-    mvwaddch(pWin_, 2, L::width - 1, ACS_RTEE);
+    mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 
     mvwaddstr(pWin_, 1, 2, "Place Which Number");
 
@@ -82,6 +71,39 @@ MenuPlaceBet::fillWindow()
     mvwaddstr(pWin_, 7, 2, "[9] Place 9");
     mvwaddstr(pWin_, 8, 2, "[0] Place 10");
     mvwaddstr(pWin_, 9, 2, "[esc] Back");
+}
+
+//----------------------------------------------------------------
+//
+// SurfaceManager wants our window size and more.
+// This occurs in context of SurfaceManager::pushSurface()
+// SurfaceManager informs us shortly of our screen position.
+// See setLocation() below. 
+//
+LocationRequest
+MenuPlaceBet::getLocationRequest() const
+{
+    LocationRequest req;
+    req.kind      = LocationKind::Menu;
+    req.size.rows = winSize_.rows;
+    req.size.cols = winSize_.cols;
+    req.direction = Direction::Right;
+    return req;
+}
+
+//----------------------------------------------------------------
+//
+// SurfaceManager tells us our location.
+// This occurs in context of SurfaceManager::pushSurface().
+// We now have enough information to create/resize our
+// ncurses WINDOW. Following this, SurfaceManager will
+// call draw() on us.
+//
+void
+MenuPlaceBet::setLocation(WindowPosition pos)
+{
+    winPos_ = pos;   // MenuPlaceBet is fixed size, no resizing needed
+    repos(winPos_);  // Just need to re-position it
 }
 
 //----------------------------------------------------------------
