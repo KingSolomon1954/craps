@@ -1,3 +1,99 @@
+Introducing an OperationManager has forced me to now consider the Event
+model for the entire application, something I was planning on anyway.
+Here are my current thoughts to redesign and simplify it. I'm far less
+concerned about maintaining strict separation of MVC as weighted against
+comprehension and simplification.
+
+Will wind up with a single EventManager for the entire application.
+lib-craps, lib-controller, lib-cui and later lib-gui will all use the
+one Controller::EventManager (publishing and subscribing; asynchrounous,
+threaded) along with Controller::GameEvents.h which defines all events.
+
+Cui::CuiView : from controller/model -> CUI
+    * listens for GameEvents (src = model & controller)
+    * subscribes to Controller EventManager
+    * Turns GameEvents into local work orders, enqueues to CuiThread
+    * ViewInterface (virtual functional API) is eliminated
+
+Cui::CuiSend : from CUI -> controller   (a new class)
+    * publishes events to Controller EventManager (src = view)
+    * Cui::OperationManager calls CuiSend as needed to form/send 
+      events, e.g. reqMakeBet, reqRollDice, reqRemoveBet, ...
+
+Cui::Surfaces :
+    * at times directly calls already existing Controller::CrapsReaders
+      as needed to obtain read-only info to build dynamic menus and
+      populate windows.
+
+Events :
+    * GameEvents.h defines all events (model, controller, view)
+    * Events contain a src field (Model, View, Controller)
+    * Events contain a unique ID as well as a correlation ID
+    * Event name prefixes:
+        * "req" - View requesting action   (e.g. reqMakeBet)
+        * "rsp" - Responses from a request (e.g. rspMakeBet)
+        * "usl" or "evt" - Unsolicited event, something happened
+           (e.g. uslCountDownRollDice or evtCountDownRollDice)
+    
+Ctrl::EventHandler : (new class in lib-controller)
+    * listens for events (src = model, view, controller)
+    * Acts on Events (src = view) e.g. reqMakeBet
+        * calls model functions inline
+        * turns function responses into Events (src = controller)
+        * publishes response event to EventManager e.g. rspBetRejected
+    * Acts on Events (src = model)
+        * these are model events the controller itself is interested in
+        * controller acts on event as necessary e.g.
+          uslHouseLowOnFunds - refill house bank
+    * All events coming from the model are unsolicited
+    * No conversion of model source events into analogous View events
+      because all model events (src = model) are seen by CuiView
+
+With this redesign, I think I can eliminate ViewInterace.h altogether.
+The View interface switches to be an event driven interface, not a
+functional interface. If the CUI is inited, then it registers for
+events. If the GUI is inited, then it registers for events. Both
+CUI and GUI send events and sometimes calls CrapsReaders.
+
+So the following current files disappear. 
+
+Deleting Ctrl::ViewInterface.h
+Deleting Ctrl::ViewCommands.h        
+Deleting Ctrl::ViewEventHandlers.h
+Deleting Ctrl::CrapsCommands.h
+Deleting Ctrl::CrapsEventHandlers.h
+Deleting Craps::EventManager
+Deleting Craps::Events.h
+
+Will keep: CrapsReaders[.h,.cpp]
+
+lib-controller include files simplifies to:
+
+AutoFill.h
+ConfigCommandLine.h
+ConfigDefaults.h
+ConfigEnv.h
+ConfigFiles.h
+ConfigManager.h
+CrapReaders.h
+Doxygen.h
+EventHandler.h
+EventManager.h
+GameController.h
+GameEvents.h
+GameMain.h
+Globals.h
+PlayerManager.h
+PlayerManifest.h
+Properties.h
+QuickBet.h
+SessionSummary.h
+TableDescription.h
+TableManager.h
+TableManifest.h
+UndoBet.h
+UndoManager.h
+
 
 Write script to copy files/assets to install locations
 Design EventQueue and Events

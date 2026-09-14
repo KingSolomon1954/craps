@@ -14,7 +14,7 @@ Workflow Overview
                                ▼
                    ┌───────────────────────┐
                    │     Cui::CuiView      │ Implements ViewInterface
-                   │                       │
+                   │                       │   ()
                    └───────────┬───────────┘
                                │
                                │ UI work (enqueue work orders)
@@ -81,7 +81,7 @@ CUI Classes
 
 Cui::CuiMain - owns startup/shutdown orchestration
 Cui::CuiView - adapter between the controller event world and the CUI work queue
-Cui::CuiThread - owns a work queue loop, sequentialized access to ncurses
+Cui::CuiThread - sequentializes access to ncurses, owns a work queue loop
 Cui::CuiUtils - convenient helpers
 Cui::SurfaceManager - owns surfaces, implements stack pushing/popping
 Cui::SurfaceBase - top most abstraction for all window classes
@@ -91,10 +91,23 @@ Cui::PanelBase - base class for rectangular windows that form a full screen
 Cui::DialogBase - base class for dialog surfaces
 Cui::CarrierBet - a struct menus use to pass around bet info
 
-                         Ctrl::ViewInterface
-                                ▲
+                            GameEvents
                                 │
-                         SurfaceManager (manages stack of Surfaces)
+                          EventManager
+                            ▲       │
+                            │       ▼
+              ┌────────> CuiSend  CuiView
+              │             ▲       │
+              │             │       ▼
+              │              \     /
+              │ Events        \   /    Events into 
+              │                 Y      Work Orders
+              │                 │
+              │             CuiThread
+              │                 ▲
+              │                 │
+              │                 ▼
+     OperationManager <-- SurfaceManager (manages stack of Surfaces)
                                 │
                                 │ Works with SurfaceBase
                                 │
