@@ -6,6 +6,7 @@
 
 #include <cui/panels/WindowNavBar.h>
 #include <cui/CuiUtils.h>
+#include <cui/dialogs/DialogConfirm.h>
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/SurfaceManager.h>
 #include <gen/Logger.h>
@@ -70,15 +71,29 @@ WindowNavBar::populate()
 void
 WindowNavBar::configure(const std::string& textLine)
 {
+    werase(pWin_);
     textLine_ = textLine;
 }
 
 //----------------------------------------------------------------
 
 void
-WindowNavBar::clear()
+WindowNavBar::onResume()
 {
-    werase(pWin_);
+    LOG_TRACE("WindowNavBar::onResume()");
+    if (pendingQuit_)
+    {
+        pendingQuit_ = false;
+        if (getOperationResult() == OperationResult::Yes)
+        {
+            LOG_TRACE("WindowNavBar::onResume(): trigger shutdown");
+        }
+        else
+        {
+            LOG_TRACE("WindowNavBar::onResume(): cancel shutdown");
+            assert(getOperationResult() == OperationResult::No);
+        }
+    }
 }
 
 //----------------------------------------------------------------
@@ -147,7 +162,10 @@ WindowNavBar::doHelp()
 void
 WindowNavBar::doQuit()
 {
-    // TODO
+    LOG_TRACE("WindowNavBar::doQuit()");
+    pendingQuit_ = true;
+    DialogConfirm::instance().configure("Are you sure you want to Quit?");
+    SurfaceManager::instance().pushSurface(&DialogConfirm::instance());
 }
 
 //----------------------------------------------------------------

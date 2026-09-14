@@ -84,6 +84,14 @@ SurfaceBase::setOperationResult(OperationResult r)
 }
 
 //----------------------------------------------------------------
+
+SurfaceBase::OperationResult
+SurfaceBase::getOperationResult()
+{
+    return operationResult_;
+}
+
+//----------------------------------------------------------------
 //
 // Return true if this surface should be skipped when unwinding
 // the stack. Some surfaces in the call chain should not regain

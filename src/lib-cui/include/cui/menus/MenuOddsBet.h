@@ -21,7 +21,6 @@ class MenuOddsBet : public MenuBase
 public:
     /// @name Lifecycle
     /// @{
-    MenuOddsBet();
    ~MenuOddsBet() = default;
     /// @}
 

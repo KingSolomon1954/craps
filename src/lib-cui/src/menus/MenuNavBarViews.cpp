@@ -43,9 +43,9 @@ MenuNavBarViews::instance()
 // 0  ┌───────────────────────┐
 // 1  │ View Menu             │
 // 2  ├───────────────────────┤
-// 3  │ [A] All Players       │
-// 4  │ [N] One Player (next) │
-// 5  │ [P] One Player (prev) │
+// 3  │ [a] All Players       │
+// 4  │ [n] One Player (next) │
+// 5  │ [p] One Player (prev) │
 // 6  │ [. or esc] Back       │
 // 7  └───────────────────────┘
 //
@@ -63,9 +63,9 @@ MenuNavBarViews::fillWindow()
     // Static contents. The border occupies row 0/10 and column 0/21.
     mvwaddstr(pWin_, 1, 2, "View Menu");
 
-    mvwaddstr(pWin_, 3, 2, "[A] All Players");
-    mvwaddstr(pWin_, 4, 2, "[N] One Player (next)");
-    mvwaddstr(pWin_, 5, 2, "[P] One PLayer (prev)");
+    mvwaddstr(pWin_, 3, 2, "[a] All Players");
+    mvwaddstr(pWin_, 4, 2, "[n] One Player (next)");
+    mvwaddstr(pWin_, 5, 2, "[p] One PLayer (prev)");
     mvwaddstr(pWin_, 6, 2, "[. or esc] Back");
 }
 
@@ -121,9 +121,9 @@ MenuNavBarViews::handleKey(int ch)
     bool handled = true;
     switch(ch)
     {
-    case 'A': allPlayers();    break;
-    case 'N': nextPlayer();    break;
-    case 'P': prevPlayer();    break;
+    case 'a': allPlayers();    break;
+    case 'n': nextPlayer();    break;
+    case 'p': prevPlayer();    break;
     case '.':
     case 27 : back();          break;
     default : handled = false; break;

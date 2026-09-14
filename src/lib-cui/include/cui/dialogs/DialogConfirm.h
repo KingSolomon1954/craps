@@ -16,22 +16,34 @@ namespace Cui {
 class DialogConfirm : public DialogBase
 {
 public:
+    /// @name Lifecycle
+    /// @{
     static DialogConfirm& instance();
-
     DialogConfirm(const DialogConfirm&)            = delete;
     DialogConfirm& operator=(const DialogConfirm&) = delete;
     DialogConfirm(DialogConfirm&&)                 = delete;
     DialogConfirm& operator=(DialogConfirm&&)      = delete;
+    /// @}
 
-    void draw() override;
-    bool handleKey(int ch) override;
-    void onAttach(SurfaceBase* pParent) override;
-
+    /// @name Modifiers
+    /// @{
+    void draw()                          override;
+    bool handleKey(int ch)               override;
+    void onAttach(SurfaceBase* pParent)  override;
+    void onDetach()                      override;
+    void setLocation(WindowPosition pos) override;
     void configure(const std::string& message);
+    /// @}
+    
+    /// @name Observers
+    /// @{
+    LocationRequest getLocationRequest() const override;
+    /// @}
     
 private:
     DialogConfirm();
 
+    void calcSize();
     void resizeWindow();
     void drawBorders();
     void drawStaticContent();
@@ -39,9 +51,10 @@ private:
     void processSelection(OperationResult r);
 
 private:
-    std::string text_;    // title bar message
-    int winBorderTopCol_ = 20;  // TODO from CUI window placement mgr
-    int winBorderTopRow_ = 10;  // TODO from CUI window placement mgr
+    WindowPosition  winPos_;
+    WindowSize      winSize_ = {5, 50};  // Arbitrary for initializaiton
+    bool            configured_ = false;
+    std::string     text_;               // title bar message
 };
 
 /*-----------------------------------------------------------*//**

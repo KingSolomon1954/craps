@@ -77,7 +77,6 @@ private:
     void populate();
 
     // Processing hotKeys
-    void processSelection();
     void back();
     
 private:
@@ -98,14 +97,15 @@ private:
 
 @class DialogMessage
 
-@brief Dialog box showing a message. User must acknowledge.
+@brief Present a message that the user must acknowledge.
 
-The dialog accepts:
+This is used to display errors, warnings, and important info, typically
+the result of improper user interactions, but also programming
+errors. For example entering an incorrect odds bet amount, or making an
+odds bet during a comeout roll.
 
-@li [. or esc or enter]
-
-The dialog is configured with a caller-supplied message,
-consisting of three fields:
+The class offers a configure() function to set up
+a caller-supplied message, consisting of three fields:
 
 @code
 
@@ -115,9 +115,9 @@ DialogMessage::instance().configure(
     "The bet amount is not valid.");  // description
 @endcode
 
-The result is available through getResult() and is always
-set to "acknowledged" which is propagated up the chain of
-surfaces.
+When the message is acknowledged by the user, the result is propagated
+and available from SurfaceBase::getOperationResult() and has the value
+of "Acknowledged".
 
 */
 

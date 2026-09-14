@@ -7,7 +7,7 @@
 #include <cui/dialogs/DialogConfirm.h>
 #include <cui/SurfaceManager.h>
 #include <cui/CuiUtils.h>
-#include <algorithm>
+#include <cassert>
 
 using namespace Cui;
 
@@ -16,7 +16,8 @@ using namespace Cui;
 DialogConfirm::DialogConfirm()
     : DialogBase("DialogConfirm")
 {
-    // No createWindow() here, uses dynamic WINDOW*
+    // Create an initial WINDOW at location 0,0. Gets resized later.
+    newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
 }
 
 //----------------------------------------------------------------
@@ -34,29 +35,7 @@ void
 DialogConfirm::configure(const std::string& textLine)
 {
     text_ = textLine;
-}
-
-//----------------------------------------------------------------
-
-void
-DialogConfirm::resizeWindow()
-{
-    constexpr int borderCols = 2; // 2 vertical borders
-    constexpr int blankCols  = 2; // 2 empty columns adjacent to borders
-
-    int width = std::max<std::size_t>(text_.length(), 15);
-    width += blankCols + borderCols;
-    int height = 7;
-
-    if (pWin_ == nullptr)
-    {
-        newWindow(height, width, winBorderTopCol_, winBorderTopRow_);
-    }
-    else
-    {
-        wresize(pWin_, height, width);
-        mvwin(pWin_, winBorderTopCol_, winBorderTopRow_);
-    }
+    configured_ = true;
 }
 
 //----------------------------------------------------------------
@@ -64,12 +43,73 @@ DialogConfirm::resizeWindow()
 void
 DialogConfirm::onAttach(SurfaceBase* pParent)
 {
-    DialogBase::onAttach(pParent);
+    assert(configured_);  // Must first call configure() 
+
+    SurfaceBase::onAttach(pParent);
     setOperationResult(OperationResult::Unset);
+    calcSize();           // Determine our height/width
+                          // winSize_ is now populated
+    // Next, surface manager will ask for our locationRequest
+}
+
+//----------------------------------------------------------------
+
+void
+DialogConfirm::onDetach()
+{
+    SurfaceBase::onDetach();
+    configured_ = false;          // Detect fresh configuration
+}
+
+//----------------------------------------------------------------
+
+void
+DialogConfirm::calcSize()
+{
+    constexpr int titleRows  = 3; // Top border + title area
+    constexpr int promptRows = 4; // Bottom border + prompt area
+    constexpr int borderCols = 2; // 2 vertical borders
+    constexpr int blankCols  = 2; // 2 empty columns adjacent to borders
+    
+    winSize_.cols = text_.length() + blankCols + borderCols;
+    winSize_.rows = titleRows + promptRows;
 }
 
 //----------------------------------------------------------------
 //
+// SurfaceManager wants our window size and more.
+// This occurs in context of SurfaceManager::pushSurface()
+// SurfaceManager informs us shortly of our screen position.
+// See setLocation() below. 
+//
+LocationRequest
+DialogConfirm::getLocationRequest() const
+{
+    LocationRequest req;
+    req.kind      = LocationKind::Dialog;
+    req.size.rows = winSize_.rows;
+    req.size.cols = winSize_.cols;
+    req.direction = Direction::Right;
+    return req;
+}
+
+//----------------------------------------------------------------
+//
+// SurfaceManager tells us our location.
+// This occurs in context of SurfaceManager::pushSurface().
+// We now have enough information to create/resize our
+// ncurses WINDOW. Following this, SurfaceManager will
+// call draw() on us.
+//
+void
+DialogConfirm::setLocation(WindowPosition pos)
+{
+    winPos_ = pos;
+    resize(winSize_);  // Dynamic menu needs resizing
+    repos(winPos_);    // and repositioning
+}
+
+//----------------------------------------------------------------
 //
 // 0   ┌──────────────────────────┐
 // 1   │ Confirm Quit RoyalCraps  │
@@ -82,7 +122,6 @@ DialogConfirm::onAttach(SurfaceBase* pParent)
 void
 DialogConfirm::draw()
 {
-    resizeWindow();
     werase(pWin_);
 
     drawBorders();
@@ -97,14 +136,11 @@ void
 DialogConfirm::drawBorders()
 {
     box(pWin_, 0, 0);
-    
-    int height, width;
-    getmaxyx(pWin_, height, width);
 
     // Horizontal separator below the title.
-    mvwhline(pWin_, 2, 1, ACS_HLINE, width - 2);
+    mvwhline(pWin_, 2, 1, ACS_HLINE, winSize_.cols - 2);
     mvwaddch(pWin_, 2, 0, ACS_LTEE);
-    mvwaddch(pWin_, 2, width - 1, ACS_RTEE);
+    mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 }
 
 //----------------------------------------------------------------

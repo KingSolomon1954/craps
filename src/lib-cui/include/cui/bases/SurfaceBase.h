@@ -38,6 +38,7 @@ public:
     virtual void onPause();
     virtual void onResume();
     virtual void setOperationResult(OperationResult r);
+    virtual OperationResult getOperationResult();
     virtual bool shouldSkip() const;
     virtual void releaseNcursesResources();
     virtual void resize(const WindowSize& size);

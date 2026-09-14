@@ -76,7 +76,6 @@ ScreenCrapsTable::drawNavBar()
 {
     auto nav = WindowNavBar::instance();
     
-    nav.clear();
     nav.configure(
 //  0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 
     " [C] Control   [B] BETTING   [V] View   [S] Stats                   |         [H] Help   [Q] Quit");

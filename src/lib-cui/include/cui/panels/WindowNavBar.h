@@ -22,10 +22,10 @@ public:
 
     /// @name Modifiers
     /// @{
-    void draw() override;
+    void draw()            override;
     bool handleKey(int ch) override;
+    void onResume()        override;
     void configure(const std::string& textLine);
-    void clear();
     /// @}
 
     /// @name Observers
@@ -35,6 +35,7 @@ public:
     
 private:
     std::string textLine_;
+    bool pendingQuit_ = false;
     
 private:
     struct Layout

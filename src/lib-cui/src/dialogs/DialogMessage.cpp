@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/dialogs/DialogMessage.h>
+#include <cui/layouts/LayoutConsole.h>
 #include <cui/SurfaceManager.h>
 #include <cui/CuiUtils.h>
 #include <cassert>
@@ -29,8 +30,30 @@ DialogMessage::instance()
     return dialog;
 }
 
-//----------------------------------------------------------------
-//
+/*-----------------------------------------------------------*//**
+
+Caller provides what is to be displayed.
+
+The formatting of the title area is:
+
+    Severity introducer + ": " + brief
+
+@oi Introducer is determined by the MessageType::type field.
+@oi Uses precanned introducers for Info, Warning, and Error.
+@oi Uses custom introducer if MessageType::type == Custom.
+@oi No introducer at all if MessageType::type == None (just brief shows)
+
+The formatting of the detail field adheres to these rules:
+
+@li \n = explicit paragraph/line break.
+@li \r\n = Windows newline; normalize it.
+@li \r by itself = newline.
+@li Multiple consecutive newlines are preserved as blank lines.
+@li Normal whitespace separates words.
+@li Lines are word-wrapped to a maximum width.
+@li A word longer than the available width is hard-wrapped rather than overflowing the window.
+@li Leading/trailing whitespace is discarded from each resulting display line.
+*/
 void
 DialogMessage::configure(const MessageText& msg)
 {
@@ -83,10 +106,6 @@ DialogMessage::formatTitle()
     {
         msgFmtd_.title = "Warning: " + msg_.brief;
     }
-    if (msg_.type == MessageType::Warning)
-    {
-        msgFmtd_.title = "Warning: " + msg_.brief;
-    }
     if (msg_.type == MessageType::Error)
     {
         msgFmtd_.title = "Error: " + msg_.brief;
@@ -98,14 +117,130 @@ DialogMessage::formatTitle()
 void
 DialogMessage::formatDetail()
 {
-    // TODO
-    // Format a possibly large msg_.detail string into an array of 
-    // strings. Each string is one line in a paragraph that is 
-    // sized appropriately for the overall size of the detail and 
-    // the width of the game screen.
-    msgFmtd_.detail.clear();
+    constexpr int preferredWidth = 76;
+    constexpr int screenMargin   = 4;
 
-    // TODO
+    msgFmtd_.detail.clear();
+    if (msg_.detail.empty()) return;
+
+    // Determine the maximum useful line width.
+    const int maxWidth = std::max(1, LayoutConsole::minCols - screenMargin);
+    const int width    = std::min(preferredWidth, maxWidth);
+    
+    // Normalize CRLF/CR into '\n'.  A newline is treated as an
+    // explicit line/paragraph break.
+    std::string text;
+    text.reserve(msg_.detail.size());
+
+    for (size_t i = 0; i < msg_.detail.size(); ++i)
+    {
+        if (msg_.detail[i] == '\r')
+        {
+            if (i + 1 < msg_.detail.size() &&
+                msg_.detail[i + 1] == '\n')
+            {
+                ++i;
+            }
+
+            text += '\n';
+        }
+        else
+        {
+            text += msg_.detail[i];
+        }
+    }
+
+    // Process one explicit line at a time.  This preserves blank
+    // lines supplied by the caller.
+    size_t start = 0;
+
+    while (start <= text.size())
+    {
+        const size_t end = text.find('\n', start);
+        const size_t len = (end == std::string::npos)
+                         ? text.size() - start
+                         : end - start;
+
+        std::string line = text.substr(start, len);
+
+        // Strip leading/trailing whitespace from the supplied line.
+        const auto first = line.find_first_not_of(" \t");
+        const auto last  = line.find_last_not_of(" \t");
+
+        if (first == std::string::npos)
+        {
+            // Explicit blank line.
+            msgFmtd_.detail.emplace_back();
+        }
+        else
+        {
+            line = line.substr(first, last - first + 1);
+
+            size_t pos = 0;
+
+            while (pos < line.size())
+            {
+                // Skip whitespace before the next word.
+                while (pos < line.size() &&
+                       (line[pos] == ' ' || line[pos] == '\t'))
+                {
+                    ++pos;
+                }
+
+                if (pos >= line.size())
+                    break;
+
+                const size_t remaining = line.size() - pos;
+
+                // If the remaining text fits, we're done with this
+                // explicit input line.
+                if (remaining <= static_cast<size_t>(width))
+                {
+                    msgFmtd_.detail.push_back(line.substr(pos));
+                    break;
+                }
+
+                // Find the last whitespace that fits in the line.
+                size_t breakPos = pos + width;
+
+                while (breakPos > pos &&
+                       line[breakPos] != ' ' &&
+                       line[breakPos] != '\t')
+                {
+                    --breakPos;
+                }
+
+                if (breakPos == pos)
+                {
+                    // A single word is longer than the display width.
+                    // Hard-wrap it rather than allowing it to overflow.
+                    msgFmtd_.detail.push_back(
+                        line.substr(pos, width));
+
+                    pos += width;
+                }
+                else
+                {
+                    msgFmtd_.detail.push_back(
+                        line.substr(pos, breakPos - pos));
+
+                    pos = breakPos;
+
+                    // Skip whitespace at the wrap point.
+                    while (pos < line.size() &&
+                           (line[pos] == ' ' || line[pos] == '\t'))
+                    {
+                        ++pos;
+                    }
+                }
+            }
+        }
+
+        if (end == std::string::npos)
+            break;
+
+        start = end + 1;
+    }
 }
 
 //----------------------------------------------------------------
@@ -135,7 +270,8 @@ DialogMessage::onAttach(SurfaceBase* pParent)
 void
 DialogMessage::onDetach()
 {
-    msg_.type = MessageType::Unset;  // Compell fresh configuration
+    SurfaceBase::onDetach();
+    msg_.type = MessageType::Unset;  // Detect fresh configuration later
 }
 
 //----------------------------------------------------------------
@@ -154,7 +290,8 @@ DialogMessage::calcSize()
         cols = std::max(cols, static_cast<int>(e.length()));
     }
     winSize_.cols = cols + blankCols + borderCols;
-    winSize_.rows = msgFmtd_.detail.size() + titleRows + promptRows;
+    winSize_.rows =
+        static_cast<int>(msgFmtd_.detail.size()) + titleRows + promptRows;
 }
 
 //----------------------------------------------------------------
@@ -237,6 +374,7 @@ DialogMessage::drawBorders()
 void
 DialogMessage::drawStaticContent()
 {
+    mvwprintw(pWin_, 1, 2, "%s", msgFmtd_.title.c_str());
     mvwprintw(pWin_, winSize_.rows - 2, 2, msgFmtd_.prompt.c_str());
 }
 
@@ -261,20 +399,15 @@ DialogMessage::handleKey(int ch)
     {
     case 10 :  // enter key
     case 27 :  // escape key
-    case '.':
-        processSelection();
-        return true;
-        break;
-        
-    default:
-        return false;
+    case '.': back(); return true; break;
+    default : return false;
     }
 }
 
 //----------------------------------------------------------------
 
 void
-DialogMessage::processSelection()
+DialogMessage::back()
 {
     setOperationResult(OperationResult::Acknowledged);
     SurfaceManager::instance().popSurface();
