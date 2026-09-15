@@ -182,8 +182,6 @@ CuiMain::run()
     WorkOrder work = {.type = Type::SetSurface,
                       .pSurface = &ScreenCrapsTable::instance()};
     CuiThread::instance().enqueueWork(work);
-
-//    SurfaceManager::instance().setSurface(&ScreenCrapsTable::instance());
 }
 
 //----------------------------------------------------------------
@@ -194,16 +192,6 @@ CuiMain::shutdown()
     SurfaceManager::instance().shutdown();
     CuiThread::instance().shutdown();
     endwin();
-}
-
-//----------------------------------------------------------------
-//
-// Called by Ctrl::GameMain 
-//
-CuiView&
-CuiMain::getView()
-{
-    return CuiView::instance();
 }
 
 //----------------------------------------------------------------

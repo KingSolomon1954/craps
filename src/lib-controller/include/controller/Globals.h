@@ -8,7 +8,7 @@
 
 #include <string>
 
-// Note: Globals in unameed namespace
+// Note: Globals in unamed namespace
 
 namespace Gen {
     class BuildInfo;       // fwd    
@@ -16,31 +16,26 @@ namespace Gen {
 
 namespace Craps {
     class CrapsTable;      // fwd    
-    class EventManager;    // fwd    
 }
 
 namespace Ctrl {
     class ConfigManager;   // fwd    
-    class EventManager;    // fwd
-    class GameController;  // fwd
+    class EventHandler;    // fwd    
     class PlayerManager;   // fwd
     class TableManager;    // fwd
-    class ViewInterface;   // fwd
     class UndoManager;     // fwd
 }
 
 class Gbl
 {
 public:
-    static Gen::BuildInfo*       pBuildInfo;
-    static Ctrl::ConfigManager*  pConfigMgr;
-    static Craps::CrapsTable*    pTable;
-    static Craps::EventManager*  pEventMgr;
-    static Ctrl::GameController* pGameCtrl;
-    static Ctrl::PlayerManager*  pPlayerMgr;
-    static Ctrl::TableManager*   pTableMgr;
-    static Ctrl::ViewInterface*  pView;
-    static Ctrl::UndoManager*    pUndoMgr;
+    static Gen::BuildInfo*      pBuildInfo;
+    static Ctrl::ConfigManager* pConfigMgr;
+    static Ctrl::EventHandler*  pEventHandler;
+    static Craps::CrapsTable*   pTable;
+    static Ctrl::PlayerManager* pPlayerMgr;
+    static Ctrl::TableManager*  pTableMgr;
+    static Ctrl::UndoManager*   pUndoMgr;
 
     static const std::string appNameScreen;
     static const std::string appNameExec;

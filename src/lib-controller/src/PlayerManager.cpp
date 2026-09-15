@@ -82,7 +82,7 @@ PlayerManager::loadPlayer(const std::string& fileName)
 
     Craps::PlayerConfig config;
     config.playerPath = PlayerManager::formPlayerPath(fileName);
-    return Craps::Player::fromFile(playerId, config, *Gbl::pEventMgr);
+    return Craps::Player::fromFile(playerId, config);
 }
 
 //----------------------------------------------------------------

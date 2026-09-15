@@ -15,23 +15,18 @@ add_library(controller STATIC
     src/ConfigDefaults.cpp
     src/ConfigEnv.cpp
     src/ConfigFiles.cpp
-    src/CrapsCommands.cpp
-    src/CrapsEventHandlers.cpp
     src/CrapsReaders.cpp
-    src/EventLoop.cpp
-    src/GameController.cpp
+    src/EventHandler.cpp
     src/GameMain.cpp
     src/Globals.cpp
     src/PlayerManager.cpp
     src/PlayerManifest.cpp
     src/Properties.cpp
-    src/QuickBet.cpp
+#   src/QuickBet.cpp
     src/TableManager.cpp
     src/TableManifest.cpp
     src/UndoBet.cpp
     src/UndoManager.cpp
-    src/ViewCommands.cpp
-    src/ViewEventHandlers.cpp
 )
 
 target_include_directories(controller

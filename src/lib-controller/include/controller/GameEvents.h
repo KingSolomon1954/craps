@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: GameEvent.h
+// File: GameEvents.h
 //
 //----------------------------------------------------------------
 
@@ -13,6 +13,218 @@
 #include <gen/MoneyUtils.h>
 
 namespace Ctrl {
+
+using EventId = unsigned;
+using CorrelationId = unsigned;
+    
+enum class EventSource
+{
+    Unset,
+    Model,
+    Controller,
+    View
+};
+
+enum class EventType
+{
+    Unset,
+    
+    // Requests
+    ReqMakeBet,
+    ReqRemoveBet,
+    ReqRollDice,
+
+    // Responses
+    RspMakeBetAccepted,
+    RspMakeBetRejected,
+
+    // Unsolicited
+    UslBettingClosed,
+    UslBettingOpened,
+    UslDiceThrowStart,
+    UslDiceThrowEnd,
+    UslDiceRolled,
+    UslResolveBetsStart,
+    UslResolveBetsEnd,
+    UslPointEstablished,
+    UslSevenOut,
+    UslPassLineWinner,
+    UslNewShooter,
+    UslPlayerJoinedTable,
+    UslPlayerLeftTable,
+
+    UslBetChanged,
+    UslPlayerBalanceChanged,
+    UslBuddyBetMade,
+    UslCountdownRollDice,
+    UslHouseLowOnFunds,
+};
+
+//----------------------------------------------------------------
+
+struct GameEvent
+{
+    EventId       id            = 0;
+    CorrelationId correlationId = 0;
+    EventSource   source        = EventSource::Unset;
+    EventType     type          = EventType::Unset;
+
+    GameEvent(EventSource source, EventType type)
+        : source(source), type(type)
+    {
+    }
+};
+
+//----------------------------------------------------------------
+
+struct UslBettingOpened : public GameEvent
+{
+    UslBettingOpened()
+        : GameEvent{EventSource::Model, EventType::UslBettingOpened}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslBettingClosed : public GameEvent
+{
+    UslBettingClosed()
+        : GameEvent{EventSource::Model, EventType::UslBettingClosed}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslDiceThrowStart : public GameEvent
+{
+    UslDiceThrowStart()
+        : GameEvent{EventSource::Model, EventType::UslDiceThrowStart}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslDiceThrowEnd : public GameEvent
+{
+    UslDiceThrowEnd()
+        : GameEvent{EventSource::Model, EventType::UslDiceThrowEnd}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslDiceRolled : public GameEvent
+{
+    unsigned roll = 0;
+    unsigned d1 = 0;
+    unsigned d2 = 0;
+    
+    UslDiceRolled()
+        : GameEvent{EventSource::Model, EventType::UslDiceRolled}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslResolveBetsStart : public GameEvent
+{
+    UslResolveBetsStart()
+        : GameEvent{EventSource::Model, EventType::UslResolveBetsStart}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslResolveBetsEnd : public GameEvent
+{
+    UslResolveBetsEnd()
+        : GameEvent{EventSource::Model, EventType::UslResolveBetsEnd}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPointEstablished : public GameEvent
+{
+    UslPointEstablished()
+        : GameEvent{EventSource::Model, EventType::UslPointEstablished}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslSevenOut : public GameEvent
+{
+    UslSevenOut()
+        : GameEvent{EventSource::Model, EventType::UslSevenOut}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPassLineWinner : public GameEvent
+{
+    UslPassLineWinner()
+        : GameEvent{EventSource::Model, EventType::UslPassLineWinner}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslNewShooter : public GameEvent
+{
+    UslNewShooter()
+        : GameEvent{EventSource::Model, EventType::UslNewShooter}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerJoinedTable : public GameEvent
+{
+    Gen::Uuid playerId;
+    
+    UslPlayerJoinedTable()
+        : GameEvent{EventSource::Model, EventType::UslPlayerJoinedTable}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerLeftTable : public GameEvent
+{
+    Gen::Uuid playerId;
+    
+    UslPlayerLeftTable()
+        : GameEvent{EventSource::Model, EventType::UslPlayerLeftTable}
+    {}
+};
+
+//----------------------------------------------------------------
+
+
+    
+
+
+
+
+
+} // namespace Ctrl
+
+//----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+#if 0    
 
 enum class EventType
 {
@@ -43,14 +255,6 @@ enum class EventType
     ViewRollDiceCountDown,
     ViewRollDiceAnimation,
     ViewProgramExit
-};
-
-struct GameEvent
-{
-    using GameEventPtr = std::unique_ptr<GameEvent>;
-    
-    virtual ~GameEvent() = default;
-    virtual EventType type() const = 0;
 };
 
 //----------------------------------------------------------------
@@ -372,10 +576,7 @@ struct ViewProgramExit : public GameEvent
     }
 };
 
-
-
     
-#if 0    
 struct TimerEvent : public GameEvent
 {
     std::chrono::steady_clock::time_point time;
@@ -386,6 +587,3 @@ struct TimerEvent : public GameEvent
 };
 #endif
     
-} // namespace Ctrl
-
-//----------------------------------------------------------------

@@ -43,6 +43,12 @@ public:
         }
     }
 
+    static EventManager& instance()
+    {
+        static EventManager em;
+        return em;
+    }
+
     EventManager(const EventManager&) = delete;
     EventManager& operator=(const EventManager&) = delete;
 

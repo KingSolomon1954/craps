@@ -9,13 +9,13 @@ lib-craps, lib-controller, lib-cui and later lib-gui will all use the
 one Controller::EventManager (publishing and subscribing; asynchrounous,
 threaded) along with Controller::GameEvents.h which defines all events.
 
-Cui::CuiView : from controller/model -> CUI
+Cui::CuiReceiver : from controller/model -> CUI
     * listens for GameEvents (src = model & controller)
     * subscribes to Controller EventManager
     * Turns GameEvents into local work orders, enqueues to CuiThread
     * ViewInterface (virtual functional API) is eliminated
 
-Cui::CuiSend : from CUI -> controller   (a new class)
+Cui::CuiSender : from CUI -> controller   (a new class)
     * publishes events to Controller EventManager (src = view)
     * Cui::OperationManager calls CuiSend as needed to form/send 
       events, e.g. reqMakeBet, reqRollDice, reqRemoveBet, ...

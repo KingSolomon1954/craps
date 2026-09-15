@@ -8,7 +8,7 @@
 #include <controller/AutoFill.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
-#include <controller/QuickBet.h>
+// #include <controller/QuickBet.h>
 #include <controller/TableManager.h>
 #include <controller/UndoManager.h>
 #include <craps/BankStats.h>
@@ -877,6 +877,7 @@ CrapsReaders::getAutoFills(
 //
 //----------------------------------------------------------------
 
+#if 0
 Gen::ReturnCode
 CrapsReaders::getQuickBets(
     std::vector<QuickBetEntry>& quickBets,  // return arg
@@ -893,6 +894,7 @@ CrapsReaders::getQuickBets(
     }
     return Gen::ReturnCode::Success;
 }
+#endif
 
 //----------------------------------------------------------------
 //

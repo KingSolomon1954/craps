@@ -6,10 +6,6 @@
 
 #pragma once
 
-#include <string>
-#include <memory>
-#include <list>
-#include <craps/Events.h>
 #include <craps/Bank.h>
 #include <craps/CrapsBet.h>
 #include <craps/CrapsTypes.h>
@@ -20,15 +16,17 @@
 #include <gen/ReturnCode.h>
 #include <gen/MoneyUtils.h>
 #include <yaml-cpp/yaml.h>
+#include <string>
+#include <memory>
+#include <list>
 
 namespace Gen {
-    class ErrorPass;    // fwd
+    class ErrorPass;     // fwd
 }
 
 namespace Craps {
 
 class DecisionRecord;   // fwd
-class EventManager;     // fwd
 class CrapsTable;       // fwd
 
 class Player
@@ -39,21 +37,19 @@ public:
     /// @name Lifecycle
     /// @{
     Player(const PlayerId&     playerId, // Existing playerId,
-           const PlayerConfig& config,   // name will come from file
-           EventManager&       eventMgr);
+           const PlayerConfig& config);  // name will come from file
+
    ~Player() = default;
     void shutdown();
 
-    static Player* createPlayer(const std::string&  playerName,  // Creates
-                                const PlayerConfig& config,      // a fresh
-                                EventManager&       eventMgr);   // PlayerId
+    static Player* createPlayer(const std::string&  playerName,  // Creates a
+                                const PlayerConfig& config);     // fresh PlayerId
     static Player* fromString  (const std::string&  yaml,
                                 const PlayerId&     playerId,
-                                const PlayerConfig& config,
-                                EventManager&       eventMgr);
+                                const PlayerConfig& config);
     static Player* fromFile    (const PlayerId&     playerId,
-                                const PlayerConfig& config,
-                                EventManager&       eventMgr);
+                                const PlayerConfig& config);
+
     /// @}
 
     /// @name Modifiers
@@ -112,7 +108,6 @@ private:
     // order matters
     PlayerId          playerId_;
     PlayerConfig      config_;
-    EventManager&     eventMgr_;
     Bank              wallet_;     // overriden by yaml
 
     // order doesn't matter
@@ -136,11 +131,11 @@ private:
     void onBettingOpened();
     void onDiceThrowStart();
     void onDiceThrowEnd();
-    void onAnnounceDiceNumber(const AnnounceDiceNumber& evt);
-    void onPointEstablished  (const PointEstablished& evt);
-    void onSevenOut();
+    void onDiceThrow(/* TODO const AnnounceDiceNumber& evt */);
+    void onNewShooter(/* TODO const NewShooter& evt */);
     void onPassLineWinner();
-    void onNewShooter(const NewShooter& evt);
+    void onPointEstablished  (/* TODO const PointEstablished& evt */);
+    void onSevenOut();
     void setName(const std::string& playerName);
 
     // Validity checks with diagnostics

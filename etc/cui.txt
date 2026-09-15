@@ -11,23 +11,23 @@ Workflow Overview
                    └───────────┬───────────┘
                                │
                                │ Ctrl::ViewInterface
-                               ▼
+                               V
                    ┌───────────────────────┐
                    │     Cui::CuiView      │ Implements ViewInterface
                    │                       │   ()
                    └───────────┬───────────┘
                                │
                                │ UI work (enqueue work orders)
-                               ▼
+                               V
                       ┌─────────────────┐
                       │ Cui:: CuiThread │
                       │                 │
                       │   Work Queue    │
-Keyboard ────────────►│        ↓        │
+Keyboard ────────────>│        ↓        │
                       │    execute()    │
                       └────────┬────────┘
                                │
-                               ▼
+                               V
                       ┌─────────────────┐
                       │ SurfaceManager  │
                       │                 │
@@ -36,7 +36,7 @@ Keyboard ────────────►│        ↓        │
                       │ rendering       │
                       └────────┬────────┘
                                │
-                               ▼
+                               V
                             ncurses
 
 The CuiThread is the only additional thread in the CUI.  Its purpose of
@@ -107,7 +107,7 @@ Cui::CarrierBet - a struct menus use to pass around bet info
               │                 ▲
               │                 │
               │                 ▼
-     OperationManager <-- SurfaceManager (manages stack of Surfaces)
+     OperationManager <── SurfaceManager (manages stack of Surfaces)
                                 │
                                 │ Works with SurfaceBase
                                 │
@@ -216,7 +216,6 @@ Startup Behavior option 2 (No Doing This)
 │ [n] Start a new game                 │
 │ [c] Configure                        │
 │ [q] Quit                             │
-│                                      │
 └──────────────────────────────────────┘
 
 
@@ -230,7 +229,6 @@ Startup Behavior option 2 (No Doing This)
 │                                      │
 │ [c] Configure                        │
 │ [q] Quit                             │
-│                                      │
 └──────────────────────────────────────┘
 
 

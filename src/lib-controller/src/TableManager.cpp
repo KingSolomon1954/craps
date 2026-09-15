@@ -10,7 +10,6 @@
 #include <controller/Globals.h>
 #include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
-#include <craps/EventManager.h>
 
 using namespace Ctrl;
 
@@ -85,7 +84,7 @@ TableManager::loadCrapsTable(const std::string& fileName)
     config.maxRecentRolls = TableManager::retrieveMaxRecentRolls();
     config.tablePath      = TableManager::formTablePath(fileName);
 
-    return Craps::CrapsTable::fromFile(tableId, config, *Gbl::pEventMgr);
+    return Craps::CrapsTable::fromFile(tableId, config);
 }
 
 //----------------------------------------------------------------

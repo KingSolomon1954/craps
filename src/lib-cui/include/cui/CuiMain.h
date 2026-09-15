@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <cui/CuiView.h>
-
 namespace Cui
 {
     
@@ -19,7 +17,6 @@ public:
    
     static CuiMain& instance();
     void shutdown();
-    CuiView& getView();
     
 private:
     bool useUnicodePips_ = false;

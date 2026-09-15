@@ -10,11 +10,12 @@
 #include <craps/CrapsBet.h>
 #include <craps/CrapsTable.h>
 #include <craps/CrapsTypes.h>
-#include <craps/EventManager.h>
 #include <craps/TableConfig.h>
 #include <doctest/doctest.h>
 #include <gen/ErrorPass.h>
+#include <gen/EventManager.h>
 #include <gen/ReturnCode.h>
+#include <controller/GameEvents.h>
 
 using namespace Craps;
 
@@ -24,7 +25,6 @@ std::string getPlayerYamlStringUtest();
 
 struct PlayerFixture
 {
-    EventManager em;
     PlayerConfig config { "/work/craps/assets/players/Player-1.yaml" };
     PlayerId p1Id { "uuid1" };
     PlayerId p2Id { "uuid2" };
@@ -37,7 +37,7 @@ struct PlayerFixture
         tableConfig.maxRecentRolls = 25;
         tableConfig.tablePath = "tmp/dontcare.yaml";
 
-        t = new CrapsTable("Table-1", tableConfig, em);
+        t = new CrapsTable("Table-1", tableConfig);
         REQUIRE(t != nullptr);
     }
 
@@ -53,8 +53,8 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
 {
     SUBCASE("via createplayer()")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
-        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config));
         CHECK(p1->getName() == "uuid1");
         CHECK(p2->getName() == "uuid2");
     }
@@ -62,7 +62,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
     SUBCASE("via fromString()")
     {
         std::string yaml = getPlayerYamlStringUtest();
-        std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id, config));
         CHECK(p1->getPlayerId() == "uuid1");
         CHECK(p1->getBalance() == 30000);
         // TODO check more fields to matching YAML
@@ -74,20 +74,20 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
 
         // Good load
         std::string nathanUuid("550e8400-e29b-41d4-a716-446655440000");
-        std::unique_ptr<Player> p1(Player::fromFile(nathanUuid, pc, em));
+        std::unique_ptr<Player> p1(Player::fromFile(nathanUuid, pc));
         CHECK(p1->getPlayerId() == nathanUuid);
         CHECK(p1->getName() == "Nathan");
         CHECK(p1->getBalance() == 30000);
 
         // Mismatched player ID
-        CHECK_THROWS_AS(Player::fromFile(p2Id, pc, em), std::runtime_error);
+        CHECK_THROWS_AS(Player::fromFile(p2Id, pc), std::runtime_error);
     }
 
     SUBCASE("fromFile:missing")
     {
         // Clobber path. Use bad playerId/path so file won't be found.
         PlayerFixture::config.playerPath = "missing/FakePlayer-1";
-        CHECK_THROWS_AS(Player::fromFile(p1Id, config, em), std::runtime_error);
+        CHECK_THROWS_AS(Player::fromFile(p1Id, config), std::runtime_error);
     }
 }
 
@@ -98,7 +98,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
     SUBCASE("joinTable")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1 != nullptr);
 
         // nullptr
@@ -114,7 +114,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
     SUBCASE("leaveTable")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1 != nullptr);
 
         // Leave table without ever joining
@@ -166,7 +166,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
     SUBCASE("badBets")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
 
         // Must join table first
         CHECK(p1->makeBet(BetName::Place, 100, 6, ep) == nullptr);
@@ -188,7 +188,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
     SUBCASE("goodBets")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
 
         Gen::Money bal = p1->getBalance();
@@ -204,7 +204,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
     SUBCASE("removeBet")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
 
         Gen::Money bal = p1->getBalance();
@@ -253,7 +253,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
     SUBCASE("goodBet")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->isComeOutRoll());
         Gen::Money bal = p1->getBalance();
@@ -271,8 +271,8 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
     SUBCASE("badBets")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
-        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config));
 
         // nullptr
         CHECK(p1->setOddsAmount(nullptr, 100, ep) == Gen::ReturnCode::Fail);
@@ -311,7 +311,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
     SUBCASE("changeAmount")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->isComeOutRoll());
         Gen::Money bal = p1->getBalance();
@@ -351,12 +351,12 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
     SUBCASE("processWin")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
         REQUIRE(p1->getNumBetsOnTable() == 1);
-        em.publish(DiceThrowStart{});
+        Gen::EventManager::instance().publish(Ctrl::UslDiceThrowStart{});
         DecisionRecord r1{b1.get(), true, false, 140, 0, 0, 0};
         p1->processWin(r1);
         CHECK(p1->getBalance() == bal + 140);
@@ -382,12 +382,12 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
     SUBCASE("processLose")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
         REQUIRE(p1->getNumBetsOnTable() == 1);
-        em.publish(DiceThrowStart{});
+        Gen::EventManager::instance().publish(Ctrl::UslDiceThrowStart{});
         DecisionRecord r1{b1.get(), true, false, 0, 120, 0, 0};
         p1->processLose(r1);
         CHECK(p1->getBalance() == bal - 120);
@@ -413,7 +413,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
     SUBCASE("processKeep")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::PassLine, 100, 0, ep);
@@ -428,7 +428,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
     {
         // Buy bet subtracts commission from win
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config, em));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
         REQUIRE(p1->joinTable(t, ep) == Gen::ReturnCode::Success);
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::Buy, 100, 4, ep);

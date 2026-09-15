@@ -9,22 +9,20 @@
 #include <gen/SignalHandler.h>
 
 namespace Gen {
-    class BuildInfo;  // fwd
+    class BuildInfo;    // fwd
+    class EventManager; // fwd
 }
 
 namespace Craps {
     class CrapsTable;   // fwd
-    class EventManager; // fwd
 }
 
 namespace Ctrl {
 
 class ConfigManager;  // fwd
-class EventLoop;      // fwd
-class GameController; // fwd
+class EventHandler;   // fwd
 class PlayerManager;  // fwd
 class TableManager;   // fwd
-class ViewInterface;  // fwd
 class UndoManager;    // fwd
     
 class GameMain
@@ -52,15 +50,12 @@ private:
     
     Gen::BuildInfo*       initBuildInfo();
     Ctrl::ConfigManager*  initConfigManager(int argc, char* argv[]);
-    Craps::EventManager*  initEventManager();
+    Ctrl::EventHandler*   initEventHandler();
     Ctrl::TableManager*   initTableManager();
     Ctrl::PlayerManager*  initPlayerManager();
     Ctrl::UndoManager*    initUndoManager();
-    Ctrl::ViewInterface*  initView();
-    Ctrl::GameController* initGameController();
-    Ctrl::EventLoop*      initEventLoop();
     
-    Ctrl::ViewInterface*  getView();
+    void                  initView();
     void                  setupLogging();
     void                  disableConsoleLogging();
     void                  explicitShutdown();

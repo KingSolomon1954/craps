@@ -11,7 +11,8 @@
 #include <sstream>
 #include <craps/CrapsTable.h>
 #include <craps/DecisionRecord.h>
-#include <craps/EventManager.h>
+#include <controller/GameEvents.h>
+#include <gen/EventManager.h>
 #include <gen/ErrorPass.h>
 #include <gen/FileUtils.h>
 #include <gen/Logger.h>
@@ -25,11 +26,9 @@ using namespace Craps;
 //
 Player::Player(
     const PlayerId&     playerId,
-    const PlayerConfig& config,
-    EventManager&       eventMgr)
+    const PlayerConfig& config)
     : playerId_(playerId)
     , config_(config)
-    , eventMgr_(eventMgr)
     , wallet_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
 }
@@ -40,10 +39,9 @@ Player::Player(
 //
 Player*
 Player::createPlayer(const std::string&  playerName,
-                     const PlayerConfig& config,
-                     EventManager&       eventMgr)
+                     const PlayerConfig& config)
 {
-    Player* p = new Player(Gen::generateUuid(), config, eventMgr);
+    Player* p = new Player(Gen::generateUuid(), config);
     p->setName(playerName);
     return p;
 }
@@ -59,10 +57,9 @@ Static function.
 Player*
 Player::fromString(const std::string&  yaml,
                    const PlayerId&     playerId,
-                   const PlayerConfig& config,
-                   EventManager&       eventMgr)
+                   const PlayerConfig& config)
 {
-    Player* p = new Player(playerId, config, eventMgr);
+    Player* p = new Player(playerId, config);
     YAML::Node root = YAML::Load(yaml);
     p->fromYAML(root);
     return p;
@@ -78,10 +75,9 @@ Static function.
 */
 Player*
 Player::fromFile(const PlayerId& playerId,
-                 const PlayerConfig& config,
-                 EventManager& eventMgr)
+                 const PlayerConfig& config)
 {
-    Player* p = new Player(playerId, config, eventMgr);
+    Player* p = new Player(playerId, config);
     p->loadFile();
     return p;
 }
@@ -194,6 +190,13 @@ Player::shutdown()
 void
 Player::setupSubscriptions()
 {
+    Gen::EventManager::instance().subscribe<Ctrl::UslDiceThrowStart>(
+        [this](const Ctrl::UslDiceThrowStart&)
+        {
+            this->onDiceThrowStart();
+        });
+
+#if 0
     eventMgr_.subscribe<BettingClosed>(
         [this](const BettingClosed&)
         {
@@ -203,11 +206,6 @@ Player::setupSubscriptions()
         [this](const BettingOpened&)
         {
             this->onBettingOpened();
-        });
-    eventMgr_.subscribe<DiceThrowStart>(
-        [this](const DiceThrowStart&)
-        {
-            this->onDiceThrowStart();
         });
     eventMgr_.subscribe<DiceThrowEnd>(
         [this](const DiceThrowEnd&)
@@ -239,6 +237,7 @@ Player::setupSubscriptions()
         {
             this->onNewShooter(evt);
         });
+    #endif
 }
 
 //----------------------------------------------------------------
@@ -960,7 +959,7 @@ Player::onDiceThrowEnd()
 //----------------------------------------------------------------
 
 void
-Player::onAnnounceDiceNumber(const AnnounceDiceNumber& evt)
+Player::onDiceThrow(/* TODO const AnnounceDiceNumber& evt  */ )
 {
     // TODO
     // std::cout << playerName_ << " acknowledges AnnounceDiceNumber " << evt.val
@@ -970,7 +969,7 @@ Player::onAnnounceDiceNumber(const AnnounceDiceNumber& evt)
 //----------------------------------------------------------------
 
 void
-Player::onPointEstablished(const PointEstablished& evt)
+Player::onPointEstablished(/* TODO const PointEstablished& evt */)
 {
     // TODO
     // std::cout << playerName_ << " acknowledges PointEstablished " << evt.point << "\n";
@@ -997,7 +996,7 @@ Player::onPassLineWinner()
 //----------------------------------------------------------------
 
 void
-Player::onNewShooter(const NewShooter& evt)
+Player::onNewShooter(/* TODO const NewShooter& evt */)
 {
     // TODO
     // std::cout << playerName_ << " acknowledges NewShooter " <<

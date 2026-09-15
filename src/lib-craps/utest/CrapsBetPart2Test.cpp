@@ -19,7 +19,6 @@
 #include <craps/CrapsBet.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
-#include <craps/EventManager.h>
 #include <craps/EnumBetName.h>
 #include <craps/Player.h>
 
@@ -29,15 +28,14 @@ using namespace Craps;
 
 struct CrapsBetPart2Fixture
 {
-    EventManager em;
     PlayerConfig config { "playerFilesDirectory" };
 
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     
     CrapsBetPart2Fixture()
-        : p1(Player::createPlayer("Player1", config, em))
-        , p2(Player::createPlayer("Player2", config, em))
+        : p1(Player::createPlayer("Player1", config))
+        , p2(Player::createPlayer("Player2", config))
     {
     }
 

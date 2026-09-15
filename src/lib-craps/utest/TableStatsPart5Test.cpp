@@ -8,7 +8,6 @@
 #include <craps/DecisionRecord.h>
 #include <craps/CrapsBet.h>
 #include <craps/Dice.h>
-#include <craps/EventManager.h>
 #include <craps/Player.h>
 #include <doctest/doctest.h>
 #include <gen/ErrorPass.h>
@@ -20,15 +19,14 @@ using namespace Craps;
 
 struct TableStatsPart5Fixture
 {
-    EventManager em;
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     
     TableStatsPart5Fixture()
     {
         PlayerConfig config { "playerFilesDirectory" };
-        p1 = Player::createPlayer("Player1", config, em);
-        p2 = Player::createPlayer("Player2", config, em);
+        p1 = Player::createPlayer("Player1", config);
+        p2 = Player::createPlayer("Player2", config);
     }
 
    ~TableStatsPart5Fixture()

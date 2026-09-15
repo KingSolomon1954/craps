@@ -9,7 +9,8 @@ add_library(cui STATIC
     src/CuiMain.cpp
     src/CuiThread.cpp
     src/CuiUtils.cpp
-    src/CuiView.cpp
+    src/CuiReceiver.cpp
+    src/CuiSender.cpp
     src/LocationManager.cpp
     src/SurfaceManager.cpp
 #   src/dialogs/DialogAckError.cpp

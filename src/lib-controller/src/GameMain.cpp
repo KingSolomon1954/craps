@@ -5,22 +5,20 @@
 //----------------------------------------------------------------
 
 #include <controller/GameMain.h>
-#include <cassert>
-#include <iostream>
-#include <rang.hpp>
-#include <gen/BuildInfo.h>
-#include <gen/Logger.h>
-#include <gen/Debug.h>
 #include <controller/ConfigManager.h>
-#include <controller/GameController.h>
+#include <controller/EventHandler.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/TableManager.h>
-#include <controller/ViewInterface.h>
 #include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
-#include <craps/EventManager.h>
 #include <cui/CuiMain.h>
+#include <gen/BuildInfo.h>
+#include <gen/Logger.h>
+#include <gen/Debug.h>
+#include <cassert>
+#include <iostream>
+#include <rang.hpp>
 
 using namespace Ctrl;
 
@@ -51,13 +49,12 @@ GameMain::GameMain(int argc, char* argv[])
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
     std::unique_ptr<Ctrl::ConfigManager>  pCfg(initConfigManager(argc, argv)); (void) pCfg;
     setupLogging();                       // After config
-    std::unique_ptr<Craps::EventManager>  pEventMgr(initEventManager());       (void) pEventMgr;
+    std::unique_ptr<Ctrl::EventHandler>   pEventHandler(initEventHandler());   (void) pEventHandler;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
     std::unique_ptr<Ctrl::UndoManager>    pUndoMgr(initUndoManager());         (void) pUndoMgr;
     disableConsoleLogging();              // No more writing to screen
     initView();
-    std::unique_ptr<Ctrl::GameController> pGameCtrl(initGameController());     (void) pGameCtrl;
 
     signalHandler_.waitForTerminate();  // Blocks until signal
 
@@ -135,11 +132,11 @@ GameMain::initConfigManager(int argc, char* argv[])
 
 //----------------------------------------------------------------
 
-Craps::EventManager*
-GameMain::initEventManager()
+Ctrl::EventHandler*
+GameMain::initEventHandler()
 {
-    auto p = new Craps::EventManager();
-    Gbl::pEventMgr = p;
+    auto p = new Ctrl::EventHandler();
+    Gbl::pEventHandler = p;
     return p;
 }
 
@@ -175,41 +172,20 @@ GameMain::initUndoManager()
 
 //----------------------------------------------------------------
 
-ViewInterface*
+void
 GameMain::initView()
-{
-    auto p = getView();
-    Gbl::pView = p;
-    return p;
-}
-
-//----------------------------------------------------------------
-
-GameController*
-GameMain::initGameController()
-{
-    auto p = new GameController();
-    Gbl::pGameCtrl = p;
-    return p;
-}
-
-//----------------------------------------------------------------
-
-ViewInterface*
-GameMain::getView()
 {
     std::string v = Gbl::pConfigMgr->getString(ConfigManager::KeyViewType).value();
     if (v == "console")
     {
+        // Just reference it so it can init()
         auto& cui = Cui::CuiMain::instance();
-        return &cui.getView();
+        return;
     }
     if (v == "graphical")
     {
-        // TODO
-        // TODO auto& gui = Gui::GuiMain::instance();
-        // TODO return &gui.getView();
-        return nullptr;
+        // auto& gui = Gui::GuiMain::instance();
+        return;
     }
 
     std::string diag = "Invalid value for config parameter:\"" +
@@ -218,7 +194,6 @@ GameMain::getView()
         "Future options for GUI and CmdLine are not implemented yet.";
         
     throw std::invalid_argument(diag);
-    return nullptr;
 }
 
 //----------------------------------------------------------------
@@ -235,7 +210,7 @@ GameMain::shutdownView()
     
     if (v == "graphical")
     {
-        // TODO Gui::GuiMain::instance().shutdown();
+        // Gui::GuiMain::instance().shutdown();
         return;
     }
 }
@@ -245,10 +220,9 @@ GameMain::shutdownView()
 void
 GameMain::explicitShutdown()
 {
-    Gbl::pGameCtrl->shutdown();
-    shutdownView();
     Gbl::pTable->shutdown();
-    // Gbl::pEventMgr    ->shutdown();  // N/A
+    shutdownView();
+    // Gbl::pEventHandler->shutdown();  // N/A
     // Gbl::pUndoMgr     ->shutdown();  // N/A
     // Gbl::pPlayerMgr   ->shutdown();  // N/A
     // Gbl::pTableMgr    ->shutdown();  // N/A

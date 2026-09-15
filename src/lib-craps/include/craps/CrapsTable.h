@@ -6,9 +6,6 @@
 
 #pragma once
 
-#include <array>
-#include <deque>
-#include <list>
 #include <gen/ErrorPass.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ReturnCode.h>
@@ -18,12 +15,14 @@
 #include <craps/CrapsTypes.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
-#include <craps/EventManager.h>
 #include <craps/LastRollStats.h>
 #include <craps/Player.h>
 #include <craps/TableConfig.h>
 #include <craps/TableStats.h>
 #include <yaml-cpp/yaml.h>
+#include <array>
+#include <deque>
+#include <list>
 
 namespace Craps {
 
@@ -33,17 +32,15 @@ public:
     /// @name Lifecycle
     /// @{
     CrapsTable(const TableId&     tableId,
-               const TableConfig& config,
-               EventManager&      eventMgr);
+               const TableConfig& config);
+
    ~CrapsTable() = default;
     void shutdown();
     static CrapsTable* fromString(std::string        yaml,
                                   const TableId&     tableId,
-                                  const TableConfig& config,
-                                  EventManager&      eventMgr);
+                                  const TableConfig& config);
     static CrapsTable* fromFile  (const TableId&     tableId,
-                                  const TableConfig& config,
-                                  EventManager&      eventMgr);
+                                  const TableConfig& config);
     /// @}
 
     /// @name Modifiers
@@ -123,7 +120,6 @@ private:
     // order matters
     TableId tableId_;  // Table-1, Table-2, ...
     TableConfig config_;
-    EventManager& eventMgr_;
     Bank houseBank_;  // overriden by yaml
 
     // order doesn't matter
