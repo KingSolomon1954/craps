@@ -5,24 +5,22 @@
 //----------------------------------------------------------------
 
 #pragma once
-#include <string>
-#include <chrono>
-#include <memory>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>
+#include <atomic>
+#include <string>
+#include <chrono>
+#include <memory>
 
 namespace Ctrl {
 
-using EventId = unsigned;
-using CorrelationId = unsigned;
-    
 enum class EventSource
 {
     Unset,
     Model,
-    Controller,
-    View
+    View,
+    Controller
 };
 
 enum class EventType
@@ -43,7 +41,7 @@ enum class EventType
     UslBettingOpened,
     UslDiceThrowStart,
     UslDiceThrowEnd,
-    UslDiceRolled,
+    UslDiceRollValue,
     UslResolveBetsStart,
     UslResolveBetsEnd,
     UslPointEstablished,
@@ -62,16 +60,31 @@ enum class EventType
 
 //----------------------------------------------------------------
 
+using EventId       = std::uint64_t;
+using CorrelationId = std::uint64_t;
+
+EventId getNextEventId();
+CorrelationId getNextCorrelationId();
+    
+//----------------------------------------------------------------
+
 struct GameEvent
 {
+    EventType     type          = EventType::Unset;
+    EventSource   source        = EventSource::Unset;
     EventId       id            = 0;
     CorrelationId correlationId = 0;
-    EventSource   source        = EventSource::Unset;
-    EventType     type          = EventType::Unset;
 
     GameEvent(EventSource source, EventType type)
-        : source(source), type(type)
+        : type(type),
+          source(source),
+          id(getNextEventId()),
+          correlationId(getNextCorrelationId())
     {
+        // All events get a value for unique ID and a correlationId. In
+        // the case of response events, the caller is responsible for
+        // overwriting the correlationId with the source event's
+        // correlationId.
     }
 };
 
@@ -113,14 +126,15 @@ struct UslDiceThrowEnd : public GameEvent
 
 //----------------------------------------------------------------
 
-struct UslDiceRolled : public GameEvent
+struct UslDiceRollValue : public GameEvent
 {
-    unsigned roll = 0;
+    unsigned rollCount = 0;
+    unsigned val = 0;
     unsigned d1 = 0;
     unsigned d2 = 0;
     
-    UslDiceRolled()
-        : GameEvent{EventSource::Model, EventType::UslDiceRolled}
+    UslDiceRollValue()
+        : GameEvent{EventSource::Model, EventType::UslDiceRollValue}
     {}
 };
 
@@ -146,6 +160,7 @@ struct UslResolveBetsEnd : public GameEvent
 
 struct UslPointEstablished : public GameEvent
 {
+    unsigned point = 0;
     UslPointEstablished()
         : GameEvent{EventSource::Model, EventType::UslPointEstablished}
     {}
@@ -173,6 +188,8 @@ struct UslPassLineWinner : public GameEvent
 
 struct UslNewShooter : public GameEvent
 {
+    Craps::PlayerId playerId;
+    
     UslNewShooter()
         : GameEvent{EventSource::Model, EventType::UslNewShooter}
     {}
@@ -182,7 +199,7 @@ struct UslNewShooter : public GameEvent
 
 struct UslPlayerJoinedTable : public GameEvent
 {
-    Gen::Uuid playerId;
+    Craps::PlayerId playerId;
     
     UslPlayerJoinedTable()
         : GameEvent{EventSource::Model, EventType::UslPlayerJoinedTable}
@@ -193,7 +210,7 @@ struct UslPlayerJoinedTable : public GameEvent
 
 struct UslPlayerLeftTable : public GameEvent
 {
-    Gen::Uuid playerId;
+    Craps::PlayerId playerId;
     
     UslPlayerLeftTable()
         : GameEvent{EventSource::Model, EventType::UslPlayerLeftTable}

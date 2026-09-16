@@ -243,8 +243,11 @@ CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
     players_.push_back(pPlayer);
-    // TODO
-    // Gen::EventManager::instance().publish(PlayerJoinedTable{ pPlayer->getPlayerId() });
+    
+    Ctrl::UslPlayerJoinedTable ev;
+    ev.playerId = pPlayer->getPlayerId();
+    Gen::EventManager::instance().publish(ev);
+
     return Gen::ReturnCode::Success;
 }
 
@@ -282,8 +285,11 @@ CrapsTable::removePlayer(Player* pPlayer, Gen::ErrorPass& ep)
 
     // Remove all bets by player, bet money given to the house bank.
     removePlayerBets(pPlayer);
-    // TODO
-    // Gen::EventManager::instance().publish(PlayerLeftTable{ pPlayer->getPlayerId() });
+    
+    Ctrl::UslPlayerLeftTable ev;
+    ev.playerId = pPlayer->getPlayerId();
+    Gen::EventManager::instance().publish(ev);
+    
     return Gen::ReturnCode::Success;
 }
 
@@ -596,8 +602,7 @@ void
 CrapsTable::declareBettingClosed()
 {
     bettingOpen_ = false; // No more bets
-    // TODO
-    // Gen::EventManager::instance().publish(BettingClosed{});
+    Gen::EventManager::instance().publish(Ctrl::UslBettingClosed{});
 }
 
 //----------------------------------------------------------------
@@ -606,8 +611,7 @@ void
 CrapsTable::declareBettingOpen()
 {
     bettingOpen_ = true;
-    // TODO
-    // Gen::EventManager::instance().publish(BettingOpened{});
+    Gen::EventManager::instance().publish(Ctrl::UslBettingOpened{});
 }
 
 //----------------------------------------------------------------
@@ -615,15 +619,22 @@ CrapsTable::declareBettingOpen()
 void
 CrapsTable::throwDice()
 {
-    // TODO
-    // Gen::EventManager::instance().publish(DiceThrowStart{});
+//  Gen::EventManager::instance().publish(Ctrl::UslDiceThrowStart{});
+    
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
     
 //  std::cout << "point:" << point_ << " dice:" << dice_.value()
 //            << "(" << dice_.d1() << "," << dice_.d2() << ")\n";
-    // TODO
-    // Gen::EventManager::instance().publish(DiceThrowEnd{});
-    // Gen::EventManager::instance().publish(AnnounceDiceNumber{dice_.value(), dice_.d1(), dice_.d2()});
+
+//    Gen::EventManager::instance().publish(Ctrl::UslDiceThrowEnd{});
+
+//    Ctrl::UslDiceRollValue ev;
+//    ev.correlationId = Ctrl::getNextCorrelationId();
+//    ev.rollCount = dice_.rollCount();
+//    ev.val = dice_.value();
+//    ev.d1  = dice_.d1();
+//    ev.d2  = dice_.d2();
+//    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------
@@ -638,22 +649,20 @@ CrapsTable::advanceState()
         if (CrapsBet::pointNums_.contains(dice_.value()))
         {
             point_ = dice_.value();
-            // TODO
-            // Gen::EventManager::instance().publish(PointEstablished{point_});
+            Ctrl::UslPointEstablished ev; ev.point = point_;
+            Gen::EventManager::instance().publish(ev);
         }
     }
     else if (dice_.value() == 7)
     {
         point_ = 0;
-        // TODO
-        // Gen::EventManager::instance().publish(SevenOut{});
+        Gen::EventManager::instance().publish(Ctrl::UslSevenOut{});
         advanceShooter();
     }
     else if (point_ == dice_.value())
     {
         point_ = 0;
-        // TODO
-        // Gen::EventManager::instance().publish(PassLineWinner{});
+        Gen::EventManager::instance().publish(Ctrl::UslPassLineWinner{});
     }
 }
 
@@ -680,8 +689,9 @@ CrapsTable::advanceShooter()
 
     if (pCurrentShooter_ != prev)
     {
-        // TODO
-        // Gen::EventManager::instance().publish(NewShooter{pCurrentShooter_->getPlayerId()});
+        Ctrl::UslNewShooter ev;
+        ev.playerId = pCurrentShooter_->getPlayerId();
+        Gen::EventManager::instance().publish(ev);
     }
 }
 
@@ -690,15 +700,13 @@ CrapsTable::advanceShooter()
 void
 CrapsTable::resolveBets()
 {
-    // TODO
-    // Gen::EventManager::instance().publish(ResolveBetsStart{});
+    Gen::EventManager::instance().publish(Ctrl::UslResolveBetsStart{});
     lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
     evaluateBets();
     dispenseResults();
     trimTableBets();
     clearDrl();
-    // TODO
-    // Gen::EventManager::instance().publish(ResolveBetsEnd{});
+    Gen::EventManager::instance().publish(Ctrl::UslResolveBetsEnd{});
 }
 
 //----------------------------------------------------------------

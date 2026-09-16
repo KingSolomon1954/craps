@@ -179,6 +179,8 @@ void
 CuiMain::run()
 {
     (void) CuiThread::instance();  // Start the CUI thread
+
+    // Render the starting screen
     WorkOrder work = {.type = Type::SetSurface,
                       .pSurface = &ScreenCrapsTable::instance()};
     CuiThread::instance().enqueueWork(work);
