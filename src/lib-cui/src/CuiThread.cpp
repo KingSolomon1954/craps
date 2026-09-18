@@ -7,8 +7,8 @@
 #include <cui/CuiThread.h>
 #include <cui/SurfaceManager.h>
 #include <gen/Logger.h>
-
 #include <ncurses.h>
+#include <cassert>
 #include <chrono>
 
 using namespace Cui;
@@ -69,6 +69,14 @@ CuiThread::shutdown()
 
 //----------------------------------------------------------------
 
+bool
+CuiThread::isCuiThread() const
+{
+    return std::this_thread::get_id() == threadId_;
+}
+
+//----------------------------------------------------------------
+
 void
 CuiThread::cuiThreadFunc()
 {
@@ -88,7 +96,8 @@ CuiThread::cuiThreadFunc()
             if (ch == ERR) break;
             if (shutdownRequested_) return;
             std::unique_lock<std::mutex> lock(mutex_);
-            workQueue_.push_back(WorkOrder{Type::Key, ch});
+            WorkOrderKey wo; wo.key = ch;            
+            workQueue_.push_back(wo);
         }
 
         processWorkQueue();
@@ -113,7 +122,7 @@ CuiThread::processWorkQueue()
 {
     while (true)
     {
-        WorkOrder workOrder;
+        WorkOrder wo;
 
         {
             std::lock_guard<std::mutex> lock(mutex_);
@@ -122,11 +131,11 @@ CuiThread::processWorkQueue()
                 return;
             }
 
-            workOrder = std::move(workQueue_.front());
+            wo = std::move(workQueue_.front());
             workQueue_.pop_front();
         }
 
-        processWorkOrder(workOrder);
+        processWorkOrder(wo);
     }
 }
 
@@ -135,37 +144,85 @@ CuiThread::processWorkQueue()
 void
 CuiThread::processWorkOrder(const WorkOrder& wo)
 {
-    // TODO
+    std::visit(
+        [this](const auto& workOrder)
+        {
+            process(workOrder);
+        },
+        wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const WorkOrderKey& wo)
+{
+    SurfaceManager::instance().handleKey(wo.key);    
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const WorkOrderSurface& wo)
+{
     switch (wo.type)
     {
-    case (Type::Key):
-        SurfaceManager::instance().handleKey(wo.key);
-        break;
-        
-    case (Type::Draw):
+    case SurfaceType::Draw:
         SurfaceManager::instance().draw();
         break;
-        
-    case (Type::SetSurface):
+
+    case SurfaceType::SetSurface:
         SurfaceManager::instance().setSurface(wo.pSurface);
         break;
-        
-    case (Type::PopSurface):
+
+    case SurfaceType::PopSurface:
         SurfaceManager::instance().popSurface();
         break;
-        
-    case (Type::PushSurface):
+
+    case SurfaceType::PushSurface:
         SurfaceManager::instance().pushSurface(wo.pSurface);
         break;
+
+    default:
+        assert(false);
     }
 }
 
 //----------------------------------------------------------------
 
-bool
-CuiThread::isCuiThread() const
+void
+CuiThread::process(const WorkOrderEvent& woe)
 {
-    return std::this_thread::get_id() == threadId_;
+    
+    std::visit(
+        [this](const auto& event)
+        {
+            process(event);
+        },
+        woe.event);
 }
 
 //----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslDiceNewValue& ev)
+{
+    (void) ev.val;
+
+    // TODO
+    // WindowRollHistory::instance().setLatestRoll(
+    //     wo.gameEvent.val, wo.gameEvent.d1, wo.gameEvent.d2);
+    // WindowHeader::instance().setRollCount(
+    //     wo.gameEvent.rollCount);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslBettingOpened& ev)
+{
+
+}
+
+//----------------------------------------------------------------
+

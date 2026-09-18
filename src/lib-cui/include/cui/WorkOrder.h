@@ -7,17 +7,25 @@
 #pragma once
 
 #include <cui/bases/SurfaceBase.h>
+#include <controller/GameEvents.h>
 #include <ncurses.h>
 
 namespace Cui {
 
 //----------------------------------------------------------------
 
-enum class Type
+enum class WorkOrderType
 {
-    Draw,
+    Unset,
     Event,
     Key,
+    Surface
+};
+
+enum class SurfaceType
+{
+    Unset,
+    Draw,
     PopSurface,
     PushSurface,
     SetSurface
@@ -25,12 +33,40 @@ enum class Type
 
 //----------------------------------------------------------------
 
-struct WorkOrder
+struct WorkOrderKey
 {
-    Type     type;
-    int      key          = ERR;
+    int key = ERR;
+};
+
+//----------------------------------------------------------------
+    
+using GameEvent = std::variant<
+    Ctrl::UslBettingOpened,
+    Ctrl::UslDiceNewValue
+    >;
+    
+struct WorkOrderEvent
+{
+    GameEvent event;
+};
+
+//----------------------------------------------------------------
+    
+struct WorkOrderSurface
+{
+    SurfaceType type = SurfaceType::Unset;
     SurfaceBase* pSurface = nullptr;
 };
+    
+//----------------------------------------------------------------
+
+using WorkOrder = std::variant<
+    WorkOrderKey,
+    WorkOrderEvent,
+    WorkOrderSurface
+    >;
+
+//----------------------------------------------------------------
 
 } // namespace Cui
 

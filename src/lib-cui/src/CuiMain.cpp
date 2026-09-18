@@ -183,8 +183,10 @@ CuiMain::run()
     (void) CuiReceiver::instance();  // Init the Receiver 
 
     // Render the starting screen
-    WorkOrder work = {.type = Type::SetSurface,
-                      .pSurface = &ScreenCrapsTable::instance()};
+    WorkOrderSurface work =
+        {.type = SurfaceType::SetSurface,
+         .pSurface = &ScreenCrapsTable::instance()
+        };
     CuiThread::instance().enqueueWork(work);
 }
 

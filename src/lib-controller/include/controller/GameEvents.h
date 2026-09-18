@@ -69,14 +69,14 @@ CorrelationId getNextCorrelationId();
 
 struct GameEvent
 {
-    EventType     type          = EventType::Unset;
     EventSource   source        = EventSource::Unset;
+    EventType     type          = EventType::Unset;
     EventId       id            = 0;
     CorrelationId correlationId = 0;
 
     GameEvent(EventSource source, EventType type)
-        : type(type),
-          source(source),
+        : source(source),
+          type(type),
           id(getNextEventId()),
           correlationId(getNextCorrelationId())
     {

@@ -5,6 +5,8 @@
 //----------------------------------------------------------------
 
 #include <cui/CuiReceiver.h>
+#include <cui/WorkOrder.h>
+#include <cui/CuiThread.h>
 #include <craps/CrapsTypes.h>
 #include <gen/EventManager.h>
 #include <gen/Logger.h>
@@ -39,6 +41,9 @@ CuiReceiver::CuiReceiver()
 void
 CuiReceiver::onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const
 {
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+    
     LOG_TRACE("Entered CuiReceiver()::onDiceNewValue()");
     std::string s = "CuiReceiver::onDiceNewValue() Dice " +
                     std::to_string(ev.val) + " ("          +
@@ -46,14 +51,6 @@ CuiReceiver::onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const
                     std::to_string(ev.d2) + ") Roll: "     +
                     std::to_string(ev.rollCount);
     LOG_TRACE(s);
-
-    
-
-    // TODO
-    // Create workorder, updateDiceRoll
-    
-    // std::cout << playerName_ << " acknowledges roll: " << ev.val
-    //           << "(" << ev.d1 << "," << ev.d2 << ")\n";
 }
 
 //----------------------------------------------------------------
