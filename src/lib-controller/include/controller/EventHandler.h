@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <controller/GameEvents.h>
+
 namespace Ctrl {
 
 class EventHandler
@@ -14,6 +16,7 @@ public:
     /// @name Lifecycle
     /// @{
     EventHandler();
+   ~EventHandler() = default;
     /// @}
 
     /// @name Modifiers
@@ -22,6 +25,7 @@ public:
 
     /// @name Observers
     /// @{
+    void onReqRollDice(const Ctrl::ReqRollDice& ev) const;
     /// @}
 
 private:

@@ -89,6 +89,10 @@ struct GameEvent
 };
 
 //----------------------------------------------------------------
+//
+// Unsolicited
+//
+//----------------------------------------------------------------
 
 struct UslBettingOpened : public GameEvent
 {
@@ -218,10 +222,21 @@ struct UslPlayerLeftTable : public GameEvent
 };
 
 //----------------------------------------------------------------
+//
+// Requests
+//
+//----------------------------------------------------------------
 
+struct ReqRollDice : public GameEvent
+{
+    ReqRollDice()
+        : GameEvent{EventSource::View, EventType::ReqRollDice}
+    {}
+};
+
+//----------------------------------------------------------------
 
     
-
 
 
 

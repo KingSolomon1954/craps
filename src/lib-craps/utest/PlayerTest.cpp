@@ -4,8 +4,6 @@
 //
 //----------------------------------------------------------------
 
-#include <iostream>
-#include <memory>
 #include <craps/Player.h>
 #include <craps/CrapsBet.h>
 #include <craps/CrapsTable.h>
@@ -13,9 +11,9 @@
 #include <craps/TableConfig.h>
 #include <doctest/doctest.h>
 #include <gen/ErrorPass.h>
-#include <gen/EventManager.h>
 #include <gen/ReturnCode.h>
-#include <controller/GameEvents.h>
+#include <iostream>
+#include <memory>
 
 using namespace Craps;
 
@@ -356,7 +354,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
         REQUIRE(p1->getNumBetsOnTable() == 1);
-        Gen::EventManager::instance().publish(Ctrl::UslDiceThrowStart{});
+        p1->bettingClosed();
         DecisionRecord r1{b1.get(), true, false, 140, 0, 0, 0};
         p1->processWin(r1);
         CHECK(p1->getBalance() == bal + 140);
@@ -369,7 +367,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         CHECK(stats.betStats.totNumWinsAllBets == 1);
         CHECK(stats.betStats.totNumLoseAllBets == 0);
         CHECK(stats.betStats.amtBetsWinOneRoll.total == 140);
-
+        
         // Check lastRollStats
         CHECK(p1->getLastRollStats().amountOnTable == 120);
         CHECK(p1->getLastRollStats().amountWin == 140);
@@ -387,7 +385,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         Gen::Money bal = p1->getBalance();
         auto b1 = p1->makeBet(BetName::Place, 120, 6, ep);
         REQUIRE(p1->getNumBetsOnTable() == 1);
-        Gen::EventManager::instance().publish(Ctrl::UslDiceThrowStart{});
+        p1->bettingClosed();
         DecisionRecord r1{b1.get(), true, false, 0, 120, 0, 0};
         p1->processLose(r1);
         CHECK(p1->getBalance() == bal - 120);

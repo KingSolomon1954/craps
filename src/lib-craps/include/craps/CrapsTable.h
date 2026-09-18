@@ -6,19 +6,18 @@
 
 #pragma once
 
-#include <gen/ErrorPass.h>
-#include <gen/MoneyUtils.h>
-#include <gen/ReturnCode.h>
-#include <gen/Timepoint.h>
 #include <craps/Bank.h>
 #include <craps/CrapsBet.h>
 #include <craps/CrapsTypes.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
 #include <craps/LastRollStats.h>
-#include <craps/Player.h>
 #include <craps/TableConfig.h>
 #include <craps/TableStats.h>
+#include <gen/ErrorPass.h>
+#include <gen/MoneyUtils.h>
+#include <gen/ReturnCode.h>
+#include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
 #include <array>
 #include <deque>
@@ -26,6 +25,8 @@
 
 namespace Craps {
 
+class Player;  // fwd
+    
 class CrapsTable
 {
 public:

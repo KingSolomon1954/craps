@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <controller/GameEvents.h>
+
 namespace Cui {
 
 class CuiReceiver
@@ -24,6 +26,7 @@ public:
 
     /// @name Observers
     /// @{
+    void onDiceRollValue(const Ctrl::UslDiceRollValue& ev) const;
     /// @}
         
 private:

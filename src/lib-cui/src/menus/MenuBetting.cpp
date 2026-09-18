@@ -6,6 +6,7 @@
 
 #include <cui/menus/MenuBetting.h>
 #include <cui/CarrierBet.h>
+#include <cui/CuiSender.h>
 #include <cui/CuiUtils.h>
 #include <cui/SurfaceManager.h>
 #include <cui/panels/WindowNavBar.h>
@@ -315,7 +316,7 @@ MenuBetting::doQuickBet()
 void
 MenuBetting::doRollDice()
 {
-    // TODO
+    CuiSender::instance().reqRollDice();
 }
 
 //----------------------------------------------------------------

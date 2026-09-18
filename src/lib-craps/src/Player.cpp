@@ -5,10 +5,6 @@
 //----------------------------------------------------------------
 
 #include <craps/Player.h>
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <sstream>
 #include <craps/CrapsTable.h>
 #include <craps/DecisionRecord.h>
 #include <controller/GameEvents.h>
@@ -17,6 +13,10 @@
 #include <gen/FileUtils.h>
 #include <gen/Logger.h>
 #include <gen/Uuid.h>
+#include <cassert>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 using namespace Craps;
 
@@ -532,6 +532,19 @@ Player::setContractAmount(
 
 /*-----------------------------------------------------------*//**
 
+Table informs us directly (inline) that betting is closed.  Can't use
+the UslBettingClosed event since that is asynchronous and bets will have
+already have been resolved by the time we see UslBettingClosed.
+
+*/
+void
+Player::bettingClosed()
+{
+    lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
+}
+
+/*-----------------------------------------------------------*//**
+
 Process WIN decision
 
 Called by CrapsTable to dish out a winning bet to a Player.
@@ -899,10 +912,10 @@ Player::getBankAlltimeStats() const
 const LastRollStats&
 Player::getLastRollStats() const
 {
-    if (pTable_ != nullptr)
-    {
+//    if (pTable_ != nullptr)
+//    {
         lastRollStats_.rollCount = pTable_->getNumRolls();
-    }
+//    }
     return lastRollStats_;
 }
 
@@ -941,8 +954,6 @@ Player::onBettingOpened()
 void
 Player::onDiceThrowStart()
 {
-    lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
-    
     // TODO
     // std::cout << playerName_ << " acknowledges DiceThrowStart\n";
 }
@@ -959,11 +970,18 @@ Player::onDiceThrowEnd()
 //----------------------------------------------------------------
 
 void
-Player::onDiceThrow(/* TODO const AnnounceDiceNumber& evt  */ )
+Player::onDiceRollValue(const Ctrl::UslDiceRollValue& ev)
 {
+    LOG_TRACE("Entered Player::onDiceRollValue()");
+    std::string s = "Player::onDiceRollValue() Dice " +
+                    std::to_string(ev.rollCount) + " (" +
+                    std::to_string(ev.d1) + "," +
+                    std::to_string(ev.d2) + ")";
+    LOG_DEBUG(s);
+
     // TODO
-    // std::cout << playerName_ << " acknowledges AnnounceDiceNumber " << evt.val
-    //           << "(" << evt.d1 << "," << evt.d2 << ")\n";
+    // std::cout << playerName_ << " acknowledges roll: " << ev.val
+    //           << "(" << ev.d1 << "," << ev.d2 << ")\n";
 }
 
 //----------------------------------------------------------------

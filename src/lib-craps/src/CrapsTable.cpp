@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <craps/CrapsTable.h>
+#include <craps/Player.h>
 #include <controller/GameEvents.h>
 #include <controller/Globals.h>
 #include <gen/EventManager.h>
@@ -601,8 +602,15 @@ CrapsTable::rollDice()
 void
 CrapsTable::declareBettingClosed()
 {
-    bettingOpen_ = false; // No more bets
+    LOG_TRACE("Entered CrapsTable::declareBettingClosed()");
+    bettingOpen_ = false;
     Gen::EventManager::instance().publish(Ctrl::UslBettingClosed{});
+    
+    lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
+    for (auto p : players_)
+    {
+        p->bettingClosed();
+    }
 }
 
 //----------------------------------------------------------------
@@ -619,22 +627,24 @@ CrapsTable::declareBettingOpen()
 void
 CrapsTable::throwDice()
 {
-//  Gen::EventManager::instance().publish(Ctrl::UslDiceThrowStart{});
-    
+    LOG_TRACE("Entered CrapsTable::throwDice()");
+    Gen::EventManager::instance().publish(Ctrl::UslDiceThrowStart{});
+
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
     
 //  std::cout << "point:" << point_ << " dice:" << dice_.value()
 //            << "(" << dice_.d1() << "," << dice_.d2() << ")\n";
 
-//    Gen::EventManager::instance().publish(Ctrl::UslDiceThrowEnd{});
+    Gen::EventManager::instance().publish(Ctrl::UslDiceThrowEnd{});
 
-//    Ctrl::UslDiceRollValue ev;
-//    ev.correlationId = Ctrl::getNextCorrelationId();
-//    ev.rollCount = dice_.rollCount();
-//    ev.val = dice_.value();
-//    ev.d1  = dice_.d1();
-//    ev.d2  = dice_.d2();
-//    Gen::EventManager::instance().publish(ev);
+    Ctrl::UslDiceRollValue ev;
+    ev.correlationId = Ctrl::getNextCorrelationId();
+    ev.rollCount = dice_.rollCount();
+    ev.val = dice_.value();
+    ev.d1  = dice_.d1();
+    ev.d2  = dice_.d2();
+    LOG_TRACE("CrapsTable::throwDice() sending UslDiceRollValue");
+    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------
@@ -701,7 +711,6 @@ void
 CrapsTable::resolveBets()
 {
     Gen::EventManager::instance().publish(Ctrl::UslResolveBetsStart{});
-    lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
     evaluateBets();
     dispenseResults();
     trimTableBets();
@@ -1028,7 +1037,7 @@ CrapsTable::getCurrentRoll() const
 unsigned
 CrapsTable::getNumRolls() const
 {
-    return currentStats_.rollStats.numRolls;
+    return dice_.rollCount();
 }
 
 //----------------------------------------------------------------

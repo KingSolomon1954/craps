@@ -7,6 +7,7 @@
 //----------------------------------------------------------------
 
 #include <craps/CrapsTable.h>
+#include <craps/Player.h>
 #include <cassert>
 #include <craps/CrapsBet.h>
 #include <gen/Logger.h>

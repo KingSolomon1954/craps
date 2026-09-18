@@ -6,6 +6,7 @@
 
 #include <cui/CuiMain.h>
 #include <cui/CuiThread.h>
+#include <cui/CuiReceiver.h>
 #include <cui/SurfaceManager.h>
 #include <cui/screens/ScreenCrapsTable.h>
 #include <cui/layouts/LayoutConsole.h>
@@ -179,6 +180,7 @@ void
 CuiMain::run()
 {
     (void) CuiThread::instance();  // Start the CUI thread
+    (void) CuiReceiver::instance();  // Init the Receiver 
 
     // Render the starting screen
     WorkOrder work = {.type = Type::SetSurface,

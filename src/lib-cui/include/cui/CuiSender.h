@@ -13,13 +13,14 @@ class CuiSender
 public:
     /// @name Lifecycle
     /// @{
-    CuiSender();
+    CuiSender() = default;
    ~CuiSender() = default;
     static CuiSender& instance();
     /// @}
 
     /// @name Modifiers
     /// @{
+    void reqRollDice();
     /// @}
 
     /// @name Observers

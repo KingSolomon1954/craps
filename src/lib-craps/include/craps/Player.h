@@ -24,6 +24,10 @@ namespace Gen {
     class ErrorPass;     // fwd
 }
 
+namespace Ctrl {
+    struct UslDiceRollValue;
+}
+
 namespace Craps {
 
 class DecisionRecord;   // fwd
@@ -70,6 +74,7 @@ public:
                               Gen::ErrorPass& ep);
     Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
     void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
+    void bettingClosed();
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
@@ -120,6 +125,12 @@ private:
     PlayerStats       alltimeStats_;
     mutable LastRollStats lastRollStats_;
 
+    // Default bank constants for player
+    static constexpr unsigned InitialStartingBankBalance_ = 30000;
+    static constexpr unsigned RefillThreshold_            = 15000;
+    static constexpr unsigned RefillAmount_               = 20000;
+
+private:    
     BetPtr makeShared(BetName betName,
                       Gen::Money contractAmount,
                       unsigned pivot,
@@ -131,7 +142,7 @@ private:
     void onBettingOpened();
     void onDiceThrowStart();
     void onDiceThrowEnd();
-    void onDiceThrow(/* TODO const AnnounceDiceNumber& evt */);
+    void onDiceRollValue(const Ctrl::UslDiceRollValue& ev);
     void onNewShooter(/* TODO const NewShooter& evt */);
     void onPassLineWinner();
     void onPointEstablished  (/* TODO const PointEstablished& evt */);
@@ -147,11 +158,6 @@ private:
                               size_t idx, Gen::ErrorPass& ep)   const;
     bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep);
     bool fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
-
-    // Default bank constants for player
-    static constexpr unsigned InitialStartingBankBalance_ = 30000;
-    static constexpr unsigned RefillThreshold_            = 15000;
-    static constexpr unsigned RefillAmount_               = 20000;
 };
 
 /*-----------------------------------------------------------*//**

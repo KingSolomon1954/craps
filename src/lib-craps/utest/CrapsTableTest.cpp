@@ -904,7 +904,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
         CHECK(t->getNumBetsOnTable() == 3);
         CHECK(p1->getBalance() == balance - 80 + 10 - 60 + 10 - 10);
     }
-
+    
     SUBCASE("superLong")
     {
         AutoRolls rolls =  // 6,8,8,7 repeat 100,000 times

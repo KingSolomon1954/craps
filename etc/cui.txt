@@ -329,7 +329,7 @@ The Player Brief Panel looks as follows:
 │ NumBets: 55 (21W, 34L)      │
 │ Pct: 38.18% win 61.81% lose │
 │ On table: 3 bets, $320      │
-│ Last: +$80,180W,100L        │
+│ Last: 180W,100L,+$80,       │
 ├─────────────────────────────┤
 
 House Brief Panel
@@ -342,7 +342,7 @@ The House Brief Panel looks as follows:
 │ NumBets: 128 (68W, 60L)     │
 │ Pct: 53.12% win 46.87% lose │
 │ On table: 12 bets, $1,520   │
-│ Last: -$100,300W,200L       │
+│ Last: 300W,200L,-$100       │
 ├─────────────────────────────┤
 
 History Subwindow
@@ -402,7 +402,7 @@ also color coded over their column.
 25  │ Nathan wins PassLine bet, +$200                                    │ House Bal: +$2,050          │
 26  │ Come out roll                                                      │ NumBets: 128 (68W, 60L)     │
 27  │ Shooter rolls a 6(3,3), point is 6                                 │ Pct: 53.1% win, 46.8% lose  │
-28  │ Arthur bets $20 on Hard 4 and 10                                   │ Last: -$100,300W,200L       │
+28  │ Arthur bets $20 on Hard 4 and 10                                   │ Last: 300W,200L,+$100       │
 29  │ Nathan bets $50 PassLine odds                                      │ On table: 12 bets, $1,520   │
 30  │ Arthur places $50 come bet                                         ├─────────────────────────────┤
 31  │ Arthur places $10 Field bet                                        │ Player: Nathan (shooter)    │
@@ -410,7 +410,7 @@ also color coded over their column.
 33  │ Lenny places $500 DontCome                                         │ Bal: $2,000 (+880)          │
 34  │ Nathan places $200 come bet                                        │ NumBets: 55 (21W, 34L)      │
 35  │ Paige places $10 on Field                                          │ Pct: 38.1% win, 61.8% lose  │
-36  │ Another message                                                    │ Last Roll: +$80,180W,100L   │
+36  │ Another message                                                    │ Last: 180W,100L,+$80        │
 37  │ Another message                                                    │ On table: 3 bets, $320      │
 38  ├────────────────────────────────────────────────────────────────────┴─────────────────────────────┤
 39  │ [C] CONTROL        [B] BETTING       [V] VIEW       [S] STATS      |      [H] Help      [Q] Quit │
