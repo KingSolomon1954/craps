@@ -25,10 +25,10 @@ public:
 
     /// @name Observers
     /// @{
-    void onReqRollDice(const Ctrl::ReqRollDice& ev) const;
     /// @}
 
 private:
+    void onReqRollDice(const Ctrl::ReqRollDice& ev) const;
 };
 
 /*-----------------------------------------------------------*//**
@@ -40,11 +40,11 @@ private:
 Has these responsibilities:
 
 @li Listens/subscribes to specific GameEvents.
-@li Listens for certain events from the View (requests).
+@li Listens for certain events (requests) from the View then,
 @li Invokes functions in model/craps, obtaining function return results.
-@li Converts results into a GameEvent and publishes them.
+@li Converts results into a GameEvent and publishes them for View to obtain
 @li Also listens for certain events from the Model/Craps that
-    lib-controller needs to handle, e.g. UslHouseLowOnFunds.
+    lib-controller needs to handle itself, e.g. UslHouseLowOnFunds.
 @li Takes various actions depending on the Craps event.
 */
 

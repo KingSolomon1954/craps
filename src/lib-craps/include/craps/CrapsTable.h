@@ -175,18 +175,21 @@ private:
     DecisionList drl_;
 
     bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
-    void declareBettingClosed();
     void throwDice();
     void resolveBets();
     void advanceState();
     void advanceShooter();
     void bumpRecentRolls(const Dice& dice);
-    void declareBettingOpen();
     void evaluateBets();
     void dispenseResults();
     void trimTableBets();
     void clearDrl();
     void evalOneBet(CrapsBet& bet);
+
+    void declareBettingClosed();
+    void declareDiceThrowStart();
+    void declareDiceNewValue();
+    void declareBettingOpen();
 
     Gen::ReturnCode removePlayerByPtr(Player* pPlayer, Gen::ErrorPass& ep);
     void removePlayerBets            (Player* pPlayer);

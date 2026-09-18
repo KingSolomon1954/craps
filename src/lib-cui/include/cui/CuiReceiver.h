@@ -26,10 +26,10 @@ public:
 
     /// @name Observers
     /// @{
-    void onDiceRollValue(const Ctrl::UslDiceRollValue& ev) const;
     /// @}
         
 private:
+    void onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const;
 };
 
 /*-----------------------------------------------------------*//**

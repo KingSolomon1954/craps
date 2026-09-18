@@ -190,54 +190,15 @@ Player::shutdown()
 void
 Player::setupSubscriptions()
 {
-    Gen::EventManager::instance().subscribe<Ctrl::UslDiceThrowStart>(
-        [this](const Ctrl::UslDiceThrowStart&)
-        {
-            this->onDiceThrowStart();
-        });
-
-#if 0
-    eventMgr_.subscribe<BettingClosed>(
-        [this](const BettingClosed&)
-        {
-            this->onBettingClosed();
-        });
-    eventMgr_.subscribe<BettingOpened>(
-        [this](const BettingOpened&)
-        {
-            this->onBettingOpened();
-        });
-    eventMgr_.subscribe<DiceThrowEnd>(
-        [this](const DiceThrowEnd&)
-        {
-            this->onDiceThrowEnd();
-        });
-    eventMgr_.subscribe<AnnounceDiceNumber>(
-        [this](const AnnounceDiceNumber& evt)
-        {
-            this->onAnnounceDiceNumber(evt);
-        });
-    eventMgr_.subscribe<PointEstablished>(
-        [this](const PointEstablished& evt)
-        {
-            this->onPointEstablished(evt);
-        });
-    eventMgr_.subscribe<SevenOut>(
-        [this](const SevenOut&)
-        {
-            this->onSevenOut();
-        });
-    eventMgr_.subscribe<PassLineWinner>(
-        [this](const PassLineWinner&)
-        {
-            this->onPassLineWinner();
-        });
-    eventMgr_.subscribe<NewShooter>(
-        [this](const NewShooter& evt)
-        {
-            this->onNewShooter(evt);
-        });
-    #endif
+    // Does not listen for events at this time.
+    
+    // Example here just to show syntax.
+    //
+    // Gen::EventManager::instance().subscribe<Ctrl::UslDiceThrowStart>(
+    //     [this](const Ctrl::UslDiceThrowStart&)
+    //     {
+    //         this->onDiceThrowStart();
+    //     });
 }
 
 //----------------------------------------------------------------
@@ -532,9 +493,10 @@ Player::setContractAmount(
 
 /*-----------------------------------------------------------*//**
 
-Table informs us directly (inline) that betting is closed.  Can't use
-the UslBettingClosed event since that is asynchronous and bets will have
-already have been resolved by the time we see UslBettingClosed.
+CrapsTable informs us directly (inline) that betting is closed. Can't
+use UslBettingClosed or UslDiceThrowStart event since that is
+asynchronous and bets will have already have been resolved by the time
+we see those events.
 
 */
 void
@@ -934,103 +896,13 @@ Player::getSessionHistory() const
 //----------------------------------------------------------------
 
 void
-Player::onBettingClosed()
-{
-    // TODO
-    // std::cout << playerName_ << " acknowledges BettingClosed\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onBettingOpened()
-{
-    // TODO
-    // std::cout << playerName_ << " acknowledges BettingOpen\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onDiceThrowStart()
-{
-    // TODO
-    // std::cout << playerName_ << " acknowledges DiceThrowStart\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onDiceThrowEnd()
-{
-    // TODO
-    // std::cout << playerName_ << " acknowledges DiceThrowEnd\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onDiceRollValue(const Ctrl::UslDiceRollValue& ev)
-{
-    LOG_TRACE("Entered Player::onDiceRollValue()");
-    std::string s = "Player::onDiceRollValue() Dice " +
-                    std::to_string(ev.rollCount) + " (" +
-                    std::to_string(ev.d1) + "," +
-                    std::to_string(ev.d2) + ")";
-    LOG_DEBUG(s);
-
-    // TODO
-    // std::cout << playerName_ << " acknowledges roll: " << ev.val
-    //           << "(" << ev.d1 << "," << ev.d2 << ")\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onPointEstablished(/* TODO const PointEstablished& evt */)
-{
-    // TODO
-    // std::cout << playerName_ << " acknowledges PointEstablished " << evt.point << "\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onSevenOut()
-{
-    // TODO
-    // std::cout << playerName_ << " acknowledges SevenOut\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onPassLineWinner()
-{
-    // TODO
-    // std::cout << playerName_ << " acknowledges PassLineWinner\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onNewShooter(/* TODO const NewShooter& evt */)
-{
-    // TODO
-    // std::cout << playerName_ << " acknowledges NewShooter " <<
-    //      Gbl::pPlayerMgr->getPlayer(evt.shooterId)->getName() << "\n";
-}
-
-//----------------------------------------------------------------
-
-void
 Player::diagBadBetId(const std::string& funcName, BetId betId) const
 {
     std::string diag =
         "Internal Error: Unable to process decision record. "
         "Player::" + funcName + "cant match "
         "decision record betId against any betId held "
-        "in player betList. Bad betId" + std::to_string(betId);
+        "in player betList. Bad betId:" + std::to_string(betId);
     // TODO: error manager
     std::cerr << diag << std::endl;
 }
@@ -1040,6 +912,7 @@ Player::diagBadBetId(const std::string& funcName, BetId betId) const
 std::string
 Player::diagPrefix(size_t idx) const
 {
+    assert(idx == 1 || idx == 2);
     std::string diag("Player::");
     if (idx == 1)
     {
@@ -1049,7 +922,6 @@ Player::diagPrefix(size_t idx) const
     {
         diag += "setOdds(): Player:" + playerName_  + "; Unable to set odds; ";
     }
-    if (idx > 2) assert(false);
     return diag;
 }
 

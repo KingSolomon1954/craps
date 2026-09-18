@@ -40,8 +40,7 @@ enum class EventType
     UslBettingClosed,
     UslBettingOpened,
     UslDiceThrowStart,
-    UslDiceThrowEnd,
-    UslDiceRollValue,
+    UslDiceNewValue,
     UslResolveBetsStart,
     UslResolveBetsEnd,
     UslPointEstablished,
@@ -114,6 +113,7 @@ struct UslBettingClosed : public GameEvent
 
 struct UslDiceThrowStart : public GameEvent
 {
+    unsigned rollCount = 0;
     UslDiceThrowStart()
         : GameEvent{EventSource::Model, EventType::UslDiceThrowStart}
     {}
@@ -121,24 +121,15 @@ struct UslDiceThrowStart : public GameEvent
 
 //----------------------------------------------------------------
 
-struct UslDiceThrowEnd : public GameEvent
-{
-    UslDiceThrowEnd()
-        : GameEvent{EventSource::Model, EventType::UslDiceThrowEnd}
-    {}
-};
-
-//----------------------------------------------------------------
-
-struct UslDiceRollValue : public GameEvent
+struct UslDiceNewValue : public GameEvent
 {
     unsigned rollCount = 0;
     unsigned val = 0;
     unsigned d1 = 0;
     unsigned d2 = 0;
     
-    UslDiceRollValue()
-        : GameEvent{EventSource::Model, EventType::UslDiceRollValue}
+    UslDiceNewValue()
+        : GameEvent{EventSource::Model, EventType::UslDiceNewValue}
     {}
 };
 

@@ -138,15 +138,6 @@ private:
     BetPtr findBetById(const BetId& betId) const;
     bool removeBetByPtr(BetPtr& pBet);
     void setupSubscriptions();
-    void onBettingClosed();
-    void onBettingOpened();
-    void onDiceThrowStart();
-    void onDiceThrowEnd();
-    void onDiceRollValue(const Ctrl::UslDiceRollValue& ev);
-    void onNewShooter(/* TODO const NewShooter& evt */);
-    void onPassLineWinner();
-    void onPointEstablished  (/* TODO const PointEstablished& evt */);
-    void onSevenOut();
     void setName(const std::string& playerName);
 
     // Validity checks with diagnostics

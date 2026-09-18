@@ -15,11 +15,12 @@ namespace Cui {
 
 enum class Type
 {
-    Key,
     Draw,
-    SetSurface,
+    Event,
+    Key,
     PopSurface,
-    PushSurface
+    PushSurface,
+    SetSurface
 };
 
 //----------------------------------------------------------------

@@ -625,19 +625,19 @@ CrapsTable::declareBettingOpen()
 //----------------------------------------------------------------
 
 void
-CrapsTable::throwDice()
+CrapsTable::declareDiceThrowStart()
 {
-    LOG_TRACE("Entered CrapsTable::throwDice()");
-    Gen::EventManager::instance().publish(Ctrl::UslDiceThrowStart{});
+    Ctrl::UslDiceThrowStart ev0;
+    ev0.rollCount = dice_.rollCount();
+    Gen::EventManager::instance().publish(ev0);
+}
 
-    if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
-    
-//  std::cout << "point:" << point_ << " dice:" << dice_.value()
-//            << "(" << dice_.d1() << "," << dice_.d2() << ")\n";
+//----------------------------------------------------------------
 
-    Gen::EventManager::instance().publish(Ctrl::UslDiceThrowEnd{});
-
-    Ctrl::UslDiceRollValue ev;
+void
+CrapsTable::declareDiceNewValue()
+{
+    Ctrl::UslDiceNewValue ev;
     ev.correlationId = Ctrl::getNextCorrelationId();
     ev.rollCount = dice_.rollCount();
     ev.val = dice_.value();
@@ -645,6 +645,17 @@ CrapsTable::throwDice()
     ev.d2  = dice_.d2();
     LOG_TRACE("CrapsTable::throwDice() sending UslDiceRollValue");
     Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::throwDice()
+{
+    LOG_TRACE("Entered CrapsTable::throwDice()");
+    declareDiceThrowStart();
+    if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
+    declareDiceNewValue();
 }
 
 //----------------------------------------------------------------
