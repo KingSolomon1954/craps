@@ -35,7 +35,7 @@ target_include_directories(cui
 
 target_link_libraries(cui
     PUBLIC gen controller
-    PRIVATE ncurses
+    PRIVATE ncurses 
 )
 
 target_compile_definitions(cui

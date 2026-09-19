@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: TimerManager.h
+// File: TimerManager.cpp
 //
 //----------------------------------------------------------------
 
@@ -11,11 +11,18 @@ using namespace Gen;
 //----------------------------------------------------------------
 
 TimerManager::TimerManager()
-    : io_()
-    , work_(boost::asio::make_work_guard(io_))
-    , running_(true)
-    , thread_(std::thread([this]() {io_.run(); }))
+    : running_(true)
+    , thread_(&TimerManager::timerThread, this)
 {
+}
+
+//----------------------------------------------------------------
+
+TimerManager&
+TimerManager::instance()
+{
+    static TimerManager tm;
+    return tm;
 }
 
 //----------------------------------------------------------------
@@ -23,6 +30,7 @@ TimerManager::TimerManager()
 TimerManager::~TimerManager()
 {
     stop();
+
     if (thread_.joinable())
     {
         thread_.join();
@@ -34,10 +42,18 @@ TimerManager::~TimerManager()
 void
 TimerManager::stop()
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    running_ = false;
-    work_.reset();  // allow run() to exit
-    io_.stop();
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+
+        if (!running_)
+        {
+            return;
+        }
+
+        running_ = false;
+    }
+
+    cv_.notify_one();
 }
 
 //----------------------------------------------------------------
@@ -45,17 +61,22 @@ TimerManager::stop()
 TimerManager::TimerId
 TimerManager::createTimer(TimerCallback cb, bool repeat)
 {
-    TimerId id = nextId_++;
     std::lock_guard<std::mutex> lock(mutex_);
-    TimerEntry entry
-    {
-        std::make_unique<boost::asio::steady_timer>(io_),
-        cb,
-        std::chrono::milliseconds{0},
-        repeat,
-        false
-    };
-    timers_.emplace(id, std::move(entry));
+
+    TimerId id = nextId_++;
+
+    timers_.emplace(
+        id,
+        TimerEntry
+        {
+            std::move(cb),
+            std::chrono::milliseconds{0},
+            TimePoint{},
+            repeat,
+            false,
+            false
+        });
+
     return id;
 }
 
@@ -67,34 +88,41 @@ TimerManager::createTimer(
     std::chrono::milliseconds duration,
     bool repeat)
 {
-    TimerId id = createTimer(cb, repeat);
+    TimerId id = createTimer(std::move(cb), repeat);
+
     armTimer(id, duration, repeat);
+
     return id;
 }
 
 //----------------------------------------------------------------
 
 void
-TimerManager::armTimer(TimerId id,
-                       std::chrono::milliseconds duration,
-                       bool repeat)
+TimerManager::armTimer(
+    TimerId id,
+    std::chrono::milliseconds duration,
+    bool repeat)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    auto it = timers_.find(id);
-    if (it == timers_.end()) return;
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
 
-    auto& entry = it->second;
-    entry.interval = duration;
-    entry.repeat = repeat;
-    entry.active = true;
-
-    entry.timer->expires_after(duration);
-    entry.timer->async_wait(
-        [this, id](const boost::system::error_code& ec)
+        auto it = timers_.find(id);
+        if (it == timers_.end())
         {
-            if (!ec) timerHandler(id);
+            return;
         }
-    );
+
+        auto& entry = it->second;
+
+        entry.interval = duration;
+        entry.repeat = repeat;
+        entry.expiresAt = Clock::now() + duration;
+        entry.active = true;
+        entry.configured = true;
+    }
+
+    // The earliest timer may have changed.
+    cv_.notify_one();
 }
 
 //----------------------------------------------------------------
@@ -102,13 +130,20 @@ TimerManager::armTimer(TimerId id,
 void
 TimerManager::cancelTimer(TimerId id)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    auto it = timers_.find(id);
-    if (it != timers_.end())
     {
-        it->second.timer->cancel();
+        std::lock_guard<std::mutex> lock(mutex_);
+
+        auto it = timers_.find(id);
+        if (it == timers_.end())
+        {
+            return;
+        }
+
+        // Preserve interval/repeat/configured.
         it->second.active = false;
     }
+
+    cv_.notify_one();
 }
 
 //----------------------------------------------------------------
@@ -116,53 +151,129 @@ TimerManager::cancelTimer(TimerId id)
 void
 TimerManager::restartTimer(TimerId id)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    auto it = timers_.find(id);
-    if (it == timers_.end()) return;
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
 
-    auto& entry = it->second;
-    if (!entry.active || !entry.callback) return;
-
-    entry.timer->expires_after(entry.interval);
-    entry.timer->async_wait(
-        [this, id](const boost::system::error_code& ec)
+        auto it = timers_.find(id);
+        if (it == timers_.end())
         {
-            if (!ec) timerHandler(id);
+            return;
         }
-    );
+
+        auto& entry = it->second;
+
+        // Never armed/configured, so there is nothing to restart.
+        if (!entry.configured || !entry.callback)
+        {
+            return;
+        }
+
+        entry.expiresAt = Clock::now() + entry.interval;
+        entry.active = true;
+    }
+
+    cv_.notify_one();
+}
+
+//----------------------------------------------------------------
+
+bool
+TimerManager::hasActiveTimer() const
+{
+    for (const auto& [id, entry] : timers_)
+    {
+        if (entry.active)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //----------------------------------------------------------------
 
 void
-TimerManager::timerHandler(TimerId id)
+TimerManager::timerThread()
 {
-    TimerCallback cb;
-    bool repeat = false;
+    std::unique_lock<std::mutex> lock(mutex_);
+
+    while (running_)
     {
-        std::lock_guard<std::mutex> lock(mutex_);
-        auto it = timers_.find(id);
-        if (it == timers_.end() || !it->second.active) return;
+        // Find the earliest active timer.
+        auto nextTimer = timers_.end();
 
-        cb = it->second.callback;
-        repeat = it->second.repeat;
-
-        if (repeat)
+        for (auto it = timers_.begin(); it != timers_.end(); ++it)
         {
-            it->second.timer->expires_after(it->second.interval);
-            it->second.timer->async_wait(
-                [this, id](const boost::system::error_code& ec)
-                {
-                    if (!ec) timerHandler(id);
-                }
-            );
+            if (!it->second.active)
+            {
+                continue;
+            }
+
+            if (nextTimer == timers_.end() ||
+                it->second.expiresAt < nextTimer->second.expiresAt)
+            {
+                nextTimer = it;
+            }
         }
-        else
+
+        // No active timers. Wait until something changes.
+        if (nextTimer == timers_.end())
         {
-            it->second.active = false;
+            cv_.wait(lock, [this]
+            {
+                return !running_ || hasActiveTimer();
+            });
+
+            continue;
+        }
+
+        const auto expiresAt = nextTimer->second.expiresAt;
+
+        // Wait until this timer expires, or until another
+        // operation changes the timer set.
+        if (cv_.wait_until(lock, expiresAt) ==
+            std::cv_status::timeout)
+        {
+            if (!running_)
+            {
+                break;
+            }
+
+            const auto now = Clock::now();
+
+            // Re-check because the timer may have been
+            // cancelled or restarted while we were waiting.
+            if (!nextTimer->second.active ||
+                nextTimer->second.expiresAt > now)
+            {
+                continue;
+            }
+
+            auto& entry = nextTimer->second;
+
+            TimerCallback callback = entry.callback;
+
+            if (entry.repeat)
+            {
+                entry.expiresAt = Clock::now() + entry.interval;
+            }
+            else
+            {
+                entry.active = false;
+            }
+
+            // Never invoke client code while holding mutex_.
+            lock.unlock();
+
+            if (callback)
+            {
+                callback();
+            }
+
+            lock.lock();
         }
     }
-    if (cb) cb();
 }
 
 //----------------------------------------------------------------

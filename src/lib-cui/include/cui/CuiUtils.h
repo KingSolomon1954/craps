@@ -8,6 +8,8 @@
 
 #include <cui/CuiStructs.h>
 #include <ncurses.h>
+#include <string>
+#include <wchar.h>
 
 //----------------------------------------------------------------
 
@@ -22,6 +24,7 @@ public:
     static WINDOW* makeCenteredWindow(WINDOW* pWin, int h, int w);
     static WindowRect centerRect(WINDOW* pWin, WindowSize size);
     static WindowRect getWindowRect(WINDOW* pWin);
+    static int wstringWidth(const std::wstring& msg);
     /// @}
 };
 

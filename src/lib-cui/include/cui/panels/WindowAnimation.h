@@ -8,6 +8,7 @@
 
 #include <cui/bases/PanelBase.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <gen/TimerManager.h>
 
 namespace Cui
 {
@@ -24,6 +25,8 @@ public:
     /// @name Modifiers
     /// @{
     void draw() override;
+    void onDiceThrowStart();
+    void onDiceNewValue(int d1, int d2, int rollCount);
     /// @}
 
     /// @name Observers
@@ -43,11 +46,38 @@ private:
         static constexpr int animationRightCol = L::animationBorderRightCol - 1;
         static constexpr int animationHeight   = animationBotRow   - animationTopRow  + 1;
         static constexpr int animationWidth    = animationRightCol - animationLeftCol + 1;
-    };        
+    };
 
+    enum class AnimationState
+    {
+        NoRoll,
+        Animating,
+        ShowingRoll
+    };
+
+    struct DiceRoll
+    {
+        unsigned rollCount = 0;
+        unsigned value = 0;
+        unsigned d1 = 0;
+        unsigned d2 = 0;
+    };
+
+    AnimationState state_ = AnimationState::NoRoll;
+    DiceRoll lastRoll_;
+    Gen::TimerManager::TimerId timerId_;
+    
+private:    
     WindowAnimation();
-    void animate();
+    void drawBanner();
+    void drawNoRoll();
+    void drawAnimationFrame();
+    void drawFinalDice();
     void drawDie(int top, int left, int value);
+    void startAnimation();
+    void stopAnimation();
+    void animateFrame();
+    void enqueueDraw();
 };
 
 } // namespace Cui

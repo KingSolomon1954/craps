@@ -4,7 +4,6 @@
 #
 # -----------------------------------------------------------------
 
-find_package(Boost REQUIRED COMPONENTS asio)
 find_package(rang REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
@@ -32,7 +31,6 @@ target_include_directories(gen
 )
 
 target_link_libraries(gen
-    PRIVATE boost::boost
     PUBLIC rang::rang
     PUBLIC yaml-cpp::yaml-cpp
 )

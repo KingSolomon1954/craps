@@ -5,6 +5,7 @@
 //---------------------------------------------------------------
 
 #include <cui/CuiUtils.h>
+#include <cwchar>
 
 using namespace Cui;
 
@@ -93,6 +94,23 @@ CuiUtils::centerRect(WINDOW* pWin, WindowSize size)
     int start_c = (size.cols - rect.cols) / 2;
     
     return {start_r, start_c, size.rows, size.cols};
+}
+
+//----------------------------------------------------------------
+//
+// Determine size of wide string taking into account any 
+// embedded wchars.
+//
+int
+CuiUtils::wstringWidth(const std::wstring& s)
+{
+    int msgW = 0;
+    for (wchar_t ch : s)
+    {
+        int w = wcwidth(ch);
+        if (w > 0) msgW += w;
+    }
+    return msgW;
 }
 
 //----------------------------------------------------------------

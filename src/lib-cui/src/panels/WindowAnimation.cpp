@@ -7,10 +7,10 @@
 #include <cui/panels/WindowAnimation.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/CuiMain.h>
+#include <cui/CuiThread.h>
 #include <cui/CuiUtils.h>
-#include <controller/CrapsReaders.h>
+#include <cui/WorkOrder.h>
 #include <wchar.h>
-#include <cwchar>
 
 using namespace Cui;
 
@@ -23,6 +23,15 @@ WindowAnimation::WindowAnimation()
               Layout::animationWidth,
               Layout::animationTopRow,
               Layout::animationLeftCol);
+
+    // Timer callback to render animation frames
+    timerId_ = Gen::TimerManager::instance().createTimer(
+            [&]
+            {
+                enqueueDraw();
+            }
+        ); // Not armed yet
+    std::srand((unsigned)std::time(nullptr));
 }
 
 //----------------------------------------------------------------
@@ -37,18 +46,152 @@ WindowAnimation::instance()
 //----------------------------------------------------------------
 
 void
+WindowAnimation::onDiceThrowStart()
+{
+    state_ = AnimationState::Animating;
+    startAnimation();
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::startAnimation()
+{
+    // Start the animation timer, repeats every "n" mils.
+    Gen::TimerManager::instance().armTimer(
+        timerId_, std::chrono::milliseconds(90), true);
+}
+
+//----------------------------------------------------------------
+//
+// Called by animation rendering when dice finally lands at 
+// final resting spot.
+//
+void
+WindowAnimation::stopAnimation()
+{
+    Gen::TimerManager::instance().cancelTimer(timerId_);
+    state_ = AnimationState::ShowingRoll;
+
+    // One last draw() workorder. // Will draw() final
+    // dice in the ShowingRoll state
+    enqueueDraw();
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::onDiceNewValue(int d1, int d2, int rollCount)
+{
+    lastRoll_.d1 = d1;
+    lastRoll_.d2 = d2;
+    lastRoll_.value = d1 + d2;
+    lastRoll_.rollCount = rollCount;
+
+    // These values will be used later when the animation finishes.
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::enqueueDraw()
+{
+    WorkOrderSurface wo{.type = SurfaceType::Draw, .pSurface = this};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
 WindowAnimation::draw()
 {
     werase(pWin_);
+    
+    switch(state_)
+    {
+    case AnimationState::NoRoll:      drawNoRoll();         break;
+    case AnimationState::Animating:   drawAnimationFrame(); break;
+    case AnimationState::ShowingRoll: drawFinalDice();      break;
+    }
 
-    // drawExternalJunctions(); // N/A
-    // drawInternalBorders();   // N/A
-    // drawStaticContent();     // N/A
-    std::string msg = "Animation Window "; +
-    mvwprintw(pWin_, 0, (Layout::animationWidth - msg.size()) / 2, "%s", msg.c_str());
-
-    animate();
     CuiUtils::transfer(pWin_);
+}
+
+//----------------------------------------------------------------
+//
+// Display this on top line of animation window:  🎲 Rolling... 🎲
+// 
+void
+WindowAnimation::drawBanner()
+{
+    std::wstring left  = L"\U0001F3B2 ";
+    std::wstring right = L" \U0001F3B2";
+    std::wstring middle;
+    
+    if (state_ == AnimationState::NoRoll)
+    {
+        middle = L"Roll Waiting";
+    }
+
+    if (state_ == AnimationState::Animating)
+    {
+        middle = L"Rolling ...";
+    }
+
+    if (state_ == AnimationState::ShowingRoll)
+    {
+        middle = std::to_wstring(lastRoll_.value)     +
+                 L"(" + std::to_wstring(lastRoll_.d1) +
+                 L"," + std::to_wstring(lastRoll_.d2);
+    }
+
+    std::wstring msg = left + middle + right;
+
+    int msgW = 0;
+    for (wchar_t ch : msg)
+    {
+        int w = wcwidth(ch);
+        if (w > 0) msgW += w;
+    }
+    mvwaddwstr(pWin_, 0, (Layout::animationWidth - msgW) / 2, msg.c_str());
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::drawNoRoll()
+{
+    // Leave window blank. Initial state. There's no dice to show.
+    drawBanner();
+}
+
+//----------------------------------------------------------------
+//
+// Draws one animation frame.
+//
+// When the animation frame timer triggers, it enqueues a
+// draw workorder to the CuiThread, which the SurfaceManager
+// fields and forwards to here.
+//
+void
+WindowAnimation::drawAnimationFrame()
+{
+    drawBanner();
+    animateFrame();  // Render a new animation frame
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::drawFinalDice()
+{
+#if 0    
+    int landing_y = L::animationHeight - die_h;
+
+    drawDie(landing_y, j1, final1);
+    drawDie(landing_y, j2, final2);
+#endif
+
 }
 
 //----------------------------------------------------------------
@@ -75,7 +218,7 @@ WindowAnimation::drawDie(int top, int left, int value)
     }
 
     // interior coordinates
-    int rTop = top + 1,  rMid = top + 2,  rBot = top + 3;
+    int rTop = top  + 1, rMid = top  + 2, rBot = top  + 3;
     int cL   = left + 2, cM   = left + 3, cR   = left + 4;
 
     auto pip = [&](int y, int x)
@@ -107,13 +250,10 @@ WindowAnimation::drawDie(int top, int left, int value)
 //----------------------------------------------------------------
 
 void
-WindowAnimation::animate()
+WindowAnimation::animateFrame()
 {
     using L = Layout;
     
-    static bool seeded = false;
-    if (!seeded) { std::srand((unsigned)std::time(nullptr)); seeded = true; }
-
     const int die_w   = 7;
     const int die_h   = 5;
     const int spacing = 4;
@@ -129,6 +269,7 @@ WindowAnimation::animate()
     int start_y   = 1;
     int landing_y = L::animationHeight - die_h;
 
+// TODO flatten
     // Fall with horizontal jitter
     for (int y = start_y; y <= landing_y; ++y)
     {
@@ -159,10 +300,8 @@ WindowAnimation::animate()
         napms(90);  // napms(28);
     }
 
-    // Final rolled values
-    int final1 = (std::rand() % 6) + 1;
-    int final2 = (std::rand() % 6) + 1;
-
+//  TODO Flatten, Move out of here
+    
     // Settle
     int amplitudes[] = {2, 1, 1, 0};
     for (int a : amplitudes)
@@ -179,35 +318,22 @@ WindowAnimation::animate()
 
         werase(pWin_);
 
-        drawDie(landing_y, j1, final1);
-        drawDie(landing_y, j2, final2);
+        drawDie(landing_y, j1, lastRoll_.d1);
+        drawDie(landing_y, j2, lastRoll_.d2);
 
         wrefresh(pWin_);
         napms(55);
     }
 
+    // call stopAnimation() when dice reach bottom of the window
+
+    // Move out of here
     // Final clean render (no jitter)
     werase(pWin_);
     
-    int total = final1 + final2;
-
-    std::wstring msg =
-        L"\U0001F3B2 Roll " + std::to_wstring(total)  +
-        L"("                + std::to_wstring(final1) +
-        L","                + std::to_wstring(final2) +
-        L") \U0001F3B2";
-
-    int msgW = 0;
-    for (wchar_t ch : msg)
-    {
-        int w = wcwidth(ch);
-        if (w > 0) msgW += w;
-    }
-    mvwaddwstr(pWin_, 0, (L::animationWidth - msgW) / 2, msg.c_str());
-
     // Draw dice
-    drawDie(landing_y, die1_x, final1);
-    drawDie(landing_y, die2_x, final2);
+    drawDie(landing_y, die1_x, lastRoll_.d1);
+    drawDie(landing_y, die2_x, lastRoll_.d2);
     wrefresh(pWin_);
 }
 
