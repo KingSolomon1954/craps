@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include <cui/bases/SurfaceBase.h>
 #include <controller/GameEvents.h>
 #include <ncurses.h>
 
 namespace Cui {
+
+class SurfaceBase;  // fwd
 
 //----------------------------------------------------------------
 

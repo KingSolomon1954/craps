@@ -24,6 +24,7 @@ add_library(cui STATIC
     src/menus/MenuPlaceBet.cpp
     src/menus/MenuNavBarViews.cpp
     src/screens/ScreenCrapsTable.cpp
+    src/panels/WindowAnimation.cpp
     src/panels/WindowNavBar.cpp
     src/panels/WindowPlayerArea.cpp
 )

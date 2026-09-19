@@ -22,6 +22,7 @@ target_link_libraries(royalcraps
     PRIVATE controller
     PRIVATE cui
     PRIVATE gui
+    PRIVATE ncursesw
 )
 
 # Address Sanitizer flags

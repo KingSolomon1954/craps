@@ -148,7 +148,8 @@ static void draw_die(WINDOW* w, int top, int left, int value)
     int cL   = left + 2, cM   = left + 3, cR   = left + 4;
 
     auto pip = [&](int y, int x){
-        static bool useUnicodePips = false;
+//      static bool useUnicodePips = false;
+        static bool useUnicodePips = true;
 //      mvwaddch(w, y, x, '*' | A_BOLD);
 //      mvwaddch(w, y, x, ACS_BULLET);
 //      mvwaddch(w, y, x, '*');
@@ -229,7 +230,8 @@ static void animate_roll(WINDOW* anim_win)
         draw_die(anim_win, y, j2, v2);
 
         wrefresh(anim_win);
-        napms(28);
+//        napms(28);
+        napms(90);        
     }
 
     // Final rolled values
@@ -261,9 +263,11 @@ static void animate_roll(WINDOW* anim_win)
 
     // Final clean render (no jitter)
     werase(anim_win);
-    std::string msg = "You rolled " + std::to_string(final1) + " + "
-                      + std::to_string(final2) + " = "
-                      + std::to_string(final1 + final2);
+    std::string msg = "Roll " +
+                      std::to_string(final1 + final2) + "(" +
+                      std::to_string(final1)          + "," +
+                      std::to_string(final2)          + ")";
+
     mvwprintw(anim_win, 0, (max_x - msg.size()) / 2, "%s", msg.c_str());
 
     // Draw dice
@@ -287,8 +291,8 @@ int main()
 
     // Test writing into each window
     mvwprintw(w.header,  0, 0, "Header text here");
-    mvwprintw(w.history, 0, 0, "History entry");
-    mvwprintw(w.table,   0, 0, "Table content...");
+    mvwprintw(w.history, 0, 0, "Roll History");
+    mvwprintw(w.table,   0, 0, "Player Area...");
     mvwprintw(w.message, 0, 0, "Messages go here");
 
     mvwprintw(w.animation, 0, 0, "Animation area");

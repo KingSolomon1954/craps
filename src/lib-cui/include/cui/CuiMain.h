@@ -17,6 +17,7 @@ public:
    
     static CuiMain& instance();
     void shutdown();
+    bool useUnicodePips() const;
     
 private:
     bool useUnicodePips_ = false;

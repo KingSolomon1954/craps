@@ -81,9 +81,9 @@ struct GameEvent
           correlationId(getNextCorrelationId())
     {
         // All events get a value for unique ID and a correlationId. In
-        // the case of response events, the caller is responsible for
-        // overwriting the correlationId with the source event's
-        // correlationId.
+        // the case of response events (or other related events), the
+        // caller is responsible for overwriting the correlationId with
+        // the source event's correlationId.
     }
 };
 

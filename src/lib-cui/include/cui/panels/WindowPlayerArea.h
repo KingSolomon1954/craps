@@ -31,13 +31,6 @@ public:
     void allPlayers();
     /// @}
 
-    /// @name EventHandlers
-    void onPlayerJoined(const Craps::PlayerId& pid);
-    void onPlayerLeft  (const Craps::PlayerId& pid);
-    void onBetPlaced(const Craps::PlayerId& pid, Craps::BetId bid);
-    void onBetFailed(const Craps::PlayerId& pid, const std::string& reason);
-    /// @}
-
     /// @name Observers
     /// @{
     static WindowPlayerArea& instance();
@@ -76,7 +69,9 @@ private:
     std::vector<Craps::PlayerId> playerIds_;
     OneOrAll currentFocus_ = OneOrAll::OnePlayer;
 
-    WindowPlayerArea();    // Private ctor
+private:
+    
+    WindowPlayerArea();
     void initPlayers();
     void createWindow();
     void drawExternalJunctions();
@@ -93,10 +88,6 @@ private:
     void advancePlayer(bool next);
     Craps::PlayerId getNextPlayerId(const Craps::PlayerId& pid) const;
     Craps::PlayerId getPrevPlayerId(const Craps::PlayerId& pid) const;
-
-// TODO: subscribe to players leaving/joining table
-// TODO: update PlayerList upon notification
-
 };
 
 } // namespace Cui

@@ -13,7 +13,7 @@
 // #include <cui/panels/WindowRollHistory.h>
 #include <cui/panels/WindowPlayerArea.h>
 // #include <cui/panels/WindowMessages.h>
-// #include <cui/panels/WindowAnimation.h>
+#include <cui/panels/WindowAnimation.h>
 // #include <cui/panels/WindowHouseBrief.h>
 // #include <cui/panels/WindowPlayerBrief.h>
 #include <cui/panels/WindowNavBar.h>
@@ -63,7 +63,7 @@ ScreenCrapsTable::draw()  // Override
 //     WindowRollHistory::instance().draw();
        WindowPlayerArea::instance().draw();
 //     WindowMessages::instance().draw();
-//     WindowAnimation::instance().draw();
+       WindowAnimation::instance().draw();
 //     WindowHouseBrief::instance().draw();
 //     WindowPlayerBrief::instance().draw();
     drawNavBar();

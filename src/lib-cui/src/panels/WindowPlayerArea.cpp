@@ -8,10 +8,8 @@
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/layouts/LayoutPlayerArea.h>
 #include <cui/CuiUtils.h>
-#include <cui/SurfaceManager.h>
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
-#include <gen/Logger.h>
 
 using namespace Cui;
 
@@ -352,22 +350,6 @@ WindowPlayerArea::advancePlayer(bool next)
     curPlayerId_ = pid;
     populateOnePlayer();
     CuiUtils::transfer(pWin_);
-}
-
-//----------------------------------------------------------------
-
-void
-WindowPlayerArea::onPlayerJoined(const Craps::PlayerId& pid)
-{
-    // TODO
-}
-
-//----------------------------------------------------------------
-
-void
-WindowPlayerArea::onPlayerLeft(const Craps::PlayerId& pid)
-{
-    // TODO
 }
 
 //----------------------------------------------------------------
