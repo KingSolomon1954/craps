@@ -316,6 +316,9 @@ MenuBetting::doQuickBet()
 void
 MenuBetting::doRollDice()
 {
+    LOG_TRACE("MenuBetting::doRollDice()");
+    if (SurfaceManager::instance().isActiveSurface(this))
+        SurfaceManager::instance().popSurface();
     CuiSender::instance().reqRollDice();
 }
 

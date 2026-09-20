@@ -43,6 +43,7 @@ struct WorkOrderKey
     
 using GameEvent = std::variant<
     Ctrl::UslBettingOpened,
+    Ctrl::UslDiceThrowStart,
     Ctrl::UslDiceNewValue
     >;
     

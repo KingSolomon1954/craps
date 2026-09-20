@@ -27,7 +27,14 @@ CuiReceiver::instance()
 CuiReceiver::CuiReceiver()
 {
     // TODO subscribe ...
-    
+
+    LOG_TRACE("CuiReceiver() subscribing to UslDiceThrowStart");
+    Gen::EventManager::instance().subscribe<Ctrl::UslDiceThrowStart>(
+        [this](const Ctrl::UslDiceThrowStart& ev)
+        {
+            this->onDiceThrowStart(ev);
+        });
+
     LOG_TRACE("CuiReceiver() subscribing to UslDiceNewValue");
     Gen::EventManager::instance().subscribe<Ctrl::UslDiceNewValue>(
         [this](const Ctrl::UslDiceNewValue& ev)
@@ -39,12 +46,24 @@ CuiReceiver::CuiReceiver()
 //----------------------------------------------------------------
 
 void
-CuiReceiver::onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const
+CuiReceiver::onDiceThrowStart(const Ctrl::UslDiceThrowStart& ev) const
 {
+    LOG_TRACE("Entered CuiReceiver()::onDiceThrowStart()");
+
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
-    
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const
+{
     LOG_TRACE("Entered CuiReceiver()::onDiceNewValue()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+
     std::string s = "CuiReceiver::onDiceNewValue() Dice " +
                     std::to_string(ev.val) + " ("          +
                     std::to_string(ev.d1) + ","            +

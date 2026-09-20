@@ -31,6 +31,7 @@ WindowAnimation::WindowAnimation()
                 enqueueDraw();
             }
         ); // Not armed yet
+    
     std::srand((unsigned)std::time(nullptr));
 }
 
@@ -48,7 +49,8 @@ WindowAnimation::instance()
 void
 WindowAnimation::onDiceThrowStart()
 {
-    state_ = AnimationState::Animating;
+    state_          = AnimationState::Animating;
+    animationPhase_ = AnimationPhase::Falling;
     startAnimation();
 }
 
@@ -60,6 +62,7 @@ WindowAnimation::startAnimation()
     // Start the animation timer, repeats every "n" mils.
     Gen::TimerManager::instance().armTimer(
         timerId_, std::chrono::milliseconds(90), true);
+    animationY_ = 1;
 }
 
 //----------------------------------------------------------------
@@ -72,10 +75,6 @@ WindowAnimation::stopAnimation()
 {
     Gen::TimerManager::instance().cancelTimer(timerId_);
     state_ = AnimationState::ShowingRoll;
-
-    // One last draw() workorder. // Will draw() final
-    // dice in the ShowingRoll state
-    enqueueDraw();
 }
 
 //----------------------------------------------------------------
@@ -109,9 +108,9 @@ WindowAnimation::draw()
     
     switch(state_)
     {
-    case AnimationState::NoRoll:      drawNoRoll();         break;
-    case AnimationState::Animating:   drawAnimationFrame(); break;
-    case AnimationState::ShowingRoll: drawFinalDice();      break;
+    case AnimationState::ZeroRoll:    drawZeroRoll();    break;
+    case AnimationState::Animating:   drawAnimation();   break;
+    case AnimationState::ShowingRoll: drawShowingRoll(); break;
     }
 
     CuiUtils::transfer(pWin_);
@@ -128,21 +127,26 @@ WindowAnimation::drawBanner()
     std::wstring right = L" \U0001F3B2";
     std::wstring middle;
     
-    if (state_ == AnimationState::NoRoll)
+    if (state_ == AnimationState::ZeroRoll)
     {
         middle = L"Roll Waiting";
     }
 
     if (state_ == AnimationState::Animating)
     {
-        middle = L"Rolling ...";
+        if (animationPhase_ == AnimationPhase::Done)
+        {
+            middle = middleFinishedRoll();
+        }
+        else
+        {
+            middle = L"Rolling ...";
+        }
     }
 
     if (state_ == AnimationState::ShowingRoll)
     {
-        middle = std::to_wstring(lastRoll_.value)     +
-                 L"(" + std::to_wstring(lastRoll_.d1) +
-                 L"," + std::to_wstring(lastRoll_.d2);
+        middle = middleFinishedRoll();
     }
 
     std::wstring msg = left + middle + right;
@@ -158,11 +162,32 @@ WindowAnimation::drawBanner()
 
 //----------------------------------------------------------------
 
-void
-WindowAnimation::drawNoRoll()
+std::wstring
+WindowAnimation::middleFinishedRoll()
 {
-    // Leave window blank. Initial state. There's no dice to show.
+    return L"Rolled: " + std::to_wstring(lastRoll_.value) +
+           L"("        + std::to_wstring(lastRoll_.d1)    +
+           L","        + std::to_wstring(lastRoll_.d2)    +
+           L")";
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::drawZeroRoll()
+{
+    // Initial state. There's no dice to show.
     drawBanner();
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::drawShowingRoll()
+{
+    drawBanner();
+    drawDie(LandingY, Die1X, lastRoll_.d1);
+    drawDie(LandingY, Die2X, lastRoll_.d2);
 }
 
 //----------------------------------------------------------------
@@ -174,24 +199,126 @@ WindowAnimation::drawNoRoll()
 // fields and forwards to here.
 //
 void
-WindowAnimation::drawAnimationFrame()
+WindowAnimation::drawAnimation()
 {
     drawBanner();
-    animateFrame();  // Render a new animation frame
+    
+    switch (animationPhase_)
+    {
+    case AnimationPhase::Falling:
+        renderFallingFrame();
+        break;
+
+    case AnimationPhase::Settling:
+        renderSettlingFrame();
+        break;
+
+    case AnimationPhase::Done:
+        renderFinalFrame();
+        stopAnimation();
+        break;
+    }
 }
 
 //----------------------------------------------------------------
 
 void
-WindowAnimation::drawFinalDice()
+WindowAnimation::renderFallingFrame()
 {
-#if 0    
-    int landing_y = L::animationHeight - die_h;
+    int j1 = clampDieX(Die1X + randomJitter(6));
+    int j2 = j2Helper(j1);
+    
+    int v1 = randomDieValue();
+    int v2 = randomDieValue();
 
-    drawDie(landing_y, j1, final1);
-    drawDie(landing_y, j2, final2);
-#endif
+    drawDie(animationY_, j1, v1);
+    drawDie(animationY_, j2, v2);
 
+    ++animationY_;
+
+    if (animationY_ > LandingY)
+    {
+        animationPhase_ = AnimationPhase::Settling;
+        settleIndex_ = 0;
+    }
+}
+
+//----------------------------------------------------------------
+
+int
+WindowAnimation::j2Helper(int j1)
+{
+    int j2;
+    do
+    {
+        j2 = clampDieX(Die2X + randomJitter(6));
+    }
+    while (j2 < j1 + DieWidth);
+    
+    return j2;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::renderSettlingFrame()
+{
+    static constexpr std::array<int, 4> SettleAmplitudes{2, 1, 1, 0};
+
+    int amplitude = SettleAmplitudes[settleIndex_];
+
+    int j1 = clampDieX(Die1X + randomJitter(amplitude));
+    int j2 = clampDieX(Die2X + randomJitter(amplitude));
+
+    drawDie(LandingY, j1, lastRoll_.d1);
+    drawDie(LandingY, j2, lastRoll_.d2);
+
+    ++settleIndex_;
+
+    if (settleIndex_ >= SettleAmplitudes.size())
+    {
+        animationPhase_ = AnimationPhase::Done;
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::renderFinalFrame()
+{
+    drawDie(LandingY, Die1X, lastRoll_.d1);
+    drawDie(LandingY, Die2X, lastRoll_.d2);
+}
+
+//----------------------------------------------------------------
+
+int
+WindowAnimation::randomJitter(int max)
+{
+    return (std::rand() % (2 * max + 1)) - max;
+}
+
+//----------------------------------------------------------------
+
+int
+WindowAnimation::randomDieValue()
+{
+    return (std::rand() % 6) + 1;
+}
+
+//----------------------------------------------------------------
+//
+// Clamp so dice stay inside but can butt the borders
+//
+int
+WindowAnimation::clampDieX(int j)
+{
+    if (j < 1) j = 1;
+    if (j + DieWidth > Layout::animationWidth - 1)
+    {
+        j = (Layout::animationWidth - 1) - DieWidth;
+    }
+    return j;
 }
 
 //----------------------------------------------------------------
@@ -245,96 +372,6 @@ WindowAnimation::drawDie(int top, int left, int value)
         default: break;
     }
     wattroff(pWin_, A_BOLD);
-}
-
-//----------------------------------------------------------------
-
-void
-WindowAnimation::animateFrame()
-{
-    using L = Layout;
-    
-    const int die_w   = 7;
-    const int die_h   = 5;
-    const int spacing = 4;
-
-    int total_w = die_w * 2 + spacing;
-    
-    // center horizontally
-    int base_x = (L::animationWidth - total_w) / 2;
-    if (base_x < 1) base_x = 1;
-    int die1_x = base_x;
-    int die2_x = base_x + die_w + spacing;
-
-    int start_y   = 1;
-    int landing_y = L::animationHeight - die_h;
-
-// TODO flatten
-    // Fall with horizontal jitter
-    for (int y = start_y; y <= landing_y; ++y)
-    {
-        werase(pWin_);
-
-        // Wobble, up to ~1/3 screen width shift
-        int max_jitter = 6; // try 6..10 for wider swings
-        int dx1 = (std::rand() % (2 * max_jitter + 1)) - max_jitter;
-        int dx2 = (std::rand() % (2 * max_jitter + 1)) - max_jitter;
-
-        int j1 = die1_x + dx1;
-        int j2 = die2_x + dx2;
-
-        // clamp so dice stay inside but can butt the borders
-        if (j1 < 1) j1 = 1;
-        if (j2 < 1) j2 = 1;
-        if (j1 + die_w > L::animationWidth - 1) j1 = (L::animationWidth - 1) - die_w;
-        if (j2 + die_w > L::animationWidth - 1) j2 = (L::animationWidth - 1) - die_w;
-
-        // spin faces while falling
-        int v1 = (std::rand() % 6) + 1;
-        int v2 = (std::rand() % 6) + 1;
-
-        drawDie(y, j1, v1);
-        drawDie(y, j2, v2);
-
-        wrefresh(pWin_);
-        napms(90);  // napms(28);
-    }
-
-//  TODO Flatten, Move out of here
-    
-    // Settle
-    int amplitudes[] = {2, 1, 1, 0};
-    for (int a : amplitudes)
-    {
-        int dx1 = (a == 0) ? 0 : ((std::rand() % (2 * a + 1)) - a);
-        int dx2 = (a == 0) ? 0 : ((std::rand() % (2 * a + 1)) - a);
-        int j1 = die1_x + dx1;
-        int j2 = die2_x + dx2;
-
-        if (j1 < 1) j1 = 1;
-        if (j2 < 1) j2 = 1;
-        if (j1 + die_w > L::animationWidth - 1) j1 = (L::animationWidth - 1) - die_w;
-        if (j2 + die_w > L::animationWidth - 1) j2 = (L::animationWidth - 1) - die_w;
-
-        werase(pWin_);
-
-        drawDie(landing_y, j1, lastRoll_.d1);
-        drawDie(landing_y, j2, lastRoll_.d2);
-
-        wrefresh(pWin_);
-        napms(55);
-    }
-
-    // call stopAnimation() when dice reach bottom of the window
-
-    // Move out of here
-    // Final clean render (no jitter)
-    werase(pWin_);
-    
-    // Draw dice
-    drawDie(landing_y, die1_x, lastRoll_.d1);
-    drawDie(landing_y, die2_x, lastRoll_.d2);
-    wrefresh(pWin_);
 }
 
 //----------------------------------------------------------------

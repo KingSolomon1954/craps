@@ -36,12 +36,14 @@ public:
     
 private:
     void cuiThreadFunc();
+    
     void processWorkQueue();
     void processWorkOrder (const WorkOrder& wo);
-    
     void process(const WorkOrderKey& wo);
     void process(const WorkOrderSurface& wo);
     void process(const WorkOrderEvent& wo);
+    
+    void process(const Ctrl::UslDiceThrowStart& ev);
     void process(const Ctrl::UslDiceNewValue& ev);
     void process(const Ctrl::UslBettingOpened& ev);
 

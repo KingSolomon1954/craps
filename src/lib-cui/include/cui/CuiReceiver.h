@@ -27,9 +27,10 @@ public:
     /// @name Observers
     /// @{
     /// @}
-        
+
 private:
-    void onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const;
+    void onDiceNewValue  (const Ctrl::UslDiceNewValue& ev)   const;
+    void onDiceThrowStart(const Ctrl::UslDiceThrowStart& ev) const;
 };
 
 /*-----------------------------------------------------------*//**
