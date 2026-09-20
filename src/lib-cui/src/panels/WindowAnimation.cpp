@@ -75,6 +75,8 @@ WindowAnimation::stopAnimation()
 {
     Gen::TimerManager::instance().cancelTimer(timerId_);
     state_ = AnimationState::ShowingRoll;
+    WorkOrderSurface wo{.type = SurfaceType::Draw};
+    CuiThread::instance().enqueueWork(wo);
 }
 
 //----------------------------------------------------------------

@@ -38,7 +38,8 @@ public:
 
     /// @name Draw
     /// @{
-    void draw();
+    void draw();                        // Draws active surface
+    void draw(SurfaceBase* pSurface);   // Draws the provided surface
     /// @}
 
 private:
@@ -51,7 +52,6 @@ private:
 private:
     SurfaceManager() = default;
     void shutdownNcursesResources();
-    void draw(SurfaceBase* pSurface);
     void assignLocation(SurfaceBase* pSurface, SurfaceBase* pParent);
 };
 

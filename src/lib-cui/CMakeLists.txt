@@ -27,6 +27,7 @@ add_library(cui STATIC
     src/panels/WindowAnimation.cpp
     src/panels/WindowNavBar.cpp
     src/panels/WindowPlayerArea.cpp
+    src/panels/WindowRollHistory.cpp
 )
 
 target_include_directories(cui

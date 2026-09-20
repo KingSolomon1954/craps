@@ -10,7 +10,7 @@
 #include <cui/menus/MenuBetting.h>
 #include <cui/menus/MenuNavBarViews.h>
 // #include <cui/panels/WindowTitleBar.h>
-// #include <cui/panels/WindowRollHistory.h>
+#include <cui/panels/WindowRollHistory.h>
 #include <cui/panels/WindowPlayerArea.h>
 // #include <cui/panels/WindowMessages.h>
 #include <cui/panels/WindowAnimation.h>
@@ -55,12 +55,14 @@ ScreenCrapsTable::instance()
 void
 ScreenCrapsTable::draw()  // Override
 {
+    LOG_TRACE("ScreenCrapsTable::draw()");
+    
     werase(pWin_);
     
     LayoutCrapsScreen::instance().draw();
 
 //     WindowTitleBar::instance().draw();
-//     WindowRollHistory::instance().draw();
+       WindowRollHistory::instance().draw();
        WindowPlayerArea::instance().draw();
 //     WindowMessages::instance().draw();
        WindowAnimation::instance().draw();

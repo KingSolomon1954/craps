@@ -7,6 +7,7 @@
 #include <cui/CuiThread.h>
 #include <cui/SurfaceManager.h>
 #include <cui/panels/WindowAnimation.h>
+#include <cui/panels/WindowRollHistory.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
 #include <cassert>
@@ -169,7 +170,14 @@ CuiThread::process(const WorkOrderSurface& wo)
     switch (wo.type)
     {
     case SurfaceType::Draw:
-        SurfaceManager::instance().draw();
+        if (wo.pSurface)
+        {
+            SurfaceManager::instance().draw(wo.pSurface);
+        }
+        else
+        {
+            SurfaceManager::instance().draw();
+        }
         break;
 
     case SurfaceType::SetSurface:
@@ -219,11 +227,10 @@ CuiThread::process(const Ctrl::UslDiceNewValue& ev)
 {
     LOG_TRACE("CuiThread::process(UslDiceNewValue)");
     
-    WindowAnimation::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
+    WindowAnimation::instance().onDiceNewValue  (ev.d1, ev.d2, ev.rollCount);
+    WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
     
     // TODO
-    // WindowRollHistory::instance().setLatestRoll(
-    //     wo.gameEvent.val, wo.gameEvent.d1, wo.gameEvent.d2);
     // WindowHeader::instance().setRollCount(
     //     wo.gameEvent.rollCount);
 }
