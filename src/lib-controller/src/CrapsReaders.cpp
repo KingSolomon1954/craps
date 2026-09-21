@@ -19,6 +19,8 @@
 #include <craps/PlayerStats.h>
 #include <craps/SessionHistory.h>
 #include <craps/TableStats.h>
+#include <gen/Logger.h>
+#include <cassert>
 
 using namespace Ctrl;
 
@@ -471,6 +473,23 @@ CrapsReaders::readBetWhenDecided(
 //
 // Table related
 //
+//----------------------------------------------------------------
+
+std::string
+CrapsReaders::readTableName()
+{
+    Craps::TableId tid;
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::getActiveCrapsTable(tid, ep);
+
+    auto pTable = Gbl::pTableMgr->getTable(tid, ep);
+    assert(pTable);
+
+    LOG_DEBUG("CrapsReaders::readTableName() tableName:" +
+              pTable->getTableName());
+    return pTable->getTableName();
+}
+
 //----------------------------------------------------------------
 
 Gen::ReturnCode

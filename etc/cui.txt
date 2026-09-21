@@ -99,8 +99,8 @@ Cui::CarrierBet - a struct menus use to pass around bet info
               ┌────────> CuiSend  CuiView
               │             ▲       │
               │             │       ▼
-              │              \     /
-              │ Events        \   /    Events into 
+              │              ╲     ╱ 
+              │ Events        ╲   ╱    Events into 
               │                 Y      Work Orders
               │                 │
               │             CuiThread

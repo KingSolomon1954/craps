@@ -44,7 +44,10 @@ struct WorkOrderKey
 using GameEvent = std::variant<
     Ctrl::UslBettingOpened,
     Ctrl::UslDiceThrowStart,
-    Ctrl::UslDiceNewValue
+    Ctrl::UslDiceNewValue,
+    Ctrl::UslPointEstablished,
+    Ctrl::UslSevenOut,
+    Ctrl::UslPassLineWinner
     >;
     
 struct WorkOrderEvent

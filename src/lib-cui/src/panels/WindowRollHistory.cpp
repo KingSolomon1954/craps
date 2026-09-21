@@ -42,6 +42,7 @@ WindowRollHistory::draw()
     drawInternalBorders();
     drawStaticContent();
     populate();
+    
     CuiUtils::transfer(pWin_);
 }
 

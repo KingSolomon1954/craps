@@ -667,8 +667,10 @@ CrapsTable::advanceState()
 {
     if (point_ == 0) // come out roll
     {
+        LOG_TRACE("CrapsTable::advanceState(): come out roll");
         if (CrapsBet::pointNums_.contains(dice_.value()))
         {
+            LOG_TRACE("CrapsTable::advanceState(): point established");
             point_ = dice_.value();
             Ctrl::UslPointEstablished ev; ev.point = point_;
             Gen::EventManager::instance().publish(ev);
@@ -676,12 +678,14 @@ CrapsTable::advanceState()
     }
     else if (dice_.value() == 7)
     {
+        LOG_TRACE("CrapsTable::advanceState(): seven out");
         point_ = 0;
         Gen::EventManager::instance().publish(Ctrl::UslSevenOut{});
         advanceShooter();
     }
     else if (point_ == dice_.value())
     {
+        LOG_TRACE("CrapsTable::advanceState(): pass line winner");
         point_ = 0;
         Gen::EventManager::instance().publish(Ctrl::UslPassLineWinner{});
     }
@@ -1015,6 +1019,14 @@ const TableId&
 CrapsTable::getTableId() const
 {
     return tableId_;
+}
+
+//----------------------------------------------------------------
+
+const std::string&
+CrapsTable::getTableName() const
+{
+    return tableName_;
 }
 
 //----------------------------------------------------------------

@@ -78,6 +78,7 @@ public:
     std::vector<Player*>    getPlayers()                const;
     Player*                 getCurrentShooter()         const;
     const TableId&          getTableId()                const;
+    const std::string&      getTableName()              const;
     const std::deque<Dice>& getRecentRolls()            const;
     const TableStats&       getCurrentStats()           const;
     const TableStats&       getAlltimeStats()           const;

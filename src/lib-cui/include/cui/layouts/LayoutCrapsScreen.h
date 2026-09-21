@@ -24,6 +24,7 @@ public:
     void eraseExternalJunctionsAllPlayers();
     void drawExternalJunctionsOnePlayer();
     void eraseExternalJunctionsOnePlayer();
+    void drawExternalJunctionsTitleBar();
 
     // Disallow
     LayoutCrapsScreen(const LayoutCrapsScreen&)            = delete;
@@ -37,15 +38,15 @@ public:
     static constexpr int botRow   = LayoutConsole::botRow;
     
     // Title bar occupies rows 0-2, cols 0-69
-    static constexpr int titleBorderTopRow   = topRow;
-    static constexpr int titleBorderBotRow   = topRow + 2;
-    static constexpr int titleBorderLeftCol  = leftCol;
-    static constexpr int titleBorderRightCol = 69;
-    static constexpr int titleBorderHeight   = titleBorderBotRow   - titleBorderTopRow  + 1;
-    static constexpr int titleBorderWidth    = titleBorderRightCol - titleBorderLeftCol + 1;
+    static constexpr int titleBarBorderTopRow   = topRow;
+    static constexpr int titleBarBorderBotRow   = topRow + 2;
+    static constexpr int titleBarBorderLeftCol  = leftCol;
+    static constexpr int titleBarBorderRightCol = 69;
+    static constexpr int titleBarBorderHeight   = titleBarBorderBotRow   - titleBarBorderTopRow  + 1;
+    static constexpr int titleBarBorderWidth    = titleBarBorderRightCol - titleBarBorderLeftCol + 1;
 
     // Dice Roll History occupies rows 2-4, cols 0-69
-    static constexpr int rollHistBorderTopRow   = titleBorderBotRow;
+    static constexpr int rollHistBorderTopRow   = titleBarBorderBotRow;
     static constexpr int rollHistBorderBotRow   = rollHistBorderTopRow + 2;
     static constexpr int rollHistBorderLeftCol  = leftCol;
     static constexpr int rollHistBorderRightCol = 69;
@@ -92,12 +93,12 @@ public:
     static constexpr int playerBriefBorderHeight   = playerBriefBorderBotRow   - playerBriefBorderTopRow  + 1;
     static constexpr int playerBriefBorderWidth    = playerBriefBorderRightCol - playerBriefBorderLeftCol + 1;
 
-    static_assert(titleBorderTopRow   == 0);
-    static_assert(titleBorderBotRow   == 2);
-    static_assert(titleBorderLeftCol  == 0);
-    static_assert(titleBorderRightCol == 69);
-    static_assert(titleBorderHeight   == 3);
-    static_assert(titleBorderWidth    == 70);
+    static_assert(titleBarBorderTopRow   == 0);
+    static_assert(titleBarBorderBotRow   == 2);
+    static_assert(titleBarBorderLeftCol  == 0);
+    static_assert(titleBarBorderRightCol == 69);
+    static_assert(titleBarBorderHeight   == 3);
+    static_assert(titleBarBorderWidth    == 70);
 
     static_assert(rollHistBorderTopRow   == 2);
     static_assert(rollHistBorderBotRow   == 4);

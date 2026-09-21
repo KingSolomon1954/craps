@@ -7,6 +7,7 @@
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/layouts/LayoutPlayerArea.h>
+#include <cui/layouts/LayoutTitleBar.h>
 #include <cui/CuiUtils.h>
 #include <cassert>
 
@@ -82,7 +83,7 @@ LayoutCrapsScreen::draw()
     mvwvline(pWin_, L::playerBriefBorderTopRow, L::playerBriefBorderLeftCol, 0, L::playerBriefBorderHeight);
 
     // Junctions on top border
-    mvwaddch(pWin_, L::titleBorderTopRow, L::titleBorderRightCol, ACS_TTEE);
+    mvwaddch(pWin_, L::titleBarBorderTopRow, L::titleBarBorderRightCol, ACS_TTEE);
 
     // Junctions on left border
     mvwaddch(pWin_, L::rollHistBorderTopRow,   L::rollHistBorderLeftCol,   ACS_LTEE);
@@ -207,5 +208,29 @@ LayoutCrapsScreen::eraseExternalJunctionsOnePlayer()
     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderRightCol, ACS_VLINE);
     CuiUtils::transfer(pWin_);
 }
+
+//----------------------------------------------------------------
+//
+// Fix up junctions for outer borders for title bar
+//
+void
+LayoutCrapsScreen::drawExternalJunctionsTitleBar()
+{
+    using L = LayoutCrapsScreen;
+    using T = LayoutTitleBar;
+
+    // Top border
+    mvwaddch(pWin_, L::titleBarBorderTopRow, T::col1, ACS_TTEE);
+    mvwaddch(pWin_, L::titleBarBorderTopRow, T::col2, ACS_TTEE);
+    mvwaddch(pWin_, L::titleBarBorderTopRow, T::col3, ACS_TTEE);
+
+    // Bottom border
+    mvwaddch(pWin_, L::titleBarBorderBotRow, T::col1, ACS_BTEE);
+    mvwaddch(pWin_, L::titleBarBorderBotRow, T::col2, ACS_BTEE);
+    mvwaddch(pWin_, L::titleBarBorderBotRow, T::col3, ACS_BTEE);
+
+    CuiUtils::transfer(pWin_);
+}
+
 
 //----------------------------------------------------------------

@@ -8,6 +8,7 @@
 #include <cui/SurfaceManager.h>
 #include <cui/panels/WindowAnimation.h>
 #include <cui/panels/WindowRollHistory.h>
+#include <cui/panels/WindowTitleBar.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
 #include <cassert>
@@ -229,6 +230,7 @@ CuiThread::process(const Ctrl::UslDiceNewValue& ev)
     
     WindowAnimation::instance().onDiceNewValue  (ev.d1, ev.d2, ev.rollCount);
     WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
+    WindowTitleBar::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
     
     // TODO
     // WindowHeader::instance().setRollCount(
@@ -241,6 +243,33 @@ void
 CuiThread::process(const Ctrl::UslBettingOpened& ev)
 {
     LOG_TRACE("CuiThread::process(UslBettingOpened)");
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslPointEstablished& ev)
+{
+    LOG_TRACE("CuiThread::process(UslPointEstablished)");
+    WindowTitleBar::instance().onPointEstablished(ev.point);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslSevenOut& ev)
+{
+    LOG_TRACE("CuiThread::process(UslSevenOut)");
+    WindowTitleBar::instance().onSevenOut();
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslPassLineWinner& ev)
+{
+    LOG_TRACE("CuiThread::process(UslPassLineWinner)");
+    WindowTitleBar::instance().onPassLineWinner();
 }
 
 //----------------------------------------------------------------

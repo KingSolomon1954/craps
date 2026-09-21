@@ -41,7 +41,11 @@ Implement "Unknown" player start up logic
 Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
+Implement Advance shooter event
+Need to display table rules in Title bar
 
+(Done) Created WindowTitleBar, integrated and works
+(Done) Created WindowRollHistory, integrated and works
 (Done) MenuBetting processes "r" and rolls dice
 (Done) Implement first round-trip events for roll dice event
 (Done) Initial implementation of GameEvents.h

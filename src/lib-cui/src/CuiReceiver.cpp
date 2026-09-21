@@ -41,6 +41,27 @@ CuiReceiver::CuiReceiver()
         {
             this->onDiceNewValue(ev);
         });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslPointEstablished");
+    Gen::EventManager::instance().subscribe<Ctrl::UslPointEstablished>(
+        [this](const Ctrl::UslPointEstablished& ev)
+        {
+            this->onPointEstablished(ev);
+        });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslSevenOut");
+    Gen::EventManager::instance().subscribe<Ctrl::UslSevenOut>(
+        [this](const Ctrl::UslSevenOut& ev)
+        {
+            this->onSevenOut(ev);
+        });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslPassLineWinner");
+    Gen::EventManager::instance().subscribe<Ctrl::UslPassLineWinner>(
+        [this](const Ctrl::UslPassLineWinner& ev)
+        {
+            this->onPassLineWinner(ev);
+        });
 }
 
 //----------------------------------------------------------------
@@ -70,6 +91,39 @@ CuiReceiver::onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const
                     std::to_string(ev.d2) + ") Roll: "     +
                     std::to_string(ev.rollCount);
     LOG_TRACE(s);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onPointEstablished(const Ctrl::UslPointEstablished& ev) const
+{
+    LOG_TRACE("Entered CuiReceiver()::onPointEstablished()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onSevenOut(const Ctrl::UslSevenOut& ev) const
+{
+    LOG_TRACE("Entered CuiReceiver()::onSevenOut()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onPassLineWinner(const Ctrl::UslPassLineWinner& ev) const
+{
+    LOG_TRACE("Entered CuiReceiver()::onPassLineWinner()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
 }
 
 //----------------------------------------------------------------

@@ -134,6 +134,7 @@ public:
         Gen::ErrorPass& ep);
     
     // Table related
+    static std::string readTableName();
     static Gen::ReturnCode readTableNumPlayers(
         const Craps::TableId& tableId,
         unsigned& numPlayers,
