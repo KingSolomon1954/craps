@@ -10,6 +10,14 @@
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <deque>
 
+#if 1
+namespace
+{
+    static constexpr short PairSevenOut       = 1;
+    static constexpr short PairPassLineWinner = 2;
+}
+#endif
+
 namespace Cui
 {
 
@@ -25,6 +33,8 @@ public:
     /// @{
     void draw() override;
     void onDiceNewValue(unsigned d1, unsigned d2, unsigned rollCount);
+    void onSevenOut();
+    void onPassLineWinner();
     /// @}
 
     /// @name Observers
@@ -50,6 +60,8 @@ private:
     {
         unsigned d1 = 0;
         unsigned d2 = 0;
+        bool passLineWinner = false;
+        bool sevenOut = false;
     };
 
     enum class Format

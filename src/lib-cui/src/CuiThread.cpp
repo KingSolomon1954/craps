@@ -254,6 +254,7 @@ CuiThread::process(const Ctrl::UslSevenOut& ev)
 {
     LOG_TRACE("CuiThread::process(UslSevenOut)");
     WindowTitleBar::instance().onSevenOut();
+    WindowRollHistory::instance().onSevenOut();
 }
 
 //----------------------------------------------------------------
@@ -263,6 +264,7 @@ CuiThread::process(const Ctrl::UslPassLineWinner& ev)
 {
     LOG_TRACE("CuiThread::process(UslPassLineWinner)");
     WindowTitleBar::instance().onPassLineWinner();
+    WindowRollHistory::instance().onPassLineWinner();
 }
 
 //----------------------------------------------------------------

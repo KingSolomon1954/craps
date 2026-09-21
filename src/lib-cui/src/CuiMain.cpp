@@ -5,8 +5,9 @@
 //----------------------------------------------------------------
 
 #include <cui/CuiMain.h>
-#include <cui/CuiThread.h>
 #include <cui/CuiReceiver.h>
+#include <cui/CuiStructs.h>
+#include <cui/CuiThread.h>
 #include <cui/SurfaceManager.h>
 #include <cui/screens/ScreenCrapsTable.h>
 #include <cui/layouts/LayoutConsole.h>
@@ -90,6 +91,9 @@ CuiMain::initNcurses()
     curs_set(0);
     start_color();
     use_default_colors();
+
+    init_pair(ColorPairs::SevenOut, COLOR_RED, -1);  // -1 is term bg color
+    init_pair(ColorPairs::PassLineWinner, -1, -1);   // -1 is term fg,bg color
 }
 
 //----------------------------------------------------------------

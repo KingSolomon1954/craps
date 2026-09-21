@@ -7,6 +7,7 @@
 #include <cui/panels/WindowRollHistory.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/CuiUtils.h>
+#include <cui/CuiStructs.h>
 #include <gen/Logger.h>
 
 using namespace Cui;
@@ -87,6 +88,53 @@ WindowRollHistory::drawStaticContent()
 void
 WindowRollHistory::populate()
 {
+    // TODO: look up the user-configured format.
+    constexpr Format fmtConfig = Format::D;
+
+    int column = 1;
+    const int rightColumn = 1 + static_cast<int>(CharLimit);
+
+    for (const auto& r : rolls_)
+    {
+        const std::string text = format(fmtConfig, r);
+
+        if (column >= rightColumn)
+            break;
+
+        const int remaining = rightColumn - column;
+        const int count = std::min(
+            remaining,
+            static_cast<int>(text.size())
+        );
+
+        if (r.sevenOut)
+        {
+            wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::SevenOut));
+        }
+        else if (r.passLineWinner)
+        {
+            wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::PassLineWinner));
+        }
+
+        mvwaddnstr(pWin_, 0, column, text.c_str(), count);
+
+        if (r.sevenOut)
+        {
+            wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::SevenOut));
+        }
+        else if (r.passLineWinner)
+        {
+            wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::PassLineWinner));
+        }
+
+        column += count;
+    }
+}
+
+#if 0
+void
+WindowRollHistory::populate()
+{
     // TODO lookup user configured format, assume something for now
     Format fmtConfig = Format::D;
     
@@ -101,6 +149,7 @@ WindowRollHistory::populate()
     }
     mvwprintw(pWin_, 0, 1, s.c_str());
 }
+#endif
 
 //----------------------------------------------------------------
 //
@@ -145,6 +194,24 @@ WindowRollHistory::onDiceNewValue(unsigned d1, unsigned d2, unsigned rollCount)
     (void) rollCount;
     
     add(Roll{d1, d2});
+}
+
+//----------------------------------------------------------------
+
+void
+WindowRollHistory::onSevenOut()
+{
+    // Retro-actively mark the front element indicating seven out.
+    rolls_[0].sevenOut = true;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowRollHistory::onPassLineWinner()
+{
+    // Retro-actively mark the front element indicating pass line winner.
+    rolls_[0].passLineWinner = true;
 }
 
 //----------------------------------------------------------------

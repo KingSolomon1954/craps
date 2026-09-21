@@ -55,7 +55,16 @@ struct LocationRequest
     LocationKind kind = LocationKind::Menu;
     Direction direction = Direction::Right;
 };
-    
+
 //----------------------------------------------------------------
 
 }  // namespace Cui
+
+
+namespace ColorPairs
+{
+    constexpr short SevenOut       = 1;
+    constexpr short PassLineWinner = 2;
+}
+
+//----------------------------------------------------------------
