@@ -135,6 +135,15 @@ public:
     
     // Table related
     static std::string readTableName();
+
+    struct TableMinMaxRules
+    {
+        unsigned minLineBet = 0;
+        unsigned maxLineBet = 0;
+        unsigned maxOdds    = 0;
+    };
+    
+    static TableMinMaxRules readTableMinMaxRules();
     static Gen::ReturnCode readTableNumPlayers(
         const Craps::TableId& tableId,
         unsigned& numPlayers,

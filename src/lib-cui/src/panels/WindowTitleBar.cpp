@@ -7,8 +7,8 @@
 #include <cui/panels/WindowTitleBar.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/layouts/LayoutTitleBar.h>
-#include <controller//CrapsReaders.h>
 #include <cui/CuiUtils.h>
+#include <controller/CrapsReaders.h>
 #include <gen/Logger.h>
 
 using namespace Cui;
@@ -22,10 +22,9 @@ WindowTitleBar::WindowTitleBar()
               Layout::titleBarWidth,
               Layout::titleBarTopRow,
               Layout::titleBarLeftCol);
-    tableName_ = Ctrl::CrapsReaders::readTableName();
-    LOG_DEBUG("WindowTitleBar() tableName:" + tableName_);
+    initTableInfo();
 }
-
+    
 //----------------------------------------------------------------
 
 WindowTitleBar&
@@ -33,6 +32,34 @@ WindowTitleBar::instance()
 {
     static WindowTitleBar wt;
     return wt;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowTitleBar::initTableInfo()
+{
+    tableName_  = Ctrl::CrapsReaders::readTableName();
+    auto r = Ctrl::CrapsReaders::readTableMinMaxRules();
+    buildRulesField(r.minLineBet, r.maxLineBet, r.maxOdds);
+}
+
+//----------------------------------------------------------------
+
+void
+WindowTitleBar::buildRulesField(unsigned minLineBet,
+                                unsigned maxLineBet,
+                                unsigned maxOdds)
+{
+    using L = Layout;
+
+    std::string minStr  = "min $" + std::to_string(minLineBet);
+    std::string maxStr  = "max $" + std::to_string(maxLineBet);
+    std::string oddsStr = "odds " + std::to_string(maxOdds) + "x";
+    rules_ = minStr + " " + maxStr + " " + oddsStr;
+    
+    // Force rules_ to fit in width of the field
+    if (rules_.length() > L::f4Cols) rules_.erase(L::f4Cols);
 }
 
 //----------------------------------------------------------------
@@ -138,6 +165,12 @@ WindowTitleBar::populateTableName()
 void
 WindowTitleBar::populateTableMaxOdds()
 {
+    using L = Layout;
+    
+    // Center string within field width
+    int startCol = L::f4Col + ((L::f4Cols - rules_.length()) / 2);
+    
+    mvwprintw(pWin_, L::f4Row, startCol, "%s", rules_.c_str());
 }
 
 //----------------------------------------------------------------

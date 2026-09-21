@@ -602,7 +602,6 @@ CrapsTable::rollDice()
 void
 CrapsTable::declareBettingClosed()
 {
-    LOG_TRACE("Entered CrapsTable::declareBettingClosed()");
     bettingOpen_ = false;
     Gen::EventManager::instance().publish(Ctrl::UslBettingClosed{});
     
@@ -643,7 +642,6 @@ CrapsTable::declareDiceNewValue()
     ev.val = dice_.value();
     ev.d1  = dice_.d1();
     ev.d2  = dice_.d2();
-    LOG_TRACE("CrapsTable::throwDice() sending UslDiceRollValue");
     Gen::EventManager::instance().publish(ev);
 }
 
@@ -652,7 +650,6 @@ CrapsTable::declareDiceNewValue()
 void
 CrapsTable::throwDice()
 {
-    LOG_TRACE("Entered CrapsTable::throwDice()");
     declareDiceThrowStart();
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
     declareDiceNewValue();
@@ -667,10 +664,8 @@ CrapsTable::advanceState()
 {
     if (point_ == 0) // come out roll
     {
-        LOG_TRACE("CrapsTable::advanceState(): come out roll");
         if (CrapsBet::pointNums_.contains(dice_.value()))
         {
-            LOG_TRACE("CrapsTable::advanceState(): point established");
             point_ = dice_.value();
             Ctrl::UslPointEstablished ev; ev.point = point_;
             Gen::EventManager::instance().publish(ev);
@@ -678,14 +673,12 @@ CrapsTable::advanceState()
     }
     else if (dice_.value() == 7)
     {
-        LOG_TRACE("CrapsTable::advanceState(): seven out");
         point_ = 0;
         Gen::EventManager::instance().publish(Ctrl::UslSevenOut{});
         advanceShooter();
     }
     else if (point_ == dice_.value())
     {
-        LOG_TRACE("CrapsTable::advanceState(): pass line winner");
         point_ = 0;
         Gen::EventManager::instance().publish(Ctrl::UslPassLineWinner{});
     }

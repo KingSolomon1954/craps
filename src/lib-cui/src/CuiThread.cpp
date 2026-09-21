@@ -22,7 +22,6 @@ CuiThread::CuiThread()
 {
     thread_ = std::thread(&CuiThread::cuiThreadFunc, this);
     threadStarted_.wait();  // Allow thread to start
-    LOG_TRACE("CuiThread::cuiThread() leaving ctor");
 }
 
 //----------------------------------------------------------------
@@ -203,7 +202,6 @@ CuiThread::process(const WorkOrderSurface& wo)
 void
 CuiThread::process(const WorkOrderEvent& woe)
 {
-    
     std::visit(
         [this](const auto& event)
         {
@@ -227,14 +225,9 @@ void
 CuiThread::process(const Ctrl::UslDiceNewValue& ev)
 {
     LOG_TRACE("CuiThread::process(UslDiceNewValue)");
-    
     WindowAnimation::instance().onDiceNewValue  (ev.d1, ev.d2, ev.rollCount);
     WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
     WindowTitleBar::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
-    
-    // TODO
-    // WindowHeader::instance().setRollCount(
-    //     wo.gameEvent.rollCount);
 }
 
 //----------------------------------------------------------------

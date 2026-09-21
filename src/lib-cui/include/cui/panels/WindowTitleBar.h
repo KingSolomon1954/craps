@@ -64,17 +64,27 @@ private:
         static constexpr std::string_view f2Fmt = "%-5u";
 
         // Field: Table Name
-        static constexpr int f3Row      = 0;
-        static constexpr int f3Col      = 23;
+        static constexpr int f3Row = 0;
+        static constexpr int f3Col = 23;
         static constexpr std::string_view f3Fmt = "%16s";
+
+        // Field: Table Rules
+        static constexpr int f4Row  = 0;
+        static constexpr int f4Col  = 42;
+        static constexpr int f4Cols = titleBarRightCol - f4Col + 1;
     };
     
     unsigned rollCount_ = 0;
     unsigned point_ = 0;
     std::string tableName_;
+    std::string rules_;
 
 private:
     WindowTitleBar();
+    void initTableInfo();
+    void buildRulesField(unsigned minLineBet,
+                         unsigned maxLineBet,
+                         unsigned maxOdds);
     void drawExternalJunctions();
     void drawInternalBorders();
     void drawStaticContent();

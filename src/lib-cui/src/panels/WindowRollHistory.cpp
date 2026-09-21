@@ -99,10 +99,6 @@ WindowRollHistory::populate()
             break;
         }
     }
-    LOG_DEBUG("WindowRollHistory::populate() size: " +
-              std::to_string(static_cast<int>(s.length())) +
-              " max: " + std::to_string(CharLimit));
-    
     mvwprintw(pWin_, 0, 1, s.c_str());
 }
 

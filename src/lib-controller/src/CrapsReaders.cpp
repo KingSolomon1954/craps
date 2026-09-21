@@ -484,10 +484,24 @@ CrapsReaders::readTableName()
 
     auto pTable = Gbl::pTableMgr->getTable(tid, ep);
     assert(pTable);
-
-    LOG_DEBUG("CrapsReaders::readTableName() tableName:" +
-              pTable->getTableName());
     return pTable->getTableName();
+}
+
+//----------------------------------------------------------------
+
+CrapsReaders::TableMinMaxRules
+CrapsReaders::readTableMinMaxRules()
+{
+    Craps::TableId tid;
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::getActiveCrapsTable(tid, ep);
+
+    auto pTable = Gbl::pTableMgr->getTable(tid, ep);
+    assert(pTable);
+    TableMinMaxRules rules{.minLineBet = pTable->getMinLineBet(),
+                           .maxLineBet = pTable->getMaxLineBet(),
+                           .maxOdds    = pTable->getMaxOdds()};
+    return rules;
 }
 
 //----------------------------------------------------------------
