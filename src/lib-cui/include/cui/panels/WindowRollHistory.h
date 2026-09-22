@@ -10,14 +10,6 @@
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <deque>
 
-#if 1
-namespace
-{
-    static constexpr short PairSevenOut       = 1;
-    static constexpr short PairPassLineWinner = 2;
-}
-#endif
-
 namespace Cui
 {
 

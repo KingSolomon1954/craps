@@ -25,6 +25,7 @@ add_library(cui STATIC
     src/menus/MenuNavBarViews.cpp
     src/screens/ScreenCrapsTable.cpp
     src/panels/WindowAnimation.cpp
+    src/panels/WindowHouseBrief.cpp
     src/panels/WindowNavBar.cpp
     src/panels/WindowPlayerArea.cpp
     src/panels/WindowRollHistory.cpp

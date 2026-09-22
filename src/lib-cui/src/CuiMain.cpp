@@ -38,6 +38,16 @@ CuiMain::instance()
 //----------------------------------------------------------------
 
 void
+CuiMain::shutdown()
+{
+    SurfaceManager::instance().shutdown();
+    CuiThread::instance().shutdown();
+    endwin();
+}
+
+//----------------------------------------------------------------
+
+void
 CuiMain::init()
 {
     using L = LayoutConsole;
@@ -91,13 +101,8 @@ CuiMain::initNcurses()
     curs_set(0);
     start_color();
     use_default_colors();
-
-    init_pair(ColorPairs::DefaultScreen,  COLOR_GREEN,  COLOR_BLACK);
-    init_pair(ColorPairs::SevenOut,       COLOR_RED,    -1);  // -1 is default color
-    init_pair(ColorPairs::PassLineWinner, COLOR_YELLOW, -1);
-    init_pair(ColorPairs::Point,          COLOR_WHITE,  -1);
-
-    bkgd(' ' | COLOR_PAIR(ColorPairs::DefaultScreen));
+    
+    setupColors();  // App color usage
 }
 
 //----------------------------------------------------------------
@@ -200,20 +205,23 @@ CuiMain::run()
 
 //----------------------------------------------------------------
 
-void
-CuiMain::shutdown()
-{
-    SurfaceManager::instance().shutdown();
-    CuiThread::instance().shutdown();
-    endwin();
-}
-
-//----------------------------------------------------------------
-
 bool
 CuiMain::useUnicodePips() const
 {
     return useUnicodePips_;
+}
+
+//----------------------------------------------------------------
+
+void
+CuiMain::setupColors()
+{
+    init_pair(ColorPairs::DefaultScreen,  COLOR_GREEN,  COLOR_BLACK);
+    init_pair(ColorPairs::SevenOut,       COLOR_RED,    -1);  // -1 is default color
+    init_pair(ColorPairs::PassLineWinner, COLOR_YELLOW, -1);
+    init_pair(ColorPairs::Point,          COLOR_WHITE,  -1);
+
+    bkgd(' ' | COLOR_PAIR(ColorPairs::DefaultScreen));
 }
 
 //----------------------------------------------------------------
