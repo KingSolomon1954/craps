@@ -35,6 +35,7 @@ public:
     void onDiceNewValue(unsigned d1, unsigned d2, unsigned rollCount);
     void onSevenOut();
     void onPassLineWinner();
+    void onPointEstablished(unsigned point);
     /// @}
 
     /// @name Observers
@@ -62,6 +63,7 @@ private:
         unsigned d2 = 0;
         bool passLineWinner = false;
         bool sevenOut = false;
+        bool point = false;
     };
 
     enum class Format
@@ -83,7 +85,9 @@ private:
     void drawStaticContent();
     void populate();
 
-    void add(const Roll& r);
+    void add    (const Roll& r);
+    void attrOn (const Roll& r);
+    void attrOff(const Roll& r);
     std::string format(Format fmt, const Roll& r) const;
     const Roll& operator[](std::size_t index) const;
 };

@@ -63,8 +63,10 @@ struct LocationRequest
 
 namespace ColorPairs
 {
-    constexpr short SevenOut       = 1;
-    constexpr short PassLineWinner = 2;
+    constexpr short DefaultScreen  = 1;
+    constexpr short SevenOut       = 2;
+    constexpr short PassLineWinner = 3;
+    constexpr short Point          = 4;
 }
 
 //----------------------------------------------------------------

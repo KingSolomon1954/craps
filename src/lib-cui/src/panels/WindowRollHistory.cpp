@@ -102,54 +102,55 @@ WindowRollHistory::populate()
             break;
 
         const int remaining = rightColumn - column;
-        const int count = std::min(
-            remaining,
-            static_cast<int>(text.size())
-        );
+        const int count = std::min(remaining, static_cast<int>(text.size()));
 
-        if (r.sevenOut)
-        {
-            wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::SevenOut));
-        }
-        else if (r.passLineWinner)
-        {
-            wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::PassLineWinner));
-        }
-
+        attrOn(r);
         mvwaddnstr(pWin_, 0, column, text.c_str(), count);
-
-        if (r.sevenOut)
-        {
-            wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::SevenOut));
-        }
-        else if (r.passLineWinner)
-        {
-            wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::PassLineWinner));
-        }
+        attrOff(r);
 
         column += count;
     }
 }
 
-#if 0
+//----------------------------------------------------------------
+
 void
-WindowRollHistory::populate()
+WindowRollHistory::attrOn(const Roll& r)
 {
-    // TODO lookup user configured format, assume something for now
-    Format fmtConfig = Format::D;
-    
-    std::string s;
-    for (const auto& r : rolls_)
+    if (r.sevenOut)
     {
-        s += format(fmtConfig, r);
-        if (s.size() > CharLimit)
-        {
-            break;
-        }
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::SevenOut));
     }
-    mvwprintw(pWin_, 0, 1, s.c_str());
+    else if (r.passLineWinner)
+    {
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::PassLineWinner));
+    }
+    else if (r.point)
+    {
+        // wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::Point));
+        wattron(pWin_, COLOR_PAIR(ColorPairs::Point));
+    }
 }
-#endif
+
+//----------------------------------------------------------------
+
+void
+WindowRollHistory::attrOff(const Roll& r)
+{
+    if (r.sevenOut)
+    {
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::SevenOut));
+    }
+    else if (r.passLineWinner)
+    {
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::PassLineWinner));
+    }
+    else if (r.point)
+    {
+        // wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::Point));
+        wattroff(pWin_, COLOR_PAIR(ColorPairs::Point));
+    }
+}
 
 //----------------------------------------------------------------
 //
@@ -212,6 +213,15 @@ WindowRollHistory::onPassLineWinner()
 {
     // Retro-actively mark the front element indicating pass line winner.
     rolls_[0].passLineWinner = true;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowRollHistory::onPointEstablished(unsigned point)
+{
+    // Retro-actively mark the front element indicating pass line winner.
+    rolls_[0].point = true;
 }
 
 //----------------------------------------------------------------

@@ -245,6 +245,7 @@ CuiThread::process(const Ctrl::UslPointEstablished& ev)
 {
     LOG_TRACE("CuiThread::process(UslPointEstablished)");
     WindowTitleBar::instance().onPointEstablished(ev.point);
+    WindowRollHistory::instance().onPointEstablished(ev.point);
 }
 
 //----------------------------------------------------------------

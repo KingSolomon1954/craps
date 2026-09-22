@@ -92,8 +92,12 @@ CuiMain::initNcurses()
     start_color();
     use_default_colors();
 
-    init_pair(ColorPairs::SevenOut, COLOR_RED, -1);  // -1 is term bg color
-    init_pair(ColorPairs::PassLineWinner, -1, -1);   // -1 is term fg,bg color
+    init_pair(ColorPairs::DefaultScreen,  COLOR_GREEN,  COLOR_BLACK);
+    init_pair(ColorPairs::SevenOut,       COLOR_RED,    -1);  // -1 is default color
+    init_pair(ColorPairs::PassLineWinner, COLOR_YELLOW, -1);
+    init_pair(ColorPairs::Point,          COLOR_WHITE,  -1);
+
+    bkgd(' ' | COLOR_PAIR(ColorPairs::DefaultScreen));
 }
 
 //----------------------------------------------------------------
