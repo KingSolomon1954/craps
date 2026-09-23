@@ -611,6 +611,30 @@ Player::processKeep(const DecisionRecord& dr)
     currentStats_.recordKeep(*(dr.pBet));
 }
 
+/*-----------------------------------------------------------*//**
+
+CrapsTable informs us directly (inline) that it's finished resolving
+bets. Can't use events for this since that is asynchronous and bets will
+have already have been removed from the table and player when we
+see those events here.
+
+Close out lastRollStats and publish event.
+*/
+void
+Player::disburseDone()
+{
+    if (lastRollStats_.numBetsWin > 0 || lastRollStats_.numBetsLose > 0)
+    {
+        Ctrl::UslPlayerResults ev;
+        ev.newBalance           = getBalance();                // balance from session start
+        ev.numBetsPlayerWins    = lastRollStats_.numBetsWin;   // player wins session start
+        ev.numBetsPlayerLoses   = lastRollStats_.numBetsLose;  // player lose session start
+        ev.playerIntakeLastRoll = lastRollStats_.amountWin;
+        ev.playerOutputLastRoll = lastRollStats_.amountLose;
+        Gen::EventManager::instance().publish(ev);
+    }
+}
+
 //----------------------------------------------------------------
 
 BetPtr
@@ -820,7 +844,7 @@ Player::setName(const std::string& playerName)
 Gen::Money
 Player::getBalance() const
 {
-    return wallet_.getBalance();
+    return wallet_.getAmtDeposited() - wallet_.getAmtWithdrawn();
 }
 
 /*-----------------------------------------------------------*//**

@@ -48,8 +48,10 @@ using GameEvent = std::variant<
     Ctrl::UslPointEstablished,
     Ctrl::UslSevenOut,
     Ctrl::UslPassLineWinner,
-    Ctrl::UslHouseResults,
-    Ctrl::UslNumBetsOnTableChanged
+    Ctrl::UslTableResults,
+    Ctrl::UslTableNumBetsOnTableChanged,
+    Ctrl::UslPlayerResults,
+    Ctrl::UslPlayerNumBetsOnTableChanged
     >;
     
 struct WorkOrderEvent

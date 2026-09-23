@@ -15,7 +15,7 @@
 // #include <cui/panels/WindowMessages.h>
 #include <cui/panels/WindowAnimation.h>
 #include <cui/panels/WindowHouseBrief.h>
-// #include <cui/panels/WindowPlayerBrief.h>
+#include <cui/panels/WindowPlayerBrief.h>
 #include <cui/panels/WindowNavBar.h>
 #include <gen/Logger.h>
 
@@ -67,7 +67,7 @@ ScreenCrapsTable::draw()  // Override
 //  WindowMessages::instance().draw();
     WindowAnimation::instance().draw();
     WindowHouseBrief::instance().draw();
-//  WindowPlayerBrief::instance().draw();
+    WindowPlayerBrief::instance().draw();
     drawNavBar();
 }
 

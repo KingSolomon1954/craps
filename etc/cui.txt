@@ -324,12 +324,12 @@ The Player Brief Panel looks as follows:
 
 ┬─────────────────────────────┐
 │ Player: Nathan (shooter)    │
-│ - - - - - - - - - - - - - - │
+│ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
 │ Bal: $2,000 (+880)          │
 │ NumBets: 55 (21W, 34L)      │
 │ Pct: 38.18% win 61.81% lose │
-│ On table: 3 bets, $320      │
 │ Last: 180W,100L,+$80,       │
+│ On table: 3 bets, $320      │
 ├─────────────────────────────┤
 
 House Brief Panel
@@ -341,8 +341,8 @@ The House Brief Panel looks as follows:
 │ House Bal: +$2,050          │
 │ NumBets: 128 (68W, 60L)     │
 │ Pct: 53.12% win 46.87% lose │
-│ On table: 12 bets, $1,520   │
 │ Last: -$100 300W,200L       │
+│ On table: 12 bets, $1,520   │
 ├─────────────────────────────┤
 
 History Subwindow
@@ -373,7 +373,7 @@ header row over the columns; has the first initial of the player's name,
 (in this example 5 players Nathan, Arthur, Paige, Lenny, Winnifred),
 also color coded over their column.
 
-    0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+    0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
 0   ┌──────────┬───────────┬──────────────────┬──────────────────────────┬─────────────────────────────┐
 1   │ Point 10 │ Roll  273 │ Las Vegas Strip  │min $5 max $2000 odds 10x │   🎲 Rolling... 🎲          │
 2   ├──────────┴───────────┴──────────────────┴──────────────────────────┤   ⚄ + ⚂  →  7               │
@@ -405,8 +405,8 @@ also color coded over their column.
 28  │ Arthur bets $20 on Hard 4 and 10                                   │ Last: +$100 300W,200L       │
 29  │ Nathan bets $50 PassLine odds                                      │ On table: 12 bets, $1,520   │
 30  │ Arthur places $50 come bet                                         ├─────────────────────────────┤
-31  │ Arthur places $10 Field bet                                        │ Player: Nathan (shooter)    │
-32  │ Winnifred placed $100 field bet                                    │ - - - - - - - - - - - - - - │
+31  │ Arthur places $10 Field bet                                        │ Nathan (shooter)            │
+32  │ Winnifred placed $100 field bet                                    │ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
 33  │ Lenny places $500 DontCome                                         │ Bal: $2,000 (+880)          │
 34  │ Nathan places $200 come bet                                        │ NumBets: 55 (21W, 34L)      │
 35  │ Paige places $10 on Field                                          │ Pct: 38.1% win, 61.8% lose  │
@@ -419,7 +419,7 @@ also color coded over their column.
 One Player View
 ───────────────
 
-    0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+    0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
 0   ┌──────────┬───────────┬──────────────────┬──────────────────────────┬─────────────────────────────┐
 1   │ Point 10 │ Roll  273 │ Las Vegas Strip  │min $5 max $2000 odds 10x │   🎲 Rolling... 🎲          │
 2   ├──────────┴───────────┴──────────────────┴──────────────────────────┤   ⚄ + ⚂  →  7               │
@@ -451,8 +451,8 @@ One Player View
 28  │ Nathan bets $50 PassLine odds                                      │ Last: -$100,300W,200L       │
 29  │ Arthur places $50 come bet                                         │ On table: 12 bets, $1,520   │
 30  │ Arthur places $10 Field bet                                        ├─────────────────────────────┤
-31  │ Winnifred placed $100 field bet                                    │ Player: Nathan (shooter)    │
-32  │ Lenny places $500 DontCome                                         │ - - - - - - - - - - - - - - │
+31  │ Winnifred placed $100 field bet                                    │ Nathan (shooter)            │
+32  │ Lenny places $500 DontCome                                         │ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
 33  │ Nathan places $200 come bet                                        │ Bal: $2,000 (+880)          │
 34  │ Paige places $10 on Field                                          │ NumBets: 55 (21W, 34L)      │
 35  │ Another message row                                                │ Pct: 38.1% win, 61.8% lose  │

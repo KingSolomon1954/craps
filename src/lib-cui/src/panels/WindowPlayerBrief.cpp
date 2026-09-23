@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: WindowHouseBrief.cpp
+// File: WindowPlayerBrief.cpp
 //
 //----------------------------------------------------------------
 
-#include <cui/panels/WindowHouseBrief.h>
+#include <cui/panels/WindowPlayerBrief.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/CuiUtils.h>
 #include <cui/CuiStructs.h>
@@ -17,36 +17,38 @@ using namespace Cui;
 
 //----------------------------------------------------------------
 
-WindowHouseBrief::WindowHouseBrief()
-    : PanelBase("WindowHouseBrief")
+WindowPlayerBrief::WindowPlayerBrief()
+    : PanelBase("WindowPlayerBrief")
 {
-    newWindow(Layout::houseBriefHeight,           // In base class
-              Layout::houseBriefWidth,
-              Layout::houseBriefTopRow,
-              Layout::houseBriefLeftCol);
+    newWindow(Layout::playerBriefHeight,           // In base class
+              Layout::playerBriefWidth,
+              Layout::playerBriefTopRow,
+              Layout::playerBriefLeftCol);
 }
 
 //----------------------------------------------------------------
 
-WindowHouseBrief&
-WindowHouseBrief::instance()
+WindowPlayerBrief&
+WindowPlayerBrief::instance()
 {
-    static WindowHouseBrief hb;
+    static WindowPlayerBrief hb;
     return hb;
 }
 
 //----------------------------------------------------------------
 //
 //  ┬─────────────────────────────┐
-//  │ House Bal: +$2,050          │
-//  │ NumBets: 128 (68W, 60L)     │
-//  │ Pct: 53.12% win 46.87% lose │
-//  │ Last: -$100 300W,200L       │
-//  │ On table: 12 bets, $1,520   │
+//  │ Player: Nathan (shooter)    │
+//  │ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
+//  │ Bal: $2,000 (+880)          │
+//  │ NumBets: 55 (21W, 34L)      │
+//  │ Pct: 38.18% win 61.81% lose │
+//  │ Last: 180W,100L,+$80,       │
+//  │ On table: 3 bets, $320      │
 //  ├─────────────────────────────┤
 //
 void
-WindowHouseBrief::draw()
+WindowPlayerBrief::draw()
 {
     werase(pWin_);
 
@@ -54,7 +56,7 @@ WindowHouseBrief::draw()
     drawInternalBorders();
     drawStaticContent();
     populate();
-
+    
     CuiUtils::transfer(pWin_);
 }
 
@@ -65,7 +67,7 @@ WindowHouseBrief::draw()
 // to take of it.
 //
 void
-WindowHouseBrief::drawExternalJunctions()
+WindowPlayerBrief::drawExternalJunctions()
 {
     // Have none
 }
@@ -73,9 +75,10 @@ WindowHouseBrief::drawExternalJunctions()
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::drawInternalBorders()
+WindowPlayerBrief::drawInternalBorders()
 {
-    // Have none
+    std::string s(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~");
+    mvwaddstr(pWin_, 1, 0, s.c_str());
 }
 
 //----------------------------------------------------------------
@@ -83,7 +86,7 @@ WindowHouseBrief::drawInternalBorders()
 // Draw static field contents
 //
 void
-WindowHouseBrief::drawStaticContent()
+WindowPlayerBrief::drawStaticContent()
 {
     // Have none
 }
@@ -93,8 +96,9 @@ WindowHouseBrief::drawStaticContent()
 // Updates all dynamic field content.
 //
 void
-WindowHouseBrief::populate()
+WindowPlayerBrief::populate()
 {
+    populateName();
     populateBalance();
     populateNumBets();
     populatePct();
@@ -105,45 +109,56 @@ WindowHouseBrief::populate()
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::populateBalance()
+WindowPlayerBrief::populateName()
+{
+// TODO
+    std::string n = "Nathan";
+    mvwaddstr(pWin_, 0, 1, n.c_str());
+//    mvwaddstr(pWin_, 0, 1, playerName_.c_str());
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerBrief::populateBalance()
 {
     std::string plusOrMinus("+");
     if (balance_ < 0) plusOrMinus = "-";
 
-    std::string s = "House Bal: " + plusOrMinus +
+    std::string s = "Bal: " + plusOrMinus +
         Gen::MoneyUtils::toString(balance_);
 
-    mvwaddstr(pWin_, 0, 1, s.c_str());
-}
-
-//----------------------------------------------------------------
-
-void
-WindowHouseBrief::populateNumBets()
-{
-    std::string s = "NumBets: ";
-    s += std::to_string(numBetsTableWins_ + numBetsTableLoses_) + " ";
-    s += std::to_string(numBetsTableWins_)  + "W,";
-    s += std::to_string(numBetsTableLoses_) + "L";
-
-    mvwaddstr(pWin_, 1, 1, s.c_str());
-}
-
-//----------------------------------------------------------------
-
-void
-WindowHouseBrief::populatePct()
-{
-    std::string s = tableWinPercentages();
     mvwaddstr(pWin_, 2, 1, s.c_str());
 }
 
 //----------------------------------------------------------------
 
-std::string
-WindowHouseBrief::tableWinPercentages() const
+void
+WindowPlayerBrief::populateNumBets()
 {
-    const unsigned total = numBetsTableWins_ + numBetsTableLoses_;
+    std::string s = "NumBets: ";
+    s += std::to_string(numBetsPlayerWins_ + numBetsPlayerLoses_) + " ";
+    s += std::to_string(numBetsPlayerWins_)  + "W,";
+    s += std::to_string(numBetsPlayerLoses_) + "L";
+    
+    mvwaddstr(pWin_, 3, 1, s.c_str());
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerBrief::populatePct()
+{
+    std::string s = playerWinPercentages();
+    mvwaddstr(pWin_, 4, 1, s.c_str());
+}
+
+//----------------------------------------------------------------
+
+std::string
+WindowPlayerBrief::playerWinPercentages() const
+{
+    const unsigned total = numBetsPlayerWins_ + numBetsPlayerLoses_;
 
     if (total == 0)
     {
@@ -151,10 +166,10 @@ WindowHouseBrief::tableWinPercentages() const
     }
 
     const double winPercent =
-        100.0 * static_cast<double>(numBetsTableWins_) / total;
+        100.0 * static_cast<double>(numBetsPlayerWins_) / total;
 
     const double losePercent =
-        100.0 * static_cast<double>(numBetsTableLoses_) / total;
+        100.0 * static_cast<double>(numBetsPlayerLoses_) / total;
 
     std::ostringstream out;
     out << "Pct: "
@@ -168,58 +183,58 @@ WindowHouseBrief::tableWinPercentages() const
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::populateLast()
+WindowPlayerBrief::populateLast()
 {
     std::string s = "Last: ";
     std::string plusOrMinus("+");
-
-    int total = tableIntakeLastRoll_ - tableOutputLastRoll_;
-
+    
+    int total = playerIntakeLastRoll_ - playerOutputLastRoll_;
+    
     if (total < 0)
     {
         plusOrMinus = "-";
     }
 
     s += plusOrMinus + "$" + std::to_string(total) + " ";
-    s += std::to_string(tableIntakeLastRoll_) + "W,";
-    s += std::to_string(tableOutputLastRoll_) + "L";
+    s += std::to_string(playerIntakeLastRoll_) + "W,";
+    s += std::to_string(playerOutputLastRoll_) + "L";
 
-    mvwaddstr(pWin_, 3, 1, s.c_str());
+    mvwaddstr(pWin_, 5, 1, s.c_str());
 }
 
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::populateOnTable()
+WindowPlayerBrief::populateOnTable()
 {
     std::string s = "On table: ";
     s += std::to_string(numBetsOnTable_) + " bets, ";
     s += Gen::MoneyUtils::toString(amtOnTable_);
 
-    mvwaddstr(pWin_, 4, 1, s.c_str());
+    mvwaddstr(pWin_, 6, 1, s.c_str());
 }
 
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::onTableResults(
+WindowPlayerBrief::onPlayerResults(
     int newBalance,                  // from session start, starting at 0
-    unsigned numBetsTableWins,       // table wins session start, players lose
-    unsigned numBetsTableLoses,      // table lose session start, players win
-    Gen::Money tableIntakeLastRoll,  // table won last roll
-    Gen::Money tableOutputLastRoll)  // table lost last roll
+    unsigned numBetsPlayerWins,      // player wins session start, players lose
+    unsigned numBetsPlayerLoses,     // player lose session start, players win
+    Gen::Money playerIntakeLastRoll, // player won last roll
+    Gen::Money playerOutputLastRoll) // player lost last roll
 {
-    balance_ = newBalance;
-    numBetsTableWins_    = numBetsTableWins;
-    numBetsTableLoses_   = numBetsTableLoses;
-    tableIntakeLastRoll_ = tableIntakeLastRoll;
-    tableOutputLastRoll_ = tableOutputLastRoll;
+    balance_ = newBalance;    
+    numBetsPlayerWins_ = numBetsPlayerWins;
+    numBetsPlayerLoses_ = numBetsPlayerLoses;
+    playerIntakeLastRoll_ = playerIntakeLastRoll;
+    playerOutputLastRoll_ = playerOutputLastRoll;
 }
 
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::onTableNumBetsOnTableChanged(
+WindowPlayerBrief::onPlayerNumBetsOnTableChanged(
     unsigned numBetsOnTable, Gen::Money amtOnTable)
 {
     numBetsOnTable_ = numBetsOnTable;
@@ -227,3 +242,4 @@ WindowHouseBrief::onTableNumBetsOnTableChanged(
 }
 
 //----------------------------------------------------------------
+

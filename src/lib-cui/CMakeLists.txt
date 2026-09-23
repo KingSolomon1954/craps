@@ -28,6 +28,7 @@ add_library(cui STATIC
     src/panels/WindowHouseBrief.cpp
     src/panels/WindowNavBar.cpp
     src/panels/WindowPlayerArea.cpp
+    src/panels/WindowPlayerBrief.cpp
     src/panels/WindowRollHistory.cpp
     src/panels/WindowTitleBar.cpp
 )

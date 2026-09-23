@@ -318,7 +318,7 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
 
-    Ctrl::UslNumBetsOnTableChanged ev;
+    Ctrl::UslTableNumBetsOnTableChanged ev;
     ev.numBetsOnTable = getNumBetsOnTable();
     ev.amtOnTable     = getAmountOnTable();
     Gen::EventManager::instance().publish(ev);
@@ -786,8 +786,9 @@ CrapsTable::dispenseResults()
     disbursePlayerWins();
     disbursePlayerLoses();
     disbursePlayerKeeps();
+    disburseDone();
 }
-
+    
 //----------------------------------------------------------------
 
 void
@@ -800,7 +801,6 @@ CrapsTable::disburseHouseResults()
         if (r.lose > 0)  // player loses, house wins
         {
             changed = true;
-            numBetsHouseWins_++;
             houseBank_.deposit(r.lose);
             lastRollStats_.amountWin += r.lose;
             lastRollStats_.numBetsWin++;
@@ -808,7 +808,6 @@ CrapsTable::disburseHouseResults()
         if (r.win > 0)  // player wins, house loses
         {
             changed = true;
-            numBetsHouseLoses_++;
             houseBank_.withdraw(r.win);
             lastRollStats_.amountLose += r.win;
             lastRollStats_.numBetsLose++;
@@ -820,12 +819,12 @@ CrapsTable::disburseHouseResults()
     }
     if (changed)
     {
-        Ctrl::UslHouseResults ev;
-        ev.newBalance          = getBalance();              // balance from session start
-        ev.numBetsHouseWins    = numBetsHouseWins_;         // house wins session start, players lose
-        ev.numBetsHouseLoses   = numBetsHouseLoses_;        // house lose session start, players win
-        ev.houseIntakeLastRoll = lastRollStats_.amountWin;
-        ev.houseOutputLastRoll = lastRollStats_.amountLose;
+        Ctrl::UslTableResults ev;
+        ev.newBalance          = getBalance();               // balance from session start
+        ev.numBetsTableWins    = lastRollStats_.numBetsWin;  // house wins session start, players lose
+        ev.numBetsTableLoses   = lastRollStats_.numBetsLose; // house lose session start, players win
+        ev.tableIntakeLastRoll = lastRollStats_.amountWin;
+        ev.tableOutputLastRoll = lastRollStats_.amountLose;
         Gen::EventManager::instance().publish(ev);
     }
 }
@@ -872,6 +871,21 @@ CrapsTable::disbursePlayerKeeps()
             r.pBet->player().processKeep(r);
             currentStats_.recordKeep(*(r.pBet));
         }
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Tell each player dispensing money is done.
+// Allows them to close out their last roll stats. Can't use events
+// for this as the timing 
+// howie
+void
+CrapsTable::disburseDone()
+{
+    for (auto p : players_)
+    {
+        p->bettingClosed();
     }
 }
 

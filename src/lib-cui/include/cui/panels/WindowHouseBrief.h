@@ -24,13 +24,13 @@ public:
     /// @name Modifiers
     /// @{
     void draw() override;
-    void onHouseResults(
+    void onTableResults(
         int newBalance,                  // from session start, starting at 0
-        unsigned numBetsHouseWins,       // house wins session start, players lose
-        unsigned numBetsHouseLoses,      // house lose session start, players win
-        Gen::Money houseIntakeLastRoll,  // house won last roll
-        Gen::Money houseOutputLastRoll); // house lost last roll
-    void onNumBetsOnTableChanged(
+        unsigned numBetsTableWins,       // table wins session start, players lose
+        unsigned numBetsTableLoses,      // table lose session start, players win
+        Gen::Money tableIntakeLastRoll,  // table won last roll
+        Gen::Money tableOutputLastRoll); // table lost last roll
+    void onTableNumBetsOnTableChanged(
         unsigned numBetsOnTable,
         Gen::Money amtOnTable);
     /// @}
@@ -54,10 +54,10 @@ private:
         static constexpr int houseBriefWidth    = houseBriefRightCol - houseBriefLeftCol + 1;
     };
     int balance_                    = 0;  // since session start from 0
-    unsigned numBetsHouseWins_      = 0;  // house wins session start, players lose
-    unsigned numBetsHouseLoses_     = 0;  // house lose session start, players win
-    Gen::Money houseIntakeLastRoll_ = 0;  // house won last roll
-    Gen::Money houseOutputLastRoll_ = 0;  // house lost last roll
+    unsigned numBetsTableWins_      = 0;  // table wins session start, players lose
+    unsigned numBetsTableLoses_     = 0;  // table lose session start, players win
+    Gen::Money tableIntakeLastRoll_ = 0;  // table won last roll
+    Gen::Money tableOutputLastRoll_ = 0;  // table lost last roll
     unsigned numBetsOnTable_ = 0;
     Gen::Money amtOnTable_ = 0;
 
@@ -72,7 +72,7 @@ private:
     void populatePct();
     void populateOnTable();
     void populateLast();
-    std::string houseWinPercentages() const;
+    std::string tableWinPercentages() const;
 };
 
 } // namespace Cui

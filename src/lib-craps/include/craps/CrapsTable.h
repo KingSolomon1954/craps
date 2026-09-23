@@ -175,8 +175,6 @@ private:
     // the results of all bets on the table, one entry for each bet.
     using DecisionList = std::list<DecisionRecord>;
     DecisionList drl_;
-    unsigned numBetsHouseWins_ = 0;
-    unsigned numBetsHouseLoses_ = 0;
 
 private:    
     bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
@@ -195,6 +193,7 @@ private:
     void declareDiceThrowStart();
     void declareDiceNewValue();
     void declareBettingOpen();
+    void disburseDone();
 
     Gen::ReturnCode removePlayerByPtr(Player* pPlayer, Gen::ErrorPass& ep);
     void removePlayerBets            (Player* pPlayer);

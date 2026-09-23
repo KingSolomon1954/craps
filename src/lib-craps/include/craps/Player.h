@@ -75,6 +75,7 @@ public:
     Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
     void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
     void bettingClosed();
+    void disburseDone();
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);

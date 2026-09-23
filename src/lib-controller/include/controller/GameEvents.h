@@ -47,8 +47,10 @@ enum class EventType
     UslSevenOut,
     UslPassLineWinner,
     UslNewShooter,
-    UslHouseResults,
-    UslNumBetsOnTableChanged,
+    UslTableResults,
+    UslTableNumBetsOnTableChanged,
+    UslPlayerResults,
+    UslPlayerNumBetsOnTableChanged,
     UslPlayerJoinedTable,
     UslPlayerLeftTable,
 
@@ -194,28 +196,55 @@ struct UslNewShooter : public GameEvent
 
 //----------------------------------------------------------------
 
-struct UslHouseResults : public GameEvent
+struct UslTableResults : public GameEvent
 {
     int newBalance;                  // balance from session start
-    unsigned numBetsHouseWins;       // house wins session start, players lose
-    unsigned numBetsHouseLoses;      // house lose session start, players win
-    Gen::Money houseIntakeLastRoll;  // house won last roll
-    Gen::Money houseOutputLastRoll;  // house lost last roll
+    unsigned numBetsTableWins;       // table wins session start, players lose
+    unsigned numBetsTableLoses;      // table lose session start, players win
+    Gen::Money tableIntakeLastRoll;  // table won last roll
+    Gen::Money tableOutputLastRoll;  // table lost last roll
     
-    UslHouseResults()
-        : GameEvent{EventSource::Model, EventType::UslHouseResults}
+    UslTableResults()
+        : GameEvent{EventSource::Model, EventType::UslTableResults}
     {}
 };
 
 //----------------------------------------------------------------
 
-struct UslNumBetsOnTableChanged : public GameEvent
+struct UslTableNumBetsOnTableChanged : public GameEvent
 {
     unsigned numBetsOnTable;
     Gen::Money amtOnTable;
     
-    UslNumBetsOnTableChanged()
-        : GameEvent{EventSource::Model, EventType::UslNumBetsOnTableChanged}
+    UslTableNumBetsOnTableChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableNumBetsOnTableChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerResults : public GameEvent
+{
+    int newBalance;                  // balance from session start
+    unsigned numBetsPlayerWins;       // player wins session start 
+    unsigned numBetsPlayerLoses;      // player lose session start
+    Gen::Money playerIntakeLastRoll;  // player won last roll
+    Gen::Money playerOutputLastRoll;  // player lost last roll
+    
+    UslPlayerResults()
+        : GameEvent{EventSource::Model, EventType::UslPlayerResults}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerNumBetsOnTableChanged : public GameEvent
+{
+    unsigned numBetsOnTable;
+    Gen::Money amtOnTable;
+    
+    UslPlayerNumBetsOnTableChanged()
+        : GameEvent{EventSource::Model, EventType::UslPlayerNumBetsOnTableChanged}
     {}
 };
 

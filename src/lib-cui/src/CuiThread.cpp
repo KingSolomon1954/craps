@@ -8,6 +8,7 @@
 #include <cui/SurfaceManager.h>
 #include <cui/panels/WindowAnimation.h>
 #include <cui/panels/WindowHouseBrief.h>
+#include <cui/panels/WindowPlayerBrief.h>
 #include <cui/panels/WindowRollHistory.h>
 #include <cui/panels/WindowTitleBar.h>
 #include <gen/Logger.h>
@@ -272,24 +273,49 @@ CuiThread::process(const Ctrl::UslPassLineWinner& ev)
 //----------------------------------------------------------------
 
 void
-CuiThread::process(const Ctrl::UslHouseResults& ev)
+CuiThread::process(const Ctrl::UslTableResults& ev)
 {
-    LOG_TRACE("CuiThread::process(UslHouseResults)");
-    WindowHouseBrief::instance().onHouseResults(
+    LOG_TRACE("CuiThread::process(UslTableResults)");
+    WindowHouseBrief::instance().onTableResults(
         ev.newBalance,
-        ev.numBetsHouseWins,
-        ev.numBetsHouseLoses,
-        ev.houseIntakeLastRoll,
-        ev.houseOutputLastRoll);
+        ev.numBetsTableWins,
+        ev.numBetsTableLoses,
+        ev.tableIntakeLastRoll,
+        ev.tableOutputLastRoll);
 }
 
 //----------------------------------------------------------------
 
 void
-CuiThread::process(const Ctrl::UslNumBetsOnTableChanged& ev)
+CuiThread::process(const Ctrl::UslTableNumBetsOnTableChanged& ev)
 {
-    LOG_TRACE("CuiThread::process(UslNumBetsOnTableChanged)");
-    WindowHouseBrief::instance().onNumBetsOnTableChanged(
+    LOG_TRACE("CuiThread::process(UslTableNumBetsOnTableChanged)");
+    WindowHouseBrief::instance().onTableNumBetsOnTableChanged(
+        ev.numBetsOnTable,
+        ev.amtOnTable);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslPlayerResults& ev)
+{
+    LOG_TRACE("CuiThread::process(UslPlayerResults)");
+    WindowPlayerBrief::instance().onPlayerResults(
+        ev.newBalance,
+        ev.numBetsPlayerWins,
+        ev.numBetsPlayerLoses,
+        ev.playerIntakeLastRoll,
+        ev.playerOutputLastRoll);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslPlayerNumBetsOnTableChanged& ev)
+{
+    LOG_TRACE("CuiThread::process(UslPlayerNumBetsOnTableChanged)");
+    WindowPlayerBrief::instance().onPlayerNumBetsOnTableChanged(
         ev.numBetsOnTable,
         ev.amtOnTable);
 }
