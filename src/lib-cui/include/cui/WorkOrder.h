@@ -47,7 +47,9 @@ using GameEvent = std::variant<
     Ctrl::UslDiceNewValue,
     Ctrl::UslPointEstablished,
     Ctrl::UslSevenOut,
-    Ctrl::UslPassLineWinner
+    Ctrl::UslPassLineWinner,
+    Ctrl::UslHouseResults,
+    Ctrl::UslNumBetsOnTableChanged
     >;
     
 struct WorkOrderEvent

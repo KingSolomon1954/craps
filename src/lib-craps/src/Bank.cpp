@@ -47,6 +47,7 @@ Bank::withdraw(Gen::Money amount)
     numWithdrawals_++;
     currentStats_.amtWithdrawn = amtWithdrawn_;
     currentStats_.numWithdrawals = numWithdrawals_;
+    
     return refill();
 }
 

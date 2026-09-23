@@ -317,6 +317,12 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
     if (!betAllowed(*pBet, ep)) return Gen::ReturnCode::Fail;
 
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
+
+    Ctrl::UslNumBetsOnTableChanged ev;
+    ev.numBetsOnTable = getNumBetsOnTable();
+    ev.amtOnTable     = getAmountOnTable();
+    Gen::EventManager::instance().publish(ev);
+    
     return Gen::ReturnCode::Success;
 }
 
@@ -787,16 +793,22 @@ CrapsTable::dispenseResults()
 void
 CrapsTable::disburseHouseResults()
 {
+    bool changed = false;
+    
     for (const auto& r : drl_)
     {
         if (r.lose > 0)  // player loses, house wins
         {
+            changed = true;
+            numBetsHouseWins_++;
             houseBank_.deposit(r.lose);
             lastRollStats_.amountWin += r.lose;
             lastRollStats_.numBetsWin++;
         }
         if (r.win > 0)  // player wins, house loses
         {
+            changed = true;
+            numBetsHouseLoses_++;
             houseBank_.withdraw(r.win);
             lastRollStats_.amountLose += r.win;
             lastRollStats_.numBetsLose++;
@@ -805,6 +817,16 @@ CrapsTable::disburseHouseResults()
         {
             houseBank_.deposit(r.commission);
         }
+    }
+    if (changed)
+    {
+        Ctrl::UslHouseResults ev;
+        ev.newBalance          = getBalance();              // balance from session start
+        ev.numBetsHouseWins    = numBetsHouseWins_;         // house wins session start, players lose
+        ev.numBetsHouseLoses   = numBetsHouseLoses_;        // house lose session start, players win
+        ev.houseIntakeLastRoll = lastRollStats_.amountWin;
+        ev.houseOutputLastRoll = lastRollStats_.amountLose;
+        Gen::EventManager::instance().publish(ev);
     }
 }
 
@@ -1078,6 +1100,16 @@ unsigned
 CrapsTable::getMaxOdds() const
 {
     return maxOdds_;
+}
+
+//----------------------------------------------------------------
+//
+// Gets today's running session balance. Always +/- starting from 0.
+//
+int
+CrapsTable::getBalance() const
+{
+    return houseBank_.getAmtDeposited() - houseBank_.getAmtWithdrawn();
 }
 
 //----------------------------------------------------------------

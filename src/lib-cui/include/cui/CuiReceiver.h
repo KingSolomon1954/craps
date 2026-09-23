@@ -29,11 +29,13 @@ public:
     /// @}
 
 private:
-    void onDiceNewValue    (const Ctrl::UslDiceNewValue& ev)     const;
-    void onDiceThrowStart  (const Ctrl::UslDiceThrowStart& ev)   const;
-    void onPointEstablished(const Ctrl::UslPointEstablished& ev) const;
-    void onSevenOut        (const Ctrl::UslSevenOut& ev)         const;
-    void onPassLineWinner  (const Ctrl::UslPassLineWinner& ev)   const;
+    void onDiceNewValue         (const Ctrl::UslDiceNewValue& ev)          const;
+    void onDiceThrowStart       (const Ctrl::UslDiceThrowStart& ev)        const;
+    void onPointEstablished     (const Ctrl::UslPointEstablished& ev)      const;
+    void onSevenOut             (const Ctrl::UslSevenOut& ev)              const;
+    void onPassLineWinner       (const Ctrl::UslPassLineWinner& ev)        const;
+    void onHouseResults         (const Ctrl::UslHouseResults& ev)          const;
+    void onNumBetsOnTableChanged(const Ctrl::UslNumBetsOnTableChanged& ev) const;
 };
 
 /*-----------------------------------------------------------*//**

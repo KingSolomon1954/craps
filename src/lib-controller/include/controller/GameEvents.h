@@ -47,14 +47,16 @@ enum class EventType
     UslSevenOut,
     UslPassLineWinner,
     UslNewShooter,
+    UslHouseResults,
+    UslNumBetsOnTableChanged,
     UslPlayerJoinedTable,
     UslPlayerLeftTable,
 
+    // Unimplemented
     UslBetChanged,
     UslPlayerBalanceChanged,
     UslBuddyBetMade,
-    UslCountdownRollDice,
-    UslHouseLowOnFunds,
+    UslCountdownRollDice
 };
 
 //----------------------------------------------------------------
@@ -187,6 +189,33 @@ struct UslNewShooter : public GameEvent
     
     UslNewShooter()
         : GameEvent{EventSource::Model, EventType::UslNewShooter}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslHouseResults : public GameEvent
+{
+    int newBalance;                  // balance from session start
+    unsigned numBetsHouseWins;       // house wins session start, players lose
+    unsigned numBetsHouseLoses;      // house lose session start, players win
+    Gen::Money houseIntakeLastRoll;  // house won last roll
+    Gen::Money houseOutputLastRoll;  // house lost last roll
+    
+    UslHouseResults()
+        : GameEvent{EventSource::Model, EventType::UslHouseResults}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslNumBetsOnTableChanged : public GameEvent
+{
+    unsigned numBetsOnTable;
+    Gen::Money amtOnTable;
+    
+    UslNumBetsOnTableChanged()
+        : GameEvent{EventSource::Model, EventType::UslNumBetsOnTableChanged}
     {}
 };
 

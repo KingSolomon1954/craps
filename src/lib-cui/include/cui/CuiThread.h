@@ -49,6 +49,8 @@ private:
     void process(const Ctrl::UslPointEstablished& ev);
     void process(const Ctrl::UslSevenOut& ev);
     void process(const Ctrl::UslPassLineWinner& ev);
+    void process(const Ctrl::UslHouseResults& ev);
+    void process(const Ctrl::UslNumBetsOnTableChanged& ev);
 
 private:
     bool shutdownRequested_ = false;

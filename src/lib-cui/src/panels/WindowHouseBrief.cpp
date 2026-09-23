@@ -8,7 +8,13 @@
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/CuiUtils.h>
 #include <cui/CuiStructs.h>
+#include <controller/CrapsReaders.h>
+#include <controller/GameEvents.h>
 #include <gen/Logger.h>
+#include <iomanip>
+#include <sstream>
+#include <string>
+
 
 using namespace Cui;
 
@@ -38,8 +44,8 @@ WindowHouseBrief::instance()
 //  │ House Bal: +$2,050          │
 //  │ NumBets: 128 (68W, 60L)     │
 //  │ Pct: 53.12% win 46.87% lose │
+//  │ Last: -$100 300W,200L       │
 //  │ On table: 12 bets, $1,520   │
-//  │ Last: 300W,200L,-$100       │
 //  ├─────────────────────────────┤
 //
 void
@@ -104,6 +110,13 @@ WindowHouseBrief::populate()
 void
 WindowHouseBrief::populateBalance()
 {
+    std::string plusOrMinus("+");
+    if (balance_ < 0) plusOrMinus = "-";
+
+    std::string s = "House Bal: " + plusOrMinus +
+        Gen::MoneyUtils::toString(balance_);
+
+    mvwaddstr(pWin_, 0, 1, s.c_str());
 }
 
 //----------------------------------------------------------------
@@ -111,6 +124,12 @@ WindowHouseBrief::populateBalance()
 void
 WindowHouseBrief::populateNumBets()
 {
+    std::string s = "NumBets: ";
+    s += std::to_string(numBetsHouseWins_ + numBetsHouseLoses_) + " ";
+    s += std::to_string(numBetsHouseWins_)  + "W,";
+    s += std::to_string(numBetsHouseLoses_) + "L";
+    
+    mvwaddstr(pWin_, 1, 1, s.c_str());
 }
 
 //----------------------------------------------------------------
@@ -118,13 +137,35 @@ WindowHouseBrief::populateNumBets()
 void
 WindowHouseBrief::populatePct()
 {
+    std::string s = houseWinPercentages();
+    mvwaddstr(pWin_, 2, 1, s.c_str());
 }
 
 //----------------------------------------------------------------
 
-void
-WindowHouseBrief::populateOnTable()
+std::string
+WindowHouseBrief::houseWinPercentages() const
 {
+    const unsigned total = numBetsHouseWins_ + numBetsHouseLoses_;
+
+    if (total == 0)
+    {
+        return "Pct: 0.00% win 0.00% lose";
+    }
+
+    const double winPercent =
+        100.0 * static_cast<double>(numBetsHouseWins_) / total;
+
+    const double losePercent =
+        100.0 * static_cast<double>(numBetsHouseLoses_) / total;
+
+    std::ostringstream out;
+    out << "Pct: "
+        << std::fixed << std::setprecision(2)
+        << winPercent << "% win "
+        << losePercent << "% lose";
+
+    return out.str();
 }
 
 //----------------------------------------------------------------
@@ -132,6 +173,61 @@ WindowHouseBrief::populateOnTable()
 void
 WindowHouseBrief::populateLast()
 {
+    std::string s = "Last: ";
+    std::string plusOrMinus("+");
+    
+    int total = houseIntakeLastRoll_ - houseOutputLastRoll_;
+    
+    if (total < 0)
+    {
+        plusOrMinus = "-";
+    }
+
+    s += plusOrMinus + "$" + std::to_string(total) + " ";
+    s += std::to_string(houseIntakeLastRoll_) + "W,";
+    s += std::to_string(houseOutputLastRoll_) + "L";
+
+    mvwaddstr(pWin_, 3, 1, s.c_str());
 }
 
 //----------------------------------------------------------------
+
+void
+WindowHouseBrief::populateOnTable()
+{
+    std::string s = "On table: ";
+    s += std::to_string(numBetsOnTable_) + " bets, ";
+    s += Gen::MoneyUtils::toString(amtOnTable_);
+
+    mvwaddstr(pWin_, 4, 1, s.c_str());
+}
+
+//----------------------------------------------------------------
+
+void
+WindowHouseBrief::onHouseResults(
+    int newBalance,                  // from session start, starting at 0
+    unsigned numBetsHouseWins,       // house wins session start, players lose
+    unsigned numBetsHouseLoses,      // house lose session start, players win
+    Gen::Money houseIntakeLastRoll,  // house won last roll
+    Gen::Money houseOutputLastRoll)  // house lost last roll
+{
+    balance_ = newBalance;    
+    numBetsHouseWins_ = numBetsHouseWins;
+    numBetsHouseLoses_ = numBetsHouseLoses;
+    houseIntakeLastRoll_ = houseIntakeLastRoll;
+    houseOutputLastRoll_ = houseOutputLastRoll;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowHouseBrief::onNumBetsOnTableChanged(
+    unsigned numBetsOnTable, Gen::Money amtOnTable)
+{
+    numBetsOnTable_ = numBetsOnTable;
+    amtOnTable_ = amtOnTable;
+}
+
+//----------------------------------------------------------------
+

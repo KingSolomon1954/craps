@@ -7,6 +7,7 @@
 #include <cui/CuiThread.h>
 #include <cui/SurfaceManager.h>
 #include <cui/panels/WindowAnimation.h>
+#include <cui/panels/WindowHouseBrief.h>
 #include <cui/panels/WindowRollHistory.h>
 #include <cui/panels/WindowTitleBar.h>
 #include <gen/Logger.h>
@@ -266,6 +267,31 @@ CuiThread::process(const Ctrl::UslPassLineWinner& ev)
     LOG_TRACE("CuiThread::process(UslPassLineWinner)");
     WindowTitleBar::instance().onPassLineWinner();
     WindowRollHistory::instance().onPassLineWinner();
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslHouseResults& ev)
+{
+    LOG_TRACE("CuiThread::process(UslHouseResults)");
+    WindowHouseBrief::instance().onHouseResults(
+        ev.newBalance,
+        ev.numBetsHouseWins,
+        ev.numBetsHouseLoses,
+        ev.houseIntakeLastRoll,
+        ev.houseOutputLastRoll);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslNumBetsOnTableChanged& ev)
+{
+    LOG_TRACE("CuiThread::process(UslNumBetsOnTableChanged)");
+    WindowHouseBrief::instance().onNumBetsOnTableChanged(
+        ev.numBetsOnTable,
+        ev.amtOnTable);
 }
 
 //----------------------------------------------------------------

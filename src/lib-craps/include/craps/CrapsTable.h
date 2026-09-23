@@ -85,6 +85,7 @@ public:
     const BankStats&        getBankCurrentStats()       const;
     const BankStats&        getBankAlltimeStats()       const;
     const LastRollStats&    getLastRollStats()          const;
+    int                     getBalance()                const;
     unsigned                getMinLineBet()             const;
     unsigned                getMaxLineBet()             const;
     unsigned                getMaxOdds()                const;
@@ -174,7 +175,10 @@ private:
     // the results of all bets on the table, one entry for each bet.
     using DecisionList = std::list<DecisionRecord>;
     DecisionList drl_;
+    unsigned numBetsHouseWins_ = 0;
+    unsigned numBetsHouseLoses_ = 0;
 
+private:    
     bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
     void throwDice();
     void resolveBets();

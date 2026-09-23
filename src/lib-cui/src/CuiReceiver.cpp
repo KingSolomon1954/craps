@@ -62,6 +62,20 @@ CuiReceiver::CuiReceiver()
         {
             this->onPassLineWinner(ev);
         });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslHouseResults");
+    Gen::EventManager::instance().subscribe<Ctrl::UslHouseResults>(
+        [this](const Ctrl::UslHouseResults& ev)
+        {
+            this->onHouseResults(ev);
+        });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslNumBetsOnTableChanged");
+    Gen::EventManager::instance().subscribe<Ctrl::UslNumBetsOnTableChanged>(
+        [this](const Ctrl::UslNumBetsOnTableChanged& ev)
+        {
+            this->onNumBetsOnTableChanged(ev);
+        });
 }
 
 //----------------------------------------------------------------
@@ -127,3 +141,26 @@ CuiReceiver::onPassLineWinner(const Ctrl::UslPassLineWinner& ev) const
 }
 
 //----------------------------------------------------------------
+
+void
+CuiReceiver::onHouseResults(const Ctrl::UslHouseResults& ev) const
+{
+    LOG_TRACE("Entered CuiReceiver()::onHouseResults()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onNumBetsOnTableChanged(const Ctrl::UslNumBetsOnTableChanged& ev) const
+{
+    LOG_TRACE("Entered CuiReceiver()::onNumBetsOnTableChanged()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+

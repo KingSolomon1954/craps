@@ -144,6 +144,7 @@ public:
     };
     
     static TableMinMaxRules readTableMinMaxRules();
+    static Gen::Money readHouseBalance();
     static Gen::ReturnCode readTableNumPlayers(
         const Craps::TableId& tableId,
         unsigned& numPlayers,
