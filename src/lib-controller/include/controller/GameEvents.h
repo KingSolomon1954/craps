@@ -198,7 +198,8 @@ struct UslNewShooter : public GameEvent
 
 struct UslTableResults : public GameEvent
 {
-    int newBalance;                  // balance from session start
+    Gen::Money balance;              // how much left in bank
+    int netBalance;                  // profit/loss this session
     unsigned numBetsTableWins;       // table wins session start, players lose
     unsigned numBetsTableLoses;      // table lose session start, players win
     Gen::Money tableIntakeLastRoll;  // table won last roll
@@ -225,7 +226,8 @@ struct UslTableNumBetsOnTableChanged : public GameEvent
 
 struct UslPlayerResults : public GameEvent
 {
-    int newBalance;                  // balance from session start
+    Gen::Money balance;               // how much left in bank
+    int netBalance;                   // profit/loss this session
     unsigned numBetsPlayerWins;       // player wins session start 
     unsigned numBetsPlayerLoses;      // player lose session start
     Gen::Money playerIntakeLastRoll;  // player won last roll

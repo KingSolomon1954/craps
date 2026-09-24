@@ -25,7 +25,8 @@ public:
     /// @{
     void draw() override;
     void onPlayerResults(
-        int newBalance,                  // from session start, starting at 0
+        Gen::Money balance,               // how much left in wallet
+        int netBalance,                   // profit/loss this session
         unsigned numBetsPlayerWins,       // house wins session start, players lose
         unsigned numBetsPlayerLoses,      // house lose session start, players win
         Gen::Money playerIntakeLastRoll,  // house won last roll
@@ -54,7 +55,8 @@ private:
         static constexpr int playerBriefWidth    = playerBriefRightCol - playerBriefLeftCol + 1;
     };
     std::string playerName_;
-    int balance_                     = 0;  // since session start from 0
+    Gen::Money balance_              = 0;  // how much left in wallet
+    int netBalance_                  = 0;  // profit/loss this session
     unsigned numBetsPlayerWins_      = 0;  // house wins session start, players lose
     unsigned numBetsPlayerLoses_     = 0;  // house lose session start, players win
     Gen::Money playerIntakeLastRoll_ = 0;  // house won last roll

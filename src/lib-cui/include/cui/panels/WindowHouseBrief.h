@@ -25,7 +25,8 @@ public:
     /// @{
     void draw() override;
     void onTableResults(
-        int newBalance,                  // from session start, starting at 0
+        Gen::Money newBalance,           // how much left in bank
+        int netBalance,                  // profit/loss session start
         unsigned numBetsTableWins,       // table wins session start, players lose
         unsigned numBetsTableLoses,      // table lose session start, players win
         Gen::Money tableIntakeLastRoll,  // table won last roll
@@ -53,7 +54,8 @@ private:
         static constexpr int houseBriefHeight   = houseBriefBotRow   - houseBriefTopRow  + 1;
         static constexpr int houseBriefWidth    = houseBriefRightCol - houseBriefLeftCol + 1;
     };
-    int balance_                    = 0;  // since session start from 0
+    Gen::Money balance_             = 0;  // how much left in bank
+    int netBalance_                 = 0;  // profit/loss session
     unsigned numBetsTableWins_      = 0;  // table wins session start, players lose
     unsigned numBetsTableLoses_     = 0;  // table lose session start, players win
     Gen::Money tableIntakeLastRoll_ = 0;  // table won last roll
@@ -67,7 +69,7 @@ private:
     void drawInternalBorders();
     void drawStaticContent();
     void populate();
-    void populateBalance();
+    void populateNetBalance();
     void populateNumBets();
     void populatePct();
     void populateOnTable();

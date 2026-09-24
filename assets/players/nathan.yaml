@@ -609,52 +609,10 @@ BetStats:
     total: 0
     max: 0
 SessionStats:
-  numSessionsAlltime: 203
+  numSessionsAlltime: 210
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 04:17:54
   history:
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-06T18:08:07.822697960
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-06T18:08:13.351111889
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-06T18:08:15.955189108
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-06T18:08:18.538359473
-      duration: 0d 00:02:22
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-06T18:10:43.658953237
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-06T18:10:47.515724143
-      duration: 0d 00:00:03
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-06T18:10:52.614812972
-      duration: 0d 00:00:02
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
@@ -913,3 +871,45 @@ SessionStats:
       numPlayers: 1
       date: 2026-09-18T00:29:40.506309844
       duration: 0d 00:14:27
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T14:30:40.880663403
+      duration: 0d 00:24:28
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T14:55:10.459784688
+      duration: 0d 00:11:51
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T15:07:04.419395617
+      duration: 0d 00:00:53
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T15:08:07.106122471
+      duration: 0d 00:03:32
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T15:11:42.324463371
+      duration: 0d 01:56:49
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T17:08:34.950810918
+      duration: 0d 00:41:38
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T02:27:14.614410782
+      duration: 0d 00:13:16

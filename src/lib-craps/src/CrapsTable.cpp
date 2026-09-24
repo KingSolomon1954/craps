@@ -820,7 +820,8 @@ CrapsTable::disburseHouseResults()
     if (changed)
     {
         Ctrl::UslTableResults ev;
-        ev.newBalance          = getBalance();               // balance from session start
+        ev.balance             = getBalance();               // balance from session start
+        ev.netBalance          = houseBank_.getSessionNet(); // balance from session start
         ev.numBetsTableWins    = lastRollStats_.numBetsWin;  // house wins session start, players lose
         ev.numBetsTableLoses   = lastRollStats_.numBetsLose; // house lose session start, players win
         ev.tableIntakeLastRoll = lastRollStats_.amountWin;
@@ -877,9 +878,11 @@ CrapsTable::disbursePlayerKeeps()
 //----------------------------------------------------------------
 //
 // Tell each player dispensing money is done.
-// Allows them to close out their last roll stats. Can't use events
-// for this as the timing 
-// howie
+//
+// Allows players to close out their last roll stats. Can't use events
+// for this as asynchronous events arrive after bets have already been
+// removed.
+// 
 void
 CrapsTable::disburseDone()
 {

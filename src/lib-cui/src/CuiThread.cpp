@@ -277,7 +277,8 @@ CuiThread::process(const Ctrl::UslTableResults& ev)
 {
     LOG_TRACE("CuiThread::process(UslTableResults)");
     WindowHouseBrief::instance().onTableResults(
-        ev.newBalance,
+        ev.balance,
+        ev.netBalance,
         ev.numBetsTableWins,
         ev.numBetsTableLoses,
         ev.tableIntakeLastRoll,
@@ -302,7 +303,8 @@ CuiThread::process(const Ctrl::UslPlayerResults& ev)
 {
     LOG_TRACE("CuiThread::process(UslPlayerResults)");
     WindowPlayerBrief::instance().onPlayerResults(
-        ev.newBalance,
+        ev.balance,
+        ev.netBalance,
         ev.numBetsPlayerWins,
         ev.numBetsPlayerLoses,
         ev.playerIntakeLastRoll,

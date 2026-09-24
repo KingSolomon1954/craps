@@ -77,6 +77,14 @@ Bank::getBalance() const
 
 //----------------------------------------------------------------
 
+int
+Bank::getSessionNet() const
+{
+    return amtDeposited_ - amtWithdrawn_; 
+}
+
+//----------------------------------------------------------------
+
 Gen::Money
 Bank::getAmtDeposited() const
 {

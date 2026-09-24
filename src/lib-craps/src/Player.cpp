@@ -613,26 +613,26 @@ Player::processKeep(const DecisionRecord& dr)
 
 /*-----------------------------------------------------------*//**
 
-CrapsTable informs us directly (inline) that it's finished resolving
-bets. Can't use events for this since that is asynchronous and bets will
-have already have been removed from the table and player when we
-see those events here.
+CrapsTable informs us directly (inline) that it is finished resolving
+bets. Can't use events for this since bets will have already have been
+removed by the time we see those events here.
 
-Close out lastRollStats and publish event.
+Close out lastRollStats (no need to do that here as it is cleared in
+betting closed) and publish event.  Always send the event. Doesn't
+matter if no bets had a decision.  Want last roll stats to show +$0
+change on screen.
 */
 void
 Player::disburseDone()
 {
-    if (lastRollStats_.numBetsWin > 0 || lastRollStats_.numBetsLose > 0)
-    {
-        Ctrl::UslPlayerResults ev;
-        ev.newBalance           = getBalance();                // balance from session start
-        ev.numBetsPlayerWins    = lastRollStats_.numBetsWin;   // player wins session start
-        ev.numBetsPlayerLoses   = lastRollStats_.numBetsLose;  // player lose session start
-        ev.playerIntakeLastRoll = lastRollStats_.amountWin;
-        ev.playerOutputLastRoll = lastRollStats_.amountLose;
-        Gen::EventManager::instance().publish(ev);
-    }
+    Ctrl::UslPlayerResults ev;
+    ev.balance              = getBalance();                // how much left in wallet
+    ev.netBalance           = getSessionNet();             // profilt/loss session start
+    ev.numBetsPlayerWins    = lastRollStats_.numBetsWin;   // player wins session start
+    ev.numBetsPlayerLoses   = lastRollStats_.numBetsLose;  // player lose session start
+    ev.playerIntakeLastRoll = lastRollStats_.amountWin;
+    ev.playerOutputLastRoll = lastRollStats_.amountLose;
+    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------
@@ -844,7 +844,15 @@ Player::setName(const std::string& playerName)
 Gen::Money
 Player::getBalance() const
 {
-    return wallet_.getAmtDeposited() - wallet_.getAmtWithdrawn();
+    return wallet_.getBalance();
+}
+
+//----------------------------------------------------------------
+
+int
+Player::getSessionNet() const
+{
+    return wallet_.getSessionNet();
 }
 
 /*-----------------------------------------------------------*//**

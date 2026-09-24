@@ -95,7 +95,7 @@ WindowHouseBrief::drawStaticContent()
 void
 WindowHouseBrief::populate()
 {
-    populateBalance();
+    populateNetBalance();
     populateNumBets();
     populatePct();
     populateOnTable();
@@ -105,13 +105,13 @@ WindowHouseBrief::populate()
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::populateBalance()
+WindowHouseBrief::populateNetBalance()
 {
     std::string plusOrMinus("+");
-    if (balance_ < 0) plusOrMinus = "-";
+    if (netBalance_ < 0) plusOrMinus = "-";
 
-    std::string s = "House Bal: " + plusOrMinus +
-        Gen::MoneyUtils::toString(balance_);
+    std::string s = "House Net: " + plusOrMinus +
+        Gen::MoneyUtils::toString(static_cast<unsigned>(netBalance_));
 
     mvwaddstr(pWin_, 0, 1, s.c_str());
 }
@@ -203,13 +203,15 @@ WindowHouseBrief::populateOnTable()
 
 void
 WindowHouseBrief::onTableResults(
-    int newBalance,                  // from session start, starting at 0
+    Gen::Money balance,              // how much left in bank
+    int netBalance,                  // profit/loss session start
     unsigned numBetsTableWins,       // table wins session start, players lose
     unsigned numBetsTableLoses,      // table lose session start, players win
     Gen::Money tableIntakeLastRoll,  // table won last roll
     Gen::Money tableOutputLastRoll)  // table lost last roll
 {
-    balance_ = newBalance;
+    balance_             = balance;
+    netBalance_          = netBalance;
     numBetsTableWins_    = numBetsTableWins;
     numBetsTableLoses_   = numBetsTableLoses;
     tableIntakeLastRoll_ = tableIntakeLastRoll;

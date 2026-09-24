@@ -39,6 +39,7 @@ public:
     Gen::Money getBalance()            const;
     Gen::Money getAmtDeposited()       const;
     Gen::Money getAmtWithdrawn()       const;
+    int        getSessionNet()         const;
     const BankStats& getCurrentStats() const;
     const BankStats& getAlltimeStats() const;
     /// @}

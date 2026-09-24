@@ -983,6 +983,19 @@ CrapsReaders::getUserPlayer(
 
 //----------------------------------------------------------------
 
+std::string
+CrapsReaders::getUserPlayerName()
+{
+    auto* p = Gbl::pPlayerMgr->getUserPlayer();
+    if (p == nullptr)
+    {
+        return "getUserPlayerName():Error";
+    }
+    return p->getName();
+}
+
+//----------------------------------------------------------------
+
 // Private helper
 std::string
 CrapsReaders::diagPrefix(

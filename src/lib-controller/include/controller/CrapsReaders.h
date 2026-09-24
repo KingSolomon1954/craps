@@ -232,6 +232,7 @@ public:
     static Gen::ReturnCode getUserPlayer(
         Craps::PlayerId& playerId,
         Gen::ErrorPass& ep);
+    static std::string getUserPlayerName();
     
     // Auto Fill
     struct AutoFillEntry

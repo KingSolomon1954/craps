@@ -399,7 +399,7 @@ also color coded over their column.
 22  │ DontCome10 o o o o o o │                      │ World  o o o o o o │                             │
 23  │                        │                      │                    │                             │
 24  ├────────────────────────┴──────────────────────┴────────────────────┼─────────────────────────────┤
-25  │ Nathan wins PassLine bet, +$200                                    │ House Bal: +$2,050          │
+25  │ Nathan wins PassLine bet, +$200                                    │ House Net: +$2,050          │
 26  │ Come out roll                                                      │ NumBets: 128 (68W, 60L)     │
 27  │ Shooter rolls a 6(3,3), point is 6                                 │ Pct: 53.1% win, 46.8% lose  │
 28  │ Arthur bets $20 on Hard 4 and 10                                   │ Last: +$100 300W,200L       │
@@ -407,7 +407,7 @@ also color coded over their column.
 30  │ Arthur places $50 come bet                                         ├─────────────────────────────┤
 31  │ Arthur places $10 Field bet                                        │ Nathan (shooter)            │
 32  │ Winnifred placed $100 field bet                                    │ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
-33  │ Lenny places $500 DontCome                                         │ Bal: $2,000 (+880)          │
+33  │ Lenny places $500 DontCome                                         │ Bal: $2,000 Net: +$1,044    │
 34  │ Nathan places $200 come bet                                        │ NumBets: 55 (21W, 34L)      │
 35  │ Paige places $10 on Field                                          │ Pct: 38.1% win, 61.8% lose  │
 36  │ Another message                                                    │ Last: 180W,100L,+$80        │
@@ -445,7 +445,7 @@ One Player View
 22  │ Come     10000000                 │ DontCome 1000000               │                             │
 23  │ PassLine 10000000  Odds 10000000  │ DontPass 1000000  Odds 1000000 │                             │
 24  ├───────────────────────────────────┴────────────────────────────────┼─────────────────────────────┤
-25  │ Nathan wins PassLine bet, +$200                                    │ House Bal: +$2,050          │
+25  │ Nathan wins PassLine bet, +$200                                    │ House Net: +$2,050          │
 26  │ Shooter rolls a 6, point is set                                    │ NumBets: 128 (68W, 60L)     │
 27  │ Arthur bets $20 on Hard 4 and 10                                   │ Pct: 53.1% win, 46.8% lose  │
 28  │ Nathan bets $50 PassLine odds                                      │ Last: -$100,300W,200L       │
@@ -453,7 +453,7 @@ One Player View
 30  │ Arthur places $10 Field bet                                        ├─────────────────────────────┤
 31  │ Winnifred placed $100 field bet                                    │ Nathan (shooter)            │
 32  │ Lenny places $500 DontCome                                         │ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
-33  │ Nathan places $200 come bet                                        │ Bal: $2,000 (+880)          │
+33  │ Nathan places $200 come bet                                        │ Bal: $2,000 Net: +$1,044)   │
 34  │ Paige places $10 on Field                                          │ NumBets: 55 (21W, 34L)      │
 35  │ Another message row                                                │ Pct: 38.1% win, 61.8% lose  │
 36  │ Another message                                                    │ Last Roll: +$80,180W,100L   │

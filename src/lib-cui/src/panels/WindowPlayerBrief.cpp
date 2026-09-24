@@ -8,6 +8,7 @@
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/CuiUtils.h>
 #include <cui/CuiStructs.h>
+#include <controller/CrapsReaders.h>
 #include <gen/Logger.h>
 #include <iomanip>
 #include <sstream>
@@ -24,6 +25,7 @@ WindowPlayerBrief::WindowPlayerBrief()
               Layout::playerBriefWidth,
               Layout::playerBriefTopRow,
               Layout::playerBriefLeftCol);
+    playerName_ = Ctrl::CrapsReaders::getUserPlayerName();
 }
 
 //----------------------------------------------------------------
@@ -40,7 +42,7 @@ WindowPlayerBrief::instance()
 //  ┬─────────────────────────────┐
 //  │ Player: Nathan (shooter)    │
 //  │ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
-//  │ Bal: $2,000 (+880)          │
+//  │ Bal: $2,000 Net: +$1,044    │
 //  │ NumBets: 55 (21W, 34L)      │
 //  │ Pct: 38.18% win 61.81% lose │
 //  │ Last: 180W,100L,+$80,       │
@@ -111,10 +113,7 @@ WindowPlayerBrief::populate()
 void
 WindowPlayerBrief::populateName()
 {
-// TODO
-    std::string n = "Nathan";
-    mvwaddstr(pWin_, 0, 1, n.c_str());
-//    mvwaddstr(pWin_, 0, 1, playerName_.c_str());
+    mvwaddstr(pWin_, 0, 1, playerName_.c_str());
 }
 
 //----------------------------------------------------------------
@@ -122,11 +121,15 @@ WindowPlayerBrief::populateName()
 void
 WindowPlayerBrief::populateBalance()
 {
-    std::string plusOrMinus("+");
-    if (balance_ < 0) plusOrMinus = "-";
+//  │ Bal: $2,000 Net: +$8,280       │
 
-    std::string s = "Bal: " + plusOrMinus +
-        Gen::MoneyUtils::toString(balance_);
+
+    std::string plusOrMinus("+");
+    if (netBalance_ < 0) plusOrMinus = "-";
+
+    std::string s = "Bal: " + Gen::MoneyUtils::toString(balance_);
+    s += " (" + plusOrMinus + Gen::MoneyUtils::toString(netBalance_);
+    s += ")";
 
     mvwaddstr(pWin_, 2, 1, s.c_str());
 }
@@ -218,15 +221,17 @@ WindowPlayerBrief::populateOnTable()
 
 void
 WindowPlayerBrief::onPlayerResults(
-    int newBalance,                  // from session start, starting at 0
+    Gen::Money balance,              // how much left in wallet
+    int netBalance,                  // profit/loss this session
     unsigned numBetsPlayerWins,      // player wins session start, players lose
     unsigned numBetsPlayerLoses,     // player lose session start, players win
     Gen::Money playerIntakeLastRoll, // player won last roll
     Gen::Money playerOutputLastRoll) // player lost last roll
 {
-    balance_ = newBalance;    
-    numBetsPlayerWins_ = numBetsPlayerWins;
-    numBetsPlayerLoses_ = numBetsPlayerLoses;
+    balance_              = balance;    
+    netBalance_           = netBalance;    
+    numBetsPlayerWins_    = numBetsPlayerWins;
+    numBetsPlayerLoses_   = numBetsPlayerLoses;
     playerIntakeLastRoll_ = playerIntakeLastRoll;
     playerOutputLastRoll_ = playerOutputLastRoll;
 }
