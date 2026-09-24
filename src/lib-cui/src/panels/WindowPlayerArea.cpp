@@ -122,7 +122,11 @@ WindowPlayerArea::drawInternalBorders()
 void
 WindowPlayerArea::drawInternalBordersAllPlayers()
 {
-    // TODO
+    using L = LayoutAllPlayers;
+    
+    // Vertical lines
+    mvwvline(pWin_, 0, L::col1_2,  0, Layout::playerAreaHeight);
+    mvwvline(pWin_, 0, L::col2_3,  0, Layout::playerAreaHeight);
 }
 
 //----------------------------------------------------------------

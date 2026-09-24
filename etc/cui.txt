@@ -1545,3 +1545,27 @@ Table layout: 18 rows content, 2 border rows, 70 columns
 │ DontCome9  o o o o o o │                      │                    │
 │ DontCome10 o o o o o o │                      │                    │
 └────────────────────────┴──────────────────────┴────────────────────┘
+
+    0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
+...    
+4   ├────────────────────────┬──────────────────────┬────────────────────┤                             │
+5   │                        │                      │                    │                             │
+6   │            N A P L W   │          N A P L W   │        N A P L W   │                             │
+7   │ PassLine   o o o o o o │ Place4   o o o o o o │ Buy4   o o o o o o │                             │
+8   │ Come       o o o o o o │ Place5   o o o o o o │ Buy5   o o o o o o │                             │
+9   │ Come4      o o o o o o │ Place6   o o o o o o │ Buy6   o o o o o o │                             │
+10  │ Come5      o o o o o o │ Place8   o o o o o o │ Buy8   o o o o o o │                             │
+11  │ Come6      o o o o o o │ Place9   o o o o o o │ Buy9   o o o o o o │                             │
+12  │ Come8      o o o o o o │ Place10  o o o o o o │ Buy10  o o o o o o │                             │
+13  │ Come9      o o o o o o │ Hard4    o o o o o o │ Lay4   o o o o o o │                             │
+14  │ Come10     o o o o o o │ Hard6    o o o o o o │ Lay5   o o o o o o │                             │
+15  │ DontPass   o o o o o o │ Hard8    o o o o o o │ Lay6   o o o o o o │                             │
+16  │ DontCome   o o o o o o │ Hard10   o o o o o o │ Lay8   o o o o o o │                             │
+17  │ DontCome4  o o o o o o │ C&E      o o o o o o │ Lay9   o o o o o o │                             │
+18  │ DontCome5  o o o o o o │ Field    o o o o o o │ Lay10  o o o o o o │                             │
+19  │ DontCome6  o o o o o o │                      │ AnyC   o o o o o o │                             │
+20  │ DontCome8  o o o o o o │                      │ Any7   o o o o o o │                             │
+21  │ DontCome9  o o o o o o │                      │ Horn   o o o o o o │                             │
+22  │ DontCome10 o o o o o o │                      │ World  o o o o o o │                             │
+23  │                        │                      │                    │                             │
+24  ├────────────────────────┴──────────────────────┴────────────────────┼─────────────────────────────┤

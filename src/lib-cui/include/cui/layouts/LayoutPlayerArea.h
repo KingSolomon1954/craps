@@ -10,9 +10,14 @@ namespace Cui {
     
 struct LayoutAllPlayers
 {
+    // These are screen 0,0 coordinates, for external borders
     static constexpr int col1 = 0;
     static constexpr int col2 = 25;
     static constexpr int col3 = 48;
+
+    // These are WINDOW 0,0 coordinates inside of border
+    static constexpr int col1_2 = 24;  // vertical line between line bets and place bets
+    static constexpr int col2_3 = 47;  // vertical line between place bets and prop bets
 };
 
 struct LayoutOnePlayer
