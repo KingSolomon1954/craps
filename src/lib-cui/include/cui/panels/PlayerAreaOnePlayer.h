@@ -24,8 +24,9 @@ public:
 
     /// @name Modifiers
     /// @{
-     void setWindow(WINDOW* pWin);
-     void drawInternalBorders();
+    void init(WINDOW* pWin);
+    void drawInternalBorders();
+    void drawStaticContent();
     /// @}
 
     /// @name Observers

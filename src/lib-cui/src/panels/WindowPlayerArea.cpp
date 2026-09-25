@@ -19,10 +19,11 @@ WindowPlayerArea::WindowPlayerArea()
     , allPlayersView_(Layout::playerAreaHeight, Layout::playerAreaWidth)
     , onePlayerView_ (Layout::playerAreaHeight, Layout::playerAreaWidth)
 {
-    initPlayers();
     createWindow();
-    allPlayersView_.setWindow(pWin_);
-    onePlayerView_.setWindow(pWin_);
+    initPlayers();
+    
+    allPlayersView_.init(pWin_, playerIds_);
+    onePlayerView_.init(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -131,11 +132,11 @@ WindowPlayerArea::drawStaticContent()
 {
     if (currentFocus_ == OneOrAll::AllPlayers)
     {
-        drawStaticContentAllPlayers();
+        allPlayersView_.drawStaticContent();
     }
     else
     {
-        drawStaticContentOnePlayer();
+        onePlayerView_.drawStaticContent();
     }
 }
 

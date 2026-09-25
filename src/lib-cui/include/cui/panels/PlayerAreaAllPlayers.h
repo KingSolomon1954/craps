@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cui/layouts/LayoutPlayerArea.h>
+#include <craps/CrapsTypes.h>
 #include <ncurses.h>
 #include <array>
 #include <string_view>
@@ -28,8 +29,9 @@ public:
 
     /// @name Modifiers
     /// @{
-    void setWindow(WINDOW* pWin);
+    void init(WINDOW* pWin, const std::vector<Craps::PlayerId>& playerIds);
     void drawInternalBorders();
+    void drawStaticContent();
     /// @}
 
     /// @name Observers
@@ -95,7 +97,27 @@ private:
     int winWidth_  = 0;
     std::vector<Player> players_;
     std::vector<Bet> bets_;
-    
+
+private:
+    void buildBetInfo();
+    void buildPlayerInfo(const std::vector<Craps::PlayerId>& playerIds);
+    void drawPlayerHeaders();
+    void drawBetLabels();
+    void drawBetMarkers();
+    void drawWideCharacter(int row, int col,
+                           wchar_t ch, short colorPair);
+    void setBetState(std::size_t betIndex,
+                     std::size_t playerIndex,
+                     BetState state);
+
+    void setBetState(std::string_view betName,
+                     std::size_t playerIndex,
+                     BetState state);
+
+    bool betPosition(std::size_t betIndex,
+                     std::size_t playerIndex,
+                     int& row,
+                     int& col) const;
 };
 
 } // namespace Cui

@@ -21,7 +21,7 @@ PlayerAreaOnePlayer::PlayerAreaOnePlayer(int height, int width)
 //----------------------------------------------------------------
 
 void
-PlayerAreaOnePlayer::setWindow(WINDOW* pWin)
+PlayerAreaOnePlayer::init(WINDOW* pWin)
 {
     pWin_ = pWin;
 }
@@ -53,6 +53,13 @@ PlayerAreaOnePlayer::drawInternalBorders()
     mvwaddch(pWin_, L::fieldBorderTopRow,    L::col8_9,       ACS_BTEE);
     mvwaddch(pWin_, L::fieldBorderTopRow,    L::col9_10,      ACS_BTEE);
     mvwaddch(pWin_, L::lineBetsBorderTopRow, L::colComeDont2, ACS_TTEE);
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaOnePlayer::drawStaticContent()
+{
 }
 
 //----------------------------------------------------------------
