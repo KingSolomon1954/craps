@@ -8,13 +8,15 @@
 
 #include <cui/bases/PanelBase.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <cui/panels/PlayerAreaAllPlayers.h>
+#include <cui/panels/PlayerAreaOnePlayer.h>
 #include <craps/CrapsTypes.h>
 #include <vector>
 
 namespace Cui
 {
 
-    class WindowPlayerArea : PanelBase
+class WindowPlayerArea : PanelBase
 {
 public:
     /// @name Lifecycle
@@ -64,20 +66,18 @@ private:
         AllPlayers
     };
 
-    Craps::PlayerId curPlayerId_;
-    Craps::TableId  tableId_;
+    Craps::PlayerId              curPlayerId_;
     std::vector<Craps::PlayerId> playerIds_;
-    OneOrAll currentFocus_ = OneOrAll::OnePlayer;
+    PlayerAreaAllPlayers         allPlayersView_;
+    PlayerAreaOnePlayer          onePlayerView_;
+    OneOrAll                     currentFocus_ = OneOrAll::OnePlayer;
 
 private:
-    
     WindowPlayerArea();
     void initPlayers();
     void createWindow();
     void drawExternalJunctions();
     void drawInternalBorders();
-    void drawInternalBordersAllPlayers();
-    void drawInternalBordersOnePlayer();
     void drawStaticContent();
     void drawStaticContentAllPlayers();
     void drawStaticContentOnePlayer();

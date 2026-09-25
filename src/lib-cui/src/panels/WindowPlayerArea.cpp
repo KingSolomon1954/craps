@@ -6,7 +6,6 @@
 
 #include <cui/panels/WindowPlayerArea.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
-#include <cui/layouts/LayoutPlayerArea.h>
 #include <cui/CuiUtils.h>
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
@@ -17,9 +16,13 @@ using namespace Cui;
 
 WindowPlayerArea::WindowPlayerArea()
     : PanelBase("WindowPlayerArea")
+    , allPlayersView_(Layout::playerAreaHeight, Layout::playerAreaWidth)
+    , onePlayerView_ (Layout::playerAreaHeight, Layout::playerAreaWidth)
 {
     initPlayers();
     createWindow();
+    allPlayersView_.setWindow(pWin_);
+    onePlayerView_.setWindow(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -55,15 +58,17 @@ WindowPlayerArea::initPlayers()
         throw std::runtime_error(ep.diag);
     }
 
-    rc = Ctrl::CrapsReaders::getActiveCrapsTable(tableId_, ep);
+    Craps::TableId tableId;
+    rc = Ctrl::CrapsReaders::getActiveCrapsTable(tableId, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("WindowPlayerArea::initPlayers() unable to init; ");
         throw std::runtime_error(ep.diag);
     }
 
-    rc = Ctrl::CrapsReaders::readTablePlayers(tableId_, playerIds_, ep);
+    rc = Ctrl::CrapsReaders::readTablePlayers(tableId, playerIds_, ep);
     assert(playerIds_.size() > 0);
+    assert(playerIds_.size() <= 6);
 }
 
 //----------------------------------------------------------------
@@ -83,8 +88,8 @@ WindowPlayerArea::draw()
 //----------------------------------------------------------------
 //
 // We need to touch up border junctions to mate with our internal
-// lines. But the border is outside of our window. Ask LayoutCrapsTable
-// to take of it.
+// lines. But the border is outside of our window. We ask 
+// LayoutCrapsScreen to take of it.
 //
 void
 WindowPlayerArea::drawExternalJunctions()
@@ -109,53 +114,12 @@ WindowPlayerArea::drawInternalBorders()
     // No need to erase, window was cleared before this
     if (currentFocus_ == OneOrAll::AllPlayers)
     {
-        drawInternalBordersAllPlayers();
+        allPlayersView_.drawInternalBorders();
     }
     else
     {
-        drawInternalBordersOnePlayer();
+        onePlayerView_.drawInternalBorders();
     }
-}
-
-//----------------------------------------------------------------
-
-void
-WindowPlayerArea::drawInternalBordersAllPlayers()
-{
-    using L = LayoutAllPlayers;
-    
-    // Vertical lines
-    mvwvline(pWin_, 0, L::col1_2,  0, Layout::playerAreaHeight);
-    mvwvline(pWin_, 0, L::col2_3,  0, Layout::playerAreaHeight);
-}
-
-//----------------------------------------------------------------
-
-void
-WindowPlayerArea::drawInternalBordersOnePlayer()
-{
-    using L = LayoutOnePlayer;
-
-    // Horizontal lines
-    mvwhline(pWin_, L::fieldBorderTopRow,    0, 0, Layout::playerAreaWidth);
-    mvwhline(pWin_, L::crapsBorderTopRow,    0, 0, Layout::playerAreaWidth);
-    mvwhline(pWin_, L::lineBetsBorderTopRow, 0, 0, Layout::playerAreaWidth);
-
-    // Vertical lines
-    mvwvline(pWin_, 0, L::col4_5,  0, L::rowsNumbers);
-    mvwvline(pWin_, 0, L::col5_6,  0, L::rowsNumbers);
-    mvwvline(pWin_, 0, L::col6_8,  0, L::rowsNumbers);
-    mvwvline(pWin_, 0, L::col8_9,  0, L::rowsNumbers);
-    mvwvline(pWin_, 0, L::col9_10, 0, L::rowsNumbers);
-    mvwvline(pWin_, L::lineBetsBorderTopRow + 1, L::colComeDont2, 0, L::rowsLineBets);
-    
-    // Junctions
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col4_5,       ACS_BTEE);
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col5_6,       ACS_BTEE);
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col6_8,       ACS_BTEE);
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col8_9,       ACS_BTEE);
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col9_10,      ACS_BTEE);
-    mvwaddch(pWin_, L::lineBetsBorderTopRow, L::colComeDont2, ACS_TTEE);
 }
 
 //----------------------------------------------------------------
@@ -181,7 +145,7 @@ void
 WindowPlayerArea::drawStaticContentAllPlayers()
 {
     // TODO
-    mvwprintw(pWin_, 0, 0, "All Plavers View");
+    // mvwprintw(pWin_, 0, 0, "All Plavers View");
 }
 
 //----------------------------------------------------------------
