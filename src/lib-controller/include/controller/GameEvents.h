@@ -28,13 +28,15 @@ enum class EventType
     Unset,
     
     // Requests
-    ReqMakeBet,
-    ReqRemoveBet,
-    ReqRollDice,
+    ReqRollDice,               // not yet implemented
+    ReqMakeBet,                // not yet implemented
+    ReqRemoveBet,              // not yet implemented
+    ReqChangeBet,              // not yet implemented
 
     // Responses
-    RspMakeBetAccepted,
-    RspMakeBetRejected,
+    RspMakeBet,                // not yet implemented
+    RspRemoveBet,              // not yet implemented
+    RspChangeBet,              // not yet implemented
 
     // Unsolicited
     UslBettingClosed,
@@ -47,21 +49,24 @@ enum class EventType
     UslSevenOut,
     UslPassLineWinner,
     UslNewShooter,
-    UslTableResults,
-    UslTableNumBetsOnTableChanged,
-    UslPlayerResults,
-    UslPlayerNumBetsOnTableChanged,
-    UslBetMade,
+
+    UslBetMade,                // not yet implemented
+    UslBetRemoved,             // not yet implemented Player decided to remove a bet
+    UslBetChanged,             // not yet implemented Player decided to change a bet
+    UslTableBalanceChanged,    // not yet implemented
+    UslPlayerBalanceChanged,   // not yet implemented
+    
     UslPlayerJoinedTable,
     UslPlayerLeftTable,
-
-    // Unimplemented
-    UslBetChanged,
-    UslPlayerBalanceChanged,
-    UslBuddyBetMade,
-    UslCountdownRollDice
+    UslCountdownRollDice       // not yet implemented
 };
 
+
+//    UslTableResults,
+//    UslTableNumBetsOnTableChanged,
+//    UslPlayerResults,
+//    UslPlayerNumBetsOnTableChanged,
+    
 //----------------------------------------------------------------
 
 using EventId       = std::uint64_t;
@@ -197,57 +202,26 @@ struct UslNewShooter : public GameEvent
 
 //----------------------------------------------------------------
 
-struct UslTableResults : public GameEvent
+struct UslTableBalanceChanged : public GameEvent
 {
-    Gen::Money balance;              // how much left in bank
-    int netBalance;                  // profit/loss this session
-    unsigned numBetsTableWins;       // table wins session start, players lose
-    unsigned numBetsTableLoses;      // table lose session start, players win
-    Gen::Money tableIntakeLastRoll;  // table won last roll
-    Gen::Money tableOutputLastRoll;  // table lost last roll
+    Gen::Money balance;          // how much left in bank
+    int        netBalance;       // profit/loss this session
     
-    UslTableResults()
-        : GameEvent{EventSource::Model, EventType::UslTableResults}
+    UslTableBalanceChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableBalanceChanged}
     {}
 };
 
 //----------------------------------------------------------------
 
-struct UslTableNumBetsOnTableChanged : public GameEvent
+struct UslPlayerBalanceChanged : public GameEvent
 {
-    unsigned numBetsOnTable;
-    Gen::Money amtOnTable;
+    Craps::PlayerId playerId;
+    Gen::Money      balance;     // how much left in bank
+    int             netBalance;  // profit/loss this session
     
-    UslTableNumBetsOnTableChanged()
-        : GameEvent{EventSource::Model, EventType::UslTableNumBetsOnTableChanged}
-    {}
-};
-
-//----------------------------------------------------------------
-
-struct UslPlayerResults : public GameEvent
-{
-    Gen::Money balance;               // how much left in bank
-    int netBalance;                   // profit/loss this session
-    unsigned numBetsPlayerWins;       // player wins session start 
-    unsigned numBetsPlayerLoses;      // player lose session start
-    Gen::Money playerIntakeLastRoll;  // player won last roll
-    Gen::Money playerOutputLastRoll;  // player lost last roll
-    
-    UslPlayerResults()
-        : GameEvent{EventSource::Model, EventType::UslPlayerResults}
-    {}
-};
-
-//----------------------------------------------------------------
-
-struct UslPlayerNumBetsOnTableChanged : public GameEvent
-{
-    unsigned numBetsOnTable;
-    Gen::Money amtOnTable;
-    
-    UslPlayerNumBetsOnTableChanged()
-        : GameEvent{EventSource::Model, EventType::UslPlayerNumBetsOnTableChanged}
+    UslPlayerBalanceChanged()
+        : GameEvent{EventSource::Model, EventType::UslPlayerBalanceChanged}
     {}
 };
 
@@ -256,13 +230,11 @@ struct UslPlayerNumBetsOnTableChanged : public GameEvent
 struct UslBetMade : public GameEvent
 {
     Craps::PlayerId playerId;
-    std::string     playerName;
     Craps::BetId    betId;
     BetName         betName;
     Gen::Money      contractAmount = 0;
     Gen::Money      oddsAmount     = 0;
     unsigned        pivot          = 0;
-    bool            isOddsBet      = false;
     
     UslBetMade()
         : GameEvent{EventSource::Model, EventType::UslBetMade}

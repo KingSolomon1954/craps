@@ -8,7 +8,12 @@
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/CuiUtils.h>
 #include <cui/CuiStructs.h>
+#include <craps/CrapsTypes.h>
+#include <craps/LastRollStats.h>
+#include <controller/CrapsReaders.h>
+#include <gen/ErrorPass.h>
 #include <gen/Logger.h>
+#include <gen/ReturnCode.h>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -202,30 +207,36 @@ WindowHouseBrief::populateOnTable()
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::onTableResults(
+WindowHouseBrief::onTableBalanceChanged(
     Gen::Money balance,              // how much left in bank
-    int netBalance,                  // profit/loss session start
-    unsigned numBetsTableWins,       // table wins session start, players lose
-    unsigned numBetsTableLoses,      // table lose session start, players win
-    Gen::Money tableIntakeLastRoll,  // table won last roll
-    Gen::Money tableOutputLastRoll)  // table lost last roll
+    int netBalance)                  // profit/loss session start
 {
-    balance_             = balance;
-    netBalance_          = netBalance;
-    numBetsTableWins_    = numBetsTableWins;
-    numBetsTableLoses_   = numBetsTableLoses;
-    tableIntakeLastRoll_ = tableIntakeLastRoll;
-    tableOutputLastRoll_ = tableOutputLastRoll;
+    balance_    = balance;
+    netBalance_ = netBalance;
 }
 
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::onTableNumBetsOnTableChanged(
-    unsigned numBetsOnTable, Gen::Money amtOnTable)
+WindowHouseBrief::onResolveBetsEnd()
 {
-    numBetsOnTable_ = numBetsOnTable;
-    amtOnTable_ = amtOnTable;
+    Gen::ErrorPass ep;
+    Craps::TableId tid;
+    
+    auto rc = Ctrl::CrapsReaders::getActiveCrapsTable(tid, ep);
+    assert(rc == Gen::ReturnCode::Success);
+
+    Craps::LastRollStats lrs;
+    
+    rc = Ctrl::CrapsReaders::readTableLastRollStats(tid, lrs, ep);
+    assert(rc == Gen::ReturnCode::Success);
+
+    numBetsTableWins_    = lrs.numBetsWin;
+    numBetsTableLoses_   = lrs.numBetsLose;
+    tableIntakeLastRoll_ = lrs.amountWin;
+    tableOutputLastRoll_ = lrs.amountLose;
+    numBetsOnTable_      = lrs.numBetsOnTable;
+    amtOnTable_          = lrs.amountOnTable;
 }
 
 //----------------------------------------------------------------

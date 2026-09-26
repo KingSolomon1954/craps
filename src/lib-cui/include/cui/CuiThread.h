@@ -45,14 +45,14 @@ private:
     
     void process(const Ctrl::UslDiceThrowStart& ev);
     void process(const Ctrl::UslDiceNewValue& ev);
-    void process(const Ctrl::UslBettingOpened& ev);
+    void process(const Ctrl::UslResolveBetsEnd& ev);
     void process(const Ctrl::UslPointEstablished& ev);
     void process(const Ctrl::UslSevenOut& ev);
     void process(const Ctrl::UslPassLineWinner& ev);
-    void process(const Ctrl::UslTableResults& ev);
-    void process(const Ctrl::UslTableNumBetsOnTableChanged& ev);
-    void process(const Ctrl::UslPlayerResults& ev);
-    void process(const Ctrl::UslPlayerNumBetsOnTableChanged& ev);
+    void process(const Ctrl::UslNewShooter& ev);
+    void process(const Ctrl::UslBettingOpened& ev);
+    void process(const Ctrl::UslTableBalanceChanged& ev);
+    void process(const Ctrl::UslPlayerBalanceChanged& ev);
 
 private:
     bool shutdownRequested_ = false;

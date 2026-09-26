@@ -625,14 +625,15 @@ change on screen.
 void
 Player::disburseDone()
 {
-    Ctrl::UslPlayerResults ev;
-    ev.balance              = getBalance();                // how much left in wallet
-    ev.netBalance           = getSessionNet();             // profilt/loss session start
-    ev.numBetsPlayerWins    = lastRollStats_.numBetsWin;   // player wins session start
-    ev.numBetsPlayerLoses   = lastRollStats_.numBetsLose;  // player lose session start
-    ev.playerIntakeLastRoll = lastRollStats_.amountWin;
-    ev.playerOutputLastRoll = lastRollStats_.amountLose;
-    Gen::EventManager::instance().publish(ev);
+    if (lastRollStats_.amountWin > 0 || lastRollStats_.amountLose > 0)
+    {
+        Ctrl::UslPlayerBalanceChanged ev;
+        ev.playerId   = playerId_;
+        ev.balance    = getBalance();    // how much left in wallet
+        ev.netBalance = getSessionNet(); // profilt/loss session start
+        
+        Gen::EventManager::instance().publish(ev);
+    }
 }
 
 //----------------------------------------------------------------

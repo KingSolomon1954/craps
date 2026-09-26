@@ -24,16 +24,8 @@ public:
     /// @name Modifiers
     /// @{
     void draw() override;
-    void onTableResults(
-        Gen::Money newBalance,           // how much left in bank
-        int netBalance,                  // profit/loss session start
-        unsigned numBetsTableWins,       // table wins session start, players lose
-        unsigned numBetsTableLoses,      // table lose session start, players win
-        Gen::Money tableIntakeLastRoll,  // table won last roll
-        Gen::Money tableOutputLastRoll); // table lost last roll
-    void onTableNumBetsOnTableChanged(
-        unsigned numBetsOnTable,
-        Gen::Money amtOnTable);
+    void onResolveBetsEnd();
+    void onTableBalanceChanged(Gen::Money balance, int netBalance);
     /// @}
 
     /// @name Observers

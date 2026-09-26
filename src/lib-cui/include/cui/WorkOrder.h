@@ -45,13 +45,13 @@ using GameEvent = std::variant<
     Ctrl::UslBettingOpened,
     Ctrl::UslDiceThrowStart,
     Ctrl::UslDiceNewValue,
+    Ctrl::UslResolveBetsEnd,
     Ctrl::UslPointEstablished,
     Ctrl::UslSevenOut,
     Ctrl::UslPassLineWinner,
-    Ctrl::UslTableResults,
-    Ctrl::UslTableNumBetsOnTableChanged,
-    Ctrl::UslPlayerResults,
-    Ctrl::UslPlayerNumBetsOnTableChanged
+    Ctrl::UslNewShooter,
+    Ctrl::UslTableBalanceChanged,
+    Ctrl::UslPlayerBalanceChanged
     >;
     
 struct WorkOrderEvent

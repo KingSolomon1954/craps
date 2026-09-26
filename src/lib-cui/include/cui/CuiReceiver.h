@@ -29,15 +29,15 @@ public:
     /// @}
 
 private:
-    void onDiceNewValue               (const Ctrl::UslDiceNewValue& ev)               const;
-    void onDiceThrowStart             (const Ctrl::UslDiceThrowStart& ev)             const;
-    void onPointEstablished           (const Ctrl::UslPointEstablished& ev)           const;
-    void onSevenOut                   (const Ctrl::UslSevenOut& ev)                   const;
-    void onPassLineWinner             (const Ctrl::UslPassLineWinner& ev)             const;
-    void onTableResults               (const Ctrl::UslTableResults& ev)               const;
-    void onTableNumBetsOnTableChanged (const Ctrl::UslTableNumBetsOnTableChanged& ev) const;
-    void onPlayerResults              (const Ctrl::UslPlayerResults& ev)               const;
-    void onPlayerNumBetsOnTableChanged(const Ctrl::UslPlayerNumBetsOnTableChanged& ev) const;
+    void onDiceNewValue        (const Ctrl::UslDiceNewValue& ev)         const;
+    void onDiceThrowStart      (const Ctrl::UslDiceThrowStart& ev)       const;
+    void onResolveBetsEnd      (const Ctrl::UslResolveBetsEnd& ev)       const;
+    void onPointEstablished    (const Ctrl::UslPointEstablished& ev)     const;
+    void onSevenOut            (const Ctrl::UslSevenOut& ev)             const;
+    void onPassLineWinner      (const Ctrl::UslPassLineWinner& ev)       const;
+    void onNewShooter          (const Ctrl::UslNewShooter& ev)           const;
+    void onTableBalanceChanged (const Ctrl::UslTableBalanceChanged& ev)  const;
+    void onPlayerBalanceChanged(const Ctrl::UslPlayerBalanceChanged& ev) const;
 };
 
 /*-----------------------------------------------------------*//**

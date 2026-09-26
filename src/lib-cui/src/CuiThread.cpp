@@ -235,9 +235,11 @@ CuiThread::process(const Ctrl::UslDiceNewValue& ev)
 //----------------------------------------------------------------
 
 void
-CuiThread::process(const Ctrl::UslBettingOpened& ev)
+CuiThread::process(const Ctrl::UslResolveBetsEnd& ev)
 {
-    LOG_TRACE("CuiThread::process(UslBettingOpened)");
+    LOG_TRACE("CuiThread::process(UslResolveBetsEnd)");
+    WindowHouseBrief::instance().onResolveBetsEnd();
+    WindowPlayerBrief::instance().onResolveBetsEnd();
 }
 
 //----------------------------------------------------------------
@@ -273,53 +275,38 @@ CuiThread::process(const Ctrl::UslPassLineWinner& ev)
 //----------------------------------------------------------------
 
 void
-CuiThread::process(const Ctrl::UslTableResults& ev)
+CuiThread::process(const Ctrl::UslNewShooter& ev)
 {
-    LOG_TRACE("CuiThread::process(UslTableResults)");
-    WindowHouseBrief::instance().onTableResults(
-        ev.balance,
-        ev.netBalance,
-        ev.numBetsTableWins,
-        ev.numBetsTableLoses,
-        ev.tableIntakeLastRoll,
-        ev.tableOutputLastRoll);
+    LOG_TRACE("CuiThread::process(UslNewShooter)");
+    WindowPlayerBrief::instance().onNewShooter(ev.playerId);
 }
 
 //----------------------------------------------------------------
 
 void
-CuiThread::process(const Ctrl::UslTableNumBetsOnTableChanged& ev)
+CuiThread::process(const Ctrl::UslTableBalanceChanged& ev)
 {
-    LOG_TRACE("CuiThread::process(UslTableNumBetsOnTableChanged)");
-    WindowHouseBrief::instance().onTableNumBetsOnTableChanged(
-        ev.numBetsOnTable,
-        ev.amtOnTable);
+    LOG_TRACE("CuiThread::process(UslTableBalanceChanged)");
+    WindowHouseBrief::instance().onTableBalanceChanged(
+        ev.balance, ev.netBalance);
 }
 
 //----------------------------------------------------------------
 
 void
-CuiThread::process(const Ctrl::UslPlayerResults& ev)
+CuiThread::process(const Ctrl::UslPlayerBalanceChanged& ev)
 {
-    LOG_TRACE("CuiThread::process(UslPlayerResults)");
-    WindowPlayerBrief::instance().onPlayerResults(
-        ev.balance,
-        ev.netBalance,
-        ev.numBetsPlayerWins,
-        ev.numBetsPlayerLoses,
-        ev.playerIntakeLastRoll,
-        ev.playerOutputLastRoll);
+    LOG_TRACE("CuiThread::process(UslPlayerBalanceChanged)");
+    WindowPlayerBrief::instance().onPlayerBalanceChanged(
+        ev.playerId, ev.balance, ev.netBalance);
 }
 
 //----------------------------------------------------------------
 
 void
-CuiThread::process(const Ctrl::UslPlayerNumBetsOnTableChanged& ev)
+CuiThread::process(const Ctrl::UslBettingOpened& ev)
 {
-    LOG_TRACE("CuiThread::process(UslPlayerNumBetsOnTableChanged)");
-    WindowPlayerBrief::instance().onPlayerNumBetsOnTableChanged(
-        ev.numBetsOnTable,
-        ev.amtOnTable);
+    LOG_TRACE("CuiThread::process(UslBettingOpened)");
 }
 
 //----------------------------------------------------------------

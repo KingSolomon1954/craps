@@ -318,19 +318,15 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
 
-    Ctrl::UslBetMade ev1;
-    ev1.playerId       = pBet->player().getPlayerId();
-    ev1.playerName     = pBet->player().getName();
-    ev1.betId          = pBet->betId();
-    ev1.betName        = pBet->betName();
-    ev1.contractAmount = pBet->contractAmount();
-    ev1.oddsAmount     = pBet->oddsAmount();
-    ev1.pivot          = pBet->pivot();
+    Ctrl::UslBetMade ev;
+    ev.playerId       = pBet->player().getPlayerId();
+    ev.betId          = pBet->betId();
+    ev.betName        = pBet->betName();
+    ev.contractAmount = pBet->contractAmount();
+    ev.oddsAmount     = pBet->oddsAmount();
+    ev.pivot          = pBet->pivot();
 
-    Ctrl::UslTableNumBetsOnTableChanged ev2;
-    ev2.numBetsOnTable = getNumBetsOnTable();
-    ev2.amtOnTable     = getAmountOnTable();
-    Gen::EventManager::instance().publish(ev2);
+    Gen::EventManager::instance().publish(ev);
     
     return Gen::ReturnCode::Success;
 }
@@ -828,13 +824,9 @@ CrapsTable::disburseHouseResults()
     }
     if (changed)
     {
-        Ctrl::UslTableResults ev;
-        ev.balance             = getBalance();               // balance from session start
-        ev.netBalance          = houseBank_.getSessionNet(); // balance from session start
-        ev.numBetsTableWins    = lastRollStats_.numBetsWin;  // house wins session start, players lose
-        ev.numBetsTableLoses   = lastRollStats_.numBetsLose; // house lose session start, players win
-        ev.tableIntakeLastRoll = lastRollStats_.amountWin;
-        ev.tableOutputLastRoll = lastRollStats_.amountLose;
+        Ctrl::UslTableBalanceChanged ev;
+        ev.balance    = getBalance();               // balance from session start
+        ev.netBalance = houseBank_.getSessionNet(); // balance from session start
         Gen::EventManager::instance().publish(ev);
     }
 }
