@@ -33,17 +33,24 @@ AutoFills need to save/read from user config
 Add Roll History Format A,B,C,D to multi-configuration
 Modify Roll History to grab Format from multi-configuration
 LocationManager needs smarter options for window placement
-Fix CrapsEventEmitters to issue event and get response
 Beef up ErrorPass and propagate throughout
 In CUI, need DialogBetAmount
-Need MenuBetting implementation
+Need More MenuBetting implementation
 Implement "Unknown" player start up logic
 Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
+OperationTracker needs correlationId matching
 Implement Advance shooter event
-Need to display table rules in Title bar
+In PlayerBrief area, display player name in their matchingcolor
+In CuiThread, separate out the processing into a dispatcher
+PlayerAreaAllPlayers needs implementation for onBetMade() updates
+Re-factor these events: UslBetMade, UslTableResults, UslPlayerResults, UslTableNumBetsOnTableChanged,
+UslPlayerNumBetsOnTableChanged,
 
+(Done) PlayerAreaAllPlayers implemented
+(Done) Divide WindowPlayerArea into several files
+(Done) Need to display table rules in Title bar
 (Done) Created WindowTitleBar, integrated and works
 (Done) Created WindowRollHistory, integrated and works
 (Done) MenuBetting processes "r" and rolls dice

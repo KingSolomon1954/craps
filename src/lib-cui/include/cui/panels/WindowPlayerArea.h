@@ -79,8 +79,6 @@ private:
     void drawExternalJunctions();
     void drawInternalBorders();
     void drawStaticContent();
-    void drawStaticContentAllPlayers();
-    void drawStaticContentOnePlayer();
         
     void populate();
     void populateAllPlayers();

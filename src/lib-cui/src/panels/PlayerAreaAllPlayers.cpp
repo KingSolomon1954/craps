@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/panels/PlayerAreaAllPlayers.h>
+#include <cui/CuiStructs.h>
 #include <controller/CrapsReaders.h>
 #include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>
@@ -115,27 +116,85 @@ void
 PlayerAreaAllPlayers::buildPlayerInfo(
     const std::vector<Craps::PlayerId>& playerIds)
 {
-    // have to obtain player names
-    // have to choose color for each player
-    // have to choose inital for each player
-    // player/user should occupy first column
+    players_.clear();
+    players_.reserve(LayoutAllPlayers::MaxPlayers);
 
     Craps::PlayerId userPlayerId;
     Gen::ErrorPass ep;
-    
+
     auto rc = Ctrl::CrapsReaders::getUserPlayer(userPlayerId, ep);
     assert(rc == Gen::ReturnCode::Success);
 
-    std::size_t index = 0;
+    std::vector<Craps::PlayerId> orderedIds;
+    orderedIds.reserve(LayoutAllPlayers::MaxPlayers);
+
+    // User always gets the first column.
+    auto userIt = std::find(playerIds.begin(), playerIds.end(),
+                            userPlayerId);
+
+    assert(userIt != playerIds.end());
+
+    orderedIds.push_back(userPlayerId);
+
+    // Preserve the existing order for everyone else.
     for (const auto& pid : playerIds)
     {
+        if (pid != userPlayerId)
+            orderedIds.push_back(pid);
+
+        if (orderedIds.size() == LayoutAllPlayers::MaxPlayers)
+            break;
+    }
+
+    for (std::size_t i = 0; i < orderedIds.size(); ++i)
+    {
         std::string name;
-        rc = Ctrl::CrapsReaders::readPlayerName(pid, name, ep);
+
+        rc = Ctrl::CrapsReaders::readPlayerName(
+            orderedIds[i], name, ep);
+
         assert(rc == Gen::ReturnCode::Success);
-// TODO        
-//        players_[index++] = {.initial = chooseInitial(name),
-//                             .colorPair = chooseColor()};
-      }
+
+        players_.push_back(
+        {
+            .initial  = chooseInitial(name),
+            .colorPair = playerColorPair(i)
+        });
+    }
+}
+
+//----------------------------------------------------------------
+
+wchar_t
+PlayerAreaAllPlayers::chooseInitial(std::string_view name) const
+{
+    for (unsigned char ch : name)
+    {
+        if (std::isalpha(ch))
+            return static_cast<wchar_t>(std::toupper(ch));
+    }
+
+    return L'?';
+}
+
+//----------------------------------------------------------------
+
+short
+PlayerAreaAllPlayers::playerColorPair(std::size_t index) const
+{
+    static constexpr std::array<short,
+        LayoutAllPlayers::MaxPlayers> colors =
+    {
+        ColorPairs::Player1,
+        ColorPairs::Player2,
+        ColorPairs::Player3,
+        ColorPairs::Player4,
+        ColorPairs::Player5,
+        ColorPairs::Player6
+    };
+
+    assert(index < colors.size());
+    return colors[index];
 }
 
 //----------------------------------------------------------------
@@ -175,12 +234,10 @@ PlayerAreaAllPlayers::drawPlayerHeaders()
                 player < static_cast<int>(players_.size())
                     ? players_[player].initial : L::DoubleDash;
 
-            const short colorPair =
-                player < static_cast<int>(players_.size())
-                    ? players_[player].colorPair : 0;
+            const short colorPair = playerColorPair(player);
 
             const int col =
-                L::SectionX[section] + L::PlayerOffset +
+                L::SectionX[section] + L::SectionW[section] +
                 player * L::PlayerStride;
 
             drawWideCharacter(L::HeaderRow, col, initial, colorPair);
@@ -195,8 +252,7 @@ PlayerAreaAllPlayers::drawBetLabels()
 {
     for (const Bet& bet : bets_)
     {
-        const int col =
-            Layout::SectionX[bet.section] + Layout::LabelOffset;
+        const int col = Layout::SectionX[bet.section] + 1;
 
         mvwaddnstr(pWin_, bet.row, col,
             bet.label.data(), static_cast<int>(bet.label.size()));
@@ -215,10 +271,10 @@ PlayerAreaAllPlayers::drawBetMarkers()
         for (int player = 0; player < LayoutAllPlayers::MaxPlayers; ++player)
         {
             const int col =
-                L::SectionX[bet.section] + L::PlayerOffset +
+                L::SectionX[bet.section] + L::SectionW[bet.section] +
                 player * L::PlayerStride;
 
-            wchar_t marker = L::Dot; // L'\u22C5'; // ⋅
+            wchar_t marker = L::Dot;
             short colorPair = 0;
 
             if (player < static_cast<int>(players_.size()))
@@ -228,15 +284,15 @@ PlayerAreaAllPlayers::drawBetMarkers()
                 switch (bet.state[player])
                 {
                     case BetState::None:
-                        marker = L::Dot; // L'\u22C5'; // ⋅
+                        marker = L::Dot;
                         break;
 
                     case BetState::Bet:
-                        marker = L::HollowCircle; // L'\u25CB'; // ○
+                        marker = L::HollowCircle;
                         break;
 
                     case BetState::BetWithOdds:
-                        marker = L::FilledCircle; // L'\u25CF'; // ●
+                        marker = L::FilledCircle;
                         break;
                 }
             }
@@ -317,10 +373,36 @@ PlayerAreaAllPlayers::betPosition(std::size_t betIndex,
     const Bet& bet = bets_[betIndex];
 
     row = bet.row;
-    col = L::SectionX[bet.section] + L::PlayerOffset +
+    col = L::SectionX[bet.section] + L::SectionW[bet.section] +
         static_cast<int>(playerIndex) * L::PlayerStride;
 
     return true;
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaAllPlayers::onBetMade()
+{
+    
+    // TODO
+    // setBetState();    
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaAllPlayers::onPlayerJoinedTable()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaAllPlayers::onPlayerLeftTable()
+{
+    // TODO
 }
 
 //----------------------------------------------------------------

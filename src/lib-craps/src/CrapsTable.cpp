@@ -318,10 +318,19 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
 
-    Ctrl::UslTableNumBetsOnTableChanged ev;
-    ev.numBetsOnTable = getNumBetsOnTable();
-    ev.amtOnTable     = getAmountOnTable();
-    Gen::EventManager::instance().publish(ev);
+    Ctrl::UslBetMade ev1;
+    ev1.playerId       = pBet->player().getPlayerId();
+    ev1.playerName     = pBet->player().getName();
+    ev1.betId          = pBet->betId();
+    ev1.betName        = pBet->betName();
+    ev1.contractAmount = pBet->contractAmount();
+    ev1.oddsAmount     = pBet->oddsAmount();
+    ev1.pivot          = pBet->pivot();
+
+    Ctrl::UslTableNumBetsOnTableChanged ev2;
+    ev2.numBetsOnTable = getNumBetsOnTable();
+    ev2.amtOnTable     = getAmountOnTable();
+    Gen::EventManager::instance().publish(ev2);
     
     return Gen::ReturnCode::Success;
 }

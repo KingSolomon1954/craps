@@ -221,6 +221,13 @@ CuiMain::setupColors()
     init_pair(ColorPairs::PassLineWinner, COLOR_YELLOW, -1);
     init_pair(ColorPairs::Point,          COLOR_WHITE,  -1);
 
+    init_pair(ColorPairs::Player1, COLOR_WHITE,   -1);
+    init_pair(ColorPairs::Player2, COLOR_MAGENTA, -1);
+    init_pair(ColorPairs::Player3, COLOR_YELLOW,  -1);
+    init_pair(ColorPairs::Player4, COLOR_BLUE,    -1);
+    init_pair(ColorPairs::Player5, COLOR_RED,     -1);
+    init_pair(ColorPairs::Player6, COLOR_CYAN,    -1);
+
     bkgd(' ' | COLOR_PAIR(ColorPairs::DefaultScreen));
 }
 

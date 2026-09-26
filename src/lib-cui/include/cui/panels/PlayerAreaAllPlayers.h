@@ -32,6 +32,9 @@ public:
     void init(WINDOW* pWin, const std::vector<Craps::PlayerId>& playerIds);
     void drawInternalBorders();
     void drawStaticContent();
+    void onBetMade();
+    void onPlayerJoinedTable();
+    void onPlayerLeftTable();
     /// @}
 
     /// @name Observers
@@ -76,16 +79,17 @@ private:
 
         // Interior left edges of the three sections.
         static constexpr std::array<int, 3> SectionX = {
-            1,   // first section
-            26,  // second section
+            0,   // first section
+            25,  // second section
             48   // third section
         };
 
-        // Label begins two columns after each section's left border.
-        static constexpr int LabelOffset = 1;
-
-        // First player marker begins after the fixed-width label.
-        static constexpr int PlayerOffset = 12;
+        // Label width of each section.
+        static constexpr std::array<int, 3> SectionW = {
+            12,   // first section
+            9,    // second section
+            7     // third section
+        };
 
         // Each player column is two terminal columns apart.
         static constexpr int PlayerStride = 2;
@@ -118,6 +122,8 @@ private:
                      std::size_t playerIndex,
                      int& row,
                      int& col) const;
+    wchar_t chooseInitial(std::string_view name) const;
+    short playerColorPair(std::size_t index) const;
 };
 
 } // namespace Cui

@@ -141,24 +141,6 @@ WindowPlayerArea::drawStaticContent()
 }
 
 //----------------------------------------------------------------
-
-void
-WindowPlayerArea::drawStaticContentAllPlayers()
-{
-    // TODO
-    // mvwprintw(pWin_, 0, 0, "All Plavers View");
-}
-
-//----------------------------------------------------------------
-
-void
-WindowPlayerArea::drawStaticContentOnePlayer()
-{
-    // TODO
-    mvwprintw(pWin_, 0, 0, "One Plaver View");
-}
-
-//----------------------------------------------------------------
 //
 // Updates all dynamic field content.
 //
@@ -182,7 +164,7 @@ WindowPlayerArea::populate()
 void
 WindowPlayerArea::populateAllPlayers()
 {
-    mvwprintw(pWin_, 0, 0, "All Players Area");
+    // mvwprintw(pWin_, 0, 0, "All Players Area");
     // Updates all dynamic fields in this view.
     // TODO
     // updatePassLineBets()

@@ -51,6 +51,7 @@ enum class EventType
     UslTableNumBetsOnTableChanged,
     UslPlayerResults,
     UslPlayerNumBetsOnTableChanged,
+    UslBetMade,
     UslPlayerJoinedTable,
     UslPlayerLeftTable,
 
@@ -247,6 +248,24 @@ struct UslPlayerNumBetsOnTableChanged : public GameEvent
     
     UslPlayerNumBetsOnTableChanged()
         : GameEvent{EventSource::Model, EventType::UslPlayerNumBetsOnTableChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslBetMade : public GameEvent
+{
+    Craps::PlayerId playerId;
+    std::string     playerName;
+    Craps::BetId    betId;
+    BetName         betName;
+    Gen::Money      contractAmount = 0;
+    Gen::Money      oddsAmount     = 0;
+    unsigned        pivot          = 0;
+    bool            isOddsBet      = false;
+    
+    UslBetMade()
+        : GameEvent{EventSource::Model, EventType::UslBetMade}
     {}
 };
 
