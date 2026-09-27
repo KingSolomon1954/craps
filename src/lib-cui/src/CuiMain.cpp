@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/CuiMain.h>
+#include <cui/ColorManager.h>
 #include <cui/CuiReceiver.h>
 #include <cui/CuiStructs.h>
 #include <cui/CuiThread.h>
@@ -22,8 +23,9 @@ using namespace Cui;
 
 CuiMain::CuiMain()
 {
-    init();
-    run();
+    initTerminal();  // includes ncurses init
+    initCui();       // starts specific cui elements
+    run();           // fire up first screen
 }
 
 //----------------------------------------------------------------
@@ -48,7 +50,17 @@ CuiMain::shutdown()
 //----------------------------------------------------------------
 
 void
-CuiMain::init()
+CuiMain::initCui()
+{
+    (void) ColorManager::instance(); // Init the ColorManager
+    (void) CuiThread::instance();    // Start the CUI thread
+    (void) CuiReceiver::instance();  // Init the Receiver 
+}
+
+//----------------------------------------------------------------
+
+void
+CuiMain::initTerminal()
 {
     using L = LayoutConsole;
     
@@ -101,8 +113,6 @@ CuiMain::initNcurses()
     curs_set(0);
     start_color();
     use_default_colors();
-    
-    setupColors();  // App color usage
 }
 
 //----------------------------------------------------------------
@@ -192,9 +202,6 @@ CuiMain::ensureMinimumTerminalSize(int minRows, int minCols)
 void
 CuiMain::run()
 {
-    (void) CuiThread::instance();  // Start the CUI thread
-    (void) CuiReceiver::instance();  // Init the Receiver 
-
     // Render the starting screen
     WorkOrderSurface work =
         {.type = SurfaceType::SetSurface,
@@ -209,26 +216,6 @@ bool
 CuiMain::useUnicodePips() const
 {
     return useUnicodePips_;
-}
-
-//----------------------------------------------------------------
-
-void
-CuiMain::setupColors()
-{
-    init_pair(ColorPairs::DefaultScreen,  COLOR_GREEN,  COLOR_BLACK);
-    init_pair(ColorPairs::SevenOut,       COLOR_RED,    -1);  // -1 is default color
-    init_pair(ColorPairs::PassLineWinner, COLOR_YELLOW, -1);
-    init_pair(ColorPairs::Point,          COLOR_WHITE,  -1);
-
-    init_pair(ColorPairs::Player1, COLOR_WHITE,   -1);
-    init_pair(ColorPairs::Player2, COLOR_MAGENTA, -1);
-    init_pair(ColorPairs::Player3, COLOR_YELLOW,  -1);
-    init_pair(ColorPairs::Player4, COLOR_BLUE,    -1);
-    init_pair(ColorPairs::Player5, COLOR_RED,     -1);
-    init_pair(ColorPairs::Player6, COLOR_CYAN,    -1);
-
-    bkgd(' ' | COLOR_PAIR(ColorPairs::DefaultScreen));
 }
 
 //----------------------------------------------------------------

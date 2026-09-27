@@ -117,6 +117,7 @@ private:
     void drawPlayerHeaders();
     void drawBetLabels();
     void drawBetMarkers();
+    void drawBetMarker(std::size_t betIndex, std::size_t playerIndex);
     void drawWideCharacter(int row, int col,
                            wchar_t ch, short colorPair);
     void setBetState(std::size_t betIndex,

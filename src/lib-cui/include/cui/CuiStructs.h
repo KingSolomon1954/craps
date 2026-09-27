@@ -60,7 +60,7 @@ struct LocationRequest
 
 }  // namespace Cui
 
-
+#if 1
 namespace ColorPairs
 {
     constexpr short DefaultScreen  = 1;
@@ -75,5 +75,7 @@ namespace ColorPairs
     constexpr short Player5        = 9;
     constexpr short Player6        = 10;
 }
+
+#endif
 
 //----------------------------------------------------------------

@@ -6,6 +6,7 @@
 
 add_library(cui STATIC
     src/CarrierBet.cpp
+    src/ColorManager.cpp
     src/CuiMain.cpp
     src/CuiThread.cpp
     src/CuiUtils.cpp

@@ -1624,3 +1624,1565 @@ Hollow Circle U+25CB   Filled Circle U+25CF    Dot Operator U+22C5  DoubleDash U
 24  ├────────────────────────┴──────────────────────┴────────────────────┼─
 
 
+
+
+# RoyalCraps Architecture — Handoff Document
+
+## Purpose
+
+This document captures the current architecture, terminology, design decisions, and unresolved questions for the RoyalCraps C++20 project.
+
+Use this document as the starting context for a new ChatGPT conversation. The goal is to continue architectural/code discussions without having to reconstruct the previous conversation.
+
+---
+
+# 1. Project
+
+RoyalCraps is a C++20 craps application with:
+
+* `lib-craps` — domain/model/game logic
+* `lib-controller` — application/controller/event infrastructure
+* `lib-cui` — ncurses character UI
+* future `lib-gui` — possible graphical UI
+
+The application currently runs on Linux using ncurses.
+
+Important technologies:
+
+* C++20
+* ncurses
+* yaml-cpp
+* CMake
+* GCC
+* `rang` for terminal colors
+
+The project favors pragmatic, comprehensible architecture over overly formal MVC patterns or unnecessary abstraction.
+
+---
+
+# 2. Current CUI Architecture
+
+The CUI has these major layers:
+
+```text
+CuiThread
+    |
+SurfaceManager
+    |
++-----------------------------+
+| SurfaceBase                 |
+|   ScreenBase                |
+|   MenuBase                  |
+|   DialogBase                |
+|   PanelBase                 |
++-----------------------------+
+```
+
+Concrete examples:
+
+```text
+ScreenCrapsTable
+
+MenuBetting
+MenuOddsBet
+MenuPlaceBet
+
+DialogAmountEntry
+DialogConfirm
+DialogMessage
+
+WindowNavBar
+WindowPlayerArea
+WindowRollHistory
+WindowAnimation
+```
+
+Singleton concrete surfaces generally use:
+
+```cpp
+static T instance();
+```
+
+---
+
+# 3. CUI Thread Rule
+
+`CuiThread` is the only thread allowed to:
+
+* call ncurses
+* manipulate CUI windows
+* manipulate CUI surfaces
+* process keyboard input
+* execute CUI WorkOrders
+
+Other threads must enqueue work to `CuiThread`.
+
+The CUI thread itself reads:
+
+```cpp
+wgetch(stdscr)
+```
+
+and turns keyboard input into a `WorkOrderKey`.
+
+The CUI should never block waiting for model operations.
+
+Model/controller events arrive asynchronously and become CUI WorkOrders.
+
+---
+
+# 4. SurfaceManager
+
+`SurfaceManager` owns the active surface stack and a `LocationManager`.
+
+Responsibilities:
+
+* `pushSurface()`
+* `popSurface()`
+* `popSurfaces()`
+* `setSurface()`
+* keyboard dispatch
+* surface lifecycle
+* location assignment
+* drawing
+* ncurses resource shutdown
+
+Current conceptual lifecycle:
+
+```text
+pushSurface(child)
+    |
+    +-- determine parent
+    +-- push child
+    +-- child.onAttach(parent)
+    +-- calculate dynamic content/size
+    +-- LocationManager.findPosition()
+    +-- child.setLocation()
+    +-- draw(child)
+```
+
+`draw()` should ultimately call:
+
+```cpp
+pSurface->draw();
+doupdate();
+```
+
+so all drawing is consistently flushed.
+
+`setSurface()` is for replacing a full-screen surface and does not need normal LocationManager placement.
+
+---
+
+# 5. Surface Stack Is Navigation, NOT Operation State
+
+This is an important architectural decision.
+
+A surface stack represents UI navigation:
+
+```text
+ScreenCrapsTable
+    -> MenuBetting
+        -> MenuPlaceBet
+            -> DialogAmountEntry
+```
+
+An operation represents a user task that may span multiple surfaces.
+
+Therefore:
+
+> Popping a surface does NOT mean an operation completed.
+
+For example, making a bet may involve:
+
+```text
+MenuBetting
+MenuPlaceBet
+choose point
+DialogAmountEntry
+```
+
+A `CarrierBet` may be populated incrementally while those surfaces are pushed/popped.
+
+The operation should be tracked separately by an `OperationManager`.
+
+---
+
+# 6. OperationManager
+
+`OperationManager` is CUI-side workflow state.
+
+It tracks things such as:
+
+```text
+current operation
+correlation ID
+CarrierBet
+operation state
+```
+
+It should not become general application state.
+
+Example:
+
+```text
+Operation::MakeBet
+    |
+    +-- CarrierBet
+    +-- correlationId
+```
+
+When the bet information is complete, the CUI submits a request.
+
+The model/controller processes the request asynchronously.
+
+The CUI does NOT block waiting for the result.
+
+---
+
+# 7. Request/Response/Unsolicited Event Architecture
+
+The project is moving toward one unified application event model.
+
+There should be one:
+
+```text
+Controller::EventManager
+```
+
+and one:
+
+```text
+Controller::GameEvents.h
+```
+
+used by:
+
+* `lib-craps`
+* `lib-controller`
+* `lib-cui`
+* future `lib-gui`
+
+The EventManager is asynchronous/threaded and acts as transport/distribution.
+
+It should NOT understand event semantics.
+
+---
+
+# 8. GameEvent Vocabulary
+
+Current event categories:
+
+```cpp
+// Requests
+ReqMakeBet
+ReqRemoveBet
+ReqRollDice
+
+// Responses
+RspMakeBetAccepted
+RspMakeBetRejected
+
+// Unsolicited
+Usl...
+```
+
+Terminology:
+
+### `Req...`
+
+A view/client is requesting something.
+
+Example:
+
+```text
+ReqMakeBet
+```
+
+### `Rsp...`
+
+A response to a particular request.
+
+The response carries the request's correlation ID.
+
+Example:
+
+```text
+ReqMakeBet
+    correlationId = 4711
+
+RspMakeBetAccepted
+    correlationId = 4711
+```
+
+### `Usl...`
+
+Unsolicited/domain event.
+
+Something happened in the application/model that interested parties may need to know about.
+
+Example:
+
+```text
+UslBetMade
+UslPlayerBalanceChanged
+UslResolveBetsEnd
+```
+
+---
+
+# 9. Event IDs and Correlation IDs
+
+`GameEvents.h` owns ID generation, not EventManager.
+
+Current conceptual types:
+
+```cpp
+using EventId = std::uint64_t;
+using CorrelationId = std::uint64_t;
+```
+
+and:
+
+```cpp
+EventId getNextEventId();
+CorrelationId getNextCorrelationId();
+```
+
+IDs are allocated atomically.
+
+`EventManager` is intentionally unaware of event contents and should not be responsible for protocol semantics.
+
+Semantics:
+
+* `EventId` identifies this particular event.
+* `CorrelationId` identifies a request/response conversation.
+
+Example:
+
+```text
+ReqMakeBet
+    eventId = 1001
+    correlationId = 5007
+
+RspMakeBetAccepted
+    eventId = 1002
+    correlationId = 5007
+```
+
+---
+
+# 10. EventManager Behavior
+
+`EventManager::publish(const EventType& event)` stores a copy of the event in its queue.
+
+The caller's local event can disappear after `publish()`.
+
+The EventManager worker later:
+
+1. moves the queued event into a local object
+2. removes it from the queue
+3. dispatches it to subscribed handlers
+
+Handlers execute on the EventManager worker thread.
+
+Therefore:
+
+> A CUI WorkOrder must NOT hold a reference to an event object received through an EventManager callback.
+
+The WorkOrder must own its own event data.
+
+---
+
+# 11. CUI Event Flow
+
+Current intended architecture:
+
+```text
+Model / Controller
+        |
+        v
+Controller::EventManager
+        |
+        v
+CuiReceiver
+        |
+        v
+CuiThread WorkOrder queue
+        |
+        v
+CuiThread
+        |
+        v
+CUI / OperationManager / surfaces
+```
+
+`CuiReceiver` is the event subscriber/adapter.
+
+Its job is primarily to translate application events into CUI WorkOrders.
+
+Actual ncurses work remains on the CUI thread.
+
+CUI-originated requests go in the opposite direction:
+
+```text
+Surface
+   |
+OperationManager
+   |
+CuiSender
+   |
+EventManager
+   |
+Controller
+```
+
+Prefer surfaces -> OperationManager -> CuiSender rather than arbitrary surfaces publishing application events themselves.
+
+---
+
+# 12. WorkOrder Architecture
+
+There are three WorkOrder categories:
+
+```text
+Event
+Key
+Surface
+```
+
+Originally these were represented as polymorphic structs deriving from `WorkOrderBase`.
+
+The current architectural direction is toward `std::variant`, because there are exactly three known categories and it avoids slicing/reference lifetime problems.
+
+Conceptually:
+
+```cpp
+struct WorkOrderKey
+{
+    int key = ERR;
+};
+
+struct WorkOrderEvent
+{
+    GameEvent event;
+};
+
+struct WorkOrderSurface
+{
+    SurfaceType type;
+    SurfaceBase* pSurface;
+};
+
+using WorkOrder = std::variant<
+    WorkOrderKey,
+    WorkOrderEvent,
+    WorkOrderSurface
+>;
+```
+
+However, because `GameEvent` has derived event types, the event portion itself may need to preserve the concrete event type.
+
+A likely solution is a variant of concrete event types:
+
+```cpp
+using GameEvent =
+    std::variant<
+        Ctrl::UslBetMade,
+        Ctrl::UslBetRemoved,
+        Ctrl::UslDiceThrowStart,
+        Ctrl::UslDiceNewValue,
+        ...
+    >;
+```
+
+and then:
+
+```cpp
+struct WorkOrderEvent
+{
+    GameEvent event;
+};
+```
+
+This preserves the actual derived event, owns a copy, and avoids field-by-field mirroring.
+
+Do not store a reference to the EventManager callback's event.
+
+---
+
+# 13. Response Events vs Domain Events
+
+This is a major current architectural decision.
+
+For example:
+
+```text
+ReqMakeBet
+```
+
+may result in:
+
+```text
+RspMakeBetAccepted
+```
+
+and also:
+
+```text
+UslBetMade
+```
+
+These are deliberately different.
+
+## Response
+
+`RspMakeBetAccepted` answers:
+
+> What happened to my request?
+
+It is primarily consumed by the request's originator, especially `OperationManager`.
+
+Example:
+
+```text
+ReqMakeBet
+    correlationId = 4711
+        |
+        v
+Controller
+        |
+        +---- RspMakeBetAccepted
+        |       correlationId = 4711
+        |
+        +---- UslBetMade
+```
+
+`OperationManager` sees the response and completes/unwinds the MakeBet workflow.
+
+## Domain event
+
+`UslBetMade` means:
+
+> A bet now exists in the game.
+
+Potential consumers include:
+
+* `PlayerAreaAllPlayers`
+* `PlayerAreaOnePlayer`
+* Message window
+* statistics windows
+* future GUI
+* other interested components
+
+The domain event may contain substantially more information than the response.
+
+---
+
+# 14. Important Principle: Response vs State Notification
+
+A response is tied to a request.
+
+A domain event is not.
+
+Therefore:
+
+```text
+RspMakeBetAccepted
+    = response to an interaction
+
+UslBetMade
+    = fact about application/domain state
+```
+
+This also handles bets that may be created without a CUI request, such as:
+
+* automatic bets
+* buddy bets
+* bots
+* future network clients
+* other application components
+
+Those may generate `UslBetMade` without there being a corresponding `RspMakeBetAccepted` for this CUI.
+
+---
+
+# 15. Event Payloads Should Represent Their Own Semantics
+
+Do not make a domain event merely a copy of the request.
+
+For example, `ReqMakeBet` may request:
+
+```text
+player
+bet name
+amount
+pivot
+```
+
+but after the model processes it, the actual bet may have:
+
+* a `BetId`
+* normalized values
+* actual resulting amounts
+* other model-derived information
+
+`UslBetMade` should describe the actual resulting domain state.
+
+---
+
+# 16. Current Event Boundary Refactoring
+
+The following events were recently reconsidered:
+
+```cpp
+UslTableResults
+UslTableNumBetsOnTableChanged
+UslPlayerResults
+UslPlayerNumBetsOnTableChanged
+UslBetMade
+```
+
+The concern is that the first four mix:
+
+* domain facts
+* state changes
+* derived aggregates
+* UI-oriented summaries
+
+---
+
+# 17. New Principle: Events Tell You When to Look; Readers Tell You What the State Is
+
+This is the current preferred direction.
+
+For example, while resolving bets:
+
+```text
+UslResolveBetsStart
+
+    evaluate bet
+       |
+       +-- UslTableBalanceChanged
+       +-- UslPlayerBalanceChanged
+
+    evaluate another bet
+       |
+       +-- UslTableBalanceChanged
+       +-- UslPlayerBalanceChanged
+
+    ...
+
+UslResolveBetsEnd
+```
+
+At `UslResolveBetsEnd`, interested UI components can query authoritative aggregate state.
+
+For example:
+
+```cpp
+CrapsReaders::getPlayerLastRollStats()
+CrapsReaders::getPlayerAmountOnTable()
+
+CrapsReaders::getTableLastRollStats()
+CrapsReaders::getTableAmountOnTable()
+```
+
+Thus:
+
+```text
+UslResolveBetsEnd
+        |
+        +-- Player UI
+        |      |
+        |      +-- getPlayerLastRollStats()
+        |      +-- getPlayerAmountOnTable()
+        |
+        +-- HouseBrief
+               |
+               +-- getTableLastRollStats()
+               +-- getTableAmountOnTable()
+```
+
+This avoids publishing large, UI-oriented "results" events merely to save a few reader calls.
+
+This was recognized as premature optimization.
+
+---
+
+# 18. `UslTableResults` / `UslPlayerResults`
+
+These currently bundle statistics such as:
+
+```text
+balance
+net balance
+number of winning bets
+number of losing bets
+intake last roll
+output last roll
+```
+
+They may not need to exist as separate events.
+
+If the information represents a genuine coherent concept, a possible future event is:
+
+```text
+UslRollResults
+```
+
+meaning:
+
+> The roll has been completely resolved; here are the results of that roll.
+
+But before introducing such an event, determine whether the data is actually a domain concept or merely a collection of values needed by a particular UI statistics panel.
+
+Current preference:
+
+> Do not publish an aggregate event merely because a UI wants an aggregate.
+
+Use a meaningful lifecycle boundary such as `UslResolveBetsEnd`, then query authoritative state.
+
+---
+
+# 19. `UslTableNumBetsOnTableChanged` / `UslPlayerNumBetsOnTableChanged`
+
+These are currently viewed as suspicious because they describe derived aggregate values:
+
+```cpp
+unsigned numBetsOnTable;
+Gen::Money amtOnTable;
+```
+
+A more fundamental event is:
+
+```text
+UslBetMade
+UslBetRemoved
+UslBetChanged
+```
+
+Consumers can update presentation state from these, while authoritative aggregate state remains in the model/readers.
+
+Do not make CUI responsible for being the authoritative accounting system.
+
+---
+
+# 20. `UslBetRemoved`
+
+Current thinking:
+
+`UslBetRemoved` should represent an **explicit removal of a bet**, such as:
+
+```text
+Player chooses Remove Bet
+        |
+        v
+ReqRemoveBet
+        |
+        v
+Controller/model
+        |
+        +-- RspRemoveBetAccepted
+        |
+        +-- UslBetRemoved
+```
+
+This allows CUI components to immediately react:
+
+```text
+PlayerArea -> remove marker
+MessageWindow -> display removal
+```
+
+However:
+
+> Do NOT necessarily publish `UslBetRemoved` for every internal bet removal during dice-roll resolution.
+
+During resolution, bets may be removed as an implementation detail of processing the roll.
+
+Those internal removals are not necessarily meaningful user-level events.
+
+Instead:
+
+```text
+UslResolveBetsStart
+    |
+    | internal bet evaluation
+    | internal bet removal
+    | balance changes
+    |
+UslResolveBetsEnd
+```
+
+The completed state can then be queried.
+
+This prevents `UslBetRemoved` from becoming ambiguous:
+
+```text
+Was it removed by the player?
+Was it lost during resolution?
+Was it paid and closed?
+Was it internal cleanup?
+```
+
+If later the UI genuinely needs to distinguish resolution outcomes, consider explicit events such as:
+
+```text
+UslBetWon
+UslBetLost
+```
+
+but do not add them merely because they are technically possible.
+
+---
+
+# 21. Event Design Rule
+
+For each proposed event, ask:
+
+### What exact fact does this event communicate?
+
+Good:
+
+```text
+UslBetMade
+```
+
+> A bet was created.
+
+Good:
+
+```text
+UslPlayerBalanceChanged
+```
+
+> The player's balance changed.
+
+Good:
+
+```text
+UslResolveBetsEnd
+```
+
+> The bet-resolution phase is complete.
+
+Questionable:
+
+```text
+UslPlayerResults
+```
+
+> Here is a collection of statistics that someone may want.
+
+Questionable:
+
+```text
+UslPlayerNumBetsOnTableChanged
+```
+
+> A derived aggregate changed.
+
+The latter two may be better served by lifecycle events + readers.
+
+---
+
+# 22. Dice Events
+
+Current simplified dice events:
+
+```text
+UslDiceThrowStart
+UslDiceNewValue
+```
+
+No separate:
+
+```text
+UslDiceThrowEnd
+```
+
+currently needed.
+
+`UslDiceThrowStart` carries:
+
+```cpp
+unsigned rollCount;
+```
+
+`UslDiceNewValue` carries:
+
+```cpp
+unsigned rollCount;
+unsigned val;
+unsigned d1;
+unsigned d2;
+```
+
+`rollCount` is domain data identifying the throw sequence, not the EventManager's event ID.
+
+A possible future `throwId` could be used if needed, but don't add it unless the model/presentation semantics require it.
+
+---
+
+# 23. Dice Animation
+
+The model should resolve the game immediately.
+
+It should NOT sleep or wait for CUI animation.
+
+Conceptually:
+
+```text
+Model
+    |
+    +-- determine dice
+    +-- resolve game
+    +-- publish model events
+```
+
+CUI:
+
+```text
+UslDiceThrowStart
+    |
+    +-- start animation
+
+UslDiceNewValue
+    |
+    +-- store final dice
+
+timer WorkOrders
+    |
+    +-- animate
+
+animation complete
+    |
+    +-- display final state
+```
+
+Other events continue processing during animation.
+
+The animation is presentation timing, not model timing.
+
+---
+
+# 24. Preventing User Actions During Roll Presentation
+
+This is an application-state synchronization issue, not merely a keyboard problem.
+
+The model may already have resolved the roll while the CUI is still visually animating it.
+
+Therefore CUI should have an interaction/presentation state, potentially managed by `OperationManager`.
+
+For example:
+
+```text
+Ready
+PresentingRoll
+```
+
+During presentation:
+
+* continue processing model events
+* continue processing timer events
+* do not block CUI thread
+* suppress operations that are invalid while presentation is in progress
+
+Potentially blocked:
+
+```text
+ReqRollDice
+ReqMakeBet
+ReqRemoveBet
+```
+
+Potentially allowed:
+
+```text
+Help
+Quit
+```
+
+The exact policy is still open.
+
+Ideally the presentation state begins when the roll request is initiated, rather than waiting until `UslDiceThrowStart`, to avoid a race.
+
+---
+
+# 25. TimerManager
+
+The old Boost.Asio TimerManager is being replaced with standard C++.
+
+Desired implementation uses:
+
+```text
+std::thread
+std::mutex
+std::condition_variable
+std::chrono::steady_clock
+std::unordered_map
+```
+
+Conceptual API:
+
+```cpp
+TimerId createTimer(TimerCallback cb,
+                    bool repeat = false);
+
+TimerId createTimer(
+    TimerCallback cb,
+    std::chrono::milliseconds duration,
+    bool repeat = false);
+
+void armTimer(
+    TimerId id,
+    std::chrono::milliseconds duration,
+    bool repeat = false);
+
+void cancelTimer(TimerId id);
+
+void restartTimer(TimerId id);
+```
+
+Semantics:
+
+| Operation        | Never armed       | Inactive                   | Active                  |
+| ---------------- | ----------------- | -------------------------- | ----------------------- |
+| `armTimer()`     | configure + start | change params + start      | change params + restart |
+| `cancelTimer()`  | harmless          | harmless                   | stop                    |
+| `restartTimer()` | harmless          | start with existing params | restart                 |
+
+Keep separate:
+
+```text
+configured
+active
+```
+
+state.
+
+`restartTimer()` silently does nothing if there are insufficient parameters to arm a never-configured timer.
+
+Timer callbacks should execute outside the timer mutex.
+
+---
+
+# 26. WindowAnimation
+
+`WindowAnimation` uses TimerManager.
+
+The timer callback does not directly manipulate ncurses.
+
+Instead it enqueues a CUI Draw WorkOrder:
+
+```text
+Timer thread
+    |
+    v
+CuiThread::enqueueWork(...)
+    |
+    v
+CuiThread
+    |
+    v
+WindowAnimation::draw()
+```
+
+This preserves the rule that only the CUI thread touches ncurses.
+
+Current animation states:
+
+```cpp
+ZeroRoll
+Animating
+ShowingRoll
+```
+
+Animation phases:
+
+```cpp
+Falling
+Settling
+Done
+```
+
+There was a bug where independent random horizontal jitter could cause the two dice rectangles to overlap.
+
+The dice need collision-aware positioning so their 7-column rectangles do not overlap.
+
+---
+
+# 27. LocationManager
+
+`SurfaceManager` owns `LocationManager`.
+
+LocationManager handles geometry/policy only, not ncurses.
+
+Preferred API:
+
+```cpp
+std::optional<WindowPosition>
+findPosition(
+    const Request& request,
+    const std::string& parentName,
+    const std::string& surfaceName);
+
+void release(const std::string& surfaceName);
+```
+
+`findPosition()` both finds and reserves a position.
+
+Active window reservations are tracked by surface name and rectangle.
+
+Basic policy:
+
+* menus: right, fallback left
+* dialogs: centered if possible
+* independent popups: centered
+* future candidate scoring may replace special cases
+
+`CuiStructs.h` contains:
+
+```cpp
+WindowSize
+WindowPosition
+WindowRect
+Direction
+LocationKind
+LocationRequest
+```
+
+`WindowRect` provides:
+
+```cpp
+bottom()
+right()
+```
+
+---
+
+# 28. CuiStructs / ColorPairs
+
+Current `ColorPairs`:
+
+```cpp
+namespace ColorPairs
+{
+    constexpr short DefaultScreen  = 1;
+    constexpr short SevenOut       = 2;
+    constexpr short PassLineWinner = 3;
+    constexpr short Point          = 4;
+}
+```
+
+These are initialized in:
+
+```text
+CuiMain::setupColors()
+```
+
+Player-specific colors should be separate from these semantic colors.
+
+Potential design:
+
+```cpp
+ColorPairs::Player1
+ColorPairs::Player2
+ColorPairs::Player3
+ColorPairs::Player4
+ColorPairs::Player5
+ColorPairs::Player6
+```
+
+The PlayerArea should assign colors based on player-column position, not know how ncurses color pairs are initialized.
+
+---
+
+# 29. PlayerAreaAllPlayers
+
+`WindowPlayerArea` has been divided into:
+
+```text
+WindowPlayerArea
+PlayerAreaAllPlayers
+PlayerAreaOnePlayer
+```
+
+`PlayerAreaAllPlayers`:
+
+* supports 1–6 players
+* one player per column
+* user/player always occupies first column
+* remaining players preserve supplied order
+* unused columns display `DoubleDash` (`U+254C`)
+* dots (`U+22C5`) are always displayed when there is no bet
+* future state:
+
+  * Dot = no bet
+  * HollowCircle = bet
+  * FilledCircle = bet with odds
+* all markers for a player use that player's color
+
+`playerIds` order is not guaranteed to have the current user first.
+
+Therefore `buildPlayerInfo()` must reorder them:
+
+```text
+user
+other player 1
+other player 2
+...
+```
+
+while preserving the supplied order of non-user players.
+
+---
+
+# 30. Player Initials
+
+Current preferred approach:
+
+The player's initial is a human-readable hint, not a unique player identifier.
+
+If two players have the same initial:
+
+```text
+Nathan -> N
+Nancy  -> N
+```
+
+that is acceptable.
+
+The player's color provides identity.
+
+Do NOT transform:
+
+```text
+Nancy -> A
+```
+
+merely to force uniqueness.
+
+Simple implementation:
+
+```cpp
+wchar_t chooseInitial(std::string_view name)
+{
+    for (unsigned char ch : name)
+    {
+        if (std::isalpha(ch))
+            return static_cast<wchar_t>(std::toupper(ch));
+    }
+
+    return L'?';
+}
+```
+
+This assumes player names are ASCII/English. If Unicode player names become a requirement, revisit this.
+
+---
+
+# 31. Current MVC Simplification
+
+The project is intentionally moving away from the previous collection of MVC-specific event/command interfaces.
+
+Files planned for removal include:
+
+```text
+Ctrl::ViewInterface.h
+Ctrl::ViewCommands.h
+Ctrl::ViewEventHandlers.h
+Ctrl::CrapsCommands.h
+Ctrl::CrapsEventHandlers.h
+Craps::EventManager
+Craps::Events.h
+```
+
+Keep:
+
+```text
+CrapsReaders.h/.cpp
+```
+
+Readers remain useful for synchronous state queries.
+
+---
+
+# 32. Simplified lib-controller
+
+Current planned controller structure includes:
+
+```text
+AutoFill.h
+ConfigCommandLine.h
+ConfigDefaults.h
+ConfigEnv.h
+ConfigFiles.h
+ConfigManager.h
+CrapReaders.h
+Doxygen.h
+EventHandler.h
+EventManager.h
+GameController.h
+GameEvents.h
+GameMain.h
+Globals.h
+PlayerManager.h
+PlayerManifest.h
+Properties.h
+QuickBet.h
+SessionSummary.h
+TableDescription.h
+TableManager.h
+TableManifest.h
+UndoBet.h
+UndoManager.h
+```
+
+---
+
+# 33. EventHandler
+
+`Controller::EventHandler` subscribes to the unified EventManager.
+
+It may receive events from:
+
+```text
+Model
+View
+Controller
+```
+
+Examples:
+
+```text
+ReqMakeBet
+    -> call model function
+    -> publish RspMakeBetAccepted/Rejected
+
+ReqRemoveBet
+    -> call model function
+    -> publish response
+
+ReqRollDice
+    -> call model function
+```
+
+It can also respond to unsolicited model events where the controller itself needs to take action.
+
+Example:
+
+```text
+UslHouseLowOnFunds
+    -> controller refills house bank
+```
+
+Model events do not need to be converted into equivalent CUI events.
+
+CUI and GUI can subscribe directly to model/domain events through EventManager.
+
+---
+
+# 34. CrapsReaders
+
+Readers are synchronous model queries.
+
+They are deliberately different from event notifications.
+
+Examples:
+
+```cpp
+getUserPlayer()
+readPlayerName()
+
+getPlayerLastRollStats()
+getPlayerAmountOnTable()
+
+getTableLastRollStats()
+getTableAmountOnTable()
+```
+
+A useful architectural rule:
+
+> Events notify consumers that something relevant happened; readers provide authoritative current/aggregate state.
+
+---
+
+# 35. Current Architectural Direction
+
+The overall flow is now:
+
+```text
+                    APPLICATION
+
+       +---------------- EventManager ----------------+
+       |                                              |
+       |       Req / Rsp / Usl GameEvents             |
+       |                                              |
+       +-------------------+--------------------------+
+                           |
+             +-------------+-------------+
+             |                           |
+         Controller                    CUI
+             |                           |
+       Model calls              CuiReceiver
+             |                           |
+             |                       WorkOrder
+             |                           |
+             |                       CuiThread
+             |                           |
+             |                  SurfaceManager
+             |                           |
+             +------ Domain events ------+
+```
+
+The important separation is:
+
+```text
+EventManager
+    = transport/distribution
+
+GameEvents
+    = application event vocabulary/protocol
+
+EventHandler
+    = controller behavior
+
+CuiReceiver
+    = event -> CUI WorkOrder adapter
+
+CuiThread
+    = UI-thread execution
+
+SurfaceManager
+    = surface/navigation management
+
+OperationManager
+    = user workflow/correlation management
+
+CrapsReaders
+    = synchronous authoritative state queries
+
+Surfaces
+    = presentation/input
+```
+
+---
+
+# 36. Most Important Current Design Principle
+
+The current direction can be summarized as:
+
+> **Don't make events carry information merely to avoid a reader call.**
+
+Instead:
+
+```text
+Meaningful state change
+        |
+        v
+publish an event
+
+Meaningful lifecycle boundary
+        |
+        v
+publish an event
+
+Consumer needs detailed/aggregate state
+        |
+        v
+use a reader
+```
+
+For example:
+
+```text
+UslPlayerBalanceChanged
+```
+
+is meaningful.
+
+```text
+UslResolveBetsEnd
+```
+
+is meaningful.
+
+Then:
+
+```text
+getPlayerLastRollStats()
+getPlayerAmountOnTable()
+```
+
+can provide the detailed state.
+
+This keeps event boundaries understandable and avoids premature optimization.
+
+---
+
+# 37. Open Questions / Continue From Here
+
+The following areas are still intentionally open:
+
+1. Exact final `GameEvents.h` event list.
+2. Whether `UslBetChanged` is needed in addition to `UslBetMade` / `UslBetRemoved`.
+3. Whether bet-resolution outcomes need explicit events such as `UslBetWon` / `UslBetLost`.
+4. Exact payloads for `UslBetMade`, `UslBetRemoved`, and balance-change events.
+5. Whether `UslRollResults` is actually needed, or whether `UslResolveBetsEnd` + readers is sufficient.
+6. Final `std::variant` design for WorkOrders and concrete GameEvents.
+7. Exact CUI event dispatch mechanism after a WorkOrder reaches `CuiThread`.
+8. OperationManager API and lifecycle.
+9. Exact interaction policy during dice presentation.
+10. Final player color palette and player-initial handling.
+11. Whether player names should be carried in events or resolved through `CrapsReaders`.
+12. Whether model state changes should be published individually or batched in particular cases.
+
+When continuing the discussion, prefer the simplest architecture that gives each event a precise semantic boundary. Avoid introducing abstractions or events solely to optimize away inexpensive reader calls.
+
+---
+
+# 38. Current Mental Model
+
+The most useful mental model for the project is:
+
+```text
+                    "Please do this"
+                         |
+                       Req...
+                         |
+                         v
+                     Controller
+                         |
+                         v
+                       Model
+                         |
+          +--------------+--------------+
+          |                             |
+          | response                    | domain fact/state change
+          v                             v
+       Rsp...                          Usl...
+          |                             |
+          v                             v
+   request originator             interested consumers
+          |                             |
+          v                             v
+ OperationManager                CUI / GUI / other
+          |
+          v
+ finish workflow
+
+
+             When aggregate state is needed:
+
+                     Usl boundary
+                         |
+                         v
+                   CrapsReaders
+                         |
+                         v
+                authoritative state
+```
+
+This is the architecture to preserve unless a concrete implementation problem demonstrates a need to change it.

@@ -164,8 +164,8 @@ PlayerAreaAllPlayers::buildPlayerInfo(
 
         players_.push_back(
         {
-            .playerId = orderedIds[i],
-            .initial  = chooseInitial(name),
+            .playerId  = orderedIds[i],
+            .initial   = chooseInitial(name),
             .colorPair = playerColorPair(i)
         });
     }
@@ -270,42 +270,70 @@ PlayerAreaAllPlayers::drawBetLabels()
 //----------------------------------------------------------------
 
 void
+PlayerAreaAllPlayers::drawBetMarker(std::size_t betIndex,
+                                    std::size_t playerIndex)
+{
+    if (pWin_ == nullptr)
+        return;
+
+    if (playerIndex >= players_.size())
+        return;
+
+    int row = 0;
+    int col = 0;
+
+    if (!betPosition(betIndex, playerIndex, row, col)) 
+        return;
+
+    wchar_t marker = Layout::Dot;
+
+    switch (bets_[betIndex].state[playerIndex])
+    {
+        case BetState::None:
+            marker = Layout::Dot;
+            break;
+
+        case BetState::Bet:
+            marker = Layout::HollowCircle;
+            break;
+
+        case BetState::BetWithOdds:
+            marker = Layout::FilledCircle;
+            break;
+    }
+
+    drawWideCharacter(
+        row,
+        col,
+        marker,
+        players_[playerIndex].colorPair);
+}
+
+//----------------------------------------------------------------
+
+void
 PlayerAreaAllPlayers::drawBetMarkers()
 {
-    using L = Layout;
-    
-    for (const Bet& bet : bets_)
+    for (std::size_t betIndex = 0;
+         betIndex < bets_.size();
+         ++betIndex)
     {
-        for (int player = 0; player < LayoutAllPlayers::MaxPlayers; ++player)
+        for (std::size_t playerIndex = 0;
+             playerIndex < LayoutAllPlayers::MaxPlayers;
+             ++playerIndex)
         {
-            const int col =
-                L::SectionX[bet.section] + L::SectionW[bet.section] +
-                player * L::PlayerStride;
-
-            wchar_t marker = L::Dot;
-            short colorPair = 0;
-
-            if (player < static_cast<int>(players_.size()))
+            if (playerIndex < players_.size())
             {
-                colorPair = players_[player].colorPair;
-
-                switch (bet.state[player])
+                drawBetMarker(betIndex, playerIndex);
+            }
+            else
+            {
+                int row = 0; int col = 0;
+                if (betPosition(betIndex, playerIndex, row, col))
                 {
-                    case BetState::None:
-                        marker = L::Dot;
-                        break;
-
-                    case BetState::Bet:
-                        marker = L::HollowCircle;
-                        break;
-
-                    case BetState::BetWithOdds:
-                        marker = L::FilledCircle;
-                        break;
+                    drawWideCharacter(row, col, Layout::Dot, 0);
                 }
             }
-
-            drawWideCharacter(bet.row, col, marker, colorPair);
         }
     }
 }
@@ -313,20 +341,16 @@ PlayerAreaAllPlayers::drawBetMarkers()
 //----------------------------------------------------------------
 
 void
-PlayerAreaAllPlayers::drawWideCharacter(int row,
-                                        int col,
-                                        wchar_t ch,
-                                        short colorPair)
+PlayerAreaAllPlayers::drawWideCharacter(int row, int col,
+                                        wchar_t ch, short colorPair)
 {
-    if (colorPair != 0)
-        wattron(pWin_, COLOR_PAIR(colorPair));
+    if (colorPair != 0) wattron(pWin_, COLOR_PAIR(colorPair));
 
     wchar_t text[2] = { ch, L'\0' };
 
     mvwaddwstr(pWin_, row, col, text);
 
-    if (colorPair != 0)
-        wattroff(pWin_, COLOR_PAIR(colorPair));
+    if (colorPair != 0) wattroff(pWin_, COLOR_PAIR(colorPair));
 }
 
 //----------------------------------------------------------------
@@ -401,14 +425,29 @@ PlayerAreaAllPlayers::onBetMade(
     (void)betId;
 
     const std::size_t playerIndex = getPlayerIndex(playerId);
-    if (playerIndex >= players_.size()) return;
+
+    if (playerIndex >= players_.size())
+        return;
 
     const std::string_view label = crapsBetNameToLabel(betName, pivot);
+
     if (label.empty()) return;
 
-    setBetState(label, playerIndex, calcBetState(contractAmount, oddsAmount));
+    const auto betIt = std::find_if(bets_.begin(), bets_.end(),
+            [&label](const Bet& bet)
+            {
+                return bet.label == label;
+            });
 
-    drawBetMarkers();
+    if (betIt == bets_.end())
+        return;
+
+    const std::size_t betIndex = static_cast<std::size_t>(
+            std::distance(bets_.begin(), betIt));
+
+    setBetState(betIndex, playerIndex, calcBetState(contractAmount, oddsAmount));
+
+    drawBetMarker(betIndex, playerIndex);
 }
 
 //----------------------------------------------------------------

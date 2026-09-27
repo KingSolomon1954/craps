@@ -22,12 +22,12 @@ public:
 private:
     bool useUnicodePips_ = false;
     
-    void init();
+    void initTerminal();
+    void initCui();
     void run();
     void initLocale();
     void initNcurses();
     bool utf8_enabled();
-    void setupColors();
     void requestTerminalResize    (int rows,     int cols);
     bool promptUserToResize       (int haveRows, int haveCols,
                                    int needRows, int needCols);
