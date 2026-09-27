@@ -29,6 +29,7 @@ public:
     /// @}
 
 private:
+    void onBettingClosed       (const Ctrl::UslBettingClosed& ev)        const;
     void onDiceNewValue        (const Ctrl::UslDiceNewValue& ev)         const;
     void onDiceThrowStart      (const Ctrl::UslDiceThrowStart& ev)       const;
     void onResolveBetsEnd      (const Ctrl::UslResolveBetsEnd& ev)       const;
@@ -36,6 +37,8 @@ private:
     void onSevenOut            (const Ctrl::UslSevenOut& ev)             const;
     void onPassLineWinner      (const Ctrl::UslPassLineWinner& ev)       const;
     void onNewShooter          (const Ctrl::UslNewShooter& ev)           const;
+    void onBettingOpened       (const Ctrl::UslBettingOpened& ev)        const;
+    void onBetMade             (const Ctrl::UslBetMade& ev)              const;
     void onTableBalanceChanged (const Ctrl::UslTableBalanceChanged& ev)  const;
     void onPlayerBalanceChanged(const Ctrl::UslPlayerBalanceChanged& ev) const;
 };

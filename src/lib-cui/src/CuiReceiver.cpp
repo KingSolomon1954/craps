@@ -26,7 +26,12 @@ CuiReceiver::instance()
 
 CuiReceiver::CuiReceiver()
 {
-    // TODO subscribe ...
+    LOG_TRACE("CuiReceiver() subscribing to UslBettingClosed");
+    Gen::EventManager::instance().subscribe<Ctrl::UslBettingClosed>(
+        [this](const Ctrl::UslBettingClosed& ev)
+        {
+            this->onBettingClosed(ev);
+        });
 
     LOG_TRACE("CuiReceiver() subscribing to UslDiceThrowStart");
     Gen::EventManager::instance().subscribe<Ctrl::UslDiceThrowStart>(
@@ -77,6 +82,20 @@ CuiReceiver::CuiReceiver()
             this->onNewShooter(ev);
         });
 
+    LOG_TRACE("CuiReceiver() subscribing to UslBettingOpened");
+    Gen::EventManager::instance().subscribe<Ctrl::UslBettingOpened>(
+        [this](const Ctrl::UslBettingOpened& ev)
+        {
+            this->onBettingOpened(ev);
+        });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslBetMade");
+    Gen::EventManager::instance().subscribe<Ctrl::UslBetMade>(
+        [this](const Ctrl::UslBetMade& ev)
+        {
+            this->onBetMade(ev);
+        });
+
     LOG_TRACE("CuiReceiver() subscribing to UslTableBalanceChanged");
     Gen::EventManager::instance().subscribe<Ctrl::UslTableBalanceChanged>(
         [this](const Ctrl::UslTableBalanceChanged& ev)
@@ -90,6 +109,17 @@ CuiReceiver::CuiReceiver()
         {
             this->onPlayerBalanceChanged(ev);
         });
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onBettingClosed(const Ctrl::UslBettingClosed& ev) const
+{
+    LOG_TRACE("Entered CuiReceiver()::onBettingClosed()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
 }
 
 //----------------------------------------------------------------
@@ -171,6 +201,28 @@ void
 CuiReceiver::onNewShooter(const Ctrl::UslNewShooter& ev) const
 {
     LOG_TRACE("Entered CuiReceiver()::onNewShooter()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onBettingOpened(const Ctrl::UslBettingOpened& ev) const
+{
+    LOG_TRACE("Entered CuiReceiver()::onBettingOpened()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onBetMade(const Ctrl::UslBetMade& ev) const
+{
+    LOG_TRACE("Entered CuiReceiver()::onBetMade()");
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);

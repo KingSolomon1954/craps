@@ -11,6 +11,8 @@
 #include <cui/panels/PlayerAreaAllPlayers.h>
 #include <cui/panels/PlayerAreaOnePlayer.h>
 #include <craps/CrapsTypes.h>
+#include <craps/EnumBetName.h>
+#include <gen/MoneyUtils.h>
 #include <vector>
 
 namespace Cui
@@ -31,6 +33,14 @@ public:
     void nextPlayer();
     void prevPlayer();
     void allPlayers();
+    void onBetMade(
+        const Craps::PlayerId& playerId,
+        const Craps::BetId&    betId,
+        const BetName&         betName,
+        Gen::Money             contractAmount,
+        Gen::Money             oddsAmount,
+        unsigned               pivot);
+
     /// @}
 
     /// @name Observers

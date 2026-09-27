@@ -41,10 +41,12 @@ Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
 OperationTracker needs correlationId matching
-In PlayerBrief area, display player name in their matchingcolor
+In PlayerBrief area, display player name in his matchingcolor
 In CuiThread, separate out the processing into a dispatcher
-PlayerAreaAllPlayers needs implementation for onBetMade() updates
+Implement PlayerAreaOnePlayer
 
+(Done) Implemented onPlayerJoinTable/LeftTable in PlayerAreaAllPlayers
+(Done) PlayerAreaAllPlayers needs implementation for onBetMade() updates
 (Done) Implement Advance shooter event, WindowPlayerBrief updated
 (Done) Re-factor these events: UslBetMade, UslTableResults, UslPlayerResults
 (Done) PlayerAreaAllPlayers implemented

@@ -40,7 +40,6 @@ enum class EventType
 
     // Unsolicited
     UslBettingClosed,
-    UslBettingOpened,
     UslDiceThrowStart,
     UslDiceNewValue,
     UslResolveBetsStart,
@@ -49,7 +48,7 @@ enum class EventType
     UslSevenOut,
     UslPassLineWinner,
     UslNewShooter,
-
+    UslBettingOpened,
     UslBetMade,                // not yet implemented
     UslBetRemoved,             // not yet implemented Player decided to remove a bet
     UslBetChanged,             // not yet implemented Player decided to change a bet
@@ -61,12 +60,6 @@ enum class EventType
     UslCountdownRollDice       // not yet implemented
 };
 
-
-//    UslTableResults,
-//    UslTableNumBetsOnTableChanged,
-//    UslPlayerResults,
-//    UslPlayerNumBetsOnTableChanged,
-    
 //----------------------------------------------------------------
 
 using EventId       = std::uint64_t;

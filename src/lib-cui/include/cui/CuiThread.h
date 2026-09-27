@@ -43,6 +43,7 @@ private:
     void process(const WorkOrderSurface& wo);
     void process(const WorkOrderEvent& wo);
     
+    void process(const Ctrl::UslBettingClosed& ev);
     void process(const Ctrl::UslDiceThrowStart& ev);
     void process(const Ctrl::UslDiceNewValue& ev);
     void process(const Ctrl::UslResolveBetsEnd& ev);
@@ -51,6 +52,7 @@ private:
     void process(const Ctrl::UslPassLineWinner& ev);
     void process(const Ctrl::UslNewShooter& ev);
     void process(const Ctrl::UslBettingOpened& ev);
+    void process(const Ctrl::UslBetMade& ev);
     void process(const Ctrl::UslTableBalanceChanged& ev);
     void process(const Ctrl::UslPlayerBalanceChanged& ev);
 

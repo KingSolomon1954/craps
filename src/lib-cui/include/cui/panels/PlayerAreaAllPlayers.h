@@ -10,6 +10,8 @@
 
 #include <cui/layouts/LayoutPlayerArea.h>
 #include <craps/CrapsTypes.h>
+#include <craps/EnumBetName.h>
+#include <gen/MoneyUtils.h>
 #include <ncurses.h>
 #include <array>
 #include <string_view>
@@ -32,9 +34,15 @@ public:
     void init(WINDOW* pWin, const std::vector<Craps::PlayerId>& playerIds);
     void drawInternalBorders();
     void drawStaticContent();
-    void onBetMade();
-    void onPlayerJoinedTable();
-    void onPlayerLeftTable();
+    void onBetMade(
+        const Craps::PlayerId& playerId,
+        const Craps::BetId&    betId,
+        const BetName&         betName,
+        Gen::Money             contractAmount,
+        Gen::Money             oddsAmount,
+        unsigned               pivot);
+    void onPlayerJoinedTable(const Craps::PlayerId& playerId);
+    void onPlayerLeftTable  (const Craps::PlayerId& playerId);
     /// @}
 
     /// @name Observers
@@ -51,6 +59,7 @@ private:
 
     struct Player
     {
+        Craps::PlayerId playerId;
         wchar_t initial = L'\u254C'; // ┌─ placeholder: ─
         short colorPair = 0;
     };
@@ -114,7 +123,7 @@ private:
                      std::size_t playerIndex,
                      BetState state);
 
-    void setBetState(std::string_view betName,
+    void setBetState(const std::string_view& betName,
                      std::size_t playerIndex,
                      BetState state);
 
@@ -124,6 +133,10 @@ private:
                      int& col) const;
     wchar_t chooseInitial(std::string_view name) const;
     short playerColorPair(std::size_t index) const;
+    size_t getPlayerIndex(const Craps::PlayerId& playerId) const;
+    BetState calcBetState(Gen::Money contractAmount, Gen::Money oddsAmount) const;
+    std::string_view crapsBetNameToLabel(const BetName& betName,
+                                         unsigned pivot) const;
 };
 
 } // namespace Cui

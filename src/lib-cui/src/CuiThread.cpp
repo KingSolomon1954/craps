@@ -9,6 +9,7 @@
 #include <cui/panels/WindowAnimation.h>
 #include <cui/panels/WindowHouseBrief.h>
 #include <cui/panels/WindowPlayerBrief.h>
+#include <cui/panels/WindowPlayerArea.h>
 #include <cui/panels/WindowRollHistory.h>
 #include <cui/panels/WindowTitleBar.h>
 #include <gen/Logger.h>
@@ -215,6 +216,14 @@ CuiThread::process(const WorkOrderEvent& woe)
 //----------------------------------------------------------------
 
 void
+CuiThread::process(const Ctrl::UslBettingClosed& ev)
+{
+    LOG_TRACE("CuiThread::process(UslBettingClosed)");
+}
+
+//----------------------------------------------------------------
+
+void
 CuiThread::process(const Ctrl::UslDiceThrowStart& ev)
 {
     LOG_TRACE("CuiThread::process(UslDiceThrowStart)");
@@ -284,6 +293,29 @@ CuiThread::process(const Ctrl::UslNewShooter& ev)
 //----------------------------------------------------------------
 
 void
+CuiThread::process(const Ctrl::UslBettingOpened& ev)
+{
+    LOG_TRACE("CuiThread::process(UslBettingOpened)");
+}
+
+//----------------------------------------------------------------
+
+void
+CuiThread::process(const Ctrl::UslBetMade& ev)
+{
+    LOG_TRACE("CuiThread::process(UslBetMade)");
+    WindowPlayerArea::instance().onBetMade(
+        ev.playerId,
+        ev.betId,
+        ev.betName,
+        ev.contractAmount,
+        ev.oddsAmount,
+        ev.pivot);
+}
+
+//----------------------------------------------------------------
+
+void
 CuiThread::process(const Ctrl::UslTableBalanceChanged& ev)
 {
     LOG_TRACE("CuiThread::process(UslTableBalanceChanged)");
@@ -299,14 +331,6 @@ CuiThread::process(const Ctrl::UslPlayerBalanceChanged& ev)
     LOG_TRACE("CuiThread::process(UslPlayerBalanceChanged)");
     WindowPlayerBrief::instance().onPlayerBalanceChanged(
         ev.playerId, ev.balance, ev.netBalance);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslBettingOpened& ev)
-{
-    LOG_TRACE("CuiThread::process(UslBettingOpened)");
 }
 
 //----------------------------------------------------------------

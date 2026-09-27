@@ -318,15 +318,7 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
 
-    Ctrl::UslBetMade ev;
-    ev.playerId       = pBet->player().getPlayerId();
-    ev.betId          = pBet->betId();
-    ev.betName        = pBet->betName();
-    ev.contractAmount = pBet->contractAmount();
-    ev.oddsAmount     = pBet->oddsAmount();
-    ev.pivot          = pBet->pivot();
-
-    Gen::EventManager::instance().publish(ev);
+    sendEventBetMade(*pBet);
     
     return Gen::ReturnCode::Success;
 }
@@ -546,6 +538,22 @@ CrapsTable::setOddsAmount(BetPtr pBet,
 }
 
 //----------------------------------------------------------------
+
+void
+CrapsTable::sendEventBetMade(const CrapsBet& bet) const
+{
+    Ctrl::UslBetMade ev;
+    ev.playerId       = bet.player().getPlayerId();
+    ev.betId          = bet.betId();
+    ev.betName        = bet.betName();
+    ev.contractAmount = bet.contractAmount();
+    ev.oddsAmount     = bet.oddsAmount();
+    ev.pivot          = bet.pivot();
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
 //
 // Returns shared_ptr to the bet of interest.
 //
@@ -648,11 +656,10 @@ void
 CrapsTable::declareDiceNewValue()
 {
     Ctrl::UslDiceNewValue ev;
-    ev.correlationId = Ctrl::getNextCorrelationId();
     ev.rollCount = dice_.rollCount();
-    ev.val = dice_.value();
-    ev.d1  = dice_.d1();
-    ev.d2  = dice_.d2();
+    ev.val       = dice_.value();
+    ev.d1        = dice_.d1();
+    ev.d2        = dice_.d2();
     Gen::EventManager::instance().publish(ev);
 }
 

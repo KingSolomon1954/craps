@@ -206,6 +206,8 @@ private:
     void disbursePlayerLoses();
     void disbursePlayerKeeps();
 
+    void sendEventBetMade(const CrapsBet& bet) const;
+    
     // File operations
     void saveFile() const;
     void loadFile();

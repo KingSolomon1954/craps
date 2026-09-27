@@ -10,7 +10,10 @@
 #include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
+#include <algorithm>
 #include <cassert>
+#include <cctype>
+#include <string>
 
 using namespace Cui;
 
@@ -42,6 +45,9 @@ PlayerAreaAllPlayers::init(WINDOW* pWin,
 void
 PlayerAreaAllPlayers::buildBetInfo()
 {
+    bets_.clear();
+    bets_.reserve(16 + 12 + 16);
+    
     auto addBet =
         [this](std::string_view label, int row, int section)
         {
@@ -131,8 +137,11 @@ PlayerAreaAllPlayers::buildPlayerInfo(
     // User always gets the first column.
     auto userIt = std::find(playerIds.begin(), playerIds.end(),
                             userPlayerId);
-
-    assert(userIt != playerIds.end());
+    if (userIt == playerIds.end())
+    {
+        // Either display the supplied order, or leave players_ empty.
+        return;
+    }
 
     orderedIds.push_back(userPlayerId);
 
@@ -150,13 +159,12 @@ PlayerAreaAllPlayers::buildPlayerInfo(
     {
         std::string name;
 
-        rc = Ctrl::CrapsReaders::readPlayerName(
-            orderedIds[i], name, ep);
-
+        rc = Ctrl::CrapsReaders::readPlayerName(orderedIds[i], name, ep);
         assert(rc == Gen::ReturnCode::Success);
 
         players_.push_back(
         {
+            .playerId = orderedIds[i],
             .initial  = chooseInitial(name),
             .colorPair = playerColorPair(i)
         });
@@ -340,7 +348,7 @@ PlayerAreaAllPlayers::setBetState(std::size_t betIndex,
 //----------------------------------------------------------------
 
 void
-PlayerAreaAllPlayers::setBetState(std::string_view betName,
+PlayerAreaAllPlayers::setBetState(const std::string_view& betName,
                                   std::size_t playerIndex,
                                   BetState state)
 {
@@ -382,28 +390,255 @@ PlayerAreaAllPlayers::betPosition(std::size_t betIndex,
 //----------------------------------------------------------------
 
 void
-PlayerAreaAllPlayers::onBetMade()
+PlayerAreaAllPlayers::onBetMade(
+    const Craps::PlayerId& playerId,
+    const Craps::BetId&    betId,
+    const BetName&         betName,
+    Gen::Money             contractAmount,
+    Gen::Money             oddsAmount,
+    unsigned               pivot)
 {
-    
-    // TODO
-    // setBetState();    
+    (void)betId;
+
+    const std::size_t playerIndex = getPlayerIndex(playerId);
+    if (playerIndex >= players_.size()) return;
+
+    const std::string_view label = crapsBetNameToLabel(betName, pivot);
+    if (label.empty()) return;
+
+    setBetState(label, playerIndex, calcBetState(contractAmount, oddsAmount));
+
+    drawBetMarkers();
+}
+
+//----------------------------------------------------------------
+
+std::size_t
+PlayerAreaAllPlayers::getPlayerIndex(const Craps::PlayerId& playerId) const
+{
+    for (std::size_t i = 0; i < players_.size(); ++i)
+    {
+        if (players_[i].playerId == playerId) return i;
+    }
+
+    return players_.size();
+}
+
+//----------------------------------------------------------------
+
+PlayerAreaAllPlayers::BetState
+PlayerAreaAllPlayers::calcBetState(Gen::Money contractAmount,
+                                   Gen::Money oddsAmount) const
+{
+    assert(contractAmount > 0);
+    return oddsAmount > 0 ? BetState::BetWithOdds : BetState::Bet;
+}
+
+//----------------------------------------------------------------
+
+std::string_view
+PlayerAreaAllPlayers::crapsBetNameToLabel(const BetName& betName,
+                                          unsigned pivot) const
+{
+    switch (betName)
+    {
+        case BetName::PassLine:
+            return "PassLine";
+
+        case BetName::Come:
+            switch (pivot)
+            {
+                case 0:  return "Come";
+                case 4:  return "Come4";
+                case 5:  return "Come5";
+                case 6:  return "Come6";
+                case 8:  return "Come8";
+                case 9:  return "Come9";
+                case 10: return "Come10";
+                default: return {};
+            }
+
+        case BetName::DontPass:
+            return "DontPass";
+
+        case BetName::DontCome:
+            switch (pivot)
+            {
+                case 0:  return "DontCome";
+                case 4:  return "DontCome4";
+                case 5:  return "DontCome5";
+                case 6:  return "DontCome6";
+                case 8:  return "DontCome8";
+                case 9:  return "DontCome9";
+                case 10: return "DontCome10";
+                default: return {};
+            }
+
+        case BetName::Place:
+            switch (pivot)
+            {
+                case 4:  return "Place4";
+                case 5:  return "Place5";
+                case 6:  return "Place6";
+                case 8:  return "Place8";
+                case 9:  return "Place9";
+                case 10: return "Place10";
+                default: return {};
+            }
+
+        case BetName::Hardway:
+            switch (pivot)
+            {
+                case 4:  return "Hard4";
+                case 6:  return "Hard6";
+                case 8:  return "Hard8";
+                case 10: return "Hard10";
+                default: return {};
+            }
+
+        case BetName::CandE:
+            return "C&E";
+
+        case BetName::Field:
+            return "Field";
+
+        case BetName::Buy:
+            switch (pivot)
+            {
+                case 4:  return "Buy4";
+                case 5:  return "Buy5";
+                case 6:  return "Buy6";
+                case 8:  return "Buy8";
+                case 9:  return "Buy9";
+                case 10: return "Buy10";
+                default: return {};
+            }
+
+        case BetName::Lay:
+            switch (pivot)
+            {
+                case 4:  return "Lay4";
+                case 5:  return "Lay5";
+                case 6:  return "Lay6";
+                case 8:  return "Lay8";
+                case 9:  return "Lay9";
+                case 10: return "Lay10";
+                default: return {};
+            }
+
+        case BetName::AnyCraps:
+            return "AnyC";
+
+        case BetName::AnySeven:
+            return "Any7";
+
+        case BetName::Horn:
+            return "Horn";
+
+        default:
+            return {};
+    }
 }
 
 //----------------------------------------------------------------
 
 void
-PlayerAreaAllPlayers::onPlayerJoinedTable()
+PlayerAreaAllPlayers::onPlayerJoinedTable(
+    const Craps::PlayerId& playerId)
 {
-    // TODO
+    // Ignore duplicate join notifications.
+    const auto alreadyPresent = std::find_if(players_.begin(), players_.end(),
+            [&playerId](const Player& player)
+            {
+                return player.playerId == playerId;
+            });
+
+    if (alreadyPresent != players_.end())
+    {
+        return;
+    }
+
+    // The display has a fixed number of player columns.
+    if (players_.size() >= LayoutAllPlayers::MaxPlayers)
+    {
+        Gen::Logger::instance().logWarn(
+            "PlayerAreaAllPlayers: cannot display player; "
+            "maximum player columns reached");
+        return;
+    }
+
+    std::string name;
+    Gen::ErrorPass ep;
+
+    const auto rc = Ctrl::CrapsReaders::readPlayerName(playerId, name, ep);
+    assert(rc == Gen::ReturnCode::Success);
+    if (rc != Gen::ReturnCode::Success)
+    {
+        return;
+    }
+
+    const std::size_t playerIndex = players_.size();
+
+    players_.push_back(
+    {
+        .playerId   = playerId,
+        .initial    = chooseInitial(name),
+        .colorPair  = playerColorPair(playerIndex)
+    });
+
+    // A newly appended player's states are already None because Player's
+    // bet-state arrays are independent of players_; explicitly clear the
+    // new column in case this method is later changed to reuse columns.
+    for (Bet& bet : bets_)
+    {
+        bet.state[playerIndex] = BetState::None;
+    }
+
+    drawPlayerHeaders();
+    drawBetMarkers();
 }
 
 //----------------------------------------------------------------
 
 void
-PlayerAreaAllPlayers::onPlayerLeftTable()
+PlayerAreaAllPlayers::onPlayerLeftTable(
+    const Craps::PlayerId& playerId)
 {
-    // TODO
+    const auto playerIt = std::find_if(players_.begin(),players_.end(),
+            [&playerId](const Player& player)
+            {
+                return player.playerId == playerId;
+            });
+
+    // Ignore stale or duplicate leave notifications.
+    if (playerIt == players_.end())
+    {
+        return;
+    }
+
+    const std::size_t removedIndex =
+        static_cast<std::size_t>(
+            std::distance(players_.begin(), playerIt));
+
+    players_.erase(playerIt);
+
+    // Player bet states are stored by column index. Compact every
+    // column after the removed player so the remaining players retain
+    // their states.
+    for (Bet& bet : bets_)
+    {
+        for (std::size_t index = removedIndex;
+             index + 1 < LayoutAllPlayers::MaxPlayers;
+             ++index)
+        {
+            bet.state[index] = bet.state[index + 1];
+        }
+
+        bet.state[LayoutAllPlayers::MaxPlayers - 1] = BetState::None;
+    }
+
+    drawPlayerHeaders();
+    drawBetMarkers();
 }
 
 //----------------------------------------------------------------
-

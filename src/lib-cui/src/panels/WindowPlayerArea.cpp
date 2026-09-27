@@ -325,3 +325,30 @@ WindowPlayerArea::advancePlayer(bool next)
 }
 
 //----------------------------------------------------------------
+
+void
+WindowPlayerArea::onBetMade(
+    const Craps::PlayerId& playerId,
+    const Craps::BetId&    betId,
+    const BetName&         betName,
+    Gen::Money             contractAmount,
+    Gen::Money             oddsAmount,
+    unsigned               pivot)
+{
+    allPlayersView_.onBetMade(playerId,
+                              betId,
+                              betName,
+                              contractAmount,
+                              oddsAmount,
+                              pivot);
+    // TODO
+    // onePlayerView_.onBetMade(playerId,
+    //                          betId,
+    //                          betName,
+    //                          contractAmount,
+    //                          oddsAmount,
+    //                          pivot);
+}
+
+//----------------------------------------------------------------
+

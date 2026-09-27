@@ -42,7 +42,7 @@ struct WorkOrderKey
 //----------------------------------------------------------------
     
 using GameEvent = std::variant<
-    Ctrl::UslBettingOpened,
+    Ctrl::UslBettingClosed,
     Ctrl::UslDiceThrowStart,
     Ctrl::UslDiceNewValue,
     Ctrl::UslResolveBetsEnd,
@@ -50,6 +50,8 @@ using GameEvent = std::variant<
     Ctrl::UslSevenOut,
     Ctrl::UslPassLineWinner,
     Ctrl::UslNewShooter,
+    Ctrl::UslBettingOpened,
+    Ctrl::UslBetMade,
     Ctrl::UslTableBalanceChanged,
     Ctrl::UslPlayerBalanceChanged
     >;
