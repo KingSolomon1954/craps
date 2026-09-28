@@ -10,6 +10,8 @@
 #include <cui/CuiThread.h>
 #include <cui/CuiUtils.h>
 #include <cui/WorkOrder.h>
+#include <controller/CrapsReaders.h>
+#include <gen/ErrorPass.h>
 #include <wchar.h>
 
 using namespace Cui;
@@ -33,6 +35,16 @@ WindowAnimation::WindowAnimation()
         ); // Not armed yet
     
     std::srand((unsigned)std::time(nullptr));
+
+
+    Gen::ErrorPass ep;
+    Craps::TableId tid;
+    (void) Ctrl::CrapsReaders::getActiveCrapsTable(tid, ep);
+
+    Craps::PlayerId pid;
+    (void) Ctrl::CrapsReaders::readTableCurrentShooter(tid, pid, ep);
+    
+    (void) Ctrl::CrapsReaders::readPlayerName(pid, shooter_, ep);
 }
 
 //----------------------------------------------------------------
@@ -51,7 +63,29 @@ WindowAnimation::onDiceThrowStart()
 {
     state_          = AnimationState::Animating;
     animationPhase_ = AnimationPhase::Falling;
+    
+    prevShooter_            = shooter_;
+    prevShooterPlayerId_    = shooterPlayerId_;
+    prevShooterPlayerColor_ = shooterPlayerColor_;
     startAnimation();
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::onNewShooter(const Craps::PlayerId& id)
+{
+    // Shooter ID
+    shooterPlayerId_ = id;
+    
+    // Shooter Name
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::readPlayerName(id, shooter_, ep);
+
+    // Shooter Color
+    const auto pColor = ColorManager::instance().getPlayerColor(id);
+    assert(pColor.has_value());
+    shooterPlayerColor_ = *pColor;
 }
 
 //----------------------------------------------------------------
@@ -62,7 +96,7 @@ WindowAnimation::startAnimation()
     // Start the animation timer, repeats every "n" mils.
     Gen::TimerManager::instance().armTimer(
         timerId_, std::chrono::milliseconds(90), true);
-    animationY_ = 1;
+    animationY_ = 2;
 }
 
 //----------------------------------------------------------------
@@ -128,7 +162,7 @@ WindowAnimation::drawBanner()
     std::wstring left  = L"\U0001F3B2 ";
     std::wstring right = L" \U0001F3B2";
     std::wstring middle;
-    
+
     if (state_ == AnimationState::ZeroRoll)
     {
         middle = L"Roll Waiting";
@@ -159,7 +193,42 @@ WindowAnimation::drawBanner()
         int w = wcwidth(ch);
         if (w > 0) msgW += w;
     }
-    mvwaddwstr(pWin_, 0, (Layout::animationWidth - msgW) / 2, msg.c_str());
+    mvwaddwstr(pWin_, 1, (Layout::animationWidth - msgW) / 2, msg.c_str());
+}
+
+//----------------------------------------------------------------
+//
+// Display name of shooter
+//
+void
+WindowAnimation::drawShowingShooter()
+{
+    drawShooter(shooter_, shooterPlayerColor_);
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::drawAnimationShooter()
+{
+    drawShooter(prevShooter_, prevShooterPlayerColor_);
+}
+
+//----------------------------------------------------------------
+
+void
+WindowAnimation::drawShooter(const std::string& name, PlayerColor pc)
+{
+    std::string label = "Shooter: ";
+    int len = label.size() + name.size();
+
+    int startPos = (Layout::animationWidth - len) / 2;
+    
+    mvwaddstr(pWin_, 0, startPos, label.c_str());
+
+    wattron(pWin_, COLOR_PAIR(ColorManager::instance().pair(pc)));
+    mvwaddstr(pWin_, 0, startPos + label.size(), name.c_str());
+    wattroff(pWin_, COLOR_PAIR(ColorManager::instance().pair(pc)));
 }
 
 //----------------------------------------------------------------
@@ -179,6 +248,7 @@ void
 WindowAnimation::drawZeroRoll()
 {
     // Initial state. There's no dice to show.
+    drawShowingShooter();
     drawBanner();
 }
 
@@ -187,6 +257,7 @@ WindowAnimation::drawZeroRoll()
 void
 WindowAnimation::drawShowingRoll()
 {
+    drawShowingShooter();
     drawBanner();
     drawDie(LandingY, Die1X, lastRoll_.d1);
     drawDie(LandingY, Die2X, lastRoll_.d2);
@@ -203,6 +274,7 @@ WindowAnimation::drawShowingRoll()
 void
 WindowAnimation::drawAnimation()
 {
+    drawAnimationShooter();
     drawBanner();
     
     switch (animationPhase_)

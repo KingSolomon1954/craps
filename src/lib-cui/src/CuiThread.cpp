@@ -292,6 +292,7 @@ CuiThread::process(const Ctrl::UslNewShooter& ev)
 {
     LOG_TRACE("CuiThread::process(UslNewShooter) evId = " + std::to_string(ev.id));
     WindowPlayerBrief::instance().onNewShooter(ev.playerId);
+    WindowAnimation::instance().onNewShooter(ev.playerId);
 }
 
 //----------------------------------------------------------------

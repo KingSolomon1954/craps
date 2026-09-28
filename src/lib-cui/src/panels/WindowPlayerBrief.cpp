@@ -282,7 +282,7 @@ WindowPlayerBrief::onResolveBetsEnd()
 void
 WindowPlayerBrief::onNewShooter(const Craps::PlayerId& playerId)
 {
-    if (playerId != playerId_)
+    if (playerId == playerId_)
     {
         shooter_ = " (shooter)";
     }

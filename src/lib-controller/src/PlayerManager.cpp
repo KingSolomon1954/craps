@@ -11,6 +11,7 @@
 #include <iostream>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
+#include <craps/CrapsTable.h>
 #include <craps/Player.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
@@ -104,6 +105,9 @@ PlayerManager::addPlayersToTable()
                    "add player to table; ");
         throw std::runtime_error(ep.diag);
     }
+
+    // Tell the table which user starts off as shooter.
+    (void) Gbl::pTable->setShooter(getUserPlayer(), ep);
 }
 
 //----------------------------------------------------------------

@@ -252,6 +252,16 @@ CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
     return Gen::ReturnCode::Success;
 }
 
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsTable::setShooter(Player* pPlayer, Gen::ErrorPass& ep)
+{
+    assert(havePlayer(pPlayer));
+    pCurrentShooter_ = pPlayer;
+    return Gen::ReturnCode::Success;
+}
+
 /*-----------------------------------------------------------*//**
 
 Removes a player and his bets from the table.
@@ -707,32 +717,36 @@ CrapsTable::advanceState()
 void
 CrapsTable::advanceShooter()
 {
-    if (players_.empty()) return;
+    if (players_.empty())
+    {
+        assert(false);
+        return;
+    }
 
     Player* prev = pCurrentShooter_;
 
     auto it = std::find(players_.begin(), players_.end(), pCurrentShooter_);
 
-    // If not found or at the end, start from beginning
-    if (it == players_.end() || std::next(it) == players_.end())
+    if (it == players_.end())
     {
-        pCurrentShooter_ = players_.front();
-        LOG_DEBUG("CrapsTable::advanceShooter(1) playerId = "
-                  + pCurrentShooter_->getPlayerId());
-    }
-    else
-    {
-        pCurrentShooter_ = *std::next(it);
-        LOG_DEBUG("CrapsTable::advanceShooter(2) playerId = "
-                  + pCurrentShooter_->getPlayerId());
+        // This should never happen: pCurrentShooter_ must be in players_.
+        Gen::Logger::instance().logError("CrapsTable::advanceShooter(): current shooter not found");
+        return;
     }
 
-//    if (pCurrentShooter_ != prev)
-//    {
+    ++it;
+
+    if (it == players_.end())
+        it = players_.begin();
+
+    pCurrentShooter_ = *it;
+
+    if (pCurrentShooter_ != prev)
+    {
         Ctrl::UslNewShooter ev;
         ev.playerId = pCurrentShooter_->getPlayerId();
         Gen::EventManager::instance().publish(ev);
-//    }
+    }
 }
 
 //----------------------------------------------------------------

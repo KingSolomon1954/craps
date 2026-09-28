@@ -49,6 +49,7 @@ public:
     // Players
     Gen::ReturnCode addPlayer   (Player* pPlayer, Gen::ErrorPass& ep);
     Gen::ReturnCode removePlayer(Player* pPlayer, Gen::ErrorPass& ep);
+    Gen::ReturnCode setShooter  (Player* pPlayer, Gen::ErrorPass& ep);
 
     // Bets
     Gen::ReturnCode addBet        (BetPtr pBet, Gen::ErrorPass& ep);

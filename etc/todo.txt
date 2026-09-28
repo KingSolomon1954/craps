@@ -45,6 +45,8 @@ In PlayerBrief area, display player name in his matchingcolor
 In CuiThread, separate out the processing into a dispatcher
 Implement PlayerAreaOnePlayer
 
+(Done) Add shooter colorized name to animation window
+(Done) Fix advanceShooter processing and initalization
 (Done) Implemented onPlayerJoinTable/LeftTable in PlayerAreaAllPlayers
 (Done) PlayerAreaAllPlayers needs implementation for onBetMade() updates
 (Done) Implement Advance shooter event, WindowPlayerBrief updated

@@ -7,8 +7,11 @@
 #pragma once
 
 #include <cui/bases/PanelBase.h>
+#include <cui/ColorManager.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <craps/CrapsTypes.h>
 #include <gen/TimerManager.h>
+#include <string>
 
 namespace Cui
 {
@@ -27,6 +30,7 @@ public:
     void draw() override;
     void onDiceThrowStart();
     void onDiceNewValue(int d1, int d2, int rollCount);
+    void onNewShooter(const Craps::PlayerId& id);
     /// @}
 
     /// @name Observers
@@ -34,7 +38,6 @@ public:
     /// @}
     
 private:
-    
     struct Layout
     {
         using L = LayoutCrapsScreen;
@@ -76,9 +79,17 @@ private:
     AnimationState state_ = AnimationState::ZeroRoll;
     AnimationPhase animationPhase_ = AnimationPhase::Falling;
 
+    std::string     shooter_;
+    Craps::PlayerId shooterPlayerId_;
+    PlayerColor     shooterPlayerColor_;
+    
+    std::string     prevShooter_;
+    Craps::PlayerId prevShooterPlayerId_;
+    PlayerColor     prevShooterPlayerColor_;
+
 private:
     // Frame & dice drawing vars and constants
-    int animationY_ = 1;
+    int animationY_ = 2;
     int settleIndex_ = 0;
     
     static constexpr int DieWidth   = 7;
@@ -97,6 +108,9 @@ private:
 private:    
     WindowAnimation();
     void drawBanner();
+    void drawShowingShooter();
+    void drawAnimationShooter();
+    void drawShooter(const std::string& name, PlayerColor pc);
     void drawZeroRoll();
     void drawAnimation();
     void drawShowingRoll();
