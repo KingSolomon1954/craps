@@ -35,6 +35,7 @@ enum class PlayerColor : std::size_t
 class ColorManager
 {
 public:
+    ColorManager();
     static ColorManager& instance();
 
     ColorManager(const ColorManager&) = delete;
@@ -49,24 +50,17 @@ public:
     // Return the ncurses color-pair for a player color.
     short pair(PlayerColor color) const;
 
-    // Assign the next available player color.
-    //
-    // If the player already has a color, that color is returned.
-    // Returns std::nullopt if all player colors are currently assigned.
-    //
-    std::optional<PlayerColor> assignPlayerColor(
-        const Craps::PlayerId& playerId);
-
     // Return the player's currently assigned color, if any.
     std::optional<PlayerColor> getPlayerColor(
         const Craps::PlayerId& playerId) const;
 
-    // Release the player's color assignment.
-    void releasePlayerColor(const Craps::PlayerId& playerId);
-
     // Release all player color assignments.
     void clearPlayerColors();
 
+    void onPlayerJonedTable(const Craps::PlayerId& playerId);
+    void onPlayerLeftTable (const Craps::PlayerId& playerId);
+
+    
 private:
     static constexpr std::size_t MaxPlayerColors = 6;
 
@@ -102,9 +96,11 @@ private:
                MaxPlayerColors> playerAssignments_{};
 
 private:
-    ColorManager() = default;
     void initColorPairs();
     void initPlayerColors();
+    std::optional<PlayerColor> assignPlayerColor(
+        const Craps::PlayerId& playerId);
+    void releasePlayerColor(const Craps::PlayerId& playerId);
 };
 
 } // namespace Cui

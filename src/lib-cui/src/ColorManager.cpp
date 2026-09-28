@@ -7,8 +7,17 @@
 #include <cui/ColorManager.h>
 #include <controller/CrapsReaders.h>
 #include <ncurses.h>
+#include <cassert>
 
 using namespace Cui;
+
+//----------------------------------------------------------------
+
+ColorManager::ColorManager()
+{
+    initColorPairs();
+    initPlayerColors();
+}
 
 //----------------------------------------------------------------
 
@@ -34,9 +43,9 @@ void
 ColorManager::initColorPairs()
 {
     init_pair(DefaultScreen,  COLOR_GREEN,  COLOR_BLACK);
-    init_pair(SevenOut,       COLOR_RED,    -1);
-    init_pair(PassLineWinner, COLOR_YELLOW, -1);
-    init_pair(Point,          COLOR_WHITE,  -1);
+    init_pair(SevenOut,       COLOR_RED,     -1);
+    init_pair(PassLineWinner, COLOR_YELLOW,  -1);
+    init_pair(Point,          COLOR_MAGENTA, -1);
 
     init_pair(PlayerColor1, COLOR_WHITE,   -1);
     init_pair(PlayerColor2, COLOR_MAGENTA, -1);
@@ -109,7 +118,12 @@ ColorManager::pair(Color color) const
 }
 
 //----------------------------------------------------------------
-
+//
+// Assign the next available player color.
+//
+// If the player already has a color, that color is returned.
+// Returns std::nullopt if all player colors are currently assigned.
+//
 std::optional<PlayerColor>
 ColorManager::assignPlayerColor(const Craps::PlayerId& playerId)
 {
@@ -158,7 +172,9 @@ ColorManager::getPlayerColor(const Craps::PlayerId& playerId) const
 }
 
 //----------------------------------------------------------------
-
+//
+// Release the player's color assignment.
+//
 void
 ColorManager::releasePlayerColor(const Craps::PlayerId& playerId)
 {
@@ -180,6 +196,23 @@ ColorManager::clearPlayerColors()
 {
     for (auto& assignment : playerAssignments_)
         assignment.reset();
+}
+
+//----------------------------------------------------------------
+
+void
+ColorManager::onPlayerJonedTable(const Craps::PlayerId& playerId)
+{
+    auto pc = assignPlayerColor(playerId);
+    assert(pc != std::nullopt);
+}
+
+//----------------------------------------------------------------
+
+void
+ColorManager::onPlayerLeftTable(const Craps::PlayerId& playerId)
+{
+    releasePlayerColor(playerId);
 }
 
 //----------------------------------------------------------------

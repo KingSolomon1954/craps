@@ -116,7 +116,7 @@ CuiReceiver::CuiReceiver()
 void
 CuiReceiver::onBettingClosed(const Ctrl::UslBettingClosed& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onBettingClosed()");
+    LOG_TRACE("CuiReceiver()::onBettingClosed() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -127,7 +127,7 @@ CuiReceiver::onBettingClosed(const Ctrl::UslBettingClosed& ev) const
 void
 CuiReceiver::onDiceThrowStart(const Ctrl::UslDiceThrowStart& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onDiceThrowStart()");
+    LOG_TRACE("CuiReceiver()::onDiceThrowStart() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -138,7 +138,7 @@ CuiReceiver::onDiceThrowStart(const Ctrl::UslDiceThrowStart& ev) const
 void
 CuiReceiver::onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onDiceNewValue()");
+    LOG_TRACE("CuiReceiver()::onDiceNewValue() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -156,7 +156,7 @@ CuiReceiver::onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const
 void
 CuiReceiver::onResolveBetsEnd(const Ctrl::UslResolveBetsEnd& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onResolveBetsEnd()");
+    LOG_TRACE("CuiReceiver()::onResolveBetsEnd() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -167,7 +167,7 @@ CuiReceiver::onResolveBetsEnd(const Ctrl::UslResolveBetsEnd& ev) const
 void
 CuiReceiver::onPointEstablished(const Ctrl::UslPointEstablished& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onPointEstablished()");
+    LOG_TRACE("CuiReceiver()::onPointEstablished() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -178,7 +178,7 @@ CuiReceiver::onPointEstablished(const Ctrl::UslPointEstablished& ev) const
 void
 CuiReceiver::onSevenOut(const Ctrl::UslSevenOut& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onSevenOut()");
+    LOG_TRACE("CuiReceiver()::onSevenOut() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -189,7 +189,7 @@ CuiReceiver::onSevenOut(const Ctrl::UslSevenOut& ev) const
 void
 CuiReceiver::onPassLineWinner(const Ctrl::UslPassLineWinner& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onPassLineWinner()");
+    LOG_TRACE("CuiReceiver()::onPassLineWinner() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -200,7 +200,7 @@ CuiReceiver::onPassLineWinner(const Ctrl::UslPassLineWinner& ev) const
 void
 CuiReceiver::onNewShooter(const Ctrl::UslNewShooter& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onNewShooter()");
+    LOG_TRACE("CuiReceiver()::onNewShooter() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -211,7 +211,7 @@ CuiReceiver::onNewShooter(const Ctrl::UslNewShooter& ev) const
 void
 CuiReceiver::onBettingOpened(const Ctrl::UslBettingOpened& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onBettingOpened()");
+    LOG_TRACE("CuiReceiver()::onBettingOpened() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -222,7 +222,7 @@ CuiReceiver::onBettingOpened(const Ctrl::UslBettingOpened& ev) const
 void
 CuiReceiver::onBetMade(const Ctrl::UslBetMade& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onBetMade()");
+    LOG_TRACE("CuiReceiver()::onBetMade()");
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -233,7 +233,7 @@ CuiReceiver::onBetMade(const Ctrl::UslBetMade& ev) const
 void
 CuiReceiver::onTableBalanceChanged(const Ctrl::UslTableBalanceChanged& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onTableBalanceChanged()");
+    LOG_TRACE("CuiReceiver()::onTableBalanceChanged() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
@@ -244,7 +244,7 @@ CuiReceiver::onTableBalanceChanged(const Ctrl::UslTableBalanceChanged& ev) const
 void
 CuiReceiver::onPlayerBalanceChanged(const Ctrl::UslPlayerBalanceChanged& ev) const
 {
-    LOG_TRACE("Entered CuiReceiver()::onPlayerBalanceChanged()");
+    LOG_TRACE("CuiReceiver()::onPlayerBalanceChanged() evId = " + std::to_string(ev.id));
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);

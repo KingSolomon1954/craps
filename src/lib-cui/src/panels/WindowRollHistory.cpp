@@ -6,6 +6,7 @@
 
 #include <cui/panels/WindowRollHistory.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <cui/ColorManager.h>
 #include <cui/CuiUtils.h>
 #include <cui/CuiStructs.h>
 #include <gen/Logger.h>
@@ -119,16 +120,15 @@ WindowRollHistory::attrOn(const Roll& r)
 {
     if (r.sevenOut)
     {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::SevenOut));
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::SevenOut)));
     }
     else if (r.passLineWinner)
     {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::PassLineWinner));
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::PassLineWinner)));
     }
     else if (r.point)
     {
-        // wattron(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::Point));
-        wattron(pWin_, COLOR_PAIR(ColorPairs::Point));
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::Point)));
     }
 }
 
@@ -139,16 +139,15 @@ WindowRollHistory::attrOff(const Roll& r)
 {
     if (r.sevenOut)
     {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::SevenOut));
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::SevenOut)));
     }
     else if (r.passLineWinner)
     {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::PassLineWinner));
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::PassLineWinner)));
     }
     else if (r.point)
     {
-        // wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorPairs::Point));
-        wattroff(pWin_, COLOR_PAIR(ColorPairs::Point));
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::Point)));
     }
 }
 

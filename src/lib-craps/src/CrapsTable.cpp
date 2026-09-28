@@ -717,18 +717,22 @@ CrapsTable::advanceShooter()
     if (it == players_.end() || std::next(it) == players_.end())
     {
         pCurrentShooter_ = players_.front();
+        LOG_DEBUG("CrapsTable::advanceShooter(1) playerId = "
+                  + pCurrentShooter_->getPlayerId());
     }
     else
     {
         pCurrentShooter_ = *std::next(it);
+        LOG_DEBUG("CrapsTable::advanceShooter(2) playerId = "
+                  + pCurrentShooter_->getPlayerId());
     }
 
-    if (pCurrentShooter_ != prev)
-    {
+//    if (pCurrentShooter_ != prev)
+//    {
         Ctrl::UslNewShooter ev;
         ev.playerId = pCurrentShooter_->getPlayerId();
         Gen::EventManager::instance().publish(ev);
-    }
+//    }
 }
 
 //----------------------------------------------------------------

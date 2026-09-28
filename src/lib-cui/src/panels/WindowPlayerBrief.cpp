@@ -6,6 +6,7 @@
 
 #include <cui/panels/WindowPlayerBrief.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <cui/ColorManager.h>
 #include <cui/CuiUtils.h>
 #include <cui/CuiStructs.h>
 #include <controller/CrapsReaders.h>
@@ -129,8 +130,18 @@ WindowPlayerBrief::populateName()
 {
     std::string n = playerName_;
     n += shooter_;
+
+    PlayerColor pc = PlayerColor::One;
+    const auto pColor = ColorManager::instance().getPlayerColor(playerId_);
+    assert(pColor.has_value());
+    if (pColor.has_value())
+    {
+        pc = *pColor;
+    }
     
+    wattron(pWin_, COLOR_PAIR(ColorManager::instance().pair(pc)));
     mvwaddstr(pWin_, 0, 1, n.c_str());
+    wattroff(pWin_, COLOR_PAIR(ColorManager::instance().pair(pc)));
 }
 
 //----------------------------------------------------------------

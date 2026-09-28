@@ -62,7 +62,7 @@ private:
     Gen::Money      playerOutputLastRoll_ = 0;  // house lost last roll
     unsigned        numBetsOnTable_       = 0;
     Gen::Money      amtOnTable_           = 0;
-    std::string     shooter_;                   // empty to start
+    std::string     shooter_ = " (shooter)";
 
 private:
     WindowPlayerBrief();

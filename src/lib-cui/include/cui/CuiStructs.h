@@ -59,23 +59,3 @@ struct LocationRequest
 //----------------------------------------------------------------
 
 }  // namespace Cui
-
-#if 1
-namespace ColorPairs
-{
-    constexpr short DefaultScreen  = 1;
-    constexpr short SevenOut       = 2;
-    constexpr short PassLineWinner = 3;
-    constexpr short Point          = 4;
-
-    constexpr short Player1        = 5;
-    constexpr short Player2        = 6;
-    constexpr short Player3        = 7;
-    constexpr short Player4        = 8;
-    constexpr short Player5        = 9;
-    constexpr short Player6        = 10;
-}
-
-#endif
-
-//----------------------------------------------------------------

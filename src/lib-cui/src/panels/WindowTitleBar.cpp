@@ -7,6 +7,7 @@
 #include <cui/panels/WindowTitleBar.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/layouts/LayoutTitleBar.h>
+#include <cui/ColorManager.h>
 #include <cui/CuiStructs.h>
 #include <cui/CuiUtils.h>
 #include <controller/CrapsReaders.h>
@@ -141,9 +142,9 @@ WindowTitleBar::populatePoint()
 {
     using L = Layout;
     
-    wattron(pWin_, COLOR_PAIR(ColorPairs::Point));
+    wattron(pWin_, wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::Point))));
     mvwprintw(pWin_, L::f1Row, L::f1Col, L::f1Fmt.data(), point_);
-    wattroff(pWin_, COLOR_PAIR(ColorPairs::Point));
+    wattroff(pWin_, wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::Point))));
 }
 
 //----------------------------------------------------------------

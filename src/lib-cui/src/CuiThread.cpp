@@ -218,7 +218,8 @@ CuiThread::process(const WorkOrderEvent& woe)
 void
 CuiThread::process(const Ctrl::UslBettingClosed& ev)
 {
-    LOG_TRACE("CuiThread::process(UslBettingClosed)");
+    static int pin = 0;
+    LOG_TRACE("CuiThread::process(UslBettingClosed) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
 }
 
 //----------------------------------------------------------------
@@ -226,7 +227,7 @@ CuiThread::process(const Ctrl::UslBettingClosed& ev)
 void
 CuiThread::process(const Ctrl::UslDiceThrowStart& ev)
 {
-    LOG_TRACE("CuiThread::process(UslDiceThrowStart)");
+    LOG_TRACE("CuiThread::process(UslDiceThrowStart) evId = " + std::to_string(ev.id));
     WindowAnimation::instance().onDiceThrowStart();
 }
 
@@ -235,7 +236,8 @@ CuiThread::process(const Ctrl::UslDiceThrowStart& ev)
 void
 CuiThread::process(const Ctrl::UslDiceNewValue& ev)
 {
-    LOG_TRACE("CuiThread::process(UslDiceNewValue)");
+    static int pin = 0;
+    LOG_TRACE("CuiThread::process(UslDiceNewValue) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
     WindowAnimation::instance().onDiceNewValue  (ev.d1, ev.d2, ev.rollCount);
     WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
     WindowTitleBar::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
@@ -246,7 +248,8 @@ CuiThread::process(const Ctrl::UslDiceNewValue& ev)
 void
 CuiThread::process(const Ctrl::UslResolveBetsEnd& ev)
 {
-    LOG_TRACE("CuiThread::process(UslResolveBetsEnd)");
+    static int pin = 0;
+    LOG_TRACE("CuiThread::process(UslResolveBetsEnd) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
     WindowHouseBrief::instance().onResolveBetsEnd();
     WindowPlayerBrief::instance().onResolveBetsEnd();
 }
@@ -256,7 +259,8 @@ CuiThread::process(const Ctrl::UslResolveBetsEnd& ev)
 void
 CuiThread::process(const Ctrl::UslPointEstablished& ev)
 {
-    LOG_TRACE("CuiThread::process(UslPointEstablished)");
+    static int pin = 0;
+    LOG_TRACE("CuiThread::process(UslPointEstablished) evId = " + std::to_string(ev.id)  + " pin " + std::to_string(pin++));
     WindowTitleBar::instance().onPointEstablished(ev.point);
     WindowRollHistory::instance().onPointEstablished(ev.point);
 }
@@ -266,7 +270,7 @@ CuiThread::process(const Ctrl::UslPointEstablished& ev)
 void
 CuiThread::process(const Ctrl::UslSevenOut& ev)
 {
-    LOG_TRACE("CuiThread::process(UslSevenOut)");
+    LOG_TRACE("CuiThread::process(UslSevenOut) evId = " + std::to_string(ev.id));
     WindowTitleBar::instance().onSevenOut();
     WindowRollHistory::instance().onSevenOut();
 }
@@ -276,7 +280,7 @@ CuiThread::process(const Ctrl::UslSevenOut& ev)
 void
 CuiThread::process(const Ctrl::UslPassLineWinner& ev)
 {
-    LOG_TRACE("CuiThread::process(UslPassLineWinner)");
+    LOG_TRACE("CuiThread::process(UslPassLineWinner) evId = " + std::to_string(ev.id));
     WindowTitleBar::instance().onPassLineWinner();
     WindowRollHistory::instance().onPassLineWinner();
 }
@@ -286,7 +290,7 @@ CuiThread::process(const Ctrl::UslPassLineWinner& ev)
 void
 CuiThread::process(const Ctrl::UslNewShooter& ev)
 {
-    LOG_TRACE("CuiThread::process(UslNewShooter)");
+    LOG_TRACE("CuiThread::process(UslNewShooter) evId = " + std::to_string(ev.id));
     WindowPlayerBrief::instance().onNewShooter(ev.playerId);
 }
 
@@ -295,7 +299,7 @@ CuiThread::process(const Ctrl::UslNewShooter& ev)
 void
 CuiThread::process(const Ctrl::UslBettingOpened& ev)
 {
-    LOG_TRACE("CuiThread::process(UslBettingOpened)");
+    LOG_TRACE("CuiThread::process(UslBettingOpened) evId = " + std::to_string(ev.id));
 }
 
 //----------------------------------------------------------------
