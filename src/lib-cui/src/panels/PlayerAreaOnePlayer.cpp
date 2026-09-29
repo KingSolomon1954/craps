@@ -60,6 +60,68 @@ PlayerAreaOnePlayer::drawInternalBorders()
 void
 PlayerAreaOnePlayer::drawStaticContent()
 {
+    drawNumberHeading();
+    drawNumberLabels();
+    drawFieldLabels();
+    drawCandELabels();
+    drawLineBetLabels();
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaOnePlayer::drawNumberHeading()
+{
+    constexpr int row = 0;
+    
+#if 0
+    PlayerColor pc;
+    const auto pColor = ColorManager::instance().getPlayerColor(playerId_);
+    assert(pColor.has_value());
+    if (pColor.has_value())
+    {
+        pc = *pColor;
+    }
+    
+    wattron(pWin_, COLOR_PAIR(ColorManager::instance().pair(pc)));
+    mvwaddstr(pWin_, 0, 1, n.c_str());
+    wattroff(pWin_, COLOR_PAIR(ColorManager::instance().pair(pc)));
+#endif
+    
+    mvwaddch (pWin_, row, 13, '4');
+    mvwaddch (pWin_, row, 23, '5');
+    mvwaddch (pWin_, row, 33, '6');
+    mvwaddch (pWin_, row, 43, '8');
+    mvwaddch (pWin_, row, 53, '9');
+    mvwaddstr(pWin_, row, 63, "10");
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaOnePlayer::drawNumberLabels()
+{
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaOnePlayer::drawFieldLabels()
+{
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaOnePlayer::drawCandELabels()
+{
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaOnePlayer::drawLineBetLabels()
+{
 }
 
 //----------------------------------------------------------------

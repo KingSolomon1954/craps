@@ -41,10 +41,10 @@ Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
 OperationTracker needs correlationId matching
-In PlayerBrief area, display player name in his matchingcolor
-In CuiThread, separate out the processing into a dispatcher
 Implement PlayerAreaOnePlayer
 
+(Done) In CuiThread, separate out the processing into a dispatcher
+(Done) In PlayerBrief area, display player name in his matchingcolor
 (Done) Add shooter colorized name to animation window
 (Done) Fix advanceShooter processing and initalization
 (Done) Implemented onPlayerJoinTable/LeftTable in PlayerAreaAllPlayers

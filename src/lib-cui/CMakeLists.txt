@@ -14,6 +14,7 @@ add_library(cui STATIC
     src/CuiSender.cpp
     src/LocationManager.cpp
     src/SurfaceManager.cpp
+    src/WorkOrderDispatcher.cpp
 #   src/dialogs/DialogAckError.cpp
 #   src/dialogs/DialogAmountEntry.cpp
     src/dialogs/DialogConfirm.cpp

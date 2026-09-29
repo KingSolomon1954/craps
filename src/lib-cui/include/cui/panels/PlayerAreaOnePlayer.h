@@ -58,7 +58,13 @@ private:
     WINDOW* pWin_  = nullptr;
     int winHeight_ = 0;
     int winWidth_  = 0;
-   
+
+private:
+    void drawNumberHeading();
+    void drawNumberLabels();
+    void drawFieldLabels();
+    void drawCandELabels();
+    void drawLineBetLabels();
 };
 
 } // namespace Cui

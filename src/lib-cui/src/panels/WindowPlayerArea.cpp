@@ -181,7 +181,6 @@ WindowPlayerArea::populateAllPlayers()
 void
 WindowPlayerArea::populateOnePlayer()
 {
-    mvwprintw(pWin_, 0, 0, "One Player Area");
     // TODO
     // updatePassLineBets()
     // updateFieldBets()

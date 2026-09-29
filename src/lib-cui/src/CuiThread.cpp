@@ -5,16 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/CuiThread.h>
-#include <cui/SurfaceManager.h>
-#include <cui/panels/WindowAnimation.h>
-#include <cui/panels/WindowHouseBrief.h>
-#include <cui/panels/WindowPlayerBrief.h>
-#include <cui/panels/WindowPlayerArea.h>
-#include <cui/panels/WindowRollHistory.h>
-#include <cui/panels/WindowTitleBar.h>
-#include <gen/Logger.h>
 #include <ncurses.h>
-#include <cassert>
 #include <chrono>
 
 using namespace Cui;
@@ -85,8 +76,6 @@ CuiThread::isCuiThread() const
 void
 CuiThread::cuiThreadFunc()
 {
-    LOG_TRACE("CuiThread::cuiThreadFunc() running ");
-    
     threadId_ = std::this_thread::get_id();
     threadStarted_.signal();
     
@@ -140,203 +129,8 @@ CuiThread::processWorkQueue()
             workQueue_.pop_front();
         }
 
-        processWorkOrder(wo);
+        dispatcher_.dispatch(wo);
     }
 }
 
 //----------------------------------------------------------------
-
-void
-CuiThread::processWorkOrder(const WorkOrder& wo)
-{
-    std::visit(
-        [this](const auto& workOrder)
-        {
-            process(workOrder);
-        },
-        wo);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const WorkOrderKey& wo)
-{
-    SurfaceManager::instance().handleKey(wo.key);    
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const WorkOrderSurface& wo)
-{
-    switch (wo.type)
-    {
-    case SurfaceType::Draw:
-        if (wo.pSurface)
-        {
-            SurfaceManager::instance().draw(wo.pSurface);
-        }
-        else
-        {
-            SurfaceManager::instance().draw();
-        }
-        break;
-
-    case SurfaceType::SetSurface:
-        SurfaceManager::instance().setSurface(wo.pSurface);
-        break;
-
-    case SurfaceType::PopSurface:
-        SurfaceManager::instance().popSurface();
-        break;
-
-    case SurfaceType::PushSurface:
-        SurfaceManager::instance().pushSurface(wo.pSurface);
-        break;
-
-    default:
-        assert(false);
-    }
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const WorkOrderEvent& woe)
-{
-    std::visit(
-        [this](const auto& event)
-        {
-            process(event);
-        },
-        woe.event);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslBettingClosed& ev)
-{
-    static int pin = 0;
-    LOG_TRACE("CuiThread::process(UslBettingClosed) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslDiceThrowStart& ev)
-{
-    LOG_TRACE("CuiThread::process(UslDiceThrowStart) evId = " + std::to_string(ev.id));
-    WindowAnimation::instance().onDiceThrowStart();
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslDiceNewValue& ev)
-{
-    static int pin = 0;
-    LOG_TRACE("CuiThread::process(UslDiceNewValue) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
-    WindowAnimation::instance().onDiceNewValue  (ev.d1, ev.d2, ev.rollCount);
-    WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
-    WindowTitleBar::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslResolveBetsEnd& ev)
-{
-    static int pin = 0;
-    LOG_TRACE("CuiThread::process(UslResolveBetsEnd) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
-    WindowHouseBrief::instance().onResolveBetsEnd();
-    WindowPlayerBrief::instance().onResolveBetsEnd();
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslPointEstablished& ev)
-{
-    static int pin = 0;
-    LOG_TRACE("CuiThread::process(UslPointEstablished) evId = " + std::to_string(ev.id)  + " pin " + std::to_string(pin++));
-    WindowTitleBar::instance().onPointEstablished(ev.point);
-    WindowRollHistory::instance().onPointEstablished(ev.point);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslSevenOut& ev)
-{
-    LOG_TRACE("CuiThread::process(UslSevenOut) evId = " + std::to_string(ev.id));
-    WindowTitleBar::instance().onSevenOut();
-    WindowRollHistory::instance().onSevenOut();
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslPassLineWinner& ev)
-{
-    LOG_TRACE("CuiThread::process(UslPassLineWinner) evId = " + std::to_string(ev.id));
-    WindowTitleBar::instance().onPassLineWinner();
-    WindowRollHistory::instance().onPassLineWinner();
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslNewShooter& ev)
-{
-    LOG_TRACE("CuiThread::process(UslNewShooter) evId = " + std::to_string(ev.id));
-    WindowPlayerBrief::instance().onNewShooter(ev.playerId);
-    WindowAnimation::instance().onNewShooter(ev.playerId);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslBettingOpened& ev)
-{
-    LOG_TRACE("CuiThread::process(UslBettingOpened) evId = " + std::to_string(ev.id));
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslBetMade& ev)
-{
-    LOG_TRACE("CuiThread::process(UslBetMade)");
-    WindowPlayerArea::instance().onBetMade(
-        ev.playerId,
-        ev.betId,
-        ev.betName,
-        ev.contractAmount,
-        ev.oddsAmount,
-        ev.pivot);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslTableBalanceChanged& ev)
-{
-    LOG_TRACE("CuiThread::process(UslTableBalanceChanged)");
-    WindowHouseBrief::instance().onTableBalanceChanged(
-        ev.balance, ev.netBalance);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiThread::process(const Ctrl::UslPlayerBalanceChanged& ev)
-{
-    LOG_TRACE("CuiThread::process(UslPlayerBalanceChanged)");
-    WindowPlayerBrief::instance().onPlayerBalanceChanged(
-        ev.playerId, ev.balance, ev.netBalance);
-}
-
-//----------------------------------------------------------------
-
