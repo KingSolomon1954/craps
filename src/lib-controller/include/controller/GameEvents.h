@@ -28,11 +28,12 @@ enum class EventType
     Unset,
     
     // Requests
-    ReqRollDice,               // not yet implemented
+    ReqRollDice,
     ReqMakeBet,                // not yet implemented
     ReqRemoveBet,              // not yet implemented
     ReqChangeBet,              // not yet implemented
-
+    ReqTerminate,
+    
     // Responses
     RspMakeBet,                // not yet implemented
     RspRemoveBet,              // not yet implemented
@@ -50,6 +51,7 @@ enum class EventType
     UslNewShooter,
     UslBettingOpened,
     UslBetMade,                // not yet implemented
+    UslBetResolved,            // not yet implemented Player decided to remove a bet
     UslBetRemoved,             // not yet implemented Player decided to remove a bet
     UslBetChanged,             // not yet implemented Player decided to change a bet
     UslTableBalanceChanged,    // not yet implemented
@@ -266,6 +268,15 @@ struct ReqRollDice : public GameEvent
 {
     ReqRollDice()
         : GameEvent{EventSource::View, EventType::ReqRollDice}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct ReqTerminate : public GameEvent
+{
+    ReqTerminate()
+        : GameEvent{EventSource::View, EventType::ReqTerminate}
     {}
 };
 

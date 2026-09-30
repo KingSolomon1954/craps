@@ -6,6 +6,7 @@
 
 #include <controller/EventHandler.h>
 #include <controller/GameEvents.h>
+#include <controller/GameMain.h>
 #include <controller/Globals.h>
 #include <craps/CrapsTable.h>
 #include <gen/EventManager.h>
@@ -22,6 +23,12 @@ EventHandler::EventHandler()
         {
             this->onReqRollDice(ev);
         });
+
+    Gen::EventManager::instance().subscribe<Ctrl::ReqTerminate>(
+        [this](const Ctrl::ReqTerminate& ev)
+        {
+            this->onReqTerminate(ev);
+        });
 }
 
 //----------------------------------------------------------------
@@ -35,6 +42,15 @@ EventHandler::onReqRollDice(const Ctrl::ReqRollDice& ev) const
 {
     LOG_TRACE("Entered EventHandler::onReqRollDice()");
     Gbl::pTable->rollDice();
+}
+
+//----------------------------------------------------------------
+
+void
+EventHandler::onReqTerminate(const Ctrl::ReqTerminate& ev) const
+{
+    LOG_TRACE("Entered EventHandler::onReqTerminate()");
+    GameMain::instance()->terminateApp();
 }
 
 //----------------------------------------------------------------

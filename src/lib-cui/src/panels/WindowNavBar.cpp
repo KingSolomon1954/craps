@@ -9,6 +9,8 @@
 #include <cui/dialogs/DialogConfirm.h>
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/SurfaceManager.h>
+#include <controller/GameEvents.h>
+#include <gen/EventManager.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
 
@@ -87,6 +89,7 @@ WindowNavBar::onResume()
         if (getOperationResult() == OperationResult::Yes)
         {
             LOG_TRACE("WindowNavBar::onResume(): trigger shutdown");
+            Gen::EventManager::instance().publish(Ctrl::ReqTerminate{} );
         }
         else
         {

@@ -35,8 +35,8 @@ public:
     void allPlayers();
     void onBetMade(
         const Craps::PlayerId& playerId,
-        const Craps::BetId&    betId,
-        const BetName&         betName,
+        Craps::BetId           betId,
+        BetName                betName,
         Gen::Money             contractAmount,
         Gen::Money             oddsAmount,
         unsigned               pivot);

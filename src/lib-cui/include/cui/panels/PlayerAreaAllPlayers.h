@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cui/layouts/LayoutPlayerArea.h>
+#include <cui/CuiStructs.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>
@@ -34,15 +35,17 @@ public:
     void init(WINDOW* pWin, const std::vector<Craps::PlayerId>& playerIds);
     void drawInternalBorders();
     void drawStaticContent();
+    void populate();
 
     void onBetMade(
         const Craps::PlayerId& playerId,
-        const Craps::BetId&    betId,
-        const BetName&         betName,
+        Craps::BetId           betId,
+        BetName                betName,
         Gen::Money             contractAmount,
         Gen::Money             oddsAmount,
         unsigned               pivot);
 
+    void onBetResolved();
     void onPlayerJoinedTable(const Craps::PlayerId& playerId);
     void onPlayerLeftTable  (const Craps::PlayerId& playerId);
     /// @}
@@ -70,7 +73,7 @@ private:
         std::string_view label;
         int row;
         int section;
-        std::array<BetState, LayoutAllPlayers::MaxPlayers> state{};
+        std::array<BetState, MaxPlayers> state{};
     };
 
     struct Layout
@@ -140,7 +143,7 @@ private:
     size_t getPlayerIndex(const Craps::PlayerId& playerId) const;
     BetState calcBetState(Gen::Money contractAmount,
                           Gen::Money oddsAmount) const;
-    std::string_view crapsBetNameToLabel(const BetName& betName,
+    std::string_view crapsBetNameToLabel(BetName betName,
                                          unsigned pivot) const;
 };
 

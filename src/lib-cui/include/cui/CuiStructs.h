@@ -9,6 +9,8 @@
 namespace Cui
 {
 
+static constexpr int MaxPlayers = 6;
+
 struct WindowSize
 {
     int rows = 0;

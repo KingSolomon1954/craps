@@ -29,6 +29,7 @@ public:
 
 private:
     void onReqRollDice(const Ctrl::ReqRollDice& ev) const;
+    void onReqTerminate(const Ctrl::ReqTerminate& ev) const;
 };
 
 /*-----------------------------------------------------------*//**

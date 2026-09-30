@@ -10,7 +10,6 @@
 #include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
-
 #include <algorithm>
 #include <cassert>
 #include <cctype>
@@ -125,7 +124,7 @@ PlayerAreaAllPlayers::buildPlayerInfo(
     const std::vector<Craps::PlayerId>& playerIds)
 {
     players_.clear();
-    players_.reserve(LayoutAllPlayers::MaxPlayers);
+    players_.reserve(MaxPlayers);
 
     Craps::PlayerId userPlayerId;
     Gen::ErrorPass ep;
@@ -134,7 +133,7 @@ PlayerAreaAllPlayers::buildPlayerInfo(
     assert(rc == Gen::ReturnCode::Success);
 
     std::vector<Craps::PlayerId> orderedIds;
-    orderedIds.reserve(LayoutAllPlayers::MaxPlayers);
+    orderedIds.reserve(MaxPlayers);
 
     // User always gets the first column.
     auto userIt = std::find(playerIds.begin(), playerIds.end(),
@@ -154,7 +153,7 @@ PlayerAreaAllPlayers::buildPlayerInfo(
         if (pid != userPlayerId)
             orderedIds.push_back(pid);
 
-        if (orderedIds.size() == LayoutAllPlayers::MaxPlayers)
+        if (orderedIds.size() == MaxPlayers)
             break;
     }
 
@@ -240,9 +239,7 @@ PlayerAreaAllPlayers::drawPlayerHeaders()
 
     for (int section = 0; section < 3; ++section)
     {
-        for (int player = 0;
-             player < LayoutAllPlayers::MaxPlayers;
-             ++player)
+        for (int player = 0; player < MaxPlayers; ++player)
         {
             const wchar_t initial =
                 player < static_cast<int>(players_.size())
@@ -330,9 +327,7 @@ PlayerAreaAllPlayers::drawBetMarkers()
          betIndex < bets_.size();
          ++betIndex)
     {
-        for (std::size_t playerIndex = 0;
-             playerIndex < LayoutAllPlayers::MaxPlayers;
-             ++playerIndex)
+        for (std::size_t playerIndex = 0; playerIndex < MaxPlayers; ++playerIndex)
         {
             if (playerIndex < players_.size())
             {
@@ -376,6 +371,14 @@ PlayerAreaAllPlayers::drawWideCharacter(
 //----------------------------------------------------------------
 
 void
+PlayerAreaAllPlayers::populate()
+{
+    // empty
+}
+
+//----------------------------------------------------------------
+
+void
 PlayerAreaAllPlayers::setBetState(
     std::size_t betIndex,
     std::size_t playerIndex,
@@ -384,7 +387,7 @@ PlayerAreaAllPlayers::setBetState(
     if (betIndex >= bets_.size())
         return;
 
-    if (playerIndex >= LayoutAllPlayers::MaxPlayers)
+    if (playerIndex >= MaxPlayers)
         return;
 
     bets_[betIndex].state[playerIndex] = state;
@@ -422,7 +425,7 @@ PlayerAreaAllPlayers::betPosition(
     if (betIndex >= bets_.size())
         return false;
 
-    if (playerIndex >= LayoutAllPlayers::MaxPlayers)
+    if (playerIndex >= MaxPlayers)
         return false;
 
     const Bet& bet = bets_[betIndex];
@@ -432,54 +435,6 @@ PlayerAreaAllPlayers::betPosition(
           static_cast<int>(playerIndex) * L::PlayerStride;
 
     return true;
-}
-
-//----------------------------------------------------------------
-
-void
-PlayerAreaAllPlayers::onBetMade(
-    const Craps::PlayerId& playerId,
-    const Craps::BetId&    betId,
-    const BetName&         betName,
-    Gen::Money             contractAmount,
-    Gen::Money             oddsAmount,
-    unsigned               pivot)
-{
-    (void)betId;
-
-    const std::size_t playerIndex = getPlayerIndex(playerId);
-
-    if (playerIndex >= players_.size())
-        return;
-
-    const std::string_view label =
-        crapsBetNameToLabel(betName, pivot);
-
-    if (label.empty())
-        return;
-
-    const auto betIt =
-        std::find_if(
-            bets_.begin(),
-            bets_.end(),
-            [&label](const Bet& bet)
-            {
-                return bet.label == label;
-            });
-
-    if (betIt == bets_.end())
-        return;
-
-    const std::size_t betIndex =
-        static_cast<std::size_t>(
-            std::distance(bets_.begin(), betIt));
-
-    setBetState(
-        betIndex,
-        playerIndex,
-        calcBetState(contractAmount, oddsAmount));
-
-    drawBetMarker(betIndex, playerIndex);
 }
 
 //----------------------------------------------------------------
@@ -514,9 +469,8 @@ PlayerAreaAllPlayers::calcBetState(
 //----------------------------------------------------------------
 
 std::string_view
-PlayerAreaAllPlayers::crapsBetNameToLabel(
-    const BetName& betName,
-    unsigned pivot) const
+PlayerAreaAllPlayers::crapsBetNameToLabel(BetName betName,
+                                          unsigned pivot) const
 {
     switch (betName)
     {
@@ -621,6 +575,62 @@ PlayerAreaAllPlayers::crapsBetNameToLabel(
 //----------------------------------------------------------------
 
 void
+PlayerAreaAllPlayers::onBetMade(
+    const Craps::PlayerId& playerId,
+    Craps::BetId           betId,
+    BetName                betName,
+    Gen::Money             contractAmount,
+    Gen::Money             oddsAmount,
+    unsigned               pivot)
+{
+    (void)betId;
+
+    const std::size_t playerIndex = getPlayerIndex(playerId);
+
+    if (playerIndex >= players_.size())
+        return;
+
+    const std::string_view label =
+        crapsBetNameToLabel(betName, pivot);
+
+    if (label.empty())
+        return;
+
+    const auto betIt =
+        std::find_if(
+            bets_.begin(),
+            bets_.end(),
+            [&label](const Bet& bet)
+            {
+                return bet.label == label;
+            });
+
+    if (betIt == bets_.end())
+        return;
+
+    const std::size_t betIndex =
+        static_cast<std::size_t>(
+            std::distance(bets_.begin(), betIt));
+
+    setBetState(
+        betIndex,
+        playerIndex,
+        calcBetState(contractAmount, oddsAmount));
+
+    drawBetMarker(betIndex, playerIndex);
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaAllPlayers::onBetResolved()
+{
+    // TODO
+}
+
+//----------------------------------------------------------------
+
+void
 PlayerAreaAllPlayers::onPlayerJoinedTable(
     const Craps::PlayerId& playerId)
 {
@@ -638,7 +648,7 @@ PlayerAreaAllPlayers::onPlayerJoinedTable(
         return;
 
     // The display has a fixed number of player columns.
-    if (players_.size() >= LayoutAllPlayers::MaxPlayers)
+    if (players_.size() >= MaxPlayers)
     {
         Gen::Logger::instance().logWarn(
             "PlayerAreaAllPlayers: cannot display player; "
@@ -710,13 +720,13 @@ PlayerAreaAllPlayers::onPlayerLeftTable(
     for (Bet& bet : bets_)
     {
         for (std::size_t index = removedIndex;
-             index + 1 < LayoutAllPlayers::MaxPlayers;
+             index + 1 < MaxPlayers;
              ++index)
         {
             bet.state[index] = bet.state[index + 1];
         }
 
-        bet.state[LayoutAllPlayers::MaxPlayers - 1] =
+        bet.state[MaxPlayers - 1] =
             BetState::None;
     }
 

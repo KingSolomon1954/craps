@@ -544,6 +544,9 @@ CrapsTable::setOddsAmount(BetPtr pBet,
     if (fifBadMinMaxForOdds (*pBet, oddsAmount, ep)) return Gen::ReturnCode::Fail;
 
     pBet->setOddsAmountInternal(oddsAmount);
+
+    sendEventBetMade(*pBet);
+    
     return Gen::ReturnCode::Success;
 }
 

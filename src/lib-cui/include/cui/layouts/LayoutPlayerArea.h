@@ -12,8 +12,6 @@ namespace Cui {
     
 struct LayoutAllPlayers
 {
-    static constexpr int MaxPlayers = 6;
-    
     // These are screen 0,0 coordinates, for external borders
     static constexpr int col1 = 0;
     static constexpr int col2 = 25;

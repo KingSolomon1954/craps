@@ -23,7 +23,7 @@ WindowPlayerArea::WindowPlayerArea()
     initPlayers();
     
     allPlayersView_.init(pWin_, playerIds_);
-    onePlayerView_.init(pWin_);
+    onePlayerView_.init (pWin_, playerIds_);
 }
 
 //----------------------------------------------------------------
@@ -149,11 +149,11 @@ WindowPlayerArea::populate()
 {
     if (currentFocus_ == OneOrAll::AllPlayers)
     {
-        populateAllPlayers();
+        allPlayersView_.populate();
     }
     else
     {
-        populateOnePlayer();
+        onePlayerView_.populate();
     }
 }
 
@@ -181,6 +181,7 @@ WindowPlayerArea::populateAllPlayers()
 void
 WindowPlayerArea::populateOnePlayer()
 {
+    onePlayerView_.populate();
     // TODO
     // updatePassLineBets()
     // updateFieldBets()
@@ -328,8 +329,8 @@ WindowPlayerArea::advancePlayer(bool next)
 void
 WindowPlayerArea::onBetMade(
     const Craps::PlayerId& playerId,
-    const Craps::BetId&    betId,
-    const BetName&         betName,
+    Craps::BetId           betId,
+    BetName                betName,
     Gen::Money             contractAmount,
     Gen::Money             oddsAmount,
     unsigned               pivot)
@@ -340,13 +341,12 @@ WindowPlayerArea::onBetMade(
                               contractAmount,
                               oddsAmount,
                               pivot);
-    // TODO
-    // onePlayerView_.onBetMade(playerId,
-    //                          betId,
-    //                          betName,
-    //                          contractAmount,
-    //                          oddsAmount,
-    //                          pivot);
+    onePlayerView_.onBetMade(playerId,
+                             betId,
+                             betName,
+                             contractAmount,
+                             oddsAmount,
+                             pivot);
 }
 
 //----------------------------------------------------------------
