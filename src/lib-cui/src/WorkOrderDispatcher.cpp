@@ -91,8 +91,7 @@ WorkOrderDispatcher::process(const WorkOrderEvent& woe)
 void
 WorkOrderDispatcher::process(const Ctrl::UslBettingClosed& ev)
 {
-    static int pin = 0;
-    LOG_TRACE("WorkOrderDispatcher::process(UslBettingClosed) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
+    LOG_TRACE("WorkOrderDispatcher::process(UslBettingClosed)");
 }
 
 //----------------------------------------------------------------
@@ -100,7 +99,8 @@ WorkOrderDispatcher::process(const Ctrl::UslBettingClosed& ev)
 void
 WorkOrderDispatcher::process(const Ctrl::UslDiceThrowStart& ev)
 {
-    LOG_TRACE("WorkOrderDispatcher::process(UslDiceThrowStart) evId = " + std::to_string(ev.id));
+    LOG_TRACE("WorkOrderDispatcher::process(UslDiceThrowStart)");
+
     WindowAnimation::instance().onDiceThrowStart();
 }
 
@@ -109,8 +109,8 @@ WorkOrderDispatcher::process(const Ctrl::UslDiceThrowStart& ev)
 void
 WorkOrderDispatcher::process(const Ctrl::UslDiceNewValue& ev)
 {
-    static int pin = 0;
-    LOG_TRACE("WorkOrderDispatcher::process(UslDiceNewValue) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
+    LOG_TRACE("WorkOrderDispatcher::process(UslDiceNewValue)");
+    
     WindowAnimation::instance().onDiceNewValue  (ev.d1, ev.d2, ev.rollCount);
     WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
     WindowTitleBar::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
@@ -121,8 +121,8 @@ WorkOrderDispatcher::process(const Ctrl::UslDiceNewValue& ev)
 void
 WorkOrderDispatcher::process(const Ctrl::UslResolveBetsEnd& ev)
 {
-    static int pin = 0;
-    LOG_TRACE("WorkOrderDispatcher::process(UslResolveBetsEnd) evId = " + std::to_string(ev.id) + " pin " + std::to_string(pin++));
+    LOG_TRACE("WorkOrderDispatcher::process(UslResolveBetsEnd)");
+
     WindowHouseBrief::instance().onResolveBetsEnd();
     WindowPlayerBrief::instance().onResolveBetsEnd();
 }
@@ -132,8 +132,8 @@ WorkOrderDispatcher::process(const Ctrl::UslResolveBetsEnd& ev)
 void
 WorkOrderDispatcher::process(const Ctrl::UslPointEstablished& ev)
 {
-    static int pin = 0;
-    LOG_TRACE("WorkOrderDispatcher::process(UslPointEstablished) evId = " + std::to_string(ev.id)  + " pin " + std::to_string(pin++));
+    LOG_TRACE("WorkOrderDispatcher::process(UslPointEstablished)");
+
     WindowTitleBar::instance().onPointEstablished(ev.point);
     WindowRollHistory::instance().onPointEstablished(ev.point);
 }
@@ -143,7 +143,8 @@ WorkOrderDispatcher::process(const Ctrl::UslPointEstablished& ev)
 void
 WorkOrderDispatcher::process(const Ctrl::UslSevenOut& ev)
 {
-    LOG_TRACE("WorkOrderDispatcher::process(UslSevenOut) evId = " + std::to_string(ev.id));
+    LOG_TRACE("WorkOrderDispatcher::process(UslSevenOut)");
+
     WindowTitleBar::instance().onSevenOut();
     WindowRollHistory::instance().onSevenOut();
 }
@@ -153,7 +154,8 @@ WorkOrderDispatcher::process(const Ctrl::UslSevenOut& ev)
 void
 WorkOrderDispatcher::process(const Ctrl::UslPassLineWinner& ev)
 {
-    LOG_TRACE("WorkOrderDispatcher::process(UslPassLineWinner) evId = " + std::to_string(ev.id));
+    LOG_TRACE("WorkOrderDispatcher::process(UslPassLineWinner)");
+
     WindowTitleBar::instance().onPassLineWinner();
     WindowRollHistory::instance().onPassLineWinner();
 }
@@ -163,7 +165,8 @@ WorkOrderDispatcher::process(const Ctrl::UslPassLineWinner& ev)
 void
 WorkOrderDispatcher::process(const Ctrl::UslNewShooter& ev)
 {
-    LOG_TRACE("WorkOrderDispatcher::process(UslNewShooter) evId = " + std::to_string(ev.id));
+    LOG_TRACE("WorkOrderDispatcher::process(UslNewShooter)");
+
     WindowPlayerBrief::instance().onNewShooter(ev.playerId);
     WindowAnimation::instance().onNewShooter(ev.playerId);
 }
@@ -173,7 +176,7 @@ WorkOrderDispatcher::process(const Ctrl::UslNewShooter& ev)
 void
 WorkOrderDispatcher::process(const Ctrl::UslBettingOpened& ev)
 {
-    LOG_TRACE("WorkOrderDispatcher::process(UslBettingOpened) evId = " + std::to_string(ev.id));
+    LOG_TRACE("WorkOrderDispatcher::process(UslBettingOpened)");
 }
 
 //----------------------------------------------------------------
@@ -182,6 +185,7 @@ void
 WorkOrderDispatcher::process(const Ctrl::UslBetMade& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslBetMade)");
+
     WindowPlayerArea::instance().onBetMade(
         ev.playerId,
         ev.betId,
@@ -197,6 +201,7 @@ void
 WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslBetResolved)");
+
     WindowPlayerArea::instance().onBetResolved(
         ev.playerId,
         ev.betName,
@@ -211,6 +216,7 @@ void
 WorkOrderDispatcher::process(const Ctrl::UslTableBalanceChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslTableBalanceChanged)");
+
     WindowHouseBrief::instance().onTableBalanceChanged(
         ev.balance, ev.netBalance);
 }
@@ -221,6 +227,7 @@ void
 WorkOrderDispatcher::process(const Ctrl::UslPlayerBalanceChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslPlayerBalanceChanged)");
+
     WindowPlayerBrief::instance().onPlayerBalanceChanged(
         ev.playerId, ev.balance, ev.netBalance);
 }

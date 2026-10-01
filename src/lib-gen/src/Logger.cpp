@@ -112,6 +112,8 @@ Logger::logError(const std::string& msg)
 void
 Logger::log(Level level, const std::string& message)
 {
+    std::lock_guard<std::mutex> lock(mutex_);
+    
     assert(out_.is_open());  // User must have already set output file
            
     std::string ts = timestamp();

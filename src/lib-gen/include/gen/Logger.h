@@ -7,6 +7,7 @@
 #pragma once
 
 #include <fstream>
+#include <mutex>
 #include <string>
 #include <rang.hpp>
 
@@ -34,6 +35,7 @@ public:
     bool isTraceOn() const;
     
 private:
+    mutable std::mutex mutex_;
     bool debugOn_ = false;
     bool traceOn_ = false;
 
