@@ -10,6 +10,7 @@
 
 #include <cui/layouts/LayoutPlayerArea.h>
 #include <cui/CuiStructs.h>
+#include <cui/CuiUtils.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>
@@ -32,10 +33,9 @@ public:
 
     /// @name Modifiers
     /// @{
-    void init(WINDOW* pWin, const std::vector<Craps::PlayerId>& playerIds);
+    void init(WINDOW* pWin);
     void drawInternalBorders();
     void drawStaticContent();
-    void populate();
 
     void onBetMade(
         const Craps::PlayerId& playerId,
@@ -55,6 +55,63 @@ public:
     /// @}
 
 private:
+
+    struct BetLabel
+    {
+        std::string_view label;
+        int row;
+        int col;
+    };
+
+    std::array<BetLabel, 44> labels_{
+        "PassLine",    2, 1,
+        "Come",        3, 1,
+        "Come4",       4, 1,
+        "Come5",       5, 1,
+        "Come6",       6, 1,
+        "Come8",       7, 1,
+        "Come9",       8, 1,
+        "Come10",      9, 1,
+        "DontPass",   10, 1,
+        "DontCome",   11, 1,
+        "DontCome4",  12, 1,
+        "DontCome5",  13, 1,
+        "DontCome6",  14, 1,
+        "DontCome8",  15, 1,
+        "DontCome9",  16, 1,
+        "DontCome10", 17, 1,
+            
+        "Place4",      2, 26,
+        "Place5",      3, 26,
+        "Place6",      4, 26,
+        "Place8",      5, 26,
+        "Place9",      6, 26,
+        "Place10",     7, 26,
+        "Hard4",       8, 26,
+        "Hard6",       9, 26,
+        "Hard8",      10, 26,
+        "Hard10",     11, 26,
+        "C&E",        12, 26,
+        "Field",      13, 26,
+            
+        "Buy4",        2, 49,
+        "Buy5",        3, 49,
+        "Buy6",        4, 49,
+        "Buy8",        5, 49,
+        "Buy9",        6, 49,
+        "Buy10",       7, 49,
+        "Lay4",        8, 49,
+        "Lay5",        9, 49,
+        "Lay6",       10, 49,
+        "Lay8",       11, 49,
+        "Lay9",       12, 49,
+        "Lay10",      13, 49,
+        "AnyC",       14, 49,
+        "Any7",       15, 49,
+        "Horn",       16, 49,
+        "World",      17, 49
+    };
+
     enum class BetState
     {
         None,
@@ -66,9 +123,352 @@ private:
     {
         Craps::PlayerId playerId;
         wchar_t initial = L'\u254C'; // ┌─ placeholder: ─
+        short colorPair = 0;
     };
 
+    struct Detail
+    {
+        Craps::BetId betId = 0;
+        BetState     state = BetState::None;
+        int col;
+    };
+    
     struct Bet
+    {
+        CuiUtils::CuiBetName betName;
+        int row;
+        std::array<Detail, MaxPlayers> detail{};
+    };
+    
+    std::array<Bet, 2> bets_{
+        CuiUtils::CuiBetName::PassLine, 2, {0, BetState::None, 12},
+                                           {0, BetState::None, 14},
+                                           {0, BetState::None, 16},
+                                           {0, BetState::None, 18},
+                                           {0, BetState::None, 20},
+                                           {0, BetState::None, 22},
+
+        CuiUtils::CuiBetName::Come,     3, {0, BetState::None, 12},
+                                           {0, BetState::None, 14},
+                                           {0, BetState::None, 16},
+                                           {0, BetState::None, 18},
+                                           {0, BetState::None, 20},
+                                           {0, BetState::None, 22}
+    };
+
+#if 0    
+            
+        CuiUtils::CuiBetName::PassLine, 2, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::PassLine, 2, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::PassLine, 2, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::PassLine, 2, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::PassLine, 2, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::Come,     3, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::Come,     3, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::Come,     3, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::Come,     3, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::Come,     3, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::Come,     3, {0, BetState::None, 22},
+
+        CuiUtils::CuiBetName::Come4,    4, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::Come4,    4, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::Come4,    4, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::Come4,    4, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::Come4,    4, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::Come4,    4, {0, BetState::None, 22},
+
+        CuiUtils::CuiBetName::Come5,    5, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::Come5,    5, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::Come5,    5, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::Come5,    5, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::Come5,    5, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::Come5,    5, {0, BetState::None, 22},
+
+        CuiUtils::CuiBetName::Come6,    6, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::Come6,    6, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::Come6,    6, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::Come6,    6, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::Come6,    6, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::Come6,    6, {0, BetState::None, 22},
+
+        CuiUtils::CuiBetName::Come8,    7, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::Come8,    7, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::Come8,    7, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::Come8,    7, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::Come8,    7, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::Come8,    7, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::Come9,    8, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::Come9,    8, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::Come9,    8, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::Come9,    8, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::Come9,    8, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::Come9,    8, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::Come10,   9, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::Come10,   9, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::Come10,   9, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::Come10,   9, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::Come10,   9, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::Come10,   9, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::DontPass,   10, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::DontPass,   10, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::DontPass,   10, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::DontPass,   10, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::DontPass,   10, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::DontPass,   10, {0, BetState::None, 22},
+                                          
+        CuiUtils::CuiBetName::DontCome,   11, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::DontCome,   11, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::DontCome,   11, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::DontCome,   11, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::DontCome,   11, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::DontCome,   11, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::DontCome4,  12, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::DontCome4,  12, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::DontCome4,  12, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::DontCome4,  12, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::DontCome4,  12, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::DontCome4,  12, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::DontCome5,  13, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::DontCome5,  13, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::DontCome5,  13, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::DontCome5,  13, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::DontCome5,  13, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::DontCome5,  13, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::DontCome6,  14, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::DontCome6,  14, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::DontCome6,  14, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::DontCome6,  14, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::DontCome6,  14, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::DontCome6,  14, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::DontCome8,  15, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::DontCome8,  15, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::DontCome8,  15, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::DontCome8,  15, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::DontCome8,  15, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::DontCome8,  15, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::DontCome9,  16, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::DontCome9,  16, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::DontCome9,  16, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::DontCome9,  16, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::DontCome9,  16, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::DontCome9,  16, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::DontCome10, 17, {0, BetState::None, 12},
+        CuiUtils::CuiBetName::DontCome10, 17, {0, BetState::None, 14},
+        CuiUtils::CuiBetName::DontCome10, 17, {0, BetState::None, 16},
+        CuiUtils::CuiBetName::DontCome10, 17, {0, BetState::None, 18},
+        CuiUtils::CuiBetName::DontCome10, 17, {0, BetState::None, 20},
+        CuiUtils::CuiBetName::DontCome10, 17, {0, BetState::None, 22},
+            
+        CuiUtils::CuiBetName::Place4,    2, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Place4,    2, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Place4,    2, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Place4,    2, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Place4,    2, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Place4,    2, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Place5,    3, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Place5,    3, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Place5,    3, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Place5,    3, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Place5,    3, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Place5,    3, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Place6,    4, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Place6,    4, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Place6,    4, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Place6,    4, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Place6,    4, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Place6,    4, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Place8,    5, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Place8,    5, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Place8,    5, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Place8,    5, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Place8,    5, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Place8,    5, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Place9,    6, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Place9,    6, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Place9,    6, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Place9,    6, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Place9,    6, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Place9,    6, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Place10,   7, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Place10,   7, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Place10,   7, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Place10,   7, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Place10,   7, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Place10,   7, {0, BetState::None, 45},
+            
+        CuiUtils::CuiBetName::Hard4,     8, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Hard4,     8, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Hard4,     8, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Hard4,     8, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Hard4,     8, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Hard4,     8, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Hard6,     9, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Hard6,     9, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Hard6,     9, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Hard6,     9, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Hard6,     9, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Hard6,     9, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Hard8,    10, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Hard8,    10, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Hard8,    10, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Hard8,    10, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Hard8,    10, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Hard8,    10, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Hard10,   11, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Hard10,   11, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Hard10,   11, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Hard10,   11, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Hard10,   11, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Hard10,   11, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::CandE,    12, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::CandE,    12, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::CandE,    12, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::CandE,    12, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::CandE,    12, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::CandE,    12, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Field,    13, {0, BetState::None, 35},
+        CuiUtils::CuiBetName::Field,    13, {0, BetState::None, 37},
+        CuiUtils::CuiBetName::Field,    13, {0, BetState::None, 39},
+        CuiUtils::CuiBetName::Field,    13, {0, BetState::None, 41},
+        CuiUtils::CuiBetName::Field,    13, {0, BetState::None, 43},
+        CuiUtils::CuiBetName::Field,    13, {0, BetState::None, 45},
+
+        CuiUtils::CuiBetName::Buy4,      2, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Buy4,      2, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Buy4,      2, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Buy4,      2, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Buy4,      2, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Buy4,      2, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Buy5,      3, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Buy5,      3, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Buy5,      3, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Buy5,      3, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Buy5,      3, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Buy5,      3, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Buy6,      4, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Buy6,      4, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Buy6,      4, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Buy6,      4, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Buy6,      4, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Buy6,      4, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Buy8,      5, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Buy8,      5, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Buy8,      5, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Buy8,      5, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Buy8,      5, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Buy8,      5, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Buy9,      6, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Buy9,      6, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Buy9,      6, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Buy9,      6, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Buy9,      6, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Buy9,      6, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Buy10,     7, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Buy10,     7, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Buy10,     7, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Buy10,     7, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Buy10,     7, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Buy10,     7, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Lay4,      8, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Lay4,      8, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Lay4,      8, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Lay4,      8, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Lay4,      8, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Lay4,      8, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Lay5,      9, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Lay5,      9, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Lay5,      9, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Lay5,      9, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Lay5,      9, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Lay5,      9, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Lay6,     10, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Lay6,     10, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Lay6,     10, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Lay6,     10, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Lay6,     10, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Lay6,     10, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Lay8,     11, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Lay8,     11, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Lay8,     11, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Lay8,     11, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Lay8,     11, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Lay8,     11, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Lay9,     12, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Lay9,     12, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Lay9,     12, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Lay9,     12, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Lay9,     12, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Lay9,     12, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Lay10,    13, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Lay10,    13, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Lay10,    13, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Lay10,    13, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Lay10,    13, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Lay10,    13, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::AnyCraps, 14, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::AnyCraps, 14, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::AnyCraps, 14, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::AnyCraps, 14, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::AnyCraps, 14, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::AnyCraps, 14, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Any7,     15, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Any7,     15, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Any7,     15, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Any7,     15, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Any7,     15, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Any7,     15, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::Horn,     16, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::Horn,     16, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::Horn,     16, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::Horn,     16, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::Horn,     16, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::Horn,     16, {0, BetState::None, 66},
+
+        CuiUtils::CuiBetName::World,    17, {0, BetState::None, 56},
+        CuiUtils::CuiBetName::World,    17, {0, BetState::None, 58},
+        CuiUtils::CuiBetName::World,    17, {0, BetState::None, 60},
+        CuiUtils::CuiBetName::World,    17, {0, BetState::None, 62},
+        CuiUtils::CuiBetName::World,    17, {0, BetState::None, 64},
+        CuiUtils::CuiBetName::World,    17, {0, BetState::None, 66}
+    };
+    
+#endif
+
+struct OldBet
     {
         std::string_view label;
         int row;
@@ -116,35 +516,27 @@ private:
     int winWidth_  = 0;
 
     std::vector<Player> players_;
-    std::vector<Bet> bets_;
 
 private:
-    void buildBetInfo();
-    void buildPlayerInfo(const std::vector<Craps::PlayerId>& playerIds);
+    void buildPlayerInfo();
+    std::size_t removePlayer(const Craps::PlayerId& playerId);
 
     void drawPlayerHeaders();
-    void drawBetLabels();
+    void drawSectionHeader(int startCol);
+    void drawLabels();
     void drawBetMarkers();
-    void drawBetMarker(std::size_t betIndex, std::size_t playerIndex);
+    void drawBetMarker(int row, int col, BetState state, short colorPair);
     void drawWideCharacter(int row, int col,
                            wchar_t ch, short colorPair);
-    void setBetState(std::size_t betIndex,
-                     std::size_t playerIndex,
-                     BetState state);
-    void setBetState(const std::string_view& betName,
-                     std::size_t playerIndex,
-                     BetState state);
-    bool betPosition(std::size_t betIndex,
-                     std::size_t playerIndex,
-                     int& row,
-                     int& col) const;
     wchar_t chooseInitial(std::string_view name) const;
-    short playerColorPair(std::size_t index) const;
-    size_t getPlayerIndex(const Craps::PlayerId& playerId) const;
+    std::size_t getPlayerIndex(const Craps::PlayerId& playerId) const;
+    std::size_t getBetIndex(CuiUtils::CuiBetName betName,
+                            std::size_t playerIndex) const;
     BetState calcBetState(Gen::Money contractAmount,
                           Gen::Money oddsAmount) const;
     std::string_view crapsBetNameToLabel(BetName betName,
                                          unsigned pivot) const;
+    wchar_t getMarker(BetState s) const;
 };
 
 } // namespace Cui

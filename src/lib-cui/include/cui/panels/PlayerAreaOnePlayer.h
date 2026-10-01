@@ -10,6 +10,7 @@
 
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
+#include <cui/CuiUtils.h>
 #include <gen/MoneyUtils.h>
 #include <ncurses.h>
 #include <vector>
@@ -28,10 +29,10 @@ public:
 
     /// @name Modifiers
     /// @{
-    void init(WINDOW* pWin, const std::vector<Craps::PlayerId>& playerIds);
+    void init(WINDOW* pWin);
     void drawInternalBorders();
     void drawStaticContent();
-    void populate();
+    void advancePlayer(bool next);
 
     void onBetMade(
         const Craps::PlayerId& playerId,
@@ -119,116 +120,99 @@ private:
         "Odds",     18, 55
     };
 
-    enum class CuiBetName
-    {
-        Place4,    Place5,    Place6,    Place8,    Place9,    Place10,
-        Come4,     Come5,     Come6,     Come8,     Come9,     Come10,
-        ComeOdds4, ComeOdds5, ComeOdds6, ComeOdds8, ComeOdds9, ComeOdds10,
-        DontCome4, DontCome5, DontCome6, DontCome8, DontCome9, DontCome10,
-        DontOdds4, DontOdds5, DontOdds6, DontOdds8, DontOdds9, DontOdds10,
-        Buy4,      Buy5,      Buy6,      Buy8,      Buy9,      Buy10,
-        Lay4,      Lay5,      Lay6,      Lay8,      Lay9,      Lay10,
-        Hard4,     Hard6,     Hard8,     Hard10,    Field,
-        AnyCraps,  CandE,     Horn,      Any7,      World,
-        Come,      DontCome,
-        PassLine,  PassLineOdds,
-        DontPass,  DontPassOdds
-    };
-    
     struct Bet
     {
-        CuiBetName betName;
+        CuiUtils::CuiBetName betName;
         int row;
         int col;
         Gen::Money amount = 0;
     };
 
     std::array<Bet, 58> bets_{
-        CuiBetName::Place4,        1, 10, 0,
-        CuiBetName::Place5,        1, 20, 0,
-        CuiBetName::Place6,        1, 30, 0,
-        CuiBetName::Place8,        1, 40, 0,
-        CuiBetName::Place9,        1, 50, 0,
-        CuiBetName::Place10,       1, 60, 0,
-        CuiBetName::Come4,         2, 10, 0,
-        CuiBetName::Come5,         2, 20, 0,
-        CuiBetName::Come6,         2, 30, 0,
-        CuiBetName::Come8,         2, 40, 0,
-        CuiBetName::Come9,         2, 50, 0,
-        CuiBetName::Come10,        2, 60, 0,
-        CuiBetName::ComeOdds4,     3, 10, 0,
-        CuiBetName::ComeOdds5,     3, 20, 0,
-        CuiBetName::ComeOdds6,     3, 30, 0,
-        CuiBetName::ComeOdds8,     3, 40, 0,
-        CuiBetName::ComeOdds9,     3, 50, 0,
-        CuiBetName::ComeOdds10,    3, 60, 0,
-        CuiBetName::DontCome4,     4, 10, 0,
-        CuiBetName::DontCome5,     4, 20, 0,
-        CuiBetName::DontCome6,     4, 30, 0,
-        CuiBetName::DontCome8,     4, 40, 0,
-        CuiBetName::DontCome9,     4, 50, 0,
-        CuiBetName::DontCome10,    4, 60, 0,
-        CuiBetName::DontOdds4,     5, 10, 0,
-        CuiBetName::DontOdds5,     5, 20, 0,
-        CuiBetName::DontOdds6,     5, 30, 0,
-        CuiBetName::DontOdds8,     5, 40, 0,
-        CuiBetName::DontOdds9,     5, 50, 0,
-        CuiBetName::DontOdds10,    5, 60, 0,
-        CuiBetName::Buy4,          6, 10, 0,
-        CuiBetName::Buy5,          6, 20, 0,
-        CuiBetName::Buy6,          6, 30, 0,
-        CuiBetName::Buy8,          6, 40, 0,
-        CuiBetName::Buy9,          6, 50, 0,
-        CuiBetName::Buy10,         6, 60, 0,
-        CuiBetName::Lay4,          7, 10, 0,
-        CuiBetName::Lay5,          7, 20, 0,
-        CuiBetName::Lay6,          7, 30, 0,
-        CuiBetName::Lay8,          7, 40, 0,
-        CuiBetName::Lay9,          7, 50, 0,
-        CuiBetName::Lay10,         7, 60, 0,
-        CuiBetName::Hard4,         8, 10, 0,
-        CuiBetName::Hard6,         8, 30, 0,
-        CuiBetName::Hard8,         8, 40, 0,
-        CuiBetName::Hard10,        8, 60, 0,
-        CuiBetName::Field,        12, 31, 0,
-        CuiBetName::AnyCraps,     14, 10, 0,
-        CuiBetName::CandE,        14, 33, 0,
-        CuiBetName::Horn,         14, 60, 0,
-        CuiBetName::Any7,         15, 10, 0,
-        CuiBetName::World,        15, 60, 0,
-        CuiBetName::Come,         17, 10, 0,
-        CuiBetName::DontCome,     17, 46, 0,
-        CuiBetName::PassLine,     18, 10, 0,
-        CuiBetName::PassLineOdds, 18, 25, 0,
-        CuiBetName::DontPass,     18, 46, 0,
-        CuiBetName::DontPassOdds, 18, 60, 0
+        CuiUtils::CuiBetName::Place4,        1, 10, 0,
+        CuiUtils::CuiBetName::Place5,        1, 20, 0,
+        CuiUtils::CuiBetName::Place6,        1, 30, 0,
+        CuiUtils::CuiBetName::Place8,        1, 40, 0,
+        CuiUtils::CuiBetName::Place9,        1, 50, 0,
+        CuiUtils::CuiBetName::Place10,       1, 60, 0,
+        CuiUtils::CuiBetName::Come4,         2, 10, 0,
+        CuiUtils::CuiBetName::Come5,         2, 20, 0,
+        CuiUtils::CuiBetName::Come6,         2, 30, 0,
+        CuiUtils::CuiBetName::Come8,         2, 40, 0,
+        CuiUtils::CuiBetName::Come9,         2, 50, 0,
+        CuiUtils::CuiBetName::Come10,        2, 60, 0,
+        CuiUtils::CuiBetName::ComeOdds4,     3, 10, 0,
+        CuiUtils::CuiBetName::ComeOdds5,     3, 20, 0,
+        CuiUtils::CuiBetName::ComeOdds6,     3, 30, 0,
+        CuiUtils::CuiBetName::ComeOdds8,     3, 40, 0,
+        CuiUtils::CuiBetName::ComeOdds9,     3, 50, 0,
+        CuiUtils::CuiBetName::ComeOdds10,    3, 60, 0,
+        CuiUtils::CuiBetName::DontCome4,     4, 10, 0,
+        CuiUtils::CuiBetName::DontCome5,     4, 20, 0,
+        CuiUtils::CuiBetName::DontCome6,     4, 30, 0,
+        CuiUtils::CuiBetName::DontCome8,     4, 40, 0,
+        CuiUtils::CuiBetName::DontCome9,     4, 50, 0,
+        CuiUtils::CuiBetName::DontCome10,    4, 60, 0,
+        CuiUtils::CuiBetName::DontOdds4,     5, 10, 0,
+        CuiUtils::CuiBetName::DontOdds5,     5, 20, 0,
+        CuiUtils::CuiBetName::DontOdds6,     5, 30, 0,
+        CuiUtils::CuiBetName::DontOdds8,     5, 40, 0,
+        CuiUtils::CuiBetName::DontOdds9,     5, 50, 0,
+        CuiUtils::CuiBetName::DontOdds10,    5, 60, 0,
+        CuiUtils::CuiBetName::Buy4,          6, 10, 0,
+        CuiUtils::CuiBetName::Buy5,          6, 20, 0,
+        CuiUtils::CuiBetName::Buy6,          6, 30, 0,
+        CuiUtils::CuiBetName::Buy8,          6, 40, 0,
+        CuiUtils::CuiBetName::Buy9,          6, 50, 0,
+        CuiUtils::CuiBetName::Buy10,         6, 60, 0,
+        CuiUtils::CuiBetName::Lay4,          7, 10, 0,
+        CuiUtils::CuiBetName::Lay5,          7, 20, 0,
+        CuiUtils::CuiBetName::Lay6,          7, 30, 0,
+        CuiUtils::CuiBetName::Lay8,          7, 40, 0,
+        CuiUtils::CuiBetName::Lay9,          7, 50, 0,
+        CuiUtils::CuiBetName::Lay10,         7, 60, 0,
+        CuiUtils::CuiBetName::Hard4,         8, 10, 0,
+        CuiUtils::CuiBetName::Hard6,         8, 30, 0,
+        CuiUtils::CuiBetName::Hard8,         8, 40, 0,
+        CuiUtils::CuiBetName::Hard10,        8, 60, 0,
+        CuiUtils::CuiBetName::Field,        12, 31, 0,
+        CuiUtils::CuiBetName::AnyCraps,     14, 10, 0,
+        CuiUtils::CuiBetName::CandE,        14, 33, 0,
+        CuiUtils::CuiBetName::Horn,         14, 60, 0,
+        CuiUtils::CuiBetName::Any7,         15, 10, 0,
+        CuiUtils::CuiBetName::World,        15, 60, 0,
+        CuiUtils::CuiBetName::Come,         17, 10, 0,
+        CuiUtils::CuiBetName::DontCome,     17, 46, 0,
+        CuiUtils::CuiBetName::PassLine,     18, 10, 0,
+        CuiUtils::CuiBetName::PassLineOdds, 18, 25, 0,
+        CuiUtils::CuiBetName::DontPass,     18, 46, 0,
+        CuiUtils::CuiBetName::DontPassOdds, 18, 60, 0
     };
 
 private:
-    WINDOW* pWin_  = nullptr;
-    int winHeight_ = 0;
-    int winWidth_  = 0;
-    std::size_t playerIndex_ = 0;
+    WINDOW* pWin_    = nullptr;
+    int winHeight_   = 0;
+    int winWidth_    = 0;
+    int playerIndex_ = 0;
     std::vector<Player> players_;
 
 private:
-    void buildPlayerInfo(const std::vector<Craps::PlayerId>& playerIds);
+    void buildPlayerInfo();
     void buildBetInfo();
-    short playerColorPair (const Craps::PlayerId& id) const;
-    std::string playerName(const Craps::PlayerId& id) const;
-    size_t removePlayer   (const Craps::PlayerId& id);
+    std::size_t removePlayer(const Craps::PlayerId& id);
     void drawName();
     void drawLabels();
     void drawBets();
     void drawOneBet(const Bet& b);
     int getBetIndex(BetName betName, unsigned pivot) const;
-    CuiBetName betToCuiBetName(BetName betName, unsigned pivot) const;
     void refreshAllBets();
     void clearBets();
     BetName getBetName(Craps::BetId betId) const;
     unsigned getPivot(Craps::BetId betId) const;
     Gen::Money getContractAmount(Craps::BetId betId) const;
     Gen::Money getOddsAmount(Craps::BetId betId) const;
+    void nextPlayerIndex();
+    void prevPlayerIndex();
 };
 
 } // namespace Cui

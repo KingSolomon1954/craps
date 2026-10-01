@@ -5,7 +5,6 @@
 //----------------------------------------------------------------
 
 #include <cui/menus/MenuOddsBet.h>
-#include <controller/CrapsReaders.h>
 #include <cui/CarrierBet.h>
 #include <cui/CuiUtils.h>
 #include <cui/SurfaceManager.h>
@@ -61,30 +60,30 @@ MenuOddsBet::getPlayerId()
 void
 MenuOddsBet::gatherBetsInfo()
 {
-    BetIdList betIdList;
-    getBetIdList(betIdList);     // fills in betIdList
-    gatherBetsDetail(betIdList); // use betIdList
+    Ctrl::CrapsReaders::BetIds ids;
+    getBetIds(ids);     // fills in betIdList
+    gatherBetsDetail(ids); // use betIdList
 }
 
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::getBetIdList(BetIdList& betIdList)
+MenuOddsBet::getBetIds(Ctrl::CrapsReaders::BetIds& ids)
 {
     Gen::ErrorPass ep;
-    auto rc = Ctrl::CrapsReaders::readPlayerGetOddsBets(playerId_, betIdList, ep); 
+    auto rc = Ctrl::CrapsReaders::readPlayerGetOddsBets(playerId_, ids, ep); 
     assert(rc == Gen::ReturnCode::Success);
 }
 
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::gatherBetsDetail(const BetIdList& betIdList)
+MenuOddsBet::gatherBetsDetail(const Ctrl::CrapsReaders::BetIds& ids)
 {
     Gen::ErrorPass ep;
     
     activeOddsBets_.clear();
-    for (auto id : betIdList)
+    for (auto id : ids)
     {
         BetInfo bi;
 

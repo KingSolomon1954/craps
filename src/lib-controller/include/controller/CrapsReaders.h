@@ -32,7 +32,10 @@ namespace Ctrl {
 
 class CrapsReaders
 {
-public:    
+public:
+    using PlayerIds = std::vector<Craps::PlayerId>;
+    using BetIds    = std::vector<Craps::BetId>;
+    
     CrapsReaders() = delete;  // Pure static class, no instantiation
 
     // Player related
@@ -43,11 +46,11 @@ public:
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerGetBets(
         const Craps::PlayerId& playerId,
-        std::vector<Craps::BetId>& betIds,
+        BetIds& betIds,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerGetOddsBets(
         const Craps::PlayerId& playerId,
-        std::vector<Craps::BetId>& betIds,
+        BetIds& betIds,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerName(
         const Craps::PlayerId& playerId,
@@ -171,7 +174,7 @@ public:
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readTablePlayers(
         const Craps::TableId& tableId,
-        std::vector<Craps::PlayerId>& playerIds,
+        PlayerIds& playerIds,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readTableCurrentShooter(
         const Craps::TableId& tableId,

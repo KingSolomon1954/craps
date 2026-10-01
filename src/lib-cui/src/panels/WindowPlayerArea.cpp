@@ -20,10 +20,8 @@ WindowPlayerArea::WindowPlayerArea()
     , onePlayerView_ (Layout::playerAreaHeight, Layout::playerAreaWidth)
 {
     createWindow();
-    initPlayers();
-    
-    allPlayersView_.init(pWin_, playerIds_);
-    onePlayerView_.init (pWin_, playerIds_);
+    allPlayersView_.init(pWin_);
+    onePlayerView_.init (pWin_);
 }
 
 //----------------------------------------------------------------
@@ -49,32 +47,6 @@ WindowPlayerArea::createWindow()
 //----------------------------------------------------------------
 
 void
-WindowPlayerArea::initPlayers()
-{
-    Gen::ErrorPass ep;
-    auto rc = Ctrl::CrapsReaders::getUserPlayer(curPlayerId_, ep);
-    if (rc == Gen::ReturnCode::Fail)
-    {
-        ep.prepend("WindowPlayerArea::initPlayers(): unable to init; ");
-        throw std::runtime_error(ep.diag);
-    }
-
-    Craps::TableId tableId;
-    rc = Ctrl::CrapsReaders::getActiveCrapsTable(tableId, ep);
-    if (rc == Gen::ReturnCode::Fail)
-    {
-        ep.prepend("WindowPlayerArea::initPlayers() unable to init; ");
-        throw std::runtime_error(ep.diag);
-    }
-
-    rc = Ctrl::CrapsReaders::readTablePlayers(tableId, playerIds_, ep);
-    assert(playerIds_.size() > 0);
-    assert(playerIds_.size() <= 6);
-}
-
-//----------------------------------------------------------------
-
-void
 WindowPlayerArea::draw()
 {
     werase(pWin_);
@@ -82,7 +54,7 @@ WindowPlayerArea::draw()
     drawExternalJunctions();
     drawInternalBorders();
     drawStaticContent();
-    populate();
+
     CuiUtils::transfer(pWin_);
 }
 
@@ -142,112 +114,6 @@ WindowPlayerArea::drawStaticContent()
 
 //----------------------------------------------------------------
 //
-// Updates all dynamic field content.
-//
-void
-WindowPlayerArea::populate()
-{
-    if (currentFocus_ == OneOrAll::AllPlayers)
-    {
-        allPlayersView_.populate();
-    }
-    else
-    {
-        onePlayerView_.populate();
-    }
-}
-
-//----------------------------------------------------------------
-//
-// Updates all dynamic fields in this view.
-//
-void
-WindowPlayerArea::populateAllPlayers()
-{
-    // mvwprintw(pWin_, 0, 0, "All Players Area");
-    // Updates all dynamic fields in this view.
-    // TODO
-    // updatePassLineBets()
-    // updateFieldBets()
-    // updateFieldBets()
-    // updateXxx()
-    // ...
-}
-
-//----------------------------------------------------------------
-//
-// Updates all dynamic fields in this view
-//
-void
-WindowPlayerArea::populateOnePlayer()
-{
-    onePlayerView_.populate();
-    // TODO
-    // updatePassLineBets()
-    // updateFieldBets()
-    // updateFieldBets()
-    // updateXxx()
-    // ...
-}
-
-//----------------------------------------------------------------
-
-Craps::PlayerId
-WindowPlayerArea::getNextPlayerId(const Craps::PlayerId& pid) const
-{
-    if (playerIds_.empty())
-    {
-        throw std::runtime_error("playerIds_ is empty");
-    }
-
-    auto it = std::find(playerIds_.begin(), playerIds_.end(), pid);
-
-    if (it == playerIds_.end())
-    {
-        throw std::runtime_error("Current player was not found");
-    }
-
-    ++it;
-
-    // Wrap around from the last player to the first.
-    if (it == playerIds_.end())
-    {
-        it = playerIds_.begin();
-    }
-
-    return *it;
-}
-
-//----------------------------------------------------------------
-
-Craps::PlayerId
-WindowPlayerArea::getPrevPlayerId(const Craps::PlayerId& pid) const
-{
-    if (playerIds_.empty())
-    {
-        throw std::runtime_error("playerIds_ is empty");
-    }
-
-    auto it = std::find(playerIds_.begin(), playerIds_.end(), pid);
-
-    if (it == playerIds_.end())
-    {
-        throw std::runtime_error("Current player was not found");
-    }
-
-    // Wrap around from the first player to the last.
-    if (it == playerIds_.begin())
-    {
-        it = playerIds_.end();
-    }
-
-    --it;
-
-    return *it;
-}
-
-//----------------------------------------------------------------
-//
 // Switch to OnePlayer View. If already showing, goto next player
 //
 void
@@ -282,7 +148,6 @@ WindowPlayerArea::allPlayers()
         drawStaticContent();
     }
     
-    populateAllPlayers();
     CuiUtils::transfer(pWin_);
 }
 
@@ -298,29 +163,12 @@ WindowPlayerArea::advancePlayer(bool next)
         drawExternalJunctions();
         drawInternalBorders();
         drawStaticContent();
-        populateOnePlayer();
         CuiUtils::transfer(pWin_);
         return;
     }
     
     // Else already in OnePlayer view, advance to next or prev player
-
-    Craps::PlayerId pid;
-    if (next)
-    {
-        pid = getNextPlayerId(curPlayerId_);
-    }
-    else
-    {
-        pid = getPrevPlayerId(curPlayerId_);
-    }
-    if (pid == curPlayerId_)
-    {
-        return; // No next or prev player to display, stay on current
-    }
-    
-    curPlayerId_ = pid;
-    populateOnePlayer();
+    onePlayerView_.advancePlayer(next);
     CuiUtils::transfer(pWin_);
 }
 

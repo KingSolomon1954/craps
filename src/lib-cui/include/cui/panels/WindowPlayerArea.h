@@ -76,7 +76,6 @@ private:
         AllPlayers
     };
 
-    Craps::PlayerId              curPlayerId_;
     std::vector<Craps::PlayerId> playerIds_;
     PlayerAreaAllPlayers         allPlayersView_;
     PlayerAreaOnePlayer          onePlayerView_;
@@ -84,15 +83,11 @@ private:
 
 private:
     WindowPlayerArea();
-    void initPlayers();
     void createWindow();
     void drawExternalJunctions();
     void drawInternalBorders();
     void drawStaticContent();
         
-    void populate();
-    void populateAllPlayers();
-    void populateOnePlayer();
     void advancePlayer(bool next);
     Craps::PlayerId getNextPlayerId(const Craps::PlayerId& pid) const;
     Craps::PlayerId getPrevPlayerId(const Craps::PlayerId& pid) const;

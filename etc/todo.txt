@@ -42,6 +42,7 @@ Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
 OperationTracker needs correlationId matching
 
+Refactor PlayerAreaAllPlayers use a table 
 Implement PlayerAreaAllPlayers::onBetResolved()
 Implement PlayerAreaOnePlayer::onBetResolved()
 

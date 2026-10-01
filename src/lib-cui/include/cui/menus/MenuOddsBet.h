@@ -8,6 +8,7 @@
 
 #include <cui/bases/MenuBase.h>
 #include <cui/CuiStructs.h>
+#include <controller/CrapsReaders.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
 #include <gen/MoneyUtils.h>
@@ -57,7 +58,6 @@ private:
     };
     
     using Bets        = std::vector<BetInfo>;
-    using BetIdList   = std::vector<Craps::BetId>;
     using MenuEntries = std::vector<MenuEntry>;
     
     Craps::PlayerId playerId_;
@@ -73,8 +73,8 @@ private:
     void gatherBets();
     void getPlayerId();
     void gatherBetsInfo();
-    void getBetIdList(BetIdList& betIdList);
-    void gatherBetsDetail(const BetIdList& betIdList);
+    void getBetIds(Ctrl::CrapsReaders::BetIds& ids);
+    void gatherBetsDetail(const Ctrl::CrapsReaders::BetIds& ids);
     void sortBetsByCreated();
 
     // Creating menu entries

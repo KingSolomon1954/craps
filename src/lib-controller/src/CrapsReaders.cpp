@@ -53,7 +53,7 @@ CrapsReaders::readPlayerHaveBet(
 Gen::ReturnCode
 CrapsReaders::readPlayerGetBets(
     const Craps::PlayerId& playerId,
-    std::vector<Craps::BetId>& betIds,
+    BetIds& betIds,
     Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -77,7 +77,7 @@ CrapsReaders::readPlayerGetBets(
 Gen::ReturnCode
 CrapsReaders::readPlayerGetOddsBets(
     const Craps::PlayerId& playerId,
-    std::vector<Craps::BetId>& betIds,
+    BetIds& betIds,
     Gen::ErrorPass& ep)
 {
     Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
@@ -631,7 +631,7 @@ CrapsReaders::readTableNumBetsOnTable(
 Gen::ReturnCode
 CrapsReaders::readTablePlayers(
     const Craps::TableId& tableId,
-    std::vector<Craps::PlayerId>& playerIds,
+    PlayerIds& playerIds,
     Gen::ErrorPass& ep)
 {
     Craps::CrapsTable* pTable = Gbl::pTableMgr->getTable(tableId, ep);
