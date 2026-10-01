@@ -342,19 +342,19 @@ PlayerAreaOnePlayer::onBetResolved(
     Gen::Money             amountLose)
 {
     if (playerId != players_[playerIndex_].playerId) return;
-    
-    for (std::size_t i = 0; i < bets_.size(); ++i)
+
+    for (auto& b : bets_)
     {
-        if (bets_[i].betId == betId)
+        if (b.betId == betId)
         {
-            bets_[i].amount = 0;
-            bets_[i].betId  = 0;
-            drawOneBet(bets_[i]);
-            break;
+            b.amount = 0;
+            b.betId  = 0;
+            drawOneBet(b);
+            return;
         }
     }
-    Gen::Logger::instance().logError("PlayerAreaOnePlayer::onBetResolved(): "
-        "did not find the resolved bet on the screen.");
+    LOG_ERROR("PlayerAreaOnePlayer::onBetResolved(): "
+              "did not find the resolved bet on the screen.");
 }
 
 //----------------------------------------------------------------

@@ -306,7 +306,23 @@ PlayerAreaAllPlayers::onBetResolved(
     Gen::Money             amountWin,
     Gen::Money             amountLose)
 {
-    // TODO
+    for (auto& bet : bets_)
+    {
+        for (std::size_t i = 0; i < bet.detail.size(); ++i)
+        {
+            if (bet.detail[i].betId == betId)
+            {
+                auto& d = bet.detail[i];  // convenience
+                d.betId = 0;
+                d.state = BetState::None;
+                drawBetMarker(bet.row, d.col,
+                              d.state, players_[i].colorPair);
+                return;
+            }
+        }
+    }
+    LOG_ERROR("PlayerAreaAllPlayers::onBetResolved(): "
+              "did not find the resolved bet on the screen.");
 }
 
 //----------------------------------------------------------------

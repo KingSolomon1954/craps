@@ -58,12 +58,16 @@ private:
 
 // Compile time toggling of debug and trace logging.
 #ifdef DEBUG
-#define LOG_DEBUG(msg) Gen::Logger::instance().logDebug(msg);
-#define LOG_TRACE(msg) Gen::Logger::instance().logTrace(msg);
+#define LOG_DEBUG(msg) Gen::Logger::instance().logDebug(msg)
+#define LOG_TRACE(msg) Gen::Logger::instance().logTrace(msg)
 #else
 #define LOG_DEBUG(msg) do {} while(0)
 #define LOG_TRACE(msg) do {} while(0)
 #endif
+
+#define LOG_INFO(msg)  Gen::Logger::instance().logInfo (msg)
+#define LOG_WARN(msg)  Gen::Logger::instance().logWarn (msg)
+#define LOG_ERROR(msg) Gen::Logger::instance().logError(msg)
     
 } // namespace Gen
 
