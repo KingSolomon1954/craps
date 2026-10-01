@@ -96,6 +96,13 @@ CuiReceiver::CuiReceiver()
             this->onBetMade(ev);
         });
 
+    LOG_TRACE("CuiReceiver() subscribing to UslBetResolved");
+    Gen::EventManager::instance().subscribe<Ctrl::UslBetResolved>(
+        [this](const Ctrl::UslBetResolved& ev)
+        {
+            this->onBetResolved(ev);
+        });
+
     LOG_TRACE("CuiReceiver() subscribing to UslTableBalanceChanged");
     Gen::EventManager::instance().subscribe<Ctrl::UslTableBalanceChanged>(
         [this](const Ctrl::UslTableBalanceChanged& ev)
@@ -223,6 +230,17 @@ void
 CuiReceiver::onBetMade(const Ctrl::UslBetMade& ev) const
 {
     LOG_TRACE("CuiReceiver()::onBetMade()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onBetResolved(const Ctrl::UslBetResolved& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onBetResolved()");
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);

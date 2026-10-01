@@ -182,29 +182,16 @@ PlayerAreaAllPlayers::drawBetMarkers()
 {
     for (auto b : bets_)
     {
-        drawBetMarker(b.row,
-                      b.detail.col,
-                      b.detail.state, 
-                      players_.colorPair);
-    }
-}
-
-#if 0        
         for (std::size_t i = 0; i < b.detail.size(); i++)
         {
-            LOG_DEBUG("b.row:" + std::to_string(b.row) +
-                " col:" + std::to_string(b.detail[i].col) +
-                " state:skip " +
-                "colorpair:" + std::to_string(players_[i].colorPair));
-    
             drawBetMarker(b.row,
                           b.detail[i].col,
                           b.detail[i].state, 
                           players_[i].colorPair);
         }
     }
+        
 }
-#endif
 
 //----------------------------------------------------------------
 
@@ -264,112 +251,6 @@ PlayerAreaAllPlayers::calcBetState(
 
 //----------------------------------------------------------------
 
-std::string_view
-PlayerAreaAllPlayers::crapsBetNameToLabel(BetName betName,
-                                          unsigned pivot) const
-{
-    switch (betName)
-    {
-        case BetName::PassLine:
-            return "PassLine";
-
-        case BetName::Come:
-            switch (pivot)
-            {
-                case 0:  return "Come";
-                case 4:  return "Come4";
-                case 5:  return "Come5";
-                case 6:  return "Come6";
-                case 8:  return "Come8";
-                case 9:  return "Come9";
-                case 10: return "Come10";
-                default: return {};
-            }
-
-        case BetName::DontPass:
-            return "DontPass";
-
-        case BetName::DontCome:
-            switch (pivot)
-            {
-                case 0:  return "DontCome";
-                case 4:  return "DontCome4";
-                case 5:  return "DontCome5";
-                case 6:  return "DontCome6";
-                case 8:  return "DontCome8";
-                case 9:  return "DontCome9";
-                case 10: return "DontCome10";
-                default: return {};
-            }
-
-        case BetName::Place:
-            switch (pivot)
-            {
-                case 4:  return "Place4";
-                case 5:  return "Place5";
-                case 6:  return "Place6";
-                case 8:  return "Place8";
-                case 9:  return "Place9";
-                case 10: return "Place10";
-                default: return {};
-            }
-
-        case BetName::Hardway:
-            switch (pivot)
-            {
-                case 4:  return "Hard4";
-                case 6:  return "Hard6";
-                case 8:  return "Hard8";
-                case 10: return "Hard10";
-                default: return {};
-            }
-
-        case BetName::CandE:
-            return "C&E";
-
-        case BetName::Field:
-            return "Field";
-
-        case BetName::Buy:
-            switch (pivot)
-            {
-                case 4:  return "Buy4";
-                case 5:  return "Buy5";
-                case 6:  return "Buy6";
-                case 8:  return "Buy8";
-                case 9:  return "Buy9";
-                case 10: return "Buy10";
-                default: return {};
-            }
-
-        case BetName::Lay:
-            switch (pivot)
-            {
-                case 4:  return "Lay4";
-                case 5:  return "Lay5";
-                case 6:  return "Lay6";
-                case 8:  return "Lay8";
-                case 9:  return "Lay9";
-                case 10: return "Lay10";
-                default: return {};
-            }
-
-        case BetName::AnyCraps:
-            return "AnyC";
-
-        case BetName::AnySeven:
-            return "Any7";
-
-        case BetName::Horn:
-            return "Horn";
-
-        default:
-            return {};
-    }
-}
-
-//----------------------------------------------------------------
-
 void
 PlayerAreaAllPlayers::onBetMade(
     const Craps::PlayerId& playerId,
@@ -418,7 +299,12 @@ PlayerAreaAllPlayers::getBetIndex(CuiUtils::CuiBetName betName,
 //----------------------------------------------------------------
 
 void
-PlayerAreaAllPlayers::onBetResolved()
+PlayerAreaAllPlayers::onBetResolved(
+    const Craps::PlayerId& playerId,
+    BetName                betName,
+    Craps::BetId           betId,
+    Gen::Money             amountWin,
+    Gen::Money             amountLose)
 {
     // TODO
 }

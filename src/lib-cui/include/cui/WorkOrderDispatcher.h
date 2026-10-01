@@ -40,6 +40,7 @@ private:
     void process(const Ctrl::UslNewShooter& ev);
     void process(const Ctrl::UslBettingOpened& ev);
     void process(const Ctrl::UslBetMade& ev);
+    void process(const Ctrl::UslBetResolved& ev);
     void process(const Ctrl::UslTableBalanceChanged& ev);
     void process(const Ctrl::UslPlayerBalanceChanged& ev);
 };

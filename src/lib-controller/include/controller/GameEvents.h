@@ -238,6 +238,21 @@ struct UslBetMade : public GameEvent
 
 //----------------------------------------------------------------
 
+struct UslBetResolved : public GameEvent
+{
+    Craps::PlayerId playerId;       
+    BetName         betName    = BetName::Invalid;
+    Craps::BetId    betId      = 0;
+    Gen::Money      amountWin  = 0;
+    Gen::Money      amountLose = 0;
+    
+    UslBetResolved()
+        : GameEvent{EventSource::Model, EventType::UslBetResolved}
+    {}
+};
+
+//----------------------------------------------------------------
+
 struct UslPlayerJoinedTable : public GameEvent
 {
     Craps::PlayerId playerId;

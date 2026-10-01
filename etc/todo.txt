@@ -42,10 +42,10 @@ Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
 OperationTracker needs correlationId matching
 
-Refactor PlayerAreaAllPlayers use a table 
 Implement PlayerAreaAllPlayers::onBetResolved()
-Implement PlayerAreaOnePlayer::onBetResolved()
 
+(Done) Refactor PlayerAreaAllPlayers use a table 
+(Done) Implement PlayerAreaOnePlayer::onBetResolved()
 (Done) Implement PlayerAreaOnePlayer
 (Done) In CuiThread, separate out the processing into a dispatcher
 (Done) In PlayerBrief area, display player name in his matchingcolor

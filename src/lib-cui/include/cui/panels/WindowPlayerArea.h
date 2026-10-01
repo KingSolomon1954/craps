@@ -41,6 +41,13 @@ public:
         Gen::Money             oddsAmount,
         unsigned               pivot);
 
+    void onBetResolved(
+        const Craps::PlayerId& playerId,
+        BetName                betName,
+        Craps::BetId           betId,
+        Gen::Money             amountWin,
+        Gen::Money             amountLose);
+
     /// @}
 
     /// @name Observers

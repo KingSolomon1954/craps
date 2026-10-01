@@ -199,3 +199,26 @@ WindowPlayerArea::onBetMade(
 
 //----------------------------------------------------------------
 
+void
+WindowPlayerArea::onBetResolved(
+    const Craps::PlayerId& playerId,
+    BetName                betName,
+    Craps::BetId           betId,
+    Gen::Money             amountWin,
+    Gen::Money             amountLose)
+
+{
+    allPlayersView_.onBetResolved(playerId,
+                                  betName,
+                                  betId,
+                                  amountWin,
+                                  amountLose);
+    onePlayerView_.onBetResolved(playerId,
+                                  betName,
+                                  betId,
+                                  amountWin,
+                                  amountLose);
+}
+
+//----------------------------------------------------------------
+

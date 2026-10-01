@@ -171,6 +171,7 @@ PlayerAreaOnePlayer::refreshAllBets()
 
         int idx = getBetIndex(betName, pivot);
         Gen::Money amount = pivot == 0 ? contractAmount : oddsAmount;
+        bets_[idx].betId  = betId;
         bets_[idx].amount = amount;
         drawOneBet(bets_[idx]);
     }
@@ -183,6 +184,7 @@ PlayerAreaOnePlayer::clearBets()
 {
     for (auto& b : bets_)
     {
+        b.betId  = 0;
         b.amount = 0;
     }
 }
@@ -322,6 +324,7 @@ PlayerAreaOnePlayer::onBetMade(
     if (idx == bets_.size())
         return;
 
+    bets_[idx].betId = betId;
     Gen::Money amount = pivot == 0 ? contractAmount : oddsAmount;
     bets_[idx].amount = amount;
     
@@ -331,9 +334,27 @@ PlayerAreaOnePlayer::onBetMade(
 //----------------------------------------------------------------
 
 void
-PlayerAreaOnePlayer::onBetResolved()
+PlayerAreaOnePlayer::onBetResolved(
+    const Craps::PlayerId& playerId,
+    BetName                betName,
+    Craps::BetId           betId,
+    Gen::Money             amountWin,
+    Gen::Money             amountLose)
 {
-    // TODO
+    if (playerId != players_[playerIndex_].playerId) return;
+    
+    for (std::size_t i = 0; i < bets_.size(); ++i)
+    {
+        if (bets_[i].betId == betId)
+        {
+            bets_[i].amount = 0;
+            bets_[i].betId  = 0;
+            drawOneBet(bets_[i]);
+            break;
+        }
+    }
+    Gen::Logger::instance().logError("PlayerAreaOnePlayer::onBetResolved(): "
+        "did not find the resolved bet on the screen.");
 }
 
 //----------------------------------------------------------------

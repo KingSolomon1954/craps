@@ -194,6 +194,20 @@ WorkOrderDispatcher::process(const Ctrl::UslBetMade& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslBetResolved)");
+    WindowPlayerArea::instance().onBetResolved(
+        ev.playerId,
+        ev.betName,
+        ev.betId,
+        ev.amountWin,
+        ev.amountLose);
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslTableBalanceChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslTableBalanceChanged)");

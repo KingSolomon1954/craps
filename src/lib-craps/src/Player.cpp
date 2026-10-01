@@ -538,6 +538,10 @@ Player::processWin(const DecisionRecord& dr)
     currentStats_.recordWin(*(dr.pBet), dr.win);
     lastRollStats_.amountWin += dr.win;
     lastRollStats_.numBetsWin++;
+
+    sendEventBetResolved(playerId_, pBet->betName(),
+                         pBet->betId(), dr.win, dr.lose);
+
     (void) removeBetByPtr(pBet);
 }
 
@@ -634,6 +638,25 @@ Player::disburseDone()
         
         Gen::EventManager::instance().publish(ev);
     }
+}
+
+//----------------------------------------------------------------
+
+void
+Player::sendEventBetResolved(const PlayerId& playerId,
+                             BetName         betName,
+                             BetId           betId,
+                             Gen::Money      amountWin,
+                             Gen::Money      amountLose) const
+{
+    Ctrl::UslBetResolved ev;
+    ev.playerId   = playerId,
+    ev.betName    = betName,
+    ev.betId      = betId,
+    ev.amountWin  = amountWin;
+    ev.amountLose = amountLose;
+    
+    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------

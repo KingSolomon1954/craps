@@ -141,6 +141,11 @@ private:
     bool removeBetByPtr(BetPtr& pBet);
     void setupSubscriptions();
     void setName(const std::string& playerName);
+    void sendEventBetResolved(const PlayerId& playerId,
+                              BetName         betName,
+                              BetId           betId, 
+                              Gen::Money      amountWin,
+                              Gen::Money      amountLose) const;
 
     // Validity checks with diagnostics
     void diagBadBetId(const std::string& funcName, BetId betId) const;
