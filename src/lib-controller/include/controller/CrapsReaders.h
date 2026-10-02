@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <deque>
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
 #include <craps/EnumBetName.h>
@@ -33,9 +32,6 @@ namespace Ctrl {
 class CrapsReaders
 {
 public:
-    using PlayerIds = std::vector<Craps::PlayerId>;
-    using BetIds    = std::vector<Craps::BetId>;
-    
     CrapsReaders() = delete;  // Pure static class, no instantiation
 
     // Player related
@@ -46,11 +42,11 @@ public:
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerGetBets(
         const Craps::PlayerId& playerId,
-        BetIds& betIds,
+        Craps::BetIds& betIds,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerGetOddsBets(
         const Craps::PlayerId& playerId,
-        BetIds& betIds,
+        Craps::BetIds& betIds,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerName(
         const Craps::PlayerId& playerId,
@@ -174,7 +170,7 @@ public:
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readTablePlayers(
         const Craps::TableId& tableId,
-        PlayerIds& playerIds,
+        Craps::PlayerIds& playerIds,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readTableCurrentShooter(
         const Craps::TableId& tableId,
@@ -182,7 +178,7 @@ public:
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readTableRecentRolls(
         const Craps::TableId& tableId,
-        std::deque<Craps::Dice>& recentRolls,
+        Craps::RecentRolls& recentRolls,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode  readTableCurrentStats(
         const Craps::TableId& tableId,

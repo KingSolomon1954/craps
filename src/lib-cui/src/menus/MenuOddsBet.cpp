@@ -60,7 +60,7 @@ MenuOddsBet::getPlayerId()
 void
 MenuOddsBet::gatherBetsInfo()
 {
-    Ctrl::CrapsReaders::BetIds ids;
+    Craps::BetIds ids;
     getBetIds(ids);     // fills in betIdList
     gatherBetsDetail(ids); // use betIdList
 }
@@ -68,7 +68,7 @@ MenuOddsBet::gatherBetsInfo()
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::getBetIds(Ctrl::CrapsReaders::BetIds& ids)
+MenuOddsBet::getBetIds(Craps::BetIds& ids)
 {
     Gen::ErrorPass ep;
     auto rc = Ctrl::CrapsReaders::readPlayerGetOddsBets(playerId_, ids, ep); 
@@ -78,7 +78,7 @@ MenuOddsBet::getBetIds(Ctrl::CrapsReaders::BetIds& ids)
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::gatherBetsDetail(const Ctrl::CrapsReaders::BetIds& ids)
+MenuOddsBet::gatherBetsDetail(const Craps::BetIds& ids)
 {
     Gen::ErrorPass ep;
     

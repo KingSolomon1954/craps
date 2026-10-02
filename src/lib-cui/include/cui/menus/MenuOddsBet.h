@@ -73,8 +73,8 @@ private:
     void gatherBets();
     void getPlayerId();
     void gatherBetsInfo();
-    void getBetIds(Ctrl::CrapsReaders::BetIds& ids);
-    void gatherBetsDetail(const Ctrl::CrapsReaders::BetIds& ids);
+    void getBetIds(Craps::BetIds& ids);
+    void gatherBetsDetail(const Craps::BetIds& ids);
     void sortBetsByCreated();
 
     // Creating menu entries

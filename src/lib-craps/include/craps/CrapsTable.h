@@ -20,7 +20,6 @@
 #include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
 #include <array>
-#include <deque>
 #include <list>
 
 namespace Craps {
@@ -80,7 +79,7 @@ public:
     Player*                 getCurrentShooter()         const;
     const TableId&          getTableId()                const;
     const std::string&      getTableName()              const;
-    const std::deque<Dice>& getRecentRolls()            const;
+    const RecentRolls&      getRecentRolls()            const;
     const TableStats&       getCurrentStats()           const;
     const TableStats&       getAlltimeStats()           const;
     const BankStats&        getBankCurrentStats()       const;
@@ -139,7 +138,7 @@ private:
     TableStats currentStats_;
     TableStats alltimeStats_;
     LastRollStats lastRollStats_; 
-    std::deque<Dice> recentRolls_;  // Front element is oldest roll
+    RecentRolls recentRolls_;  // Front element is oldest roll
 
     // Move these to a rules struct 
     unsigned maxOdds_     = 5;

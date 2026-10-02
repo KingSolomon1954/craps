@@ -46,10 +46,10 @@ public:
     static int wstringWidth(const std::wstring& msg);
     static std::string playerName(const Craps::PlayerId& id);
     static short playerColorPair (const Craps::PlayerId& id);
-    static Ctrl::CrapsReaders::PlayerIds orderedPlayerIds();
+    static Craps::PlayerIds orderedPlayerIds();
     static Craps::PlayerId userPlayerId();
     static Craps::TableId activeTableId();
-    static Ctrl::CrapsReaders::PlayerIds playersAtTable(Craps::TableId tid);
+    static Craps::PlayerIds playersAtTable(Craps::TableId tid);
     static CuiBetName betToCuiBetName(BetName betName, unsigned pivot);
     /// @}
 };

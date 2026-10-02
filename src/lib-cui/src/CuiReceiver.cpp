@@ -151,9 +151,9 @@ CuiReceiver::onDiceNewValue(const Ctrl::UslDiceNewValue& ev) const
     CuiThread::instance().enqueueWork(wo);
 
     std::string s = "CuiReceiver::onDiceNewValue() Dice " +
-                    std::to_string(ev.val) + " ("          +
-                    std::to_string(ev.d1) + ","            +
-                    std::to_string(ev.d2) + ") Roll: "     +
+                    std::to_string(ev.val) + " ("         +
+                    std::to_string(ev.d1)  + ","          +
+                    std::to_string(ev.d2)  + ") Roll: "   +
                     std::to_string(ev.rollCount);
     LOG_TRACE(s);
 }

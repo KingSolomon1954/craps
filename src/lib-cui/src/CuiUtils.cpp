@@ -140,14 +140,14 @@ CuiUtils::playerColorPair(const Craps::PlayerId& id)
 
 //----------------------------------------------------------------
 
-Ctrl::CrapsReaders::PlayerIds
+Craps::PlayerIds
 CuiUtils::orderedPlayerIds()
 {
     auto userPid   = userPlayerId();
     auto tableId   = activeTableId();
     auto playerIds = playersAtTable(tableId);
 
-    Ctrl::CrapsReaders::PlayerIds orderedIds;  // Going to return this
+    Craps::PlayerIds orderedIds;  // Going to return this
     orderedIds.reserve(MaxPlayers);
     orderedIds.push_back(userPid);  // UserPlayer always gets index 0.
 
@@ -200,11 +200,11 @@ CuiUtils::activeTableId()
 
 //----------------------------------------------------------------
 
-Ctrl::CrapsReaders::PlayerIds
+Craps::PlayerIds
 CuiUtils::playersAtTable(Craps::TableId tid)
 {
     Gen::ErrorPass ep;
-    Ctrl::CrapsReaders::PlayerIds pids;
+    Craps::PlayerIds pids;
     
     auto rc = Ctrl::CrapsReaders::readTablePlayers(tid, pids, ep);
     assert(pids.size() > 0);

@@ -1160,7 +1160,7 @@ CrapsTable::getBalance() const
 
 //----------------------------------------------------------------
 
-const std::deque<Dice>&
+const RecentRolls&
 CrapsTable::getRecentRolls() const
 {
     return recentRolls_;
