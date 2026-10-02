@@ -23,7 +23,6 @@ class ConfigManager;  // fwd
 class EventHandler;   // fwd
 class PlayerManager;  // fwd
 class TableManager;   // fwd
-class UndoManager;    // fwd
     
 class GameMain
 {
@@ -53,7 +52,6 @@ private:
     Ctrl::EventHandler*   initEventHandler();
     Ctrl::TableManager*   initTableManager();
     Ctrl::PlayerManager*  initPlayerManager();
-    Ctrl::UndoManager*    initUndoManager();
     
     void                  initView();
     void                  setupLogging();

@@ -20,7 +20,6 @@ Ctrl::EventHandler*    Gbl::pEventHandler = nullptr;
 Craps::CrapsTable*     Gbl::pTable        = nullptr;
 Ctrl::TableManager*    Gbl::pTableMgr     = nullptr;
 Ctrl::PlayerManager*   Gbl::pPlayerMgr    = nullptr;
-Ctrl::UndoManager*     Gbl::pUndoMgr      = nullptr;
 
 const std::string Gbl::appNameScreen = "Royal Craps";
 const std::string Gbl::appNameExec   = "royalcraps";

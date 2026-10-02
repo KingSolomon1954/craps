@@ -12,6 +12,8 @@
 
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
+#include <controller/AutoFill.h>
+#include <controller/QuickBet.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
 #include <craps/SessionHistory.h>
@@ -234,22 +236,15 @@ public:
     static std::string getUserPlayerName();
     
     // Auto Fill
-    struct AutoFillEntry
-    {
-        BetName     betName;
-        size_t      pivot;
-        bool        oddsBet;
-        Gen::Money  amount;
-    };
-
     static Gen::ReturnCode getAutoFill(
-            AutoFillEntry& entry,
-            Gen::ErrorPass& ep);
+        AutoFill::AutoFillEntry& entry,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode getAutoFills(
-            std::vector<AutoFillEntry>& autoFills,  // return arg
-            Gen::ErrorPass& ep);
+        AutoFill::AutoFills& autoFills,  // return arg
+        Gen::ErrorPass& ep);
 
     // Quick Bet
+#if 0    
     struct QuickBetEntry
     {
         BetName     betName;
@@ -257,10 +252,11 @@ public:
         bool        oddsBet;
         Gen::Money  amount;
     };
+#endif
     
     static Gen::ReturnCode getQuickBets(
-            std::vector<QuickBetEntry>& quickBets,  // return arg
-            Gen::ErrorPass& ep);
+        QuickBet::QuickBets& quickBets,  // return arg
+        Gen::ErrorPass& ep);
 
 private:
     // Private helpers

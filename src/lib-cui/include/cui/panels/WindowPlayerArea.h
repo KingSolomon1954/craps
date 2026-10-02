@@ -23,6 +23,7 @@ class WindowPlayerArea : PanelBase
 public:
     /// @name Lifecycle
     /// @{
+    static WindowPlayerArea& instance();
    ~WindowPlayerArea() = default;
     /// @}
 
@@ -52,7 +53,6 @@ public:
 
     /// @name Observers
     /// @{
-    static WindowPlayerArea& instance();
     /// @}
     
 private:

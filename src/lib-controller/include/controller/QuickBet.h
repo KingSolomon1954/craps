@@ -22,11 +22,12 @@ public:
         bool       isOddsBet  = false;
         Gen::Money amount     = 0;
     };
-    using Bets = std::vector<QuickBetEntry>;
+    using QuickBets = std::vector<QuickBetEntry>;
     
     /// @name Lifecycle
     /// @{
-    static QuickBet* instance();
+   ~QuickBet() = default;
+    static QuickBet& instance();
     /// @}
     
     /// @name Modifiers
@@ -39,11 +40,13 @@ public:
 
     /// @name Observers
     /// @{
-    const Bets& getQuickBets();
+    const QuickBets& getQuickBets();
     /// @}
     
 private:
-    Bets bets_;
+    QuickBet() = default;
+    
+    QuickBets bets_;
 };
 
 /*-----------------------------------------------------------*//**

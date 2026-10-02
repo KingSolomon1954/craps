@@ -23,11 +23,13 @@ public:
         bool       isOddsBet  = false;
         Gen::Money amount     = 0;
     };
-    using Fills = std::vector<AutoFillEntry>;
+    using AutoFills = std::vector<AutoFillEntry>;
     
     /// @name Lifecycle
     /// @{
-    static AutoFill* instance();
+    AutoFill() = default;
+   ~AutoFill() = default;
+    static AutoFill& instance();
     /// @}
     
     /// @name Modifiers
@@ -39,15 +41,15 @@ public:
     /// @name Observers
     /// @{
     Gen::ReturnCode getAutoFill(AutoFillEntry& afe);
-    const Fills& getAutoFills();
+    const AutoFills& getAutoFills();
     /// @}
     
 private:
-    Fills fills_;
+    AutoFills fills_;
 
     // Helper to find an entry by betName/pivot/isOddsBet
-    Fills::iterator       findEntry(const AutoFillEntry& afe);
-    Fills::const_iterator findEntry(const AutoFillEntry& afe) const;
+    AutoFills::iterator       findEntry(const AutoFillEntry& afe);
+    AutoFills::const_iterator findEntry(const AutoFillEntry& afe) const;
 };
 
 /*-----------------------------------------------------------*//**

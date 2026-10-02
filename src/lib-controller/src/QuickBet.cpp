@@ -5,9 +5,9 @@
 //----------------------------------------------------------------
 
 #include <controller/QuickBet.h>
-#include <controller/CrapsCommands.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
+#include <craps/CrapsTypes.h>
 #include <craps/Player.h>
 #include <cassert>
 
@@ -15,10 +15,10 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 
-QuickBet* QuickBet::instance()
+QuickBet& QuickBet::instance()
 {
-    static QuickBet quickBet;
-    return &quickBet;
+    static QuickBet qb;
+    return qb;
 }
 
 //----------------------------------------------------------------
@@ -26,6 +26,7 @@ QuickBet* QuickBet::instance()
 void
 QuickBet::applyQuickBet(size_t index)
 {
+#if 0
     Gen::ErrorPass ep;
     Craps::BetId betId;
     Gen::ReturnCode rc;
@@ -63,6 +64,7 @@ QuickBet::applyQuickBet(size_t index)
             // pOwning_->onBetFailed(playerId, ep.diag);
             // showDialogAckError(ep.diag);
     }
+#endif    
 }
 
 //----------------------------------------------------------------
@@ -120,7 +122,7 @@ QuickBet::deleteQuickBet(size_t index)
 
 //----------------------------------------------------------------
 
-const QuickBet::Bets&
+const QuickBet::QuickBets&
 QuickBet::getQuickBets()
 {
     return bets_;

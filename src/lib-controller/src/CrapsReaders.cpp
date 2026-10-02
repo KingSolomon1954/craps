@@ -5,10 +5,8 @@
 //----------------------------------------------------------------
 
 #include <controller/CrapsReaders.h>
-#include <controller/AutoFill.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
-// #include <controller/QuickBet.h>
 #include <controller/TableManager.h>
 #include <controller/UndoManager.h>
 #include <craps/BankStats.h>
@@ -884,13 +882,11 @@ CrapsReaders::readTableList()
 
 Gen::ReturnCode
 CrapsReaders::getAutoFill(
-    AutoFillEntry& entry,
+    AutoFill::AutoFillEntry& entry,
     Gen::ErrorPass& ep)
 {
-    AutoFill::AutoFillEntry afe =
-        {entry.betName, entry.pivot, entry.oddsBet, entry.amount };
-    
-    if (AutoFill::instance()->getAutoFill(afe) == Gen::ReturnCode::Success)
+    AutoFill::AutoFillEntry afe;
+    if (AutoFill::instance().getAutoFill(afe) == Gen::ReturnCode::Success)
     {
         entry.amount = afe.amount;
         return Gen::ReturnCode::Fail;
@@ -903,17 +899,18 @@ CrapsReaders::getAutoFill(
 
 Gen::ReturnCode
 CrapsReaders::getAutoFills(
-    std::vector<AutoFillEntry>& autoFills,  // return arg
+    AutoFill::AutoFills& autoFills,  // return arg
     Gen::ErrorPass& ep)
 {
-    AutoFill::Fills controllerFills = AutoFill::instance()->getAutoFills();
+    AutoFill::AutoFills controllerFills =
+        AutoFill::instance().getAutoFills();
 
     for (size_t i = 0; i < controllerFills.size(); i++)
     {
-        autoFills[i].betName = controllerFills[i].betName;
-        autoFills[i].pivot   = controllerFills[i].pivot;
-        autoFills[i].oddsBet = controllerFills[i].isOddsBet;
-        autoFills[i].amount  = controllerFills[i].amount;
+        autoFills[i].betName   = controllerFills[i].betName;
+        autoFills[i].pivot     = controllerFills[i].pivot;
+        autoFills[i].isOddsBet = controllerFills[i].isOddsBet;
+        autoFills[i].amount    = controllerFills[i].amount;
     }
     return Gen::ReturnCode::Success;
 }

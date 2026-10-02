@@ -10,7 +10,6 @@
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/TableManager.h>
-#include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
 #include <cui/CuiMain.h>
 #include <gen/BuildInfo.h>
@@ -52,7 +51,6 @@ GameMain::GameMain(int argc, char* argv[])
     std::unique_ptr<Ctrl::EventHandler>   pEventHandler(initEventHandler());   (void) pEventHandler;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
-    std::unique_ptr<Ctrl::UndoManager>    pUndoMgr(initUndoManager());         (void) pUndoMgr;
     disableConsoleLogging();              // No more writing to screen
     initView();
 
@@ -162,16 +160,6 @@ GameMain::initPlayerManager()
 
 //----------------------------------------------------------------
 
-UndoManager*
-GameMain::initUndoManager()
-{
-    auto p = new UndoManager();
-    Gbl::pUndoMgr = p;
-    return p;
-}
-
-//----------------------------------------------------------------
-
 void
 GameMain::initView()
 {
@@ -223,7 +211,6 @@ GameMain::explicitShutdown()
     Gbl::pTable->shutdown();
     shutdownView();
     // Gbl::pEventHandler->shutdown();  // N/A
-    // Gbl::pUndoMgr     ->shutdown();  // N/A
     // Gbl::pPlayerMgr   ->shutdown();  // N/A
     // Gbl::pTableMgr    ->shutdown();  // N/A
     // Gbl::pConfigMgr   ->shutdown();  // N/A

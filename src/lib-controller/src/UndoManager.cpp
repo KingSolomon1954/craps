@@ -10,6 +10,14 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 
+UndoManager& UndoManager::instance()
+{
+    static UndoManager um;
+    return um;
+}
+
+//----------------------------------------------------------------
+
 void
 UndoManager::push(std::unique_ptr<UndoBet> ubet)
 {

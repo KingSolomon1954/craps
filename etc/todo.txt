@@ -25,7 +25,6 @@ Minimum bets are wrong. Allow $1 bets for proposition bets,
 hardways, fix min field bet.
 
 Add world bet
-QuickBets is commented out
 QuickBets need to save/read from user config
 AutoFills need to save/read from user config
 
@@ -41,9 +40,13 @@ Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
 OperationTracker needs correlationId matching
+Rewrite QuickBet for new CUI design
+Implement ReqMakeBet, to include UndoManager
 
-
-
+(Done) UndoManager implements instance(), remove from Globals
+(Done) Added QuickBets back into compilation
+(Done) Only CrapsTypes define using PlayersId, BetIds, and RecentRolls
+(Done) Fix shared structure between CrapsRaders and AutoFill
 (Done) Implement PlayerAreaAllPlayers::onBetResolved()
 (Done) Refactor PlayerAreaAllPlayers use a table 
 (Done) Implement PlayerAreaOnePlayer::onBetResolved()

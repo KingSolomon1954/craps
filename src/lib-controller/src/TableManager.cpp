@@ -111,7 +111,7 @@ TableManager::switchCrapsTable(
         Gbl::pTable = p;                     // New table accssible in globals
         pCurrentCrapsTable_ = p;             // Manage it's memory
         tables_[0] = p;                      // replace table in container
-        Gbl::pUndoMgr->clear();              // Start with zero undo's
+        UndoManager::instance().clear();     // Start with zero undo's
         return Gen::ReturnCode::Success;
     }
     catch (const std::runtime_error& e)

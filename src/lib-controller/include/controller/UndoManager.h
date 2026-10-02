@@ -15,12 +15,23 @@ namespace Ctrl {
 class UndoManager
 {
 public:
+    /// @name Lifecycle
+    /// @{
+   ~UndoManager() = default;
+    static UndoManager& instance();
+    /// @}
+    
+    /// @name Modifiers
+    /// @{
     void push(std::unique_ptr<UndoBet> ubet); 
     bool canUndo() const;
     void undo();
     void clear();
+    /// @}
     
 private:
+    UndoManager() = default;
+    
     std::vector<std::unique_ptr<UndoBet>> stack_;
 };
 

@@ -10,10 +10,11 @@ using namespace Ctrl;
 
 //----------------------------------------------------------------
 
-AutoFill* AutoFill::instance()
+AutoFill&
+AutoFill::instance()
 {
-    static AutoFill autoFill;
-    return &autoFill;
+    static AutoFill af;
+    return af;
 }
 
 //----------------------------------------------------------------
@@ -61,7 +62,7 @@ AutoFill::deleteAutoFill(const AutoFillEntry& afe)
 
 //----------------------------------------------------------------
 
-const AutoFill::Fills&
+const AutoFill::AutoFills&
 AutoFill::getAutoFills()
 {
     return fills_;
@@ -71,7 +72,7 @@ AutoFill::getAutoFills()
 //
 // Look for an existing entry with same betName, pivot, and isOddsBet
 //
-AutoFill::Fills::iterator
+AutoFill::AutoFills::iterator
 AutoFill::findEntry(const AutoFillEntry& afe)
 {
     return std::find_if(fills_.begin(), fills_.end(),
@@ -86,7 +87,7 @@ AutoFill::findEntry(const AutoFillEntry& afe)
 //
 // Look for an existing entry with same betName, pivot, and isOddsBet
 //
-AutoFill::Fills::const_iterator
+AutoFill::AutoFills::const_iterator
 AutoFill::findEntry(const AutoFillEntry& afe) const
 {
     return std::find_if(fills_.cbegin(), fills_.cend(),
