@@ -42,6 +42,7 @@ Need OperationTracker (manages interactive lifecycle)
 OperationTracker needs correlationId matching
 Rewrite QuickBet for new CUI design
 Implement ReqMakeBet, to include UndoManager
+Add dialog confirm when quitting game tied to operations manager
 
 (Done) UndoManager implements instance(), remove from Globals
 (Done) Added QuickBets back into compilation

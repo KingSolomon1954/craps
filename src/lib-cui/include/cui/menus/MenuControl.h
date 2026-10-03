@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: MenuPlaceBet.h
+// File: MenuControl.h
 //
 //----------------------------------------------------------------
 
@@ -11,13 +11,13 @@
 
 namespace Cui {
 
-class MenuPlaceBet : public MenuBase
+class MenuControl : public MenuBase
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuPlaceBet() = default;
-    static MenuPlaceBet& instance();
+   ~MenuControl() = default;
+    static MenuControl& instance();
     /// @}
 
     /// @name Modifiers
@@ -34,25 +34,30 @@ public:
     
 private:
     WindowPosition  winPos_;
-    WindowSize      winSize_ = {11, 22};  // rows, cols
+    WindowSize      winSize_ = {14, 25};  // rows, cols
 
 private:
-    MenuPlaceBet();  // Private ctor
+    MenuControl();  // Private ctor
     void fillWindow();
-    void processSelection(int num);
-    void populateCarrier (int pivot);
-    void prepDialogAmount(int pivot);
-    void activateDialogAmount();
+    void doConfigure();
+    void doPause();
+    void doResume();
+    void doBuddyJoins();
+    void doBuddyLeaves();
+    void doRenamePlayer();
+    void doSwitchPlayer();
+    void doCreatePlayer();
+    void doChangeTable();
     void back();
 };
 
 /*-----------------------------------------------------------*//**
 
-@class MenuPlaceBet
+@class MenuControl
 
-@brief Display choices for Place Bets
+@brief Display choices for game control and configuration
 
-Responsibilities of MenuPlaceBet
+Responsibilities of MenuControl
 
 @li Key bindings for the menu
 @li Process input keys 

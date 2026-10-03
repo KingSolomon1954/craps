@@ -923,7 +923,8 @@ Control Menu
         │ [q] Quick Bets          │
         │ [a] Auto Bets           │
         │ [t] Timed Rolls         │
-        │ [esc] Back              │
+        │ [s] Animation Speed     │
+        │ [. or esc] Back         │
         └─────────────────────────┘
 
         [f] Format Roll History

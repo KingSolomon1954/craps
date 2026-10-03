@@ -623,7 +623,7 @@ BetStats:
 RollStats:
   numberCounts:
     2:
-      count: 0
+      count: 2
       maxRepeats: 0
     3:
       count: 3
@@ -632,22 +632,22 @@ RollStats:
       count: 4
       maxRepeats: 1
     5:
-      count: 4
-      maxRepeats: 0
-    6:
       count: 7
       maxRepeats: 0
+    6:
+      count: 9
+      maxRepeats: 0
     7:
-      count: 8
+      count: 9
       maxRepeats: 0
     8:
-      count: 6
+      count: 8
       maxRepeats: 0
     9:
       count: 7
       maxRepeats: 1
     10:
-      count: 1005
+      count: 1006
       maxRepeats: 1
     11:
       count: 2
@@ -691,14 +691,14 @@ RollStats:
         maxRepeats: 0
     6:
       wins:
-        count: 4
+        count: 5
         maxRepeats: 0
       lose:
         count: 0
         maxRepeats: 0
     8:
       wins:
-        count: 3
+        count: 4
         maxRepeats: 0
       lose:
         count: 0
@@ -712,7 +712,7 @@ RollStats:
         maxRepeats: 0
     10:
       wins:
-        count: 2
+        count: 3
         maxRepeats: 0
       lose:
         count: 0
@@ -737,14 +737,14 @@ RollStats:
         count: 0
         maxRepeats: 0
       lose:
-        count: 4
+        count: 5
         maxRepeats: 0
     8:
       wins:
         count: 0
         maxRepeats: 0
       lose:
-        count: 3
+        count: 4
         maxRepeats: 0
     9:
       wins:
@@ -758,7 +758,7 @@ RollStats:
         count: 0
         maxRepeats: 0
       lose:
-        count: 2
+        count: 3
         maxRepeats: 0
   comePntCnts:
     4:
@@ -770,17 +770,17 @@ RollStats:
         maxRepeats: 0
     5:
       wins:
-        count: 2
+        count: 3
         maxRepeats: 0
       lose:
-        count: 3
+        count: 4
         maxRepeats: 0
     6:
       wins:
         count: 3
         maxRepeats: 0
       lose:
-        count: 3
+        count: 4
         maxRepeats: 0
     8:
       wins:
@@ -801,7 +801,7 @@ RollStats:
         count: 3
         maxRepeats: 1
       lose:
-        count: 5
+        count: 6
         maxRepeats: 0
   dontComePntCnts:
     4:
@@ -813,14 +813,14 @@ RollStats:
         maxRepeats: 0
     5:
       wins:
-        count: 3
+        count: 4
         maxRepeats: 0
       lose:
-        count: 2
+        count: 3
         maxRepeats: 0
     6:
       wins:
-        count: 3
+        count: 4
         maxRepeats: 0
       lose:
         count: 3
@@ -841,7 +841,7 @@ RollStats:
         maxRepeats: 1
     10:
       wins:
-        count: 5
+        count: 6
         maxRepeats: 0
       lose:
         count: 3
@@ -859,32 +859,32 @@ RollStats:
         count: 0
         maxRepeats: 0
       lose:
-        count: 7
+        count: 9
         maxRepeats: 2
     8:
       wins:
         count: 2
         maxRepeats: 0
       lose:
-        count: 3
+        count: 5
         maxRepeats: 0
     10:
       wins:
         count: 3
         maxRepeats: 0
       lose:
-        count: 4
+        count: 5
         maxRepeats: 1
-  numRolls: 50
+  numRolls: 61
   numPointsEstablished: 1
   comeOutRolls:
-    count: 11
+    count: 12
     maxRepeats: 1
   pointRolls:
-    count: 39
+    count: 49
     maxRepeats: 10
   passWinsComeOut:
-    count: 9
+    count: 10
     maxRepeats: 3
   passLoseComeOut:
     count: 1
@@ -893,31 +893,31 @@ RollStats:
     count: 1
     maxRepeats: 0
   comeLoseComeOut:
-    count: 4
+    count: 6
     maxRepeats: 1
   dontPassWinsComeOut:
     count: 1
     maxRepeats: 0
   dontPassLoseComeOut:
-    count: 9
+    count: 10
     maxRepeats: 3
   dontComeWinsComeOut:
-    count: 2
+    count: 4
     maxRepeats: 1
   dontComeLoseComeOut:
     count: 1
     maxRepeats: 0
   fieldBetWins:
-    count: 25
+    count: 28
     maxRepeats: 4
   fieldBetLose:
-    count: 25
+    count: 28
     maxRepeats: 4
   sevenOuts:
     count: 0
     maxRepeats: 0
   shooterCounts:
-    count: 50
+    count: 61
     maxRepeats: 21
   twosOnComeOutRoll:
     count: 0
@@ -926,7 +926,7 @@ RollStats:
     count: 1
     maxRepeats: 0
   sevensOnComeOutRoll:
-    count: 8
+    count: 9
     maxRepeats: 0
   elevensOnComeOutRoll:
     count: 1
@@ -938,34 +938,10 @@ RollStats:
     count: 1
     maxRepeats: 0
 SessionStats:
-  numSessionsAlltime: 329
+  numSessionsAlltime: 333
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 04:17:54
   history:
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2026-09-13T06:09:28.232795448
-      duration: 0d 00:00:16
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2026-09-13T06:09:46.162594889
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2026-09-13T06:09:48.722647576
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 0
-      date: 2026-09-13T06:09:52.571382913
-      duration: 0d 00:00:18
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
@@ -1206,3 +1182,27 @@ SessionStats:
       numPlayers: 0
       date: 2026-09-24T04:56:41.774750148
       duration: 0d 00:14:46
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-10-03T16:21:04.083260297
+      duration: 0d 00:00:19
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-10-03T16:21:24.871536331
+      duration: 0d 00:00:19
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-10-03T16:21:47.378947998
+      duration: 0d 00:01:08
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 0
+      date: 2026-10-03T16:25:44.375447479
+      duration: 0d 00:04:24

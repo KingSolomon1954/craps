@@ -8,6 +8,7 @@
 #include <cui/CuiUtils.h>
 #include <cui/dialogs/DialogConfirm.h>
 #include <cui/layouts/LayoutConsole.h>
+#include <cui/menus/MenuControl.h>
 #include <cui/SurfaceManager.h>
 #include <controller/GameEvents.h>
 #include <gen/EventManager.h>
@@ -125,7 +126,7 @@ WindowNavBar::handleKey(int ch)
 void
 WindowNavBar::doControl()
 {
-    // TODO
+    SurfaceManager::instance().pushSurface(&MenuControl::instance());
 }
 
 //----------------------------------------------------------------
@@ -167,8 +168,13 @@ WindowNavBar::doQuit()
 {
     LOG_TRACE("WindowNavBar::doQuit()");
     pendingQuit_ = true;
-    DialogConfirm::instance().configure("Are you sure you want to Quit?");
-    SurfaceManager::instance().pushSurface(&DialogConfirm::instance());
+
+    Gen::EventManager::instance().publish(Ctrl::ReqRollDice{});
+
+    // TODO  Need a confirm dialog box tied to operationis maangers.
+    // instead of the following.
+    //    DialogConfirm::instance().configure("Are you sure you want to Quit?");
+    //    SurfaceManager::instance().pushSurface(&DialogConfirm::instance());
 }
 
 //----------------------------------------------------------------
