@@ -31,6 +31,7 @@ SurfaceManager::shutdownNcursesResources()
                   surface->surfaceName() + "->releaseNcursesResources()");
         surface->releaseNcursesResources();
     }
+
     surfaces_.clear();
 }
 
@@ -48,21 +49,37 @@ SurfaceManager::shutdown()
 //
 // Used when shutting down in order to issue delwin() before ncurses
 // disappears. Can't control static order singleton class destructors.
-// 
+//
 void
 SurfaceManager::registerForShutdown(SurfaceBase* pSurface)
 {
-    LOG_TRACE("SurfaceManager::registerForShutdown() " + pSurface->surfaceName());
-    SurfaceList oldSurfaces;
+    LOG_TRACE("SurfaceManager::registerForShutdown() " +
+              pSurface->surfaceName());
+
     surfaces_.push_back(pSurface);
 }
 
 //----------------------------------------------------------------
-
+//
+// Redraw the complete current screen composition.
+//
+// stack_ is ordered from the root surface through each active
+// overlay/menu to the currently active surface.  Each surface is
+// drawn in that order so that higher surfaces appear on top of
+// lower surfaces.
+//
 void
 SurfaceManager::draw()
 {
-    draw(stack_.back());
+    if (stack_.empty())
+        return;
+
+    for (auto* surface : stack_)
+    {
+        surface->draw();
+    }
+
+    doupdate();
 }
 
 //----------------------------------------------------------------
@@ -70,8 +87,10 @@ SurfaceManager::draw()
 void
 SurfaceManager::draw(SurfaceBase* pSurface)
 {
+    assert(pSurface);
+
     pSurface->draw();
-    doupdate();  // Paint the physical screen
+    doupdate();
 }
 
 //----------------------------------------------------------------
@@ -81,10 +100,10 @@ SurfaceManager::draw(SurfaceBase* pSurface)
 void
 SurfaceManager::setSurface(SurfaceBase* pSurface)
 {
-    LOG_TRACE("SurfaceManager::setSurface() " + pSurface->surfaceName());
-    SurfaceList oldSurfaces;
+    LOG_TRACE("SurfaceManager::setSurface() " +
+              pSurface->surfaceName());
 
-    oldSurfaces = stack_;
+    SurfaceList oldSurfaces = stack_;
     stack_.clear();
     stack_.push_back(pSurface);
 
@@ -92,14 +111,15 @@ SurfaceManager::setSurface(SurfaceBase* pSurface)
     {
         s->onDetach();
     }
+
     pSurface->onAttach(nullptr);
 
-    draw(pSurface);
+    draw();
 }
 
 //----------------------------------------------------------------
 //
-// Menu/Dialog/Overlya/etc. LocationManager placement
+// Menu/Dialog/Overlay/etc. LocationManager placement.
 //
 void
 SurfaceManager::pushSurface(SurfaceBase* pSurface)
@@ -110,6 +130,8 @@ SurfaceManager::pushSurface(SurfaceBase* pSurface)
     auto pParent = activeSurface();
 
     stack_.push_back(pSurface);
+
+    pParent->onPause();
 
     pSurface->onAttach(pParent);
     assignLocation(pSurface, pParent);
@@ -122,21 +144,26 @@ SurfaceManager::pushSurface(SurfaceBase* pSurface)
 void
 SurfaceManager::popSurface()
 {
-    SurfaceBase* pSurface = nullptr;
-    SurfaceBase* pResumed = nullptr;
+    if (stack_.size() <= 1)
+        return;
 
-    if (stack_.size() <= 1) return;
-
-    pSurface = stack_.back();
+    SurfaceBase* pSurface = stack_.back();
     stack_.pop_back();
-    LOG_TRACE("SurfaceManager::popSurface() popping " + pSurface->surfaceName());
 
-    pResumed = stack_.back();
+    LOG_TRACE("SurfaceManager::popSurface() popping " +
+              pSurface->surfaceName());
+
+    SurfaceBase* pResumed = stack_.back();
+
     locationMgr_.release(pSurface->surfaceName());
+
     pSurface->onDetach();
     pResumed->onResume();
 
-    draw(pResumed);
+    // The popped surface's ncurses WINDOW may have left its
+    // contents on the physical screen.  Redraw the complete
+    // remaining surface chain to reconstruct the screen.
+    draw();
 }
 
 //----------------------------------------------------------------
@@ -145,20 +172,50 @@ void
 SurfaceManager::popSurfaces()
 {
     LOG_TRACE("SurfaceManager::popSurfaces()");
-    while (true)
+
+    while (stack_.size() > 1)
     {
-        SurfaceBase* pSurface = nullptr;
+        SurfaceBase* pSurface = stack_.back();
+        stack_.pop_back();
 
-        if (stack_.size() <= 1) return;
-        pSurface = stack_.back();
+        LOG_TRACE("SurfaceManager::popSurfaces() popping " +
+                  pSurface->surfaceName());
 
+        locationMgr_.release(pSurface->surfaceName());
+        pSurface->onDetach();
+
+        SurfaceBase* pCurrent = stack_.back();
+        pCurrent->onResume();
+
+        if (!pCurrent->shouldSkip())
+        {
+            LOG_TRACE("SurfaceManager::popSurfaces()");
+            break;
+        }
+    }
+
+    draw();
+}
+
+#if 0
+
+void
+SurfaceManager::popSurfaces()
+{
+    LOG_TRACE("SurfaceManager::popSurfaces()");
+
+    while (stack_.size() > 1)
+    {
         popSurface();
 
-        SurfaceBase* pCurrent = nullptr;
-        if (!stack_.empty()) pCurrent = stack_.back();
-        if (!pCurrent || !pCurrent->shouldSkip()) return;
+        SurfaceBase* pCurrent = stack_.back();
+
+        if (!pCurrent->shouldSkip())
+            return;
     }
 }
+
+#endif
 
 //----------------------------------------------------------------
 
@@ -166,15 +223,16 @@ void
 SurfaceManager::assignLocation(SurfaceBase* pSurface,
                                SurfaceBase* pParent)
 {
-    assert(pParent); assert(pSurface);
-    
+    assert(pParent);
+    assert(pSurface);
+
     auto position = locationMgr_.findPosition(
         pSurface->getLocationRequest(),
         pParent->surfaceName(),
         pSurface->surfaceName());
 
     // findPosition() itself throws if position is null
-    
+
     pSurface->setLocation(*position);
 }
 
@@ -185,9 +243,12 @@ SurfaceManager::handleKey(int ch)
 {
     if (!stack_.empty())
     {
-        LOG_TRACE("SurfaceManager::handleKey() calling handlekey(" + std::to_string(ch) + ")");
+        LOG_TRACE("SurfaceManager::handleKey() calling handlekey(" +
+                  std::to_string(ch) + ")");
+
         return stack_.back()->handleKey(ch);
     }
+
     return false;
 }
 
@@ -196,7 +257,9 @@ SurfaceManager::handleKey(int ch)
 SurfaceBase*
 SurfaceManager::activeSurface() const
 {
-    if (stack_.empty()) return nullptr;
+    if (stack_.empty())
+        return nullptr;
+
     return stack_.back();
 }
 
@@ -209,3 +272,4 @@ SurfaceManager::isActiveSurface(SurfaceBase* pSurface) const
 }
 
 //----------------------------------------------------------------
+

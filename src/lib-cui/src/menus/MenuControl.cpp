@@ -64,7 +64,7 @@ MenuControl::fillWindow()
     mvwaddch(pWin_, 2, 0, ACS_LTEE);
     mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 
-    mvwaddstr(pWin_,  1, 2, "Configure");
+    mvwaddstr(pWin_,  1, 2, "Control");
     mvwaddstr(pWin_,  3, 2, "[c] Configure");
     mvwaddstr(pWin_,  4, 2, "[p] Pause");
     mvwaddstr(pWin_,  5, 2, "[r] Resume");
@@ -115,6 +115,8 @@ MenuControl::setLocation(WindowPosition pos)
 void
 MenuControl::draw()
 {
+     LOG_TRACE("MenuControl::draw()");
+     
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
 }    

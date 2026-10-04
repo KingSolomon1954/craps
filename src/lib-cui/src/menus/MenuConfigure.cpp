@@ -7,6 +7,7 @@
 #include <cui/menus/MenuConfigure.h>
 #include <cui/CuiUtils.h>
 #include <cui/SurfaceManager.h>
+#include <gen/Logger.h>
 
 using namespace Cui;
 
@@ -105,6 +106,7 @@ MenuConfigure::setLocation(WindowPosition pos)
 void
 MenuConfigure::draw()
 {
+     LOG_TRACE("MenuConfigure::draw()");
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
 }    
