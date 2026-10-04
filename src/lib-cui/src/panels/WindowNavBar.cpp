@@ -84,20 +84,6 @@ void
 WindowNavBar::onResume()
 {
     LOG_TRACE("WindowNavBar::onResume()");
-    if (pendingQuit_)
-    {
-        pendingQuit_ = false;
-        if (getOperationResult() == OperationResult::Yes)
-        {
-            LOG_TRACE("WindowNavBar::onResume(): trigger shutdown");
-            Gen::EventManager::instance().publish(Ctrl::ReqTerminate{} );
-        }
-        else
-        {
-            LOG_TRACE("WindowNavBar::onResume(): cancel shutdown");
-            assert(getOperationResult() == OperationResult::No);
-        }
-    }
 }
 
 //----------------------------------------------------------------
@@ -167,9 +153,8 @@ void
 WindowNavBar::doQuit()
 {
     LOG_TRACE("WindowNavBar::doQuit()");
-    pendingQuit_ = true;
 
-    Gen::EventManager::instance().publish(Ctrl::ReqRollDice{});
+    Gen::EventManager::instance().publish(Ctrl::ReqTerminate{});
 
     // TODO  Need a confirm dialog box tied to operationis maangers.
     // instead of the following.

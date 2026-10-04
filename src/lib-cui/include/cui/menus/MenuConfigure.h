@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: MenuControl.h
+// File: MenuConfigure.h
 //
 //----------------------------------------------------------------
 
@@ -11,13 +11,13 @@
 
 namespace Cui {
 
-class MenuControl : public MenuBase
+class MenuConfigure : public MenuBase
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~MenuControl() = default;
-    static MenuControl& instance();
+   ~MenuConfigure() = default;
+    static MenuConfigure& instance();
     /// @}
 
     /// @name Modifiers
@@ -25,7 +25,6 @@ public:
     void draw()                          override;
     bool handleKey(int ch)               override;
     void setLocation(WindowPosition pos) override;
-    void onResume()                      override;
     /// @}
 
     /// @name Observers
@@ -35,30 +34,26 @@ public:
     
 private:
     WindowPosition  winPos_;
-    WindowSize      winSize_ = {14, 25};  // rows, cols
+    WindowSize      winSize_ = {10, 37};  // rows, cols
 
 private:
-    MenuControl();  // Private ctor
+    MenuConfigure();  // Private ctor
     void fillWindow();
-    void doConfigure();
-    void doPause();
-    void doResume();
-    void doBuddyJoins();
-    void doBuddyLeaves();
-    void doRenamePlayer();
-    void doSwitchPlayer();
-    void doCreatePlayer();
-    void doChangeTable();
+    void doFormatRollHistory();
+    void doQuickBets();
+    void doAutoBets();
+    void doTimedRolls();
+    void doAnimationSpeed();
     void back();
 };
 
 /*-----------------------------------------------------------*//**
 
-@class MenuControl
+@class MenuConfigure
 
 @brief Display choices for game control and configuration
 
-Responsibilities of MenuControl
+Responsibilities of MenuConfigure
 
 @li Key bindings for the menu
 @li Process input keys 

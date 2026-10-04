@@ -35,7 +35,6 @@ public:
     
 private:
     std::string textLine_;
-    bool pendingQuit_ = false;
     
 private:
     struct Layout

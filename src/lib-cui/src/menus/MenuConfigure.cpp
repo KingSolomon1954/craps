@@ -1,21 +1,19 @@
 //----------------------------------------------------------------
 //
-// File: MenuControl.cpp
+// File: MenuConfigure.cpp
 //
 //----------------------------------------------------------------
 
-#include <cui/menus/MenuControl.h>
-#include <cui/CuiUtils.h>
 #include <cui/menus/MenuConfigure.h>
+#include <cui/CuiUtils.h>
 #include <cui/SurfaceManager.h>
-#include <gen/Logger.h>
 
 using namespace Cui;
 
 //----------------------------------------------------------------
 
-MenuControl::MenuControl()
-    : MenuBase("MenuControl")
+MenuConfigure::MenuConfigure()
+    : MenuBase("MenuConfigure")
 {
     // Create an initial WINDOW at location 0,0. Gets positioned later.
     newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
@@ -24,10 +22,10 @@ MenuControl::MenuControl()
 
 //----------------------------------------------------------------
 
-MenuControl&
-MenuControl::instance()
+MenuConfigure&
+MenuConfigure::instance()
 {
-    static MenuControl menu;
+    static MenuConfigure menu;
     return menu;
 }
 
@@ -38,24 +36,20 @@ MenuControl::instance()
 // Later, multiple calls to draw() just transfers the already
 // filled window.
 //
-//    0123456789 123456789 1234
-// 0  ┌────────────────────────┐
-// 1  │ Control Menu           │
-// 2  ├────────────────────────┤
-// 3  │ [c] Configure          │
-// 4  │ [p] Pause              │
-// 5  │ [r] Resume             │
-// 6  │ [j] Buddy Joins Table  │
-// 7  │ [l] Buddy Leaves Table │
-// 8  │ [n] Rename Player      │
-// 9  │ [s] Switch To Player   │
-// 10 │ [e] Create New Player  │
-// 11 │ [a] Change Table       │
-// 12 │ [. or esc] Back        │
-// 13 └────────────────────────┘
+//    0123456789 123456789 123456
+// 0  ┌─────────────────────────┐
+// 1  │ Configure               │
+// 2  ├─────────────────────────┤
+// 3  │ [f] Format Roll History │
+// 4  │ [q] Quick Bets          │
+// 5  │ [a] Auto Bets           │
+// 6  │ [t] Timed Rolls         │
+// 7  │ [s] Animation Speed     │
+// 8  │ [. or esc] Back         │
+// 9  └─────────────────────────┘
 //
 void
-MenuControl::fillWindow()
+MenuConfigure::fillWindow()
 {
     box(pWin_, 0, 0);
 
@@ -64,17 +58,13 @@ MenuControl::fillWindow()
     mvwaddch(pWin_, 2, 0, ACS_LTEE);
     mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 
-    mvwaddstr(pWin_,  1, 2, "Configure");
-    mvwaddstr(pWin_,  3, 2, "[c] Configure");
-    mvwaddstr(pWin_,  4, 2, "[p] Pause");
-    mvwaddstr(pWin_,  5, 2, "[r] Resume");
-    mvwaddstr(pWin_,  6, 2, "[j] Buddy Joins Table");
-    mvwaddstr(pWin_,  7, 2, "[l] Buddy Leaves Table");
-    mvwaddstr(pWin_,  8, 2, "[n] Rename Player");
-    mvwaddstr(pWin_,  9, 2, "[s] Switch Player");
-    mvwaddstr(pWin_, 10, 2, "[e] Create Player");
-    mvwaddstr(pWin_, 11, 2, "[a] Change Table");
-    mvwaddstr(pWin_, 12, 2, "[. or esc] Back");
+    mvwaddstr(pWin_, 1, 2, "Configure");
+    mvwaddstr(pWin_, 3, 2, "[c] Format Roll History");
+    mvwaddstr(pWin_, 4, 2, "[q] Quick Bets");
+    mvwaddstr(pWin_, 5, 2, "[a] Auto Bets");
+    mvwaddstr(pWin_, 6, 2, "[t] Timed Rolls");
+    mvwaddstr(pWin_, 7, 2, "[s] Animation Speed");
+    mvwaddstr(pWin_, 8, 2, "[. or esc] Back");
 }
 
 //----------------------------------------------------------------
@@ -85,7 +75,7 @@ MenuControl::fillWindow()
 // See setLocation() below. 
 //
 LocationRequest
-MenuControl::getLocationRequest() const
+MenuConfigure::getLocationRequest() const
 {
     LocationRequest req;
     req.kind      = LocationKind::Menu;
@@ -104,16 +94,16 @@ MenuControl::getLocationRequest() const
 // call draw() on us.
 //
 void
-MenuControl::setLocation(WindowPosition pos)
+MenuConfigure::setLocation(WindowPosition pos)
 {
-    winPos_ = pos;   // MenuControl is fixed size, no resizing needed
+    winPos_ = pos;   // MenuConfigure is fixed size, no resizing needed
     repos(winPos_);  // Just need to re-position it
 }
 
 //----------------------------------------------------------------
 
 void
-MenuControl::draw()
+MenuConfigure::draw()
 {
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
@@ -124,23 +114,19 @@ MenuControl::draw()
 // Override surface base class
 //
 bool
-MenuControl::handleKey(int ch)
+MenuConfigure::handleKey(int ch)
 {
     bool handled = true;
     switch(ch)
     {
-    case 'c': doConfigure();    break;
-    case 'p': doPause();        break;
-    case 'r': doResume();       break;
-    case 'j': doBuddyJoins();   break;
-    case 'l': doBuddyLeaves();  break;
-    case 'n': doRenamePlayer(); break;
-    case 's': doSwitchPlayer(); break;
-    case 'e': doCreatePlayer(); break;
-    case 'a': doChangeTable();  break;
+    case 'f': doFormatRollHistory(); break;
+    case 'q': doQuickBets();         break;
+    case 'a': doAutoBets();          break;
+    case 't': doTimedRolls();        break;
+    case 's': doAnimationSpeed();    break;
     case '.':
-    case 27 : back();           break;
-    default : handled = false;  break;
+    case 27 : back();                break;
+    default : handled = false;       break;
     }
     return handled;
 }
@@ -148,71 +134,47 @@ MenuControl::handleKey(int ch)
 //----------------------------------------------------------------
 
 void
-MenuControl::doConfigure()
+MenuConfigure::doFormatRollHistory()
 {
-    SurfaceManager::instance().pushSurface(&MenuConfigure::instance());
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuControl::doPause()
+MenuConfigure::doQuickBets()
 {
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuControl::doResume()
+MenuConfigure::doAutoBets()
 {
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuControl::doBuddyJoins()
+MenuConfigure::doTimedRolls()
 {
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuControl::doBuddyLeaves()
+MenuConfigure::doAnimationSpeed()
 {
+    // TODO
 }
 
 //----------------------------------------------------------------
 
 void
-MenuControl::doRenamePlayer()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doSwitchPlayer()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doCreatePlayer()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doChangeTable()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::back()
+MenuConfigure::back()
 {
     // Set our own state in base class to reflect cancel.
     // Also informs parent surfaces of the state of operation.
@@ -221,14 +183,6 @@ MenuControl::back()
     //
     setOperationResult(OperationResult::Cancel);  // base class
     SurfaceManager::instance().popSurfaces();
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::onResume()
-{
-    LOG_TRACE("MenuControl::onResume()");
 }
 
 //----------------------------------------------------------------

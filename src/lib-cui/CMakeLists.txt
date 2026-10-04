@@ -23,6 +23,7 @@ add_library(cui STATIC
     src/layouts/LayoutCrapsScreen.cpp
     src/menus/MenuBetting.cpp
     src/menus/MenuControl.cpp
+    src/menus/MenuConfigure.cpp
     src/menus/MenuOddsBet.cpp
     src/menus/MenuPlaceBet.cpp
     src/menus/MenuNavBarViews.cpp
