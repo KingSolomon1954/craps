@@ -891,7 +891,7 @@ CrapsReaders::getAutoFill(
         entry.amount = afe.amount;
         return Gen::ReturnCode::Fail;
     }
-    ep.diag = "No such auto fill entry exists.";
+    ep.setDescription("No such auto fill entry exists.");
     return Gen::ReturnCode::Fail;
 }
 
@@ -954,7 +954,7 @@ CrapsReaders::getActiveCrapsTable(
     auto* t = Gbl::pTable;
     if (t == nullptr)
     {
-        ep.diag = "CrapsReaders::getActiveCrapsTable(): nullptr for active table. Coding error.";
+        ep.setDescription("CrapsReaders::getActiveCrapsTable(): nullptr for active table. Coding error.");
         return Gen::ReturnCode::Fail;
     }
     tableId = t->getTableId();
@@ -971,7 +971,8 @@ CrapsReaders::getUserPlayer(
     auto* p = Gbl::pPlayerMgr->getUserPlayer();
     if (p == nullptr)
     {
-        ep.diag = "CrapsReaders::getUserPlayer(): nullptr for user/player. Coding error.";
+        ep.setDescription("CrapsReaders::getUserPlayer(): "
+                          "nullptr for user/player. Coding error.");
         return Gen::ReturnCode::Fail;
     }
     playerId = p->getPlayerId();

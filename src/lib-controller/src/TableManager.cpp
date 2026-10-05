@@ -60,8 +60,8 @@ TableManager::getTable(const Craps::TableId& tableId,
             return t;
         }
     }
-    ep.diag = "TableManager::getTable(): no such tableId; \"" +
-        tableId + "\"";
+    ep.setDescription("TableManager::getTable(): no such tableId; \"" +
+                      tableId + "\"");
     return nullptr;
 }
 
@@ -116,7 +116,7 @@ TableManager::switchCrapsTable(
     }
     catch (const std::runtime_error& e)
     {
-        ep.diag = "TableManager::switchCrapsTable(): ";
+        ep.setDescription("TableManager::switchCrapsTable(): ");
         ep.append(e.what());
         return Gen::ReturnCode::Fail;
     }

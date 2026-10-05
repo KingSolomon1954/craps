@@ -6,6 +6,8 @@
 
 find_package(rang REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(zeus_expected CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 add_library(gen STATIC
     src/BuildInfo.cpp
@@ -33,6 +35,8 @@ target_include_directories(gen
 target_link_libraries(gen
     PUBLIC rang::rang
     PUBLIC yaml-cpp::yaml-cpp
+    PUBLIC zeus::expected
+    PUBLIC fmt::fmt
 )
 
 target_compile_definitions(gen

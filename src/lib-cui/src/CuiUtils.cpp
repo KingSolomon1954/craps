@@ -176,7 +176,7 @@ CuiUtils::userPlayerId()
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("CuiUtils::userPlayer() unable to obtain; ");
-        throw std::runtime_error(ep.diag);
+        throw std::runtime_error(ep.description());
     }
     return userPlayerId;
 }
@@ -193,7 +193,7 @@ CuiUtils::activeTableId()
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("CuiUtils::activeTableId() unable to obtain; ");
-        throw std::runtime_error(ep.diag);
+        throw std::runtime_error(ep.description());
     }
     return tableId;
 }
@@ -213,7 +213,7 @@ CuiUtils::playersAtTable(Craps::TableId tid)
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("CuiUtils::playersAtTable() unable to obtain; ");
-        throw std::runtime_error(ep.diag);
+        throw std::runtime_error(ep.description());
     }
     return pids;
 }

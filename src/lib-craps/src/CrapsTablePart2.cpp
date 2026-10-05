@@ -45,8 +45,8 @@ CrapsTable::fifBettingClosed(const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep
     // fault if betting is closed and sets ep error diag
     if (!bettingOpen_)
     {
-        ep.diag = diagPrefix(1, bet) + "Betting is closed at the moment - "
-                                       "dice roll is underway.";
+        ep.setDescription(diagPrefix(1, bet) + "Betting is closed at "
+                          "the moment - dice roll is underway.");
         return true;
     }
     return false;
@@ -60,8 +60,9 @@ CrapsTable::fifMissingPlayer(const CrapsBet& bet, Gen::ErrorPass& ep) const
     // fault if player is missing and sets ep error diag
     if (!havePlayer(&bet.player()))
     {
-        ep.diag = diagPrefix(1, bet) + "Player " +
-            bet.player().getName() + " is not joined with this table.";
+        ep.setDescription(diagPrefix(1, bet) + "Player " +
+                          bet.player().getName()         +
+                          " is not joined with this table.");
         return true;
     }
     return false;
@@ -75,8 +76,9 @@ CrapsTable::fifHaveBet(const CrapsBet& bet, Gen::ErrorPass& ep) const
     // fault if already have bet and sets ep error diag
     if (haveBet(bet.betId()))
     {
-        ep.diag = diagPrefix(1, bet) + "Player " +
-            bet.player().getName() + " has already made this bet.";
+        ep.setDescription(diagPrefix(1, bet) + "Player " +
+                          bet.player().getName()         +
+                          " has already made this bet.");
         return true;
     }
     return false;
@@ -90,7 +92,8 @@ CrapsTable::fifMissingBet(const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) c
     // fault if bet is not on the table and sets ep error diag
     if (!haveBet(bet.betId()))
     {
-        ep.diag = diagPrefix(idx, bet) + "This bet is not on the table.";
+        ep.setDescription(diagPrefix(idx, bet) +
+                          "This bet is not on the table.");
         return true;
     }
     return false;
@@ -106,7 +109,7 @@ CrapsTable::fifZeroAmount(const CrapsBet& bet,
 {
     if (amt == 0)
     {
-        ep.diag = diagPrefix(idx, bet) + "Bet cannot be $0.";
+        ep.setDescription(diagPrefix(idx, bet) + "Bet cannot be $0.");
         return true;
     }
     return false;
@@ -122,16 +125,18 @@ CrapsTable::fifComeDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep) const
     {
         if (point_ == 0)
         {
-            ep.diag = diagPrefix(1, bet) + "This bet is not allowed "
-                                           "during come out roll.";
+            ep.setDescription(diagPrefix(1, bet) +
+                              "This bet is not allowed "
+                              "during come out roll.");
             return true;
         }
         if (bet.pivot() != 0)
         {
             // Not a come out roll, but can't have a pivot already assigned
-            ep.diag = diagPrefix(1, bet) + "This bet cannot specify " +
-                "a point/pivot of " + std::to_string(bet.pivot()) +
-                ". Pivot must be 0.";
+            ep.setDescription(diagPrefix(1, bet)                          +
+                              "This bet cannot specify a point/pivot of " +
+                              std::to_string(bet.pivot())                 +
+                              ". Pivot must be 0.");
             return true;
         }
     }
@@ -146,8 +151,8 @@ CrapsTable::fifDontPassDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep) const
     // fault if DontPass is disallowed and sets ep error diag
     if (bet.betName() == BetName::DontPass && point_ != 0)
     {
-        ep.diag = diagPrefix(1, bet) + 
-            "This bet is not allowed while there is already a point.";
+        ep.setDescription(diagPrefix(1, bet) + "This bet is not allowed "
+                          "while there is already a point.");
         return true;
     }
     return false;
@@ -163,9 +168,9 @@ CrapsTable::fifBadPassLineChange(const CrapsBet& bet, Gen::Money amt,
     {
         if (bet.pivot() != 0 && amt < bet.contractAmount())
         {
-            ep.diag = diagPrefix(2, bet) +
-                "Cannot reduce contract amount for PassLine/Come "
-                "bets after point is established.";
+            ep.setDescription(diagPrefix(2, bet) +
+                              "Cannot reduce contract amount for PassLine/"
+                              "Come bets after point is established.");
             return true;
         }
     }
@@ -184,9 +189,9 @@ CrapsTable::fifBadDontPassChange(const CrapsBet& bet, Gen::Money amt,
         {
             if (amt > bet.contractAmount())
             {
-                ep.diag = diagPrefix(2, bet) +
-                    "Cannot increase contract amount "
-                    "for DontPass/DontCome bets after point is established.";
+                ep.setDescription(diagPrefix(2, bet) +
+                    "Cannot increase contract amount for DontPass/"
+                    "DontCome bets after point is established.");
                 return true;
             }
             else
@@ -194,10 +199,10 @@ CrapsTable::fifBadDontPassChange(const CrapsBet& bet, Gen::Money amt,
                 // Reducing bet OK; but have to deal with odds
                 if (bet.oddsAmount() > (amt * maxLineBet_))
                 {
-                    ep.diag = diagPrefix(2, bet) + 
+                    ep.setDescription(diagPrefix(2, bet) + 
                     "Cannot reduce contract bet due to large odds bet. First"
                     "reduce odds amount before reducing contract amount, "
-                    "otherwise odds bet would exceed table limits.";
+                    "otherwise odds bet would exceed table limits.");
                     return true;
                 }
             }
@@ -263,7 +268,7 @@ CrapsTable::fifBadBetTypeForOdds(const CrapsBet& bet, Gen::ErrorPass& ep) const
     {
         std::string s("Odds bet is only available for "
                       "PassLine|Come|DontPass|DontCome bets.");
-        ep.diag = diagPrefix(3, bet) + s;
+        ep.setDescription(diagPrefix(3, bet) + s);
         return true;
     }
     return false;
@@ -279,7 +284,7 @@ CrapsTable::fifZeroPivotForOdds(const CrapsBet& bet, Gen::ErrorPass& ep) const
     {
         std::string s("Odds bet is only allowed after a "
             "point has been established for this bet.");
-        ep.diag = diagPrefix(3, bet) + s;
+        ep.setDescription(diagPrefix(3, bet) + s);
         return true;
     }
     return false;
@@ -296,12 +301,13 @@ CrapsTable::fifBadMinMaxForOdds(const CrapsBet& bet, Gen::Money amt,
     // Minimum odds is zero. But no need to test for that.
     if (amt > (bet.contractAmount() * maxOdds_))
     {
-        ep.diag = diagPrefix(3, bet) + Gen::MoneyUtils::toString(amt)  +
+        ep.setDescription(diagPrefix(3, bet)                           +
+            Gen::MoneyUtils::toString(amt)                             +
             " exceeds table limit of " + std::to_string(maxOdds_)      +
             "x odds; Contract amount is "                              +
             Gen::MoneyUtils::toString(bet.contractAmount())            +
             " which allows max odds amount of "                        +
-            Gen::MoneyUtils::toString(bet.contractAmount() * maxOdds_) +  ".";
+            Gen::MoneyUtils::toString(bet.contractAmount() * maxOdds_) +  ".");
         return true;
     }
     return false;
@@ -326,8 +332,8 @@ CrapsTable::withinMinMaxLineBets(BetName betName,
         {
             std::string min = std::to_string(minLineBet_);
             std::string max = std::to_string(maxLineBet_);
-            ep.diag = diagLimits(amount) +
-              "(min:" + min + ",max:" + max + ").";
+            ep.setDescription(diagLimits(amount) +
+                              "(min:" + min + ",max:" + max + ").");
             return false;
         }
     }
@@ -359,8 +365,8 @@ CrapsTable::withinMinMaxSideBets(BetName betName,
     {
         std::string minStr = std::to_string(min);
         std::string maxStr = std::to_string(max);
-            ep.diag = diagLimits(amt) +
-              "(min:" + minStr + ",max:" + maxStr + ").";
+        ep.setDescription(diagLimits(amt) +
+                          "(min:" + minStr + ",max:" + maxStr + ").");
             return false;
     }
     return true;
@@ -375,16 +381,16 @@ CrapsTable::goodMultiplesSideBets(BetName betName,
 {
     if (betName == BetName::CandE && (amt % 2 != 0))
     {
-        ep.diag = "This bet must be a multiple of 2. " +
-                  Gen::MoneyUtils::toString(amt)        +
-                  " is not a multiple of 2.";
+        ep.setDescription("This bet must be a multiple of 2. " +
+                          Gen::MoneyUtils::toString(amt)       +
+                          " is not a multiple of 2.");
         return false;
     }
     if (betName == BetName::Horn && (amt % 4 != 0))
     {
-        ep.diag = "This bet must be a multiple of 4. " +
-                  Gen::MoneyUtils::toString(amt)        +
-                  " is not a multiple of 4.";
+        ep.setDescription("This bet must be a multiple of 4. " +
+                          Gen::MoneyUtils::toString(amt)       +
+                          " is not a multiple of 4.");
         return false;
     }
     return true;

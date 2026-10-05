@@ -208,8 +208,8 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 {
     if (pTable == nullptr)
     {
-        ep.diag = "Player::joinTable(): Player:" + playerName_ +
-            "; pTable is null.";
+        ep.setDescription("Player::joinTable(): Player:" +
+                          playerName_ + "; pTable is null.");
         return Gen::ReturnCode::Fail;
     }
 
@@ -385,7 +385,7 @@ Player::makeShared(BetName betName,
     }
     catch(std::invalid_argument& e)
     {
-        ep.diag = diagPrefix(1) + e.what();
+        ep.setDescription(diagPrefix(1) + e.what());
         return nullptr;
     }
 }
@@ -428,8 +428,8 @@ Player::setOddsAmount(BetPtr pBet,
 {
     if (pBet == nullptr)
     {
-        ep.diag = "Player::setOddsAmount(): Player:" + playerName_ +
-            "; pBet is null.";
+        ep.setDescription("Player::setOddsAmount(): Player:" +
+                          playerName_ + "; pBet is null.");
         return Gen::ReturnCode::Fail;
     }
 
@@ -667,8 +667,8 @@ Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
     auto b = findBetById(betId);
     if (b != nullptr) return b;
         
-    ep.diag = "Player::getBet(): player " + playerName_ +
-        " has no such betId " + std::to_string(betId) + ".";
+    ep.setDescription("Player::getBet(): player " + playerName_ +
+                      " has no such betId " + std::to_string(betId) + ".");
     return nullptr;
 }
 
@@ -785,9 +785,10 @@ Player::removeBet(const BetId& betId, Gen::ErrorPass& ep)
         });
     if (it == bets_.end())
     {
-        ep.diag = "Player::removeBet(): unable to remove bet; Player " +
-            playerName_ + " does not have a bet with betId:" +
-            std::to_string(betId) + ").";
+        ep.setDescription("Player::removeBet(): unable to remove "
+                          "bet; Player " + playerName_       +
+                          " does not have a bet with betId:" +
+                          std::to_string(betId) + ").");
         return Gen::ReturnCode::Fail;
     }
 
@@ -989,8 +990,8 @@ Player::fifNoTable(size_t idx, Gen::ErrorPass& ep) const
     // fault if player is not joined to a table and sets ep error diag
     if (pTable_ == nullptr)
     {
-        ep.diag = diagPrefix(idx) + "Player " + playerName_ +
-            " has not yet joined a table.";
+        ep.setDescription(diagPrefix(idx) + "Player " + playerName_ +
+                          " has not yet joined a table.");
         return true;
     }
     return false;
@@ -1024,11 +1025,11 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
 
     if (diff > wallet_.getBalance())
     {
-        ep.diag = diagPrefix(idx) + "Player " + playerName_ +
+        ep.setDescription(diagPrefix(idx) + "Player " + playerName_ +
             " has insufficient funds to make a " +
             Gen::MoneyUtils::toString(amount)    +
             " bet; current balance:"             +
-            Gen::MoneyUtils::toString(getBalance()) + ".";
+            Gen::MoneyUtils::toString(getBalance()) + ".");
         return true;
     }
     return false;
@@ -1064,16 +1065,16 @@ Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
         if (pBet->player().getPlayerId() == playerId_)
         {
             // bet was created outside of makeBet()
-            ep.diag = diagPrefix(2) +
+            ep.setDescription(diagPrefix(2) +
                 "Player " + playerName_ + " does not have this bet in "
                 "its bet list; Programmer error; Must use Player::makeBet() "
-                "to make a bet; " + pBet->diagBetId() + ".";
+                "to make a bet; " + pBet->diagBetId() + ".");
             return true;
         }
-        ep.diag = diagPrefix(2) +
+        ep.setDescription(diagPrefix(2) +
             "Player " + playerName_ + " does not own this bet; " +
             pBet->diagBetId() + "; Owned by Player:" +
-            pBet->player().getName() + ".";
+            pBet->player().getName() + ".");
         return true;
     }
     return false;

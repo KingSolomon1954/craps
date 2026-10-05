@@ -20,7 +20,8 @@ class AppRecipe(ConanFile):
 
     def requirements(self):
         self.requires("nlohmann_json/[~3.12.0]")
-        self.requires("boost/1.84.0")
+        self.requires("zeus_expected/1.1.1")
+        self.requires("fmt/11.2.0");
         self.requires("cxxopts/3.2.0")
         self.requires("ncurses/6.5")
         self.requires("rang/3.2")
@@ -28,7 +29,7 @@ class AppRecipe(ConanFile):
         self.requires("doctest/[~2.4.11]")
         
     def configure(self):
-        self.options["boost"].header_only = True  # Optional: if you're using header-only
+        pass
 
     def build_requirements(self):
         pass

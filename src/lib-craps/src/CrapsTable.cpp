@@ -234,13 +234,13 @@ CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
                             "Player " + pPlayer->getName() + " to table; ");
     if (havePlayer(pPlayer))
     {
-        ep.diag = diag1 + "Player is already joined.";
+        ep.setDescription(diag1 + "Player is already joined.");
         return Gen::ReturnCode::Fail;
     }
     if (players_.size() == MaxPlayers)
     {
-        ep.diag = diag1 + "At max num players " +
-            std::to_string(MaxPlayers) + ".";
+        ep.setDescription(diag1 + "At max num players " +
+                          std::to_string(MaxPlayers) + ".");
         return Gen::ReturnCode::Fail;
     }
     players_.push_back(pPlayer);
@@ -286,9 +286,10 @@ CrapsTable::removePlayer(Player* pPlayer, Gen::ErrorPass& ep)
 {
     if (!havePlayer(pPlayer))
     {
-        ep.diag = "CrapsTable::removePlayer(); Unable to remove player; " +
-                  pPlayer->getName() + ":" + pPlayer->getPlayerId()       +
-                  "; Player has not joined this table.";
+        ep.setDescription("CrapsTable::removePlayer(); Unable to "
+                          "remove player; " + pPlayer->getName() +
+                          ":" + pPlayer->getPlayerId()           +
+                          "; Player has not joined this table.");
         return Gen::ReturnCode::Fail;
     }
     
@@ -399,18 +400,19 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
     std::string diag = "CrapsTable::removeBet(): Unable to remove bet. ";
     if (pBet == nullptr)
     {
-        ep.diag = diag + "pBet is nullptr.";
+        ep.setDescription(diag + "pBet is nullptr.");
         return Gen::ReturnCode::Fail;
     }
     if (!haveBet(pBet->betId()))
     {
-        ep.diag = diag + "This bet instance is not on the table.";
+        ep.setDescription(diag + "This bet instance is not on the table.");
         return Gen::ReturnCode::Fail;
     }
     if (!isBetRemovable(pBet))
     {
-        ep.diag = diag + "PassLine|Come bets with points must remain "
-            "on table until a decision; " + pBet->diagBetId() + ".";
+        ep.setDescription(diag + "PassLine|Come bets with points "
+                          "must remain on table until a decision; " +
+                          pBet->diagBetId() + ".");
         return Gen::ReturnCode::Fail;
     }
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
@@ -443,12 +445,12 @@ CrapsTable::removeBetForce(BetPtr pBet, Gen::ErrorPass& ep)
     std::string diag = "CrapsTable::removeBetForce(): Unable to remove bet. ";
     if (pBet == nullptr)
     {
-        ep.diag = diag + "pBet is nullptr.";
+        ep.setDescription(diag + "pBet is nullptr.");
         return Gen::ReturnCode::Fail;
     }
     if (!haveBet(pBet->betId()))
     {
-        ep.diag = diag + "This bet instance is not on the table.";
+        ep.setDescription(diag + "This bet instance is not on the table.");
         return Gen::ReturnCode::Fail;
     }
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
@@ -576,8 +578,8 @@ CrapsTable::getBet(const BetId& betId, Gen::ErrorPass& ep) const
     auto pBet = findBetById(betId);
     if (pBet == nullptr)
     {
-        ep.diag = "CrapsTable::getBet(): no such betId: " +
-                  std::to_string(betId) + ".";
+        ep.setDescription("CrapsTable::getBet(): no such betId: " +
+                          std::to_string(betId) + ".");
     }
     return pBet;
 }
@@ -802,7 +804,7 @@ CrapsTable::evalOneBet(CrapsBet& bet)
     }
     else
     {
-        std::cout << ep.diag << std::endl;
+        std::cout << ep.description() << std::endl;
     }
 }
 
@@ -1039,7 +1041,7 @@ CrapsTable::removePlayerByPtr(Player* pPlayer, Gen::ErrorPass& ep)
         players_.erase(it);
         return Gen::ReturnCode::Success;
     }
-    ep.diag = "Player has not joined this table.";
+    ep.setDescription("Player has not joined this table.");
     return Gen::ReturnCode::Fail;
 }
 
@@ -1319,7 +1321,7 @@ CrapsTable::resolveBetsOld()
     }
     else
     {
-        std::cout << ep.diag << std::endl;
+        std::cout << ep.description() << std::endl;
     }
 
     // Process all bets

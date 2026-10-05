@@ -103,7 +103,7 @@ PlayerManager::addPlayersToTable()
     {
         ep.prepend("PlayerManager::addPlayersToTable(): Unable to "
                    "add player to table; ");
-        throw std::runtime_error(ep.diag);
+        throw std::runtime_error(ep.description());
     }
 
     // Tell the table which user starts off as shooter.
@@ -123,8 +123,8 @@ PlayerManager::getPlayer(const Craps::PlayerId& playerId,
             return p;
         }
     }
-    ep.diag = "PlayerManager::getPLayer(): no such playerId; \"" +
-        playerId + "\"";
+    ep.setDescription("PlayerManager::getPLayer(): no such playerId; \"" +
+                      playerId + "\"");
     return nullptr;
 }
 

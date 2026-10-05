@@ -390,7 +390,7 @@ CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 {
     std::string s("CrapsBet::evaluate(): Error evaluating betId:");
     s += std::to_string(betId_) + " betName:" + EnumBetName::toString(betName_) + ". ";
-    Gen::StringUtils::prepend(ep.diag, s);
+    ep.prepend(s);
     return Gen::ReturnCode::Fail;
 }
 
@@ -420,7 +420,7 @@ CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
     {
         return true;
     }
-    ep.diag = "Bad value for point:" + std::to_string(point);
+    ep.setDescription("Bad value for point:" + std::to_string(point));
     return false;
 }
 
@@ -576,8 +576,8 @@ CrapsBet::evalCome(
         // during a come out roll, which is illegal. Instead the
         // user must make a PassLine bet.
         //
-        ep.diag = "Come bet is not allowed on come out roll. "
-                  "Use PassLine bet instead.";
+        ep.setDescription("Come bet is not allowed on come out roll. "
+                          "Use PassLine bet instead.");
         return Gen::ReturnCode::Fail;
     }
 
@@ -663,7 +663,8 @@ CrapsBet::evalDontPass(
         // evaluation(s) in order to be assigned a pivot, thus if there
         // is a point, then pivot cannot be zero.
         //
-        ep.diag = "DontPass bet is not allowed after point is established.";
+        ep.setDescription("DontPass bet is not allowed after point "
+                          "is established.");
         return Gen::ReturnCode::Fail;
     }
 
@@ -724,8 +725,8 @@ CrapsBet::evalDontCome(
         // during a come out roll, which is illegal. Instead the
         // user must make a DontPass bet.
         //
-        ep.diag = "DontCome bet is not allowed on Come out roll. "
-                  " Use DontPass bet instead.";
+        ep.setDescription("DontCome bet is not allowed on Come out "
+                          "roll. Use DontPass bet instead.");
         return Gen::ReturnCode::Fail;
     }
 

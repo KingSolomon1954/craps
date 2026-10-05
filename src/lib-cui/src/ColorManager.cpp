@@ -69,7 +69,7 @@ ColorManager::initPlayerColors()
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("ColorManager::initPlayerColors(1) unable to init; ");
-        throw std::runtime_error(ep.diag);
+        throw std::runtime_error(ep.description());
     }
 
     std::vector<Craps::PlayerId> ids;
@@ -77,7 +77,7 @@ ColorManager::initPlayerColors()
     if (rc == Gen::ReturnCode::Fail)
     {
         ep.prepend("ColorManager::initPlayerColors(2) unable to init; ");
-        throw std::runtime_error(ep.diag);
+        throw std::runtime_error(ep.description());
     }
 
     for (const auto& id : ids)
