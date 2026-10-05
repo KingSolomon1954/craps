@@ -21,9 +21,7 @@ Initialized to empty, and timestamp set to epoch minimum.
 
 */
 ErrorPass::ErrorPass()
-    : errorName_(ErrorName::UnsetErrorName)
-    , errorType_(ErrorType::ErrorTypeNotSpecified)
-    , severity_(Severity::UnsetSeverity)
+    : severity_(Severity::UnsetSeverity)
     , lineNum_(0)
     , codeNum_(0)
     , ts_(std::chrono::system_clock::time_point::min())
@@ -35,7 +33,18 @@ ErrorPass::ErrorPass()
 void
 ErrorPass::setErrorName(ErrorPass::ErrorName n)
 {
-    errorName_ = n;
+    if (n == ErrorPass::ErrorName::UnsetErrorName)
+        errorName_.clear();
+    else
+        errorName_ = ErrorPass::errorNameStr(n);
+}
+
+//----------------------------------------------------------------
+
+void
+ErrorPass::setErrorName(const std::string& name)
+{
+    errorName_ = name;
 }
 
 //----------------------------------------------------------------
@@ -43,12 +52,23 @@ ErrorPass::setErrorName(ErrorPass::ErrorName n)
 void
 ErrorPass::setErrorType(ErrorPass::ErrorType n)
 {
-    errorType_ = n;
+    if (n == ErrorPass::ErrorType::ErrorTypeNotSpecified)
+        errorType_.clear();
+    else
+        errorType_ = ErrorPass::errorTypeStr(n);
 }
 
 //----------------------------------------------------------------
 
-ErrorPass::ErrorName
+void
+ErrorPass::setErrorType(const std::string& type)
+{
+    errorType_ = type;
+}
+
+//----------------------------------------------------------------
+
+const std::string&
 ErrorPass::errorName() const
 {
     return errorName_;
@@ -56,18 +76,10 @@ ErrorPass::errorName() const
 
 //----------------------------------------------------------------
 
-void
-ErrorPass::setSeverity(ErrorPass::Severity n)
-{
-    severity_ = n;
-}
-
-//----------------------------------------------------------------
-
 const std::string&
 ErrorPass::errorNameStr() const
 {
-    return ErrorPass::errorNameStr(errorName_);
+    return errorName_;
 }
 
 //----------------------------------------------------------------
@@ -137,7 +149,7 @@ ErrorPass::errorNameStr(const ErrorPass::ErrorName& en)
 
 //----------------------------------------------------------------
 
-ErrorPass::ErrorType
+const std::string&
 ErrorPass::errorType() const
 {
     return errorType_;
@@ -148,7 +160,7 @@ ErrorPass::errorType() const
 const std::string&
 ErrorPass::errorTypeStr() const
 {
-    return ErrorPass::errorTypeStr(errorType_);
+    return errorType_;
 }
 
 //----------------------------------------------------------------
@@ -420,6 +432,29 @@ ErrorPass::set(ErrorPass::ErrorName errorName,
                const std::string& fileName,
                unsigned lineNum)
 {
+    const std::string name =
+        errorName == ErrorPass::ErrorName::UnsetErrorName
+            ? std::string{}
+            : ErrorPass::errorNameStr(errorName);
+    const std::string type =
+        errorType == ErrorPass::ErrorType::ErrorTypeNotSpecified
+            ? std::string{}
+            : ErrorPass::errorTypeStr(errorType);
+
+    set(name, type, severity, description, funcName, fileName, lineNum);
+}
+
+//----------------------------------------------------------------
+
+void
+ErrorPass::set(const std::string& errorName,
+               const std::string& errorType,
+               ErrorPass::Severity severity,
+               const std::string& description,
+               const std::string& funcName,
+               const std::string& fileName,
+               unsigned lineNum)
+{
     errorName_   = errorName;
     errorType_   = errorType;
     severity_    = severity;
@@ -428,7 +463,7 @@ ErrorPass::set(ErrorPass::ErrorName errorName,
     fileName_    = fileName;
     lineNum_     = lineNum;
     ts_          = std::chrono::system_clock::now();
-    
+
     // Seed initial point of failure into the stack trace
     stackTrace_.clear();
     pushTrace(funcName, fileName, lineNum);
@@ -439,8 +474,8 @@ ErrorPass::set(ErrorPass::ErrorName errorName,
 void
 ErrorPass::clear()
 {
-    errorName_ = ErrorName::UnsetErrorName;
-    errorType_ = ErrorType::ErrorTypeNotSpecified;
+    errorName_.clear();
+    errorType_.clear();
     severity_  = Severity::UnsetSeverity;
     description_.clear();
     funcName_.clear();
@@ -457,21 +492,14 @@ ErrorPass::clear()
 bool
 ErrorPass::hasError() const
 {
-    return errorName_ != ErrorName::UnsetErrorName;
-}
-
-//----------------------------------------------------------------
-
-ErrorPass::operator ErrorPass::ErrorName() const
-{
-    return errorName_;
+    return !errorName_.empty();
 }
 
 //----------------------------------------------------------------
 
 ErrorPass::operator const std::string&() const
 {
-    return errorNameStr();
+    return errorName_;
 }
 
 //----------------------------------------------------------------
@@ -481,6 +509,8 @@ ErrorPass::operator== (const ErrorPass& rhs) const
 {
     return
     errorName_   == rhs.errorName_   &&
+    errorType_   == rhs.errorType_   &&
+    severity_    == rhs.severity_    &&
     description_ == rhs.description_ &&
     funcName_    == rhs.funcName_    &&
     fileName_    == rhs.fileName_    &&
@@ -556,7 +586,7 @@ operator<< (std::ostream& out, const ErrorPass& ep)
     out << outStr;
     return out;
 }
-    
+
 }  // namespace Gen
 
 //----------------------------------------------------------------
