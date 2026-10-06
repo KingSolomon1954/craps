@@ -226,6 +226,36 @@ CrapsTable::shutdown()
 
 //----------------------------------------------------------------
 
+zeus::expected<void, Gen::ErrorPass>
+CrapsTable::addPlayer(Player& player)
+{
+    if (havePlayer(&player) || players_.size() == MaxPlayers)
+    {
+        Gen::ErrorPass ep;
+        const std::string diag1("Unable to add player: " + 
+                                 player.getName() + " to table; ");
+        if (players_.size() == MaxPlayers)
+        {
+            EP_SET(ep, En::OverflowError, Et::ProcessingError, Es::Indeterminate,
+                   diag1 + "Maximum players already at table.");
+        }
+        else
+        {
+            EP_SET(ep, En::ExistsError, Et::ProcessingError, Es::Indeterminate,
+                   diag1 + "Player already at table.");
+        }
+        return zeus::unexpected<Gen::ErrorPass>(ep);
+    }
+    
+    players_.push_back(&player);
+    
+    Ctrl::UslPlayerJoinedTable ev;
+    ev.playerId = player.getPlayerId();
+    Gen::EventManager::instance().publish(ev);
+    return {};
+}
+
+#if 0
 Gen::ReturnCode
 CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
 {
@@ -251,6 +281,8 @@ CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
 
     return Gen::ReturnCode::Success;
 }
+
+#endif
 
 //----------------------------------------------------------------
 

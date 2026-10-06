@@ -16,6 +16,7 @@
 #include <gen/ReturnCode.h>
 #include <gen/MoneyUtils.h>
 #include <yaml-cpp/yaml.h>
+#include <zeus/expected.hpp>
 #include <string>
 #include <memory>
 #include <list>
@@ -58,6 +59,7 @@ public:
 
     /// @name Modifiers
     /// @{
+    zeus::expected<void, Gen::ErrorPass> joinTable(CrapsTable& table);
     Gen::ReturnCode joinTable(CrapsTable* pTable, Gen::ErrorPass& ep);
     Gen::ReturnCode leaveTable(Gen::ErrorPass& ep);
     BetPtr makeBet(BetName betName,
@@ -139,7 +141,6 @@ private:
                       Gen::ErrorPass& ep);
     BetPtr findBetById(const BetId& betId) const;
     bool removeBetByPtr(BetPtr& pBet);
-    void setupSubscriptions();
     void setName(const std::string& playerName);
     void sendEventBetResolved(const PlayerId& playerId,
                               BetName         betName,

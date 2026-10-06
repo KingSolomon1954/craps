@@ -19,6 +19,7 @@
 #include <gen/ReturnCode.h>
 #include <gen/Timepoint.h>
 #include <yaml-cpp/yaml.h>
+#include <zeus/expected.hpp>
 #include <array>
 #include <list>
 
@@ -46,7 +47,8 @@ public:
     /// @name Modifiers
     /// @{
     // Players
-    Gen::ReturnCode addPlayer   (Player* pPlayer, Gen::ErrorPass& ep);
+    // Gen::ReturnCode addPlayer   (Player* pPlayer, Gen::ErrorPass& ep);
+    zeus::expected<void, Gen::ErrorPass> addPlayer(Player& player);
     Gen::ReturnCode removePlayer(Player* pPlayer, Gen::ErrorPass& ep);
     Gen::ReturnCode setShooter  (Player* pPlayer, Gen::ErrorPass& ep);
 
@@ -255,6 +257,10 @@ private:
     static constexpr unsigned InitialStartingBankBalance_ = 3000000;
     static constexpr unsigned RefillThreshold_            = 1500000;
     static constexpr unsigned RefillAmount_               = 2000000;
+
+    using En = Gen::ErrorPass::ErrorName;
+    using Et = Gen::ErrorPass::ErrorType;
+    using Es = Gen::ErrorPass::Severity;
 };
 
 /*-----------------------------------------------------------*//**

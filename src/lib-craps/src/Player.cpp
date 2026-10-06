@@ -187,22 +187,22 @@ Player::shutdown()
 
 //----------------------------------------------------------------
 
-void
-Player::setupSubscriptions()
+zeus::expected<void, Gen::ErrorPass>
+Player::joinTable(CrapsTable& table)
 {
-    // Does not listen for events at this time.
+    auto result = table.addPlayer(*this);
+    if (!result)
+    {
+        result.error().prepend("Failed to join table. ");
+        return zeus::unexpected<Gen::ErrorPass>(
+            std::move(result).error());
+    }
     
-    // Example here just to show syntax.
-    //
-    // Gen::EventManager::instance().subscribe<Ctrl::UslDiceThrowStart>(
-    //     [this](const Ctrl::UslDiceThrowStart&)
-    //     {
-    //         this->onDiceThrowStart();
-    //     });
+    pTable_ = &table;
+    return {};
 }
 
-//----------------------------------------------------------------
-
+#if 0
 Gen::ReturnCode
 Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 {
@@ -213,6 +213,13 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
         return Gen::ReturnCode::Fail;
     }
 
+    auto result = pTable->addPlayer(this);
+    if (!result)
+    {
+        result.ep.prepend("Failed to join table. ");
+        return zeus::unexpected<ErrorPass>(result.ep);
+    }
+    
     if (pTable->addPlayer(this, ep) == Gen::ReturnCode::Fail)
     {
         ep.prepend("Player::joinTable(): Player:" + playerName_ +
@@ -225,6 +232,7 @@ Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
 
     return Gen::ReturnCode::Success;
 }
+#endif
 
 /*-----------------------------------------------------------*//**
 

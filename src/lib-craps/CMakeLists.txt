@@ -5,6 +5,8 @@
 # --------------------------------------------------------
 
 find_package(yaml-cpp REQUIRED)
+find_package(zeus_expected CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 add_library(craps STATIC
     src/Bank.cpp
@@ -30,6 +32,8 @@ target_link_libraries(craps
     PUBLIC gen
     PUBLIC controller
     PUBLIC yaml-cpp::yaml-cpp
+    PUBLIC fmt::fmt
+    PUBLIC zeus::expected
 )
 
 target_compile_definitions(craps

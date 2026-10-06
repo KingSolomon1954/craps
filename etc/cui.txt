@@ -1211,8 +1211,58 @@ Help Menu
 
 
 
+ErrorDialog
+───────────
+🚫 U+1F6AB ⛔ L'\u26D4' 🛑 U+1F6D1  ❌ U+274C 	🔒 U+1F512
+🔆 U+1F506 💲 U+1F4B2   📝 U+1F4DD  🔨 U+1F528  📂 U+1F4C1
+❕ U+2755  📜 U+1F4DC
 
+L'\u2716' // ✖ Heavy multiplication X
+L'\u2718' // ✘ Ballot X
+L'\u26D4' // ⛔ No entry
+L'\u2757' // ❗ Heavy exclamation mark
+L'\u2620' // ☠ Skull and crossbones
 
+ErrorDialog
+───────────
+Header, always shows "Error", followed by ErrorType, and ErrorName
+Section Description, always shows supplied text
+Section Probable cause appears only if non-empty
+Section Proposed repair appears only if non-empty
+Section additional info appears only if non-empty
+Section Trace appears only if a programmatic type error
+
+┌───────────────────────────────────────────────────────────┐
+│ ❌ ERROR❗ Processing Error. Item Already Exists.         │
+├───────────────────────────────────────────────────────────┤
+│ 📜 Description:                                           │
+│                                                           │
+├───────────────────────────────────────────────────────────┤
+│ 📂 Probable Cause:                                        │
+│                                                           │
+├───────────────────────────────────────────────────────────┤
+│ 🔨 Proposed Repair:                                       │
+│                                                           │
+├───────────────────────────────────────────────────────────┤
+│ 🔆 Additional Info:                                       │
+│                                                           │
+├───────────────────────────────────────────────────────────┤
+│ 👇 Trace                                                  │
+│                                                           │
+├───────────────────────────────────────────────────────────┤
+│ [. or esc] OK                                             │
+└───────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────┐
+│ ❌ ERROR❗ Processing Error. Item Already Exists.         │
+├───────────────────────────────────────────────────────────┤
+│ 🔆 Description:                                           │
+│                                                           │
+│ Unable to add player: Winnifred, Player already at table. │
+│                                                           │
+├───────────────────────────────────────────────────────────┤
+│ [. or esc] Confirm                                        │
+└───────────────────────────────────────────────────────────┘
 
 
 
