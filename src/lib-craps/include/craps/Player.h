@@ -39,7 +39,7 @@ class Player
 {
 public:
     using Bets = std::vector<BetPtr>;
-    
+
     /// @name Lifecycle
     /// @{
     Player(const PlayerId&     playerId, // Existing playerId,
@@ -55,7 +55,6 @@ public:
                                 const PlayerConfig& config);
     static Player* fromFile    (const PlayerId&     playerId,
                                 const PlayerConfig& config);
-
     /// @}
 
     /// @name Modifiers
@@ -69,7 +68,7 @@ public:
     zeus::expected<void, Gen::ErrorPass> setOddsAmount(
         BetPtr pBet, Gen::Money oddsAmount);
     zeus::expected<void, Gen::ErrorPass> removeBet(const BetId& betId);
-    
+
     Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
     void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
     void bettingClosed();
@@ -130,7 +129,7 @@ private:
     static constexpr unsigned RefillThreshold_            = 15000;
     static constexpr unsigned RefillAmount_               = 20000;
 
-private:    
+private:
     BetPtr makeShared(BetName betName,
                       Gen::Money contractAmount,
                       unsigned pivot,
@@ -140,7 +139,7 @@ private:
     void setName(const std::string& playerName);
     void sendEventBetResolved(const PlayerId& playerId,
                               BetName         betName,
-                              BetId           betId, 
+                              BetId           betId,
                               Gen::Money      amountWin,
                               Gen::Money      amountLose) const;
 

@@ -232,7 +232,7 @@ CrapsTable::addPlayer(Player& player)
     if (havePlayer(&player) || players_.size() == MaxPlayers)
     {
         Gen::ErrorPass ep;
-        const std::string diag1("Unable to add player: " + 
+        const std::string diag1("Unable to add player: " +
                                  player.getName() + " to table; ");
         if (players_.size() == MaxPlayers)
         {
@@ -246,9 +246,9 @@ CrapsTable::addPlayer(Player& player)
         }
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-    
+
     players_.push_back(&player);
-    
+
     Ctrl::UslPlayerJoinedTable ev;
     ev.playerId = player.getPlayerId();
     Gen::EventManager::instance().publish(ev);
@@ -288,17 +288,17 @@ CrapsTable::removePlayer(Player& player)
 {
     if (!havePlayer(&player))
     {
-        std::string diag = "Unable to remove player: " + 
+        std::string diag = "Unable to remove player: " +
             player.getName() + ". Player is not at this table.";
         Gen::ErrorPass ep;
         EP_SET(ep, En::NotFoundError, Et::ProcessingError,
                Es::Indeterminate, diag);
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-    
+
     removePlayerByPtr(&player);
     removePlayerBets(&player);   // Bet money given to the house bank.
-    
+
     Ctrl::UslPlayerLeftTable ev;
     ev.playerId = player.getPlayerId();
     Gen::EventManager::instance().publish(ev);
@@ -330,7 +330,7 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
 
     sendEventBetMade(*pBet);
-    
+
     return Gen::ReturnCode::Success;
 }
 
@@ -369,7 +369,7 @@ CrapsTable::isBetRemovable(BetPtr pBet) const
     if (!haveBet(pBet->betId())) return false;
     if ((pBet->distance() > 0))
     {
-        if (pBet->betName() == BetName::PassLine || 
+        if (pBet->betName() == BetName::PassLine ||
             pBet->betName() == BetName::Come)
         {
             return false;
@@ -419,7 +419,7 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
         ep.setErrorName("Betting Error");
         return Gen::ReturnCode::Fail;
     }
-    
+
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
     return Gen::ReturnCode::Success;
 }
@@ -541,7 +541,7 @@ CrapsTable::setOddsAmount(BetPtr pBet,
     pBet->setOddsAmountInternal(oddsAmount);
 
     sendEventBetMade(*pBet);
-    
+
     return Gen::ReturnCode::Success;
 }
 
@@ -631,7 +631,7 @@ CrapsTable::declareBettingClosed()
 {
     bettingOpen_ = false;
     Gen::EventManager::instance().publish(Ctrl::UslBettingClosed{});
-    
+
     lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
     for (auto p : players_)
     {
@@ -817,14 +817,14 @@ CrapsTable::dispenseResults()
     disbursePlayerKeeps();
     disburseDone();
 }
-    
+
 //----------------------------------------------------------------
 
 void
 CrapsTable::disburseHouseResults()
 {
     bool changed = false;
-    
+
     for (const auto& r : drl_)
     {
         if (r.lose > 0)  // player loses, house wins
@@ -907,7 +907,7 @@ CrapsTable::disbursePlayerKeeps()
 // Allows players to close out their last roll stats. Can't use events
 // for this as asynchronous events arrive after bets have already been
 // removed.
-// 
+//
 void
 CrapsTable::disburseDone()
 {
@@ -948,7 +948,7 @@ CrapsTable::trimTableBets()
 //----------------------------------------------------------------
 //
 // Part of trimTableBets processing chain.
-// 
+//
 bool
 CrapsTable::removeMatchingBet(BetList& bets, CrapsBet* pBet)
 {

@@ -196,7 +196,7 @@ Player::joinTable(CrapsTable& table)
         return zeus::unexpected<Gen::ErrorPass>(
             std::move(result).error());
     }
-    
+
     pTable_ = &table;
     return {};
 }
@@ -230,7 +230,7 @@ Player::leaveTable()
         assert(getNumBetsOnTable() == 0);
         return {};
     }
-    
+
     // Remove any outstanding bets from table, recover funds
     // Manually increment iterator so we can erase while iterating
     for (auto it = bets_.begin(); it != bets_.end(); ) // no increment here
@@ -240,14 +240,14 @@ Player::leaveTable()
         wallet_.deposit(pBet->contractAmount() + pBet->oddsAmount());
         it = bets_.erase(it); // returns next valid iterator
     }
-    
+
     auto result = pTable_->removePlayer(*this);
     if (!result)
     {
         result.error().prepend("Failed to leave table. ");
         return zeus::unexpected<Gen::ErrorPass>(std::move(result).error());
     }
-    
+
     return {};
 }
 
@@ -280,15 +280,15 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
     Gen::ErrorPass ep;
     std::string s = "Unable to make bet(" +
                     std::to_string(contractAmount) +
-                    ") for player: " + playerName_ + ". ";    
-    
-    if (fifNoTable(ep)  || 
+                    ") for player: " + playerName_ + ". ";
+
+    if (fifNoTable(ep)  ||
         fifInsufficientFunds(nullptr, contractAmount, ep))
     {
         ep.prepend(s);
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-     
+
     auto pBet = makeShared(betName, contractAmount, pivot, ep);
     if (pBet == nullptr || fifBadAddBet(pBet, ep))
     {
@@ -298,7 +298,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
         ep.setSeverity(Es::Indeterminate);
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-    
+
     wallet_.withdraw(contractAmount);
     bets_.push_back(pBet);
     return pBet;
@@ -427,7 +427,7 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
     }
 
     Gen::Money curOddsBet = pBet->oddsAmount();  // Remember current val
-    
+
     // Adjust wallet. Handle increase or decrease in odds bet
     if (oddsAmount < curOddsBet)
     {
@@ -469,7 +469,7 @@ Changes the contract amount of a bet on the table.
 */
 zeus::expected<void, Gen::ErrorPass>
 Player::setContractAmount(
-    BetPtr pBet, 
+    BetPtr pBet,
     Gen::Money newAmount)
 {
     // TODO
@@ -478,7 +478,7 @@ Player::setContractAmount(
     // call pTable_->setContractAmount()
     // if success adjust wallet, change contractAmount_, send event
     // if fail leave wallet alone, keep existing contractAmount_
-    
+
     return {};
 }
 
@@ -626,7 +626,7 @@ Player::disburseDone()
         ev.playerId   = playerId_;
         ev.balance    = getBalance();    // how much left in wallet
         ev.netBalance = getSessionNet(); // profilt/loss session start
-        
+
         Gen::EventManager::instance().publish(ev);
     }
 }
@@ -646,7 +646,7 @@ Player::sendEventBetResolved(const PlayerId& playerId,
     ev.betId      = betId,
     ev.amountWin  = amountWin;
     ev.amountLose = amountLose;
-    
+
     Gen::EventManager::instance().publish(ev);
 }
 
@@ -657,7 +657,7 @@ Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
 {
     auto b = findBetById(betId);
     if (b != nullptr) return b;
-        
+
     ep.setDescription("Player::getBet(): player " + playerName_ +
                       " has no such betId " + std::to_string(betId) + ".");
     return nullptr;
@@ -770,7 +770,7 @@ zeus::expected<void, Gen::ErrorPass>
 Player::removeBet(const BetId& betId)
 {
     Gen::ErrorPass ep;
-    
+
     auto it = std::remove_if(bets_.begin(), bets_.end(),
         [betId](const BetPtr& b)
         {

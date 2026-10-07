@@ -26,7 +26,7 @@
 namespace Craps {
 
 class Player;  // fwd
-    
+
 class CrapsTable
 {
 public:
@@ -61,7 +61,7 @@ public:
     Gen::ReturnCode setOddsAmount(BetPtr pBet,
                                   Gen::Money oddsAmount,
                                   Gen::ErrorPass& ep);
-    
+
     // Table
     void rollDice();
     void resetStats();
@@ -138,10 +138,10 @@ private:
     Dice testRollDice_;
     TableStats currentStats_;
     TableStats alltimeStats_;
-    LastRollStats lastRollStats_; 
+    LastRollStats lastRollStats_;
     RecentRolls recentRolls_;  // Front element is oldest roll
 
-    // Move these to a rules struct 
+    // Move these to a rules struct
     unsigned maxOdds_     = 5;
     unsigned minLineBet_  = 5;
     unsigned maxLineBet_  = 1000;
@@ -153,7 +153,7 @@ private:
     unsigned maxCandEBet_ = 1000;
     unsigned minHornBet_  = 4;
     unsigned maxHornBet_  = 1000;
-    
+
     CrapsTable();  // private ctor
 
     // Players must join table in order to play.
@@ -177,7 +177,7 @@ private:
     using DecisionList = std::list<DecisionRecord>;
     DecisionList drl_;
 
-private:    
+private:
     bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
     void throwDice();
     void resolveBets();
@@ -208,7 +208,7 @@ private:
     void disbursePlayerKeeps();
 
     void sendEventBetMade(const CrapsBet& bet) const;
-    
+
     // File operations
     void saveFile() const;
     void loadFile();

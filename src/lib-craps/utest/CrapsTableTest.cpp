@@ -10,6 +10,7 @@
 #include <vector>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
+#include <zeus/expected.hpp>
 
 using namespace Craps;
 
@@ -119,60 +120,62 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
         Gen::ErrorPass ep;
 
-        CHECK(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); CHECK(result);
         CHECK(t->getNumPlayers() == 1);
+        
         // Add same player again - error
-        CHECK(t->addPlayer(p1, ep) == Gen::ReturnCode::Fail);
+        result = t->addPlayer(*p1); CHECK(!result);
 
         // Add different player
-        CHECK(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
+        result = t->addPlayer(*p2); CHECK(result);
         CHECK(t->getNumPlayers() == 2);
         
         // Add a bunch
-        CHECK(t->addPlayer(p3, ep) == Gen::ReturnCode::Success);
-        CHECK(t->addPlayer(p4, ep) == Gen::ReturnCode::Success);
-        CHECK(t->addPlayer(p5, ep) == Gen::ReturnCode::Success);
-        CHECK(t->addPlayer(p6, ep) == Gen::ReturnCode::Success);
+        result = t->addPlayer(*p3); CHECK(result);
+        result = t->addPlayer(*p4); CHECK(result);
+        result = t->addPlayer(*p5); CHECK(result);
+        result = t->addPlayer(*p6); CHECK(result);
 
         // Six players max at a table
-        CHECK(t->addPlayer(p7, ep) == Gen::ReturnCode::Fail);
+        result = t->addPlayer(*p7); CHECK(!result);
+        CHECK(t->getNumPlayers() == 6);
 
         // Remove player unknown to the table
-        CHECK(t->removePlayer(p7, ep) == Gen::ReturnCode::Fail);
+        result = t->removePlayer(*p7); CHECK(!result);
         CHECK(t->getNumPlayers() == 6);
 
         // Remove from middle
-        CHECK(t->removePlayer(p3, ep) == Gen::ReturnCode::Success);
+        result = t->removePlayer(*p3); CHECK(result);
         CHECK(t->getNumPlayers() == 5);
 
         // Remove from front
-        CHECK(t->removePlayer(p1, ep) == Gen::ReturnCode::Success);
+        result = t->removePlayer(*p1); CHECK(result);
         CHECK(t->getNumPlayers() == 4);
 
         // Remove from tail
-        CHECK(t->removePlayer(p6, ep) == Gen::ReturnCode::Success);
+        result = t->removePlayer(*p6); CHECK(result);
         CHECK(t->getNumPlayers() == 3);
 
         // Able to add after removals
-        CHECK(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
+        result = t->addPlayer(*p1); CHECK(result);
         CHECK(t->getNumPlayers() == 4);
 
         // Remove all and still able to add
-        CHECK(t->removePlayer(p1, ep) == Gen::ReturnCode::Success);
-        CHECK(t->removePlayer(p2, ep) == Gen::ReturnCode::Success);
-        CHECK(t->removePlayer(p3, ep) == Gen::ReturnCode::Fail);
-        CHECK(t->removePlayer(p4, ep) == Gen::ReturnCode::Success);
-        CHECK(t->removePlayer(p5, ep) == Gen::ReturnCode::Success);
-        CHECK(t->removePlayer(p6, ep) == Gen::ReturnCode::Fail);
+        result = t->removePlayer(*p1); CHECK(result);
+        result = t->removePlayer(*p2); CHECK(result);
+        result = t->removePlayer(*p3); CHECK(!result);
+        result = t->removePlayer(*p4); CHECK(result);
+        result = t->removePlayer(*p5); CHECK(result);
+        result = t->removePlayer(*p6); CHECK(!result);
         CHECK(t->getNumPlayers() == 0);
-        CHECK(t->addPlayer(p3, ep) == Gen::ReturnCode::Success);
+        result = t->addPlayer(*p3); CHECK(result);
         CHECK(t->getNumPlayers() == 1);
-        CHECK(t->removePlayer(p3, ep) == Gen::ReturnCode::Success);
+        result = t->removePlayer(*p3); CHECK(result);
         CHECK(t->getNumPlayers() == 0);
 
         // Remove a player with active bets
         // First add the player
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
+        result = t->addPlayer(*p1); REQUIRE(result);
         // Load up several bets
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Field,   10, 0);
         auto b2 = std::make_shared<CrapsBet>(p1, BetName::Hardway, 10, 4);
@@ -188,14 +191,13 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
         REQUIRE(t->addBet(b4, ep) == Gen::ReturnCode::Success);
         REQUIRE(t->getNumBetsOnTable() == 4);
         // Remove player
-        CHECK(t->removePlayer(p1, ep) == Gen::ReturnCode::Success);
+        result = t->removePlayer(*p1); CHECK(result);
         CHECK(t->getNumBetsOnTable() == 0);
     }
 
     SUBCASE("playerList")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        Gen::ErrorPass ep;
         
         REQUIRE(t->getNumPlayers() == 0);
 
@@ -205,9 +207,9 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
         CHECK(v.size() == 0);
 
         // Load up some players
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
-        REQUIRE(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
-        REQUIRE(t->addPlayer(p3, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
+        result = t->addPlayer(*p2); REQUIRE(result);
+        result = t->addPlayer(*p3); REQUIRE(result);
         
         // Get back non-empty vector
         v = t->getPlayers();
@@ -235,8 +237,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         CHECK(t->addBet(b1, ep) == Gen::ReturnCode::Fail);
 
         // Add two players
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
-        REQUIRE(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
+        result = t->addPlayer(*p2); REQUIRE(result);
         REQUIRE(t->getNumPlayers() == 2);
 
         // Place a good bet
@@ -272,8 +274,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
         
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
-        REQUIRE(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
+             result = t->addPlayer(*p2); REQUIRE(result);
         REQUIRE(t->isComeOutRoll());
 
         // Make a Place bet, legal on come out roll
@@ -382,8 +384,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
         
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
-        REQUIRE(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
+             result = t->addPlayer(*p2); REQUIRE(result);
         REQUIRE(t->isComeOutRoll());
 
         // LineBet too small
@@ -452,8 +454,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
 
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
-        REQUIRE(t->addPlayer(p2, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
+             result = t->addPlayer(*p2); REQUIRE(result);
 
         // Bad type of bet for odds bet
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
@@ -491,7 +493,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
         
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
 
         // Change contract bet after on table, no point yet.
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
@@ -534,7 +536,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
 
         REQUIRE(t->getAmountOnTable() == 0);
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
 
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
         CHECK(t->addBet(b1, ep) == Gen::ReturnCode::Success);
@@ -555,7 +557,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
 
         REQUIRE(t->getAmountOnTable() == 0);
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
 
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
         REQUIRE(t->addBet(b1, ep) == Gen::ReturnCode::Success);
@@ -602,7 +604,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
 
         REQUIRE(t->getAmountOnTable() == 0);
-        REQUIRE(t->addPlayer(p1, ep) == Gen::ReturnCode::Success);
+        auto result = t->addPlayer(*p1); REQUIRE(result);
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
         auto b2 = std::make_shared<CrapsBet>(p1, BetName::PassLine,  10, 0);
         REQUIRE(t->addBet(b1, ep) == Gen::ReturnCode::Success);
@@ -610,7 +612,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
         CHECK(t->getAmountOnTable() == 20);
         CHECK(t->getNumBetsOnTable() == 2);
-        CHECK(t->removePlayer(p1, ep) == Gen::ReturnCode::Success);
+        result = t->removePlayer(*p1); CHECK(result);
         CHECK(t->getAmountOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
     }
@@ -638,17 +640,17 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(t->getCurrentRoll().d1() == 6);
         CHECK(t->getCurrentRoll().d2() == 6);
 
-        REQUIRE(p1->joinTable(t.get(), ep) == Gen::ReturnCode::Success);
-        REQUIRE(p2->joinTable(t.get(), ep) == Gen::ReturnCode::Success);
+        auto result = p1->joinTable(*t.get()); REQUIRE(result);
+             result = p2->joinTable(*t.get()); REQUIRE(result);
         REQUIRE(t->getNumPlayers() == 2);
         Gen::Money johnBalance = p1->getBalance();
         Gen::Money janeBalance = p2->getBalance();
 
         // come out roll, roll a 7, pass line win, dont pass lose
-        auto johnBet1 = p1->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet1 = p2->makeBet(BetName::DontPass, 10, 0, ep);
-        REQUIRE(johnBet1 != nullptr);
-        REQUIRE(janeBet1 != nullptr);
+        auto johnBet1 = p1->makeBet(BetName::PassLine, 10, 0);
+        auto janeBet1 = p2->makeBet(BetName::DontPass, 10, 0);
+        REQUIRE(johnBet1.has_value());
+        REQUIRE(janeBet1.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
         CHECK(p2->getBalance() == (janeBalance - 10));
         std::cout << "John makes PassLine bet\n";
@@ -674,10 +676,10 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 11, pass line win, dont pass lose
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet2 = p1->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet2 = p2->makeBet(BetName::DontPass, 10, 0, ep);
-        REQUIRE(johnBet2 != nullptr);
-        REQUIRE(janeBet2 != nullptr);
+        auto johnBet2 = p1->makeBet(BetName::PassLine, 10, 0);
+        auto janeBet2 = p2->makeBet(BetName::DontPass, 10, 0);
+        REQUIRE(johnBet2.has_value());
+        REQUIRE(janeBet2.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
         CHECK(p2->getBalance() == (janeBalance - 10));
         std::cout << "John makes PassLine bet\n";
@@ -697,10 +699,10 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 2, pass line lose, dont pass win
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet3 = p1->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet3 = p2->makeBet(BetName::DontPass, 10, 0, ep);
-        REQUIRE(johnBet3 != nullptr);
-        REQUIRE(janeBet3 != nullptr);
+        auto johnBet3 = p1->makeBet(BetName::PassLine, 10, 0);
+        auto janeBet3 = p2->makeBet(BetName::DontPass, 10, 0);
+        REQUIRE(johnBet3.has_value());
+        REQUIRE(janeBet3.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
         CHECK(p2->getBalance() == (janeBalance - 10));
         std::cout << "John makes PassLine bet\n";
@@ -720,10 +722,10 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 3, pass line lose, dont pass win
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet4 = p1->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet4 = p2->makeBet(BetName::DontPass, 10, 0, ep);
-        REQUIRE(johnBet4 != nullptr);
-        REQUIRE(janeBet4 != nullptr);
+        auto johnBet4 = p1->makeBet(BetName::PassLine, 10, 0);
+        auto janeBet4 = p2->makeBet(BetName::DontPass, 10, 0);
+        REQUIRE(johnBet4.has_value());
+        REQUIRE(janeBet4.has_value());
         std::cout << "John makes PassLine bet\n";
         std::cout << "Jane makes DontPass bet\n";
 
@@ -741,10 +743,10 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 12, pass line lose, dont pass push
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet5 = p1->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet5 = p2->makeBet(BetName::DontPass, 10, 0, ep);
-        REQUIRE(johnBet5 != nullptr);
-        REQUIRE(janeBet5 != nullptr);
+        auto johnBet5 = p1->makeBet(BetName::PassLine, 10, 0);
+        auto janeBet5 = p2->makeBet(BetName::DontPass, 10, 0);
+        REQUIRE(johnBet5.has_value());
+        REQUIRE(janeBet5.has_value());
         std::cout << "John makes PassLine bet\n";
         std::cout << "Jane makes DontPass bet\n";
 
@@ -760,17 +762,17 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(t->isComeOutRoll());
 
         // Remove bet, allowed
-        p2->removeBet(janeBet5->betId(), ep);
+        result = p2->removeBet(janeBet5.value()->betId());
         CHECK(p2->getNumBetsOnTable() == 0);
         CHECK(t->getNumBetsOnTable() == 0);
 
         // come out roll, roll a 4, pass line keep, dont pass keep
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet6 = p1->makeBet(BetName::PassLine, 10, 0, ep);
-        auto janeBet6 = p2->makeBet(BetName::DontPass, 10, 0, ep);
-        REQUIRE(johnBet6 != nullptr);
-        REQUIRE(janeBet6 != nullptr);
+        auto johnBet6 = p1->makeBet(BetName::PassLine, 10, 0);
+        auto janeBet6 = p2->makeBet(BetName::DontPass, 10, 0);
+        REQUIRE(johnBet6.has_value());
+        REQUIRE(janeBet6.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
         CHECK(p2->getBalance() == (janeBalance - 10));
         std::cout << "John makes PassLine bet\n";
@@ -813,7 +815,6 @@ using AutoRolls = std::vector<AutoBet>;
 
 void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
 {
-    Gen::ErrorPass ep;
     Craps::BetPtr lastBet;
     
     for (const auto& r : rolls)
@@ -824,13 +825,14 @@ void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
         }
         if (r.action == Action::MakeBet)
         {
-            auto bet = player.makeBet(
-                r.betName, r.amount, r.pivot, ep);
-            lastBet = bet;
+            auto result = player.makeBet(r.betName, r.amount, r.pivot);
+            REQUIRE(result);
+            lastBet = result.value();
         }
         if (r.action == Action::SetOdds)
         {
-            REQUIRE(player.setOddsAmount(lastBet, r.amount, ep) == Gen::ReturnCode::Success);
+            auto result = player.setOddsAmount(lastBet, r.amount);
+            REQUIRE(result);
         }
     }
 }
@@ -840,8 +842,8 @@ void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
 {
     std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-    Gen::ErrorPass ep;
-    REQUIRE(p1->joinTable(t.get(), ep) == Gen::ReturnCode::Success);
+
+    auto result = p1->joinTable(*t); REQUIRE(result);
     
     SUBCASE("shortRoll")
     {
