@@ -14,6 +14,7 @@
 #include <craps/PlayerConfig.h>
 #include <craps/PlayerStats.h>
 #include <gen/ReturnCode.h>
+#include <gen/ErrorPass.h>
 #include <gen/MoneyUtils.h>
 #include <yaml-cpp/yaml.h>
 #include <zeus/expected.hpp>
@@ -60,15 +61,11 @@ public:
     /// @name Modifiers
     /// @{
     zeus::expected<void, Gen::ErrorPass> joinTable(CrapsTable& table);
-    Gen::ReturnCode joinTable(CrapsTable* pTable, Gen::ErrorPass& ep);
-    Gen::ReturnCode leaveTable(Gen::ErrorPass& ep);
-    BetPtr makeBet(BetName betName,
-                          Gen::Money contractAmount,
-                          unsigned pivot,
-                          Gen::ErrorPass& ep);
-    Gen::ReturnCode setOddsAmount(BetPtr pBet,
-                                  Gen::Money amount,
-                                  Gen::ErrorPass& ep);
+    zeus::expected<void, Gen::ErrorPass> leaveTable();
+    zeus::expected<BetPtr, Gen::ErrorPass> makeBet(
+        BetName betName, Gen::Money contractAmount, unsigned pivot);
+    zeus::expected<void, Gen::ErrorPass> setOddsAmount(
+        BetPtr pBet, Gen::Money oddsAmount);
     Gen::ReturnCode setContractAmount(const BetId& betId,
                                       Gen::Money newAmount,
                                       Gen::ErrorPass& ep);
@@ -151,12 +148,16 @@ private:
     // Validity checks with diagnostics
     void diagBadBetId(const std::string& funcName, BetId betId) const;
     std::string diagPrefix(size_t idx)                          const;
-    bool fifNoTable(size_t idx, Gen::ErrorPass& ep)             const;
+    bool fifNoTable(Gen::ErrorPass& ep)                         const;
     bool fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep)         const;
     bool fifInsufficientFunds(BetPtr pBet,  Gen::Money amount,
-                              size_t idx, Gen::ErrorPass& ep)   const;
+                              Gen::ErrorPass& ep)               const;
     bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep);
     bool fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
+
+    using En = Gen::ErrorPass::ErrorName;
+    using Et = Gen::ErrorPass::ErrorType;
+    using Es = Gen::ErrorPass::Severity;
 };
 
 /*-----------------------------------------------------------*//**

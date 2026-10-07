@@ -9,7 +9,6 @@
 #include <craps/DecisionRecord.h>
 #include <controller/GameEvents.h>
 #include <gen/EventManager.h>
-#include <gen/ErrorPass.h>
 #include <gen/FileUtils.h>
 #include <gen/Logger.h>
 #include <gen/Uuid.h>
@@ -170,7 +169,7 @@ void
 Player::shutdown()
 {
     Gen::ErrorPass ep;
-    (void) leaveTable(ep);
+    (void) leaveTable();
 
     // Create an entry for today's session.
     alltimeStats_.sessionHistory.addSessionSummary(
@@ -202,38 +201,6 @@ Player::joinTable(CrapsTable& table)
     return {};
 }
 
-#if 0
-Gen::ReturnCode
-Player::joinTable(CrapsTable* pTable, Gen::ErrorPass& ep)
-{
-    if (pTable == nullptr)
-    {
-        ep.setDescription("Player::joinTable(): Player:" +
-                          playerName_ + "; pTable is null.");
-        return Gen::ReturnCode::Fail;
-    }
-
-    auto result = pTable->addPlayer(this);
-    if (!result)
-    {
-        result.ep.prepend("Failed to join table. ");
-        return zeus::unexpected<ErrorPass>(result.ep);
-    }
-    
-    if (pTable->addPlayer(this, ep) == Gen::ReturnCode::Fail)
-    {
-        ep.prepend("Player::joinTable(): Player:" + playerName_ +
-                   "; failed to join table. ");
-        return Gen::ReturnCode::Fail;
-    }
-
-    pTable_ = pTable;
-    setupSubscriptions();
-
-    return Gen::ReturnCode::Success;
-}
-#endif
-
 /*-----------------------------------------------------------*//**
 
 Player leaves the table.
@@ -255,27 +222,33 @@ when player switches tables.
     Success, otherwsie Fail and ep has the reason for failure.
     It is not an error if a player has not joined a table.
 */
-Gen::ReturnCode
-Player::leaveTable(Gen::ErrorPass& ep)
+zeus::expected<void, Gen::ErrorPass>
+Player::leaveTable()
 {
-    // Not joined, so nothing to leave.
-    if (pTable_ == nullptr)
+    if (pTable_ == nullptr)  // Not joined, so nothing to leave.
     {
         assert(getNumBetsOnTable() == 0);
-        return Gen::ReturnCode::Success;
+        return {};
     }
-
+    
     // Remove any outstanding bets from table, recover funds
     // Manually increment iterator so we can erase while iterating
     for (auto it = bets_.begin(); it != bets_.end(); ) // no increment here
     {
         auto pBet = *it;
-        pTable_->removeBetForce(pBet, ep);
+        pTable_->removeBetForce(pBet);
         wallet_.deposit(pBet->contractAmount() + pBet->oddsAmount());
         it = bets_.erase(it); // returns next valid iterator
     }
-    pTable_->removePlayer(this, ep);
-    return Gen::ReturnCode::Success;
+    
+    auto result = pTable_->removePlayer(*this);
+    if (!result)
+    {
+        result.error().prepend("Failed to leave table. ");
+        return zeus::unexpected<Gen::ErrorPass>(std::move(result).error());
+    }
+    
+    return {};
 }
 
 /*-----------------------------------------------------------*//**
@@ -294,29 +267,37 @@ Makes a bet on the table.
     the caller sets the pivot to zero. Zero indicates the pivot number
     needs to be set later. See CrapsBet::CrapsBet() constructor.
 
-@param[in,out] ep
-    If an error occurs, ep holds the reason
-
 @return
     If successful, the shared pointer to the CrapsBet is returned,
-    otherwise a nullptr and ep has the reason for failure
+    otherwise ErrorPass object has the reason for failure
 
 @internal
 @li fif prefix means "fault if"
 */
-BetPtr
-Player::makeBet(BetName betName,
-                Gen::Money contractAmount,
-                unsigned pivot,
-                Gen::ErrorPass& ep)
+zeus::expected<BetPtr, Gen::ErrorPass>
+Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 {
-    // fif prefix means "fault if"
-
-    if (fifNoTable(1, ep))                                    return nullptr;
-    if (fifInsufficientFunds(nullptr, contractAmount, 1, ep)) return nullptr;
+    Gen::ErrorPass ep;
+    
+    if (fifNoTable(ep)  || 
+        fifInsufficientFunds(nullptr, contractAmount, ep))
+    {
+        ep.prepend("Unable to make bet(" + std::to_string(contractAmount) +
+            ") for player: " + playerName_ + ". ");
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+     
     auto pBet = makeShared(betName, contractAmount, pivot, ep);
-    if (pBet == nullptr)                                      return nullptr;
-    if (fifBadAddBet(pBet, ep))                               return nullptr;
+    if (pBet == nullptr || fifBadAddBet(pBet, ep))
+    {
+        ep.prepend("Unable to make bet(" + std::to_string(contractAmount) +
+            ") for player: " + playerName_ + ". ");
+        ep.setErrorName("Betting Error");
+        ep.setErrorType(Et::ProcessingError);
+        ep.setSeverity(Es::Indeterminate);
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+    
     wallet_.withdraw(contractAmount);
     bets_.push_back(pBet);
     return pBet;
@@ -393,7 +374,8 @@ Player::makeShared(BetName betName,
     }
     catch(std::invalid_argument& e)
     {
-        ep.setDescription(diagPrefix(1) + e.what());
+        EP_SET(ep, En::CaughtException, Et::ProcessingError,
+               Es::Major, e.what());
         return nullptr;
     }
 }
@@ -419,36 +401,31 @@ conditions are true:
 @param[in] oddsAmount
     The amount to set it to. Clobbers any previous setting.
 
-@param[in,out] ep
-    If error occurs, ep holds the reason
-
 @returns
-    Success if the bet was accepted, otherwise Fail and ep has
-    the reason.
+    ErrorPass object if an error occured, otherwise no error.
 
 @internal
 @li fif prefix means "fault if"
 */
-Gen::ReturnCode
-Player::setOddsAmount(BetPtr pBet,
-                      Gen::Money oddsAmount,
-                      Gen::ErrorPass& ep)
+zeus::expected<void, Gen::ErrorPass>
+Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
 {
-    if (pBet == nullptr)
-    {
-        ep.setDescription("Player::setOddsAmount(): Player:" +
-                          playerName_ + "; pBet is null.");
-        return Gen::ReturnCode::Fail;
-    }
-
+    assert(pBet);
     // fif prefix means "fault if"
 
-    if (fifMissingBet(pBet, ep))                       return Gen::ReturnCode::Fail;
-    if (fifNoTable(2, ep))                             return Gen::ReturnCode::Fail;
-    if (fifInsufficientFunds(pBet, oddsAmount, 2, ep)) return Gen::ReturnCode::Fail;
-    Gen::Money curOddsBet = pBet->oddsAmount();        // Remember current val
-    if (fifBadSetOdds(pBet, oddsAmount, ep))           return Gen::ReturnCode::Fail;
+    Gen::ErrorPass ep;
+    if ((fifMissingBet(pBet, ep))                    ||
+        (fifNoTable(ep))                             ||
+        (fifInsufficientFunds(pBet, oddsAmount, ep)) ||
+        (fifBadSetOdds(pBet, oddsAmount, ep)))
+    {
+        ep.prepend("Unable to set odds(" + std::to_string(oddsAmount) +
+            ") for player: " + playerName_ + ". ");
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
 
+    Gen::Money curOddsBet = pBet->oddsAmount();  // Remember current val
+    
     // Adjust wallet. Handle increase or decrease in odds bet
     if (oddsAmount < curOddsBet)
     {
@@ -458,9 +435,8 @@ Player::setOddsAmount(BetPtr pBet,
     {
         wallet_.withdraw(oddsAmount - curOddsBet);
     }
-    return Gen::ReturnCode::Success;
+    return {};
 }
-
 
 /*-----------------------------------------------------------*//**
 
@@ -993,13 +969,14 @@ Player::diagPrefix(size_t idx) const
 //----------------------------------------------------------------
 
 bool
-Player::fifNoTable(size_t idx, Gen::ErrorPass& ep) const
+Player::fifNoTable(Gen::ErrorPass& ep) const
 {
     // fault if player is not joined to a table and sets ep error diag
     if (pTable_ == nullptr)
     {
-        ep.setDescription(diagPrefix(idx) + "Player " + playerName_ +
-                          " has not yet joined a table.");
+        std::string s("Player " + playerName_ + " has not yet joined a table.");
+        EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,
+               Es::Indeterminate, s);
         return true;
     }
     return false;
@@ -1009,7 +986,7 @@ Player::fifNoTable(size_t idx, Gen::ErrorPass& ep) const
 
 bool
 Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
-                             size_t idx, Gen::ErrorPass& ep) const
+                             Gen::ErrorPass& ep) const
 {
     // fault if insufficient funds and sets ep error diag
 
@@ -1033,11 +1010,13 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
 
     if (diff > wallet_.getBalance())
     {
-        ep.setDescription(diagPrefix(idx) + "Player " + playerName_ +
+        std::string s = "Player " + playerName_ +
             " has insufficient funds to make a " +
             Gen::MoneyUtils::toString(amount)    +
             " bet; current balance:"             +
-            Gen::MoneyUtils::toString(getBalance()) + ".");
+            Gen::MoneyUtils::toString(getBalance()) + ".";
+        EP_SET(ep, En::UnderflowError, Et::ProcessingError,
+               Es::Indeterminate, s);
         return true;
     }
     return false;
@@ -1054,7 +1033,6 @@ Player::fifBadAddBet(BetPtr pBet, Gen::ErrorPass& ep)
 
     if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
     {
-        ep.prepend(diagPrefix(1));
         return true;
     }
     return false;

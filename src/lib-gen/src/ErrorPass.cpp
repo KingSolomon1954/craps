@@ -68,6 +68,14 @@ ErrorPass::setErrorType(const std::string& type)
 
 //----------------------------------------------------------------
 
+void
+ErrorPass::setSeverity(ErrorPass::Severity s)
+{
+    severity_ = s;
+}
+
+//----------------------------------------------------------------
+
 const std::string&
 ErrorPass::errorName() const
 {

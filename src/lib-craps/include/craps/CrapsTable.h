@@ -47,15 +47,14 @@ public:
     /// @name Modifiers
     /// @{
     // Players
-    // Gen::ReturnCode addPlayer   (Player* pPlayer, Gen::ErrorPass& ep);
-    zeus::expected<void, Gen::ErrorPass> addPlayer(Player& player);
-    Gen::ReturnCode removePlayer(Player* pPlayer, Gen::ErrorPass& ep);
-    Gen::ReturnCode setShooter  (Player* pPlayer, Gen::ErrorPass& ep);
+    zeus::expected<void, Gen::ErrorPass> addPlayer   (Player& player);
+    zeus::expected<void, Gen::ErrorPass> removePlayer(Player& player);
+    void setShooter(Player& pPlayer);
 
     // Bets
     Gen::ReturnCode addBet        (BetPtr pBet, Gen::ErrorPass& ep);
     Gen::ReturnCode removeBet     (BetPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBetForce(BetPtr pBet, Gen::ErrorPass& ep);
+    void            removeBetForce(BetPtr pBet);
     Gen::ReturnCode setContractAmount(BetPtr pBet,
                                       Gen::Money newAmount,
                                       Gen::ErrorPass& ep);
@@ -197,11 +196,11 @@ private:
     void declareBettingOpen();
     void disburseDone();
 
-    Gen::ReturnCode removePlayerByPtr(Player* pPlayer, Gen::ErrorPass& ep);
-    void removePlayerBets            (Player* pPlayer);
-    void removeBetsByPlayerPtr       (BetList& bets, Player* pPlayer);
-    bool removeMatchingBet           (BetList& bets, CrapsBet* pBet);
-    BetPtr findBetById               (const BetId& betId) const;
+    void removePlayerByPtr    (Player* pPlayer);
+    void removePlayerBets     (Player* pPlayer);
+    void removeBetsByPlayerPtr(BetList& bets, Player* pPlayer);
+    bool removeMatchingBet    (BetList& bets, CrapsBet* pBet);
+    BetPtr findBetById        (const BetId& betId) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();

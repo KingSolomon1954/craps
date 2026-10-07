@@ -244,7 +244,7 @@ CrapsTable::addPlayer(Player& player)
             EP_SET(ep, En::ExistsError, Et::ProcessingError, Es::Indeterminate,
                    diag1 + "Player already at table.");
         }
-        return zeus::unexpected<Gen::ErrorPass>(ep);
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
     
     players_.push_back(&player);
@@ -255,43 +255,13 @@ CrapsTable::addPlayer(Player& player)
     return {};
 }
 
-#if 0
-Gen::ReturnCode
-CrapsTable::addPlayer(Player* pPlayer, Gen::ErrorPass& ep)
-{
-    assert(pPlayer != nullptr);
-    const std::string diag1("CrapsTable::addPlayer(): Unable to add "
-                            "Player " + pPlayer->getName() + " to table; ");
-    if (havePlayer(pPlayer))
-    {
-        ep.setDescription(diag1 + "Player is already joined.");
-        return Gen::ReturnCode::Fail;
-    }
-    if (players_.size() == MaxPlayers)
-    {
-        ep.setDescription(diag1 + "At max num players " +
-                          std::to_string(MaxPlayers) + ".");
-        return Gen::ReturnCode::Fail;
-    }
-    players_.push_back(pPlayer);
-    
-    Ctrl::UslPlayerJoinedTable ev;
-    ev.playerId = pPlayer->getPlayerId();
-    Gen::EventManager::instance().publish(ev);
-
-    return Gen::ReturnCode::Success;
-}
-
-#endif
-
 //----------------------------------------------------------------
 
-Gen::ReturnCode
-CrapsTable::setShooter(Player* pPlayer, Gen::ErrorPass& ep)
+void
+CrapsTable::setShooter(Player& player)
 {
-    assert(havePlayer(pPlayer));
-    pCurrentShooter_ = pPlayer;
-    return Gen::ReturnCode::Success;
+    assert(havePlayer(&player));
+    pCurrentShooter_ = &player;
 }
 
 /*-----------------------------------------------------------*//**
@@ -313,28 +283,26 @@ behavior then first remove player's bets with force
     Success, otherwise fail and ep holds the reason.
     Fails only if player is not joined to the table.
 */
-Gen::ReturnCode
-CrapsTable::removePlayer(Player* pPlayer, Gen::ErrorPass& ep)
+zeus::expected<void, Gen::ErrorPass>
+CrapsTable::removePlayer(Player& player)
 {
-    if (!havePlayer(pPlayer))
+    if (!havePlayer(&player))
     {
-        ep.setDescription("CrapsTable::removePlayer(); Unable to "
-                          "remove player; " + pPlayer->getName() +
-                          ":" + pPlayer->getPlayerId()           +
-                          "; Player has not joined this table.");
-        return Gen::ReturnCode::Fail;
+        std::string diag = "Unable to remove player: " + 
+            player.getName() + ". Player is not at this table.";
+        Gen::ErrorPass ep;
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError,
+               Es::Indeterminate, diag);
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
     
-    (void) removePlayerByPtr(pPlayer, ep);  // ignore error if any
-
-    // Remove all bets by player, bet money given to the house bank.
-    removePlayerBets(pPlayer);
+    removePlayerByPtr(&player);
+    removePlayerBets(&player);   // Bet money given to the house bank.
     
     Ctrl::UslPlayerLeftTable ev;
-    ev.playerId = pPlayer->getPlayerId();
+    ev.playerId = player.getPlayerId();
     Gen::EventManager::instance().publish(ev);
-    
-    return Gen::ReturnCode::Success;
+    return {};
 }
 
 /*-----------------------------------------------------------*//**
@@ -463,30 +431,18 @@ them.
 
 @param[in,out] pBet
     The bet of interest.
-
-@param[in,out] ep
-    Holds reason for error
-
-@return
-    Success if bet is removed, otherwise Fail and ep has reason.
-    Fails only if bet is not found.
 */
-Gen::ReturnCode
-CrapsTable::removeBetForce(BetPtr pBet, Gen::ErrorPass& ep)
+void
+CrapsTable::removeBetForce(BetPtr pBet)
 {
-    std::string diag = "CrapsTable::removeBetForce(): Unable to remove bet. ";
-    if (pBet == nullptr)
+    if (pBet == nullptr || !haveBet(pBet->betId()))
     {
-        ep.setDescription(diag + "pBet is nullptr.");
-        return Gen::ReturnCode::Fail;
-    }
-    if (!haveBet(pBet->betId()))
-    {
-        ep.setDescription(diag + "This bet instance is not on the table.");
-        return Gen::ReturnCode::Fail;
+        LOG_ERROR("CrapsTable::removeBetForce() pBet is null or "
+                  "or the bet was not found. Player and CrapsTable "
+                  " are out of sync.");
+        return;
     }
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
-    return Gen::ReturnCode::Success;
 }
 
 /*-----------------------------------------------------------*//**
@@ -767,7 +723,8 @@ CrapsTable::advanceShooter()
     if (it == players_.end())
     {
         // This should never happen: pCurrentShooter_ must be in players_.
-        Gen::Logger::instance().logError("CrapsTable::advanceShooter(): current shooter not found");
+        LOG_ERROR("CrapsTable::advanceShooter(): current shooter "
+                  "not found. Should never happen");
         return;
     }
 
@@ -1064,17 +1021,14 @@ CrapsTable::havePlayer(Player* pPlayer) const
 
 //----------------------------------------------------------------
 
-Gen::ReturnCode
-CrapsTable::removePlayerByPtr(Player* pPlayer, Gen::ErrorPass& ep)
+void
+CrapsTable::removePlayerByPtr(Player* pPlayer)
 {
     auto it = std::find(players_.begin(), players_.end(), pPlayer);
     if (it != players_.end())
     {
         players_.erase(it);
-        return Gen::ReturnCode::Success;
     }
-    ep.setDescription("Player has not joined this table.");
-    return Gen::ReturnCode::Fail;
 }
 
 //----------------------------------------------------------------

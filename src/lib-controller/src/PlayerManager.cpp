@@ -96,8 +96,12 @@ PlayerManager::addPlayersToTable()
 
     for (auto p : players_)
     {
-        auto rc = p->joinTable(Gbl::pTable, ep);
-        if (rc == Gen::ReturnCode::Fail) booboo = true;
+        auto result = p->joinTable(*Gbl::pTable);
+        if (!result)
+        {
+            ep = result.error();
+            booboo = true;
+        }
     }
     if (booboo)
     {
@@ -107,7 +111,7 @@ PlayerManager::addPlayersToTable()
     }
 
     // Tell the table which user starts off as shooter.
-    (void) Gbl::pTable->setShooter(getUserPlayer(), ep);
+    Gbl::pTable->setShooter(*getUserPlayer());
 }
 
 //----------------------------------------------------------------
