@@ -25,8 +25,7 @@ UndoBetAdded::undo()
 {
     // We're undoing a bet that was added.
     // We use removeBet() to undo it.
-    Gen::ErrorPass ep;
-    (void) pBet_->player().removeBet(pBet_->betId(), ep);
+    (void) pBet_->player().removeBet(pBet_->betId());
 }
 
 //----------------------------------------------------------------

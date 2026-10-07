@@ -397,24 +397,29 @@ into their wallet.
 Gen::ReturnCode
 CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
 {
-    std::string diag = "CrapsTable::removeBet(): Unable to remove bet. ";
+    std::string diag = "Unable to remove bet. ";
     if (pBet == nullptr)
     {
-        ep.setDescription(diag + "pBet is nullptr.");
+        EP_SET(ep, En::NullPointerError, Et::ProcessingError,
+               Es::Indeterminate, diag + "pBet is nullptr.");
         return Gen::ReturnCode::Fail;
     }
     if (!haveBet(pBet->betId()))
     {
-        ep.setDescription(diag + "This bet instance is not on the table.");
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError, Es::Indeterminate,
+               diag + "This bet instance is not on the table.");
         return Gen::ReturnCode::Fail;
     }
     if (!isBetRemovable(pBet))
     {
-        ep.setDescription(diag + "PassLine|Come bets with points "
-                          "must remain on table until a decision; " +
-                          pBet->diagBetId() + ".");
+        EP_SET(ep, En::UnsetErrorName, Et::ProcessingError, Es::Indeterminate,
+               diag + "PassLine|Come bets with points "
+               "must remain on table until a decision; " +
+               pBet->diagBetId() + ".");
+        ep.setErrorName("Betting Error");
         return Gen::ReturnCode::Fail;
     }
+    
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
     return Gen::ReturnCode::Success;
 }

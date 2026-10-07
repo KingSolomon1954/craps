@@ -244,16 +244,6 @@ public:
         Gen::ErrorPass& ep);
 
     // Quick Bet
-#if 0    
-    struct QuickBetEntry
-    {
-        BetName     betName;
-        size_t      pivot;
-        bool        oddsBet;
-        Gen::Money  amount;
-    };
-#endif
-    
     static Gen::ReturnCode getQuickBets(
         QuickBet::QuickBets& quickBets,  // return arg
         Gen::ErrorPass& ep);

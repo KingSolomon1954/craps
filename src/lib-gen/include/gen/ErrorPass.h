@@ -169,6 +169,15 @@ private:
 
 @brief A generic error payload for value-based error handling.
 
+There are two basic ways to use ErrorPass:
+
+1. Value-based - using std::expected (or zeus::expected)
+
+2. Call-chain - using in/out function parameter
+
+Value-based ErrorPassing
+------------------------
+
 Error passing combined with `zeus::expected` provides a type-safe,
 value-based error handling scheme. Instead of throwing exceptions or using
 primitive return status codes, functions return a `zeus::expected<T, ErrorPass>`.
@@ -177,11 +186,30 @@ If a function succeeds, it contains its value of type `T`. If it fails, it
 carries an `ErrorPass` payload containing metadata about the failure and
 the location where it occurred.
 
-The standard ErrorName and ErrorType enums provide names for common library
-errors. Applications may also supply their own error names and types as
-strings; no derived error class or enum extension is required. Error names
-and types are stored as strings. An empty error name means that no error is
-set. Severity remains a standard enum.
+Call-chain ErrorPassing
+-----------------------
+
+With call chain error passing, an ErrorPass object is declared at the
+top of a call chain and then supplied directly in the signature of
+functions that have coded for it. The caller supplies the ErrorPass
+object which will be filled out by the callee when an error is
+encountered and left untouched if there is no error.
+
+The callee then in turn uses the error passing object it was given
+and passes that along to child functions it calls, forming a chain of
+calls using the same error passing object from the top. This strategy
+requires writing functions with a signature accepting an error
+passing object up and down the call chain. This sounds yucky at first
+but becomes second nature in practice and profoundly useful.
+
+Extensible with application domain error names and types.
+---------------------------------------------------------
+
+The standard ErrorName and ErrorType enums provide names for common
+library errors. Applications may also supply their own error names and
+types as strings; no derived error class or enum extension is
+required. Error names and types are stored as strings. An empty error
+name means that no error is set. Severity remains a standard enum.
 
 Example using the standard vocabulary:
 
@@ -231,7 +259,7 @@ if (!result)
 {
     auto ep = result.error();
     EP_TRACE(ep); // Automatically appends caller information to stackTrace vector
-    return zeus::unexpected(ep);
+    return zeus::unexpected(std::move(ep));
 }
 @endcode
 

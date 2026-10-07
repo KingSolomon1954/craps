@@ -278,20 +278,21 @@ zeus::expected<BetPtr, Gen::ErrorPass>
 Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 {
     Gen::ErrorPass ep;
+    std::string s = "Unable to make bet(" +
+                    std::to_string(contractAmount) +
+                    ") for player: " + playerName_ + ". ";    
     
     if (fifNoTable(ep)  || 
         fifInsufficientFunds(nullptr, contractAmount, ep))
     {
-        ep.prepend("Unable to make bet(" + std::to_string(contractAmount) +
-            ") for player: " + playerName_ + ". ");
+        ep.prepend(s);
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
      
     auto pBet = makeShared(betName, contractAmount, pivot, ep);
     if (pBet == nullptr || fifBadAddBet(pBet, ep))
     {
-        ep.prepend("Unable to make bet(" + std::to_string(contractAmount) +
-            ") for player: " + playerName_ + ". ");
+        ep.prepend(s);
         ep.setErrorName("Betting Error");
         ep.setErrorType(Et::ProcessingError);
         ep.setSeverity(Es::Indeterminate);
@@ -369,6 +370,7 @@ Player::makeShared(BetName betName,
 {
     try
     {
+        // CrapsBet ctor can throw.
         return std::make_shared<CrapsBet>(this, betName,
                                           contractAmount, pivot);
     }
@@ -465,14 +467,19 @@ Changes the contract amount of a bet on the table.
 @li Sca suffix means "set contract amount"
 @li 2 is the index to select the right diagPrefix
 */
-Gen::ReturnCode
+zeus::expected<void, Gen::ErrorPass>
 Player::setContractAmount(
-    const BetId& betId,
-    Gen::Money newAmount,
-    Gen::ErrorPass& ep)
+    BetPtr pBet, 
+    Gen::Money newAmount)
 {
     // TODO
-    return Gen::ReturnCode::Fail;
+    // Figure out if adding/subtracting
+    // Check sufficient funds in wallet
+    // call pTable_->setContractAmount()
+    // if success adjust wallet, change contractAmount_, send event
+    // if fail leave wallet alone, keep existing contractAmount_
+    
+    return {};
 }
 
 /*-----------------------------------------------------------*//**
@@ -759,9 +766,11 @@ Player::removeBetByPtr(BetPtr& b)
 //
 // Called by the UI to remove a bet from the table.
 //
-Gen::ReturnCode
-Player::removeBet(const BetId& betId, Gen::ErrorPass& ep)
+zeus::expected<void, Gen::ErrorPass>
+Player::removeBet(const BetId& betId)
 {
+    Gen::ErrorPass ep;
+    
     auto it = std::remove_if(bets_.begin(), bets_.end(),
         [betId](const BetPtr& b)
         {
@@ -769,11 +778,12 @@ Player::removeBet(const BetId& betId, Gen::ErrorPass& ep)
         });
     if (it == bets_.end())
     {
-        ep.setDescription("Player::removeBet(): unable to remove "
-                          "bet; Player " + playerName_       +
-                          " does not have a bet with betId:" +
-                          std::to_string(betId) + ").");
-        return Gen::ReturnCode::Fail;
+        std::string s = "Unable to remove "
+                        "bet; Player " + playerName_       +
+                        " does not have a bet with betId:" +
+                        std::to_string(betId) + ").";
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError, Es::Indeterminate, s);
+        return zeus::unexpected(std::move(ep));
     }
 
     // We have a bet, then we must have valid pTable. No need to check.
@@ -781,13 +791,12 @@ Player::removeBet(const BetId& betId, Gen::ErrorPass& ep)
     // If table can't remove it then player can't remove it.
     if (pTable_->removeBet(*it, ep) == Gen::ReturnCode::Fail)
     {
-        ep.prepend("Player::removeBet(): ");
-        return Gen::ReturnCode::Fail;
+        return zeus::unexpected(std::move(ep));
     }
 
     wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount());
     bets_.erase(it, bets_.end());  // remove from our list of bets
-    return Gen::ReturnCode::Success;
+    return {};
 }
 
 //----------------------------------------------------------------

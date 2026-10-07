@@ -60,17 +60,16 @@ public:
 
     /// @name Modifiers
     /// @{
-    zeus::expected<void, Gen::ErrorPass> joinTable(CrapsTable& table);
-    zeus::expected<void, Gen::ErrorPass> leaveTable();
     zeus::expected<BetPtr, Gen::ErrorPass> makeBet(
         BetName betName, Gen::Money contractAmount, unsigned pivot);
+    zeus::expected<void, Gen::ErrorPass> joinTable(CrapsTable& table);
+    zeus::expected<void, Gen::ErrorPass> leaveTable();
+    zeus::expected<void, Gen::ErrorPass> setContractAmount(
+        BetPtr pBet, Gen::Money newAmount);
     zeus::expected<void, Gen::ErrorPass> setOddsAmount(
         BetPtr pBet, Gen::Money oddsAmount);
-    Gen::ReturnCode setContractAmount(const BetId& betId,
-                                      Gen::Money newAmount,
-                                      Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(const BetId& betId,
-                              Gen::ErrorPass& ep);
+    zeus::expected<void, Gen::ErrorPass> removeBet(const BetId& betId);
+    
     Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
     void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
     void bettingClosed();
