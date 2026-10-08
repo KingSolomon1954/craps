@@ -168,7 +168,6 @@ Player::fromYAML(const YAML::Node& node)
 void
 Player::shutdown()
 {
-    Gen::ErrorPass ep;
     (void) leaveTable();
 
     // Create an entry for today's session.
@@ -227,8 +226,13 @@ Player::leaveTable()
 {
     if (pTable_ == nullptr)  // Not joined, so nothing to leave.
     {
+        Gen::ErrorPass ep;
+        std::string s = "Player " + playerName_ +
+            " unable to leave table. Player is not there.";
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError,
+               Es::Indeterminate, s);
         assert(getNumBetsOnTable() == 0);
-        return {};
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
     // Remove any outstanding bets from table, recover funds
@@ -412,31 +416,34 @@ conditions are true:
 zeus::expected<void, Gen::ErrorPass>
 Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
 {
-    assert(pBet);
     // fif prefix means "fault if"
 
     Gen::ErrorPass ep;
-    if ((fifMissingBet(pBet, ep))                    ||
-        (fifNoTable(ep))                             ||
-        (fifInsufficientFunds(pBet, oddsAmount, ep)) ||
-        (fifBadSetOdds(pBet, oddsAmount, ep)))
+    if (fifMissingBet(pBet, ep)                     ||
+        fifNoTable(ep)                              ||
+        fifInsufficientFunds(pBet, oddsAmount, ep))
     {
         ep.prepend("Unable to set odds(" + std::to_string(oddsAmount) +
             ") for player: " + playerName_ + ". ");
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-
-    Gen::Money curOddsBet = pBet->oddsAmount();  // Remember current val
-
-    // Adjust wallet. Handle increase or decrease in odds bet
-    if (oddsAmount < curOddsBet)
-    {
-        wallet_.deposit(curOddsBet - oddsAmount);
+    
+    Gen::Money saveOddsAmount = pBet->oddsAmount();
+    
+// std::cout << "wallet_.deposit = " << pBet->oddsAmount() << std::endl;
+    wallet_.deposit(pBet->oddsAmount());  // give back old amount, if any
+// std::cout << "wallet_.withdraw = " << oddsAmount << std::endl;
+    wallet_.withdraw(oddsAmount);         // take out new amount
+    
+    auto rc = pTable_->setOddsAmount(pBet, oddsAmount, ep);
+    if (rc == Gen::ReturnCode::Fail)         // Bet was rejected
+    {                                        // Restore prev amount
+        wallet_.deposit(oddsAmount);
+        wallet_.withdraw(saveOddsAmount);
+        ep.prepend(diagPrefix(2));
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-    if (oddsAmount > curOddsBet)
-    {
-        wallet_.withdraw(oddsAmount - curOddsBet);
-    }
+
     return {};
 }
 
@@ -1000,7 +1007,7 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
     // fault if insufficient funds and sets ep error diag
 
     // nullptr arg is expected when called from makeBet(), since a
-    // bet has not been created.
+    // bet has not yet been created.
 
     int diff = 0;
     if (pBet == nullptr)
@@ -1034,7 +1041,7 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
 //----------------------------------------------------------------
 
 bool
-Player::fifBadAddBet(BetPtr pBet, Gen::ErrorPass& ep)
+Player::fifBadAddBet(BetPtr pBet, Gen::ErrorPass& ep) const
 {
     // fault if can't add bet and sets ep error diag
     assert(pBet != nullptr);
@@ -1053,40 +1060,33 @@ bool
 Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
 {
     // fault if bet is not owned by this player and sets ep error diag
-    assert(pBet != nullptr);
 
+    if (pBet == nullptr)
+    {
+        EP_SET(ep, En::NullPointerError, Et::ProcessingError,
+               Es::Indeterminate, diagPrefix(2) + "BetPtr is null.");
+        return true;
+    }
+    
     if (findBetById(pBet->betId()) == nullptr)
     {
         if (pBet->player().getPlayerId() == playerId_)
         {
             // bet was created outside of makeBet()
-            ep.setDescription(diagPrefix(2) +
+            std::string s = diagPrefix(2) +
                 "Player " + playerName_ + " does not have this bet in "
                 "its bet list; Programmer error; Must use Player::makeBet() "
-                "to make a bet; " + pBet->diagBetId() + ".");
+                "to make a bet; " + pBet->diagBetId() + ".";
+            EP_SET(ep, En::LogicError, Et::ProcessingError,
+                   Es::Indeterminate, s);
             return true;
         }
-        ep.setDescription(diagPrefix(2) +
+        std::string s = diagPrefix(2) +
             "Player " + playerName_ + " does not own this bet; " +
             pBet->diagBetId() + "; Owned by Player:" +
-            pBet->player().getName() + ".");
-        return true;
-    }
-    return false;
-}
-
-//----------------------------------------------------------------
-
-bool
-Player::fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount,
-                      Gen::ErrorPass& ep)
-{
-    assert(pBet != nullptr);
-    assert(pTable_ != nullptr);
-
-    if (pTable_->setOddsAmount(pBet, oddsAmount, ep) == Gen::ReturnCode::Fail)
-    {
-        ep.prepend(diagPrefix(2));
+            pBet->player().getName() + ".";
+        EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,
+               Es::Indeterminate, s);
         return true;
     }
     return false;

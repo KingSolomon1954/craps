@@ -296,8 +296,8 @@ CrapsTable::removePlayer(Player& player)
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
-    removePlayerByPtr(&player);
     removePlayerBets(&player);   // Bet money given to the house bank.
+    removePlayerByPtr(&player);
 
     Ctrl::UslPlayerLeftTable ev;
     ev.playerId = player.getPlayerId();
@@ -522,7 +522,6 @@ conditions are true:
     the reason.
 
 @internal
-    soa prefix means "set odds amount"  - need variants for
     diagnostic messages look like this:
     CrapsBet::setOddsAmount(): Unable to set odds bet; bet(betId:157, betName:DontPass(4)). Odds bet amount of $1 is too small. Minimum odds for this bet is 2.
     CrapsBet::setOddsAmount(): Unable to set odds bet; bet(betId:159, betName:DontPass(6)). Exceeds table limit of 5x odds; Contract amount is $1 which allows max odds amount of $5.

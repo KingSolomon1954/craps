@@ -869,7 +869,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
     {
         AutoRolls rolls =  // 2,3,4,5,6,7,8,9,10,11,12
         {
-            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, 
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
             AutoBet{Action::RollDice, 1, 1, BetName::Invalid,  0,  0}, // lose 10
             AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
             AutoBet{Action::RollDice, 1, 2, BetName::Invalid,  0,  0}, // lose 10
@@ -883,7 +883,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
             AutoBet{Action::RollDice, 3, 3, BetName::Invalid,  0,  0}, // come 6
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
-            AutoBet{Action::RollDice, 3, 4, BetName::Invalid,  0,  0}, // 7 out lose 80, win 20
+            AutoBet{Action::RollDice, 3, 4, BetName::Invalid,  0,  0}, // 7 out lose 80, deposit 20
             AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, 
             AutoBet{Action::RollDice, 4, 4, BetName::Invalid,  0,  0}, // point 8
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
@@ -900,8 +900,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
         };
 
         Gen::Money balance = p1->getBalance();
-
         autoBetLoop(rolls, *t, *p1);
+//      CHECK(p1->getBalance() == balance - 10 - 10 - 10 - 10 - 10 - 10 - 10 - 10 - 10 + 20 - 10 - 10 - 10 - 10 - 10 - 10 - 10 + 20 - 10);
         CHECK(t->getAmountOnTable() ==  60);
         CHECK(t->getNumBetsOnTable() == 3);
         CHECK(p1->getBalance() == balance - 80 + 10 - 60 + 10 - 10);
@@ -940,6 +940,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:recentRolls")
 {
     CrapsTable t("Table-1", config);
+    auto result = p1->joinTable(t); REQUIRE(result);
     const std::deque<Dice>& recentRolls = t.getRecentRolls();
     CHECK(recentRolls.size() == 0);
 

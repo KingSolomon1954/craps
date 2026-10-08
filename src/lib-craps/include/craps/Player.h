@@ -119,7 +119,7 @@ private:
     std::string       shortDescription_;
     std::string       fullDescription_;
     std::list<BetPtr> bets_;
-    CrapsTable*       pTable_;
+    CrapsTable*       pTable_ = nullptr;
     PlayerStats       currentStats_;
     PlayerStats       alltimeStats_;
     mutable LastRollStats lastRollStats_;
@@ -150,8 +150,7 @@ private:
     bool fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep)         const;
     bool fifInsufficientFunds(BetPtr pBet,  Gen::Money amount,
                               Gen::ErrorPass& ep)               const;
-    bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep);
-    bool fifBadSetOdds(BetPtr pBet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
+    bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep)         const;
 
     using En = Gen::ErrorPass::ErrorName;
     using Et = Gen::ErrorPass::ErrorType;

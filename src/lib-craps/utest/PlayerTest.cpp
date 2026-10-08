@@ -113,7 +113,8 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
         REQUIRE(p1 != nullptr);
 
         // Leave table without ever joining
-        auto result = p1->leaveTable(); CHECK(result);
+        REQUIRE((*t).getNumPlayers() == 0);
+        auto result = p1->leaveTable(); CHECK(!result);
 
         // Join, then immediately leave, no intervening activity
         result = p1->joinTable(*t); CHECK(result);

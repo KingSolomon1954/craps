@@ -32,6 +32,8 @@ Bank::Bank(
 void
 Bank::deposit(Gen::Money amount)
 {
+    if (amount == 0) return;
+    
     amtDeposited_ += amount;
     numDeposits_++;
     currentStats_.amtDeposited = amtDeposited_;
@@ -43,6 +45,8 @@ Bank::deposit(Gen::Money amount)
 bool
 Bank::withdraw(Gen::Money amount)
 {
+    if (amount == 0) return false;
+    
     amtWithdrawn_ += amount;
     numWithdrawals_++;
     currentStats_.amtWithdrawn = amtWithdrawn_;
