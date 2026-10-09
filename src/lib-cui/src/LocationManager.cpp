@@ -242,8 +242,7 @@ LocationManager::overlapsExisting(const WindowRect& rect) const
             rect.bottom()     < existing.row ||
             existing.bottom() < rect.row;
 
-        if (!separated)
-            return true;
+        if (!separated) return true;
     }
 
     return false;
@@ -254,12 +253,9 @@ LocationManager::overlapsExisting(const WindowRect& rect) const
 std::optional<WindowRect>
 LocationManager::getRect(const std::string& surfaceName) const
 {
-    LOG_TRACE("getRect() looking for " + surfaceName);
     const auto it = windows_.find(surfaceName);
 
-    if (it == windows_.end())
-        return std::nullopt;
-
+    if (it == windows_.end()) return std::nullopt;
     return it->second;
 }
 

@@ -71,8 +71,7 @@ SurfaceManager::registerForShutdown(SurfaceBase* pSurface)
 void
 SurfaceManager::draw()
 {
-    if (stack_.empty())
-        return;
+    if (stack_.empty()) return;
 
     for (auto* surface : stack_)
     {
@@ -189,7 +188,7 @@ SurfaceManager::popSurfaces()
 
         if (!pCurrent->shouldSkip())
         {
-            LOG_TRACE("SurfaceManager::popSurfaces()");
+            LOG_TRACE("popSurfaces(): !shouldSkip: break");
             break;
         }
     }

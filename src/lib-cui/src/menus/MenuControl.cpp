@@ -115,8 +115,7 @@ MenuControl::setLocation(WindowPosition pos)
 void
 MenuControl::draw()
 {
-     LOG_TRACE("MenuControl::draw()");
-     
+    LOG_TRACE("MenuControl::draw()");
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
 }    
