@@ -44,6 +44,7 @@ WindowNavBar::draw()
     werase(pWin_);
     drawStaticContent();
     populate();
+    
     CuiUtils::transfer(pWin_);
 }
 

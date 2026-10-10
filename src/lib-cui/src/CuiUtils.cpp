@@ -18,7 +18,6 @@ Move window contents to ncurses virtual backing store
 
 @param[in] pWin
     The ncurses window of interest.
-
 */
 void
 CuiUtils::transfer(WINDOW* pWin)

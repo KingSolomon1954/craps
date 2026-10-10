@@ -25,7 +25,6 @@ public:
     void draw()                          override;
     bool handleKey(int ch)               override;
     void setLocation(WindowPosition pos) override;
-    void onResume()                      override;
     /// @}
 
     /// @name Observers
@@ -34,8 +33,8 @@ public:
     /// @}
     
 private:
-    WindowPosition  winPos_;
-    WindowSize      winSize_ = {14, 25};  // rows, cols
+    WindowPosition   winPos_;
+    const WindowSize winSize_ = {14, 25};  // rows, cols
 
 private:
     MenuControl();  // Private ctor

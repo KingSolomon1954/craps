@@ -60,7 +60,7 @@ MenuConfigure::fillWindow()
     mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 
     mvwaddstr(pWin_, 1, 2, "Configure");
-    mvwaddstr(pWin_, 3, 2, "[c] Format Roll History");
+    mvwaddstr(pWin_, 3, 2, "[f] Format Roll History");
     mvwaddstr(pWin_, 4, 2, "[q] Quick Bets");
     mvwaddstr(pWin_, 5, 2, "[a] Auto Bets");
     mvwaddstr(pWin_, 6, 2, "[t] Timed Rolls");
@@ -107,6 +107,7 @@ void
 MenuConfigure::draw()
 {
      LOG_TRACE("MenuConfigure::draw()");
+     
     // Just reuse already filled window over and over
     CuiUtils::transfer(pWin_);
 }    

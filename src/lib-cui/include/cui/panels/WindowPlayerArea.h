@@ -31,9 +31,10 @@ public:
     /// @{
     void draw() override;
     
+    void allPlayers();
+    void onePlayer();
     void nextPlayer();
     void prevPlayer();
-    void allPlayers();
     void onBetMade(
         const Craps::PlayerId& playerId,
         Craps::BetId           betId,

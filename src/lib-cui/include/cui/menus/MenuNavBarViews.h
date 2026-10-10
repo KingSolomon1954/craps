@@ -34,15 +34,15 @@ public:
     
 private:
     WindowPosition  winPos_;
-    WindowSize      winSize_ = {8, 25};  // rows, cols
+    WindowSize      winSize_ = {9, 23};  // rows, cols
 
 private:
     MenuNavBarViews();  // Private ctor
     void fillWindow();
     void allPlayers();
+    void onePlayer();
     void nextPlayer();
     void prevPlayer();
-    void popIfActive();
     void back();
 };
 

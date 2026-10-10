@@ -27,10 +27,8 @@ PlayerAreaAllPlayers::PlayerAreaAllPlayers(int height, int width)
 
 //----------------------------------------------------------------
 //
-// Called by WindowPlayerArea after the base WINDOW pWin_ is created
-// and after the list of players is known.
+// Called by WindowPlayerArea after the base WINDOW pWin_ is created.
 //
-
 void
 PlayerAreaAllPlayers::init(WINDOW* pWin)
 {

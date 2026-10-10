@@ -9,6 +9,8 @@
 #include <gen/Logger.h>
 #include <cassert>
 
+#include <cui/menus/MenuControl.h>
+
 using namespace Cui;
 
 //----------------------------------------------------------------
@@ -79,6 +81,11 @@ SurfaceManager::draw()
     }
 
     doupdate();
+
+// howie    
+//    LOG_TRACE("SurfaceManager::diag extra MenuControl draw()");
+//    MenuControl::instance().draw();
+//    doupdate();
 }
 
 //----------------------------------------------------------------

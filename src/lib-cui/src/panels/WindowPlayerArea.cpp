@@ -114,7 +114,23 @@ WindowPlayerArea::drawStaticContent()
 
 //----------------------------------------------------------------
 //
+// Switch to OnePlayer View. Show previously showing player.
+// Called from MenuNavBarViews.
+//
+void
+WindowPlayerArea::onePlayer()
+{
+    if (currentFocus_ == OneOrAll::AllPlayers)
+    {
+        currentFocus_ = OneOrAll::OnePlayer;
+        draw();
+    }
+}
+
+//----------------------------------------------------------------
+//
 // Switch to OnePlayer View. If already showing, goto next player
+// Called from MenuNavBarViews.
 //
 void
 WindowPlayerArea::nextPlayer()
@@ -125,6 +141,7 @@ WindowPlayerArea::nextPlayer()
 //----------------------------------------------------------------
 //
 // Switch to OnePlayer View. If already showing, goto prev player
+// Called from MenuNavBarViews.
 //
 void
 WindowPlayerArea::prevPlayer()
@@ -135,6 +152,7 @@ WindowPlayerArea::prevPlayer()
 //----------------------------------------------------------------
 //
 // Switch to AllPlayers View. If already showing, just re-populate.
+// Called from MenuNavBarViews.
 //
 void
 WindowPlayerArea::allPlayers()
@@ -142,13 +160,8 @@ WindowPlayerArea::allPlayers()
     if (currentFocus_ == OneOrAll::OnePlayer)
     {
         currentFocus_ = OneOrAll::AllPlayers;
-        werase(pWin_);
-        drawExternalJunctions();
-        drawInternalBorders();
-        drawStaticContent();
+        draw();
     }
-    
-    CuiUtils::transfer(pWin_);
 }
 
 //----------------------------------------------------------------
@@ -156,20 +169,16 @@ WindowPlayerArea::allPlayers()
 void
 WindowPlayerArea::advancePlayer(bool next)
 {
-    if (currentFocus_ == OneOrAll::AllPlayers)
+    if (currentFocus_ == OneOrAll::OnePlayer)
+    {
+        onePlayerView_.advancePlayer(next);
+        CuiUtils::transfer(pWin_);
+    }
+    else
     {
         currentFocus_ = OneOrAll::OnePlayer;
-        werase(pWin_);
-        drawExternalJunctions();
-        drawInternalBorders();
-        drawStaticContent();
-        CuiUtils::transfer(pWin_);
-        return;
+        draw();
     }
-    
-    // Else already in OnePlayer view, advance to next or prev player
-    onePlayerView_.advancePlayer(next);
-    CuiUtils::transfer(pWin_);
 }
 
 //----------------------------------------------------------------

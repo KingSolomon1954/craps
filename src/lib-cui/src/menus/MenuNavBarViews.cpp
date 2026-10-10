@@ -40,14 +40,15 @@ MenuNavBarViews::instance()
 // Later, multiple calls to draw() just transfers the already
 // filled window.
 //
-// 0  ┌───────────────────────┐
-// 1  │ View Menu             │
-// 2  ├───────────────────────┤
-// 3  │ [a] All Players       │
-// 4  │ [n] One Player (next) │
-// 5  │ [p] One Player (prev) │
-// 6  │ [. or esc] Back       │
-// 7  └───────────────────────┘
+// 0  ┌─────────────────────┐
+// 1  │ View Menu           │
+// 2  ├─────────────────────┤
+// 3  │ [a] All Players     │
+// 4  │ [o] One Player      │
+// 4  │ [n] Next Player     │
+// 5  │ [p] Previous Player │
+// 6  │ [. or esc] Back     │
+// 7  └─────────────────────┘
 //
 void
 MenuNavBarViews::fillWindow()
@@ -64,9 +65,10 @@ MenuNavBarViews::fillWindow()
     mvwaddstr(pWin_, 1, 2, "View Menu");
 
     mvwaddstr(pWin_, 3, 2, "[a] All Players");
-    mvwaddstr(pWin_, 4, 2, "[n] One Player (next)");
-    mvwaddstr(pWin_, 5, 2, "[p] One PLayer (prev)");
-    mvwaddstr(pWin_, 6, 2, "[. or esc] Back");
+    mvwaddstr(pWin_, 4, 2, "[o] One Player");
+    mvwaddstr(pWin_, 5, 2, "[n] Next Player");
+    mvwaddstr(pWin_, 6, 2, "[p] Previous PLayer");
+    mvwaddstr(pWin_, 7, 2, "[. or esc] Back");
 }
 
 //----------------------------------------------------------------
@@ -122,6 +124,7 @@ MenuNavBarViews::handleKey(int ch)
     switch(ch)
     {
     case 'a': allPlayers();    break;
+    case 'o': onePlayer();     break;
     case 'n': nextPlayer();    break;
     case 'p': prevPlayer();    break;
     case '.':
@@ -132,45 +135,21 @@ MenuNavBarViews::handleKey(int ch)
 }
 
 //----------------------------------------------------------------
-//
-// Three conditions to handle below:
-//
-// 1. ScreenCrapsTable is the active window
-//    call ScreenCrapsTable nextPlayer, prevPlayer, or allPlayers
-//    trigger redraw
-//
-// 2. MenuBetting is the active window
-//    call ScreenCrapsTable nextPlayer, prevPlayer, or allPlayers
-//    popSurface() MenuBetting disappears, ScreenCrapsTable is redrawn 
-//
-// 3. MenuNavBarViews is the active window
-//    call ScreenCrapsTable nextPlayer, prevPlayer, or allPlayers
-//    popSurface() MenuNavBarViews disappears, ScreenCrapsTable is redrawn 
-
-
-//----------------------------------------------------------------
-
-void
-MenuNavBarViews::popIfActive()
-{
-    if (SurfaceManager::instance().isActiveSurface(this))
-    {
-        SurfaceManager::instance().popSurface();
-    }
-    else
-    {
-        // Else ScreenCrapsTable is active, repaint
-        SurfaceManager::instance().draw();
-    }
-}
-
-//----------------------------------------------------------------
 
 void
 MenuNavBarViews::allPlayers()
 {
     WindowPlayerArea::instance().allPlayers();
-    popIfActive();
+    SurfaceManager::instance().popSurface();
+}
+
+//----------------------------------------------------------------
+
+void
+MenuNavBarViews::onePlayer()
+{
+    WindowPlayerArea::instance().onePlayer();
+    SurfaceManager::instance().popSurface();
 }
 
 //----------------------------------------------------------------
@@ -179,7 +158,7 @@ void
 MenuNavBarViews::nextPlayer()
 {
     WindowPlayerArea::instance().nextPlayer();
-    popIfActive();
+    SurfaceManager::instance().popSurface();
 }
 
 //----------------------------------------------------------------
@@ -188,7 +167,7 @@ void
 MenuNavBarViews::prevPlayer()
 {
     WindowPlayerArea::instance().prevPlayer();
-    popIfActive();
+    SurfaceManager::instance().popSurface();
 }
 
 //----------------------------------------------------------------
@@ -196,12 +175,7 @@ MenuNavBarViews::prevPlayer()
 void
 MenuNavBarViews::back()
 {
-    if (SurfaceManager::instance().isActiveSurface(this))
-    {
-        SurfaceManager::instance().popSurface();  // Become invisible
-    }
-
-    // Else ignore, nothing to do. ScreenCrapsTable is visible
+    SurfaceManager::instance().popSurface();
 }
 
 //----------------------------------------------------------------

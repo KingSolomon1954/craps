@@ -124,6 +124,7 @@ LayoutCrapsScreen::drawExternalJunctionsAllPlayers()
     mvwaddch(pWin_, L::playerAreaBorderTopRow, A::col3, ACS_TTEE);
     mvwaddch(pWin_, L::playerAreaBorderBotRow, A::col2, ACS_BTEE);
     mvwaddch(pWin_, L::playerAreaBorderBotRow, A::col3, ACS_BTEE);
+
     CuiUtils::transfer(pWin_);
 }
 
@@ -142,7 +143,8 @@ LayoutCrapsScreen::eraseExternalJunctionsAllPlayers()
     mvwaddch(pWin_, L::playerAreaBorderTopRow, A::col3, ACS_HLINE);
     mvwaddch(pWin_, L::playerAreaBorderBotRow, A::col2, ACS_HLINE);
     mvwaddch(pWin_, L::playerAreaBorderBotRow, A::col3, ACS_HLINE);
-    CuiUtils::transfer(pWin_);
+
+    // Doesn't need transfer(). Erase is always followed by draw()
 }
 
 //----------------------------------------------------------------
@@ -174,6 +176,7 @@ LayoutCrapsScreen::drawExternalJunctionsOnePlayer()
     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderRightCol, ACS_RTEE);
     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderRightCol, ACS_RTEE);
     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderRightCol, ACS_RTEE);
+
     CuiUtils::transfer(pWin_);
 }
 
@@ -206,7 +209,8 @@ LayoutCrapsScreen::eraseExternalJunctionsOnePlayer()
     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderRightCol, ACS_VLINE);
     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderRightCol, ACS_VLINE);
     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderRightCol, ACS_VLINE);
-    CuiUtils::transfer(pWin_);
+
+    // Doesn't need transfer(). Erase is always followed by draw()
 }
 
 //----------------------------------------------------------------
@@ -231,6 +235,5 @@ LayoutCrapsScreen::drawExternalJunctionsTitleBar()
 
     CuiUtils::transfer(pWin_);
 }
-
 
 //----------------------------------------------------------------

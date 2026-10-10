@@ -116,7 +116,8 @@ void
 MenuControl::draw()
 {
     LOG_TRACE("MenuControl::draw()");
-    // Just reuse already filled window over and over
+    
+    touchwin(pWin_);   // ncurses problem? Have to force content refresh.
     CuiUtils::transfer(pWin_);
 }    
 
@@ -222,14 +223,6 @@ MenuControl::back()
     //
     setOperationResult(OperationResult::Cancel);  // base class
     SurfaceManager::instance().popSurfaces();
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::onResume()
-{
-    LOG_TRACE("MenuControl::onResume()");
 }
 
 //----------------------------------------------------------------
