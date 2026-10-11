@@ -1,15 +1,16 @@
 <!---
 Comments here if needed.
+    <img src="https://github.com/user-attachments/assets/92fe4271-e308-45e4-9afc-b049fa4c3e0f" alt="">
 -->
 
 <h1 align="center">Royal Craps</h1>
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/92fe4271-e308-45e4-9afc-b049fa4c3e0f" alt="">
+    <img src="/home/howie/dev/proj/craps/assets/images/logo1.jpeg" alt="">
 </p>
 
 <p align="center">
-Multiple player dice game
+Single-player Craps game with up to five computer players
 </p>
 
 ---
@@ -20,17 +21,19 @@ Multiple player dice game
 [![Analysis](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fkingsolomon1954.github.io%2Fcpp-bootstrap%2Fstatic-analysis%2Freport%2Fstatic-analysis-badge.yml&query=badge.error-count&suffix=%20issues&label=analysis)](https://kingsolomon1954.github.io/cpp-bootstrap/static-analysis/report/index.html)
 
 ## Game Features
-- Multiple players
-  - configurable number of players
-  - computer players
-  - players randomly come and go
-    player profiles
-- Dice Rolls
-  - manual or automated timed rolls
-  - animation fidelity
-
-
-- more...
+- Terminal Based UI (future GUI)
+- Multiple Computer Buddies
+- Line Bets, Odds Bets, Place Bets, Proposition Bets
+- Dice Roll history
+- Dice Stats
+- Session Stats
+- Player Stats Current Session
+- Player Stats Across All Sessions
+- Table Stats Current Session
+- Table Stats All Sessions
+- On-Screen Dice Roll Animation
+- Automatic Odds
+- Quick Bets
 
 ## Installation
 To be supplied
@@ -39,7 +42,4 @@ To be supplied
 - Project setup from KingSolomon1954/cpp-bootstrap
 - GNU Makefile
 - Podman or Docker
-- Some typical Linux command line utilities
-
-
-
+- C++, ncurses
