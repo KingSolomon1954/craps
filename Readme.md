@@ -35,6 +35,11 @@ Single-player Craps game with up to five computer players
 - Table Stats All Sessions
 - Terminal Based UI (future GUI)
 
+## Sample Screen Shot
+<p align="center">
+  <img src="assets/images/SampleScreenShot1.png" alt="Screen Shot 1">
+</p>
+
 ## Installation
 To be supplied
 
