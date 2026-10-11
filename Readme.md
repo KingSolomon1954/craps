@@ -5,7 +5,7 @@ Comments here if needed.
 <h1 align="center">Royal Craps</h1>
 
 <p align="center">
-  <img src="docs/src/images/pub/logo1.jpeg"
+  <img src="docs/src/images/pub/logo1-256x256.png"
        alt="Royal Craps logo"
        width="300">
 </p>
