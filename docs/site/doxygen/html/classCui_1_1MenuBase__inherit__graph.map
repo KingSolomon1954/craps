@@ -1,0 +1,21 @@
+<map id="Cui::MenuBase" name="Cui::MenuBase">
+<area shape="rect" id="Node000001" title="Specialized surface type for menus." alt="" coords="185,179,304,204"/>
+<area shape="rect" id="Node000003" href="$classCui_1_1DialogAckError.html" title="Display diagnostic in a pop up, required user to enter or ok." alt="" coords="367,5,515,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="255,165,291,102,318,68,350,40,372,28,375,33,354,44,322,72,296,105,260,167"/>
+<area shape="rect" id="Node000004" href="$classCui_1_1DialogAmountEntry.html" title="Obtains bet amount from user." alt="" coords="352,55,531,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="263,166,301,126,351,89,377,78,379,83,353,94,304,130,267,170"/>
+<area shape="rect" id="Node000005" href="$classCui_1_1MenuBetting.html" title="Menu for full ScreenCrapsTable." alt="" coords="374,104,509,129"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="281,170,351,138,387,127,388,132,353,143,283,175"/>
+<area shape="rect" id="Node000006" href="$classCui_1_1MenuConfigure.html" title="Display choices for game control and configuration." alt="" coords="367,153,516,179"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="317,179,366,173,367,178,318,185"/>
+<area shape="rect" id="Node000007" href="$classCui_1_1MenuControl.html" title="Display choices for game control and configuration." alt="" coords="374,203,509,228"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="318,198,374,204,373,210,318,203"/>
+<area shape="rect" id="Node000008" href="$classCui_1_1MenuNavBarViews.html" title="Display choices for switching Player Views." alt="" coords="354,252,529,277"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="284,208,353,238,388,249,387,254,351,243,282,213"/>
+<area shape="rect" id="Node000009" href="$classCui_1_1MenuOddsBet.html" title="Display choices for making odds bets." alt="" coords="370,301,513,327"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="267,213,305,252,353,288,379,299,377,304,351,292,301,256,263,217"/>
+<area shape="rect" id="Node000010" href="$classCui_1_1MenuPlaceBet.html" title="Display choices for Place Bets." alt="" coords="369,351,513,376"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="260,215,296,277,322,310,354,337,375,348,372,353,350,342,318,313,291,280,255,218"/>
+<area shape="rect" id="Node000002" href="$classCui_1_1SurfaceBase.html" title="Common abstraction for anything occupying a visible/input surface." alt="" coords="5,179,137,204"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,189,185,189,185,194,151,194"/>
+</map>

@@ -1,4 +1,26 @@
 var searchData=
 [
-  ['_7ebuildinfo_0',['~BuildInfo',['../classGen_1_1BuildInfo.html#ad531f74e3394e5f53b1e71135ccf6c89',1,'Gen::BuildInfo']]]
+  ['undobet_0',['UndoBet',['../classCtrl_1_1UndoBet.html',1,'Ctrl']]],
+  ['undobetadded_1',['UndoBetAdded',['../classCtrl_1_1UndoBetAdded.html',1,'Ctrl']]],
+  ['undobetmodifiedamount_2',['UndoBetModifiedAmount',['../classCtrl_1_1UndoBetModifiedAmount.html',1,'Ctrl']]],
+  ['undobetmodifiedflags_3',['UndoBetModifiedFlags',['../classCtrl_1_1UndoBetModifiedFlags.html',1,'Ctrl']]],
+  ['undobetremoved_4',['UndoBetRemoved',['../classCtrl_1_1UndoBetRemoved.html',1,'Ctrl']]],
+  ['undomanager_5',['UndoManager',['../classCtrl_1_1UndoManager.html',1,'Ctrl']]],
+  ['unseterrorname_6',['UnsetErrorName',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cda160cd37161a04a6ea720b69734524b7b',1,'Gen::ErrorPass']]],
+  ['uslbetmade_7',['UslBetMade',['../structCtrl_1_1UslBetMade.html',1,'Ctrl']]],
+  ['uslbetresolved_8',['UslBetResolved',['../structCtrl_1_1UslBetResolved.html',1,'Ctrl']]],
+  ['uslbettingclosed_9',['UslBettingClosed',['../structCtrl_1_1UslBettingClosed.html',1,'Ctrl']]],
+  ['uslbettingopened_10',['UslBettingOpened',['../structCtrl_1_1UslBettingOpened.html',1,'Ctrl']]],
+  ['usldicenewvalue_11',['UslDiceNewValue',['../structCtrl_1_1UslDiceNewValue.html',1,'Ctrl']]],
+  ['usldicethrowstart_12',['UslDiceThrowStart',['../structCtrl_1_1UslDiceThrowStart.html',1,'Ctrl']]],
+  ['uslnewshooter_13',['UslNewShooter',['../structCtrl_1_1UslNewShooter.html',1,'Ctrl']]],
+  ['uslpasslinewinner_14',['UslPassLineWinner',['../structCtrl_1_1UslPassLineWinner.html',1,'Ctrl']]],
+  ['uslplayerbalancechanged_15',['UslPlayerBalanceChanged',['../structCtrl_1_1UslPlayerBalanceChanged.html',1,'Ctrl']]],
+  ['uslplayerjoinedtable_16',['UslPlayerJoinedTable',['../structCtrl_1_1UslPlayerJoinedTable.html',1,'Ctrl']]],
+  ['uslplayerlefttable_17',['UslPlayerLeftTable',['../structCtrl_1_1UslPlayerLeftTable.html',1,'Ctrl']]],
+  ['uslpointestablished_18',['UslPointEstablished',['../structCtrl_1_1UslPointEstablished.html',1,'Ctrl']]],
+  ['uslresolvebetsend_19',['UslResolveBetsEnd',['../structCtrl_1_1UslResolveBetsEnd.html',1,'Ctrl']]],
+  ['uslresolvebetsstart_20',['UslResolveBetsStart',['../structCtrl_1_1UslResolveBetsStart.html',1,'Ctrl']]],
+  ['uslsevenout_21',['UslSevenOut',['../structCtrl_1_1UslSevenOut.html',1,'Ctrl']]],
+  ['usltablebalancechanged_22',['UslTableBalanceChanged',['../structCtrl_1_1UslTableBalanceChanged.html',1,'Ctrl']]]
 ];

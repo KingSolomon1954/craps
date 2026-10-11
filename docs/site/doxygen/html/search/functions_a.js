@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['patch_0',['patch',['../classGen_1_1BuildInfo.html#a4b730dc5df352054211f8fa7088fdcc1',1,'Gen::BuildInfo']]],
-  ['prepend_1',['prepend',['../classGen_1_1StringUtils.html#a136f32567bc479041db7e3631ba45d45',1,'Gen::StringUtils::prepend(std::string &amp;s1, const std::string &amp;s2)'],['../classGen_1_1StringUtils.html#a1389460ca451acd9e8b3e835004b2ea7',1,'Gen::StringUtils::prepend(std::string &amp;s1, const char *pChars)'],['../classGen_1_1StringUtils.html#afca0cecf05e853696546015205bfcb41',1,'Gen::StringUtils::prepend(std::string &amp;s1, char c)']]],
-  ['properties_2',['Properties',['../classApp_1_1Properties.html#a7c001f15168b6ec386377dc91e288033',1,'App::Properties']]]
+  ['major_0',['major',['../classGen_1_1BuildInfo.html#ac3c507e24e01ea33835c7dba5d590804',1,'Gen::BuildInfo']]],
+  ['makebet_1',['makeBet',['../classCraps_1_1Player.html#a1239f78337c01e5fd28269ef6c317658',1,'Craps::Player']]],
+  ['makecenteredwindow_2',['makeCenteredWindow',['../classCui_1_1CuiUtils.html#a3fc4b0ff4556ce0d55f4ff1a40aaa0e4',1,'Cui::CuiUtils']]],
+  ['minor_3',['minor',['../classGen_1_1BuildInfo.html#a3bc228c5d644950409a6b975ebccf723',1,'Gen::BuildInfo']]]
 ];

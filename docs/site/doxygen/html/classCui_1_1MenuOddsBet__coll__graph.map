@@ -1,0 +1,8 @@
+<map id="Cui::MenuOddsBet" name="Cui::MenuOddsBet">
+<area shape="rect" id="Node000001" title="Display choices for making odds bets." alt="" coords="5,155,148,180"/>
+<area shape="rect" id="Node000002" href="$classCui_1_1MenuBase.html" title="Specialized surface type for menus." alt="" coords="17,80,136,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,120,79,154,74,154,74,120"/>
+<area shape="rect" id="Node000003" href="$classCui_1_1SurfaceBase.html" title="Common abstraction for anything occupying a visible/input surface." alt="" coords="11,5,143,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,45,79,80,74,80,74,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="158,10,169,18,161,25,143,27,143,22,159,20,164,18,155,15"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="Craps::BetStats" name="Craps::BetStats">
+<area shape="rect" id="Node000001" title=" " alt="" coords="184,137,307,163"/>
+<area shape="rect" id="Node000002" href="$structCraps_1_1BetTypeStats.html" title=" " alt="" coords="5,5,157,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,42,119,77,152,111,175,125,200,135,198,140,173,130,149,115,115,81,91,45"/>
+<area shape="rect" id="Node000003" href="$structCraps_1_1NumBets.html" title=" " alt="" coords="182,5,309,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,44,248,137,243,137,243,44"/>
+<area shape="rect" id="Node000004" href="$structCraps_1_1AmtBets.html" title=" " alt="" coords="360,5,483,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="423,45,415,81,406,100,394,115,375,129,353,140,307,150,306,145,351,134,372,125,390,111,402,97,410,80,417,44"/>
+</map>

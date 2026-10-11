@@ -1,0 +1,13 @@
+<map id="Craps::PlayerStats" name="Craps::PlayerStats">
+<area shape="rect" id="Node000001" title="Track statistics about rolls and dice." alt="" coords="259,225,400,251"/>
+<area shape="rect" id="Node000002" href="$classCraps_1_1BetStats.html" title=" " alt="" coords="184,137,307,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,171,320,223,316,227,264,175"/>
+<area shape="rect" id="Node000003" href="$structCraps_1_1BetTypeStats.html" title=" " alt="" coords="5,5,157,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,42,119,77,152,111,175,125,200,135,198,140,173,130,149,115,115,81,91,45"/>
+<area shape="rect" id="Node000004" href="$structCraps_1_1NumBets.html" title=" " alt="" coords="182,5,309,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="248,44,248,137,243,137,243,44"/>
+<area shape="rect" id="Node000005" href="$structCraps_1_1AmtBets.html" title=" " alt="" coords="360,5,483,31"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="423,45,415,81,406,100,394,116,361,127,305,140,304,135,359,122,390,111,402,97,410,80,417,44"/>
+<area shape="rect" id="Node000006" href="$classCraps_1_1SessionHistory.html" title="Capture session summaries in a history file." alt="" coords="331,137,495,163"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="394,175,343,227,339,223,390,171"/>
+</map>

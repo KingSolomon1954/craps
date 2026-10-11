@@ -1,0 +1,5 @@
+<map id="Craps::OddsTables" name="Craps::OddsTables">
+<area shape="rect" id="Node000001" title="Tables specifying odds for payouts." alt="" coords="9,167,151,192"/>
+<area shape="rect" id="Node000002" href="$structCraps_1_1OddsTables_1_1OddsEntry.html" title=" " alt="" coords="5,5,155,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,60,83,166,77,166,77,60"/>
+</map>

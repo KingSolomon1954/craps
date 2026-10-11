@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['insensitiveequals_0',['insensitiveEquals',['../classGen_1_1StringUtils.html#a22d8f32ee08f9e55b951426ef32d91c7',1,'Gen::StringUtils']]],
-  ['insensitivepredicate_1',['insensitivePredicate',['../classGen_1_1StringUtils.html#aeb7055721171ac8f0af73466f2a2c33b',1,'Gen::StringUtils']]],
-  ['invalid_2',['Invalid',['../group__free.html#ggacf1d75949e1f4e1707e8b3ab73ae3d9da4bbb8f967da6d1a610596d7257179c2b',1,'EnumChannelDirection.h']]],
-  ['isconvertiblefrom_3',['isConvertibleFrom',['../namespaceEnumChannelDirection.html#a23e5bc311b8c5489e16f05f8c4867b6e',1,'EnumChannelDirection']]]
+  ['hardway_0',['Hardway',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a6e52cf4a9d3e411fad7918897b5cde85',1,'EnumBetName.h']]],
+  ['hardwayworking_1',['hardwayWorking',['../classCraps_1_1CrapsBet.html#ab3c3e7b5af1c0a20acdd5e24cee89b31',1,'Craps::CrapsBet']]],
+  ['horn_2',['Horn',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a5cf73e808193af68b60d465bf312e789',1,'EnumBetName.h']]]
 ];
