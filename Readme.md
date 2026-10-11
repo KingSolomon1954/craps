@@ -5,11 +5,13 @@ Comments here if needed.
 <h1 align="center">Royal Craps</h1>
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/92fe4271-e308-45e4-9afc-b049fa4c3e0f" alt="">
+  <img src="assets/images/logo1.jpeg"
+       alt="Royal Craps logo"
+       width="300">
 </p>
 
 <p align="center">
-Multiple player dice game
+Single-player Craps game with up to five computer players
 </p>
 
 ---
@@ -20,17 +22,23 @@ Multiple player dice game
 [![Analysis](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fkingsolomon1954.github.io%2Fcpp-bootstrap%2Fstatic-analysis%2Freport%2Fstatic-analysis-badge.yml&query=badge.error-count&suffix=%20issues&label=analysis)](https://kingsolomon1954.github.io/cpp-bootstrap/static-analysis/report/index.html)
 
 ## Game Features
-- Multiple players
-  - configurable number of players
-  - computer players
-  - players randomly come and go
-    player profiles
-- Dice Rolls
-  - manual or automated timed rolls
-  - animation fidelity
+- Line, Odds, Place, Field, and Proposition Bets
+- Automatic Odds
+- Quick Bets
+- Multiple Computer Buddies
+- On-Screen Dice Roll Animation
+- Dice Roll history
+- Dice Stats
+- Player Stats Current Session
+- Player Stats Across All Sessions
+- Table Stats Current Session
+- Table Stats All Sessions
+- Terminal Based UI (future GUI)
 
-
-- more...
+## Sample Screen Shot
+<p align="center">
+  <img src="assets/images/SampleScreenShot1.png" alt="Screen Shot 1">
+</p>
 
 ## Installation
 To be supplied
@@ -39,7 +47,4 @@ To be supplied
 - Project setup from KingSolomon1954/cpp-bootstrap
 - GNU Makefile
 - Podman or Docker
-- Some typical Linux command line utilities
-
-
-
+- C++, ncurses
