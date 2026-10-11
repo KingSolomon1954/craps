@@ -34,8 +34,8 @@ public:
     /// @}
     
 private:
-    WindowPosition  winPos_;
-    WindowSize      winSize_ = {11, 22};  // rows, cols
+    WindowPosition   winPos_;
+    const WindowSize winSize_ = {11, 22};  // rows, cols
 
 private:
     MenuPlaceBet();  // Private ctor

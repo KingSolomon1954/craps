@@ -32,18 +32,24 @@ AutoFills need to save/read from user config
 Add Roll History Format A,B,C,D to multi-configuration
 Modify Roll History to grab Format from multi-configuration
 LocationManager needs smarter options for window placement
-Beef up ErrorPass and propagate throughout
-In CUI, need DialogBetAmount
 Need More MenuBetting implementation
 Implement "Unknown" player start up logic
-Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
+Implement the many MenuConfiguration options
 Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
 OperationTracker needs correlationId matching
 Rewrite QuickBet for new CUI design
 Implement ReqMakeBet, to include UndoManager
 Add dialog confirm when quitting game tied to operations manager
+Complete the first round-trip bet made by the CUI.
+In CUI, need DialogBetAmount
+In CUI, implement DialogAckError layers of info
 
+(Done) Beefed up ErrorPass and propagate throughout, needs more attention
+(Done) Introduced zeus::expected library
+(Done) Fix invisible MenuControl when child menus are cancelled 
+(Done) Added skeleton MenuConfig
+(Done) Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
 (Done) UndoManager implements instance(), remove from Globals
 (Done) Added QuickBets back into compilation
 (Done) Only CrapsTypes define using PlayersId, BetIds, and RecentRolls
