@@ -1,12 +1,13 @@
 <!---
 Comments here if needed.
-    <img src="https://github.com/user-attachments/assets/92fe4271-e308-45e4-9afc-b049fa4c3e0f" alt="">
 -->
 
 <h1 align="center">Royal Craps</h1>
 
 <p align="center">
-    <img src="/home/howie/dev/proj/craps/assets/images/logo1.jpeg" alt="">
+  <img src="assets/images/logo1.jpeg"
+       alt="Royal Craps logo"
+       width="300">
 </p>
 
 <p align="center">
