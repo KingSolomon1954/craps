@@ -4,13 +4,12 @@
 #
 # -----------------------------------------------------------------
 
-find_package(Boost REQUIRED COMPONENTS asio)
-
 add_executable(gen-ut
     utest-gen-main.cpp
     BuildInfoTest.cpp
+    EventManagerTest.cpp
     MoneyTest.cpp
-    MoneyUtilTest.cpp
+    MoneyUtilsTest.cpp
     MultiLayerConfigTest.cpp
     StringUtilsTest.cpp
     TimerManagerTest.cpp
@@ -18,7 +17,6 @@ add_executable(gen-ut
 
 target_link_libraries(gen-ut
     PRIVATE gen
-    PRIVATE boost::boost
     PRIVATE doctest::doctest
 )
 

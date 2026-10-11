@@ -147,16 +147,27 @@ ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
     cfg.set(ConfigManager::KeyViewType,     "console");
     cfg.set(ConfigManager::KeySoundEnabled, "true");
     cfg.set(ConfigManager::KeySoundVolume,  "50");
-    cfg.set(ConfigManager::KeyDebugLogging,  "true");
+    cfg.set(ConfigManager::KeyDebugLogging,  "false");
     cfg.set(ConfigManager::KeyTraceLogging,  "false");
 
     Gen::Timepoint tp;
-    cfg.set(ConfigManager::KeySessionStart,        tp.toString());
-    cfg.set(ConfigManager::KeyTableStartId,        "Table-1");
+    cfg.set(ConfigManager::KeySessionStartTime,    tp.toString());
+    cfg.set(ConfigManager::KeyTableStart,          "las-vegas-strip.yaml");
     cfg.set(ConfigManager::KeyTableStartLastPlyrs, "true");
     cfg.set(ConfigManager::KeyTableMaxSessions,    "50");
     cfg.set(ConfigManager::KeyTableMaxRecentRolls, "25");
-    // TODO more ...
+
+    cfg.set(ConfigManager::KeyTablePlayer1, "");
+    cfg.set(ConfigManager::KeyTablePlayer2, "");
+    cfg.set(ConfigManager::KeyTablePlayer3, "");
+    cfg.set(ConfigManager::KeyTablePlayer4, "");
+    cfg.set(ConfigManager::KeyTablePlayer5, "");
+    cfg.set(ConfigManager::KeyTablePlayer6, "");
+
+    cfg.set(ConfigManager::KeyPlayerMaxSessions, "50");
+
+
+// TODO more ...
 }
 
 //----------------------------------------------------------------

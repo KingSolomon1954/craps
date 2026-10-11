@@ -13,7 +13,7 @@ class Dice
 public:
     /// @name Lifecycle
     /// @{
-    Dice();
+    Dice() = default;
    ~Dice() = default;
     /// @}
 
@@ -25,9 +25,10 @@ public:
 
     /// @name Observers
     /// @{
-    unsigned value() const;
-    unsigned d1() const;
-    unsigned d2() const;
+    unsigned value()     const;
+    unsigned d1()        const;
+    unsigned d2()        const;
+    unsigned rollCount() const;
     bool operator==(const Dice&) const = default;  // Only generates ==
     /// @}
 
@@ -35,7 +36,8 @@ private:
     int getRandomNumber(int min, int max) const;
     
     unsigned d1_ = 6; 
-    unsigned d2_ = 6; 
+    unsigned d2_ = 6;
+    unsigned rollCount_ = 0;
 };
 
 /*-----------------------------------------------------------*//**

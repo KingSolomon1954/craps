@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <controller/Globals.h>
-#include <craps/CrapsTable.h>
 #include <gen/Timepoint.h>
 
 namespace Ctrl {
@@ -15,14 +13,14 @@ namespace Ctrl {
 class SessionSummary
 {
 public:
-    Craps::TableId tableId;
+    std::string name;             // Player or Table name
     Gen::Timepoint sessionStart;
     Gen::Timepoint sessionEnd;
-    Gbl::Money totAmtWin;   // Players win
-    Gbl::Money totAmtLose;  // Players lose
-    unsigned numRolls;
-    unsigned numBetsMade;
-    unsigned numPlayers;
+    Gbl::Money totAmtWin  = 0;    // Players win
+    Gbl::Money totAmtLose = 0;    // Players lose
+    unsigned numRolls     = 0;
+    unsigned numBetsMade  = 0;
+    unsigned numPlayers   = 0;    // Filled out only if Table summary
     
     /// @name Lifecycle
     /// @{
@@ -41,7 +39,12 @@ public:
 
 @class SessionSummary
 
-@brief Maintain a brief record about a session
+@brief A record about a player or table session
+
+Structure suitable for UI presentation.
+
+Translates from Craps table session history or from Player
+session history for UI handling.
 
 */
 

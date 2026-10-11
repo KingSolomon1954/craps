@@ -1,4 +1,4 @@
-tbl.startId: "Table-1"
-tbl.startLastPlyrs: true
+table.startTable: "las-vegas-strip.yaml"
+table.startWithLastPlayers: true
 sound.enabled: true
 sound.volume: 50

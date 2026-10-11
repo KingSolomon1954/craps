@@ -6,11 +6,15 @@
 
 #include <controller/PlayerManager.h>
 #include <cassert>
+#include <stdexcept>
 #include <fstream>
 #include <iostream>
-#include <craps/DecisionRecord.h>
+#include <controller/ConfigManager.h>
+#include <controller/Globals.h>
 #include <craps/CrapsTable.h>
+#include <craps/Player.h>
 #include <gen/ErrorPass.h>
+#include <gen/Logger.h>
 
 using namespace Ctrl;
 
@@ -21,49 +25,19 @@ Constructor
 */
 PlayerManager::PlayerManager()
 {
-    // Empty.
+    manifest_.loadFromFile();  // Load players manifest
+    loadStartingPlayers();     // Throws
+    addPlayersToTable();       // Throws
 }
 
-/*-----------------------------------------------------------*//**
+//----------------------------------------------------------------
 
-Create a Player
-
-*/
-PlayerManager::PlayerPtr
-PlayerManager::createPlayer(const std::string& name)
+PlayerManager::~PlayerManager()
 {
-    auto player = std::make_shared<Craps::Player>(name, 1000); // Default balance
-    playersAll_[player->getUuid()] = player;
-    return player;
-}
-
-/*-----------------------------------------------------------*//**
-
-Get Player by UUID
-
-*/
-PlayerManager::PlayerPtr
-PlayerManager::getPlayer(const Gen::Uuid& uuid) const
-{
-    auto it = playersAll_.find(uuid);
-    if (it != playersAll_.end()) return it->second;
-    return nullptr;
-}
-
-/*-----------------------------------------------------------*//**
-
-Loads player descriptions from file.
-
-*/
-PlayerManager::PlayerDescriptions
-PlayerManager::loadPlayerChoices()
-{
-    // TODO: read directory and build up player choices
-    return {
-        { "John", "The Bronx better",  "abcd", std::chrono::system_clock::now()},
-        { "Jane", "The Chatty roller", "efgh", std::chrono::system_clock::now()},
-        { "Dave", "The quiet gambler", "ijkl", std::chrono::system_clock::now()},
-    };
+    for (auto p : players_)
+    {
+        delete p;
+    }
 }
 
 //----------------------------------------------------------------
@@ -71,152 +45,138 @@ PlayerManager::loadPlayerChoices()
 void
 PlayerManager::loadStartingPlayers()
 {
-    assert(Gbl::pTable);
-    
-    // TODO read from mult layer config
-    // Form list of the last player ids
-    std::vector<PlayerManager::PlayerId> ids;
-    
-    // Add each player to table
-    Gen::ErrorPass ep;
-    for (auto pid : ids)  // Players join table
+    std::vector<std::string> playerFiles;
+
+    Craps::PlayerId playerFile1 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer1).value();
+    Craps::PlayerId playerFile2 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer2).value();
+    Craps::PlayerId playerFile3 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer3).value();
+    Craps::PlayerId playerFile4 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer4).value();
+    Craps::PlayerId playerFile5 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer5).value();
+    Craps::PlayerId playerFile6 = Gbl::pConfigMgr->getString(ConfigManager::KeyTablePlayer6).value();
+    if (!playerFile1.empty()) playerFiles.push_back(playerFile1);
+    if (!playerFile2.empty()) playerFiles.push_back(playerFile2);
+    if (!playerFile3.empty()) playerFiles.push_back(playerFile3);
+    if (!playerFile4.empty()) playerFiles.push_back(playerFile4);
+    if (!playerFile5.empty()) playerFiles.push_back(playerFile5);
+    if (!playerFile6.empty()) playerFiles.push_back(playerFile6);
+
+    for (auto& f : playerFiles)
     {
-        // TODO: check error return
-        Gbl::pTable->addPlayer(pid, ep);
+        players_.push_back(loadPlayer(f));
     }
 }
 
 //----------------------------------------------------------------
 
-Craps::Player
-PlayerManager::loadPlayer(const PlayerId& playerId)
+Craps::Player*
+PlayerManager::loadPlayer(const std::string& fileName)
 {
-    // TODO: read from file and create player
-    return Craps::Player();
+    // Confirm fileName appears in players manifest
+    auto playerId = manifest_.getPlayerId(fileName);
+    if (playerId.empty())
+    {
+        std::string diag = "PlayerManager::loadPlayer(): unable to load "
+            "player file; lookup failed; file name:\"" + fileName +
+            "\" is not found in manifest file:\"players.yaml\".";
+        throw std::runtime_error(diag);
+    }
+
+    Craps::PlayerConfig config;
+    config.playerPath = PlayerManager::formPlayerPath(fileName);
+    return Craps::Player::fromFile(playerId, config);
 }
 
-/*-----------------------------------------------------------*//**
+//----------------------------------------------------------------
 
-Load all players from file
-
-*/
-bool
-PlayerManager::loadPlayers()
+void
+PlayerManager::addPlayersToTable()
 {
-    /// TODO switch to a YAML index, or read directory freshly each time
-    std::ifstream in("players/index.json");
-    if (!in) return false;
-    json index;
-    in >> index;
+    Gen::ErrorPass ep;
+    bool booboo = false;
 
-    for (const auto& entry : index["players"])
+    for (auto p : players_)
     {
-        auto player = std::make_shared<Craps::Player>();
-        if (player->loadFromFile("players/" + entry["uuid"].get<Gen::Uuid>() + ".json"))
+        auto result = p->joinTable(*Gbl::pTable);
+        if (!result)
         {
-            playersAll_[player->getUuid()] = player;
+            ep = result.error();
+            booboo = true;
         }
     }
-    return true;
-}
-
-/*-----------------------------------------------------------*//**
-
-Save all players to file
-
-*/
-bool
-PlayerManager::savePlayers()
-{
-    json index;
-    for (const auto& [uuid, player] : playersAll_)
+    if (booboo)
     {
-        player->saveToFile("players/" + uuid + ".json");
-        index["players"].push_back({
-            {"uuid", uuid},
-            {"name", player->getName()}
-        });
+        ep.prepend("PlayerManager::addPlayersToTable(): Unable to "
+                   "add player to table; ");
+        throw std::runtime_error(ep.description());
     }
 
-    std::ofstream out("players/index.json");
-    out << index.dump(2);
-    return true;
-}
-
-/*-----------------------------------------------------------*//**
-
-Disburse WIN decision record to player.
-
-Called by CrapsTable to dish out a winning bet to a Player.
-
-*/
-void
-PlayerManager::disburseWin(const Craps::DecisionRecord& dr) const
-{
-    auto pPlayer = getPlayer(dr.playerId);
-    if (pPlayer == nullptr)
-    {
-        diagBadPlayerId("disburseWin() ", dr.playerId);
-        assert(false);
-        return;
-    }
-    pPlayer->processWin(dr);
-}
-
-/*-----------------------------------------------------------*//**
-
-Disburse LOSE decision record to player.
-
-Called by CrapsTable to dish out a losing bet to a Player.
-
-*/
-void
-PlayerManager::disburseLose(const Craps::DecisionRecord& dr) const
-{
-    auto pPlayer = getPlayer(dr.playerId);
-    if (pPlayer == nullptr)
-    {
-        diagBadPlayerId("disburseLose() ", dr.playerId);
-        assert(false);
-        return;
-    }
-    pPlayer->processLose(dr);
-}
-
-/*-----------------------------------------------------------*//**
-
-Disburse KEEP decision record to player.
-
-Called by CrapsTable to inform a Player about their bet that
-have no decision on the current roll of dice.
-
-*/
-void
-PlayerManager::disburseKeep(const Craps::DecisionRecord& dr) const
-{
-    auto pPlayer = getPlayer(dr.playerId);
-    if (pPlayer == nullptr)
-    {
-        diagBadPlayerId("disburseKeep() ", dr.playerId);
-        assert(false);
-        return;
-    }
-    pPlayer->processKeep(dr);
+    // Tell the table which user starts off as shooter.
+    Gbl::pTable->setShooter(*getUserPlayer());
 }
 
 //----------------------------------------------------------------
 
-void
-PlayerManager::diagBadPlayerId(const std::string& funcName,
-                               const PlayerId& playerId) const
+Craps::Player*
+PlayerManager::getPlayer(const Craps::PlayerId& playerId,
+                         Gen::ErrorPass& ep) const
 {
-    std::string diag =
-        "Internal Error: Unable to process decision record. "
-        "PlayerManager::" + funcName + "cant match "
-        "decision record playerId against any playerId in "
-        "playersAll list. Bad uuid:" + playerId;
-    // TODO: error manager
-    std::cerr << diag << std::endl;
+    for (auto p : players_)
+    {
+        if (p->getPlayerId() == playerId)
+        {
+            return p;
+        }
+    }
+    ep.setDescription("PlayerManager::getPLayer(): no such playerId; \"" +
+                      playerId + "\"");
+    return nullptr;
+}
+
+//----------------------------------------------------------------
+
+const PlayerManifest::PlayerList&
+PlayerManager::getPlayerList() const
+{
+    return manifest_.getPlayerList();
+}
+
+//----------------------------------------------------------------
+
+std::filesystem::path
+PlayerManager::formPlayerPath(const std::string& fileName)
+{
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysPlayers).value();
+
+    namespace fs = std::filesystem;
+    fs::path path = fs::path(dir) / fileName;
+    return path;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns the player that is the user.
+
+This is the person operating the game as player "x".
+*/
+Craps::Player*
+PlayerManager::getUserPlayer() const
+{
+    LOG_TRACE("PlayerManager::getUserPlayer()");
+    std::string playerFileName = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyTableUserIsPlayer).value();
+
+    LOG_TRACE("PlayerManager::before manifest()");
+    auto playerId = manifest_.getPlayerId(playerFileName);
+    LOG_TRACE("PlayerManager::after manifest()");
+    for (auto p : players_)
+    {
+        if (p->getPlayerId() == playerId)
+        {
+            return p;
+        }
+    }
+    return nullptr;
 }
 
 //----------------------------------------------------------------

@@ -1,0 +1,126 @@
+//----------------------------------------------------------------
+//
+// File: CrapsCommands.h
+//
+// The UI uses this API to interact with the game.
+// It enqueues GameEvents, actually UI events, to the GameController.
+// These are events that change the state of game.
+//
+//----------------------------------------------------------------
+
+#pragma once
+
+#include <craps/EnumBetName.h>
+#include <craps/CrapsTypes.h>
+#include <gen/ErrorPass.h>
+#include <gen/MoneyUtils.h>
+#include <gen/ReturnCode.h>
+
+namespace Ctrl {
+
+class CrapsCommands
+{
+public:    
+    CrapsCommands() = delete;  // Pure static class, no instantiation
+
+    // TODO Eliminate remaining return args from function signature
+
+    // Player related
+    static uint64_t cmdPlayerJoinTable(
+        const Craps::PlayerId& playerId,
+        const Craps::TableId& tableId);
+    static uint64_t cmdPlayerLeaveTable(
+        const Craps::PlayerId& playerId);
+    static uint64_t cmdMakeBet(
+        const Craps::PlayerId& playerId,
+        BetName betName,
+        Gen::Money contractAmount,
+        size_t pivot);
+    static uint64_t cmdMakeBetAuto(
+        const Craps::PlayerId& playerId,
+        BetName betName,
+        Gen::Money contractAmount,
+        size_t pivot);
+
+    // Bet related
+    static uint64_t cmdBetSetContractAmount(
+        const Craps::BetId& betId,
+        Gen::Money contractAmount);
+    static uint64_t cmdBetSetOddsAmount(
+        const Craps::BetId& betId,
+        Gen::Money oddsAmount);
+    static uint64_t cmdBetSetOffComeOutRoll(
+        const Craps::BetId& betId);
+    static uint64_t cmdBetSetOnComeOutRoll(
+        const Craps::BetId& betId);
+    static uint64_t cmdBetSetHardwayOff(
+        const Craps::BetId& betId);
+    static uint64_t cmdBetSetHardwayOn(
+        const Craps::BetId& betId);
+    static Gen::ReturnCode cmdBetRemove(
+        const Craps::BetId& betid,
+        Gen::ErrorPass& ep);
+    
+    // Table related
+    static uint64_t cmdRollDice(
+        const Craps::TableId& tableId);
+    static Gen::ReturnCode undoLastBet(
+        Gen::ErrorPass& ep);
+
+    // Program control
+    static void gameTerminate();
+    
+    static uint64_t cmdSetAutoFill(
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount);
+    static uint64_t cmdDeleteAutoFill(
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount);
+    static uint64_t cmdSetQuickBet(
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount);
+    static uint64_t cmdApplyQuickBet(
+        size_t index);
+    static uint64_t cmdDeleteQuickBetByLookup(
+        BetName    betName,
+        size_t     pivot,
+        bool       oddsBet,
+        Gen::Money amount);
+    static uint64_t cmdDeleteQuickBetByIndex(
+        size_t index);
+
+private:
+    // Private helpers
+    static std::string diagPrefix(
+        const std::string& funcName,
+        const std::string& unableToWhat);
+};
+
+/*-----------------------------------------------------------*//**
+
+@class CrapsCommands
+
+@brief UI builds and enqueues an Event to perform against the model
+
+A collection of functions that builds and enqueues GameEvents to 
+perform a command on the model. These are commands that
+change the game state.
+
+See class CrapsInterfaceReader for read-only retrieval
+of information from the model.
+
+Both GUI and CUI go through this interface.
+
+*/    
+
+} // namespace Ctrl
+
+//----------------------------------------------------------------
+
+

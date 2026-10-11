@@ -4,16 +4,19 @@
 //
 //----------------------------------------------------------------
 
+#include <filesystem>
 #include <controller/TableManager.h>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
+#include <controller/UndoManager.h>
+#include <craps/CrapsTable.h>
 
 using namespace Ctrl;
 
 //----------------------------------------------------------------
 //
 // Design note:
-// 
+//
 // Private pCurrentCrapsTable_ is used to manage the lifetime of the
 // current global CrapsTable. This differs from how CrapsGame class
 // manages lifetime of all the other globals. Unlike the other
@@ -23,10 +26,10 @@ using namespace Ctrl;
 //
 TableManager::TableManager()
 {
+    manifest_.loadFromFile();           // Load tables.yaml manifest
     pCurrentCrapsTable_ = loadStartingCrapsTable();
     Gbl::pTable = pCurrentCrapsTable_;  // Make it accessible via globals
-    
-    manifest_.loadFromFile();  // Load tables.yaml manifest
+    tables_.push_back(pCurrentCrapsTable_);
 }
 
 //----------------------------------------------------------------
@@ -38,18 +41,50 @@ TableManager::~TableManager()
 
 //----------------------------------------------------------------
 
-const TableManager::TableDescriptions&
-TableManager::getTableChoices() const
+const TableManifest::TableList&
+TableManager::getTableList() const
 {
-    return manifest_.getTables();
+    return manifest_.getTableList();
 }
 
 //----------------------------------------------------------------
 
 Craps::CrapsTable*
-TableManager::loadCrapsTable(const Craps::CrapsTable::TableId& tableId)
+TableManager::getTable(const Craps::TableId& tableId,
+                       Gen::ErrorPass& ep) const
 {
-    return Craps::CrapsTable::fromFile(tableId);
+    for (auto t : tables_)
+    {
+        if (t->getTableId() == tableId)
+        {
+            return t;
+        }
+    }
+    ep.setDescription("TableManager::getTable(): no such tableId; \"" +
+                      tableId + "\"");
+    return nullptr;
+}
+
+//----------------------------------------------------------------
+
+Craps::CrapsTable*
+TableManager::loadCrapsTable(const std::string& fileName)
+{
+    auto tableId = manifest_.getTableId(fileName);
+    if (tableId.empty())
+    {
+        std::string diag = "TableManager::loadCrapsTable(): unable to load "
+            "table file; lookup failed; file name:\"" + fileName +
+            "\" is not found in manifest file:\"tables.yaml\".";
+        throw std::runtime_error(diag);
+    }
+
+    Craps::TableConfig config;
+    config.maxSessions    = TableManager::retrieveMaxSessions();
+    config.maxRecentRolls = TableManager::retrieveMaxRecentRolls();
+    config.tablePath      = TableManager::formTablePath(fileName);
+
+    return Craps::CrapsTable::fromFile(tableId, config);
 }
 
 //----------------------------------------------------------------
@@ -57,16 +92,16 @@ TableManager::loadCrapsTable(const Craps::CrapsTable::TableId& tableId)
 Craps::CrapsTable*
 TableManager::loadStartingCrapsTable()
 {
-    Craps::CrapsTable::TableId tid =
-        Gbl::pConfigMgr->getString(ConfigManager::KeyTableStartId).value();
-    return loadCrapsTable(tid);
+    std::string fileName =
+        Gbl::pConfigMgr->getString(ConfigManager::KeyTableStart).value();
+    return loadCrapsTable(fileName);
 }
 
 //----------------------------------------------------------------
 
 Gen::ReturnCode
 TableManager::switchCrapsTable(
-    const Craps::CrapsTable::TableId& toTableId, Gen::ErrorPass& ep)
+    const Craps::TableId& toTableId, Gen::ErrorPass& ep)
 {
     try
     {
@@ -75,14 +110,47 @@ TableManager::switchCrapsTable(
         delete pCurrentCrapsTable_;          // Clean up its memory
         Gbl::pTable = p;                     // New table accssible in globals
         pCurrentCrapsTable_ = p;             // Manage it's memory
+        tables_[0] = p;                      // replace table in container
+        UndoManager::instance().clear();     // Start with zero undo's
         return Gen::ReturnCode::Success;
     }
     catch (const std::runtime_error& e)
     {
-        ep.diag = "TableManager::switchCrapsTable(): ";
+        ep.setDescription("TableManager::switchCrapsTable(): ");
         ep.append(e.what());
         return Gen::ReturnCode::Fail;
     }
+}
+
+//----------------------------------------------------------------
+
+size_t
+TableManager::retrieveMaxSessions()
+{
+    return Gbl::pConfigMgr->getInt(
+        Ctrl::ConfigManager::KeyTableMaxSessions).value();
+}
+
+//----------------------------------------------------------------
+
+size_t
+TableManager::retrieveMaxRecentRolls()
+{
+    return Gbl::pConfigMgr->getInt(
+        Ctrl::ConfigManager::KeyTableMaxRecentRolls).value();
+}
+
+//----------------------------------------------------------------
+
+std::filesystem::path
+TableManager::formTablePath(const std::string& fileName)
+{
+    std::string dir = Gbl::pConfigMgr->getString(
+        Ctrl::ConfigManager::KeyDirsSysTables).value();
+
+    namespace fs = std::filesystem;
+    fs::path path = fs::path(dir) / fileName;
+    return path;
 }
 
 //----------------------------------------------------------------

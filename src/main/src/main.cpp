@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <controller/CrapsGame.h>
+#include <controller/GameMain.h>
 #include <exception>
 #include <iostream>
 
@@ -15,7 +15,7 @@ main(int argc, char* argv[])
 {
     try
     {
-        Ctrl::CrapsGame craps(argc, argv);
+        Ctrl::GameMain craps(argc, argv);
     }
     catch (const std::exception& e)
     {

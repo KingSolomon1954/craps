@@ -6,131 +6,160 @@
 
 #pragma once
 
-#include <array>
-#include <deque>
-#include <list>
-#include <memory>
-#include <gen/ErrorPass.h>
-#include <gen/MoneyUtil.h>
-#include <gen/ReturnCode.h>
-#include <gen/Timepoint.h>
-#include <gen/Uuid.h>
 #include <craps/Bank.h>
 #include <craps/CrapsBet.h>
+#include <craps/CrapsTypes.h>
 #include <craps/DecisionRecord.h>
 #include <craps/Dice.h>
-#include <craps/Player.h>
+#include <craps/LastRollStats.h>
+#include <craps/TableConfig.h>
 #include <craps/TableStats.h>
+#include <gen/ErrorPass.h>
+#include <gen/MoneyUtils.h>
+#include <gen/ReturnCode.h>
+#include <gen/Timepoint.h>
+#include <yaml-cpp/yaml.h>
+#include <zeus/expected.hpp>
+#include <array>
+#include <list>
 
 namespace Craps {
+
+class Player;  // fwd
 
 class CrapsTable
 {
 public:
-    using TableId = std::string;
-    
     /// @name Lifecycle
     /// @{
-    CrapsTable(const TableId& tableId);
+    CrapsTable(const TableId&     tableId,
+               const TableConfig& config);
+
    ~CrapsTable() = default;
-    static CrapsTable* fromConfig(const TableId& tableId);
-    static CrapsTable* fromFile  (const TableId& tableId);
+    void shutdown();
+    static CrapsTable* fromString(std::string        yaml,
+                                  const TableId&     tableId,
+                                  const TableConfig& config);
+    static CrapsTable* fromFile  (const TableId&     tableId,
+                                  const TableConfig& config);
     /// @}
 
     /// @name Modifiers
     /// @{
-    Gen::ReturnCode addPlayer   (const Gen::Uuid& playerId, Gen::ErrorPass& ep);
-    Gen::ReturnCode removePlayer(const Gen::Uuid& playerId, Gen::ErrorPass& ep);
-    Gen::ReturnCode updatePlayerId(const Gen::Uuid& oldId,
-                                   const Gen::Uuid& newId,
-                                   Gen::ErrorPass& ep);
+    // Players
+    zeus::expected<void, Gen::ErrorPass> addPlayer   (Player& player);
+    zeus::expected<void, Gen::ErrorPass> removePlayer(Player& player);
+    void setShooter(Player& pPlayer);
 
-    using BetIntfcPtr = std::shared_ptr<class CrapsBetIntfc>;
-    BetIntfcPtr addBet(const Gen::Uuid& playerId,
-                       BetName betName,
-                       Gen::Money contractAmount,
-                       unsigned pivot,
-                       Gen::ErrorPass& ep);
-    Gen::ReturnCode changeBetAmount (BetIntfcPtr pBet, int delta, Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet       (BetIntfcPtr pBet, Gen::ErrorPass& ep);
-    Gen::ReturnCode setOdds         (BetIntfcPtr bet, Gen::Money amount, Gen::ErrorPass& ep);
+    // Bets
+    Gen::ReturnCode addBet        (BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode removeBet     (BetPtr pBet, Gen::ErrorPass& ep);
+    void            removeBetForce(BetPtr pBet);
+    Gen::ReturnCode setContractAmount(BetPtr pBet,
+                                      Gen::Money newAmount,
+                                      Gen::ErrorPass& ep);
+    Gen::ReturnCode setOddsAmount(BetPtr pBet,
+                                  Gen::Money oddsAmount,
+                                  Gen::ErrorPass& ep);
 
+    // Table
     void rollDice();
-    void testRollDice(unsigned d1, unsigned d2);
-    void testSetState(unsigned point, unsigned d1, unsigned d2);
     void resetStats();
-    void close();               // Shutdown table, soon to switch out.
-    void prepareForShutdown();  // Shutdown table, soon to destruct.
+    void close();               // Shutdown table, switching to different table
     /// @}
 
     /// @name Observers
     /// @{
-    unsigned                getNumPlayers()     const;
-    unsigned                getPoint()          const;
-    Dice                    getCurRoll()        const;
-    Gen::Money              getAmountOnTable()  const;
-    unsigned                getNumBetsOnTable() const;
-    std::vector<Gen::Uuid>  getPlayers()        const;
-    Gen::Uuid               getShooterId()      const;
-    const std::deque<Dice>& getRecentRolls()    const;
-    const TableStats&       getCurrentStats()   const;
-    const TableStats&       getAlltimeStats()   const;
-    unsigned                getMinLineBet()     const;
-    unsigned                getMaxLineBet()     const;
-    unsigned                getMaxOdds()        const;
-    bool                    isComeOutRoll()     const;
-    bool                    isBettingOpen()     const;
-    bool                    havePlayer(const Gen::Uuid& playerId) const;
-    bool                    haveBet(const BetIntfcPtr bet)        const;
-    bool                    haveBet(const Gen::Uuid& playerId,
-                                    BetName betName, unsigned pivot) const;
+    unsigned                getNumPlayers()             const;
+    unsigned                getPoint()                  const;
+    Dice                    getCurrentRoll()            const;
+    unsigned                getNumRolls()               const;
+    Gen::Money              getAmountOnTable()          const;
+    unsigned                getNumBetsOnTable()         const;
+    std::vector<Player*>    getPlayers()                const;
+    Player*                 getCurrentShooter()         const;
+    const TableId&          getTableId()                const;
+    const std::string&      getTableName()              const;
+    const RecentRolls&      getRecentRolls()            const;
+    const TableStats&       getCurrentStats()           const;
+    const TableStats&       getAlltimeStats()           const;
+    const BankStats&        getBankCurrentStats()       const;
+    const BankStats&        getBankAlltimeStats()       const;
+    const LastRollStats&    getLastRollStats()          const;
+    int                     getBalance()                const;
+    unsigned                getMinLineBet()             const;
+    unsigned                getMaxLineBet()             const;
+    unsigned                getMaxOdds()                const;
+    BetPtr                  getBet (const BetId& betId, Gen::ErrorPass& ep) const;
+    bool                    haveBet(const BetId& betId) const;
+    bool                    isComeOutRoll()             const;
+    bool                    isBettingOpen()             const;
+    bool                    isBetRemovable(BetPtr pBet) const;
+    bool                    havePlayer(Player* pPlayer) const;
     const SessionHistory::Sessions& getSessionHistory() const;
     /// @}
 
 #if 0
     void resetTable();
-    void startNewRound();         // Initiates come-out roll
     std::vector<CrapsBet> getBetsForPlayer(const std::string& playerName) const;
 
 #endif
+    // Unit test access points
+#ifdef UNIT_TEST
+public:
+    void testRollDice(unsigned d1, unsigned d2)
+    {
+        isTestRoll_ = true;
+        testRollDice_.set(d1, d2);
+        rollDice();
+    };
+    void testSetState(unsigned point, unsigned d1, unsigned d2)
+    {
+        point_ = point;
+        dice_.set(d1, d2);
+    }
+#endif
 
 private:
-    TableId tableId_;
+    // order matters
+    TableId tableId_;  // Table-1, Table-2, ...
+    TableConfig config_;
+    Bank houseBank_;  // overriden by yaml
+
+    // order doesn't matter
     std::string tableName_;
     std::string shortDescription_;
     std::string fullDescription_;
-    unsigned minLineBet_ = 5;           // overriden by yaml
-    unsigned maxLineBet_ = 1000;        // overriden by yaml
-    unsigned maxOdds_    = 5;           // overriden by yaml
-    Bank houseBank_;                    // overriden by yaml
     Dice dice_;
     unsigned point_ = 0;
-    Gen::Uuid currentShooterId_;
+    Player* pCurrentShooter_ = nullptr;
     bool bettingOpen_ = true;
     bool isTestRoll_ = false;
     Dice testRollDice_;
     TableStats currentStats_;
     TableStats alltimeStats_;
-    std::deque<Dice> recentRolls_;  // Roll history. Front element is oldest roll
-    size_t recentRollsMaxSize_ = 25;
+    LastRollStats lastRollStats_;
+    RecentRolls recentRolls_;  // Front element is oldest roll
+
+    // Move these to a rules struct
+    unsigned maxOdds_     = 5;
+    unsigned minLineBet_  = 5;
+    unsigned maxLineBet_  = 1000;
+    unsigned minPlaceBet_ = 5;
+    unsigned maxPlaceBet_ = 1000;
+    unsigned minFieldBet_ = 1;
+    unsigned maxFieldBet_ = 1000;
+    unsigned minCandEBet_ = 2;
+    unsigned maxCandEBet_ = 1000;
+    unsigned minHornBet_  = 4;
+    unsigned maxHornBet_  = 1000;
 
     CrapsTable();  // private ctor
-    
-    static constexpr unsigned InitialStartingBankBalance_ = 3000000;
-    static constexpr unsigned RefillThreshold_            = 1000000;
-    static constexpr unsigned RefillAmount_               = 2000000;
-    
-    // Players must join table in order to play.  We only hold the
-    // player's UUID here in a std::list container and rely on the
-    // PlayerManager to interface with players.
-    //
+
+    // Players must join table in order to play.
     static inline constexpr size_t MaxPlayers = 6;
-    using PlayerList = std::list<Gen::Uuid>;
+    using PlayerList = std::list<Player*>;
     PlayerList players_;
-    Gen::ReturnCode removeUuid(const Gen::Uuid& id, Gen::ErrorPass& ep);
-    Gen::ReturnCode updateUuid(const Gen::Uuid& oldId,
-                               const Gen::Uuid& newId,
-                               Gen::ErrorPass& ep);
 
     // Bets on the table are kept in a fixed sized array of lists, where
     // each array index equates to a bet type, and holds a list of bets
@@ -139,7 +168,7 @@ private:
     // collects losing bets in a certain order followed by payouts of
     // winning bets in a certain order.
     //
-    using BetList = std::list<BetIntfcPtr>;
+    using BetList = std::list<BetPtr>;
     using BetTable = std::array<BetList, EnumBetName::enumerators.size()>;
     BetTable tableBets_;
 
@@ -148,48 +177,89 @@ private:
     using DecisionList = std::list<DecisionRecord>;
     DecisionList drl_;
 
-    void removePlayerBets(const Gen::Uuid& playerId);
-    void removeBetsByPlayerId(BetList& bets, const Gen::Uuid& playerId);
-
-    // Turn bet name enums into size_t to avoid casting each time.
-    // Used when directly indexing into tableBets_;
-    // TODO might not need this - remove later.
-    static inline constexpr size_t PlaceBetIndex = static_cast<size_t>(BetName::Place);
-
-    bool betAllowed(const Gen::Uuid& playerId, BetName betName,
-                    Gen::Money contractAmount, unsigned& pivot,
-                    Gen::ErrorPass& ep) const;
-    bool withinTableLimits(BetName betName, Gen::Money contractAmount,
-                           Gen::ErrorPass& ep) const;
-    void declareBettingClosed();
+private:
+    bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
     void throwDice();
     void resolveBets();
     void advanceState();
     void advanceShooter();
     void bumpRecentRolls(const Dice& dice);
-    void declareBettingOpen();
     void evaluateBets();
     void dispenseResults();
     void trimTableBets();
     void clearDrl();
-    void evalOneBet(const BetIntfcPtr pBet);
-    bool removeMatchingBetId(BetList& bets, unsigned betId);
-    CrapsBetIntfc* findBetById(unsigned betId) const;
+    void evalOneBet(CrapsBet& bet);
+
+    void declareBettingClosed();
+    void declareDiceThrowStart();
+    void declareDiceNewValue();
+    void declareBettingOpen();
+    void disburseDone();
+
+    void removePlayerByPtr    (Player* pPlayer);
+    void removePlayerBets     (Player* pPlayer);
+    void removeBetsByPlayerPtr(BetList& bets, Player* pPlayer);
+    bool removeMatchingBet    (BetList& bets, CrapsBet* pBet);
+    BetPtr findBetById        (const BetId& betId) const;
 
     void disburseHouseResults();
     void disbursePlayerWins();
     void disbursePlayerLoses();
     void disbursePlayerKeeps();
 
-    void saveFile(const std::string& dir) const;
-    void loadFile(const std::string& dir);
-    void setMaxSessions();
-    void setHouseBank  ();
+    void sendEventBetMade(const CrapsBet& bet) const;
 
+    // File operations
+    void saveFile() const;
+    void loadFile();
     YAML::Node toYAML() const;
     YAML::Node rulesToYAML() const;
     void fromYAML(const YAML::Node& node);
     void rulesFromYAML(const YAML::Node& node);
+
+    // Validity checks with diagnostics, in CrapsTablePart2.cpp
+    std::string diagPrefix    (size_t idx, const CrapsBet& bet) const;
+    bool fifBettingClosed     (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifMissingBet        (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifMissingPlayer     (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifHaveBet           (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifComeDisallowed    (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifDontPassDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifBadBetTypeForOdds (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifZeroPivotForOdds  (const CrapsBet& bet, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxLineBets (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxSideBets (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifZeroAmount        (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadPassLineChange (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadDontPassChange (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMultiples      (const CrapsBet& bet, Gen::Money amt,
+                               size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxForOdds  (const CrapsBet& bet, Gen::Money amt,
+                               Gen::ErrorPass& ep) const;
+    bool withinMinMaxLineBets(BetName betName,
+                              Gen::Money contractAmount,
+                              Gen::ErrorPass& ep) const;
+    bool withinMinMaxSideBets(BetName betName,
+                              Gen::Money contractAmount,
+                              Gen::ErrorPass& ep) const;
+    bool goodMultiplesSideBets(BetName betName,
+                              Gen::Money amt,
+                              Gen::ErrorPass& ep) const;
+    std::string diagLimits   (Gen::Money amt) const;
+
+    // Default bank constants for table
+    static constexpr unsigned InitialStartingBankBalance_ = 3000000;
+    static constexpr unsigned RefillThreshold_            = 1500000;
+    static constexpr unsigned RefillAmount_               = 2000000;
+
+    using En = Gen::ErrorPass::ErrorName;
+    using Et = Gen::ErrorPass::ErrorType;
+    using Es = Gen::ErrorPass::Severity;
 };
 
 /*-----------------------------------------------------------*//**

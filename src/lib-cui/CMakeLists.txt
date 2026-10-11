@@ -5,8 +5,38 @@
 # -----------------------------------------------------------------
 
 add_library(cui STATIC
-    src/Placeholder.cpp
-    src/ConsoleView.cpp
+    src/CuiMain.cpp
+    src/bases/SurfaceBase.cpp
+    src/core/CuiReceiver.cpp
+    src/core/CuiSender.cpp
+    src/core/CuiThread.cpp
+    src/core/CuiUtils.cpp
+    src/core/WorkOrderDispatcher.cpp
+#   src/dialogs/DialogAckError.cpp
+#   src/dialogs/DialogAmountEntry.cpp
+    src/dialogs/DialogConfirm.cpp
+    src/dialogs/DialogMessage.cpp
+    src/layouts/LayoutCrapsScreen.cpp
+    src/managers/CarrierBet.cpp
+    src/managers/ColorManager.cpp
+    src/managers/LocationManager.cpp
+    src/managers/SurfaceManager.cpp
+    src/menus/MenuBetting.cpp
+    src/menus/MenuControl.cpp
+    src/menus/MenuConfigure.cpp
+    src/menus/MenuOddsBet.cpp
+    src/menus/MenuPlaceBet.cpp
+    src/menus/MenuNavBarViews.cpp
+    src/panels/PlayerAreaAllPlayers.cpp
+    src/panels/PlayerAreaOnePlayer.cpp
+    src/panels/WindowAnimation.cpp
+    src/panels/WindowHouseBrief.cpp
+    src/panels/WindowNavBar.cpp
+    src/panels/WindowPlayerArea.cpp
+    src/panels/WindowPlayerBrief.cpp
+    src/panels/WindowRollHistory.cpp
+    src/panels/WindowTitleBar.cpp
+    src/screens/ScreenCrapsTable.cpp
 )
 
 target_include_directories(cui
@@ -15,6 +45,7 @@ target_include_directories(cui
 
 target_link_libraries(cui
     PUBLIC gen controller
+    PRIVATE ncurses 
 )
 
 target_compile_definitions(cui

@@ -1,0 +1,71 @@
+//----------------------------------------------------------------
+//
+// File: QuickBet.h
+//
+//----------------------------------------------------------------
+
+#pragma once
+
+#include <vector>
+#include <craps/EnumBetName.h>
+#include <gen/MoneyUtils.h>
+
+namespace Ctrl {
+
+class QuickBet
+{
+public:
+    struct QuickBetEntry
+    {
+        BetName    betName    = BetName::Invalid;
+        size_t     pivot      = 0;
+        bool       isOddsBet  = false;
+        Gen::Money amount     = 0;
+    };
+    using QuickBets = std::vector<QuickBetEntry>;
+    
+    /// @name Lifecycle
+    /// @{
+   ~QuickBet() = default;
+    static QuickBet& instance();
+    /// @}
+    
+    /// @name Modifiers
+    /// @{
+    void applyQuickBet (size_t index);
+    void setQuickBet   (const QuickBetEntry& qbe);
+    void deleteQuickBet(const QuickBetEntry& qbe);
+    void deleteQuickBet(size_t index);
+    /// @}
+
+    /// @name Observers
+    /// @{
+    const QuickBets& getQuickBets();
+    /// @}
+    
+private:
+    QuickBet() = default;
+    
+    QuickBets bets_;
+};
+
+/*-----------------------------------------------------------*//**
+
+@class QuickBet
+
+@brief Manages automatic bets
+
+The QuickBet class in controller has these responsibilities:
+
+@li Maintains a list of quick bets in a std::vector
+
+@li applyQuickBet() - makes the bet
+@li setQuickBet() - replaces a quick bet if the entry already exists, zero is valid amount
+@li getQuickBets() - returns the read-only vector of quick bet entries
+@li deleteQuickBet() - delete an entry, shift entries if necessary, no empty slots
+
+*/
+
+} // namespace Ctrl
+
+//----------------------------------------------------------------

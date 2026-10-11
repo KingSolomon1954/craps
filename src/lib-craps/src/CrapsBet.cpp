@@ -6,11 +6,15 @@
 
 #include <craps/CrapsBet.h>
 
-#include <stdexcept> // for std::invalid_argument
+#include <cassert>
 #include <iostream>
+#include <stdexcept> // for std::invalid_argument
+#include <craps/CrapsTable.h>
 #include <craps/DecisionRecord.h>
+#include <craps/Player.h>
 #include <craps/Dice.h>
 #include <gen/ErrorPass.h>
+#include <gen/MoneyUtils.h>
 #include <gen/StringUtils.h>
 
 using namespace Craps;
@@ -39,7 +43,7 @@ placed on a Craps table. CrapsBet is unaware of the state of any Craps
 table. This decouples the act of creating a bet from placing a bet on a
 CrapsTable, allowing the application better freedom of design.
 
-@param[in] playerId
+@param[in] pPlayer
     The player making this bet.
 
 @param[in] name
@@ -75,78 +79,119 @@ CrapsTable, allowing the application better freedom of design.
     For PassLine bets, if somehow a pivot is zero and the bet is being
     evaluated after a point has already been established, then the pivot
     is silently assigned to the already established point, as if the player
-    made a PassLine bet after point was established.
+    made a PassLine bet after the point was established.
 */
 CrapsBet::CrapsBet(
-    const Gen::Uuid& playerId,
-    BetName name,
+    Player*    pPlayer,
+    BetName    name,
     Gen::Money contractAmount,
-    unsigned pivot)
-    : playerId_(playerId)
-    , betId_(++idCounter_)
+    unsigned   pivot)
+    : pPlayer_(pPlayer)
+    , betId_  (++idCounter_)
     , betName_(name)
-    , pivot_(pivot)
+    , pivot_  (pivot)
     , contractAmount_(contractAmount)
-    , oddsAmount_(0)
-    , offComeOutRoll_(true)
-    , distance_(0)
 {
-    validArgsCtor(); // Throws if bad args
+    assert(pPlayer != nullptr);
+    try
+    {
+        checkBetName();         // throws
+        checkContractAmount();  // throws
+        checkLinePivot();       // throws
+        checkPlacePivot();      // throws
+        checkHardwayPivot();    // throws
+        checkSideBets();        // throws
+    }
+    catch(std::invalid_argument& e)
+    {
+        std::string s = "CrapsBet()::ctor: Unable to create bet; ";
+        throw std::invalid_argument(s + e.what());
+    }
 }
 
-/*-----------------------------------------------------------*//**
+//----------------------------------------------------------------
 
-Determine if the bet is suitable for processing.
-
-For example Place bets must have the pivot set to 
-4,5,6,8,9 or 10 and the contractAmount must be non-zero.
-
-*/
 void
-CrapsBet::validArgsCtor()
+CrapsBet::checkBetName()
 {
     if (betName_ == BetName::Invalid)
     {
-        throw std::invalid_argument("CrapsBet()::ctor Bad \"betName\": cannot be \"BetName::Invalid\".");
+        throw std::invalid_argument("Bad \"betName\": cannot be \"BetName::Invalid\".");
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkContractAmount()
+{
     if (contractAmount_ == 0)
     {
-        throw std::invalid_argument("CrapsBet()::ctor Bad \"contractAmount\": must be > 0.");
+        throw std::invalid_argument("Bad \"contractAmount\":$0 must be > $0.");
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkLinePivot()
+{
     if (betName_ == BetName::PassLine ||
-        betName_ == BetName::Come     ||     
+        betName_ == BetName::Come     ||
         betName_ == BetName::DontPass ||
         betName_ == BetName::DontCome)
     {
         if (!pointNums_.contains(pivot_) && pivot_ != 0)
         {
-            throw std::invalid_argument(
-                "CrapsBet()::ctor Bad \"pivot\": for "
-                "PassLine|Come|DontPass|Dontcome bet, pivot must "
-                "be 0,4,5,6,8,9 or 10.");
+            std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
+                " for PassLine|Come|DontPass|Dontcome bet; "
+                "pivot must be 0,4,5,6,8,9 or 10.";
+            throw std::invalid_argument(diag);
         }
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkPlacePivot()
+{
     if (betName_ == BetName::Place ||
         betName_ == BetName::Lay   ||
         betName_ == BetName::Buy)
     {
         if (!pointNums_.contains(pivot_))
         {
-            throw std::invalid_argument(
-                "CrapsBet()::ctor Bad \"pivot\": for a Place, Buy, or Lay "
-                "bet, pivot must be one of 4,5,6,8,9,10");
+            std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
+                " for a Place, Buy, or Lay bet; "
+                "pivot must be 0,4,5,6,8,9 or 10.";
+            throw std::invalid_argument(diag);
         }
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkHardwayPivot()
+{
     if (betName_ == BetName::Hardway)
     {
         offComeOutRoll_ = false;  // For hardways, default is  always working
         if (!hardwayNums_.contains(pivot_))
         {
-            throw std::invalid_argument(
-                "CrapsBet()::ctor Bad \"pivot\": for Hardway "
-                "bet, pivot must be one of 4,6,8,10");
+            std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
+                " for a Hardway bet; pivot must be one of 4,6,8,10";
+            throw std::invalid_argument(diag);
         }
     }
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::checkSideBets()
+{
     if (betName_ == BetName::Field    ||
         betName_ == BetName::AnyCraps ||
         betName_ == BetName::AnySeven ||
@@ -155,20 +200,6 @@ CrapsBet::validArgsCtor()
     {
         pivot_ = 0;  // Quietly force it to 0.
     }
-    if (betName_ == BetName::CandE && (contractAmount_ % 2 != 0))
-    {
-        throw std::invalid_argument(
-            "CrapsBet()::ctor C&E bet(" +
-            Gen::MoneyUtil::toString(contractAmount_) +
-            ") is not a multiple of 2. Min amount is 2");
-    }
-    if (betName_ == BetName::Horn && (contractAmount_ % 4 != 0))
-    {
-        throw std::invalid_argument(
-            "CrapsBet()::ctor Horn bet(" +
-            Gen::MoneyUtil::toString(contractAmount_) +
-            ") is not a multiple of 4. Min amount is 4");
-    }
 }
 
 //----------------------------------------------------------------
@@ -176,7 +207,7 @@ CrapsBet::validArgsCtor()
 bool
 CrapsBet::operator==(const CrapsBet& other) const
 {
-    return playerId_       == other.playerId_       &&
+    return pPlayer_        == other.pPlayer_        &&
            betId_          == other.betId_          &&
            pivot_          == other.pivot_          &&
            contractAmount_ == other.contractAmount_ &&
@@ -184,164 +215,71 @@ CrapsBet::operator==(const CrapsBet& other) const
            offComeOutRoll_ == other.offComeOutRoll_ &&
            distance_       == other.distance_       &&
            whenCreated_    == other.whenCreated_    &&
-           whenDecided_    == other.whenDecided_;    
-} 
+           whenDecided_    == other.whenDecided_;
+}
 
 /*-----------------------------------------------------------*//**
 
-Sets the contract bet to the new amount.
+Sets the contract bet to the given amount.
 
+Private function called by CrapsTable. CrapsTable is trusted
+so just overwrites value. No checks needed.
+
+@param[in] amount
+    Sets the contract bet amount to amount
 */
-Gen::ReturnCode
-CrapsBet::setContractAmount(Gen::Money amount, Gen::ErrorPass& ep)
+void
+CrapsBet::setContractAmountInternal(Gen::Money amount)
 {
-    if (amount == 0)
-    {
-        ep.diag = "New contract amount would be zero or less. "
-            "Use removeBet() if intent is to pull the bet.";
-        return Gen::ReturnCode::Fail;
-    }
-    
-    if (betName_ == BetName::PassLine ||
-        betName_ == BetName::Come)
-    {
-        if (pivot_ != 0 && amount < contractAmount_)
-        {
-            ep.diag = "Cannot reduce contract amount for PassLine/Come "
-                      "bets after point is established.";
-            return Gen::ReturnCode::Fail;
-        }
-    }
-
-    if (betName_ == BetName::DontPass ||
-        betName_ == BetName::DontCome)
-    {
-        if (pivot_ != 0 && amount > contractAmount_)
-        {
-            ep.diag = "Cannot increase contract amount for DontPass/DontCome "
-                      "bets after point is established.";
-            return Gen::ReturnCode::Fail;
-        }
-    }
     contractAmount_ = amount;
-    return Gen::ReturnCode::Success;
 }
 
 /*-----------------------------------------------------------*//**
 
-Set, change, or remove the amount for an odds bet.
+Sets the odds amount to the given amount.
 
-It is only permissable to set an odds amount if the following
-conditions are true:
+Private function called by CrapsTable. CrapsTable is trusted
+so just overwrites value. No checks needed.
 
-* the bet is a PassLine, DontPass, Come, DontCome bet
-
-* the bet has already been assigned its pivot (point) (i.e, pivot is
-non-zero)
-
-* subject to checking house limits for max odds
-
-* minimum bet is given by house rules or the actual dice odds whichever
-* is higher
-
-TODO: Also the house limits the amount of the odds bet to 10x the
-amount of the contract bet.
-
-@param [in] amount
-    The amount to set it to. Clobbers any previous setting.
-
-@returns
-    Success if the bet was accepted, otherwise Fail and ep has
-    the reason.
+@param[in] amount
+    Sets the odds amount to amount
 */
-
-Gen::ReturnCode
-CrapsBet::setOddsAmount(Gen::Money newAmount, unsigned maxOdds,
-                        Gen::ErrorPass& ep)
+void
+CrapsBet::setOddsAmountInternal(Gen::Money newAmount)
 {
-    if (betName_ != BetName::PassLine && betName_ != BetName::DontPass &&
-        betName_ != BetName::Come     && betName_ != BetName::DontCome)
-    {
-        std::string s("Odds bet is only available for "
-            "PassLine|Come|DontPass|DontCome bets. Current bet is betId:");
-        s += std::to_string(betId_) + " betName:" +
-            EnumBetName::toString(betName_) + ". ";
-        ep.diag = s;
-        return Gen::ReturnCode::Fail;
-    }
-
-    // OK to remove odds bet anytime.
-//  if (amount == 0 && oddsAmount_ > 0)
-    if (newAmount == 0)
-    {
-        oddsAmount_ = 0;
-        return Gen::ReturnCode::Success;
-    }
-
-    // Otherwise, caller is adding or changing amount
-
-    if (pivot_ == 0)
-    {
-        std::string s("Odds bet is not allowed. "
-            "Need a point to be established for this bet. ");
-        s += "betId:" + std::to_string(betId_) + " betName:" +
-            EnumBetName::toString(betName_) + " pivot:" +
-            std::to_string(pivot_) + ".";
-        ep.diag = s;
-        return Gen::ReturnCode::Fail;
-    }
-
-    if (betName_ == BetName::PassLine || betName_ == BetName::Come)
-    {
-        if (newAmount < OddsTables::oddsPass[pivot_].denominator)
-        {
-            ep.diag = diagTooSmall(newAmount,
-                OddsTables::oddsPass[pivot_].denominator,
-                betName_, pivot_);
-            return Gen::ReturnCode::Fail;
-        }
-    }
-    if (betName_ == BetName::DontPass || betName_ == BetName::DontCome)
-    {
-        if (newAmount < OddsTables::oddsDont[pivot_].denominator)
-        {
-            ep.diag = diagTooSmall(newAmount,
-                OddsTables::oddsDont[pivot_].denominator,
-                betName_, pivot_);
-            return Gen::ReturnCode::Fail;
-        }
-    }
-
-    if (newAmount > (contractAmount_ * maxOdds))
-    {
-        ep.diag = "Odds bet for " + EnumBetName::toString(betName_) +
-            "(" + std::to_string(pivot_) + ") exceeds table limit of "    +
-            std::to_string(maxOdds) + "x odds; "
-            "Contract amount is $" + std::to_string(contractAmount_)      +
-            " which allows max odds amount of $"                          +
-            std::to_string(contractAmount_ * maxOdds) +  ".";
-        return Gen::ReturnCode::Fail;
-    }
-        
     oddsAmount_ = newAmount;
-    return Gen::ReturnCode::Success;    
 }
 
-//----------------------------------------------------------------
-//
-// Helper to form error diag.
-//
-std::string
-CrapsBet::diagTooSmall(Gen::Money amount, Gen::Money min,
-                        BetName betName, unsigned pivot)
+/*-----------------------------------------------------------*//**
+
+Sets the pivot to the given point.
+
+Private function called by CrapsTable. CrapsTable is trusted
+so just overwrites value. No checks needed.
+
+@param[in] pivot
+    Sets the pivot to point
+*/
+void
+CrapsBet::setPivotInternal(unsigned pivot)
 {
-    std::string s("Odds bet amount of ");
-    s += Gen::MoneyUtil::toStringNoCommas(amount) + 
-        " is too small. Minimum odds bet for a " +
-        EnumBetName::toString(betName_) +
-        "(" + std::to_string(pivot) + ") is " +
-        std::to_string(min) +  ".";
-    return s;
+    pivot_ = pivot;
+}
+
+/*-----------------------------------------------------------*//**
+
+Sets the distance to the given number.
+
+Private function called by unit tests
+so just overwrites value. No checks needed.
+
+@param[in] distance
+    Sets the distance
+*/
+void
+CrapsBet::setDistanceInternal(unsigned distance)
+{
+    distance_ = distance;
 }
 
 /*-----------------------------------------------------------*//**
@@ -350,7 +288,13 @@ Evaluates a CrapsBet for win/lose.
 
 Using the given point and the current dice roll, evaluate() determines
 whether this bet has won, lost or not yet reached a decision. The
-results of the evaluation are returned in a CrapsBet::DecisionRecord.
+results of the evaluation are returned in a DecisionRecord.
+
+Payout strategy:
+
+@li Pay full odds on the largest multiple of the payout unit
+@li Pay remaining amount at 1:1
+@li Rounds down in favor of house (like casinos)
 
 @param [in] point
     supply 0 to indicate a come out roll, otherwise the current point
@@ -372,61 +316,19 @@ results of the evaluation are returned in a CrapsBet::DecisionRecord.
 
 /*-----------------------------------------------------------*//**
 
-@struct CrapsBet::DecisionRecord
+Evaluates all bets to determine win/lose.
 
-The DecisionRecord contains the following fields to convey handling by
-the caller:
-
-@betId - the id of the bet associated with this result
-
-@decision -indicates that a decision has been reached for this bet.
-
-    When true, this bet has reached a decision, and one or more of the
-    win, lose, returnToPlayer fields in this record will have non-zero
-    values. It is the caller's responsibility to remove the bet from
-    the craps table.
-
-    When false, this bet has not reached a decision and should remain on
-    on the Craps table. The win, lose, retrunToPlayer fields will all be
-    zero. The distance field (in the CrapsBet) is incremented by one. On
-    come out rolls (i.e, the passed in point is zero) then the CrapsBet
-    pivot field, if zero, will be set to the dice value for
-    Pass/Come/DontPass/DontCome bets.
-
-@pivotAssigned - indicates whether a pivot for this bet has been freshly
-    established. For example, a Come bet has now been moved to the "6".
-
-    When true, the pivot has been assigned. Caller uses this
-    flag to move a come bet on the table to its box.
-
-    When evaluating PassLine bets, if somehow a pivot is zero and the
-    point has already been established, then the pivot is silently
-    assigned to the already established point, as if the player made a
-    PassLine bet after point was established.
-
-@win - if non-zero, then this bet has won the given amount.
-
-    The calculation includes odds winnings. The caller implementation
-    should take this win amount and add it with the original
-    contractAmount and oddsAmount to give back to the player.
-
-@lose - if non-zero, then this bet has lost the given amount.
-
-    The amount is the contractBet plus odds bet, if any. The caller
-    implementation should add this amount to the table's banking system
-    and subtract this amount from the player's wallet if not already
-    done so.
-
-@returnToPlayer - if non-zero then the given amount should be returned
-    to the player.
-
-    Note this is not a win or lose. This happens when a point-based bet
-    wins/loses during a come out roll and setOffComeOutRoll() is true.
-
-@commission - Lay and Buy bets require a 5% commission if they win.
-
-    This amount has been subtracted from the win amount.  The table's
-    banking system should deposit this amount if non-zero.
+@param [in] point
+    The point
+@param [in] dice
+    The dice roll
+@param [out] dr
+    Results returned in the given DecisionRecord
+@param [out] ep
+    Holds error description if an error is encountered
+@return
+    ReturnCode::Success and dr is filled out, otherwise
+    ReturnCode::Fail, dr is undefined and ep holds reason why
 */
 Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
@@ -437,8 +339,8 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     {
         return diagEvalProcError(ep);
     }
-                         
-    dr = {betId_, false, 0,0,0,0, 0, playerId_};   // Prepare decision record
+
+    dr = {this, false, false, 0,0,0,0};   // Prepare decision record
     Gen::ReturnCode rc = Gen::ReturnCode::Fail;
     switch (betName_)
     {
@@ -476,7 +378,7 @@ void
 CrapsBet::diagEvalEntered(unsigned point, const Dice& dice) const
 {
     std::cout << "CrapsBet::evaluate(point:" << point
-              << " dice:" << dice.value() << " (" 
+              << " dice:" << dice.value() << " ("
               << dice.d1() << ","
               << dice.d2() << "))" << std::endl;
 }
@@ -488,8 +390,25 @@ CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 {
     std::string s("CrapsBet::evaluate(): Error evaluating betId:");
     s += std::to_string(betId_) + " betName:" + EnumBetName::toString(betName_) + ". ";
-    Gen::StringUtils::prepend(ep.diag, s);
+    ep.prepend(s);
     return Gen::ReturnCode::Fail;
+}
+
+//----------------------------------------------------------------
+
+std::string
+CrapsBet::diagBetId() const
+{
+    std::string s = "bet(betId:" + std::to_string(betId_) +
+        ", betName:" + EnumBetName::toString(betName_);
+
+    if (pivot_ != 0)
+    {
+        s += "(" + std::to_string(pivot_) + ")";
+    }
+
+    s += ")";
+    return s;
 }
 
 //----------------------------------------------------------------
@@ -501,29 +420,68 @@ CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
     {
         return true;
     }
-    ep.diag = "Bad value for point:" + std::to_string(point);
+    ep.setDescription("Bad value for point:" + std::to_string(point));
     return false;
 }
 
 //----------------------------------------------------------------
+//
+// Payout Logic. Suitable for both positive and inverted odds.
+//
+unsigned
+CrapsBet::calculateOddsPayout(
+    unsigned amount,
+    unsigned numerator,
+    unsigned denominator) const
+{
+    // Las Vegas style, rounds down, (100/3) == 33
+    return (amount * numerator) / denominator;
 
+#if 0
+    // This rounds up (100/3) == 34
+    if (amount < denominator)
+    {
+        return amount;  // Pay 1:1 if under payout unit
+    }
+
+    unsigned fullUnits = amount / denominator;
+    unsigned remainder = amount % denominator;
+
+    return fullUnits * numerator + remainder;
+#endif    
+}
+
+//----------------------------------------------------------------
+//
+// Strategy:
+//
+// * Odds payout only on even multiples of the true odds.
+// * Uneven remainders should pay 1:1 for any leftover amount
+//   above a full multiple.
+// * Amounts below a full multiple get paid 1:1 only.
+//
 void
 CrapsBet::calcWinPointBet(
-    unsigned d,
+    unsigned pivot,
     DecisionRecord& dr,
     bool returnOdds,
     const OddsTables::OddsEntry table[]) const
 {
     dr.win = contractAmount_;
+
     if (oddsAmount_ == 0) return;
+
     if (offComeOutRoll_ && returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
+        return;
     }
-    else
-    {
-        dr.win += (oddsAmount_ * table[d].numerator) / table[d].denominator;
-    }
+
+    const auto& odds = table[pivot];
+    unsigned oddsPayout = calculateOddsPayout(oddsAmount_,
+                                              odds.numerator,
+                                              odds.denominator);
+    dr.win += oddsPayout;
 }
 
 //----------------------------------------------------------------
@@ -541,7 +499,7 @@ CrapsBet::calcLossPointBet(DecisionRecord& dr, bool returnOdds) const
     {
         dr.lose += oddsAmount_;
     }
-}    
+}
 
 //----------------------------------------------------------------
 
@@ -550,12 +508,12 @@ CrapsBet::evalPassLine(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep; // unused, quiet the compiler
     Decision dcn = Keep;
     unsigned d = dice.value(); // Cache value once
-    
+
     if (point == 0)
     {
         if (d == 7 || d == 11)
@@ -601,7 +559,7 @@ CrapsBet::evalPassLine(
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
 }
-    
+
 //----------------------------------------------------------------
 
 Gen::ReturnCode
@@ -609,7 +567,7 @@ CrapsBet::evalCome(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     if (point == 0 && pivot_ == 0)
     {
@@ -618,15 +576,15 @@ CrapsBet::evalCome(
         // during a come out roll, which is illegal. Instead the
         // user must make a PassLine bet.
         //
-        ep.diag = "Come bet is not allowed on come out roll. "
-                  "Use PassLine bet instead.";
+        ep.setDescription("Come bet is not allowed on come out roll. "
+                          "Use PassLine bet instead.");
         return Gen::ReturnCode::Fail;
     }
-        
+
     Decision dcn = Keep;
     bool returnOdds = false;
     unsigned d = dice.value(); // Cache value once
-    
+
     if (point == 0)  // Come out roll (for the table)
     {
         if (d == 7)
@@ -665,7 +623,7 @@ CrapsBet::evalCome(
             }
         }
         else   // Waiting for a repeating number.
-        { 
+        {
             if (d == 7)
             {
                 dcn = Lose;
@@ -691,11 +649,11 @@ CrapsBet::evalDontPass(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     Decision dcn = Keep;
     unsigned d = dice.value();  // Cache value once
-    
+
     if ((point != 0) && (pivot_ == 0))
     {
         // This bet is in the wrong state, it should not be on the
@@ -705,7 +663,8 @@ CrapsBet::evalDontPass(
         // evaluation(s) in order to be assigned a pivot, thus if there
         // is a point, then pivot cannot be zero.
         //
-        ep.diag = "DontPass bet is not allowed after point is established.";
+        ep.setDescription("DontPass bet is not allowed after point "
+                          "is established.");
         return Gen::ReturnCode::Fail;
     }
 
@@ -744,7 +703,7 @@ CrapsBet::evalDontPass(
     }
 
     const bool returnOdds = false;
-    if (dcn == Win)  calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
+    if (dcn == Win) calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
     if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
@@ -757,7 +716,7 @@ CrapsBet::evalDontCome(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     if (point == 0 && pivot_ == 0)
     {
@@ -766,15 +725,15 @@ CrapsBet::evalDontCome(
         // during a come out roll, which is illegal. Instead the
         // user must make a DontPass bet.
         //
-        ep.diag = "DontCome bet is not allowed on Come out roll. "
-                  " Use DontPass bet instead.";
+        ep.setDescription("DontCome bet is not allowed on Come out "
+                          "roll. Use DontPass bet instead.");
         return Gen::ReturnCode::Fail;
     }
-        
+
     Decision dcn = Keep;
     bool returnOdds = false;
     unsigned d = dice.value(); // Cache value once
-    
+
     if (point == 0)  // Come out roll (for the table)
     {
         if (d == 7)
@@ -817,7 +776,7 @@ CrapsBet::evalDontCome(
             }
         }
         else   // Waiting for a 7 before number repeats.
-        { 
+        {
             if (d == 7)
             {
                 dcn = Win;
@@ -843,17 +802,17 @@ CrapsBet::evalPlace(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep;
     Decision dcn = Keep;
-    
+
     if (point == 0 && offComeOutRoll_)
     {
         dcn = Keep;
     }
     else
-    {            
+    {
         if (dice.value() == 7)
         {
             dcn = Lose;
@@ -864,12 +823,15 @@ CrapsBet::evalPlace(
         }
         // else dcn = keep
     }
-        
+
     if (dcn == Win)
     {
-        dr.win = (contractAmount_ * OddsTables::oddsPlace[pivot_].numerator) /
-            OddsTables::oddsPlace[pivot_].denominator;
+        const auto& odds = OddsTables::oddsPlace[pivot_];
+        dr.win = calculateOddsPayout(contractAmount_,
+                                     odds.numerator,
+                                     odds.denominator);
     }
+    
     if (dcn == Lose)
     {
         dr.lose = contractAmount_;
@@ -885,17 +847,17 @@ CrapsBet::evalLay(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep;
     Decision dcn = Keep;
-    
+
     if (point == 0 && offComeOutRoll_)
     {
         dcn = Keep;
     }
     else
-    {            
+    {
         if (dice.value() == 7)
         {
             dcn = Win;
@@ -906,11 +868,13 @@ CrapsBet::evalLay(
         }
         // else dcn = keep
     }
-        
+
     if (dcn == Win)
     {
-        dr.win = (contractAmount_ * OddsTables::oddsDont[pivot_].numerator) /
-            OddsTables::oddsDont[pivot_].denominator;
+        const auto& odds = OddsTables::oddsDont[pivot_];
+        dr.win = calculateOddsPayout(contractAmount_,
+                                     odds.numerator,
+                                     odds.denominator);
         dr.commission = static_cast<unsigned>(dr.win * (5.0f / 100.0f));
         dr.win -= dr.commission;
     }
@@ -929,17 +893,17 @@ CrapsBet::evalBuy(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep;
     Decision dcn = Keep;
-    
+
     if (point == 0 && offComeOutRoll_)
     {
         dcn = Keep;
     }
     else
-    {            
+    {
         if (dice.value() == 7)
         {
             dcn = Lose;
@@ -950,11 +914,13 @@ CrapsBet::evalBuy(
         }
         // else dcn = keep
     }
-        
+
     if (dcn == Win)
     {
-        dr.win = (contractAmount_ * OddsTables::oddsPass[pivot_].numerator) /
-            OddsTables::oddsPass[pivot_].denominator;
+        const auto& odds = OddsTables::oddsPass[pivot_];
+        dr.win = calculateOddsPayout(contractAmount_,
+                                     odds.numerator,
+                                     odds.denominator);
         dr.commission = static_cast<unsigned>(contractAmount_ * (5.0f / 100.0f));
         dr.win -= dr.commission;
     }
@@ -973,16 +939,16 @@ CrapsBet::evalField(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep; (void) point;  // unused, quiet the compiler
     Decision dcn = Keep;
     unsigned d = dice.value();  // cache value once
-    
-    // For field bets, in additon to win/lose we also set the pivot. 
+
+    // For field bets, in additon to win/lose we also set the pivot.
     // Allows us to keeps stats on field bet win/lose per number.
 
-    if (d == 5 || d == 6 || d == 7 || d == 8) 
+    if (d == 5 || d == 6 || d == 7 || d == 8)
     {
         dcn = Lose;
         pivot_ = d;
@@ -992,7 +958,7 @@ CrapsBet::evalField(
         dcn = Win;
         pivot_ = d;
     }
-        
+
     if (dcn == Win)
     {
         dr.win = contractAmount_;
@@ -1013,7 +979,7 @@ CrapsBet::evalHardway(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep; (void) point;  // unused, quiet the compiler
     Decision dcn = Keep;
@@ -1038,7 +1004,7 @@ CrapsBet::evalHardway(
         }
     }
     // else dcn = Keep
-    
+
     if (dcn == Win)
     {
         dr.win = (contractAmount_ * OddsTables::oddsHardway[pivot_].numerator) /
@@ -1059,10 +1025,10 @@ CrapsBet::evalAnyCraps(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep; (void) point;  // unused, quiet the compiler
-    
+
     if (crapsNums_.contains(dice.value()))
     {
         dr.win = contractAmount_ * 7;
@@ -1082,10 +1048,10 @@ CrapsBet::evalAnySeven(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep; (void) point;  // unused, quiet the compiler
-    
+
     if (dice.value() == 7)
     {
         dr.win = contractAmount_ * 4;
@@ -1105,10 +1071,10 @@ CrapsBet::evalCandE(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep; (void) point;  // unused, quiet the compiler
-    
+
     if (dice.value() == 11)
     {
         dr.win = (contractAmount_ / 2) * 15;
@@ -1132,15 +1098,15 @@ CrapsBet::evalHorn(
     unsigned point,
     const Dice& dice,
     DecisionRecord& dr,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     (void) ep; (void) point;  // unused, quiet the compiler
 
-    if (dice.value() == 2 || dice.value() == 12) 
+    if (dice.value() == 2 || dice.value() == 12)
     {
         dr.win = (contractAmount_ / 4) * 30;
     }
-    else if (dice.value() == 3 || dice.value() == 11) 
+    else if (dice.value() == 3 || dice.value() == 11)
     {
         dr.win = (contractAmount_ / 4) * 15;
     }
@@ -1154,15 +1120,15 @@ CrapsBet::evalHorn(
 
 /*-----------------------------------------------------------*//**
 
-Returns the playerId.
+Returns the player associated with this bet.
 
 @return
-    The playerId
+    Pointer to the player
 */
-const Gen::Uuid&
-CrapsBet::playerId() const
+Player&
+CrapsBet::player() const
 {
-    return playerId_;
+    return *pPlayer_;
 }
 
 /*-----------------------------------------------------------*//**
@@ -1172,7 +1138,7 @@ Returns the bet ID.
 @return
     The unique bet ID associated with this bet.
 */
-unsigned
+BetId
 CrapsBet::betId() const
 {
     return betId_;
@@ -1296,7 +1262,7 @@ CrapsBet::setOnComeOutRoll()
 
 Set this Hardway bet to "working".
 
-Working is the default for a Hardway bet. 
+Working is the default for a Hardway bet.
 
 If this bet is not a Hardway bet, then just silently returns.
 */
@@ -1370,16 +1336,16 @@ std::ostream&
 operator<< (std::ostream& out, const CrapsBet& b)
 {
     out <<
-    "      playerId: " << b.playerId()       << std::endl <<
-    "         betId: " << b.betId()          << std::endl <<
-    "       betName: " << b.betName()        << std::endl <<
-    "         pivot: " << b.pivot()          << std::endl <<
-    "contractAmount: " << b.contractAmount() << std::endl <<
-    "    oddsAmount: " << b.oddsAmount()     << std::endl <<
-    "offComeOutRoll: " << b.offComeOutRoll() << std::endl <<
-    "      distance: " << b.distance()       << std::endl <<
-    "   whenCreated: " << b.whenCreated()    << std::endl <<
-    "   whenDecided: " << b.whenDecided()    << std::endl;
+    "        player: " << b.player().getName() << std::endl <<
+    "         betId: " << b.betId()            << std::endl <<
+    "       betName: " << b.betName()          << std::endl <<
+    "         pivot: " << b.pivot()            << std::endl <<
+    "contractAmount: " << b.contractAmount()   << std::endl <<
+    "    oddsAmount: " << b.oddsAmount()       << std::endl <<
+    "offComeOutRoll: " << b.offComeOutRoll()   << std::endl <<
+    "      distance: " << b.distance()         << std::endl <<
+    "   whenCreated: " << b.whenCreated()      << std::endl <<
+    "   whenDecided: " << b.whenDecided()      << std::endl;
     return out;
 }
 
@@ -1389,13 +1355,13 @@ std::ostream&
 operator<< (std::ostream& out, const DecisionRecord& dr)
 {
     out <<
-    "      playerId: " << dr.playerId       << std::endl <<
-    "         betId: " << dr.betId          << std::endl <<
-    "      decision: " << dr.decision       << std::endl <<
-    " pivotAssigned: " << dr.pivotAssigned  << std::endl <<
-    "           win: " << dr.win            << std::endl <<
-    "          lose: " << dr.lose           << std::endl <<
-    "returnToPlayer: " << dr.returnToPlayer << std::endl;
+    "        player: " << dr.pBet->player().getName() << std::endl <<
+    "         betId: " << dr.pBet->betId()            << std::endl <<
+    "      decision: " << dr.decision                 << std::endl <<
+    " pivotAssigned: " << dr.pivotAssigned            << std::endl <<
+    "           win: " << dr.win                      << std::endl <<
+    "          lose: " << dr.lose                     << std::endl <<
+    "returnToPlayer: " << dr.returnToPlayer           << std::endl;
     return out;
 }
 

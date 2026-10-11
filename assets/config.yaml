@@ -1,5 +1,21 @@
-# tbl.startId: "Table-1"
-# log.debug: true
-# log.trace: false
-# tbl.maxSessions: 50
-# tbl.maxRecentRolls: 25
+table:
+  startTable: "las-vegas-strip.yaml"
+  startWithLastPlayers: true
+  startPlayers:
+    - "nathan.yaml"
+    - "arthur.yaml"
+    - "paige.yaml"
+  maxSessions: 44
+  maxRecentRolls: 33
+  userIsPlayer: "nathan.yaml"
+  
+rollHistory:
+  format: 1         # [ 1..4 ]
+  scroll: "up"      # [left | right | up | down]
+
+log:
+  debug: true
+  trace: false
+
+player:
+  maxSessions: 22

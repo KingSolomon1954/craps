@@ -6,22 +6,22 @@ tables:
     tableName: Las Vegas Strip
     shortDescription: A typical table with 5x odds, min $10, max $10,000.
     fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
-    fileName: Table-1.yaml
+    fileName: las-vegas-strip.yaml
   
   - tableId: Table-2
     tableName: High Roller
     shortDescription: Big limits, 10x odds, min $100, max $25,000.
     fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
-    fileName: Table-2.yaml
+    fileName: high-roller.yaml
 
   - tableId: Table-3
     tableName: Morning Table
     shortDescription: Lower limits, 3x odds, min $5, max $1,000.
     fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
-    fileName: Table-3.yaml
+    fileName: morning-table.yaml
 
   - tableId: Table-4
     tableName: Beginner Mode
     shortDescription: Great for new players learning the game.
     fullDescription: To be supplied.
-    fileName: Table-4.yaml
+    fileName: beginners-table.yaml

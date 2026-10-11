@@ -1,0 +1,106 @@
+//----------------------------------------------------------------
+//
+// File: WindowPlayerArea.h
+//
+//----------------------------------------------------------------
+
+#pragma once
+
+#include <cui/bases/PanelBase.h>
+#include <cui/layouts/LayoutCrapsScreen.h>
+#include <cui/panels/PlayerAreaAllPlayers.h>
+#include <cui/panels/PlayerAreaOnePlayer.h>
+#include <craps/CrapsTypes.h>
+#include <craps/EnumBetName.h>
+#include <gen/MoneyUtils.h>
+#include <vector>
+
+namespace Cui
+{
+
+class WindowPlayerArea : PanelBase
+{
+public:
+    /// @name Lifecycle
+    /// @{
+    static WindowPlayerArea& instance();
+   ~WindowPlayerArea() = default;
+    /// @}
+
+    /// @name Modifiers
+    /// @{
+    void draw() override;
+    
+    void allPlayers();
+    void onePlayer();
+    void nextPlayer();
+    void prevPlayer();
+    void onBetMade(
+        const Craps::PlayerId& playerId,
+        Craps::BetId           betId,
+        BetName                betName,
+        Gen::Money             contractAmount,
+        Gen::Money             oddsAmount,
+        unsigned               pivot);
+
+    void onBetResolved(
+        const Craps::PlayerId& playerId,
+        BetName                betName,
+        Craps::BetId           betId,
+        Gen::Money             amountWin,
+        Gen::Money             amountLose);
+
+    /// @}
+
+    /// @name Observers
+    /// @{
+    /// @}
+    
+private:
+    
+    struct Layout
+    {
+        using L = LayoutCrapsScreen;
+        
+        // Sizing and location based on LayoutCrapsScreen
+        static constexpr int playerAreaTopRow   = L::playerAreaBorderTopRow   + 1;
+        static constexpr int playerAreaBotRow   = L::playerAreaBorderBotRow   - 1;
+        static constexpr int playerAreaLeftCol  = L::playerAreaBorderLeftCol  + 1;
+        static constexpr int playerAreaRightCol = L::playerAreaBorderRightCol - 1;
+        static constexpr int playerAreaHeight   = playerAreaBotRow   - playerAreaTopRow  + 1;
+        static constexpr int playerAreaWidth    = playerAreaRightCol - playerAreaLeftCol + 1;
+
+        static_assert(playerAreaTopRow   == 5);
+        static_assert(playerAreaBotRow   == 23);
+        static_assert(playerAreaLeftCol  == 1);
+        static_assert(playerAreaRightCol == 68);
+        static_assert(playerAreaHeight   == 19);
+        static_assert(playerAreaWidth    == 68);
+    };        
+
+    enum class OneOrAll
+    {
+        OnePlayer,
+        AllPlayers
+    };
+
+    std::vector<Craps::PlayerId> playerIds_;
+    PlayerAreaAllPlayers         allPlayersView_;
+    PlayerAreaOnePlayer          onePlayerView_;
+    OneOrAll                     currentFocus_ = OneOrAll::OnePlayer;
+
+private:
+    WindowPlayerArea();
+    void createWindow();
+    void drawExternalJunctions();
+    void drawInternalBorders();
+    void drawStaticContent();
+        
+    void advancePlayer(bool next);
+    Craps::PlayerId getNextPlayerId(const Craps::PlayerId& pid) const;
+    Craps::PlayerId getPrevPlayerId(const Craps::PlayerId& pid) const;
+};
+
+} // namespace Cui
+
+//----------------------------------------------------------------

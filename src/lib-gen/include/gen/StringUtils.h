@@ -8,6 +8,7 @@
 
 #include <string>
 #include <cstdarg>  // For variable args
+#include <vector>
 
 namespace Gen
 {
@@ -19,7 +20,7 @@ public:
     /// @{
     /// @}
     
-    /// @name Modifers
+    /// @name Modifiers
     /// @{
     static std::string toUpper(const std::string& s1);
     static std::string toLower(const std::string& s1);
@@ -74,6 +75,9 @@ public:
     /// @}
     
     static const std::string whiteSpace;  ///< these chars " \t\v\f\r\n"
+
+    static std::vector<std::string> wrapText(const std::string& text,
+                                             int wrapWidth);
 };
 
 /*-----------------------------------------------------------*//**

@@ -6,136 +6,155 @@
 
 #pragma once
 
+#include <craps/Bank.h>
+#include <craps/CrapsBet.h>
+#include <craps/CrapsTypes.h>
+#include <craps/EnumBetName.h>
+#include <craps/LastRollStats.h>
+#include <craps/PlayerConfig.h>
+#include <craps/PlayerStats.h>
+#include <gen/ReturnCode.h>
+#include <gen/ErrorPass.h>
+#include <gen/MoneyUtils.h>
+#include <yaml-cpp/yaml.h>
+#include <zeus/expected.hpp>
 #include <string>
 #include <memory>
 #include <list>
-#include <nlohmann/json.hpp>
-#include <controller/Events.h>
-#include <craps/Bank.h>
-#include <craps/EnumBetName.h>
-#include <gen/ReturnCode.h>
-#include <gen/MoneyUtil.h>
-#include <gen/Uuid.h>
-
-using json = nlohmann::json;
 
 namespace Gen {
-    class ErrorPass;    // fwd
+    class ErrorPass;     // fwd
+}
+
+namespace Ctrl {
+    struct UslDiceRollValue;
 }
 
 namespace Craps {
 
-class CrapsBetIntfc;    // fwd
 class DecisionRecord;   // fwd
+class CrapsTable;       // fwd
 
 class Player
 {
 public:
+    using Bets = std::vector<BetPtr>;
+
     /// @name Lifecycle
     /// @{
-    Player();
-    Player(const std::string& name,
-           unsigned startingBalance);
-    Player(const Gen::Uuid&,
-           const std::string& name,
-           unsigned startingBalance);
+    Player(const PlayerId&     playerId, // Existing playerId,
+           const PlayerConfig& config);  // name will come from file
 
-    bool saveToFile(const std::string& path) const;
-    bool loadFromFile(const std::string& path);
+   ~Player() = default;
+    void shutdown();
 
-//    static Player deserialize(const std::string& line);
-//    std::string serialize() const;
+    static Player* createPlayer(const std::string&  playerName,  // Creates a
+                                const PlayerConfig& config);     // fresh PlayerId
+    static Player* fromString  (const std::string&  yaml,
+                                const PlayerId&     playerId,
+                                const PlayerConfig& config);
+    static Player* fromFile    (const PlayerId&     playerId,
+                                const PlayerConfig& config);
     /// @}
 
-#if 0
-class CrapsInterface
-{
-    // Table related (TableManager)
-    using TableId = std::string;
-    using TableList = std::vector<TableId>;
-    static TableList getTableList() const;
-    static TablePickerView getTablePickerView(TableId tableId);
-    static TableGameView getTableGameView(TableId tableId);
-    static TableStatsView getTableStatsView(TableId tableId);
-
-    // Player related (PlayerManager)
-    using PlayerId = std::string;
-    using PlayerList = std::vector<PlayerId> ;
-    static PlayerList getPlayerList() const;
-    static PlayerPickerView getPlayerPickerView(PlayerId playerId);
-    static PlayerGameView getPlayerGameView(PlayerId playerId);
-    static PlayerStatsView getPlayerStatsView(TableId tableId);
-
-    static Gen::ReturnCode openTable(TableId tableId, PlayerList p);
-    static Gen::ReturnCode closeTable(TableId tableId);
-
-    using BetId = unsigned;
-    using BetList = std::list<BetId>;
-    using Money = unsigned;
-
-    static ReturnCode join(TableId tableId, PlayerId playerId, Gen::ErrorPass& ep);
-    static ReturnCode leave(TableId tableId, PlayerId playerId, Gen::ErrorPass& ep);
-    
-    static BetId placeBet(TableId tableId,
-                          PlayerId playerId,
-                          BetNameStr betName,
-                          Gen::Money contractAmount,
-                          Gen::ErrorPass& ep);
-    static ReturnCode removeBet(TableId tableId, BetId bet, Gen::ErrorPass& ep);
-    static ReturnCode setOdds(TableId tableId, BetId bet, Gen::Money oddsAmount, Gen::ErrorPass& ep);
-    static ReturnCode changeBetAmount(TableId tableId, BetId bet, int delta, Gen::ErrorPass& ep);
-    static void rollDice(TalbeId tableId);
-    
-};    
-#endif
-    
-    
     /// @name Modifiers
     /// @{
-    Gen::ReturnCode joinTable(Gen::ErrorPass& ep);
-    Gen::ReturnCode makeBet(BetName betName,
-                            Gen::Money contractAmount,
-                            unsigned pivot,
-                            Gen::ErrorPass& ep);
-    Gen::ReturnCode removeBet(BetName betName,
-                              unsigned pivot,
-                              Gen::ErrorPass& ep);
+    zeus::expected<BetPtr, Gen::ErrorPass> makeBet(
+        BetName betName, Gen::Money contractAmount, unsigned pivot);
+    zeus::expected<void, Gen::ErrorPass> joinTable(CrapsTable& table);
+    zeus::expected<void, Gen::ErrorPass> leaveTable();
+    zeus::expected<void, Gen::ErrorPass> setContractAmount(
+        BetPtr pBet, Gen::Money newAmount);
+    zeus::expected<void, Gen::ErrorPass> setOddsAmount(
+        BetPtr pBet, Gen::Money oddsAmount);
+    zeus::expected<void, Gen::ErrorPass> removeBet(const BetId& betId);
+
+    Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
+    void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
+    void bettingClosed();
+    void disburseDone();
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
-    void fromJson(const json& j);
+    void resetStats();
     /// @}
 
     /// @name Observers
     /// @{
-    const Gen::Uuid& getUuid()   const;
-    const std::string& getName() const;
-    Gen::Money getAmountOnTable()const;
-    unsigned getNumBetsOnTable() const;
-    Gen::Money getBalance()      const;
-    json toJson()                const;
+    const std::string&   getName()                                const;
+    const PlayerId&      getPlayerId()                            const;
+    Gen::Money           getAmountOnTable()                       const;
+    unsigned             getNumBetsOnTable()                      const;
+    Gen::Money           getBalance()                             const;
+    int                  getSessionNet()                          const;
+    BetPtr               getBet(const BetId& betId, Gen::ErrorPass& ep) const;
+    Craps::BetId         getBet(BetName betName, size_t pivot, Gen::ErrorPass& ep) const;
+    Bets                 getBets()                                const;
+    Bets                 getOddsBets()                            const;
+
+    const LastRollStats& getLastRollStats()                       const;
+    const PlayerStats&   getCurrentStats()                        const;
+    const PlayerStats&   getAlltimeStats()                        const;
+    const BankStats&     getBankCurrentStats()                    const;
+    const BankStats&     getBankAlltimeStats()                    const;
+    bool                 haveBet(const BetId& betId)              const;
+    const SessionHistory::Sessions& getSessionHistory()           const;
+
+    /// @name File operations
+    /// @{
+    void saveFile() const;
+    void loadFile();
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
     /// @}
 
 private:
-    Gen::Uuid uuid_;
-    std::string name_;
-    Bank wallet_;
-    using BetIntfcPtr = std::shared_ptr<class CrapsBetIntfc>;
-    std::list<BetIntfcPtr> bets_;
+    // order matters
+    PlayerId          playerId_;
+    PlayerConfig      config_;
+    Bank              wallet_;     // overriden by yaml
 
-    bool removeBetByPtr(BetIntfcPtr& pBet);
-    BetIntfcPtr findBetById(unsigned betId) const;
-    void diagBadBetId(const std::string& funcName, unsigned betId) const;
-    void setupSubscriptions();
-    void onBettingClosed();
-    void onBettingOpened();
-    void onDiceThrowStart();
-    void onDiceThrowEnd();
-    void onAnnounceDiceNumber(const Ctrl::AnnounceDiceNumber& evt);
-    void onPointEstablished(const Ctrl::PointEstablished& evt);
-    void onSevenOut();
-    void onPassLineWinner();
-    void onNewShooter(const Ctrl::NewShooter& evt);
+    // order doesn't matter
+    std::string       playerName_; // set by yaml or creation
+    std::string       shortDescription_;
+    std::string       fullDescription_;
+    std::list<BetPtr> bets_;
+    CrapsTable*       pTable_ = nullptr;
+    PlayerStats       currentStats_;
+    PlayerStats       alltimeStats_;
+    mutable LastRollStats lastRollStats_;
+
+    // Default bank constants for player
+    static constexpr unsigned InitialStartingBankBalance_ = 30000;
+    static constexpr unsigned RefillThreshold_            = 15000;
+    static constexpr unsigned RefillAmount_               = 20000;
+
+private:
+    BetPtr makeShared(BetName betName,
+                      Gen::Money contractAmount,
+                      unsigned pivot,
+                      Gen::ErrorPass& ep);
+    BetPtr findBetById(const BetId& betId) const;
+    bool removeBetByPtr(BetPtr& pBet);
+    void setName(const std::string& playerName);
+    void sendEventBetResolved(const PlayerId& playerId,
+                              BetName         betName,
+                              BetId           betId,
+                              Gen::Money      amountWin,
+                              Gen::Money      amountLose) const;
+
+    // Validity checks with diagnostics
+    void diagBadBetId(const std::string& funcName, BetId betId) const;
+    std::string diagPrefix(size_t idx)                          const;
+    bool fifNoTable(Gen::ErrorPass& ep)                         const;
+    bool fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep)         const;
+    bool fifInsufficientFunds(BetPtr pBet,  Gen::Money amount,
+                              Gen::ErrorPass& ep)               const;
+    bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep)         const;
+
+    using En = Gen::ErrorPass::ErrorName;
+    using Et = Gen::ErrorPass::ErrorType;
+    using Es = Gen::ErrorPass::Severity;
 };
 
 /*-----------------------------------------------------------*//**
@@ -146,13 +165,12 @@ private:
 
 Player Responsibilities:
 
-@li maintains one file per player
-
-@li all player files in the players directory
-
+@li Maintains player's money
+@li Tracks player's bets
 @li Know how to read/write its own data
-
-@li Export a to_json() and from_json() method
+@li Exports toYAML() and reads fromYAML()
+@li Maintains one file per player
+@li All player files located in the players directory
 
 */
 

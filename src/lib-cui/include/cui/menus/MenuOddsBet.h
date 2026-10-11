@@ -1,0 +1,129 @@
+//----------------------------------------------------------------
+//
+// File: MenuOddsBet.h
+//
+//----------------------------------------------------------------
+
+#pragma once
+
+#include <cui/bases/MenuBase.h>
+#include <cui/core/CuiStructs.h>
+#include <controller/CrapsReaders.h>
+#include <craps/EnumBetName.h>
+#include <craps/CrapsTypes.h>
+#include <gen/MoneyUtils.h>
+#include <gen/Timepoint.h>
+#include <vector>
+
+namespace Cui {
+
+class MenuOddsBet : public MenuBase
+{
+public:
+    /// @name Lifecycle
+    /// @{
+   ~MenuOddsBet() = default;
+    /// @}
+
+    /// @name Modifiers
+    /// @{
+    void draw()                                override;
+    bool handleKey(int ch)                     override;
+    void onAttach(SurfaceBase* pParent)        override;
+    void setLocation(WindowPosition pos)       override;
+    /// @}
+
+    /// @name Observers
+    /// @{
+    static MenuOddsBet& instance();
+    LocationRequest getLocationRequest() const override;
+    /// @}
+    
+private:
+    struct BetInfo
+    {
+        Craps::PlayerId playerId;
+        Craps::BetId    betId;
+        BetName         betName;
+        unsigned        pivot;
+        Gen::Money      contractAmount;
+        Gen::Money      currentOddsAmount;
+        Gen::Timepoint  whenCreated;
+    };
+    struct MenuEntry
+    {
+        char         hotKey;
+        Craps::BetId betId;
+        std::string  text;
+    };
+    
+    using Bets        = std::vector<BetInfo>;
+    using MenuEntries = std::vector<MenuEntry>;
+    
+    Craps::PlayerId playerId_;
+    Bets            activeOddsBets_;
+    MenuEntries     menuEntries_;
+    WindowPosition  winPos_;
+    WindowSize      winSize_;
+    
+private:    
+    MenuOddsBet();  // Private ctor
+
+    // Gathering bets
+    void gatherBets();
+    void getPlayerId();
+    void gatherBetsInfo();
+    void getBetIds(Craps::BetIds& ids);
+    void gatherBetsDetail(const Craps::BetIds& ids);
+    void sortBetsByCreated();
+
+    // Creating menu entries
+    void buildMenuEntries();
+    void buildMenuBets();
+    char indexToHotKey(size_t index);
+    void addBackEntry();
+    std::string formatBet   (const BetInfo& bet);
+    std::string formatAmount(const BetInfo& bet);
+    std::string formatPivot (const BetInfo& bet);
+    std::string formatHotKey(const char hotKey);
+
+    bool shortCircuit();
+
+    // Window creation and drawing
+    void calcSize();
+    void resizeWindow();
+    void drawBorders();
+    void drawStaticContent();
+    void populate();
+
+    // Processing hotKeys
+    void back();
+    void processSelection(const Craps::BetId& betId);
+    BetInfo& findBet(const Craps::BetId& betId);
+    void populateCarrier(const BetInfo& bet);
+    void prepDialogAmount(const BetInfo& bet);
+    void activateDialogAmount();
+};
+
+/*-----------------------------------------------------------*//**
+
+@class MenuOddsBet
+
+@brief Display choices for making odds bets
+
+Responsibilities of MenuOddsBet:
+
+@li Key bindings for the menu
+
+@li Process input keys 
+
+@li Takes action on input keys 
+
+@li Renders the menu on screen
+
+*/
+
+} // namespace Cui
+
+//----------------------------------------------------------------
+

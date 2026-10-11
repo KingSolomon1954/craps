@@ -1,19 +1,157 @@
 
-Fix Player startup/init
-Load Player from yaml file 
-Save Player to yaml file
+Write script to copy files/assets to install locations
+
+New feature Stats maybe add stats for place, lay, buy, any7, CandE, Horn
+
+New feature Stat Streaks - count same number repeats before 7
+    example (4:0:57)  the 4 repeated 0 times before a 7 out 57 times
+    example (4:1:6)   the 4 repeated 1 time  before a 7 out  6 times
+    example (4:3:1)   the 4 repeated 3 times before a 7 out  1 times 
+
+Refund on quit - unresolved bets back to player's bank
+  show a message like: “You left the table with active bets.
+  Your chips have been returned to your bank.”
+  When switching tables:
+  Add a warning like: “You have active bets. Are you sure
+  you want to quit and abandon them?”
+
 Save Config to yaml file
-Write unit test MultiLayerConfigTest
-Write unit test ConfigManagerTest
+Need unit test for initial bank money
+Need unit test for undo bet capability
+Need unit test ConfigManagerTest
+Need unit test CrapsInterface
 
-load Player choices by reading dir
-write script to copy files/assets to install locations
-design EventQueue and Events
-stats PlayerStats
+Minimum bets are wrong. Allow $1 bets for proposition bets,
+hardways, fix min field bet.
 
-stats TableStats maybe add stats for place, lay, buy, any7, CandE, Horn
-update CrapBet unit-test, for any bet and setOdds exceeding table limit
+Add world bet
+QuickBets need to save/read from user config
+AutoFills need to save/read from user config
 
+
+Add Roll History Format A,B,C,D to multi-configuration
+Modify Roll History to grab Format from multi-configuration
+LocationManager needs smarter options for window placement
+Need More MenuBetting implementation
+Implement "Unknown" player start up logic
+Implement the many MenuConfiguration options
+Need to inhibit various actions during animation roll
+Need OperationTracker (manages interactive lifecycle)
+OperationTracker needs correlationId matching
+Rewrite QuickBet for new CUI design
+Implement ReqMakeBet, to include UndoManager
+Add dialog confirm when quitting game tied to operations manager
+Complete the first round-trip bet made by the CUI.
+In CUI, need DialogBetAmount
+In CUI, implement DialogAckError layers of info
+
+(Done) Beefed up ErrorPass and propagate throughout, needs more attention
+(Done) Introduced zeus::expected library
+(Done) Fix invisible MenuControl when child menus are cancelled 
+(Done) Added skeleton MenuConfig
+(Done) Fix key handling ScreenCrapsTable (currently forced to ctrl-c to exit)
+(Done) UndoManager implements instance(), remove from Globals
+(Done) Added QuickBets back into compilation
+(Done) Only CrapsTypes define using PlayersId, BetIds, and RecentRolls
+(Done) Fix shared structure between CrapsRaders and AutoFill
+(Done) Implement PlayerAreaAllPlayers::onBetResolved()
+(Done) Refactor PlayerAreaAllPlayers use a table 
+(Done) Implement PlayerAreaOnePlayer::onBetResolved()
+(Done) Implement PlayerAreaOnePlayer
+(Done) In CuiThread, separate out the processing into a dispatcher
+(Done) In PlayerBrief area, display player name in his matchingcolor
+(Done) Add shooter colorized name to animation window
+(Done) Fix advanceShooter processing and initalization
+(Done) Implemented onPlayerJoinTable/LeftTable in PlayerAreaAllPlayers
+(Done) PlayerAreaAllPlayers needs implementation for onBetMade() updates
+(Done) Implement Advance shooter event, WindowPlayerBrief updated
+(Done) Re-factor these events: UslBetMade, UslTableResults, UslPlayerResults
+(Done) PlayerAreaAllPlayers implemented
+(Done) Divide WindowPlayerArea into several files
+(Done) Need to display table rules in Title bar
+(Done) Created WindowTitleBar, integrated and works
+(Done) Created WindowRollHistory, integrated and works
+(Done) MenuBetting processes "r" and rolls dice
+(Done) Implement first round-trip events for roll dice event
+(Done) Initial implementation of GameEvents.h
+(Done) Implement Controller::EventHandler skeleton
+(Done) Redesign CUI, lib-controller, lib-craps
+(Done) Fix failing unit-test, lastRollStats
+(Done) Switch to lib-gen EventManager. Eliminate 2 different event managers.
+(Done) First cut geometry management/control over menu placement
+(Done) In CUI, write ConfirmDialog class
+(Done) In CUI, need DialogBase
+(Done) Hook up ScreenCrapsTable::onAttach(MenuBetting)
+(Done) Fix ScreenCrapsTable initial corrupted drawing
+(Done) Add/fix explicit shutdown in GameMain
+(Done) Logger initialization, turn off console logging just before view
+(Done) Fix logger writing to file
+(Done) Logger supports writing to file and console same time
+(Done) Add startup terminal resizing to CUI logic
+(Done) Organize lib-cui into subfolders
+(Done) Add shortCircuit() to MenuOddsBet to skip menu if only one odds bet
+(Done) LayoutCrapsScreen draw all Panel borders and fix-up on behalf of Panels
+(Done) LayoutCrapsScreen made into a static class
+(Done) Fix up NavBar to be a Panel
+(Done) Use single layout class that all Panels reference
+(Done) PaneBase class for Windows attached to full screens
+(Done) EventManager available as a lib-gen class
+(Done) Implement WindowPlayerArea inital drawing and switch one/all player
+(Done) Implement first cut at WindowNavBar 
+(Done) Surface base class to implement releaseNcursesResources()
+(Done) ConsoleManager provides pParent surface to form operation change
+(Done) Implemented first dynamic menu MenuOddsBet
+(Done) Implemented first static menu MenuPlaceBet
+(Done) Implement CarrierBet, to pass down menu chain
+(Done) Surface base class to own pWin_
+(Done) Implement ScreenBase, MenuBase, Surface
+(Done) ConsoleManager needs to collect unique surface pointers.
+(Done) ConsoleManager needs a prepareForShutdown() over the collection.
+(Done) ConsoleView -> ConsoleManager
+(Done) ScreenTableCraps to use its own pWin_, not stdscr
+(Done) Implement initial ScreenCrapsTable draw window
+(Done) Change API for controller events (emitters, handlers, readers)
+(Done) Switch to unique_ptr for event loop ovnership
+(Done) ConsoleView delegates to ViewEventEmitter
+(Done) ConsoleView inherits from ViewInterface
+(Done) Implement controller events infrastructure, emitters, handlers, reader
+(Done) Modify lifetime model for menus, use instance() accessor
+(Done) Design menu hierarchy
+(Done) Undo capability, UndoManager class, UndoBet classes
+(Done) Build up CrapsInterface for UI interaction
+(Done) Populate CrapsInterface, organized around players, bets, table
+(Done) Write unit test MultiLayerConfigTest
+(Done) load Player choices by reading dir
+(Done) Load config.yaml with arrays into multi-layer config
+(Done) Switch to use file names to load, instead of TableId or PlayerId
+(Done) Implement PlayerManifest
+(Done) Fix Player startup/init
+(Done) Load n Players on startup/init
+(Done) Load Player from yaml file 
+(Done) Save Player to yaml file
+(Done) stats PlayerStats
+(Done) Player::leaveTable(), refund on leave
+(Done) Create initial unit-test for Player
+(Done) Eliminate lib-controller from lib-craps
+(Done) Move EventManager inside of CrapsTable.cpp - went a different way
+(Done) Add accessor for BankStats from CrapsTable
+(Done) Eliminate PlayerManager from CrapsTable.cpp
+(Done) Eliminate ConfigManager from CrapsTable.cpp
+(Done) CrapsTable unit test relies on a working Player - maybe mock Player
+(Done) Need unit test for bank refills
+(Done) Fix sessionStartBalance to continue session to session
+(Done) Redesign bankStats to fall under Bank class
+(Done) maxFieldBet_ and friends need to read/write YAML()
+(Done) Not needed - make a static CrapsBet function that creates a shared_ptr
+(Done) Move testRollDice() under -DUNIT_TEST flag
+(Done) Update CrapBet unit-test, for any bet and setOdds exceeding table limit
+(Done) Need to add DontPlace bets to the game - abandoned
+(Done) Buy bets and Lay bets have wrong payouts - need updating
+(Done) Money calculation uses multiples and pays 1:1 odds on leftover
+(Done) Allow odds bets less than contract bet - pay even money
+(Done) Design change, CrapsTable accepts CrapsBets. eliminate CrapsBetIntfc
+(Done) change changeOddsAmount() -> setOddsAmount()
+(Done) change changeContractAmount() -> setContractAmount()
 (Done) Rules for CrapsTables (10x odds, limits, automation)
 (Done) Load Table from yaml file (CrapsTable.cpp)
 (Done) Save Table from yaml file (CrapsTable.cpp)
@@ -53,36 +191,10 @@ update CrapBet unit-test, for any bet and setOdds exceeding table limit
 (Done) Implement minimal game loop
 (Done) Add getBool() to MultiLayerManager
 
-Formats to display roll history
--------------------------------
-7(3,4) 8(4,4) 6(3,3) 
-7(34) 8(44) 6(33) 
-7,8,6
-7 8 6
-4 7 8 6
-
-Display throw history left to right or reverse
-----------------------------------------------
-7,8,6,2,2,4
-7,8,6,2,2,4,11
-
-4,2,2,6,8,7
-11,4,2,2,6,8,7
-
-User Input → ConsoleView → GameEvent (UserInputLineEvent) → EventQueue → GameController
-
-    ├── ConsoleView ├── 
-    │               │ 
-    │               ├──>  Generate Event -->  EventLoop
-    │               │
-    ├── GuiView  ── ├
-
-onViewXxx  - prefix for event handlers originating from Views
-onGameXxx  - prefix for event handlers originating from the game/model
-                                            
 
 Royal Craps
------------
+───────────
+
 TODO: 
 
 World
@@ -421,7 +533,7 @@ BOXCARS = 12
 FIELD = (2, 3, 4, 9, 10, 11, 12)
 
 
-ef bets_init():
+def bets_init():
 	bets = {
     #########################################################################
     #
@@ -505,21 +617,6 @@ ef bets_init():
         "C&E":0                 #craps-eleven, same as any craps plus 11, pays same as
 	} 
 
-
-CrapsTable::processBets(point, dice)
-{
-    for bet in Bets
-    {
-        winLose(bet, point, dice)
-        bank.winLose(bet)
-        player.winLose(bet)
-    }
-    // Remove bets that had a decision.
-    // These removed bets need screen updates
-    betListForUpdatedViews = pruneBetList();
-}
-
-
 oddsTable
 num   pass   dont    buy   lay     place    hardway
 0     0,0    0,0     0,0    0,0      0,0      0,0
@@ -546,33 +643,8 @@ Audio           Unreal Sound Cues (dice rolls, chip sounds, dealer voice)
 VFX (Optional)  Niagara (for casino glow or excitement FX)
 
 
-
-CrapsTable.h
-    Controller
-        Dice
-        Point
-        Shooter
-        resolveBets
-    BetManager
-    Bank
-    Players
-    Rules
-        OddsTables.h
-        Min/Max bets
-        N x Odds
-    History
-    Statistics
-
-PlayerManager
-
-Player.h
-    Bank
-    History
-    Statistics
-
-
 Source Code Layout
-------------------
+──────────────────
 
 src/main  (startup)
 
@@ -590,7 +662,7 @@ src/lib-gen (utilities)
 
 
 Runtime Directory Structure
----------------------------
+───────────────────────────
 
 The standard runtime directories for royalcraps are:
 
@@ -617,11 +689,6 @@ The standard runtime directories for royalcraps are:
 
 
 
-Session History
----------------
 
-Date                Duration    Bets   Intake   Payout  Balance Players
------------------   ----------- ------ -------- ------- ------- -------
-2025-07-12T09:29:56 0d 01:33:08 112    246222   334577  +88355  6
-2025-05-12T08:05:44 0d 00:22:11 24     1009     950     +59     6
+
 

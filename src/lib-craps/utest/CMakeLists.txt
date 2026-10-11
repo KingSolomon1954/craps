@@ -6,10 +6,12 @@
 
 add_executable(craps-ut
     utest-lib-craps.cpp
+    BankTest.cpp
     CrapsBetPart1Test.cpp
     CrapsBetPart2Test.cpp
     CrapsTableTest.cpp
     EnumBetNameTest.cpp
+    PlayerTest.cpp
     SessionHistoryTest.cpp
     TableStatsPart1Test.cpp
     TableStatsPart2Test.cpp
@@ -23,6 +25,8 @@ target_link_libraries(craps-ut
     PRIVATE gen
     PRIVATE doctest::doctest
 )
+
+target_compile_definitions(craps-ut PRIVATE UNIT_TEST)
 
 doctest_discover_tests(craps-ut)
 

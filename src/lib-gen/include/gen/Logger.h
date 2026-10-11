@@ -7,6 +7,7 @@
 #pragma once
 
 #include <fstream>
+#include <mutex>
 #include <string>
 #include <rang.hpp>
 
@@ -24,12 +25,18 @@ public:
     void logWarn (const std::string& msg);
     void logError(const std::string& msg);
 
-    // Runtime toggling of debug and trace logging.
-    void setDebugLevel(bool onOff);  // on enables debug output, def = on
-    void setTraceLevel(bool onOff);  // on enables trace output, def = off
+    void enableConsoleLogging();
+    void disableConsoleLogging();
+    
+    void setDebugLevel(bool onOff);
+    void setTraceLevel(bool onOff);
 
+    bool isDebugOn() const;
+    bool isTraceOn() const;
+    
 private:
-    bool debugOn_ = true;
+    mutable std::mutex mutex_;
+    bool debugOn_ = false;
     bool traceOn_ = false;
 
     enum class Level
@@ -42,7 +49,9 @@ private:
     };
 
     std::ofstream out_;
-
+    bool consoleEnabled_ = true;
+    
+    Logger() = default;
     void log(Level level, const std::string& message);
     std::string timestamp() const;
     std::string levelToString(Level level) const;
@@ -51,12 +60,16 @@ private:
 
 // Compile time toggling of debug and trace logging.
 #ifdef DEBUG
-#define LOG_DEBUG(msg) Gen::Logger::instance().logDebug(msg);
-#define LOG_TRACE(msg) Gen::Logger::instance().logTrace(msg);
+#define LOG_DEBUG(msg) Gen::Logger::instance().logDebug(msg)
+#define LOG_TRACE(msg) Gen::Logger::instance().logTrace(msg)
 #else
 #define LOG_DEBUG(msg) do {} while(0)
 #define LOG_TRACE(msg) do {} while(0)
 #endif
+
+#define LOG_INFO(msg)  Gen::Logger::instance().logInfo (msg)
+#define LOG_WARN(msg)  Gen::Logger::instance().logWarn (msg)
+#define LOG_ERROR(msg) Gen::Logger::instance().logError(msg)
     
 } // namespace Gen
 

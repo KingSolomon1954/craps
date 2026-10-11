@@ -1,0 +1,90 @@
+//----------------------------------------------------------------
+//
+// File: CuiThread.h
+//
+//----------------------------------------------------------------
+
+#pragma once
+
+#include <cui/core/WorkOrder.h>
+#include <cui/core/WorkOrderDispatcher.h>
+#include <gen/EdgeEvent.h>
+#include <condition_variable>
+#include <deque>
+#include <mutex>
+#include <thread>
+
+//----------------------------------------------------------------
+
+namespace Cui {
+
+class CuiThread
+{
+public:
+    CuiThread();
+   ~CuiThread();
+    static CuiThread& instance();
+
+    CuiThread(const CuiThread&)            = delete;
+    CuiThread& operator=(const CuiThread&) = delete;
+    CuiThread(CuiThread&&)                 = delete;
+    CuiThread& operator=(CuiThread&&)      = delete;
+
+    // Returns false if shutdown is underway.
+    bool enqueueWork(WorkOrder workOrder);
+    void shutdown();
+    bool isCuiThread() const;
+    
+private:
+    void cuiThreadFunc();
+    
+    void processWorkQueue();
+    void processWorkOrder (const WorkOrder& wo);
+    void process(const WorkOrderKey& wo);
+    void process(const WorkOrderSurface& wo);
+    void process(const WorkOrderEvent& wo);
+    
+    void process(const Ctrl::UslBettingClosed& ev);
+    void process(const Ctrl::UslDiceThrowStart& ev);
+    void process(const Ctrl::UslDiceNewValue& ev);
+    void process(const Ctrl::UslResolveBetsEnd& ev);
+    void process(const Ctrl::UslPointEstablished& ev);
+    void process(const Ctrl::UslSevenOut& ev);
+    void process(const Ctrl::UslPassLineWinner& ev);
+    void process(const Ctrl::UslNewShooter& ev);
+    void process(const Ctrl::UslBettingOpened& ev);
+    void process(const Ctrl::UslBetMade& ev);
+    void process(const Ctrl::UslTableBalanceChanged& ev);
+    void process(const Ctrl::UslPlayerBalanceChanged& ev);
+
+private:
+    bool shutdownRequested_ = false;
+    std::deque<WorkOrder> workQueue_;
+    mutable std::mutex mutex_;
+    std::condition_variable condition_;
+    std::thread thread_;
+    std::thread::id threadId_;
+    Gen::EdgeEvent threadStarted_;
+    WorkOrderDispatcher dispatcher_;
+};
+
+/*-----------------------------------------------------------*//**
+
+@class CuiThread
+
+@brief CuiThread processes CUI work orders and also obtains
+       keypresses and manipulates surfaces 
+
+CuiThread is the only class that is allowed to call into ncurses,
+including reading key presses.
+
+Responsibilities of CuiThread:
+
+@li Primary job is to serialize all CUI/ncurses work.
+@li Implements a thread loop to enqueue keys and process work orders
+@li Works closely with SurfaceManager
+*/
+
+} // namespace Cui
+
+//----------------------------------------------------------------

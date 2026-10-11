@@ -5,17 +5,17 @@
 //----------------------------------------------------------------
 
 #include <craps/Player.h>
+#include <craps/CrapsTable.h>
+#include <craps/DecisionRecord.h>
+#include <controller/GameEvents.h>
+#include <gen/EventManager.h>
+#include <gen/FileUtils.h>
+#include <gen/Logger.h>
+#include <gen/Uuid.h>
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <controller/Events.h>
-#include <controller/EventManager.h>
-#include <controller/PlayerManager.h>
-#include <craps/CrapsBetIntfc.h>
-#include <craps/CrapsTable.h>
-#include <craps/DecisionRecord.h>
-#include <gen/ErrorPass.h>
 
 using namespace Craps;
 
@@ -23,228 +23,723 @@ using namespace Craps;
 //
 // Constructor.
 //
-Player::Player()
-{
-    setupSubscriptions();
-}
-
-//----------------------------------------------------------------
-//
-// Constructor.
-//
 Player::Player(
-    const std::string& name,
-    unsigned startingBalance)
-    : uuid_(Gen::generateUuid())
-    , name_(name)
-    , wallet_(startingBalance, 500, 500)  // TODO
+    const PlayerId&     playerId,
+    const PlayerConfig& config)
+    : playerId_(playerId)
+    , config_(config)
+    , wallet_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
-    setupSubscriptions();
 }
 
 //----------------------------------------------------------------
 //
-// Constructor.
+// Will create a fresh PlayerId
 //
-Player::Player(
-    const Gen::Uuid& uuid,
-    const std::string& name,
-    unsigned startingBalance)
-    : uuid_(uuid)
-    , name_(name)
-    , wallet_(startingBalance, 500, 500) // TODO)
+Player*
+Player::createPlayer(const std::string&  playerName,
+                     const PlayerConfig& config)
 {
-    setupSubscriptions();
+    Player* p = new Player(Gen::generateUuid(), config);
+    p->setName(playerName);
+    return p;
+}
+
+/*-----------------------------------------------------------*//**
+
+Construct Player from in-memory YAML node.
+
+Throws upon error.
+
+Static function.
+*/
+Player*
+Player::fromString(const std::string&  yaml,
+                   const PlayerId&     playerId,
+                   const PlayerConfig& config)
+{
+    Player* p = new Player(playerId, config);
+    YAML::Node root = YAML::Load(yaml);
+    p->fromYAML(root);
+    return p;
+}
+
+/*-----------------------------------------------------------*//**
+
+Construct Player from YAML file.
+
+Throws upon error.
+
+Static function.
+*/
+Player*
+Player::fromFile(const PlayerId& playerId,
+                 const PlayerConfig& config)
+{
+    Player* p = new Player(playerId, config);
+    p->loadFile();
+    return p;
 }
 
 //----------------------------------------------------------------
-
+//
+// Save Player to file
+//
 void
-Player::setupSubscriptions()
+Player::saveFile() const
 {
-    Gbl::pEventMgr->subscribe<Ctrl::BettingClosed>(
-        [this](const Ctrl::BettingClosed&)
-        {
-            this->onBettingClosed();
-        });
-    Gbl::pEventMgr->subscribe<Ctrl::BettingOpened>(
-        [this](const Ctrl::BettingOpened&)
-        {
-            this->onBettingOpened();
-        });
-    Gbl::pEventMgr->subscribe<Ctrl::DiceThrowStart>(
-        [this](const Ctrl::DiceThrowStart&)
-        {
-            this->onDiceThrowStart();
-        });
-    Gbl::pEventMgr->subscribe<Ctrl::DiceThrowEnd>(
-        [this](const Ctrl::DiceThrowEnd&)
-        {
-            this->onDiceThrowEnd();
-        });
-    Gbl::pEventMgr->subscribe<Ctrl::AnnounceDiceNumber>(
-        [this](const Ctrl::AnnounceDiceNumber& evt)
-        {
-            this->onAnnounceDiceNumber(evt);
-        });
-    Gbl::pEventMgr->subscribe<Ctrl::PointEstablished>(
-        [this](const Ctrl::PointEstablished& evt)
-        {
-            this->onPointEstablished(evt);
-        });
-    Gbl::pEventMgr->subscribe<Ctrl::SevenOut>(
-        [this](const Ctrl::SevenOut&)
-        {
-            this->onSevenOut();
-        });
-    Gbl::pEventMgr->subscribe<Ctrl::PassLineWinner>(
-        [this](const Ctrl::PassLineWinner&)
-        {
-            this->onPassLineWinner();
-        });
-    Gbl::pEventMgr->subscribe<Ctrl::NewShooter>(
-        [this](const Ctrl::NewShooter& evt)
-        {
-            this->onNewShooter(evt);
-        });
-}
-                
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-Player::joinTable(Gen::ErrorPass& ep)
-{
-    // For now, using a single global craps table.
-    if (Gbl::pTable->addPlayer(uuid_, ep) == Gen::ReturnCode::Fail)
+    if (config_.playerPath.empty())
     {
-        ep.prepend("Player " + name_ + " joining table. ");
-        return Gen::ReturnCode::Fail;
+        LOG_DEBUG("Player::saveFile() skipping; playerPath is empty");
+        return;
     }
-    return Gen::ReturnCode::Success;
+
+    LOG_DEBUG("Player::saveFile(" + config_.playerPath.string()  + ")");
+    std::ofstream fout(config_.playerPath);
+    fout << toYAML();
 }
 
 //----------------------------------------------------------------
-
-Gen::ReturnCode
-Player::makeBet(BetName betName,
-                Gen::Money contractAmount,
-                unsigned pivot,
-                Gen::ErrorPass& ep)
+//
+// Load Player from file
+//
+void
+Player::loadFile()
 {
-    // TODO check sufficient funds first 
-    auto pBet = Gbl::pTable->addBet(uuid_, betName, contractAmount, pivot, ep);
-    if (pBet == nullptr)
+    try
     {
-        return Gen::ReturnCode::Fail;
+        std::ifstream fin =
+            Gen::FileUtils::openOrThrow(config_.playerPath);  // throws
+        YAML::Node root = YAML::Load(fin);
+        fromYAML(root);                                       // throws
     }
+    catch (const std::runtime_error& e)
+    {
+        std::string diag("Player::loadFile(): \"" +
+                         config_.playerPath.string() + "\"; ");
+        throw std::runtime_error(diag + e.what());
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Convert Player to YAML
+//
+YAML::Node
+Player::toYAML() const
+{
+    YAML::Node node;
+    node["playerId"]         = playerId_;
+    node["playerName"]       = playerName_;
+    node["shortDescription"] = shortDescription_;
+    node["fullDescription"]  = fullDescription_;
+    node["Bank"]             = wallet_.toYAML();
+    alltimeStats_.toYAML(node);
+    return node;
+}
+
+//----------------------------------------------------------------
+//
+// Convert YAML to Player
+//
+void
+Player::fromYAML(const YAML::Node& node)
+{
+    auto playerIdInFile = node["playerId"].as<std::string>();
+    playerName_         = node["playerName"].as<std::string>();
+    shortDescription_   = node["shortDescription"].as<std::string>();
+    fullDescription_    = node["fullDescription"].as<std::string>();
+
+    // YAML playerId must agree with id from ctor
+    if (playerIdInFile != playerId_)
+    {
+        throw std::runtime_error("Player ID mismatch: expected " +
+                                 playerId_ + ", found " + playerIdInFile);
+    }
+
+    wallet_.fromYAML(node["Bank"]);
+    alltimeStats_.fromYAML(node);
+}
+
+//----------------------------------------------------------------
+//
+//  Save to files, disable timers, etc
+//
+void
+Player::shutdown()
+{
+    (void) leaveTable();
+
+    // Create an entry for today's session.
+    alltimeStats_.sessionHistory.addSessionSummary(
+        1, // num players
+        currentStats_.betStats.totNumBetsAllBets,
+        wallet_.getAmtDeposited(),
+        wallet_.getAmtWithdrawn());
+
+    // Merge alltime stats with today's session, then save.
+    alltimeStats_.merge(currentStats_);
+    wallet_.mergeStats();
+    saveFile();
+}
+
+//----------------------------------------------------------------
+
+zeus::expected<void, Gen::ErrorPass>
+Player::joinTable(CrapsTable& table)
+{
+    auto result = table.addPlayer(*this);
+    if (!result)
+    {
+        result.error().prepend("Failed to join table. ");
+        return zeus::unexpected<Gen::ErrorPass>(
+            std::move(result).error());
+    }
+
+    pTable_ = &table;
+    return {};
+}
+
+/*-----------------------------------------------------------*//**
+
+Player leaves the table.
+
+Any outstanding bets on the table are forcibly removed, meaning bets
+are pulled from the table and funds are returned to the player. This
+bypasses normal table checks that prevent removing bets due to Craps
+table rules.
+
+UI should perform confirmation checks with users prior to leaving table.
+
+leaveTable() is called upon program shutdown as well as
+when player switches tables.
+
+@param[in,out] ep
+    If an error occurs, ep holds the reason
+
+@return
+    Success, otherwsie Fail and ep has the reason for failure.
+    It is not an error if a player has not joined a table.
+*/
+zeus::expected<void, Gen::ErrorPass>
+Player::leaveTable()
+{
+    if (pTable_ == nullptr)  // Not joined, so nothing to leave.
+    {
+        Gen::ErrorPass ep;
+        std::string s = "Player " + playerName_ +
+            " unable to leave table. Player is not there.";
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError,
+               Es::Indeterminate, s);
+        assert(getNumBetsOnTable() == 0);
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
+    // Remove any outstanding bets from table, recover funds
+    // Manually increment iterator so we can erase while iterating
+    for (auto it = bets_.begin(); it != bets_.end(); ) // no increment here
+    {
+        auto pBet = *it;
+        pTable_->removeBetForce(pBet);
+        wallet_.deposit(pBet->contractAmount() + pBet->oddsAmount());
+        it = bets_.erase(it); // returns next valid iterator
+    }
+
+    auto result = pTable_->removePlayer(*this);
+    if (!result)
+    {
+        result.error().prepend("Failed to leave table. ");
+        return zeus::unexpected<Gen::ErrorPass>(std::move(result).error());
+    }
+
+    return {};
+}
+
+/*-----------------------------------------------------------*//**
+
+Makes a bet on the table.
+
+@param[in] betName
+    the type of bet to make
+
+@param[in] contractAmount
+    the dollar amount to bet
+
+@param[in] the pivot
+    The number this bet is focused on. For example a Place bet must set
+    the pivot to 4,5,6,8,9 or 10. For PassLine/Come/DontPass/DontCome bets,
+    the caller sets the pivot to zero. Zero indicates the pivot number
+    needs to be set later. See CrapsBet::CrapsBet() constructor.
+
+@return
+    If successful, the shared pointer to the CrapsBet is returned,
+    otherwise ErrorPass object has the reason for failure
+
+@internal
+@li fif prefix means "fault if"
+*/
+zeus::expected<BetPtr, Gen::ErrorPass>
+Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
+{
+    Gen::ErrorPass ep;
+    std::string s = "Unable to make bet(" +
+                    std::to_string(contractAmount) +
+                    ") for player: " + playerName_ + ". ";
+
+    if (fifNoTable(ep)  ||
+        fifInsufficientFunds(nullptr, contractAmount, ep))
+    {
+        ep.prepend(s);
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
+    auto pBet = makeShared(betName, contractAmount, pivot, ep);
+    if (pBet == nullptr || fifBadAddBet(pBet, ep))
+    {
+        ep.prepend(s);
+        ep.setErrorName("Betting Error");
+        ep.setErrorType(Et::ProcessingError);
+        ep.setSeverity(Es::Indeterminate);
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
     wallet_.withdraw(contractAmount);
     bets_.push_back(pBet);
+    return pBet;
+}
+
+//----------------------------------------------------------------
+//
+// Restores a previouly removed bet.
+//
+// This participates in the undo facility.
+//
+// Adds the saved previously removed bet back in, bypassing
+// validity checks and avoiding double stats counters.
+// This only works as part of the undo manager unstacking.
+// It does not work for restoring arbitrary bets as no checks
+// are made for sufficient funds, duplicates, etc.
+//
+Gen::ReturnCode
+Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
+{
+    wallet_.withdraw(pBet->contractAmount() + pBet->oddsAmount());
+    bets_.push_back(pBet);
+    (void) pTable_->addBet(pBet, ep);
     return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------
+//
+// Restores a previouly changed bet amount.
+//
+// This participates in the undo facility.
+//
+// Adjusts player's wallet due to an undo of a change in bet amount.
+//
+void
+Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState)
+{
+    auto applyDelta = [this](int delta)
+    {
+        if (delta > 0)
+        {
+            // Undoing an increase → get money back
+            wallet_.deposit(delta);
+        }
+        else if (delta < 0)
+        {
+            // Undoing a decrease → costs us money
+            wallet_.withdraw(-delta); // must negate since withdraw expects positive
+        }
+    };
 
+    int deltaContract = pBet->contractAmount() - prevState.contractAmount();
+    applyDelta(deltaContract);
+
+    int deltaOdds = pBet->oddsAmount() - prevState.oddsAmount();
+    applyDelta(deltaOdds);
+}
+
+//----------------------------------------------------------------
+//
+// Purpose of this is to issue std::make_shared in try/catch block.
+// Convert exception to ErrorPass.
+//
+BetPtr
+Player::makeShared(BetName betName,
+                   Gen::Money contractAmount,
+                   unsigned pivot,
+                   Gen::ErrorPass& ep)
+{
+    try
+    {
+        // CrapsBet ctor can throw.
+        return std::make_shared<CrapsBet>(this, betName,
+                                          contractAmount, pivot);
+    }
+    catch(std::invalid_argument& e)
+    {
+        EP_SET(ep, En::CaughtException, Et::ProcessingError,
+               Es::Major, e.what());
+        return nullptr;
+    }
+}
+
+/*-----------------------------------------------------------*//**
+
+Sets, changes, or removes the amount for an odds bet.
+
+Overwrites the previous amount, if any. A value
+of zero removes it altogether.
+
+It is only permissable to set an odds amount if the following
+conditions are true:
+
+@li the bet is already on the table
+@li the bet is a PassLine, DontPass, Come, or DontCome bet
+@li the bet has an assigned pivot (point) (i.e, pivot is non-zero)
+@li the new amount is subject to table limits min/max odds
+
+@param[in,out] pBet
+    The bet of interest.
+
+@param[in] oddsAmount
+    The amount to set it to. Clobbers any previous setting.
+
+@returns
+    ErrorPass object if an error occured, otherwise no error.
+
+@internal
+@li fif prefix means "fault if"
+*/
+zeus::expected<void, Gen::ErrorPass>
+Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
+{
+    // fif prefix means "fault if"
+
+    Gen::ErrorPass ep;
+    if (fifMissingBet(pBet, ep)                     ||
+        fifNoTable(ep)                              ||
+        fifInsufficientFunds(pBet, oddsAmount, ep))
+    {
+        ep.prepend("Unable to set odds(" + std::to_string(oddsAmount) +
+            ") for player: " + playerName_ + ". ");
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+    
+    Gen::Money saveOddsAmount = pBet->oddsAmount();
+    
+// std::cout << "wallet_.deposit = " << pBet->oddsAmount() << std::endl;
+    wallet_.deposit(pBet->oddsAmount());  // give back old amount, if any
+// std::cout << "wallet_.withdraw = " << oddsAmount << std::endl;
+    wallet_.withdraw(oddsAmount);         // take out new amount
+    
+    auto rc = pTable_->setOddsAmount(pBet, oddsAmount, ep);
+    if (rc == Gen::ReturnCode::Fail)         // Bet was rejected
+    {                                        // Restore prev amount
+        wallet_.deposit(oddsAmount);
+        wallet_.withdraw(saveOddsAmount);
+        ep.prepend(diagPrefix(2));
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
+    return {};
+}
+
+/*-----------------------------------------------------------*//**
+
+Changes the contract amount of a bet on the table.
+
+@li The bet must already exist on the table.
+@li Validates the change against table rules.
+@li Overwrites the previous amount.
+@li Fails if insufficient funds.
+@li Reclaims funds if reducing contract amount.
+
+@param[in] betId
+    The bet of interest.
+
+@param[in] newAmount
+    Sets the contract bet amount to newAmount
+
+@param[in,out] ep
+    Holds reason for error
+
+@return
+    Success if amount has been changed, otherwise Fail and ep has reason
+
+@internal
+@li fif prefix means "fault if"
+@li Sca suffix means "set contract amount"
+@li 2 is the index to select the right diagPrefix
+*/
+zeus::expected<void, Gen::ErrorPass>
+Player::setContractAmount(
+    BetPtr pBet,
+    Gen::Money newAmount)
+{
+    // TODO
+    // Figure out if adding/subtracting
+    // Check sufficient funds in wallet
+    // call pTable_->setContractAmount()
+    // if success adjust wallet, change contractAmount_, send event
+    // if fail leave wallet alone, keep existing contractAmount_
+
+    return {};
+}
+
+/*-----------------------------------------------------------*//**
+
+CrapsTable informs us directly (inline) that betting is closed. Can't
+use UslBettingClosed or UslDiceThrowStart event since that is
+asynchronous and bets will have already have been resolved by the time
+we see those events.
+
+*/
+void
+Player::bettingClosed()
+{
+    lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
+}
+
+/*-----------------------------------------------------------*//**
+
+Process WIN decision
+
+Called by CrapsTable to dish out a winning bet to a Player.
+
+*/
 void
 Player::processWin(const DecisionRecord& dr)
 {
+    assert(dr.pBet != nullptr);
     assert(dr.win > 0);
 
-    // Obtain pointer to our bet
-    auto pBet = findBetById(dr.betId);
+    // Confirm we actually own the bet in dr.pBet (raw pointer)
+    // Obtain shared_ptr to our bet
+    //
+    auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
-        diagBadBetId("processWin() ", dr.betId);
+        diagBadBetId("processWin() ", dr.pBet->betId());
         assert(false);
         return;
     }
 
     wallet_.deposit(dr.returnToPlayer);
     wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
-    
-    std::cout << name_ << ": processWin(" << pBet->betName() <<
-        ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
 
-    // TODO update win stats before removing bet
-    // pBet->startTime - endTime ...
+    // std::cout << playerName_ << ": processWin(" << pBet->betName() <<
+    //     ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
+
+    currentStats_.recordWin(*(dr.pBet), dr.win);
+    lastRollStats_.amountWin += dr.win;
+    lastRollStats_.numBetsWin++;
+
+    sendEventBetResolved(playerId_, pBet->betName(),
+                         pBet->betId(), dr.win, dr.lose);
 
     (void) removeBetByPtr(pBet);
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Process LOSE decision
+
+Called by CrapsTable to dish out a losing bet to a Player.
+
+*/
 void
 Player::processLose(const DecisionRecord& dr)
 {
+    assert(dr.pBet != nullptr);
     assert(dr.lose > 0);
-    wallet_.deposit(dr.returnToPlayer);
-    // Money was already withdrawn from wallet when making the bet
 
-    // Obtain pointer to the bet (for stats and stuff)
-    auto pBet = findBetById(dr.betId);
+    // Confirm we actually own the bet in dr.pBet (raw pointer)
+    // Obtain shared_ptr to our bet
+    //
+    auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
-        diagBadBetId("processLose() ", dr.betId);
+        diagBadBetId("processLose() ", dr.pBet->betId());
         assert(false);
         return;
     }
 
-    std::cout << name_ << ": processLose(" << pBet->betName() <<
-        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
+    // No need to update money. Money was withdrawn from wallet
+    // when making the bet. Just deal with return to player, if any.
+    //
+    wallet_.deposit(dr.returnToPlayer);
 
-    // TODO update lose stats before removing bet
-    // pBet->startTime - endTime ...
+//    std::cout << playerName_ << ": processLose(" << pBet->betName() <<
+//        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
 
+    currentStats_.recordLose(*(dr.pBet), dr.lose);
+    lastRollStats_.amountLose += dr.lose;
+    lastRollStats_.numBetsLose++;
     (void) removeBetByPtr(pBet);  // Done with this bet
 }
 
-//----------------------------------------------------------------
+/*-----------------------------------------------------------*//**
 
+Process KEEP decision
+
+Called by CrapsTable to inform Player that the current roll of
+dice resulted in no decision for the assocated bet.
+
+*/
 void
 Player::processKeep(const DecisionRecord& dr)
 {
-    // Obtain pointer to the bet (for stats and stuff)
-    auto pBet = findBetById(dr.betId);
+    assert(dr.pBet != nullptr);
+
+    // Confirm we actually own the bet in dr.pBet (raw pointer)
+    // Obtain shared_ptr to our bet
+    //
+    auto pBet = findBetById(dr.pBet->betId());
     if (pBet == nullptr)
     {
-        diagBadBetId("processKeep() ", dr.betId);
+        diagBadBetId("processKeep() ", dr.pBet->betId());
         assert(false);
         return;
     }
 
-    std::cout << name_ << ": processKeep(" << pBet->betName() <<
-        ") lost:" << dr.lose << " won:" << dr.win
-        << " balance:" << wallet_.getBalance() << "\n";
+//    std::cout << playerName_ << ": processKeep(" << pBet->betName() <<
+//        ") lost:" << dr.lose << " won:" << dr.win
+//        << " balance:" << wallet_.getBalance() << "\n";
 
     assert(dr.lose == 0); assert(dr.win == 0);
-    
-    // TODO
-    // maybe the pivot was assigned, if so do auto odds?
-    // update stats
+    currentStats_.recordKeep(*(dr.pBet));
+}
+
+/*-----------------------------------------------------------*//**
+
+CrapsTable informs us directly (inline) that it is finished resolving
+bets. Can't use events for this since bets will have already have been
+removed by the time we see those events here.
+
+Close out lastRollStats (no need to do that here as it is cleared in
+betting closed) and publish event.  Always send the event. Doesn't
+matter if no bets had a decision.  Want last roll stats to show +$0
+change on screen.
+*/
+void
+Player::disburseDone()
+{
+    if (lastRollStats_.amountWin > 0 || lastRollStats_.amountLose > 0)
+    {
+        Ctrl::UslPlayerBalanceChanged ev;
+        ev.playerId   = playerId_;
+        ev.balance    = getBalance();    // how much left in wallet
+        ev.netBalance = getSessionNet(); // profilt/loss session start
+
+        Gen::EventManager::instance().publish(ev);
+    }
 }
 
 //----------------------------------------------------------------
 
 void
-Player::diagBadBetId(const std::string& funcName, unsigned betId) const
+Player::sendEventBetResolved(const PlayerId& playerId,
+                             BetName         betName,
+                             BetId           betId,
+                             Gen::Money      amountWin,
+                             Gen::Money      amountLose) const
 {
-    std::string diag =
-        "Internal Error: Unable to process decision record. "
-        "Player::" + funcName + "cant match "
-        "decision record betId against any betId held "
-        "in player betList. Bad betId" + std::to_string(betId);
-    // TODO: error manager
-    std::cerr << diag << std::endl;
+    Ctrl::UslBetResolved ev;
+    ev.playerId   = playerId,
+    ev.betName    = betName,
+    ev.betId      = betId,
+    ev.amountWin  = amountWin;
+    ev.amountLose = amountLose;
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+BetPtr
+Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
+{
+    auto b = findBetById(betId);
+    if (b != nullptr) return b;
+
+    ep.setDescription("Player::getBet(): player " + playerName_ +
+                      " has no such betId " + std::to_string(betId) + ".");
+    return nullptr;
+}
+
+//----------------------------------------------------------------
+
+Craps::BetId
+Player::getBet(BetName betName, size_t pivot, Gen::ErrorPass& ep) const
+{
+    auto it = std::find_if(bets_.begin(), bets_.end(),
+                   [betName, pivot](const BetPtr& b)
+                   {
+                       return b->betName() == betName &&
+                              b->pivot()   == pivot;
+                   });
+    if (it != bets_.end())
+    {
+        return (*it)->betId();
+    }
+    return 0;
+}
+
+//----------------------------------------------------------------
+
+Player::Bets
+Player::getBets() const
+{
+    std::vector<BetPtr> returnBets;
+    for (auto b : bets_)
+    {
+        returnBets.push_back(b);
+    }
+    return returnBets;
 }
 
 //----------------------------------------------------------------
 //
-// Search for a bet by ID
+// Return bets capable of odds
 //
-Player::BetIntfcPtr
-Player::findBetById(unsigned betId) const
+Player::Bets
+Player::getOddsBets() const
+{
+    std::vector<BetPtr> returnBets;
+    for (auto b : bets_)
+    {
+        if ((b->betName() == BetName::PassLine  ||
+             b->betName() == BetName::Come      ||
+             b->betName() == BetName::DontPass  ||
+             b->betName() == BetName::DontCome) &&
+            (b->pivot() != 0))
+        {
+            returnBets.push_back(b);
+        }
+    }
+    return returnBets;
+}
+
+//----------------------------------------------------------------
+
+bool
+Player::haveBet(const BetId& betId) const
+{
+    return findBetById(betId) != nullptr;
+}
+
+//----------------------------------------------------------------
+//
+// Search for bet by ID
+//
+BetPtr
+Player::findBetById(const BetId& betId) const
 {
     auto it = std::find_if(bets_.begin(), bets_.end(),
-                   [betId](const BetIntfcPtr& b)
+                   [betId](const BetPtr& b)
                    {
                        return b->betId() == betId;
                    });
@@ -256,9 +751,12 @@ Player::findBetById(unsigned betId) const
 }
 
 //----------------------------------------------------------------
-
+//
+// Private function. Used to remove a bet from this player's
+// collection. Meant to be called after processing a bet result.
+//
 bool
-Player::removeBetByPtr(BetIntfcPtr& b)
+Player::removeBetByPtr(BetPtr& b)
 {
     auto it = std::find(bets_.begin(), bets_.end(), b);
     if (it != bets_.end())
@@ -271,28 +769,50 @@ Player::removeBetByPtr(BetIntfcPtr& b)
 
 //----------------------------------------------------------------
 //
-// Remove bet by name.
+// Remove bet by betId.
 //
-Gen::ReturnCode
-Player::removeBet(BetName betName, unsigned pivot, Gen::ErrorPass& ep)
+// Called by the UI to remove a bet from the table.
+//
+zeus::expected<void, Gen::ErrorPass>
+Player::removeBet(const BetId& betId)
 {
+    Gen::ErrorPass ep;
+
     auto it = std::remove_if(bets_.begin(), bets_.end(),
-        [betName, pivot](const BetIntfcPtr& b)
+        [betId](const BetPtr& b)
         {
-            return (b->betName() == betName) && (b->pivot() == pivot);
+            return (b->betId() == betId);
         });
     if (it == bets_.end())
     {
-        ep.diag = "not found";
-        return Gen::ReturnCode::Fail;
+        std::string s = "Unable to remove "
+                        "bet; Player " + playerName_       +
+                        " does not have a bet with betId:" +
+                        std::to_string(betId) + ").";
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError, Es::Indeterminate, s);
+        return zeus::unexpected(std::move(ep));
     }
 
-    if (Gbl::pTable->removeBet(*it, ep) == Gen::ReturnCode::Fail)
+    // We have a bet, then we must have valid pTable. No need to check.
+    // We have a bet, then it must be on the table. See makeBet().
+    // If table can't remove it then player can't remove it.
+    if (pTable_->removeBet(*it, ep) == Gen::ReturnCode::Fail)
     {
-        ep.prepend("problem");
+        return zeus::unexpected(std::move(ep));
     }
+
+    wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount());
     bets_.erase(it, bets_.end());  // remove from our list of bets
-    return Gen::ReturnCode::Success;
+    return {};
+}
+
+//----------------------------------------------------------------
+
+void
+Player::resetStats()
+{
+    currentStats_.reset();
+    wallet_.resetStats();
 }
 
 //----------------------------------------------------------------
@@ -322,83 +842,10 @@ Player::getNumBetsOnTable() const
 
 //----------------------------------------------------------------
 
-#if 0
-bool
-Player::removeBetById(unsigned betId)
+const PlayerId&
+Player::getPlayerId() const
 {
-    auto it = std::remove_if(bets_.begin(), bets_.end(),
-                   [betId](const BetIntfcPtr& b)
-                   {
-                       return b->betId() == betId;
-                   });
-    if (it != bets_.end())
-    {
-        bets_.erase(it, bets_.end());
-        return true;
-    }
-    return false;
-}
-#endif
-
-//----------------------------------------------------------------
-//
-// Save Player to file
-//
-bool
-Player::saveToFile(const std::string& path) const
-{
-    std::ofstream out(path);
-    if (!out) return false;
-    out << toJson().dump(2);
-    return true;
-}
-
-//----------------------------------------------------------------
-//
-// Load Player from file
-//
-bool
-Player::loadFromFile(const std::string& path)
-{
-    std::ifstream in(path);
-    if (!in) return false;
-    json j;
-    in >> j;
-    fromJson(j);
-    return true;
-}
-
-//----------------------------------------------------------------
-//
-// Convert Player to JSON
-//
-json Player::toJson() const
-{
-    return json{
-        {"uuid", uuid_},
-        {"name", name_},
-        {"balance", wallet_.getBalance()}
-    };
-}
-
-//----------------------------------------------------------------
-//
-// Convert JSON to Player
-//
-void
-Player::fromJson(const json& j)
-{
-    uuid_ = j.at("uuid").get<std::string>();
-    name_ = j.at("name").get<std::string>();
-    // TODO wallet_.balance = j.at("balance").get<int64_t>();
-}
-
-//----------------------------------------------------------------
-
-const Gen::Uuid&
-Player::getUuid() const
-{
-    return uuid_;
+    return playerId_;
 }
 
 //----------------------------------------------------------------
@@ -406,7 +853,15 @@ Player::getUuid() const
 const std::string&
 Player::getName() const
 {
-    return name_;
+    return playerName_;
+}
+
+//----------------------------------------------------------------
+
+void
+Player::setName(const std::string& playerName)
+{
+    playerName_ = playerName;
 }
 
 //----------------------------------------------------------------
@@ -419,85 +874,222 @@ Player::getBalance() const
 
 //----------------------------------------------------------------
 
-void
-Player::onBettingClosed()
+int
+Player::getSessionNet() const
 {
-    // TODO
-    std::cout << name_ << " acknowledges BettingClosed\n";
+    return wallet_.getSessionNet();
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns read-only access to current session player stats.
+
+@return current session player stats (read-only)
+
+*/
+const PlayerStats&
+Player::getCurrentStats() const
+{
+    return currentStats_;
+}
+
+/*-----------------------------------------------------------*//**
+
+Returns read-only access to all-time stats.
+
+All-time stats are an aggregation of all sessions for this player.
+
+Note that all-time stats are only updated when the current session ends.
+
+@return all-time table stats (read-only)
+
+*/
+const PlayerStats&
+Player::getAlltimeStats() const
+{
+    return alltimeStats_;
+}
+
+//----------------------------------------------------------------
+
+const BankStats&
+Player::getBankCurrentStats() const
+{
+    return wallet_.getCurrentStats();
+}
+
+//----------------------------------------------------------------
+
+const BankStats&
+Player::getBankAlltimeStats() const
+{
+    return wallet_.getAlltimeStats();
+}
+
+//----------------------------------------------------------------
+
+const LastRollStats&
+Player::getLastRollStats() const
+{
+//    if (pTable_ != nullptr)
+//    {
+        lastRollStats_.rollCount = pTable_->getNumRolls();
+//    }
+    return lastRollStats_;
+}
+
+//----------------------------------------------------------------
+//
+// Return session history.
+//
+// This is just a relay function for convenience.
+//
+const SessionHistory::Sessions&
+Player::getSessionHistory() const
+{
+    return alltimeStats_.sessionHistory.getSessions();
 }
 
 //----------------------------------------------------------------
 
 void
-Player::onBettingOpened()
+Player::diagBadBetId(const std::string& funcName, BetId betId) const
 {
-    // TODO
-    std::cout << name_ << " acknowledges BettingOpen\n";
+    std::string diag =
+        "Internal Error: Unable to process decision record. "
+        "Player::" + funcName + "cant match "
+        "decision record betId against any betId held "
+        "in player betList. Bad betId:" + std::to_string(betId);
+    // TODO: error manager
+    std::cerr << diag << std::endl;
 }
 
 //----------------------------------------------------------------
 
-void
-Player::onDiceThrowStart()
+std::string
+Player::diagPrefix(size_t idx) const
 {
-    // TODO
-    std::cout << name_ << " acknowledges DiceThrowStart\n";
+    assert(idx == 1 || idx == 2);
+    std::string diag("Player::");
+    if (idx == 1)
+    {
+        diag += "makeBet(): Player:" + playerName_  + "; Unable to make bet; ";
+    }
+    if (idx == 2)
+    {
+        diag += "setOdds(): Player:" + playerName_  + "; Unable to set odds; ";
+    }
+    return diag;
 }
 
 //----------------------------------------------------------------
 
-void
-Player::onDiceThrowEnd()
+bool
+Player::fifNoTable(Gen::ErrorPass& ep) const
 {
-    // TODO
-    std::cout << name_ << " acknowledges DiceThrowEnd\n";
+    // fault if player is not joined to a table and sets ep error diag
+    if (pTable_ == nullptr)
+    {
+        std::string s("Player " + playerName_ + " has not yet joined a table.");
+        EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,
+               Es::Indeterminate, s);
+        return true;
+    }
+    return false;
 }
 
 //----------------------------------------------------------------
 
-void
-Player::onAnnounceDiceNumber(const Ctrl::AnnounceDiceNumber& evt)
+bool
+Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
+                             Gen::ErrorPass& ep) const
 {
-    // TODO
-    std::cout << name_ << " acknowledges AnnounceDiceNumber " << evt.val
-              << "(" << evt.d1 << "," << evt.d2 << ")\n";
+    // fault if insufficient funds and sets ep error diag
+
+    // nullptr arg is expected when called from makeBet(), since a
+    // bet has not yet been created.
+
+    int diff = 0;
+    if (pBet == nullptr)
+    {
+        diff = amount;
+    }
+    else
+    {
+        diff = amount - pBet->oddsAmount();
+    }
+
+    if (diff <= 0)
+    {
+        return false;  // Reducing existing bet, always enough funds.
+    }
+
+    if (diff > wallet_.getBalance())
+    {
+        std::string s = "Player " + playerName_ +
+            " has insufficient funds to make a " +
+            Gen::MoneyUtils::toString(amount)    +
+            " bet; current balance:"             +
+            Gen::MoneyUtils::toString(getBalance()) + ".";
+        EP_SET(ep, En::UnderflowError, Et::ProcessingError,
+               Es::Indeterminate, s);
+        return true;
+    }
+    return false;
 }
 
 //----------------------------------------------------------------
 
-void
-Player::onPointEstablished(const Ctrl::PointEstablished& evt)
+bool
+Player::fifBadAddBet(BetPtr pBet, Gen::ErrorPass& ep) const
 {
-    // TODO
-    std::cout << name_ << " acknowledges PointEstablished " << evt.point << "\n";
+    // fault if can't add bet and sets ep error diag
+    assert(pBet != nullptr);
+    assert(pTable_ != nullptr);
+
+    if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
+    {
+        return true;
+    }
+    return false;
 }
 
 //----------------------------------------------------------------
 
-void
-Player::onSevenOut()
+bool
+Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
 {
-    // TODO
-    std::cout << name_ << " acknowledges SevenOut\n";
-}
+    // fault if bet is not owned by this player and sets ep error diag
 
-//----------------------------------------------------------------
-
-void
-Player::onPassLineWinner()
-{
-    // TODO
-    std::cout << name_ << " acknowledges PassLineWinner\n";
-}
-
-//----------------------------------------------------------------
-
-void
-Player::onNewShooter(const Ctrl::NewShooter& evt)
-{
-    // TODO
-    std::cout << name_ << " acknowledges NewShooter " <<
-        Gbl::pPlayerMgr->getPlayer(evt.shooterId)->getName() << "\n";
+    if (pBet == nullptr)
+    {
+        EP_SET(ep, En::NullPointerError, Et::ProcessingError,
+               Es::Indeterminate, diagPrefix(2) + "BetPtr is null.");
+        return true;
+    }
+    
+    if (findBetById(pBet->betId()) == nullptr)
+    {
+        if (pBet->player().getPlayerId() == playerId_)
+        {
+            // bet was created outside of makeBet()
+            std::string s = diagPrefix(2) +
+                "Player " + playerName_ + " does not have this bet in "
+                "its bet list; Programmer error; Must use Player::makeBet() "
+                "to make a bet; " + pBet->diagBetId() + ".";
+            EP_SET(ep, En::LogicError, Et::ProcessingError,
+                   Es::Indeterminate, s);
+            return true;
+        }
+        std::string s = diagPrefix(2) +
+            "Player " + playerName_ + " does not own this bet; " +
+            pBet->diagBetId() + "; Owned by Player:" +
+            pBet->player().getName() + ".";
+        EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,
+               Es::Indeterminate, s);
+        return true;
+    }
+    return false;
 }
 
 //----------------------------------------------------------------
@@ -535,3 +1127,21 @@ Player::deserialize(const std::string& line)
 #endif
 
 //----------------------------------------------------------------
+
+#if 0
+bool
+Player::removeBetById(unsigned betId)
+{
+    auto it = std::remove_if(bets_.begin(), bets_.end(),
+                   [betId](const BetIntfcPtr& b)
+                   {
+                       return b->betId() == betId;
+                   });
+    if (it != bets_.end())
+    {
+        bets_.erase(it, bets_.end());
+        return true;
+    }
+    return false;
+}
+#endif

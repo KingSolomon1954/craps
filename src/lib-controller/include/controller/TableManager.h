@@ -7,38 +7,55 @@
 #pragma once
 
 #include <memory>
+#include <filesystem>
+#include <vector>
 #include <controller/TableManifest.h>
 #include <controller/TableDescription.h>
-#include <craps/CrapsTable.h>
+#include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>
+#include <gen/ReturnCode.h>
+
+namespace Craps {
+    class CrapsTable;  // fwd
+}
 
 namespace Ctrl {
 
 class TableManager
 {
 public:
-    
+    using Tables = std::vector<Craps::CrapsTable*>;
+
     /// @name Lifecycle
     /// @{
     TableManager();
    ~TableManager();
     /// @}
-    
-    using TableDescriptions = std::vector<TableManifest::TableInfo>;
-    
+
+    /// @name Modifiers
+    /// @{
     Gen::ReturnCode switchCrapsTable(
-        const Craps::CrapsTable::TableId& toTableId, Gen::ErrorPass& ep);
-    
-    const TableDescriptions& getTableChoices() const;
-    
-    static Craps::CrapsTable* loadCrapsTable(
-        const Craps::CrapsTable::TableId& tableId);
-    
-    static Craps::CrapsTable* loadStartingCrapsTable();
-    
+        const Craps::TableId& toTableId, Gen::ErrorPass& ep);
+    /// @}
+
+    /// @name Observers
+    /// @{
+    const TableManifest::TableList& getTableList() const;
+    Craps::CrapsTable* getTable(const Craps::TableId& tableId,
+                                Gen::ErrorPass& ep) const;
+    /// @}
+
 private:
     Craps::CrapsTable* pCurrentCrapsTable_ = nullptr;
     TableManifest manifest_;
+    Tables tables_;
+
+    Craps::CrapsTable* loadCrapsTable(const std::string& fileName);
+    Craps::CrapsTable* loadStartingCrapsTable();
+
+    static size_t retrieveMaxSessions();
+    static size_t retrieveMaxRecentRolls();
+    static std::filesystem::path formTablePath(const Craps::TableId& tableId);
 };
 
 /*-----------------------------------------------------------*//**

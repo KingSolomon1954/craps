@@ -4,8 +4,9 @@
 #
 # --------------------------------------------------------
 
-find_package(nlohmann_json REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(zeus_expected CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 add_library(craps STATIC
     src/Bank.cpp
@@ -13,9 +14,11 @@ add_library(craps STATIC
     src/BetStats.cpp
     src/CrapsBet.cpp
     src/CrapsTable.cpp
+    src/CrapsTablePart2.cpp
     src/Dice.cpp
     src/EnumBetName.cpp
     src/Player.cpp
+    src/PlayerStats.cpp
     src/RollStats.cpp
     src/SessionHistory.cpp
     src/TableStats.cpp
@@ -28,8 +31,9 @@ target_include_directories(craps
 target_link_libraries(craps
     PUBLIC gen
     PUBLIC controller
-    PUBLIC nlohmann_json::nlohmann_json
     PUBLIC yaml-cpp::yaml-cpp
+    PUBLIC fmt::fmt
+    PUBLIC zeus::expected
 )
 
 target_compile_definitions(craps

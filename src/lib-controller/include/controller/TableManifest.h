@@ -7,7 +7,7 @@
 #pragma once
 
 #include <vector>
-#include <craps/CrapsTable.h>
+#include <craps/CrapsTypes.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Ctrl {
@@ -15,24 +15,28 @@ namespace Ctrl {
 class TableManifest
 {
 public:
-    struct TableInfo
+    struct TableDescription
     {
-        Craps::CrapsTable::TableId tableId;
+        Craps::TableId tableId;
         std::string tableName;
         std::string shortDescription;
         std::string fullDescription;
         std::string fileName;
-        
+
         YAML::Node toYAML() const;
         void fromYAML(const YAML::Node& node);
     };
+
+    using TableList = std::vector<TableManifest::TableDescription>;
     
+    std::string getFileName(const Craps::TableId& tableId) const;
+    Craps::TableId getTableId(const std::string& fileName) const;
+    const TableList& getTableList()                        const;
     void loadFromFile();  // throws
-    const std::vector<TableManifest::TableInfo>& getTables() const;
     void fromYAML(const YAML::Node& node);
 
 private:
-    std::vector<TableInfo> tables_;
+    TableList tables_;
 };
 
 /*-----------------------------------------------------------*//**

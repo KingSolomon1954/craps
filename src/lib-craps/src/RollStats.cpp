@@ -294,6 +294,8 @@ RollStats::pointCountsToYAML(YAML::Node& node) const
 void
 RollStats::singleCountsToYAML(YAML::Node& node) const
 {
+    node["numRolls"]             = numRolls;
+    node["numPointsEstablished"] = numPointsEstablished;
     node["comeOutRolls"]         = comeOutRolls.toYAML();
     node["pointRolls"]           = pointRolls.toYAML();
     node["passWinsComeOut"]      = passWinsComeOut.toYAML();
@@ -403,6 +405,8 @@ RollStats::pointCountsFromYAML (const YAML::Node& node)
 void
 RollStats::singleCountsFromYAML(const YAML::Node& node)
 {
+    numRolls                    = node["numRolls"].as<unsigned>();
+    numPointsEstablished        = node["numPointsEstablished"].as<unsigned>();
     comeOutRolls.fromYAML        (node["comeOutRolls"]);
     pointRolls.fromYAML          (node["pointRolls"]);
     passWinsComeOut.fromYAML     (node["passWinsComeOut"]);

@@ -300,26 +300,27 @@ operator==(long long dollars, const Money& m)
 
 namespace Gen {
 
-bool operator< (long long lhs, const Money& rhs) {
+bool operator< (long long lhs, const Money& rhs)
+{
     return lhs <=> rhs == std::strong_ordering::less;
 }
 
-bool operator> (long long lhs, const Money& rhs) {
-std::cout << "Howie lhs:" << lhs << "\n";
+bool operator> (long long lhs, const Money& rhs)
+{
     return lhs <=> rhs == std::strong_ordering::greater;
 }
 
-bool operator<=(long long lhs, const Money& rhs) {
+bool operator<=(long long lhs, const Money& rhs)
+{
     return lhs <=> rhs != std::strong_ordering::greater;
 }
 
-bool operator>=(long long lhs, const Money& rhs) {
+bool operator>=(long long lhs, const Money& rhs)
+{
     return lhs <=> rhs != std::strong_ordering::less;
 }
 
 }  // namespace Gen
-
-
 
 //----------------------------------------------------------------
 //

@@ -6,7 +6,9 @@
 
 #pragma once
 
-#include <gen/MoneyUtil.h>
+#include <gen/MoneyUtils.h>
+#include <craps/BankStats.h>
+#include <yaml-cpp/yaml.h>
 
 namespace Craps {
 
@@ -16,7 +18,7 @@ public:
     /// @name Lifecycle
     /// @{
     Bank();
-    Bank(Gen::Money initialBalance,
+    Bank(Gen::Money sessionStartBalance,
          Gen::Money refillThreshold,
          Gen::Money refillAmount);
     Bank(const Bank&) = default;  // copy ctor
@@ -24,31 +26,45 @@ public:
 
     /// @name Modifiers
     /// @{
-    bool deposit (Gen::Money amount);
-    Gen::Money withdraw(Gen::Money amount);
+    void deposit (Gen::Money amount);
+    bool withdraw(Gen::Money amount);
+    void mergeStats();
+    void resetStats();
     Bank& operator=(const Bank&) = default;  // assignment
     Bank& operator=(Bank&&)      = default;  // move
     /// @}
 
     /// @name Observers
     /// @{
-    Gen::Money getBalance()      const;
-    Gen::Money getAmtDeposited() const;
-    Gen::Money getAmtWithdrawn() const;
+    Gen::Money getBalance()            const;
+    Gen::Money getAmtDeposited()       const;
+    Gen::Money getAmtWithdrawn()       const;
+    int        getSessionNet()         const;
+    const BankStats& getCurrentStats() const;
+    const BankStats& getAlltimeStats() const;
     /// @}
 
+    // @name YAML operations
+    /// @{
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
+    /// @}
+    
 private:
-    Gen::Money refill();
-
-    Gen::Money initialBalance_  = 0;
-    Gen::Money refillThreshold_ = 0;
-    Gen::Money refillAmount_    = 0;
-    Gen::Money amtDeposited_    = 0;
-    Gen::Money amtWithdrawn_    = 0;
-    Gen::Money amtRefilled_     = 0;
-    unsigned numDeposits_       = 0;
-    unsigned numWithdrawals_    = 0;
-    unsigned numRefills_        = 0;
+    bool refill();
+    
+    Gen::Money originalStartBalance_ = 0;
+    Gen::Money sessionStartBalance_  = 0;
+    Gen::Money refillThreshold_      = 0;
+    Gen::Money refillAmount_         = 0;
+    Gen::Money amtDeposited_         = 0;
+    Gen::Money amtWithdrawn_         = 0;
+    Gen::Money amtRefilled_          = 0;
+    unsigned numDeposits_            = 0;
+    unsigned numWithdrawals_         = 0;
+    unsigned numRefills_             = 0;
+    BankStats currentStats_;
+    BankStats alltimeStats_;
 };
 
 /*-----------------------------------------------------------*//**

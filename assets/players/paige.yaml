@@ -1,0 +1,915 @@
+playerId: 50d2cd10-bef8-4c35-a0a4-5ff7d86944e1
+playerName: Paige
+shortDescription: Super hungry player
+fullDescription: Likes to eat between throws
+Bank:
+  originalStartBalance: 30000
+  sessionStartBalance: 30000
+  refillThreshold: 15000
+  refillAmount: 20000
+  bankStats:
+    numDeposits: 0
+    amtDeposited: 0
+    numWithdrawals: 0
+    amtWithdrawn: 0
+    numRefills: 0
+    amtRefilled: 0
+    maxAmtDepositedSession: 0
+    maxAmtWithdrawnSession: 0
+    maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
+    maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
+BetStats:
+  totNumBetsAllBets: 0
+  totNumWinsAllBets: 0
+  totNumLoseAllBets: 0
+  totNumKeepAllBets: 0
+  totAmtAllBets: 0
+  totAmtWinsAllBets: 0
+  totAmtLoseAllBets: 0
+  totAmtKeepAllBets: 0
+  maxAmtBetOneBet: 0
+  maxAmtWinOneBet: 0
+  maxAmtLoseOneBet: 0
+  maxAmtKeepOneBet: 0
+  betTypeStats:
+    wins:
+      AnyCraps:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      AnySeven:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      CandE:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Field:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Horn:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+    lose:
+      AnyCraps:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      AnySeven:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Buy9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      CandE:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Come9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontCome9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      DontPass9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Field:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Hard8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Horn:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Lay9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      PassLine9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place10:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place4:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place5:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place6:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place8:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      Place9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+  numBetsOneRoll:
+    total: 0
+    max: 0
+  numBetsWinOneRoll:
+    total: 0
+    max: 0
+  numBetsLoseOneRoll:
+    total: 0
+    max: 0
+  numBetsKeepOneRoll:
+    total: 0
+    max: 0
+  amtBetsOneRoll:
+    total: 0
+    max: 0
+  amtBetsWinOneRoll:
+    total: 0
+    max: 0
+  amtBetsLoseOneRoll:
+    total: 0
+    max: 0
+  amtBetsKeepOneRoll:
+    total: 0
+    max: 0
+SessionStats:
+  numSessionsAlltime: 290
+  firstSessionDate: 2025-06-25T14:30:00.000000000
+  longestSessionAlltime: 0d 04:17:54
+  history:
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:07:20.217480037
+      duration: 0d 00:02:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:09:24.616681656
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:09:28.407160611
+      duration: 0d 00:00:15
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:09:46.337060723
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:09:48.896759961
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:09:52.748051758
+      duration: 0d 00:00:18
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:10:13.131018644
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:10:15.691030805
+      duration: 0d 00:00:06
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:03.246000351
+      duration: 0d 00:00:04
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:09.479732554
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:11.680002302
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:14.663535248
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:17.742739653
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:20.438224316
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:22.774371450
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:25.222018366
+      duration: 0d 00:00:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:27.759010417
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:31.142062040
+      duration: 0d 00:00:04
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:34:36.805972993
+      duration: 0d 00:01:50
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:36:29.323329259
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:36:32.875464655
+      duration: 0d 00:00:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-13T06:42:37.078652943
+      duration: 0d 04:09:01
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-18T00:03:08.078358473
+      duration: 0d 00:00:35
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-18T00:05:56.888627020
+      duration: 0d 00:01:40
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-18T00:07:42.283624222
+      duration: 0d 00:01:39
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-18T00:16:30.619294475
+      duration: 0d 00:02:59
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-18T00:19:39.187530540
+      duration: 0d 00:06:56
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-18T00:26:38.669498601
+      duration: 0d 00:02:57
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-18T00:29:40.623127833
+      duration: 0d 00:14:27
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T14:30:40.995723922
+      duration: 0d 00:24:28
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T14:55:10.573087666
+      duration: 0d 00:11:51
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T15:07:04.536211608
+      duration: 0d 00:00:53
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T15:08:07.220931550
+      duration: 0d 00:03:32
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T15:11:42.438978748
+      duration: 0d 01:56:49
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-23T17:08:35.065135532
+      duration: 0d 00:41:38
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T02:27:14.727665170
+      duration: 0d 00:13:15
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T02:40:33.757717645
+      duration: 0d 01:40:08
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:20:44.601189043
+      duration: 0d 00:00:40
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:21:33.517179710
+      duration: 0d 00:09:09
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:31:39.100276736
+      duration: 0d 00:01:51
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:33:33.136685822
+      duration: 0d 00:04:40
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:38:16.378939670
+      duration: 0d 00:02:19
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:40:37.769437293
+      duration: 0d 00:00:53
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:41:32.489343528
+      duration: 0d 00:03:02
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:44:36.358654357
+      duration: 0d 00:12:04
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-09-24T04:56:41.949196354
+      duration: 0d 00:14:46
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-10-03T16:21:04.312208487
+      duration: 0d 00:00:18
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-10-03T16:21:25.044659878
+      duration: 0d 00:00:18
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-10-03T16:21:47.530106609
+      duration: 0d 00:01:07
+    - numBets: 0
+      amtIntake: 0
+      amtPayout: 0
+      numPlayers: 1
+      date: 2026-10-03T16:25:44.580833537
+      duration: 0d 00:04:24
