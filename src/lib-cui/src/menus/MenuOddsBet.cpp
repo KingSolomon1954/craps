@@ -5,9 +5,9 @@
 //----------------------------------------------------------------
 
 #include <cui/menus/MenuOddsBet.h>
-#include <cui/CarrierBet.h>
-#include <cui/CuiUtils.h>
-#include <cui/SurfaceManager.h>
+#include <cui/managers/CarrierBet.h>
+#include <cui/managers/SurfaceManager.h>
+#include <cui/core/CuiUtils.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
 #include <algorithm>

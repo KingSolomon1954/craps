@@ -7,7 +7,7 @@
 #pragma once
 
 #include <cui/bases/PanelBase.h>
-#include <cui/ColorManager.h>
+#include <cui/managers/ColorManager.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <craps/CrapsTypes.h>
 #include <gen/TimerManager.h>

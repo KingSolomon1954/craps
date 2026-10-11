@@ -5,11 +5,11 @@
 //----------------------------------------------------------------
 
 #include <cui/panels/WindowNavBar.h>
-#include <cui/CuiUtils.h>
+#include <cui/core/CuiUtils.h>
 #include <cui/dialogs/DialogConfirm.h>
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/menus/MenuControl.h>
-#include <cui/SurfaceManager.h>
+#include <cui/managers/SurfaceManager.h>
 #include <controller/GameEvents.h>
 #include <gen/EventManager.h>
 #include <gen/Logger.h>

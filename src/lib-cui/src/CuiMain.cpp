@@ -5,11 +5,11 @@
 //----------------------------------------------------------------
 
 #include <cui/CuiMain.h>
-#include <cui/ColorManager.h>
-#include <cui/CuiReceiver.h>
-#include <cui/CuiStructs.h>
-#include <cui/CuiThread.h>
-#include <cui/SurfaceManager.h>
+#include <cui/core/CuiReceiver.h>
+#include <cui/core/CuiStructs.h>
+#include <cui/core/CuiThread.h>
+#include <cui/managers/ColorManager.h>
+#include <cui/managers/SurfaceManager.h>
 #include <cui/screens/ScreenCrapsTable.h>
 #include <cui/layouts/LayoutConsole.h>
 #include <controller/Globals.h>

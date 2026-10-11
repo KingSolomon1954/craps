@@ -5,10 +5,10 @@
 //----------------------------------------------------------------
 
 #include <cui/panels/WindowPlayerBrief.h>
+#include <cui/core/CuiUtils.h>
+#include <cui/core/CuiStructs.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
-#include <cui/ColorManager.h>
-#include <cui/CuiUtils.h>
-#include <cui/CuiStructs.h>
+#include <cui/managers/ColorManager.h>
 #include <controller/CrapsReaders.h>
 #include <craps/LastRollStats.h>
 #include <gen/ErrorPass.h>

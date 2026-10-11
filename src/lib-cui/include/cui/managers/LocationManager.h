@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cui/CuiStructs.h>
+#include <cui/core/CuiStructs.h>
 #include <optional>
 #include <string>
 #include <unordered_map>

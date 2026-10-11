@@ -7,9 +7,9 @@
 #include <cui/panels/WindowAnimation.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/CuiMain.h>
-#include <cui/CuiThread.h>
-#include <cui/CuiUtils.h>
-#include <cui/WorkOrder.h>
+#include <cui/core/CuiThread.h>
+#include <cui/core/CuiUtils.h>
+#include <cui/core/WorkOrder.h>
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
 #include <wchar.h>

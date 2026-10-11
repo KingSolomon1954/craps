@@ -5,8 +5,8 @@
 //----------------------------------------------------------------
 
 #include <cui/menus/MenuConfigure.h>
-#include <cui/CuiUtils.h>
-#include <cui/SurfaceManager.h>
+#include <cui/core/CuiUtils.h>
+#include <cui/managers/SurfaceManager.h>
 #include <gen/Logger.h>
 
 using namespace Cui;

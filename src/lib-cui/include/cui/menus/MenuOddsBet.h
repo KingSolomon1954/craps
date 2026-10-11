@@ -7,7 +7,7 @@
 #pragma once
 
 #include <cui/bases/MenuBase.h>
-#include <cui/CuiStructs.h>
+#include <cui/core/CuiStructs.h>
 #include <controller/CrapsReaders.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>

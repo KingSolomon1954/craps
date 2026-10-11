@@ -10,7 +10,7 @@
 
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
-#include <cui/CuiUtils.h>
+#include <cui/core/CuiUtils.h>
 #include <gen/MoneyUtils.h>
 #include <ncurses.h>
 #include <vector>

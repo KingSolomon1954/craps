@@ -6,8 +6,8 @@
 
 #include <cui/panels/WindowHouseBrief.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
-#include <cui/CuiUtils.h>
-#include <cui/CuiStructs.h>
+#include <cui/core/CuiUtils.h>
+#include <cui/core/CuiStructs.h>
 #include <craps/CrapsTypes.h>
 #include <craps/LastRollStats.h>
 #include <controller/CrapsReaders.h>

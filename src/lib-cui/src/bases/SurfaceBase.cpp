@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/bases/SurfaceBase.h>
-#include <cui/SurfaceManager.h>
+#include <cui/managers/SurfaceManager.h>
 #include <cassert>
 #include <stdexcept>
 

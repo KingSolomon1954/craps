@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/CuiSender.h>
+#include <cui/core/CuiSender.h>
 #include <controller/GameEvents.h>
 #include <craps/CrapsTypes.h>
 #include <gen/EventManager.h>

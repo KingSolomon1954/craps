@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/panels/PlayerAreaAllPlayers.h>
-#include <cui/ColorManager.h>
+#include <cui/managers/ColorManager.h>
 #include <controller/CrapsReaders.h>
 #include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>

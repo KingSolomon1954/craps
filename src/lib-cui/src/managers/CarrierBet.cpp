@@ -4,7 +4,7 @@
 //
 //---------------------------------------------------------------
 
-#include <cui/CarrierBet.h>
+#include <cui/managers/CarrierBet.h>
 
 using namespace Cui;
 

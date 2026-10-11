@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cui/WorkOrder.h>
+#include <cui/core/WorkOrder.h>
 
 //----------------------------------------------------------------
 

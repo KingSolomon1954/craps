@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/SurfaceManager.h>
+#include <cui/managers/SurfaceManager.h>
 #include <cui/bases/SurfaceBase.h>
 #include <gen/Logger.h>
 #include <cassert>

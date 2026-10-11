@@ -6,8 +6,8 @@
 
 #include <cui/dialogs/DialogMessage.h>
 #include <cui/layouts/LayoutConsole.h>
-#include <cui/SurfaceManager.h>
-#include <cui/CuiUtils.h>
+#include <cui/managers/SurfaceManager.h>
+#include <cui/core/CuiUtils.h>
 #include <cassert>
 
 using namespace Cui;

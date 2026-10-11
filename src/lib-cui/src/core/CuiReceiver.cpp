@@ -4,9 +4,9 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/CuiReceiver.h>
-#include <cui/WorkOrder.h>
-#include <cui/CuiThread.h>
+#include <cui/core/CuiReceiver.h>
+#include <cui/core/WorkOrder.h>
+#include <cui/core/CuiThread.h>
 #include <craps/CrapsTypes.h>
 #include <gen/EventManager.h>
 #include <gen/Logger.h>

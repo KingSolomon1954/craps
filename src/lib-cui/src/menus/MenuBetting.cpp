@@ -5,10 +5,10 @@
 //----------------------------------------------------------------
 
 #include <cui/menus/MenuBetting.h>
-#include <cui/CarrierBet.h>
-#include <cui/CuiSender.h>
-#include <cui/CuiUtils.h>
-#include <cui/SurfaceManager.h>
+#include <cui/managers/CarrierBet.h>
+#include <cui/managers/SurfaceManager.h>
+#include <cui/core/CuiSender.h>
+#include <cui/core/CuiUtils.h>
 #include <cui/panels/WindowNavBar.h>
 #include <gen/Logger.h>
 #include <cassert>

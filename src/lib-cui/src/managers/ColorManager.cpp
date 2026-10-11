@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/ColorManager.h>
+#include <cui/managers/ColorManager.h>
 #include <controller/CrapsReaders.h>
 #include <ncurses.h>
 #include <cassert>

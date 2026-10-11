@@ -6,7 +6,7 @@
 
 #include <cui/panels/WindowPlayerArea.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
-#include <cui/CuiUtils.h>
+#include <cui/core/CuiUtils.h>
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
 

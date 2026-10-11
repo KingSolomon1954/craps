@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/CuiThread.h>
+#include <cui/core/CuiThread.h>
 #include <ncurses.h>
 #include <chrono>
 

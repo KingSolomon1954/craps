@@ -5,8 +5,8 @@
 //----------------------------------------------------------------
 
 #include <cui/dialogs/DialogConfirm.h>
-#include <cui/SurfaceManager.h>
-#include <cui/CuiUtils.h>
+#include <cui/managers/SurfaceManager.h>
+#include <cui/core/CuiUtils.h>
 #include <cassert>
 
 using namespace Cui;

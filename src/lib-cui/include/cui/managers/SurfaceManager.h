@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cui/LocationManager.h>
+#include <cui/managers/LocationManager.h>
 #include <string>
 #include <vector>
 

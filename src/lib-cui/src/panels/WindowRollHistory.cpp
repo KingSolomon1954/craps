@@ -6,9 +6,9 @@
 
 #include <cui/panels/WindowRollHistory.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
-#include <cui/ColorManager.h>
-#include <cui/CuiUtils.h>
-#include <cui/CuiStructs.h>
+#include <cui/managers/ColorManager.h>
+#include <cui/core/CuiUtils.h>
+#include <cui/core/CuiStructs.h>
 #include <gen/Logger.h>
 
 using namespace Cui;

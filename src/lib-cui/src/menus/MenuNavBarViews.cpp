@@ -7,8 +7,8 @@
 #include <cui/menus/MenuNavBarViews.h>
 #include <cui/menus/MenuBetting.h>
 #include <cui/panels/WindowPlayerArea.h>
-#include <cui/SurfaceManager.h>
-#include <cui/CuiUtils.h>
+#include <cui/managers/SurfaceManager.h>
+#include <cui/core/CuiUtils.h>
 #include <gen/Logger.h>
 #include <cassert>
 

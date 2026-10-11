@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <cui/WorkOrder.h>
-#include <cui/WorkOrderDispatcher.h>
+#include <cui/core/WorkOrder.h>
+#include <cui/core/WorkOrderDispatcher.h>
 #include <gen/EdgeEvent.h>
 #include <condition_variable>
 #include <deque>

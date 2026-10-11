@@ -8,7 +8,7 @@
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/layouts/LayoutPlayerArea.h>
 #include <cui/layouts/LayoutTitleBar.h>
-#include <cui/CuiUtils.h>
+#include <cui/core/CuiUtils.h>
 #include <cassert>
 
 using namespace Cui;

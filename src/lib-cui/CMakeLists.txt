@@ -5,29 +5,28 @@
 # -----------------------------------------------------------------
 
 add_library(cui STATIC
-    src/CarrierBet.cpp
-    src/ColorManager.cpp
     src/CuiMain.cpp
-    src/CuiThread.cpp
-    src/CuiUtils.cpp
-    src/CuiReceiver.cpp
-    src/CuiSender.cpp
-    src/LocationManager.cpp
-    src/SurfaceManager.cpp
-    src/WorkOrderDispatcher.cpp
+    src/bases/SurfaceBase.cpp
+    src/core/CuiReceiver.cpp
+    src/core/CuiSender.cpp
+    src/core/CuiThread.cpp
+    src/core/CuiUtils.cpp
+    src/core/WorkOrderDispatcher.cpp
 #   src/dialogs/DialogAckError.cpp
 #   src/dialogs/DialogAmountEntry.cpp
     src/dialogs/DialogConfirm.cpp
     src/dialogs/DialogMessage.cpp
-    src/bases/SurfaceBase.cpp
     src/layouts/LayoutCrapsScreen.cpp
+    src/managers/CarrierBet.cpp
+    src/managers/ColorManager.cpp
+    src/managers/LocationManager.cpp
+    src/managers/SurfaceManager.cpp
     src/menus/MenuBetting.cpp
     src/menus/MenuControl.cpp
     src/menus/MenuConfigure.cpp
     src/menus/MenuOddsBet.cpp
     src/menus/MenuPlaceBet.cpp
     src/menus/MenuNavBarViews.cpp
-    src/screens/ScreenCrapsTable.cpp
     src/panels/PlayerAreaAllPlayers.cpp
     src/panels/PlayerAreaOnePlayer.cpp
     src/panels/WindowAnimation.cpp
@@ -37,6 +36,7 @@ add_library(cui STATIC
     src/panels/WindowPlayerBrief.cpp
     src/panels/WindowRollHistory.cpp
     src/panels/WindowTitleBar.cpp
+    src/screens/ScreenCrapsTable.cpp
 )
 
 target_include_directories(cui

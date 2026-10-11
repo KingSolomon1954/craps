@@ -4,8 +4,8 @@
 //
 //---------------------------------------------------------------
 
-#include <cui/CuiUtils.h>
-#include <cui/ColorManager.h>
+#include <cui/core/CuiUtils.h>
+#include <cui/managers/ColorManager.h>
 #include <gen/ErrorPass.h>
 #include <cassert>
 #include <cwchar>

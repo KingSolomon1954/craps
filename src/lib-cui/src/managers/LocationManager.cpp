@@ -4,7 +4,7 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/LocationManager.h>
+#include <cui/managers/LocationManager.h>
 #include <cui/layouts/LayoutConsole.h>
 #include <gen/Logger.h>
 #include <cassert>

@@ -6,9 +6,9 @@
 
 #include <cui/menus/MenuPlaceBet.h>
 
-#include <cui/CarrierBet.h>
-#include <cui/SurfaceManager.h>
-#include <cui/CuiUtils.h>
+#include <cui/managers/CarrierBet.h>
+#include <cui/managers/SurfaceManager.h>
+#include <cui/core/CuiUtils.h>
 #include <craps/EnumBetName.h>
 
 using namespace Cui;

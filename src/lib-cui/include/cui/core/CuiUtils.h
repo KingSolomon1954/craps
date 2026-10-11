@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cui/CuiStructs.h>
+#include <cui/core/CuiStructs.h>
 #include <controller/CrapsReaders.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>

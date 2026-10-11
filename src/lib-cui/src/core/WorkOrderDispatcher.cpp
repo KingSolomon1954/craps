@@ -4,8 +4,8 @@
 //
 //----------------------------------------------------------------
 
-#include <cui/WorkOrderDispatcher.h>
-#include <cui/SurfaceManager.h>
+#include <cui/core/WorkOrderDispatcher.h>
+#include <cui/managers/SurfaceManager.h>
 #include <cui/panels/WindowAnimation.h>
 #include <cui/panels/WindowHouseBrief.h>
 #include <cui/panels/WindowPlayerBrief.h>

@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/screens/ScreenCrapsTable.h>
-#include <cui/SurfaceManager.h>
+#include <cui/managers/SurfaceManager.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/menus/MenuBetting.h>
 #include <cui/menus/MenuNavBarViews.h>

@@ -9,8 +9,8 @@
 #pragma once
 
 #include <cui/layouts/LayoutPlayerArea.h>
-#include <cui/CuiStructs.h>
-#include <cui/CuiUtils.h>
+#include <cui/core/CuiStructs.h>
+#include <cui/core/CuiUtils.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>

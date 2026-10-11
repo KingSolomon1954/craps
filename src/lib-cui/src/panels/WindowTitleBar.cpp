@@ -7,9 +7,9 @@
 #include <cui/panels/WindowTitleBar.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/layouts/LayoutTitleBar.h>
-#include <cui/ColorManager.h>
-#include <cui/CuiStructs.h>
-#include <cui/CuiUtils.h>
+#include <cui/managers/ColorManager.h>
+#include <cui/core/CuiStructs.h>
+#include <cui/core/CuiUtils.h>
 #include <controller/CrapsReaders.h>
 #include <gen/Logger.h>
 
