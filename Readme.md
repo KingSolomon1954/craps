@@ -22,19 +22,18 @@ Single-player Craps game with up to five computer players
 [![Analysis](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fkingsolomon1954.github.io%2Fcpp-bootstrap%2Fstatic-analysis%2Freport%2Fstatic-analysis-badge.yml&query=badge.error-count&suffix=%20issues&label=analysis)](https://kingsolomon1954.github.io/cpp-bootstrap/static-analysis/report/index.html)
 
 ## Game Features
-- Terminal Based UI (future GUI)
+- Line, Odds, Place, Field, and Proposition Bets
+- Automatic Odds
+- Quick Bets
 - Multiple Computer Buddies
-- Line Bets, Odds Bets, Place Bets, Proposition Bets
+- On-Screen Dice Roll Animation
 - Dice Roll history
 - Dice Stats
-- Session Stats
 - Player Stats Current Session
 - Player Stats Across All Sessions
 - Table Stats Current Session
 - Table Stats All Sessions
-- On-Screen Dice Roll Animation
-- Automatic Odds
-- Quick Bets
+- Terminal Based UI (future GUI)
 
 ## Installation
 To be supplied
