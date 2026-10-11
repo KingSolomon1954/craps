@@ -12,9 +12,12 @@
 
 @namespace Gen
 
-@brief Supply Library description.
+@brief General Purpose Library (lib-gen)
 
-Add longer description.
+This library contains general purpose classes and facilities, for
+example, timer, logging, event distribution.  These classes are suitable
+for re-use across any application.
+
 */
 
 //----------------------------------------------------------------

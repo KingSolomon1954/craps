@@ -12,9 +12,11 @@
 
 @namespace Cui
 
-@brief Console User Interface View
+@brief CUI Library (lib-cui)
 
-Add longer description.
+This library is the Console User Interface. It is the View
+in the Model/View/Controller (MVC) design paradigm.
+Uses ncurses library underneath.
 
 */
 

@@ -12,26 +12,21 @@
 
 @mainpage RoyalCraps
 
-![RoyalCraps](docs/src/images/pub/CampfireLakeSmall.png)
+![](docs/src/images/pub/logo1-256x256.png)
 
-Add description of RoyalCraps
+RoyalCraps is designed in accordance with the Model/View/Controller
+(MVC) design paradigm, though it is a relaxed adherence suitable for
+such a small program. It consists of five major development areas:
 
-@li @ref App
-@li @ref Gen
-@li @ref Ctrl
-@li @ref Cui
-@li @ref Gui
-@li @ref free
+@li @ref Gen   - General purpose library
+@li @ref Craps - Craps library
+@li @ref Ctrl  - Controller library
+@li @ref Cui   - Console User Interface library
+@li @ref Gui   - Graphical User Interface library
+@li @ref free  - Free standing functions
 
-*/
-
-/*-----------------------------------------------------------*//**
-
-@namespace App
-
-@brief Application level functions and classes.
-
-Add longer description.
+The program runs several threads. All threads are encapsulated inside
+classes.
 
 */
 

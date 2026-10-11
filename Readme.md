@@ -5,13 +5,13 @@ Comments here if needed.
 <h1 align="center">Royal Craps</h1>
 
 <p align="center">
-  <img src="assets/images/logo1.jpeg"
+  <img src="docs/src/images/pub/logo1.jpeg"
        alt="Royal Craps logo"
        width="300">
 </p>
 
 <p align="center">
-Single-player Craps game with up to five computer players
+Single-player Craps Game
 </p>
 
 ---
@@ -25,7 +25,7 @@ Single-player Craps game with up to five computer players
 - Line, Odds, Place, Field, and Proposition Bets
 - Automatic Odds
 - Quick Bets
-- Multiple Computer Buddies
+- Play with Up to Five Computer Buddies
 - On-Screen Dice Roll Animation
 - Dice Roll history
 - Dice Stats
@@ -37,7 +37,7 @@ Single-player Craps game with up to five computer players
 
 ## Sample Screen Shot
 <p align="center">
-  <img src="assets/images/SampleScreenShot1.png" alt="Screen Shot 1">
+  <img src="docs/src/images/pub/SampleScreenShot1.png" alt="Screen Shot 1">
 </p>
 
 ## Installation

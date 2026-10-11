@@ -12,9 +12,10 @@
 
 @namespace Gui
 
-@brief Supply Library description.
+@brief GUI Library (lib-gui)
 
-Add longer description.
+This library is the Graphical User Interface. It is the View
+in the Model/View/Controller (MVC) design paradigm.
 
 */
 
