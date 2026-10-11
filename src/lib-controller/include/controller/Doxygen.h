@@ -12,9 +12,15 @@
 
 @namespace Ctrl
 
-@brief Supply Library description.
+@brief Controller Library (lib-controller)
 
-Add longer description.
+This library is the "Controller" in the Model/View/Controller (MVC)
+design paradigm. It has several major responsibilities:
+
+@li performs game initialization and shutdown
+@li provides an abstraction layer between the Model 
+    (lib-craps) and the CUI (lib-cui) and GUI (lib-gui)
+@li controls game operations, events, configuration, etc
 
 */
 

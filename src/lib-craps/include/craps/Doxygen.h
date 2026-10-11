@@ -10,37 +10,23 @@
 
 /*-----------------------------------------------------------*//**
 
-@mainpage RoyalCraps
-
-![RoyalCraps](docs/src/images/pub/CampfireLakeSmall.png)
-
-Add description of RoyalCraps
-
-@li @ref Gen
-@li @ref Craps
-@li @ref Ctrl
-@li @ref Cui
-@li @ref Gui
-@li @ref free
-
-*/
-
-/*-----------------------------------------------------------*//**
-
 @namespace Craps
 
-@brief Application level functions and classes.
+@brief Craps Library (lib-craps)
 
-Add longer description.
+This library is the Craps engine. It is the "Model" in the
+Model/View/Controller (MVC) design paradigm.
 
-*/
-
-/*-----------------------------------------------------------*//**
-
-@defgroup free Free Functions
-
-@brief Functions not in a namespace.
+@li Contains no threads
+@li Calls into the Controller to obtain configuration info
+@li Publishes events
+@li Knows nothing about any CUI/GUI
+@li Read/writes files containing game configuration and stats
 
 */
 
 //----------------------------------------------------------------
+
+
+
+

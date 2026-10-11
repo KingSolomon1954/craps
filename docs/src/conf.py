@@ -38,7 +38,6 @@ include_patterns = ['index.rst',
                     'doxygen**',
                     'licenses**',
                     'manpage**',
-                    'rest-api**',
                     'static-analysis**',
                     'user-guide**']
 
@@ -64,7 +63,7 @@ templates_path = [ "templates", "shared/templates"]
 #
 html_static_path = ["static"]
 
-html_logo = "images/pub/CampfireSmall.png"
+html_logo = "images/pub/logo1-102x102.png"
 
 # ----------------------------------------------------------------
 #
