@@ -10,9 +10,7 @@ Comments here if needed.
        width="300">
 </p>
 
-<p align="center">
-Single-player Craps Game
-</p>
+<p align="center"> Single-player Craps Game </p>
 
 ---
 
