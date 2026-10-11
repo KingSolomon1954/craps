@@ -41,6 +41,19 @@ Comments here if needed.
 ## Installation
 To be supplied
 
+## Published Documentation (GitHub Pages)
+- [Documentation Top](https://kingsolomon1954.github.io/craps/index.html)
+- [User Guide](https://kingsolomon1954.github.io/craps/user-guide/user-guide.html)
+- [ManPage](https://kingsolomon1954.github.io/craps/manpage/manpage.html)
+- [Design Doc](https://kingsolomon1954.github.io/craps/design-doc/design-doc.html)
+- [Doxygen API](https://kingsolomon1954.github.io/craps/doxygen/html/index.html)
+- [Static Analysis](https://kingsolomon1954.github.io/craps/static-analysis/report/index.html)
+- [Code Coverage](https://kingsolomon1954.github.io/craps/code-coverage/html/index.html)
+- [Licenses](https://kingsolomon1954.github.io/craps/licenses/licenses.html)
+
+## Building
+To be supplied
+
 ## Development
 - Project setup from KingSolomon1954/cpp-bootstrap
 - GNU Makefile
