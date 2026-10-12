@@ -203,7 +203,7 @@ Important behaviors:
 
 1. Example: Unnamed subscriber callback function
 
-@@code
+@code
 struct DiceRolled
 {
     int value;

@@ -26,53 +26,53 @@ public:
      */
     enum class ErrorName : std::uint8_t
     {
-        UnsetErrorName,                 ///< No error
-        CaughtException,                ///<
-        ConfigurationError,             ///<
-        DataFormatError,                ///<
-        ExistsError,                    ///<
-        IllegalStateError,              ///<
-        InputOutputError,               ///<
-        InvalidAccessError,             ///<
-        InvalidArgumentError,           ///<
-        LengthError,                    ///<
-        LogicError,                     ///<
-        NetworkError,                   ///<
-        NoPermissionError,              ///<
-        NotFoundError,                  ///<
-        NotImplementedError,            ///<
-        NullPointerError,               ///<
-        NullValueError,                 ///<
-        OperationNotPossibleError,      ///<
-        OverflowError,                  ///<
-        RangeError,                     ///<
-        SignalError,                    ///<
-        SystemCallError,                ///<
-        TimeoutError,                   ///<
-        UnderflowError,                 ///<
+        UnsetErrorName,
+        CaughtException,
+        ConfigurationError,
+        DataFormatError,
+        ExistsError,
+        IllegalStateError,
+        InputOutputError,
+        InvalidAccessError,
+        InvalidArgumentError,
+        LengthError,
+        LogicError,
+        NetworkError,
+        NoPermissionError,
+        NotFoundError,
+        NotImplementedError,
+        NullPointerError,
+        NullValueError,
+        OperationNotPossibleError,
+        OverflowError,
+        RangeError,
+        SignalError,
+        SystemCallError,
+        TimeoutError,
+        UnderflowError,
     };
 
     /// Error Type
     enum class ErrorType : std::uint8_t
     {
-        ErrorTypeNotSpecified,          ///<
-        CommunicationsError,            ///<
-        ConfigurationError,             ///<
-        EnvironmentalError,             ///<
-        EquipmentError,                 ///<
-        ProcessingError,                ///<
-        QualityOfServiceError           ///<
+        ErrorTypeNotSpecified,
+        CommunicationsError,
+        ConfigurationError,
+        EnvironmentalError,
+        EquipmentError,
+        ProcessingError,
+        QualityOfServiceError
     };
 
     /// Severity
     enum class Severity : std::uint8_t
     {
-        UnsetSeverity,                  ///<
-        Indeterminate,                  ///<
-        Critical,                       ///<
-        Major,                          ///<
-        Minor,                          ///<
-        Warning                         ///<
+        UnsetSeverity,
+        Indeterminate,
+        Critical,
+        Major,
+        Minor,
+        Warning
     };
 
     /// @name Lifecycle
@@ -263,7 +263,6 @@ if (!result)
 }
 @endcode
 
-@ingroup error
 */
 
 } // namespace Gen
@@ -274,7 +273,6 @@ if (!result)
 
 @brief Convenience macro to populate a newly generated error passing object.
 
-@ingroup error
 */
 #define EP_SET(epObj, errName, errType, severity, errDescription)        \
     epObj.set(errName, errType, severity, errDescription, __FUNCTION__, __FILE__, __LINE__)
@@ -285,7 +283,6 @@ if (!result)
 
 @brief Appends the current call stack context to the ErrorPass payload.
 
-@ingroup error
 */
 #define EP_TRACE(epObj) \
     epObj.pushTrace(__FUNCTION__, __FILE__, __LINE__)

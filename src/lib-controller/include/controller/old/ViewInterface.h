@@ -44,7 +44,6 @@ public:
         uint64_t               correlationId) = 0;
     virtual void showProgramExit() = 0;
     /// @}
-    /// @}
 
     /// @name Observers
     /// @{

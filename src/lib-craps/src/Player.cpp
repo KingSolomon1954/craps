@@ -214,9 +214,6 @@ UI should perform confirmation checks with users prior to leaving table.
 leaveTable() is called upon program shutdown as well as
 when player switches tables.
 
-@param[in,out] ep
-    If an error occurs, ep holds the reason
-
 @return
     Success, otherwsie Fail and ep has the reason for failure.
     It is not an error if a player has not joined a table.
@@ -265,7 +262,7 @@ Makes a bet on the table.
 @param[in] contractAmount
     the dollar amount to bet
 
-@param[in] the pivot
+@param[in] pivot
     The number this bet is focused on. For example a Place bet must set
     the pivot to 4,5,6,8,9 or 10. For PassLine/Come/DontPass/DontCome bets,
     the caller sets the pivot to zero. Zero indicates the pivot number
@@ -457,14 +454,11 @@ Changes the contract amount of a bet on the table.
 @li Fails if insufficient funds.
 @li Reclaims funds if reducing contract amount.
 
-@param[in] betId
+@param[in] pBet
     The bet of interest.
 
 @param[in] newAmount
     Sets the contract bet amount to newAmount
-
-@param[in,out] ep
-    Holds reason for error
 
 @return
     Success if amount has been changed, otherwise Fail and ep has reason

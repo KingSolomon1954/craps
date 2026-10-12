@@ -20,7 +20,6 @@ so that spawned threads inherit the mask and block signals.  Provides a
 waitForTerminate() function that unblocks selected signals and waits for
 one to arrive.
 
-@ingroup misc
 */
 class SignalHandler
 {

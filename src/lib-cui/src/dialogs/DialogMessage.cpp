@@ -38,16 +38,16 @@ The formatting of the title area is:
 
     Severity introducer + ": " + brief
 
-@oi Introducer is determined by the MessageType::type field.
-@oi Uses precanned introducers for Info, Warning, and Error.
-@oi Uses custom introducer if MessageType::type == Custom.
-@oi No introducer at all if MessageType::type == None (just brief shows)
+@li Introducer is determined by the MessageType::type field.
+@li Uses precanned introducers for Info, Warning, and Error.
+@li Uses custom introducer if MessageType::type == Custom.
+@li No introducer at all if MessageType::type == None (just brief shows)
 
 The formatting of the detail field adheres to these rules:
 
-@li \n = explicit paragraph/line break.
-@li \r\n = Windows newline; normalize it.
-@li \r by itself = newline.
+@li \\n = explicit paragraph/line break.
+@li \\r\\n = Windows newline; normalize it.
+@li \\r by itself = newline.
 @li Multiple consecutive newlines are preserved as blank lines.
 @li Normal whitespace separates words.
 @li Lines are word-wrapped to a maximum width.
