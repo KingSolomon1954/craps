@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/menus/MenuBetting.h>
+#include <cui/menus/MenuPivot.h>
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiSender.h>
@@ -55,18 +56,20 @@ MenuBetting::instance()
 // 8  │ [l] Place Bet         │
 // 9  │ [h] Hardways          │
 // 10 │ [f] Field Bet         │
-// 11 │ [e] C&E Bet           │
-// 12 │ [a] Any Craps         │
-// 13 │ [7] Any 7             │
-// 14 │ [n] Horn Bet          │
-// 15 │ [w] World Bet         │
-// 16 │ [g] Bet Flags         │
-// 17 │ [q] Quick Bet         │
-// 18 │ [x] Remove Bets       │
-// 19 │ [u] Undo Last         │
-// 20 │ [r] Roll Dice         │
-// 21 │ [. or esc] Back       │
-// 22 └───────────────────────┘
+// 11 │ [b] Buy Bet           │
+// 12 │ [y] Lay Bet           │
+// 13 │ [e] C&E Bet           │
+// 14 │ [a] Any Craps         │
+// 15 │ [7] Any 7             │
+// 16 │ [n] Horn Bet          │
+// 17 │ [w] World Bet         │
+// 18 │ [g] Bet Flags         │
+// 19 │ [q] Quick Bet         │
+// 20 │ [x] Remove Bets       │
+// 21 │ [u] Undo Last         │
+// 22 │ [r] Roll Dice         │
+// 23 │ [. or esc] Back       │
+// 24 └───────────────────────┘
 //
 void
 MenuBetting::fillWindow()
@@ -88,17 +91,19 @@ MenuBetting::fillWindow()
     mvwaddstr(pWin_, 8,  2, "[l] Place Bet");
     mvwaddstr(pWin_, 9,  2, "[h] Hardways");
     mvwaddstr(pWin_, 10, 2, "[f] Field Bet");
-    mvwaddstr(pWin_, 11, 2, "[e] C&E Bet");
-    mvwaddstr(pWin_, 12, 2, "[a] Any Craps");
-    mvwaddstr(pWin_, 13, 2, "[7] Any 7");
-    mvwaddstr(pWin_, 14, 2, "[n] Horn Bet");
-    mvwaddstr(pWin_, 15, 2, "[w] World Bet (todo)");
-    mvwaddstr(pWin_, 16, 2, "[g] Bet Flags");
-    mvwaddstr(pWin_, 17, 2, "[q] Quick Bet");
-    mvwaddstr(pWin_, 18, 2, "[x] Remove Bets");
-    mvwaddstr(pWin_, 19, 2, "[u] Undo Last");
-    mvwaddstr(pWin_, 20, 2, "[r] Roll Dice");
-    mvwaddstr(pWin_, 21, 2, "[. or esc] Back");
+    mvwaddstr(pWin_, 11, 2, "[i] Buy Bet");
+    mvwaddstr(pWin_, 12, 2, "[y] Lay Bet");
+    mvwaddstr(pWin_, 13, 2, "[e] C&E Bet");
+    mvwaddstr(pWin_, 14, 2, "[a] Any Craps");
+    mvwaddstr(pWin_, 15, 2, "[7] Any 7");
+    mvwaddstr(pWin_, 16, 2, "[n] Horn Bet");
+    mvwaddstr(pWin_, 17, 2, "[w] World Bet (todo)");
+    mvwaddstr(pWin_, 18, 2, "[g] Bet Flags");
+    mvwaddstr(pWin_, 19, 2, "[q] Quick Bet");
+    mvwaddstr(pWin_, 20, 2, "[x] Remove Bets");
+    mvwaddstr(pWin_, 21, 2, "[u] Undo Last");
+    mvwaddstr(pWin_, 22, 2, "[r] Roll Dice");
+    mvwaddstr(pWin_, 23, 2, "[. or esc] Back");
 }
 
 //----------------------------------------------------------------
@@ -140,6 +145,7 @@ void
 MenuBetting::draw()
 {
     LOG_TRACE("MenuBetting::draw() ");
+    touchwin(pWin_);
     CuiUtils::transfer(pWin_); // Reuse already filled window over and over
 }
 
@@ -164,6 +170,8 @@ MenuBetting::handleKey(int ch)
     case 'l': doBets(BetName::Place);    break;
     case 'h': doBets(BetName::Hardway);  break;
     case 'f': doBets(BetName::Field);    break;
+    case 'i': doBets(BetName::Buy);      break;
+    case 'y': doBets(BetName::Lay);      break;
     case 'e': doBets(BetName::CandE);    break;
     case 'a': doBets(BetName::AnyCraps); break;
     case '7': doBets(BetName::AnySeven); break;
@@ -202,6 +210,8 @@ MenuBetting::doBets(BetName betName)
     // case BetName::World:
     case BetName::Horn:      doGetAmount(); break;
     case BetName::Place:
+    case BetName::Buy:
+    case BetName::Lay:
     case BetName::Hardway:   doGetPivot();  break;
     default:
         assert(true);
@@ -267,8 +277,8 @@ MenuBetting::activateDialogAmount()
 void
 MenuBetting::activateMenuPivot()
 {
-    // TODO
-    // ConsoleManager::pushSurface(MenuPivot);
+    MenuPivot::instance().configure(betName_);
+    SurfaceManager::instance().pushSurface(&MenuPivot::instance());
 }
 
 //----------------------------------------------------------------
