@@ -6,8 +6,11 @@
 
 #include <cui/menus/MenuBetting.h>
 #include <cui/menus/MenuPivot.h>
+#include <cui/menus/MenuOddsBet.h>
+#include <cui/dialogs/DialogMessage.h>
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
+#include <controller/CrapsReaders.h>
 #include <cui/core/CuiSender.h>
 #include <cui/core/CuiUtils.h>
 #include <cui/panels/WindowNavBar.h>
@@ -255,38 +258,9 @@ MenuBetting::populateCarrier()
 //----------------------------------------------------------------
 
 void
-MenuBetting::prepDialogAmount()
-{
-    // TODO
-    // DialogBetAmount::setPrompt("Amount for %s" bet, EnumBetName::toString(betName_));
-    // auto amount = getAutoFillAmount(betName_);
-    // DialogBetAmount::preFill(amount);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::activateDialogAmount()
-{
-    // TODO
-    // ConsoleManager::pushSurface(AmountDialog);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::activateMenuPivot()
-{
-    MenuPivot::instance().configure(betName_);
-    SurfaceManager::instance().pushSurface(&MenuPivot::instance());
-}
-
-//----------------------------------------------------------------
-
-void
 MenuBetting::doOddsBets()
 {
-    // TODO
+    activateMenuOddsBet();
 }
 
 //----------------------------------------------------------------
@@ -330,6 +304,74 @@ MenuBetting::doRollDice()
     if (SurfaceManager::instance().isActiveSurface(this))
         SurfaceManager::instance().popSurface();
     CuiSender::instance().reqRollDice();
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::prepDialogAmount()
+{
+    // TODO
+    // DialogBetAmount::setPrompt("Amount for %s" bet, EnumBetName::toString(betName_));
+    // auto amount = getAutoFillAmount(betName_);
+    // DialogBetAmount::preFill(amount);
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::activateDialogAmount()
+{
+    // TODO
+    // ConsoleManager::pushSurface(AmountDialog);
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::activateMenuPivot()
+{
+    MenuPivot::instance().configure(betName_);
+    SurfaceManager::instance().pushSurface(&MenuPivot::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+MenuBetting::activateMenuOddsBet()
+{
+    if (hasQualifyingOddsBets())
+    {
+        SurfaceManager::instance().pushSurface(&MenuOddsBet::instance());
+    }
+    else
+    {
+        DialogMessage::MessageText m;
+        m.type = DialogMessage::MessageType::Info;
+        m.brief = "You have no qualifying odds capable bets";
+        m.detail = "";
+        DialogMessage::instance().configure(m);
+        
+        SurfaceManager::instance().pushSurface(&DialogMessage::instance());
+    }
+}
+
+//----------------------------------------------------------------
+
+bool
+MenuBetting::hasQualifyingOddsBets()
+{
+    Gen::ErrorPass  ep;
+    Craps::PlayerId pid;
+
+    auto rc = Ctrl::CrapsReaders::getUserPlayer(pid, ep);
+    assert(rc == Gen::ReturnCode::Success);
+
+    bool haveBets;
+    rc = Ctrl::CrapsReaders::readPlayerHaveAnyOddsCapableBet(
+        pid, haveBets, ep); 
+    assert(rc == Gen::ReturnCode::Success);
+    return haveBets;
 }
 
 //----------------------------------------------------------------

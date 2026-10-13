@@ -56,38 +56,42 @@ MenuPivot::instance()
 void
 MenuPivot::configure(BetName betName)
 {
-    selectTitle  (betName);
-    selectPrompts(betName);
+    betName_ = betName;
+    selectTitle  ();
+    selectPrompts();
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPivot::selectTitle(BetName name)
+MenuPivot::selectTitle()
 {
-    switch (name)
+    switch (betName_)
     {
     case BetName::Place:
-        activeTitle_ = "Place Which Number";
+        activeTitle_ = "Place Which Number  ";
         break;
 
     case BetName::Buy:
-        activeTitle_ = "Buy Which Number  ";
+        activeTitle_ = "Buy Which Number    ";
         break;
 
     case BetName::Lay:
-        activeTitle_ = "Lay Which Number  ";
+        activeTitle_ = "Lay Which Number    ";
         break;
 
+    case BetName::Hardway:
+        activeTitle_ = "Hardway Which Number";
+        break;
     }
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPivot::selectPrompts(BetName name)
+MenuPivot::selectPrompts()
 {
-    switch (name)
+    switch (betName_)
     {
     case BetName::Place:
         pNumberPrompts_ = &promptsPlace_;
@@ -99,6 +103,10 @@ MenuPivot::selectPrompts(BetName name)
 
     case BetName::Lay:
         pNumberPrompts_ = &promptsLay_;
+        break;
+    
+    case BetName::Hardway:
+        pNumberPrompts_ = &promptsHardway_;
         break;
     }
 }
@@ -172,9 +180,10 @@ MenuPivot::drawStaticContent()
 void
 MenuPivot::populate()
 {
-    mvwaddstr(pWin_, 1, 2, activeTitle_.data());
-
     assert(pNumberPrompts_);
+    
+    mvwaddstr(pWin_, 1, 2, activeTitle_.data());
+    
     int row = 3;
     for (const std::string_view s : *pNumberPrompts_)
     {
@@ -189,7 +198,41 @@ MenuPivot::populate()
 bool
 MenuPivot::handleKey(int ch)
 {
+    if (betName_ == BetName::Hardway)
+    {
+        return handleKeyHardways(ch);
+    }
+
+    return handleKeyAllNumbers(ch);
+}
+
+//----------------------------------------------------------------
+
+bool
+MenuPivot::handleKeyHardways(int ch)
+{
     bool handled = true;
+
+    switch(ch)
+    {
+    case '4': processSelection(4);   break;
+    case '6': processSelection(6);   break;
+    case '8': processSelection(8);   break;
+    case '0': processSelection(10);  break;
+    case '.':
+    case 27 : back();                break;
+    default: handled = false;        break;
+    }
+    return handled;
+}
+    
+//----------------------------------------------------------------
+
+bool
+MenuPivot::handleKeyAllNumbers(int ch)
+{
+    bool handled = true;
+
     switch(ch)
     {
     case '4': processSelection(4);  break;

@@ -38,12 +38,13 @@ public:
 
 private:
     WindowPosition   winPos_;
-    const WindowSize winSize_ = {11, 22};  // rows, cols
-    BetName betName_ = BetName::Place;     // default
+    const WindowSize winSize_ = {11, 24};  // rows, cols
+    BetName betName_;
     
     using NumberPrompts = std::array<std::string_view, 6>;
     
-    static constexpr NumberPrompts promptsPlace_{
+    static constexpr NumberPrompts promptsPlace_
+    {
         "[4] Place 4  ",
         "[5] Place 5  ",
         "[6] Place 6  ",
@@ -52,7 +53,8 @@ private:
         "[0] Place 10 "
     };
 
-    static constexpr NumberPrompts promptsBuy_{
+    static constexpr NumberPrompts promptsBuy_
+    {
         "[4] Buy 4    ",
         "[5] Buy 5    ",
         "[6] Buy 6    ",
@@ -61,7 +63,8 @@ private:
         "[0] Buy 10   "
     };
 
-    static constexpr NumberPrompts promptsLay_{
+    static constexpr NumberPrompts promptsLay_
+    {
         "[4] Lay 4    ",
         "[5] Lay 5    ",
         "[6] Lay 6    ",
@@ -70,15 +73,28 @@ private:
         "[0] Lay 10   "
     };
 
+    static constexpr NumberPrompts promptsHardway_
+    {
+        "[4] Hard 4   ",
+        "[6] Hard 6   ",
+        "[8] Hard 8   ",
+        "[0] Hard 10  ",
+        "             ",
+        "             "
+    };
+
 private:
     std::string_view activeTitle_;
     const NumberPrompts* pNumberPrompts_ = nullptr;
-    
+
+private:
     MenuPivot();  // Private ctor
-    void selectTitle(BetName name);
-    void selectPrompts(BetName name);
+    void selectTitle();
+    void selectPrompts();
     void drawStaticContent();
     void populate();
+    bool handleKeyHardways(int ch);
+    bool handleKeyAllNumbers(int ch);
     void processSelection(int num);
     void populateCarrier (int pivot);
     void prepDialogAmount(int pivot);

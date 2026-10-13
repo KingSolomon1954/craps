@@ -98,6 +98,7 @@ public:
     const BankStats&     getBankCurrentStats()                    const;
     const BankStats&     getBankAlltimeStats()                    const;
     bool                 haveBet(const BetId& betId)              const;
+    bool                 haveAnyOddsCapableBet()                  const;
     const SessionHistory::Sessions& getSessionHistory()           const;
 
     /// @name File operations

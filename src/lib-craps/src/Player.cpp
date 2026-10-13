@@ -726,6 +726,25 @@ Player::haveBet(const BetId& betId) const
 }
 
 //----------------------------------------------------------------
+
+bool
+Player::haveAnyOddsCapableBet() const
+{
+    for (auto b : bets_)
+    {
+        if ((b->betName() == BetName::PassLine  ||
+             b->betName() == BetName::Come      ||
+             b->betName() == BetName::DontPass  ||
+             b->betName() == BetName::DontCome) &&
+            (b->pivot() != 0))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
 //
 // Search for bet by ID
 //

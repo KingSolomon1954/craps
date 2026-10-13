@@ -50,6 +50,10 @@ public:
         const Craps::PlayerId& playerId,
         Craps::BetIds& betIds,
         Gen::ErrorPass& ep);
+    static Gen::ReturnCode readPlayerHaveAnyOddsCapableBet(
+        const Craps::PlayerId& playerId,
+        bool& haveOddsBets,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerName(
         const Craps::PlayerId& playerId,
         std::string& playerName,

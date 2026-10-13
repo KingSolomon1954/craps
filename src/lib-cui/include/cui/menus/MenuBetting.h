@@ -56,6 +56,8 @@ private:
     void prepDialogAmount();
     void activateDialogAmount();
     void activateMenuPivot();
+    void activateMenuOddsBet();
+    bool hasQualifyingOddsBets();
     void back();
 };
 
