@@ -19,7 +19,11 @@ enum class Color
     DefaultScreen,
     SevenOut,
     PassLineWinner,
-    Point
+    Point,
+    InfoMessage,
+    WarnMessage,
+    ErrorMessage,
+    CustomMessage
 };
 
 enum class PlayerColor : std::size_t
@@ -68,13 +72,17 @@ private:
     static constexpr short SevenOut       = 2;
     static constexpr short PassLineWinner = 3;
     static constexpr short Point          = 4;
+    static constexpr short InfoMessage    = 5;
+    static constexpr short WarnMessage    = 6;
+    static constexpr short ErrorMessage   = 7; 
+    static constexpr short CustomMessage  = 8;
 
-    static constexpr short PlayerColor1 = 5;
-    static constexpr short PlayerColor2 = 6;
-    static constexpr short PlayerColor3 = 7;
-    static constexpr short PlayerColor4 = 8;
-    static constexpr short PlayerColor5 = 9;
-    static constexpr short PlayerColor6 = 10;
+    static constexpr short PlayerColor1   = 9;
+    static constexpr short PlayerColor2   = 10;
+    static constexpr short PlayerColor3   = 11;
+    static constexpr short PlayerColor4   = 12;
+    static constexpr short PlayerColor5   = 13;
+    static constexpr short PlayerColor6   = 14;
 
     static constexpr std::array<short, MaxPlayerColors>
         PlayerColorPairs{

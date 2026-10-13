@@ -17,20 +17,20 @@ namespace Cui {
 class DialogMessage : public DialogBase
 {
 public:
-    enum class MessageType
+    enum class MessageLabel
     {
         Unset,     // Unset means user failed to configure
-        None,      // Caller doesn't want anything displayed for type
-        Custom,    // Caller wants their own text displayed for type
-        Info,      // Precanned formatting for info
-        Warning,   // Precanned formatting for warning
-        Error      // Precanned formatting for error
+        None,      // Caller doesn't want a label at all
+        Custom,    // Caller is providing their own label
+        Info,      // Use precanned info label 
+        Warning,   // Use precanned warning label
+        Error      // Use precanned error label
     };
     
     struct MessageText
     {
-        MessageType type = MessageType::Unset;
-        std::string customType;
+        MessageLabel label = MessageLabel::Unset;
+        std::string customLabel;
         std::string brief;
         std::string detail;
     };
@@ -64,25 +64,30 @@ private:
     DialogMessage();
 
     // Creating dialog box entries
-    void buildDialogEntries();
+    int buildDialogEntries();
+    int formatPrompt();
+    int titleSize();
+    int maxSizeDetail();
+    void calcSize(int maxCols);
     void eraseFields();
-    void formatTitle();
     void formatDetail();
-    void formatPrompt();
-    void calcSize();
 
     // Window creation and drawing
     void drawBorders();
     void drawStaticContent();
+    void drawTitle();
+    void drawDetail();
     void populate();
+    void attrOn();
+    void attrOff();
 
     // Processing hotKeys
     void back();
     
 private:
-    WindowPosition  winPos_;
-    WindowSize      winSize_ = {5, 50};  // Arbitrary for initializaiton
-    MessageText     msg_;
+    WindowPosition winPos_;
+    WindowSize     winSize_ = {5, 50};  // Arbitrary for initializaiton
+    MessageText    msg_;
 
     struct MessageFormatted
     {
@@ -91,6 +96,10 @@ private:
         std::string prompt;
     };
     MessageFormatted msgFmtd_;
+
+    const std::string InfoLabel_  = "Info: ";
+    const std::string WarnLabel_  = "Warning: ";
+    const std::string ErrorLabel_ = "Error: ";
 };
 
 /*-----------------------------------------------------------*//**
