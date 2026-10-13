@@ -348,8 +348,9 @@ MenuBetting::activateMenuOddsBet()
     {
         DialogMessage::MessageText m;
         m.type = DialogMessage::MessageType::Info;
-        m.brief = "You have no qualifying odds capable bets";
-        m.detail = "";
+        m.brief = "No qualifying odds capable bets";
+        m.detail = "Only Pass, DontPass, Come and "
+                   "DontCome bets can have odds";
         DialogMessage::instance().configure(m);
         
         SurfaceManager::instance().pushSurface(&DialogMessage::instance());

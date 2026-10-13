@@ -109,10 +109,13 @@ a caller-supplied message, consisting of three fields:
 
 @code
 
-DialogMessage::instance().configure(
-    MessageType::Warning,             // message type
-    "Invalid bet",                    // message brief
-    "The bet amount is not valid.");  // description
+DialogMessage::MessageText m;
+m.type = DialogMessage::MessageType::Info;
+m.brief = "No qualifying odds capable bets";
+m.detail = "Of the 4 bets you have, none are capable of betting odds."
+           "Only Pass, Dont Pass, Come and Dont Come bets can have odds";
+DialogMessage::instance().configure(m);
+
 @endcode
 
 When the message is acknowledged by the user, the result is propagated

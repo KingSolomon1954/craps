@@ -8,6 +8,7 @@
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiUtils.h>
+#include <gen/Logger.h>
 #include <cassert>
 
 using namespace Cui;
@@ -93,22 +94,27 @@ DialogMessage::formatTitle()
     {
         msgFmtd_.title = msg_.brief;
     }
-    if (msg_.type == MessageType::Custom)
+    else if (msg_.type == MessageType::Custom)
     {
         msgFmtd_.title = msg_.customType;
         msgFmtd_.title += ":" +  msg_.brief;
     }
-    if (msg_.type == MessageType::Info)
+    else if (msg_.type == MessageType::Info)
     {
         msgFmtd_.title = "Info: " + msg_.brief;
     }
-    if (msg_.type == MessageType::Warning)
+    else if (msg_.type == MessageType::Warning)
     {
         msgFmtd_.title = "Warning: " + msg_.brief;
     }
-    if (msg_.type == MessageType::Error)
+    else if (msg_.type == MessageType::Error)
     {
         msgFmtd_.title = "Error: " + msg_.brief;
+    }
+    else
+    {
+        assert(false);
+        msgFmtd_.title = "Programmer Error: Bad Enum in formatTitle()";
     }
 }
 
@@ -289,9 +295,14 @@ DialogMessage::calcSize()
     {
         cols = std::max(cols, static_cast<int>(e.length()));
     }
+    cols = std::max(cols, static_cast<int>(msgFmtd_.title.length()));
+    
     winSize_.cols = cols + blankCols + borderCols;
     winSize_.rows =
         static_cast<int>(msgFmtd_.detail.size()) + titleRows + promptRows;
+    LOG_TRACE("DialogMessage::calcSize(): winSize_.rows = " +
+              std::to_string(winSize_.rows) +  " winSize_.cols = " +
+              std::to_string(winSize_.cols));
 }
 
 //----------------------------------------------------------------
