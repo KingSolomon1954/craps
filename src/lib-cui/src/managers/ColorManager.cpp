@@ -116,6 +116,20 @@ ColorManager::pair(Color color) const
 
         case Color::Point:
             return Point;
+
+        case Color::InfoMessage:
+            return InfoMessage;
+
+        case Color::WarnMessage:
+            return WarnMessage;
+
+        case Color::ErrorMessage:
+            return ErrorMessage;
+
+        case Color::CustomMessage:
+            return CustomMessage;
+            
+        default: assert(false);
     }
 
     return DefaultScreen;

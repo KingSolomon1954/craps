@@ -45,6 +45,7 @@ Complete the first round-trip bet made by the CUI.
 In CUI, need DialogBetAmount
 In CUI, implement DialogAckError layers of info
 
+(Done) Integrated DialogMessage, added colorized introducers
 (Done) Beefed up ErrorPass and propagate throughout, needs more attention
 (Done) Introduced zeus::expected library
 (Done) Fix invisible MenuControl when child menus are cancelled 
