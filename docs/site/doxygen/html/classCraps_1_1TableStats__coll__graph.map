@@ -1,0 +1,17 @@
+<map id="Craps::TableStats" name="Craps::TableStats">
+<area shape="rect" id="Node000001" title="Track statistics about rolls and dice." alt="" coords="470,328,605,353"/>
+<area shape="rect" id="Node000002" href="$classCraps_1_1BetStats.html" title=" " alt="" coords="272,240,395,265"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="375,268,511,325,509,330,373,273"/>
+<area shape="rect" id="Node000003" href="$structCraps_1_1BetTypeStats.html" title=" " alt="" coords="5,5,157,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="82,44,83,82,89,128,104,175,117,196,132,214,155,226,190,235,272,245,271,250,189,240,153,231,129,218,112,199,100,177,84,130,78,83,77,44"/>
+<area shape="rect" id="Node000004" href="$structCraps_1_1NumBets.html" title=" " alt="" coords="182,5,309,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="240,45,232,81,227,125,231,172,238,194,249,214,262,228,279,238,277,242,259,232,245,218,233,196,226,173,222,125,227,80,235,43"/>
+<area shape="rect" id="Node000005" href="$structCraps_1_1AmtBets.html" title=" " alt="" coords="360,5,483,31"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="421,45,407,147,394,217,381,232,364,242,362,238,377,228,390,215,402,146,416,44"/>
+<area shape="rect" id="Node000006" href="$classCraps_1_1RollStats.html" title=" " alt="" coords="475,240,600,265"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="540,279,540,327,535,327,535,279"/>
+<area shape="rect" id="Node000007" href="$structCraps_1_1Counter.html" title=" " alt="" coords="535,5,654,31"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="598,45,592,124,583,171,568,217,551,241,547,238,563,215,578,170,587,123,592,45"/>
+<area shape="rect" id="Node000008" href="$classCraps_1_1SessionHistory.html" title="Capture session summaries in a history file." alt="" coords="625,240,789,265"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="673,274,562,330,559,325,671,269"/>
+</map>

@@ -1,0 +1,26 @@
+<map id="src/lib&#45;craps/include/craps/SessionHistory.h" name="src/lib&#45;craps/include/craps/SessionHistory.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="233,5,405,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="470,167,529,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="344,44,401,91,477,156,474,160,398,95,340,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="164,93,227,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="291,48,227,88,224,84,288,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,167,137,192"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="254,48,203,68,153,96,118,126,90,157,86,154,114,122,150,91,201,63,252,43"/>
+<area shape="rect" id="Node000005" href="$MoneyUtils_8h.html" title=" " alt="" coords="251,93,387,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="322,46,322,79,317,79,317,46"/>
+<area shape="rect" id="Node000009" href="$Timepoint_8h.html" title=" " alt="" coords="518,93,646,119"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="383,43,531,87,530,92,381,48"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="349,116,458,159,456,164,347,121"/>
+<area shape="poly" id="edge9_Node000005_Node000004" title=" " alt="" coords="280,121,125,165,124,160,279,116"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="273,167,347,192"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="320,119,316,154,311,153,315,119"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="371,167,446,192"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="335,117,385,156,382,160,332,121"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="161,167,248,192"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="302,121,236,162,234,157,300,116"/>
+<area shape="poly" id="edge13_Node000009_Node000002" title=" " alt="" coords="570,121,525,160,522,155,567,117"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="654,167,721,192"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="600,116,660,157,658,161,597,121"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="553,167,629,192"/>
+<area shape="poly" id="edge12_Node000009_Node000011" title=" " alt="" coords="586,119,591,153,585,154,581,119"/>
+</map>

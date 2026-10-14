@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['channeldirection_0',['ChannelDirection',['../group__free.html#gacf1d75949e1f4e1707e8b3ab73ae3d9d',1,'EnumChannelDirection.h']]]
+  ['betname_0',['BetName',['../group__free.html#ga7182e663179cba6d21c5a6619ffc4c84',1,'EnumBetName.h']]]
 ];

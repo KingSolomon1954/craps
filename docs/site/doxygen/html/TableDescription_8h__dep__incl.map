@@ -1,0 +1,17 @@
+<map id="src/lib&#45;controller/include/controller/TableDescription.h" name="src/lib&#45;controller/include/controller/TableDescription.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="443,5,590,60"/>
+<area shape="rect" id="Node000002" href="$TableManager_8h.html" title=" " alt="" coords="447,108,586,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="519,74,519,108,514,108,514,74"/>
+<area shape="rect" id="Node000003" href="$CrapsReaders_8cpp.html" title=" " alt="" coords="5,211,172,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="434,157,173,214,172,209,433,152"/>
+<area shape="rect" id="Node000004" href="$GameMain_8cpp.html" title=" " alt="" coords="197,211,343,251"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="436,170,321,213,319,208,434,165"/>
+<area shape="rect" id="Node000005" href="$Globals_8cpp.html" title=" " alt="" coords="367,211,495,251"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="485,175,451,212,447,209,481,171"/>
+<area shape="rect" id="Node000006" href="$TableManager_8cpp.html" title=" " alt="" coords="520,211,687,251"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="553,171,588,209,584,212,549,175"/>
+<area shape="rect" id="Node000007" href="$CrapsCommands_8cpp.html" title=" " alt="" coords="711,211,922,251"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="600,160,757,208,755,213,598,165"/>
+<area shape="rect" id="Node000008" href="$CrapsEventHandlers_8cpp.html" title=" " alt="" coords="946,211,1178,251"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="600,148,952,208,951,213,599,153"/>
+</map>

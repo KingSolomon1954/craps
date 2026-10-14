@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7ebuildinfo_0',['~BuildInfo',['../classGen_1_1BuildInfo.html#ad531f74e3394e5f53b1e71135ccf6c89',1,'Gen::BuildInfo']]]
+  ['quadlet_0',['quadlet',['../classGen_1_1BuildInfo.html#a6d2a4078c67eff965c8d30c4225d63dc',1,'Gen::BuildInfo']]]
 ];

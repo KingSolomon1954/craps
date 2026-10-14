@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['redflame_0',['RedFlame',['../index.html',1,'']]]
+  ['royalcraps_0',['RoyalCraps',['../index.html',1,'']]]
 ];

@@ -1,0 +1,27 @@
+<map id="src/lib&#45;cui/src/managers/LocationManager.cpp" name="src/lib&#45;cui/src/managers/LocationManager.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="566,5,743,45"/>
+<area shape="rect" id="Node000002" href="$LocationManager_8h.html" title=" " alt="" coords="227,93,464,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="581,48,405,92,403,87,580,43"/>
+<area shape="rect" id="Node000007" href="$LayoutConsole_8h.html" title=" " alt="" coords="737,93,943,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="700,43,801,85,799,90,698,48"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="805,167,875,192"/>
+<area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="668,44,693,80,727,117,762,140,798,159,796,163,759,145,724,121,689,83,663,47"/>
+<area shape="rect" id="Node000009" href="$Logger_8h.html" title=" " alt="" coords="557,93,662,119"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="646,47,625,83,621,80,641,44"/>
+<area shape="rect" id="Node000003" href="$CuiStructs_8h.html" title=" " alt="" coords="5,167,160,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="304,121,139,166,138,160,302,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="184,167,259,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="327,121,255,162,252,157,324,116"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="432,167,491,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="365,116,432,157,429,162,363,121"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="283,167,407,192"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="348,119,348,153,343,153,343,119"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="843,119,843,153,837,153,837,119"/>
+<area shape="poly" id="edge11_Node000009_Node000005" title=" " alt="" coords="587,121,499,163,497,158,584,116"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="515,167,589,192"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="602,121,572,158,568,154,598,117"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="613,167,677,192"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="618,118,636,153,631,156,613,120"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="702,167,781,192"/>
+<area shape="poly" id="edge12_Node000009_Node000012" title=" " alt="" coords="632,116,709,158,707,162,629,121"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="Cui::MenuPivot" name="Cui::MenuPivot">
+<area shape="rect" id="Node000001" title="Display choices for Place Bets." alt="" coords="11,152,131,177"/>
+<area shape="rect" id="Node000002" href="$classCui_1_1MenuBase.html" title="Specialized surface type for menus." alt="" coords="12,79,131,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,118,74,152,69,152,69,118"/>
+<area shape="rect" id="Node000003" href="$classCui_1_1SurfaceBase.html" title="Common abstraction for anything occupying a visible/input surface." alt="" coords="5,5,137,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,44,74,79,69,79,69,44"/>
+</map>

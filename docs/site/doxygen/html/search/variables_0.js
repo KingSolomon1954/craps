@@ -1,4 +1,29 @@
 var searchData=
 [
-  ['enumerators_0',['enumerators',['../namespaceEnumChannelDirection.html#aad70354c90091b63eb49cfed9b8edbaf',1,'EnumChannelDirection']]]
+  ['amount_0',['amount',['../structCtrl_1_1AutoFill_1_1AutoFillEntry.html#a5dcda8b1212447b1c2f77be7758eb583',1,'Ctrl::AutoFill::AutoFillEntry::amount'],['../structCtrl_1_1QuickBet_1_1QuickBetEntry.html#a874284cd91016b3ffcee596d3d7ab08a',1,'Ctrl::QuickBet::QuickBetEntry::amount'],['../structCraps_1_1BetStat.html#af1a5d607c04737bbcbb035cb9377a2ad',1,'Craps::BetStat::amount'],['../structCui_1_1DialogAmountEntry_1_1Results.html#a95cc2335828a1cab807070eabe511da9',1,'Cui::DialogAmountEntry::Results::amount']]],
+  ['amountbet_1',['amountBet',['../structCraps_1_1BetStat.html#aee9f4f4b0ef274e5864ca59582bc8d95',1,'Craps::BetStat']]],
+  ['amountlose_2',['amountLose',['../structCtrl_1_1UslBetResolved.html#a7a017b320c50434f9ed4cf1da0a85391',1,'Ctrl::UslBetResolved::amountLose'],['../structCraps_1_1LastRollStats.html#aabb25120c20819aeee6fa52fa8883908',1,'Craps::LastRollStats::amountLose']]],
+  ['amountontable_3',['amountOnTable',['../structCraps_1_1LastRollStats.html#a867a94c1462f1724c4142c91b0e33bb2',1,'Craps::LastRollStats']]],
+  ['amountwin_4',['amountWin',['../structCtrl_1_1UslBetResolved.html#a2c4af2de6c1c78e6f73bebdf6f505bd6',1,'Ctrl::UslBetResolved::amountWin'],['../structCraps_1_1LastRollStats.html#aec5fa8f50371e758f78582fae7925c7a',1,'Craps::LastRollStats::amountWin']]],
+  ['amtbetskeeponeroll_5',['amtBetsKeepOneRoll',['../classCraps_1_1BetStats.html#a65dff2552df57229128cbc6f94cfe333',1,'Craps::BetStats']]],
+  ['amtbetsloseoneroll_6',['amtBetsLoseOneRoll',['../classCraps_1_1BetStats.html#a090611ef02fea1ecf70ce9bc3eeaeed6',1,'Craps::BetStats']]],
+  ['amtbetsoneroll_7',['amtBetsOneRoll',['../classCraps_1_1BetStats.html#aef2991274b361655b0b18761046d7275',1,'Craps::BetStats']]],
+  ['amtbetswinoneroll_8',['amtBetsWinOneRoll',['../classCraps_1_1BetStats.html#a74e39648309147169c35a94824c25180',1,'Craps::BetStats']]],
+  ['amtdeposited_9',['amtDeposited',['../classCraps_1_1BankStats.html#ab97d3ab8f5f7b74b9a548bfc9afb513a',1,'Craps::BankStats']]],
+  ['amtintake_10',['amtIntake',['../structCraps_1_1SessionHistory_1_1Summary.html#a61cc4c00a15eb1f5f80e2e2706ebc581',1,'Craps::SessionHistory::Summary']]],
+  ['amtpayout_11',['amtPayout',['../structCraps_1_1SessionHistory_1_1Summary.html#afee85f84c2b71588953e16ee0d276a6c',1,'Craps::SessionHistory::Summary']]],
+  ['amtrefilled_12',['amtRefilled',['../classCraps_1_1BankStats.html#a34fb03be8cc8f77005aa8b5b41af581b',1,'Craps::BankStats']]],
+  ['amtwithdrawn_13',['amtWithdrawn',['../classCraps_1_1BankStats.html#aeec5d6c984e4b86f250d2ef2cdd53a54',1,'Craps::BankStats']]],
+  ['animationborderbotrow_14',['animationBorderBotRow',['../classCui_1_1LayoutCrapsScreen.html#abed56f8c56b119c398a18942c4736f7e',1,'Cui::LayoutCrapsScreen']]],
+  ['animationborderheight_15',['animationBorderHeight',['../classCui_1_1LayoutCrapsScreen.html#a1e5cb5fd3e6e3243f7d0185a29e1e3a6',1,'Cui::LayoutCrapsScreen']]],
+  ['animationborderleftcol_16',['animationBorderLeftCol',['../classCui_1_1LayoutCrapsScreen.html#afe76663cedb65506893bd19f48082251',1,'Cui::LayoutCrapsScreen']]],
+  ['animationborderrightcol_17',['animationBorderRightCol',['../classCui_1_1LayoutCrapsScreen.html#ab3585e367c94c55408e3f98a422b4b66',1,'Cui::LayoutCrapsScreen']]],
+  ['animationbordertoprow_18',['animationBorderTopRow',['../classCui_1_1LayoutCrapsScreen.html#a133961e3bd846eb09381ea5a8a9f4473',1,'Cui::LayoutCrapsScreen']]],
+  ['animationborderwidth_19',['animationBorderWidth',['../classCui_1_1LayoutCrapsScreen.html#ad6ec6be0749687ad32949bd82d1aee61',1,'Cui::LayoutCrapsScreen']]],
+  ['anycrapsstr_20',['AnyCrapsStr',['../EnumBetName_8cpp.html#a2938f18e29136f82ba6dbf1854a592ef',1,'EnumBetName.cpp']]],
+  ['anyestpntcnts_21',['anyEstPntCnts',['../classCraps_1_1RollStats.html#a56ad5e5890337d06308f715274ea60f7',1,'Craps::RollStats']]],
+  ['anysevenstr_22',['AnySevenStr',['../EnumBetName_8cpp.html#a726d30311da7b75bfd05314b7b22d729',1,'EnumBetName.cpp']]],
+  ['appnameexec_23',['appNameExec',['../classGbl.html#afb3240973d4e4b38201ba19aece14ff8',1,'Gbl']]],
+  ['appnamescreen_24',['appNameScreen',['../classGbl.html#ade33364608a58b7dfd51d614a09ce2f6',1,'Gbl']]],
+  ['armed_25',['armed',['../structCraps_1_1Counter.html#a324980179fe3a2fb198d8f175928bb59',1,'Craps::Counter']]]
 ];

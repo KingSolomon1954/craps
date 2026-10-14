@@ -1,0 +1,16 @@
+<map id="src/lib&#45;cui/include/cui/managers/SurfaceManager.h" name="src/lib&#45;cui/include/cui/managers/SurfaceManager.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="344,5,579,45"/>
+<area shape="rect" id="Node000002" href="$LocationManager_8h.html" title=" " alt="" coords="187,93,424,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="425,48,342,89,339,85,423,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="432,167,491,192"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="464,46,464,153,459,153,459,46"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="499,93,562,119"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="480,44,513,81,509,84,476,47"/>
+<area shape="rect" id="Node000003" href="$CuiStructs_8h.html" title=" " alt="" coords="5,167,160,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="270,121,132,165,131,160,269,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="184,167,259,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="294,121,247,160,244,155,290,117"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="331,116,424,158,422,163,329,121"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="283,167,407,192"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="314,118,334,153,330,156,310,120"/>
+</map>

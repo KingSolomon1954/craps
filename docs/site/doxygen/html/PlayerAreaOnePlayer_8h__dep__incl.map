@@ -1,0 +1,15 @@
+<map id="src/lib&#45;cui/include/cui/panels/PlayerAreaOnePlayer.h" name="src/lib&#45;cui/include/cui/panels/PlayerAreaOnePlayer.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="403,5,649,45"/>
+<area shape="rect" id="Node000002" href="$WindowPlayerArea_8h.html" title=" " alt="" coords="293,93,524,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="490,56,436,95,433,91,487,52"/>
+<area shape="rect" id="Node000007" href="$PlayerAreaOnePlayer_8cpp.html" title=" " alt="" coords="548,93,739,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="565,52,619,91,616,95,562,56"/>
+<area shape="rect" id="Node000003" href="$WorkOrderDispatcher_8cpp.html" title=" " alt="" coords="5,181,196,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="329,140,169,184,167,179,327,134"/>
+<area shape="rect" id="Node000004" href="$MenuNavBarViews_8cpp.html" title=" " alt="" coords="221,181,397,221"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="378,144,333,183,329,179,374,140"/>
+<area shape="rect" id="Node000005" href="$WindowPlayerArea_8cpp.html" title=" " alt="" coords="421,181,597,221"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="443,140,488,179,485,183,439,144"/>
+<area shape="rect" id="Node000006" href="$ScreenCrapsTable_8cpp.html" title=" " alt="" coords="621,181,789,221"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="487,135,641,179,639,184,486,140"/>
+</map>

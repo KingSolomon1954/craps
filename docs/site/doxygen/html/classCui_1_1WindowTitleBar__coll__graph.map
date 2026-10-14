@@ -1,0 +1,8 @@
+<map id="Cui::WindowTitleBar" name="Cui::WindowTitleBar">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,155,160,180"/>
+<area shape="rect" id="Node000002" href="$classCui_1_1PanelBase.html" title="A Window physically contained within a full screen Surface." alt="" coords="23,80,142,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,120,85,154,80,154,80,120"/>
+<area shape="rect" id="Node000003" href="$classCui_1_1SurfaceBase.html" title="Common abstraction for anything occupying a visible/input surface." alt="" coords="17,5,149,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,45,85,80,80,80,80,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="164,10,175,18,167,25,149,27,149,22,165,20,170,18,161,15"/>
+</map>
