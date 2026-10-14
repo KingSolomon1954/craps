@@ -125,7 +125,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handlers for processing events from the model -&gt; UI.  <a href="classCtrl_1_1CrapsEventHandlers.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1CrapsReaders.html">CrapsReaders</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">UI retrieves read-only information directly from the model.  <a href="classCtrl_1_1CrapsReaders.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves read-only information directly from the model.  <a href="classCtrl_1_1CrapsReaders.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1EventHandler.html">EventHandler</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes GameEvents for lib-controller.  <a href="classCtrl_1_1EventHandler.html#details">More...</a><br /></td></tr>
@@ -134,6 +134,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">UI (Console or GUI) enqueues events. The loop processes events.  <a href="classCtrl_1_1EventLoop.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1GameEvent.html">GameEvent</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for all Events.  <a href="structCtrl_1_1GameEvent.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1GameMain.html">GameMain</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> Game Top Level class.  <a href="classCtrl_1_1GameMain.html#details">More...</a><br /></td></tr>
@@ -223,67 +224,67 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a45de7de396e69e49884327ced79b5d01" id="r_a45de7de396e69e49884327ced79b5d01"><td class="memItemLeft" align="right" valign="top"><a id="a45de7de396e69e49884327ced79b5d01" name="a45de7de396e69e49884327ced79b5d01"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>EventId</b> = std::uint64_t</td></tr>
+<tr class="memitem:a45de7de396e69e49884327ced79b5d01" id="r_a45de7de396e69e49884327ced79b5d01"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a45de7de396e69e49884327ced79b5d01">EventId</a> = std::uint64_t</td></tr>
+<tr class="memdesc:a45de7de396e69e49884327ced79b5d01"><td class="mdescLeft">&#160;</td><td class="mdescRight">A unique ID.  <br /></td></tr>
 <tr class="separator:a45de7de396e69e49884327ced79b5d01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a469de83a5b91f8ca630e556d9bcf9f46" id="r_a469de83a5b91f8ca630e556d9bcf9f46"><td class="memItemLeft" align="right" valign="top"><a id="a469de83a5b91f8ca630e556d9bcf9f46" name="a469de83a5b91f8ca630e556d9bcf9f46"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>CorrelationId</b> = std::uint64_t</td></tr>
+<tr class="memitem:a469de83a5b91f8ca630e556d9bcf9f46" id="r_a469de83a5b91f8ca630e556d9bcf9f46"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a469de83a5b91f8ca630e556d9bcf9f46">CorrelationId</a> = std::uint64_t</td></tr>
+<tr class="memdesc:a469de83a5b91f8ca630e556d9bcf9f46"><td class="mdescLeft">&#160;</td><td class="mdescRight">An ID to match Response Events to Request Events.  <br /></td></tr>
 <tr class="separator:a469de83a5b91f8ca630e556d9bcf9f46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:aba82d930285c670ac7c9f2feaa2759d8" id="r_aba82d930285c670ac7c9f2feaa2759d8"><td class="memItemLeft" align="right" valign="top"><a id="aba82d930285c670ac7c9f2feaa2759d8" name="aba82d930285c670ac7c9f2feaa2759d8"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>EventSource</b> { <b>Unset</b>
-, <b>Model</b>
-, <b>View</b>
-, <b>Controller</b>
+<tr class="memitem:aba82d930285c670ac7c9f2feaa2759d8" id="r_aba82d930285c670ac7c9f2feaa2759d8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8">EventSource</a> { <a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8ac9f88e098f6fe4e4e112eeb05ccb9671">Unset</a>
+, <a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8aa559b87068921eec05086ce5485e9784">Model</a>
+, <a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8a4351cfebe4b61d8aa5efa1d020710005">View</a>
+, <a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8a9bbf373797bf7cf7ba62c80023682e25">Controller</a>
  }</td></tr>
+<tr class="memdesc:aba82d930285c670ac7c9f2feaa2759d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The source of an Event.  <a href="#aba82d930285c670ac7c9f2feaa2759d8">More...</a><br /></td></tr>
 <tr class="separator:aba82d930285c670ac7c9f2feaa2759d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a080339ce20c437b0d9a51542a36ee3e3" id="r_a080339ce20c437b0d9a51542a36ee3e3"><td class="memItemLeft" align="right" valign="top"><a id="a080339ce20c437b0d9a51542a36ee3e3" name="a080339ce20c437b0d9a51542a36ee3e3"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>EventType</b> { <br />
-&#160;&#160;<b>Unset</b>
-, <b>ReqRollDice</b>
-, <b>ReqMakeBet</b>
-, <b>ReqRemoveBet</b>
+<tr class="memitem:a080339ce20c437b0d9a51542a36ee3e3" id="r_a080339ce20c437b0d9a51542a36ee3e3"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3">EventType</a> { <br />
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac9f88e098f6fe4e4e112eeb05ccb9671">Unset</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a7a5de79675acf4bd51eb799546fc1fa7">ReqRollDice</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a4e226028069555ba3251c970e1e551de">ReqMakeBet</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aad9e3b3cce846f95775e43083db749e3">ReqRemoveBet</a>
 , <br />
-&#160;&#160;<b>ReqChangeBet</b>
-, <b>ReqTerminate</b>
-, <b>RspMakeBet</b>
-, <b>RspRemoveBet</b>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a39a4d7aad341bb4976e8efeb3374222a">ReqChangeBet</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884">ReqTerminate</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004">RspMakeBet</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52">RspRemoveBet</a>
 , <br />
-&#160;&#160;<b>RspChangeBet</b>
-, <b>UslBettingClosed</b>
-, <b>UslDiceThrowStart</b>
-, <b>UslDiceNewValue</b>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80">RspChangeBet</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad54394414bcef4b92b44bf2abf41f8ed">UslBettingClosed</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a8ab4ed05add088110149237e8279c61d">UslDiceThrowStart</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc">UslDiceNewValue</a>
 , <br />
-&#160;&#160;<b>UslResolveBetsStart</b>
-, <b>UslResolveBetsEnd</b>
-, <b>UslPointEstablished</b>
-, <b>UslSevenOut</b>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a5e4356c27e7a2603c194550df8d2ebf0">UslResolveBetsStart</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a114b77429783dcc326d4460b2ca1fab4">UslResolveBetsEnd</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad6111d74444e4de12b96e7970bf167f2">UslPointEstablished</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb">UslSevenOut</a>
 , <br />
-&#160;&#160;<b>UslPassLineWinner</b>
-, <b>UslNewShooter</b>
-, <b>UslBettingOpened</b>
-, <b>UslBetMade</b>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac62b18f39537806ea7b4d8557ffea75c">UslPassLineWinner</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac06fab4a3e7e7248da311ebd73503e5d">UslNewShooter</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac2669feb7491e496e18296a0b6acac40">UslBettingOpened</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac16a3dd90af2966c7fa6c42549c6388f">UslBetMade</a>
 , <br />
-&#160;&#160;<b>UslBetResolved</b>
-, <b>UslBetRemoved</b>
-, <b>UslBetChanged</b>
-, <b>UslTableBalanceChanged</b>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a123e35f80e3fa66d2e5180a487566dd0">UslBetResolved</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a2a7a485679558282089b85a3136bdcb1">UslBetRemoved</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aedf4c595aa6b2ddaf3b22460d8a95cf2">UslBetChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05">UslTableBalanceChanged</a>
 , <br />
-&#160;&#160;<b>UslPlayerBalanceChanged</b>
-, <b>UslPlayerJoinedTable</b>
-, <b>UslPlayerLeftTable</b>
-, <b>UslCountdownRollDice</b>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79">UslPlayerBalanceChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5">UslPlayerJoinedTable</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aec8d24f370b0e606012aa12be2233d98">UslPlayerLeftTable</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3af585f0c7691aa143fefa45d443339cfc">UslCountdownRollDice</a>
 <br />
  }</td></tr>
+<tr class="memdesc:a080339ce20c437b0d9a51542a36ee3e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the Event.  <a href="#a080339ce20c437b0d9a51542a36ee3e3">More...</a><br /></td></tr>
 <tr class="separator:a080339ce20c437b0d9a51542a36ee3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aaff18678ecff63433a67d8b4ce2e830f" id="r_aaff18678ecff63433a67d8b4ce2e830f"><td class="memItemLeft" align="right" valign="top"><a id="aaff18678ecff63433a67d8b4ce2e830f" name="aaff18678ecff63433a67d8b4ce2e830f"></a>
-EventId&#160;</td><td class="memItemRight" valign="bottom"><b>getNextEventId</b> ()</td></tr>
+<tr class="memitem:aaff18678ecff63433a67d8b4ce2e830f" id="r_aaff18678ecff63433a67d8b4ce2e830f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a45de7de396e69e49884327ced79b5d01">EventId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaff18678ecff63433a67d8b4ce2e830f">getNextEventId</a> ()</td></tr>
 <tr class="separator:aaff18678ecff63433a67d8b4ce2e830f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26f8b92725c87456be558e64df66fafb" id="r_a26f8b92725c87456be558e64df66fafb"><td class="memItemLeft" align="right" valign="top"><a id="a26f8b92725c87456be558e64df66fafb" name="a26f8b92725c87456be558e64df66fafb"></a>
-CorrelationId&#160;</td><td class="memItemRight" valign="bottom"><b>getNextCorrelationId</b> ()</td></tr>
+<tr class="memitem:a26f8b92725c87456be558e64df66fafb" id="r_a26f8b92725c87456be558e64df66fafb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a469de83a5b91f8ca630e556d9bcf9f46">CorrelationId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26f8b92725c87456be558e64df66fafb">getNextCorrelationId</a> ()</td></tr>
 <tr class="separator:a26f8b92725c87456be558e64df66fafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -294,10 +295,176 @@ CorrelationId&#160;</td><td class="memItemRight" valign="bottom"><b>getNextCorre
 <li>provides an abstraction layer between the Model (lib-craps) and the CUI (lib-cui) and GUI (lib-gui) </li>
 <li>controls game operations, events, configuration, etc </li>
 </ul>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="a469de83a5b91f8ca630e556d9bcf9f46" name="a469de83a5b91f8ca630e556d9bcf9f46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a469de83a5b91f8ca630e556d9bcf9f46">&#9670;&#160;</a></span>CorrelationId</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a469de83a5b91f8ca630e556d9bcf9f46">Ctrl::CorrelationId</a> = std::uint64_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>An ID to match Response Events to Request Events. </p>
+<p>Every event carries a correlationId allowing users to match up Requests with Responses. By default, and for convenience, a correlationId is set to the uniqueId. In the case of Response Events, the caller is responsible for overwriting the correlationId with the source event's correlationId. </p>
+
+</div>
+</div>
+<a id="a45de7de396e69e49884327ced79b5d01" name="a45de7de396e69e49884327ced79b5d01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45de7de396e69e49884327ced79b5d01">&#9670;&#160;</a></span>EventId</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a45de7de396e69e49884327ced79b5d01">Ctrl::EventId</a> = std::uint64_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A unique ID. </p>
+<p>Every event gets a unique value for unique ID. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="aba82d930285c670ac7c9f2feaa2759d8" name="aba82d930285c670ac7c9f2feaa2759d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba82d930285c670ac7c9f2feaa2759d8">&#9670;&#160;</a></span>EventSource</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8">Ctrl::EventSource</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The source of an Event. </p>
+<p>The source aligns with the Model/View/Controller (MVC) design where:</p>
+<ul>
+<li>Model = the event came from the <a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> Engine (lib-craps) </li>
+<li>View = the event came from the CUI (lib-cui) or GUI (lib-gui) </li>
+<li>Controller = the event came from the Controlloer (lib-controller) </li>
+</ul>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aba82d930285c670ac7c9f2feaa2759d8ac9f88e098f6fe4e4e112eeb05ccb9671" name="aba82d930285c670ac7c9f2feaa2759d8ac9f88e098f6fe4e4e112eeb05ccb9671"></a>Unset&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aba82d930285c670ac7c9f2feaa2759d8aa559b87068921eec05086ce5485e9784" name="aba82d930285c670ac7c9f2feaa2759d8aa559b87068921eec05086ce5485e9784"></a>Model&#160;</td><td class="fielddoc"><p><a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> engine originated event. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aba82d930285c670ac7c9f2feaa2759d8a4351cfebe4b61d8aa5efa1d020710005" name="aba82d930285c670ac7c9f2feaa2759d8a4351cfebe4b61d8aa5efa1d020710005"></a>View&#160;</td><td class="fielddoc"><p>View ( <a class="el" href="namespaceCui.html" title="CUI Library (lib-cui)">Cui</a> / <a class="el" href="namespaceGui.html" title="GUI Library (lib-gui)">Gui</a> ) originated event. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aba82d930285c670ac7c9f2feaa2759d8a9bbf373797bf7cf7ba62c80023682e25" name="aba82d930285c670ac7c9f2feaa2759d8a9bbf373797bf7cf7ba62c80023682e25"></a>Controller&#160;</td><td class="fielddoc"><p>Controller ( <a class="el" href="namespaceCtrl.html" title="Controller Library (lib-controller)">Ctrl</a> ) originated event. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a080339ce20c437b0d9a51542a36ee3e3" name="a080339ce20c437b0d9a51542a36ee3e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a080339ce20c437b0d9a51542a36ee3e3">&#9670;&#160;</a></span>EventType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3">Ctrl::EventType</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The name of the Event. </p>
+<p>A unique name that describes the purpose of the Event. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ac9f88e098f6fe4e4e112eeb05ccb9671" name="a080339ce20c437b0d9a51542a36ee3e3ac9f88e098f6fe4e4e112eeb05ccb9671"></a>Unset&#160;</td><td class="fielddoc"><p>uninitialized, treat as illegal </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a7a5de79675acf4bd51eb799546fc1fa7" name="a080339ce20c437b0d9a51542a36ee3e3a7a5de79675acf4bd51eb799546fc1fa7"></a>ReqRollDice&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a4e226028069555ba3251c970e1e551de" name="a080339ce20c437b0d9a51542a36ee3e3a4e226028069555ba3251c970e1e551de"></a>ReqMakeBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3aad9e3b3cce846f95775e43083db749e3" name="a080339ce20c437b0d9a51542a36ee3e3aad9e3b3cce846f95775e43083db749e3"></a>ReqRemoveBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a39a4d7aad341bb4976e8efeb3374222a" name="a080339ce20c437b0d9a51542a36ee3e3a39a4d7aad341bb4976e8efeb3374222a"></a>ReqChangeBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884" name="a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884"></a>ReqTerminate&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004" name="a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004"></a>RspMakeBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52" name="a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52"></a>RspRemoveBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80" name="a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80"></a>RspChangeBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ad54394414bcef4b92b44bf2abf41f8ed" name="a080339ce20c437b0d9a51542a36ee3e3ad54394414bcef4b92b44bf2abf41f8ed"></a>UslBettingClosed&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a8ab4ed05add088110149237e8279c61d" name="a080339ce20c437b0d9a51542a36ee3e3a8ab4ed05add088110149237e8279c61d"></a>UslDiceThrowStart&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc" name="a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc"></a>UslDiceNewValue&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a5e4356c27e7a2603c194550df8d2ebf0" name="a080339ce20c437b0d9a51542a36ee3e3a5e4356c27e7a2603c194550df8d2ebf0"></a>UslResolveBetsStart&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a114b77429783dcc326d4460b2ca1fab4" name="a080339ce20c437b0d9a51542a36ee3e3a114b77429783dcc326d4460b2ca1fab4"></a>UslResolveBetsEnd&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ad6111d74444e4de12b96e7970bf167f2" name="a080339ce20c437b0d9a51542a36ee3e3ad6111d74444e4de12b96e7970bf167f2"></a>UslPointEstablished&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb" name="a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb"></a>UslSevenOut&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ac62b18f39537806ea7b4d8557ffea75c" name="a080339ce20c437b0d9a51542a36ee3e3ac62b18f39537806ea7b4d8557ffea75c"></a>UslPassLineWinner&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ac06fab4a3e7e7248da311ebd73503e5d" name="a080339ce20c437b0d9a51542a36ee3e3ac06fab4a3e7e7248da311ebd73503e5d"></a>UslNewShooter&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ac2669feb7491e496e18296a0b6acac40" name="a080339ce20c437b0d9a51542a36ee3e3ac2669feb7491e496e18296a0b6acac40"></a>UslBettingOpened&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ac16a3dd90af2966c7fa6c42549c6388f" name="a080339ce20c437b0d9a51542a36ee3e3ac16a3dd90af2966c7fa6c42549c6388f"></a>UslBetMade&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a123e35f80e3fa66d2e5180a487566dd0" name="a080339ce20c437b0d9a51542a36ee3e3a123e35f80e3fa66d2e5180a487566dd0"></a>UslBetResolved&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a2a7a485679558282089b85a3136bdcb1" name="a080339ce20c437b0d9a51542a36ee3e3a2a7a485679558282089b85a3136bdcb1"></a>UslBetRemoved&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3aedf4c595aa6b2ddaf3b22460d8a95cf2" name="a080339ce20c437b0d9a51542a36ee3e3aedf4c595aa6b2ddaf3b22460d8a95cf2"></a>UslBetChanged&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05" name="a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05"></a>UslTableBalanceChanged&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79" name="a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79"></a>UslPlayerBalanceChanged&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5" name="a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5"></a>UslPlayerJoinedTable&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3aec8d24f370b0e606012aa12be2233d98" name="a080339ce20c437b0d9a51542a36ee3e3aec8d24f370b0e606012aa12be2233d98"></a>UslPlayerLeftTable&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3af585f0c7691aa143fefa45d443339cfc" name="a080339ce20c437b0d9a51542a36ee3e3af585f0c7691aa143fefa45d443339cfc"></a>UslCountdownRollDice&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a26f8b92725c87456be558e64df66fafb" name="a26f8b92725c87456be558e64df66fafb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26f8b92725c87456be558e64df66fafb">&#9670;&#160;</a></span>getNextCorrelationId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a469de83a5b91f8ca630e556d9bcf9f46">Ctrl::CorrelationId</a> Ctrl::getNextCorrelationId </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaff18678ecff63433a67d8b4ce2e830f" name="aaff18678ecff63433a67d8b4ce2e830f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaff18678ecff63433a67d8b4ce2e830f">&#9670;&#160;</a></span>getNextEventId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a45de7de396e69e49884327ced79b5d01">Ctrl::EventId</a> Ctrl::getNextEventId </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -93,7 +93,7 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">CrapsTypes.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//----------------------------------------------------------------</span></div>
+<a href="CrapsTypes_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// File: CrapsTypes.h</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//</span></div>
@@ -105,7 +105,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;deque&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;gen/Uuid.h&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="Uuid_8h.html">gen/Uuid.h</a>&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceCraps.html">Craps</a> {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
@@ -113,26 +113,36 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">class </span>CrapsBet;  <span class="comment">// fwd</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">class </span>Dice;      <span class="comment">// fwd</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">using </span>TableId   = std::string;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">   21</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">TableId</a>   = std::string;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">using </span>PlayerId  = Gen::Uuid;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">using </span>PlayerPtr = std::shared_ptr&lt;class Player&gt;;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">using </span>PlayerIds = std::vector&lt;Craps::PlayerId&gt;;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">   23</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a>  = <a class="code hl_typedef" href="namespaceGen.html#ada33f021180306fccdb1832b7531f166">Gen::Uuid</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="namespaceCraps.html#afad645f7b6b9e6d7b1d5d06c63a08043">   24</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceCraps.html#afad645f7b6b9e6d7b1d5d06c63a08043">PlayerPtr</a> = std::shared_ptr&lt;class Player&gt;;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="namespaceCraps.html#a16ab59cdd9aeafbfb3b5109be401a2a9">   25</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceCraps.html#a16ab59cdd9aeafbfb3b5109be401a2a9">PlayerIds</a> = std::vector&lt;Craps::PlayerId&gt;;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">using </span>BetId     = unsigned;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">using </span>BetPtr    = std::shared_ptr&lt;class CrapsBet&gt;;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">using </span>BetIds    = std::vector&lt;Craps::BetId&gt;;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">   27</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">BetId</a>     = unsigned;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">   28</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a>    = std::shared_ptr&lt;class CrapsBet&gt;;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="namespaceCraps.html#a692ab7bd1716374daa403859aeb6b34b">   29</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceCraps.html#a692ab7bd1716374daa403859aeb6b34b">BetIds</a>    = std::vector&lt;Craps::BetId&gt;;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">using </span>RecentRolls = std::deque&lt;Craps::Dice&gt;;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="namespaceCraps.html#a1ec715016943bcacc2a5da2b82f90703">   31</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceCraps.html#a1ec715016943bcacc2a5da2b82f90703">RecentRolls</a> = std::deque&lt;Craps::Dice&gt;;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>}</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">//----------------------------------------------------------------</span></div>
+<div class="ttc" id="aUuid_8h_html"><div class="ttname"><a href="Uuid_8h.html">Uuid.h</a></div></div>
 <div class="ttc" id="anamespaceCraps_html"><div class="ttname"><a href="namespaceCraps.html">Craps</a></div><div class="ttdoc">Craps Library (lib-craps)</div><div class="ttdef"><b>Definition</b> CrapsReaders.h:24</div></div>
+<div class="ttc" id="anamespaceCraps_html_a16ab59cdd9aeafbfb3b5109be401a2a9"><div class="ttname"><a href="namespaceCraps.html#a16ab59cdd9aeafbfb3b5109be401a2a9">Craps::PlayerIds</a></div><div class="ttdeci">std::vector&lt; Craps::PlayerId &gt; PlayerIds</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:25</div></div>
+<div class="ttc" id="anamespaceCraps_html_a1ec715016943bcacc2a5da2b82f90703"><div class="ttname"><a href="namespaceCraps.html#a1ec715016943bcacc2a5da2b82f90703">Craps::RecentRolls</a></div><div class="ttdeci">std::deque&lt; Craps::Dice &gt; RecentRolls</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:31</div></div>
+<div class="ttc" id="anamespaceCraps_html_a2d6cc59e8ed3ada470393b645849a7e5"><div class="ttname"><a href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a></div><div class="ttdeci">std::string TableId</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:21</div></div>
+<div class="ttc" id="anamespaceCraps_html_a4c85ae32d62a87e464aca9a0a6e19e42"><div class="ttname"><a href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a></div><div class="ttdeci">unsigned BetId</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:27</div></div>
+<div class="ttc" id="anamespaceCraps_html_a692ab7bd1716374daa403859aeb6b34b"><div class="ttname"><a href="namespaceCraps.html#a692ab7bd1716374daa403859aeb6b34b">Craps::BetIds</a></div><div class="ttdeci">std::vector&lt; Craps::BetId &gt; BetIds</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:29</div></div>
+<div class="ttc" id="anamespaceCraps_html_a9efd0f28587bc0010ce60ab037e08a8d"><div class="ttname"><a href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a></div><div class="ttdeci">Gen::Uuid PlayerId</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:23</div></div>
+<div class="ttc" id="anamespaceCraps_html_aee667f3a06e065896d76fd5f7e911192"><div class="ttname"><a href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">Craps::BetPtr</a></div><div class="ttdeci">std::shared_ptr&lt; class CrapsBet &gt; BetPtr</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:28</div></div>
+<div class="ttc" id="anamespaceCraps_html_afad645f7b6b9e6d7b1d5d06c63a08043"><div class="ttname"><a href="namespaceCraps.html#afad645f7b6b9e6d7b1d5d06c63a08043">Craps::PlayerPtr</a></div><div class="ttdeci">std::shared_ptr&lt; class Player &gt; PlayerPtr</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:24</div></div>
+<div class="ttc" id="anamespaceGen_html_ada33f021180306fccdb1832b7531f166"><div class="ttname"><a href="namespaceGen.html#ada33f021180306fccdb1832b7531f166">Gen::Uuid</a></div><div class="ttdeci">std::string Uuid</div><div class="ttdef"><b>Definition</b> Uuid.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Oct 14 2026 19:08:48 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -1,5 +1,5 @@
 <map id="Ctrl::GameEvent" name="Ctrl::GameEvent">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,425,135,451"/>
+<area shape="rect" id="Node000001" title="Base class for all Events." alt="" coords="5,425,135,451"/>
 <area shape="rect" id="Node000002" href="$structCtrl_1_1ReqRollDice.html" title=" " alt="" coords="229,5,361,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,411,69,338,83,238,97,184,117,131,145,83,181,40,203,26,228,18,229,23,205,30,184,44,149,86,122,134,102,186,88,239,75,338,73,412"/>
 <area shape="rect" id="Node000003" href="$structCtrl_1_1ReqTerminate.html" title=" " alt="" coords="223,55,366,80"/>

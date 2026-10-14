@@ -92,13 +92,14 @@ $(function(){ initResizable(false); });
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classCtrl_1_1CrapsReaders-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Ctrl::CrapsReaders Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>UI retrieves read-only information directly from the model.  
+<p>Retrieves read-only information directly from the model.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="CrapsReaders_8h_source.html">CrapsReaders.h</a>&gt;</code></p>
@@ -108,181 +109,1933 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1CrapsReaders_1_1TableMinMaxRules.html">TableMinMaxRules</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a46bef38a9fda3a7b53472e0f4f87cc0e" id="r_a46bef38a9fda3a7b53472e0f4f87cc0e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46bef38a9fda3a7b53472e0f4f87cc0e">CrapsReaders</a> ()=delete</td></tr>
+<tr class="separator:a46bef38a9fda3a7b53472e0f4f87cc0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:acff01e9f4d5ca77895935e557c09ea3a" id="r_acff01e9f4d5ca77895935e557c09ea3a"><td class="memItemLeft" align="right" valign="top"><a id="acff01e9f4d5ca77895935e557c09ea3a" name="acff01e9f4d5ca77895935e557c09ea3a"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerHaveBet</b> (const Craps::PlayerId &amp;playerId, const Craps::BetId &amp;betId, bool &amp;haveBet, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:acff01e9f4d5ca77895935e557c09ea3a" id="r_acff01e9f4d5ca77895935e557c09ea3a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acff01e9f4d5ca77895935e557c09ea3a">readPlayerHaveBet</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, bool &amp;haveBet, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:acff01e9f4d5ca77895935e557c09ea3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a89ffcfa3537b45ba9fdaf568e96cc7" id="r_a2a89ffcfa3537b45ba9fdaf568e96cc7"><td class="memItemLeft" align="right" valign="top"><a id="a2a89ffcfa3537b45ba9fdaf568e96cc7" name="a2a89ffcfa3537b45ba9fdaf568e96cc7"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerGetBets</b> (const Craps::PlayerId &amp;playerId, Craps::BetIds &amp;betIds, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a2a89ffcfa3537b45ba9fdaf568e96cc7" id="r_a2a89ffcfa3537b45ba9fdaf568e96cc7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a89ffcfa3537b45ba9fdaf568e96cc7">readPlayerGetBets</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="namespaceCraps.html#a692ab7bd1716374daa403859aeb6b34b">Craps::BetIds</a> &amp;betIds, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a2a89ffcfa3537b45ba9fdaf568e96cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab475d03659f618d08486b4f0017c17d3" id="r_ab475d03659f618d08486b4f0017c17d3"><td class="memItemLeft" align="right" valign="top"><a id="ab475d03659f618d08486b4f0017c17d3" name="ab475d03659f618d08486b4f0017c17d3"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerGetOddsBets</b> (const Craps::PlayerId &amp;playerId, Craps::BetIds &amp;betIds, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:ab475d03659f618d08486b4f0017c17d3" id="r_ab475d03659f618d08486b4f0017c17d3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab475d03659f618d08486b4f0017c17d3">readPlayerGetOddsBets</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="namespaceCraps.html#a692ab7bd1716374daa403859aeb6b34b">Craps::BetIds</a> &amp;betIds, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:ab475d03659f618d08486b4f0017c17d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9339cb52253b0c928acab4ade20fb611" id="r_a9339cb52253b0c928acab4ade20fb611"><td class="memItemLeft" align="right" valign="top"><a id="a9339cb52253b0c928acab4ade20fb611" name="a9339cb52253b0c928acab4ade20fb611"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerName</b> (const Craps::PlayerId &amp;playerId, std::string &amp;playerName, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a2232bbf48f06d1d11aa6d26f2bb7f56d" id="r_a2232bbf48f06d1d11aa6d26f2bb7f56d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2232bbf48f06d1d11aa6d26f2bb7f56d">readPlayerHaveAnyOddsCapableBet</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, bool &amp;haveOddsBets, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:a2232bbf48f06d1d11aa6d26f2bb7f56d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9339cb52253b0c928acab4ade20fb611" id="r_a9339cb52253b0c928acab4ade20fb611"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9339cb52253b0c928acab4ade20fb611">readPlayerName</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, std::string &amp;playerName, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a9339cb52253b0c928acab4ade20fb611"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5814f630268c4a46b8179f59689dd9f" id="r_ad5814f630268c4a46b8179f59689dd9f"><td class="memItemLeft" align="right" valign="top"><a id="ad5814f630268c4a46b8179f59689dd9f" name="ad5814f630268c4a46b8179f59689dd9f"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerAmountOnTable</b> (const Craps::PlayerId &amp;playerId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;amount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:ad5814f630268c4a46b8179f59689dd9f" id="r_ad5814f630268c4a46b8179f59689dd9f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5814f630268c4a46b8179f59689dd9f">readPlayerAmountOnTable</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;amount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:ad5814f630268c4a46b8179f59689dd9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b95695881be3ad7ec336e4570e26966" id="r_a1b95695881be3ad7ec336e4570e26966"><td class="memItemLeft" align="right" valign="top"><a id="a1b95695881be3ad7ec336e4570e26966" name="a1b95695881be3ad7ec336e4570e26966"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerNumBetsOnTable</b> (const Craps::PlayerId &amp;playerId, unsigned &amp;numBets, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a1b95695881be3ad7ec336e4570e26966" id="r_a1b95695881be3ad7ec336e4570e26966"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b95695881be3ad7ec336e4570e26966">readPlayerNumBetsOnTable</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, unsigned &amp;numBets, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a1b95695881be3ad7ec336e4570e26966"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f79902c56774fa5d7a1aba2632c2785" id="r_a2f79902c56774fa5d7a1aba2632c2785"><td class="memItemLeft" align="right" valign="top"><a id="a2f79902c56774fa5d7a1aba2632c2785" name="a2f79902c56774fa5d7a1aba2632c2785"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerBalance</b> (const Craps::PlayerId &amp;playerId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;balance, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a2f79902c56774fa5d7a1aba2632c2785" id="r_a2f79902c56774fa5d7a1aba2632c2785"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f79902c56774fa5d7a1aba2632c2785">readPlayerBalance</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;balance, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a2f79902c56774fa5d7a1aba2632c2785"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21471356957ed885720fb87a919e55d4" id="r_a21471356957ed885720fb87a919e55d4"><td class="memItemLeft" align="right" valign="top"><a id="a21471356957ed885720fb87a919e55d4" name="a21471356957ed885720fb87a919e55d4"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerLastRollStats</b> (const Craps::PlayerId &amp;playerId, <a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;lastRollStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a21471356957ed885720fb87a919e55d4" id="r_a21471356957ed885720fb87a919e55d4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21471356957ed885720fb87a919e55d4">readPlayerLastRollStats</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;lastRollStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a21471356957ed885720fb87a919e55d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e821166d5fb438d3a42314adfed6e6b" id="r_a1e821166d5fb438d3a42314adfed6e6b"><td class="memItemLeft" align="right" valign="top"><a id="a1e821166d5fb438d3a42314adfed6e6b" name="a1e821166d5fb438d3a42314adfed6e6b"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerCurrentStats</b> (const Craps::PlayerId &amp;playerId, <a class="el" href="classCraps_1_1PlayerStats.html">Craps::PlayerStats</a> &amp;playerCurrentStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a1e821166d5fb438d3a42314adfed6e6b" id="r_a1e821166d5fb438d3a42314adfed6e6b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e821166d5fb438d3a42314adfed6e6b">readPlayerCurrentStats</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classCraps_1_1PlayerStats.html">Craps::PlayerStats</a> &amp;playerCurrentStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a1e821166d5fb438d3a42314adfed6e6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4783c44664126e301824d8dd9e911163" id="r_a4783c44664126e301824d8dd9e911163"><td class="memItemLeft" align="right" valign="top"><a id="a4783c44664126e301824d8dd9e911163" name="a4783c44664126e301824d8dd9e911163"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerAlltimeStats</b> (const Craps::PlayerId &amp;playerId, <a class="el" href="classCraps_1_1PlayerStats.html">Craps::PlayerStats</a> &amp;playerAlltimeStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a4783c44664126e301824d8dd9e911163" id="r_a4783c44664126e301824d8dd9e911163"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4783c44664126e301824d8dd9e911163">readPlayerAlltimeStats</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classCraps_1_1PlayerStats.html">Craps::PlayerStats</a> &amp;playerAlltimeStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a4783c44664126e301824d8dd9e911163"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92697d7c5c9e778301a57cd6ef1ceb89" id="r_a92697d7c5c9e778301a57cd6ef1ceb89"><td class="memItemLeft" align="right" valign="top"><a id="a92697d7c5c9e778301a57cd6ef1ceb89" name="a92697d7c5c9e778301a57cd6ef1ceb89"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerCurrentStatsBank</b> (const Craps::PlayerId &amp;playerId, <a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;playerCurrentStatsBank, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a92697d7c5c9e778301a57cd6ef1ceb89" id="r_a92697d7c5c9e778301a57cd6ef1ceb89"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92697d7c5c9e778301a57cd6ef1ceb89">readPlayerCurrentStatsBank</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;playerCurrentStatsBank, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a92697d7c5c9e778301a57cd6ef1ceb89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a406c01ec2528dc8bfc80c05a6379e96a" id="r_a406c01ec2528dc8bfc80c05a6379e96a"><td class="memItemLeft" align="right" valign="top"><a id="a406c01ec2528dc8bfc80c05a6379e96a" name="a406c01ec2528dc8bfc80c05a6379e96a"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerSessionHistory</b> (const Craps::PlayerId &amp;playerId, Craps::SessionHistory::Sessions &amp;playerSessionHistory, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a406c01ec2528dc8bfc80c05a6379e96a" id="r_a406c01ec2528dc8bfc80c05a6379e96a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a406c01ec2528dc8bfc80c05a6379e96a">readPlayerSessionHistory</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classCraps_1_1SessionHistory.html#ae95c30374abf79a3e8df509983df9594">Craps::SessionHistory::Sessions</a> &amp;playerSessionHistory, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a406c01ec2528dc8bfc80c05a6379e96a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf8f9728ca48391316e5d25bc057a00a" id="r_aaf8f9728ca48391316e5d25bc057a00a"><td class="memItemLeft" align="right" valign="top"><a id="aaf8f9728ca48391316e5d25bc057a00a" name="aaf8f9728ca48391316e5d25bc057a00a"></a>
-static const PlayerManifest::PlayerList &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>readPlayerList</b> ()</td></tr>
+<tr class="memitem:aaf8f9728ca48391316e5d25bc057a00a" id="r_aaf8f9728ca48391316e5d25bc057a00a"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classCtrl_1_1PlayerManifest.html#af3675d861b3db3d50ef07ff81342de4b">PlayerManifest::PlayerList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf8f9728ca48391316e5d25bc057a00a">readPlayerList</a> ()</td></tr>
 <tr class="separator:aaf8f9728ca48391316e5d25bc057a00a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d021013f822db7ccc5a701692544dca" id="r_a4d021013f822db7ccc5a701692544dca"><td class="memItemLeft" align="right" valign="top"><a id="a4d021013f822db7ccc5a701692544dca" name="a4d021013f822db7ccc5a701692544dca"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetIsRemovable</b> (const Craps::BetId &amp;betid, bool &amp;isRemovable, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a4d021013f822db7ccc5a701692544dca" id="r_a4d021013f822db7ccc5a701692544dca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d021013f822db7ccc5a701692544dca">readBetIsRemovable</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betid, bool &amp;isRemovable, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a4d021013f822db7ccc5a701692544dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abff7c2d30520f950d238cde096ae7571" id="r_abff7c2d30520f950d238cde096ae7571"><td class="memItemLeft" align="right" valign="top"><a id="abff7c2d30520f950d238cde096ae7571" name="abff7c2d30520f950d238cde096ae7571"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetPivot</b> (const Craps::BetId &amp;betId, unsigned &amp;pivot, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:abff7c2d30520f950d238cde096ae7571" id="r_abff7c2d30520f950d238cde096ae7571"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abff7c2d30520f950d238cde096ae7571">readBetPivot</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, unsigned &amp;pivot, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:abff7c2d30520f950d238cde096ae7571"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abddedc3f9a9913de919b4dd5f77ee823" id="r_abddedc3f9a9913de919b4dd5f77ee823"><td class="memItemLeft" align="right" valign="top"><a id="abddedc3f9a9913de919b4dd5f77ee823" name="abddedc3f9a9913de919b4dd5f77ee823"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetPlayerId</b> (const Craps::BetId &amp;betId, Craps::PlayerId &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:abddedc3f9a9913de919b4dd5f77ee823" id="r_abddedc3f9a9913de919b4dd5f77ee823"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abddedc3f9a9913de919b4dd5f77ee823">readBetPlayerId</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:abddedc3f9a9913de919b4dd5f77ee823"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5dd14edf3a7867c99409321df9e3974" id="r_af5dd14edf3a7867c99409321df9e3974"><td class="memItemLeft" align="right" valign="top"><a id="af5dd14edf3a7867c99409321df9e3974" name="af5dd14edf3a7867c99409321df9e3974"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetName</b> (const Craps::BetId &amp;betId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> &amp;betName, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:af5dd14edf3a7867c99409321df9e3974" id="r_af5dd14edf3a7867c99409321df9e3974"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5dd14edf3a7867c99409321df9e3974">readBetName</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> &amp;betName, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:af5dd14edf3a7867c99409321df9e3974"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0756f9ab6bc6d82502128d6aa3cb0efd" id="r_a0756f9ab6bc6d82502128d6aa3cb0efd"><td class="memItemLeft" align="right" valign="top"><a id="a0756f9ab6bc6d82502128d6aa3cb0efd" name="a0756f9ab6bc6d82502128d6aa3cb0efd"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetContractAmount</b> (const Craps::BetId &amp;betId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;contractAmount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a0756f9ab6bc6d82502128d6aa3cb0efd" id="r_a0756f9ab6bc6d82502128d6aa3cb0efd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0756f9ab6bc6d82502128d6aa3cb0efd">readBetContractAmount</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;contractAmount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a0756f9ab6bc6d82502128d6aa3cb0efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25535c52069f3f7f91f8f68935219888" id="r_a25535c52069f3f7f91f8f68935219888"><td class="memItemLeft" align="right" valign="top"><a id="a25535c52069f3f7f91f8f68935219888" name="a25535c52069f3f7f91f8f68935219888"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetOddsAmount</b> (const Craps::BetId &amp;betId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;oddsAmount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a25535c52069f3f7f91f8f68935219888" id="r_a25535c52069f3f7f91f8f68935219888"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25535c52069f3f7f91f8f68935219888">readBetOddsAmount</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;oddsAmount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a25535c52069f3f7f91f8f68935219888"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa201c5b07bf27cee603286fb534564d0" id="r_aa201c5b07bf27cee603286fb534564d0"><td class="memItemLeft" align="right" valign="top"><a id="aa201c5b07bf27cee603286fb534564d0" name="aa201c5b07bf27cee603286fb534564d0"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetOffComeOutRoll</b> (const Craps::BetId &amp;betId, bool &amp;offComeOutRoll, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:aa201c5b07bf27cee603286fb534564d0" id="r_aa201c5b07bf27cee603286fb534564d0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa201c5b07bf27cee603286fb534564d0">readBetOffComeOutRoll</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, bool &amp;offComeOutRoll, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:aa201c5b07bf27cee603286fb534564d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab82e130433e42b86c48114d4788034f6" id="r_ab82e130433e42b86c48114d4788034f6"><td class="memItemLeft" align="right" valign="top"><a id="ab82e130433e42b86c48114d4788034f6" name="ab82e130433e42b86c48114d4788034f6"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetHardwayWorking</b> (const Craps::BetId &amp;betId, bool &amp;hardwayWorking, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:ab82e130433e42b86c48114d4788034f6" id="r_ab82e130433e42b86c48114d4788034f6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab82e130433e42b86c48114d4788034f6">readBetHardwayWorking</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, bool &amp;hardwayWorking, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:ab82e130433e42b86c48114d4788034f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5a50df8c2d01b73ac77a43c6fadb8e5" id="r_ad5a50df8c2d01b73ac77a43c6fadb8e5"><td class="memItemLeft" align="right" valign="top"><a id="ad5a50df8c2d01b73ac77a43c6fadb8e5" name="ad5a50df8c2d01b73ac77a43c6fadb8e5"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetDistance</b> (const Craps::BetId &amp;betId, unsigned &amp;distance, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:ad5a50df8c2d01b73ac77a43c6fadb8e5" id="r_ad5a50df8c2d01b73ac77a43c6fadb8e5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5a50df8c2d01b73ac77a43c6fadb8e5">readBetDistance</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, unsigned &amp;distance, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:ad5a50df8c2d01b73ac77a43c6fadb8e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc548b22a1112c84ec61f37b5abd270b" id="r_adc548b22a1112c84ec61f37b5abd270b"><td class="memItemLeft" align="right" valign="top"><a id="adc548b22a1112c84ec61f37b5abd270b" name="adc548b22a1112c84ec61f37b5abd270b"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetWhenCreated</b> (const Craps::BetId &amp;betId, <a class="el" href="classGen_1_1Timepoint.html">Gen::Timepoint</a> &amp;whenCreated, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:adc548b22a1112c84ec61f37b5abd270b" id="r_adc548b22a1112c84ec61f37b5abd270b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc548b22a1112c84ec61f37b5abd270b">readBetWhenCreated</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, <a class="el" href="classGen_1_1Timepoint.html">Gen::Timepoint</a> &amp;whenCreated, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:adc548b22a1112c84ec61f37b5abd270b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd5439e93cb80aa68d7626e700455485" id="r_abd5439e93cb80aa68d7626e700455485"><td class="memItemLeft" align="right" valign="top"><a id="abd5439e93cb80aa68d7626e700455485" name="abd5439e93cb80aa68d7626e700455485"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readBetWhenDecided</b> (const Craps::BetId &amp;betId, <a class="el" href="classGen_1_1Timepoint.html">Gen::Timepoint</a> &amp;whenDecided, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:abd5439e93cb80aa68d7626e700455485" id="r_abd5439e93cb80aa68d7626e700455485"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd5439e93cb80aa68d7626e700455485">readBetWhenDecided</a> (const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, <a class="el" href="classGen_1_1Timepoint.html">Gen::Timepoint</a> &amp;whenDecided, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:abd5439e93cb80aa68d7626e700455485"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab84cff051063562d6ee8107d05f2d837" id="r_ab84cff051063562d6ee8107d05f2d837"><td class="memItemLeft" align="right" valign="top"><a id="ab84cff051063562d6ee8107d05f2d837" name="ab84cff051063562d6ee8107d05f2d837"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>readTableName</b> ()</td></tr>
+<tr class="memitem:ab84cff051063562d6ee8107d05f2d837" id="r_ab84cff051063562d6ee8107d05f2d837"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab84cff051063562d6ee8107d05f2d837">readTableName</a> ()</td></tr>
 <tr class="separator:ab84cff051063562d6ee8107d05f2d837"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73e9868a9da5c640c392aaf99b505565" id="r_a73e9868a9da5c640c392aaf99b505565"><td class="memItemLeft" align="right" valign="top"><a id="a73e9868a9da5c640c392aaf99b505565" name="a73e9868a9da5c640c392aaf99b505565"></a>
-static <a class="el" href="structCtrl_1_1CrapsReaders_1_1TableMinMaxRules.html">TableMinMaxRules</a>&#160;</td><td class="memItemRight" valign="bottom"><b>readTableMinMaxRules</b> ()</td></tr>
+<tr class="memitem:a73e9868a9da5c640c392aaf99b505565" id="r_a73e9868a9da5c640c392aaf99b505565"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structCtrl_1_1CrapsReaders_1_1TableMinMaxRules.html">TableMinMaxRules</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73e9868a9da5c640c392aaf99b505565">readTableMinMaxRules</a> ()</td></tr>
 <tr class="separator:a73e9868a9da5c640c392aaf99b505565"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a924889b6d4e60a568ebc762d5bf2d4ae" id="r_a924889b6d4e60a568ebc762d5bf2d4ae"><td class="memItemLeft" align="right" valign="top"><a id="a924889b6d4e60a568ebc762d5bf2d4ae" name="a924889b6d4e60a568ebc762d5bf2d4ae"></a>
-static <a class="el" href="classGen_1_1Money.html">Gen::Money</a>&#160;</td><td class="memItemRight" valign="bottom"><b>readHouseBalance</b> ()</td></tr>
+<tr class="memitem:a924889b6d4e60a568ebc762d5bf2d4ae" id="r_a924889b6d4e60a568ebc762d5bf2d4ae"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGen_1_1Money.html">Gen::Money</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a924889b6d4e60a568ebc762d5bf2d4ae">readHouseBalance</a> ()</td></tr>
 <tr class="separator:a924889b6d4e60a568ebc762d5bf2d4ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a058a3ceb91547cbe5caa63a613f4491b" id="r_a058a3ceb91547cbe5caa63a613f4491b"><td class="memItemLeft" align="right" valign="top"><a id="a058a3ceb91547cbe5caa63a613f4491b" name="a058a3ceb91547cbe5caa63a613f4491b"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableNumPlayers</b> (const Craps::TableId &amp;tableId, unsigned &amp;numPlayers, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a058a3ceb91547cbe5caa63a613f4491b" id="r_a058a3ceb91547cbe5caa63a613f4491b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a058a3ceb91547cbe5caa63a613f4491b">readTableNumPlayers</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, unsigned &amp;numPlayers, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a058a3ceb91547cbe5caa63a613f4491b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a98d92c7b9da1780115c62c2d709576" id="r_a4a98d92c7b9da1780115c62c2d709576"><td class="memItemLeft" align="right" valign="top"><a id="a4a98d92c7b9da1780115c62c2d709576" name="a4a98d92c7b9da1780115c62c2d709576"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTablePoint</b> (const Craps::TableId &amp;tableId, unsigned &amp;point, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a4a98d92c7b9da1780115c62c2d709576" id="r_a4a98d92c7b9da1780115c62c2d709576"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a98d92c7b9da1780115c62c2d709576">readTablePoint</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, unsigned &amp;point, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a4a98d92c7b9da1780115c62c2d709576"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac968055b6ea807c75ef5a906f238ac18" id="r_ac968055b6ea807c75ef5a906f238ac18"><td class="memItemLeft" align="right" valign="top"><a id="ac968055b6ea807c75ef5a906f238ac18" name="ac968055b6ea807c75ef5a906f238ac18"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableCurrentRoll</b> (const Craps::TableId &amp;tableId, <a class="el" href="classCraps_1_1Dice.html">Craps::Dice</a> &amp;dice, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:ac968055b6ea807c75ef5a906f238ac18" id="r_ac968055b6ea807c75ef5a906f238ac18"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac968055b6ea807c75ef5a906f238ac18">readTableCurrentRoll</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="classCraps_1_1Dice.html">Craps::Dice</a> &amp;dice, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:ac968055b6ea807c75ef5a906f238ac18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add7fbd8c0328906f9c0b99fa03387b06" id="r_add7fbd8c0328906f9c0b99fa03387b06"><td class="memItemLeft" align="right" valign="top"><a id="add7fbd8c0328906f9c0b99fa03387b06" name="add7fbd8c0328906f9c0b99fa03387b06"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableNumRolls</b> (const Craps::TableId &amp;tableId, unsigned &amp;numRolls, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:add7fbd8c0328906f9c0b99fa03387b06" id="r_add7fbd8c0328906f9c0b99fa03387b06"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add7fbd8c0328906f9c0b99fa03387b06">readTableNumRolls</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, unsigned &amp;numRolls, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:add7fbd8c0328906f9c0b99fa03387b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84507fbb4a0cf022b73b9fb10892abbe" id="r_a84507fbb4a0cf022b73b9fb10892abbe"><td class="memItemLeft" align="right" valign="top"><a id="a84507fbb4a0cf022b73b9fb10892abbe" name="a84507fbb4a0cf022b73b9fb10892abbe"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableAmountOnTable</b> (const Craps::TableId &amp;tableId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;amount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a84507fbb4a0cf022b73b9fb10892abbe" id="r_a84507fbb4a0cf022b73b9fb10892abbe"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a84507fbb4a0cf022b73b9fb10892abbe">readTableAmountOnTable</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;amount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a84507fbb4a0cf022b73b9fb10892abbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69863d05e6936f2f9e54ef85921ae7af" id="r_a69863d05e6936f2f9e54ef85921ae7af"><td class="memItemLeft" align="right" valign="top"><a id="a69863d05e6936f2f9e54ef85921ae7af" name="a69863d05e6936f2f9e54ef85921ae7af"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableNumBetsOnTable</b> (const Craps::TableId &amp;tableId, unsigned &amp;numBets, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a69863d05e6936f2f9e54ef85921ae7af" id="r_a69863d05e6936f2f9e54ef85921ae7af"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69863d05e6936f2f9e54ef85921ae7af">readTableNumBetsOnTable</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, unsigned &amp;numBets, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a69863d05e6936f2f9e54ef85921ae7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3c55ec8d557abc9760574e58c7a9281" id="r_ac3c55ec8d557abc9760574e58c7a9281"><td class="memItemLeft" align="right" valign="top"><a id="ac3c55ec8d557abc9760574e58c7a9281" name="ac3c55ec8d557abc9760574e58c7a9281"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTablePlayers</b> (const Craps::TableId &amp;tableId, Craps::PlayerIds &amp;playerIds, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:ac3c55ec8d557abc9760574e58c7a9281" id="r_ac3c55ec8d557abc9760574e58c7a9281"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3c55ec8d557abc9760574e58c7a9281">readTablePlayers</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="namespaceCraps.html#a16ab59cdd9aeafbfb3b5109be401a2a9">Craps::PlayerIds</a> &amp;playerIds, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:ac3c55ec8d557abc9760574e58c7a9281"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d2f4ac3ddcd043fa24af6d1e343f630" id="r_a9d2f4ac3ddcd043fa24af6d1e343f630"><td class="memItemLeft" align="right" valign="top"><a id="a9d2f4ac3ddcd043fa24af6d1e343f630" name="a9d2f4ac3ddcd043fa24af6d1e343f630"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableCurrentShooter</b> (const Craps::TableId &amp;tableId, Craps::PlayerId &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a9d2f4ac3ddcd043fa24af6d1e343f630" id="r_a9d2f4ac3ddcd043fa24af6d1e343f630"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d2f4ac3ddcd043fa24af6d1e343f630">readTableCurrentShooter</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a9d2f4ac3ddcd043fa24af6d1e343f630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0866428a67ff38f419ee87c53c3f3357" id="r_a0866428a67ff38f419ee87c53c3f3357"><td class="memItemLeft" align="right" valign="top"><a id="a0866428a67ff38f419ee87c53c3f3357" name="a0866428a67ff38f419ee87c53c3f3357"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableRecentRolls</b> (const Craps::TableId &amp;tableId, Craps::RecentRolls &amp;recentRolls, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a0866428a67ff38f419ee87c53c3f3357" id="r_a0866428a67ff38f419ee87c53c3f3357"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0866428a67ff38f419ee87c53c3f3357">readTableRecentRolls</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="namespaceCraps.html#a1ec715016943bcacc2a5da2b82f90703">Craps::RecentRolls</a> &amp;recentRolls, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a0866428a67ff38f419ee87c53c3f3357"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a915dc70f9e9ce070a592e3864cfda8f2" id="r_a915dc70f9e9ce070a592e3864cfda8f2"><td class="memItemLeft" align="right" valign="top"><a id="a915dc70f9e9ce070a592e3864cfda8f2" name="a915dc70f9e9ce070a592e3864cfda8f2"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableCurrentStats</b> (const Craps::TableId &amp;tableId, <a class="el" href="classCraps_1_1TableStats.html">Craps::TableStats</a> &amp;currentTableStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a915dc70f9e9ce070a592e3864cfda8f2" id="r_a915dc70f9e9ce070a592e3864cfda8f2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a915dc70f9e9ce070a592e3864cfda8f2">readTableCurrentStats</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="classCraps_1_1TableStats.html">Craps::TableStats</a> &amp;currentTableStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a915dc70f9e9ce070a592e3864cfda8f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accbe033bdab2a626a04a51e27585fdfd" id="r_accbe033bdab2a626a04a51e27585fdfd"><td class="memItemLeft" align="right" valign="top"><a id="accbe033bdab2a626a04a51e27585fdfd" name="accbe033bdab2a626a04a51e27585fdfd"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableAlltimeStats</b> (const Craps::TableId &amp;tableId, <a class="el" href="classCraps_1_1TableStats.html">Craps::TableStats</a> &amp;alltimeTableStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:accbe033bdab2a626a04a51e27585fdfd" id="r_accbe033bdab2a626a04a51e27585fdfd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#accbe033bdab2a626a04a51e27585fdfd">readTableAlltimeStats</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="classCraps_1_1TableStats.html">Craps::TableStats</a> &amp;alltimeTableStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:accbe033bdab2a626a04a51e27585fdfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1a759142ad31de0610f760eeb0aed87" id="r_af1a759142ad31de0610f760eeb0aed87"><td class="memItemLeft" align="right" valign="top"><a id="af1a759142ad31de0610f760eeb0aed87" name="af1a759142ad31de0610f760eeb0aed87"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableCurrentStatsBank</b> (const Craps::TableId &amp;tableId, <a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;currentStatsBank, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:af1a759142ad31de0610f760eeb0aed87" id="r_af1a759142ad31de0610f760eeb0aed87"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1a759142ad31de0610f760eeb0aed87">readTableCurrentStatsBank</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;currentStatsBank, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:af1a759142ad31de0610f760eeb0aed87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c62eb1f255d720de1779d77a226a097" id="r_a9c62eb1f255d720de1779d77a226a097"><td class="memItemLeft" align="right" valign="top"><a id="a9c62eb1f255d720de1779d77a226a097" name="a9c62eb1f255d720de1779d77a226a097"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableAlltimeStatsBank</b> (const Craps::TableId &amp;tableId, <a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;alltimeStatsBank, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a9c62eb1f255d720de1779d77a226a097" id="r_a9c62eb1f255d720de1779d77a226a097"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c62eb1f255d720de1779d77a226a097">readTableAlltimeStatsBank</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;alltimeStatsBank, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a9c62eb1f255d720de1779d77a226a097"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa68a991db3f6980a290d74d9e541e306" id="r_aa68a991db3f6980a290d74d9e541e306"><td class="memItemLeft" align="right" valign="top"><a id="aa68a991db3f6980a290d74d9e541e306" name="aa68a991db3f6980a290d74d9e541e306"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableLastRollStats</b> (const Craps::TableId &amp;tableId, <a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;lastRollStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:aa68a991db3f6980a290d74d9e541e306" id="r_aa68a991db3f6980a290d74d9e541e306"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa68a991db3f6980a290d74d9e541e306">readTableLastRollStats</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;lastRollStats, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:aa68a991db3f6980a290d74d9e541e306"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ba346d58b55c8dd865b7c0fbb377d6c" id="r_a1ba346d58b55c8dd865b7c0fbb377d6c"><td class="memItemLeft" align="right" valign="top"><a id="a1ba346d58b55c8dd865b7c0fbb377d6c" name="a1ba346d58b55c8dd865b7c0fbb377d6c"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableSessionHistory</b> (const Craps::TableId &amp;tableId, Craps::SessionHistory::Sessions &amp;tableSessionHistory, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a1ba346d58b55c8dd865b7c0fbb377d6c" id="r_a1ba346d58b55c8dd865b7c0fbb377d6c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ba346d58b55c8dd865b7c0fbb377d6c">readTableSessionHistory</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="classCraps_1_1SessionHistory.html#ae95c30374abf79a3e8df509983df9594">Craps::SessionHistory::Sessions</a> &amp;tableSessionHistory, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a1ba346d58b55c8dd865b7c0fbb377d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fc4e9e1270434691ac40c4959bb521d" id="r_a9fc4e9e1270434691ac40c4959bb521d"><td class="memItemLeft" align="right" valign="top"><a id="a9fc4e9e1270434691ac40c4959bb521d" name="a9fc4e9e1270434691ac40c4959bb521d"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableIsComeOutRoll</b> (const Craps::TableId &amp;tableId, bool &amp;isComeOutRoll, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a9fc4e9e1270434691ac40c4959bb521d" id="r_a9fc4e9e1270434691ac40c4959bb521d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9fc4e9e1270434691ac40c4959bb521d">readTableIsComeOutRoll</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, bool &amp;isComeOutRoll, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a9fc4e9e1270434691ac40c4959bb521d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7125c4df908905aaed91f8884b839ee1" id="r_a7125c4df908905aaed91f8884b839ee1"><td class="memItemLeft" align="right" valign="top"><a id="a7125c4df908905aaed91f8884b839ee1" name="a7125c4df908905aaed91f8884b839ee1"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableIsBettingOpen</b> (const Craps::TableId &amp;tableId, bool &amp;isBettingOpen, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a7125c4df908905aaed91f8884b839ee1" id="r_a7125c4df908905aaed91f8884b839ee1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7125c4df908905aaed91f8884b839ee1">readTableIsBettingOpen</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, bool &amp;isBettingOpen, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a7125c4df908905aaed91f8884b839ee1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a105fce74544e0875763de98680c02b4a" id="r_a105fce74544e0875763de98680c02b4a"><td class="memItemLeft" align="right" valign="top"><a id="a105fce74544e0875763de98680c02b4a" name="a105fce74544e0875763de98680c02b4a"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableHaveBet</b> (const Craps::TableId &amp;tableId, const Craps::BetId &amp;betId, bool &amp;haveBet, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a105fce74544e0875763de98680c02b4a" id="r_a105fce74544e0875763de98680c02b4a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a105fce74544e0875763de98680c02b4a">readTableHaveBet</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;betId, bool &amp;haveBet, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a105fce74544e0875763de98680c02b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a613993e4bca0a1ad3325044022bc2fad" id="r_a613993e4bca0a1ad3325044022bc2fad"><td class="memItemLeft" align="right" valign="top"><a id="a613993e4bca0a1ad3325044022bc2fad" name="a613993e4bca0a1ad3325044022bc2fad"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>readTableHavePlayer</b> (const Craps::TableId &amp;tableId, const Craps::PlayerId &amp;playerId, bool &amp;havePlayer, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a613993e4bca0a1ad3325044022bc2fad" id="r_a613993e4bca0a1ad3325044022bc2fad"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a613993e4bca0a1ad3325044022bc2fad">readTableHavePlayer</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, bool &amp;havePlayer, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a613993e4bca0a1ad3325044022bc2fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2016fc5f041a81760d5b604dd2e3310" id="r_ab2016fc5f041a81760d5b604dd2e3310"><td class="memItemLeft" align="right" valign="top"><a id="ab2016fc5f041a81760d5b604dd2e3310" name="ab2016fc5f041a81760d5b604dd2e3310"></a>
-static const TableManifest::TableList &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>readTableList</b> ()</td></tr>
+<tr class="memitem:ab2016fc5f041a81760d5b604dd2e3310" id="r_ab2016fc5f041a81760d5b604dd2e3310"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classCtrl_1_1TableManifest.html#a4e5f1e35c174ecb7fc0f035d6af40deb">TableManifest::TableList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2016fc5f041a81760d5b604dd2e3310">readTableList</a> ()</td></tr>
 <tr class="separator:ab2016fc5f041a81760d5b604dd2e3310"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a288625c88e857740a3a4d81c2f4bd6ac" id="r_a288625c88e857740a3a4d81c2f4bd6ac"><td class="memItemLeft" align="right" valign="top"><a id="a288625c88e857740a3a4d81c2f4bd6ac" name="a288625c88e857740a3a4d81c2f4bd6ac"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>getActiveCrapsTable</b> (Craps::TableId &amp;tableId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a288625c88e857740a3a4d81c2f4bd6ac" id="r_a288625c88e857740a3a4d81c2f4bd6ac"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a288625c88e857740a3a4d81c2f4bd6ac">getActiveCrapsTable</a> (<a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;tableId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a288625c88e857740a3a4d81c2f4bd6ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b7ddee35c0e433ea07b6d3bf1b6556f" id="r_a1b7ddee35c0e433ea07b6d3bf1b6556f"><td class="memItemLeft" align="right" valign="top"><a id="a1b7ddee35c0e433ea07b6d3bf1b6556f" name="a1b7ddee35c0e433ea07b6d3bf1b6556f"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>getUserPlayer</b> (Craps::PlayerId &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a1b7ddee35c0e433ea07b6d3bf1b6556f" id="r_a1b7ddee35c0e433ea07b6d3bf1b6556f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b7ddee35c0e433ea07b6d3bf1b6556f">getUserPlayer</a> (<a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a1b7ddee35c0e433ea07b6d3bf1b6556f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99b721167828868b536a744406f79a0b" id="r_a99b721167828868b536a744406f79a0b"><td class="memItemLeft" align="right" valign="top"><a id="a99b721167828868b536a744406f79a0b" name="a99b721167828868b536a744406f79a0b"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getUserPlayerName</b> ()</td></tr>
+<tr class="memitem:a99b721167828868b536a744406f79a0b" id="r_a99b721167828868b536a744406f79a0b"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99b721167828868b536a744406f79a0b">getUserPlayerName</a> ()</td></tr>
 <tr class="separator:a99b721167828868b536a744406f79a0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74e3d482c77ae292038525c660a46f48" id="r_a74e3d482c77ae292038525c660a46f48"><td class="memItemLeft" align="right" valign="top"><a id="a74e3d482c77ae292038525c660a46f48" name="a74e3d482c77ae292038525c660a46f48"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>getAutoFill</b> (<a class="el" href="structCtrl_1_1AutoFill_1_1AutoFillEntry.html">AutoFill::AutoFillEntry</a> &amp;entry, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a74e3d482c77ae292038525c660a46f48" id="r_a74e3d482c77ae292038525c660a46f48"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74e3d482c77ae292038525c660a46f48">getAutoFill</a> (<a class="el" href="structCtrl_1_1AutoFill_1_1AutoFillEntry.html">AutoFill::AutoFillEntry</a> &amp;entry, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a74e3d482c77ae292038525c660a46f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a476046012c102e492890b6b61dbcf421" id="r_a476046012c102e492890b6b61dbcf421"><td class="memItemLeft" align="right" valign="top"><a id="a476046012c102e492890b6b61dbcf421" name="a476046012c102e492890b6b61dbcf421"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>getAutoFills</b> (AutoFill::AutoFills &amp;autoFills, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a476046012c102e492890b6b61dbcf421" id="r_a476046012c102e492890b6b61dbcf421"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a476046012c102e492890b6b61dbcf421">getAutoFills</a> (<a class="el" href="classCtrl_1_1AutoFill.html#a3591593ae857aa95a7139029f4f4c617">AutoFill::AutoFills</a> &amp;autoFills, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a476046012c102e492890b6b61dbcf421"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f7c944eaf05f66da6b4a49c131b858d" id="r_a0f7c944eaf05f66da6b4a49c131b858d"><td class="memItemLeft" align="right" valign="top"><a id="a0f7c944eaf05f66da6b4a49c131b858d" name="a0f7c944eaf05f66da6b4a49c131b858d"></a>
-static Gen::ReturnCode&#160;</td><td class="memItemRight" valign="bottom"><b>getQuickBets</b> (QuickBet::QuickBets &amp;quickBets, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="memitem:a0f7c944eaf05f66da6b4a49c131b858d" id="r_a0f7c944eaf05f66da6b4a49c131b858d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f7c944eaf05f66da6b4a49c131b858d">getQuickBets</a> (<a class="el" href="classCtrl_1_1QuickBet.html#ac9a9a0054c3642f0accefa3af0068517">QuickBet::QuickBets</a> &amp;quickBets, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a0f7c944eaf05f66da6b4a49c131b858d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>UI retrieves read-only information directly from the model. </p>
-<p>A collection of functions that retrieves information from the model directly, bypassing the <a class="el" href="classCtrl_1_1EventLoop.html" title="UI (Console or GUI) enqueues events. The loop processes events.">EventLoop</a>. These are read-only retrievals that do not change the game state.</p>
-<p>See class <a class="el" href="classCtrl_1_1CrapsCommands.html" title="UI builds and enqueues an Event to perform against the model.">CrapsCommands</a> for issueing commands that change the model state.</p>
-<p>Both GUI and CUI go through this interface. </p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
+<div class="textblock"><p>Retrieves read-only information directly from the model. </p>
+<p>A collection of functions that retrieves information from the model directly, without incurring the overhead of Req/Rsp events. These are read-only retrievals that do not change the game state.</p>
+<p>Used mainly by the CUI and GUI to populate dynamic menus as needed. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a46bef38a9fda3a7b53472e0f4f87cc0e" name="a46bef38a9fda3a7b53472e0f4f87cc0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46bef38a9fda3a7b53472e0f4f87cc0e">&#9670;&#160;</a></span>CrapsReaders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Ctrl::CrapsReaders::CrapsReaders </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a288625c88e857740a3a4d81c2f4bd6ac" name="a288625c88e857740a3a4d81c2f4bd6ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a288625c88e857740a3a4d81c2f4bd6ac">&#9670;&#160;</a></span>getActiveCrapsTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::getActiveCrapsTable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a74e3d482c77ae292038525c660a46f48" name="a74e3d482c77ae292038525c660a46f48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74e3d482c77ae292038525c660a46f48">&#9670;&#160;</a></span>getAutoFill()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::getAutoFill </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCtrl_1_1AutoFill_1_1AutoFillEntry.html">AutoFill::AutoFillEntry</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>entry</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a476046012c102e492890b6b61dbcf421" name="a476046012c102e492890b6b61dbcf421"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a476046012c102e492890b6b61dbcf421">&#9670;&#160;</a></span>getAutoFills()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::getAutoFills </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCtrl_1_1AutoFill.html#a3591593ae857aa95a7139029f4f4c617">AutoFill::AutoFills</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>autoFills</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0f7c944eaf05f66da6b4a49c131b858d" name="a0f7c944eaf05f66da6b4a49c131b858d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f7c944eaf05f66da6b4a49c131b858d">&#9670;&#160;</a></span>getQuickBets()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> Ctrl::CrapsReaders::getQuickBets </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCtrl_1_1QuickBet.html#ac9a9a0054c3642f0accefa3af0068517">QuickBet::QuickBets</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>quickBets</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1b7ddee35c0e433ea07b6d3bf1b6556f" name="a1b7ddee35c0e433ea07b6d3bf1b6556f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b7ddee35c0e433ea07b6d3bf1b6556f">&#9670;&#160;</a></span>getUserPlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::getUserPlayer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a99b721167828868b536a744406f79a0b" name="a99b721167828868b536a744406f79a0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99b721167828868b536a744406f79a0b">&#9670;&#160;</a></span>getUserPlayerName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string CrapsReaders::getUserPlayerName </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0756f9ab6bc6d82502128d6aa3cb0efd" name="a0756f9ab6bc6d82502128d6aa3cb0efd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0756f9ab6bc6d82502128d6aa3cb0efd">&#9670;&#160;</a></span>readBetContractAmount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetContractAmount </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>contractAmount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad5a50df8c2d01b73ac77a43c6fadb8e5" name="ad5a50df8c2d01b73ac77a43c6fadb8e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a50df8c2d01b73ac77a43c6fadb8e5">&#9670;&#160;</a></span>readBetDistance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetDistance </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned &amp;</td>          <td class="paramname"><span class="paramname"><em>distance</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab82e130433e42b86c48114d4788034f6" name="ab82e130433e42b86c48114d4788034f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab82e130433e42b86c48114d4788034f6">&#9670;&#160;</a></span>readBetHardwayWorking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetHardwayWorking </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>hardwayWorking</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4d021013f822db7ccc5a701692544dca" name="a4d021013f822db7ccc5a701692544dca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d021013f822db7ccc5a701692544dca">&#9670;&#160;</a></span>readBetIsRemovable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetIsRemovable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betid</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>isRemovable</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af5dd14edf3a7867c99409321df9e3974" name="af5dd14edf3a7867c99409321df9e3974"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5dd14edf3a7867c99409321df9e3974">&#9670;&#160;</a></span>readBetName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetName </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a25535c52069f3f7f91f8f68935219888" name="a25535c52069f3f7f91f8f68935219888"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25535c52069f3f7f91f8f68935219888">&#9670;&#160;</a></span>readBetOddsAmount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetOddsAmount </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>oddsAmount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa201c5b07bf27cee603286fb534564d0" name="aa201c5b07bf27cee603286fb534564d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa201c5b07bf27cee603286fb534564d0">&#9670;&#160;</a></span>readBetOffComeOutRoll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetOffComeOutRoll </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>offComeOutRoll</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abff7c2d30520f950d238cde096ae7571" name="abff7c2d30520f950d238cde096ae7571"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abff7c2d30520f950d238cde096ae7571">&#9670;&#160;</a></span>readBetPivot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetPivot </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned &amp;</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abddedc3f9a9913de919b4dd5f77ee823" name="abddedc3f9a9913de919b4dd5f77ee823"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abddedc3f9a9913de919b4dd5f77ee823">&#9670;&#160;</a></span>readBetPlayerId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetPlayerId </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc548b22a1112c84ec61f37b5abd270b" name="adc548b22a1112c84ec61f37b5abd270b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc548b22a1112c84ec61f37b5abd270b">&#9670;&#160;</a></span>readBetWhenCreated()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetWhenCreated </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Timepoint.html">Gen::Timepoint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>whenCreated</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abd5439e93cb80aa68d7626e700455485" name="abd5439e93cb80aa68d7626e700455485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd5439e93cb80aa68d7626e700455485">&#9670;&#160;</a></span>readBetWhenDecided()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readBetWhenDecided </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Timepoint.html">Gen::Timepoint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>whenDecided</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a924889b6d4e60a568ebc762d5bf2d4ae" name="a924889b6d4e60a568ebc762d5bf2d4ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a924889b6d4e60a568ebc762d5bf2d4ae">&#9670;&#160;</a></span>readHouseBalance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> CrapsReaders::readHouseBalance </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4783c44664126e301824d8dd9e911163" name="a4783c44664126e301824d8dd9e911163"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4783c44664126e301824d8dd9e911163">&#9670;&#160;</a></span>readPlayerAlltimeStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerAlltimeStats </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1PlayerStats.html">Craps::PlayerStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerAlltimeStats</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad5814f630268c4a46b8179f59689dd9f" name="ad5814f630268c4a46b8179f59689dd9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5814f630268c4a46b8179f59689dd9f">&#9670;&#160;</a></span>readPlayerAmountOnTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerAmountOnTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>amount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2f79902c56774fa5d7a1aba2632c2785" name="a2f79902c56774fa5d7a1aba2632c2785"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f79902c56774fa5d7a1aba2632c2785">&#9670;&#160;</a></span>readPlayerBalance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerBalance </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>balance</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1e821166d5fb438d3a42314adfed6e6b" name="a1e821166d5fb438d3a42314adfed6e6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e821166d5fb438d3a42314adfed6e6b">&#9670;&#160;</a></span>readPlayerCurrentStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerCurrentStats </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1PlayerStats.html">Craps::PlayerStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerCurrentStats</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a92697d7c5c9e778301a57cd6ef1ceb89" name="a92697d7c5c9e778301a57cd6ef1ceb89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92697d7c5c9e778301a57cd6ef1ceb89">&#9670;&#160;</a></span>readPlayerCurrentStatsBank()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerCurrentStatsBank </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerCurrentStatsBank</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a89ffcfa3537b45ba9fdaf568e96cc7" name="a2a89ffcfa3537b45ba9fdaf568e96cc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a89ffcfa3537b45ba9fdaf568e96cc7">&#9670;&#160;</a></span>readPlayerGetBets()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerGetBets </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a692ab7bd1716374daa403859aeb6b34b">Craps::BetIds</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betIds</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab475d03659f618d08486b4f0017c17d3" name="ab475d03659f618d08486b4f0017c17d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab475d03659f618d08486b4f0017c17d3">&#9670;&#160;</a></span>readPlayerGetOddsBets()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerGetOddsBets </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a692ab7bd1716374daa403859aeb6b34b">Craps::BetIds</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betIds</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2232bbf48f06d1d11aa6d26f2bb7f56d" name="a2232bbf48f06d1d11aa6d26f2bb7f56d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2232bbf48f06d1d11aa6d26f2bb7f56d">&#9670;&#160;</a></span>readPlayerHaveAnyOddsCapableBet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerHaveAnyOddsCapableBet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>haveOddsBets</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acff01e9f4d5ca77895935e557c09ea3a" name="acff01e9f4d5ca77895935e557c09ea3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acff01e9f4d5ca77895935e557c09ea3a">&#9670;&#160;</a></span>readPlayerHaveBet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerHaveBet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>haveBet</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a21471356957ed885720fb87a919e55d4" name="a21471356957ed885720fb87a919e55d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21471356957ed885720fb87a919e55d4">&#9670;&#160;</a></span>readPlayerLastRollStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerLastRollStats </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>lastRollStats</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaf8f9728ca48391316e5d25bc057a00a" name="aaf8f9728ca48391316e5d25bc057a00a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf8f9728ca48391316e5d25bc057a00a">&#9670;&#160;</a></span>readPlayerList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classCtrl_1_1PlayerManifest.html#af3675d861b3db3d50ef07ff81342de4b">PlayerManifest::PlayerList</a> &amp; CrapsReaders::readPlayerList </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9339cb52253b0c928acab4ade20fb611" name="a9339cb52253b0c928acab4ade20fb611"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9339cb52253b0c928acab4ade20fb611">&#9670;&#160;</a></span>readPlayerName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerName </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>playerName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1b95695881be3ad7ec336e4570e26966" name="a1b95695881be3ad7ec336e4570e26966"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b95695881be3ad7ec336e4570e26966">&#9670;&#160;</a></span>readPlayerNumBetsOnTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerNumBetsOnTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned &amp;</td>          <td class="paramname"><span class="paramname"><em>numBets</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a406c01ec2528dc8bfc80c05a6379e96a" name="a406c01ec2528dc8bfc80c05a6379e96a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a406c01ec2528dc8bfc80c05a6379e96a">&#9670;&#160;</a></span>readPlayerSessionHistory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readPlayerSessionHistory </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1SessionHistory.html#ae95c30374abf79a3e8df509983df9594">Craps::SessionHistory::Sessions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerSessionHistory</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="accbe033bdab2a626a04a51e27585fdfd" name="accbe033bdab2a626a04a51e27585fdfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accbe033bdab2a626a04a51e27585fdfd">&#9670;&#160;</a></span>readTableAlltimeStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableAlltimeStats </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1TableStats.html">Craps::TableStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>alltimeTableStats</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c62eb1f255d720de1779d77a226a097" name="a9c62eb1f255d720de1779d77a226a097"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c62eb1f255d720de1779d77a226a097">&#9670;&#160;</a></span>readTableAlltimeStatsBank()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableAlltimeStatsBank </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>alltimeStatsBank</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a84507fbb4a0cf022b73b9fb10892abbe" name="a84507fbb4a0cf022b73b9fb10892abbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84507fbb4a0cf022b73b9fb10892abbe">&#9670;&#160;</a></span>readTableAmountOnTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableAmountOnTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>amount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac968055b6ea807c75ef5a906f238ac18" name="ac968055b6ea807c75ef5a906f238ac18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac968055b6ea807c75ef5a906f238ac18">&#9670;&#160;</a></span>readTableCurrentRoll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableCurrentRoll </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1Dice.html">Craps::Dice</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>dice</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9d2f4ac3ddcd043fa24af6d1e343f630" name="a9d2f4ac3ddcd043fa24af6d1e343f630"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d2f4ac3ddcd043fa24af6d1e343f630">&#9670;&#160;</a></span>readTableCurrentShooter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableCurrentShooter </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a915dc70f9e9ce070a592e3864cfda8f2" name="a915dc70f9e9ce070a592e3864cfda8f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a915dc70f9e9ce070a592e3864cfda8f2">&#9670;&#160;</a></span>readTableCurrentStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableCurrentStats </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1TableStats.html">Craps::TableStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>currentTableStats</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af1a759142ad31de0610f760eeb0aed87" name="af1a759142ad31de0610f760eeb0aed87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1a759142ad31de0610f760eeb0aed87">&#9670;&#160;</a></span>readTableCurrentStatsBank()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableCurrentStatsBank </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1BankStats.html">Craps::BankStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>currentStatsBank</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a105fce74544e0875763de98680c02b4a" name="a105fce74544e0875763de98680c02b4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a105fce74544e0875763de98680c02b4a">&#9670;&#160;</a></span>readTableHaveBet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableHaveBet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>haveBet</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a613993e4bca0a1ad3325044022bc2fad" name="a613993e4bca0a1ad3325044022bc2fad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a613993e4bca0a1ad3325044022bc2fad">&#9670;&#160;</a></span>readTableHavePlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableHavePlayer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>havePlayer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7125c4df908905aaed91f8884b839ee1" name="a7125c4df908905aaed91f8884b839ee1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7125c4df908905aaed91f8884b839ee1">&#9670;&#160;</a></span>readTableIsBettingOpen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableIsBettingOpen </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>isBettingOpen</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9fc4e9e1270434691ac40c4959bb521d" name="a9fc4e9e1270434691ac40c4959bb521d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fc4e9e1270434691ac40c4959bb521d">&#9670;&#160;</a></span>readTableIsComeOutRoll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableIsComeOutRoll </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>isComeOutRoll</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa68a991db3f6980a290d74d9e541e306" name="aa68a991db3f6980a290d74d9e541e306"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa68a991db3f6980a290d74d9e541e306">&#9670;&#160;</a></span>readTableLastRollStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableLastRollStats </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>lastRollStats</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab2016fc5f041a81760d5b604dd2e3310" name="ab2016fc5f041a81760d5b604dd2e3310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2016fc5f041a81760d5b604dd2e3310">&#9670;&#160;</a></span>readTableList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classCtrl_1_1TableManifest.html#a4e5f1e35c174ecb7fc0f035d6af40deb">TableManifest::TableList</a> &amp; CrapsReaders::readTableList </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a73e9868a9da5c640c392aaf99b505565" name="a73e9868a9da5c640c392aaf99b505565"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73e9868a9da5c640c392aaf99b505565">&#9670;&#160;</a></span>readTableMinMaxRules()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structCtrl_1_1CrapsReaders_1_1TableMinMaxRules.html">CrapsReaders::TableMinMaxRules</a> CrapsReaders::readTableMinMaxRules </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab84cff051063562d6ee8107d05f2d837" name="ab84cff051063562d6ee8107d05f2d837"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab84cff051063562d6ee8107d05f2d837">&#9670;&#160;</a></span>readTableName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string CrapsReaders::readTableName </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a69863d05e6936f2f9e54ef85921ae7af" name="a69863d05e6936f2f9e54ef85921ae7af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69863d05e6936f2f9e54ef85921ae7af">&#9670;&#160;</a></span>readTableNumBetsOnTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableNumBetsOnTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned &amp;</td>          <td class="paramname"><span class="paramname"><em>numBets</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a058a3ceb91547cbe5caa63a613f4491b" name="a058a3ceb91547cbe5caa63a613f4491b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a058a3ceb91547cbe5caa63a613f4491b">&#9670;&#160;</a></span>readTableNumPlayers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableNumPlayers </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned &amp;</td>          <td class="paramname"><span class="paramname"><em>numPlayers</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="add7fbd8c0328906f9c0b99fa03387b06" name="add7fbd8c0328906f9c0b99fa03387b06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add7fbd8c0328906f9c0b99fa03387b06">&#9670;&#160;</a></span>readTableNumRolls()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableNumRolls </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned &amp;</td>          <td class="paramname"><span class="paramname"><em>numRolls</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3c55ec8d557abc9760574e58c7a9281" name="ac3c55ec8d557abc9760574e58c7a9281"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3c55ec8d557abc9760574e58c7a9281">&#9670;&#160;</a></span>readTablePlayers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTablePlayers </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a16ab59cdd9aeafbfb3b5109be401a2a9">Craps::PlayerIds</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerIds</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4a98d92c7b9da1780115c62c2d709576" name="a4a98d92c7b9da1780115c62c2d709576"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a98d92c7b9da1780115c62c2d709576">&#9670;&#160;</a></span>readTablePoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTablePoint </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned &amp;</td>          <td class="paramname"><span class="paramname"><em>point</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0866428a67ff38f419ee87c53c3f3357" name="a0866428a67ff38f419ee87c53c3f3357"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0866428a67ff38f419ee87c53c3f3357">&#9670;&#160;</a></span>readTableRecentRolls()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableRecentRolls </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a1ec715016943bcacc2a5da2b82f90703">Craps::RecentRolls</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>recentRolls</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1ba346d58b55c8dd865b7c0fbb377d6c" name="a1ba346d58b55c8dd865b7c0fbb377d6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ba346d58b55c8dd865b7c0fbb377d6c">&#9670;&#160;</a></span>readTableSessionHistory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsReaders::readTableSessionHistory </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1SessionHistory.html#ae95c30374abf79a3e8df509983df9594">Craps::SessionHistory::Sessions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableSessionHistory</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/lib-controller/include/controller/<a class="el" href="CrapsReaders_8h_source.html">CrapsReaders.h</a></li>
-<li>src/lib-controller/src/<b>CrapsReaders.cpp</b></li>
+<li>src/lib-controller/src/<a class="el" href="CrapsReaders_8cpp.html">CrapsReaders.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['errorname_0',['ErrorName',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cd',1,'Gen::ErrorPass']]],
-  ['errortype_1',['ErrorType',['../classGen_1_1ErrorPass.html#a92d05e8dcc6565618e5dbd175578ac15',1,'Gen::ErrorPass']]]
+  ['color_0',['Color',['../namespaceCui.html#af8072f8108d9c65cfa74f7129ff4262a',1,'Cui']]],
+  ['cuibetname_1',['CuiBetName',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3e',1,'Cui::CuiUtils']]]
 ];

@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['max_0',['max',['../structCraps_1_1NumBets.html#a04b5840434f3af5aa60d28defda1f904',1,'Craps::NumBets::max'],['../structCraps_1_1AmtBets.html#a4815284a796fdd696a08fafcd1a0a38b',1,'Craps::AmtBets::max']]],
+  ['maxamtbetonebet_1',['maxAmtBetOneBet',['../classCraps_1_1BetStats.html#a6735d519d564eb2280953ff2df0cb787',1,'Craps::BetStats']]],
+  ['maxamtdepositedsession_2',['maxAmtDepositedSession',['../classCraps_1_1BankStats.html#a5cb0dd8ea215ff6c74f1d6472d32d5e8',1,'Craps::BankStats']]],
+  ['maxamtdepositedsessiondate_3',['maxAmtDepositedSessionDate',['../classCraps_1_1BankStats.html#a0812f490914f1e043d18413007fe3532',1,'Craps::BankStats']]],
+  ['maxamtkeeponebet_4',['maxAmtKeepOneBet',['../classCraps_1_1BetStats.html#a1a5c182eb0aae44881f6a7aa35bf66cf',1,'Craps::BetStats']]],
+  ['maxamtloseonebet_5',['maxAmtLoseOneBet',['../classCraps_1_1BetStats.html#a217c83c4c1af261203e7e2f3547f04ab',1,'Craps::BetStats']]],
+  ['maxamtwinonebet_6',['maxAmtWinOneBet',['../classCraps_1_1BetStats.html#aa33a268d7a503b60194a2194946d4a24',1,'Craps::BetStats']]],
+  ['maxamtwithdrawnsession_7',['maxAmtWithdrawnSession',['../classCraps_1_1BankStats.html#a0b93f8227e449620379b28691a8204ba',1,'Craps::BankStats']]],
+  ['maxamtwithdrawnsessiondate_8',['maxAmtWithdrawnSessionDate',['../classCraps_1_1BankStats.html#a1241f40ac596f20f1cdacaf146587663',1,'Craps::BankStats']]],
+  ['maxlinebet_9',['maxLineBet',['../structCtrl_1_1CrapsReaders_1_1TableMinMaxRules.html#a21b32e40b865d18f2b2db53a06442450',1,'Ctrl::CrapsReaders::TableMinMaxRules']]],
+  ['maxodds_10',['maxOdds',['../structCtrl_1_1CrapsReaders_1_1TableMinMaxRules.html#a5117f8ba19e84295e1416673151c72bd',1,'Ctrl::CrapsReaders::TableMinMaxRules']]],
+  ['maxrecentrolls_11',['maxRecentRolls',['../structCraps_1_1TableConfig.html#a22c9c1d084cc06100075a42ec8bccd7c',1,'Craps::TableConfig']]],
+  ['maxrepeats_12',['maxRepeats',['../structCraps_1_1Counter.html#ada5372a87e73bd273eacea7908593e12',1,'Craps::Counter']]],
+  ['maxsessions_13',['maxSessions',['../structCraps_1_1TableConfig.html#ad0aa21317186a3c5424da49c4fdda90e',1,'Craps::TableConfig']]],
+  ['menuhotkeys_14',['MenuHotKeys',['../classCui_1_1MenuBase.html#a6ac9744d057b2a51db0318c08ea1ffd4',1,'Cui::MenuBase']]],
+  ['messageborderbotrow_15',['messageBorderBotRow',['../classCui_1_1LayoutCrapsScreen.html#a4a015baaa342ef332cc63e8fea134695',1,'Cui::LayoutCrapsScreen']]],
+  ['messageborderheight_16',['messageBorderHeight',['../classCui_1_1LayoutCrapsScreen.html#aaa869f2db454eb2dea4775850fd0db1c',1,'Cui::LayoutCrapsScreen']]],
+  ['messageborderleftcol_17',['messageBorderLeftCol',['../classCui_1_1LayoutCrapsScreen.html#a2ca1da6bd114cab6a38329c1e62ad11c',1,'Cui::LayoutCrapsScreen']]],
+  ['messageborderrightcol_18',['messageBorderRightCol',['../classCui_1_1LayoutCrapsScreen.html#ab349043b294f70d1d36e19df7ca1d9d5',1,'Cui::LayoutCrapsScreen']]],
+  ['messagebordertoprow_19',['messageBorderTopRow',['../classCui_1_1LayoutCrapsScreen.html#ad117dfc4d08a1084d11dbe98159a5113',1,'Cui::LayoutCrapsScreen']]],
+  ['messageborderwidth_20',['messageBorderWidth',['../classCui_1_1LayoutCrapsScreen.html#ae1b6de2ba75304392280f97676909fba',1,'Cui::LayoutCrapsScreen']]],
+  ['mincols_21',['minCols',['../structCui_1_1LayoutConsole.html#a5a473f0d97595e1861339e1a6b2e8659',1,'Cui::LayoutConsole']]],
+  ['minlinebet_22',['minLineBet',['../structCtrl_1_1CrapsReaders_1_1TableMinMaxRules.html#a7f64363989e6fe913b56aa194bef5627',1,'Ctrl::CrapsReaders::TableMinMaxRules']]],
+  ['minrows_23',['minRows',['../structCui_1_1LayoutConsole.html#ad8130006601aa8409cfd3b85cf463f8a',1,'Cui::LayoutConsole']]]
+];

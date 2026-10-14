@@ -96,59 +96,356 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">Cui::LayoutConsole Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="LayoutConsole_8h_source.html">LayoutConsole.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:ad8130006601aa8409cfd3b85cf463f8a" id="r_ad8130006601aa8409cfd3b85cf463f8a"><td class="memItemLeft" align="right" valign="top"><a id="ad8130006601aa8409cfd3b85cf463f8a" name="ad8130006601aa8409cfd3b85cf463f8a"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>minRows</b> = 41</td></tr>
+<tr class="memitem:ad8130006601aa8409cfd3b85cf463f8a" id="r_ad8130006601aa8409cfd3b85cf463f8a"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8130006601aa8409cfd3b85cf463f8a">minRows</a> = 41</td></tr>
 <tr class="separator:ad8130006601aa8409cfd3b85cf463f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a473f0d97595e1861339e1a6b2e8659" id="r_a5a473f0d97595e1861339e1a6b2e8659"><td class="memItemLeft" align="right" valign="top"><a id="a5a473f0d97595e1861339e1a6b2e8659" name="a5a473f0d97595e1861339e1a6b2e8659"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>minCols</b> = 100</td></tr>
+<tr class="memitem:a5a473f0d97595e1861339e1a6b2e8659" id="r_a5a473f0d97595e1861339e1a6b2e8659"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a473f0d97595e1861339e1a6b2e8659">minCols</a> = 100</td></tr>
 <tr class="separator:a5a473f0d97595e1861339e1a6b2e8659"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a384a419a14a8f57c201f2980519c30bf" id="r_a384a419a14a8f57c201f2980519c30bf"><td class="memItemLeft" align="right" valign="top"><a id="a384a419a14a8f57c201f2980519c30bf" name="a384a419a14a8f57c201f2980519c30bf"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>topRow</b> = 0</td></tr>
+<tr class="memitem:a384a419a14a8f57c201f2980519c30bf" id="r_a384a419a14a8f57c201f2980519c30bf"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a384a419a14a8f57c201f2980519c30bf">topRow</a> = 0</td></tr>
 <tr class="separator:a384a419a14a8f57c201f2980519c30bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe82d3cada814378c27c49c8fcf21819" id="r_afe82d3cada814378c27c49c8fcf21819"><td class="memItemLeft" align="right" valign="top"><a id="afe82d3cada814378c27c49c8fcf21819" name="afe82d3cada814378c27c49c8fcf21819"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>botRow</b> = minRows - 1</td></tr>
+<tr class="memitem:afe82d3cada814378c27c49c8fcf21819" id="r_afe82d3cada814378c27c49c8fcf21819"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe82d3cada814378c27c49c8fcf21819">botRow</a> = <a class="el" href="#ad8130006601aa8409cfd3b85cf463f8a">minRows</a> - 1</td></tr>
 <tr class="separator:afe82d3cada814378c27c49c8fcf21819"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad33a593afa13e0b80635897d5668edf1" id="r_ad33a593afa13e0b80635897d5668edf1"><td class="memItemLeft" align="right" valign="top"><a id="ad33a593afa13e0b80635897d5668edf1" name="ad33a593afa13e0b80635897d5668edf1"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>leftCol</b> = 0</td></tr>
+<tr class="memitem:ad33a593afa13e0b80635897d5668edf1" id="r_ad33a593afa13e0b80635897d5668edf1"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad33a593afa13e0b80635897d5668edf1">leftCol</a> = 0</td></tr>
 <tr class="separator:ad33a593afa13e0b80635897d5668edf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af220904bd3f38cef138c440070602987" id="r_af220904bd3f38cef138c440070602987"><td class="memItemLeft" align="right" valign="top"><a id="af220904bd3f38cef138c440070602987" name="af220904bd3f38cef138c440070602987"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>rightCol</b> = minCols - 1</td></tr>
+<tr class="memitem:af220904bd3f38cef138c440070602987" id="r_af220904bd3f38cef138c440070602987"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af220904bd3f38cef138c440070602987">rightCol</a> = <a class="el" href="#a5a473f0d97595e1861339e1a6b2e8659">minCols</a> - 1</td></tr>
 <tr class="separator:af220904bd3f38cef138c440070602987"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af90c227bbc25b50fe25e7a01000ef141" id="r_af90c227bbc25b50fe25e7a01000ef141"><td class="memItemLeft" align="right" valign="top"><a id="af90c227bbc25b50fe25e7a01000ef141" name="af90c227bbc25b50fe25e7a01000ef141"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = minRows</td></tr>
+<tr class="memitem:af90c227bbc25b50fe25e7a01000ef141" id="r_af90c227bbc25b50fe25e7a01000ef141"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af90c227bbc25b50fe25e7a01000ef141">height</a> = <a class="el" href="#ad8130006601aa8409cfd3b85cf463f8a">minRows</a></td></tr>
 <tr class="separator:af90c227bbc25b50fe25e7a01000ef141"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12c1bb11c68dffdc5b4bd5c2bd2470ab" id="r_a12c1bb11c68dffdc5b4bd5c2bd2470ab"><td class="memItemLeft" align="right" valign="top"><a id="a12c1bb11c68dffdc5b4bd5c2bd2470ab" name="a12c1bb11c68dffdc5b4bd5c2bd2470ab"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>width</b> = minCols</td></tr>
+<tr class="memitem:a12c1bb11c68dffdc5b4bd5c2bd2470ab" id="r_a12c1bb11c68dffdc5b4bd5c2bd2470ab"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12c1bb11c68dffdc5b4bd5c2bd2470ab">width</a> = <a class="el" href="#a5a473f0d97595e1861339e1a6b2e8659">minCols</a></td></tr>
 <tr class="separator:a12c1bb11c68dffdc5b4bd5c2bd2470ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75b0fc1c64bab642e10fb95bda556230" id="r_a75b0fc1c64bab642e10fb95bda556230"><td class="memItemLeft" align="right" valign="top"><a id="a75b0fc1c64bab642e10fb95bda556230" name="a75b0fc1c64bab642e10fb95bda556230"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>navBorderTopRow</b> = 38</td></tr>
+<tr class="memitem:a75b0fc1c64bab642e10fb95bda556230" id="r_a75b0fc1c64bab642e10fb95bda556230"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75b0fc1c64bab642e10fb95bda556230">navBorderTopRow</a> = 38</td></tr>
 <tr class="separator:a75b0fc1c64bab642e10fb95bda556230"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6416df4a6c5061d2701e3c4699f55c6d" id="r_a6416df4a6c5061d2701e3c4699f55c6d"><td class="memItemLeft" align="right" valign="top"><a id="a6416df4a6c5061d2701e3c4699f55c6d" name="a6416df4a6c5061d2701e3c4699f55c6d"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>navBorderBotRow</b> = botRow</td></tr>
+<tr class="memitem:a6416df4a6c5061d2701e3c4699f55c6d" id="r_a6416df4a6c5061d2701e3c4699f55c6d"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6416df4a6c5061d2701e3c4699f55c6d">navBorderBotRow</a> = <a class="el" href="#afe82d3cada814378c27c49c8fcf21819">botRow</a></td></tr>
 <tr class="separator:a6416df4a6c5061d2701e3c4699f55c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca766f31b533ddb3c89b24104c0a566e" id="r_aca766f31b533ddb3c89b24104c0a566e"><td class="memItemLeft" align="right" valign="top"><a id="aca766f31b533ddb3c89b24104c0a566e" name="aca766f31b533ddb3c89b24104c0a566e"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>navBorderLeftCol</b> = leftCol</td></tr>
+<tr class="memitem:aca766f31b533ddb3c89b24104c0a566e" id="r_aca766f31b533ddb3c89b24104c0a566e"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca766f31b533ddb3c89b24104c0a566e">navBorderLeftCol</a> = <a class="el" href="#ad33a593afa13e0b80635897d5668edf1">leftCol</a></td></tr>
 <tr class="separator:aca766f31b533ddb3c89b24104c0a566e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70d99ca75641c230eecc8319cae0ebd9" id="r_a70d99ca75641c230eecc8319cae0ebd9"><td class="memItemLeft" align="right" valign="top"><a id="a70d99ca75641c230eecc8319cae0ebd9" name="a70d99ca75641c230eecc8319cae0ebd9"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>navBorderRightCol</b> = rightCol</td></tr>
+<tr class="memitem:a70d99ca75641c230eecc8319cae0ebd9" id="r_a70d99ca75641c230eecc8319cae0ebd9"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70d99ca75641c230eecc8319cae0ebd9">navBorderRightCol</a> = <a class="el" href="#af220904bd3f38cef138c440070602987">rightCol</a></td></tr>
 <tr class="separator:a70d99ca75641c230eecc8319cae0ebd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef13fbec70d2c5762ac727a822a03554" id="r_aef13fbec70d2c5762ac727a822a03554"><td class="memItemLeft" align="right" valign="top"><a id="aef13fbec70d2c5762ac727a822a03554" name="aef13fbec70d2c5762ac727a822a03554"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>navBorderHeight</b> = navBorderBotRow - navBorderTopRow + 1</td></tr>
+<tr class="memitem:aef13fbec70d2c5762ac727a822a03554" id="r_aef13fbec70d2c5762ac727a822a03554"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef13fbec70d2c5762ac727a822a03554">navBorderHeight</a> = <a class="el" href="#a6416df4a6c5061d2701e3c4699f55c6d">navBorderBotRow</a> - <a class="el" href="#a75b0fc1c64bab642e10fb95bda556230">navBorderTopRow</a> + 1</td></tr>
 <tr class="separator:aef13fbec70d2c5762ac727a822a03554"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f8edb6d65daf338a25fd4cdb224a708" id="r_a4f8edb6d65daf338a25fd4cdb224a708"><td class="memItemLeft" align="right" valign="top"><a id="a4f8edb6d65daf338a25fd4cdb224a708" name="a4f8edb6d65daf338a25fd4cdb224a708"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>navBorderWidth</b> = navBorderRightCol - navBorderLeftCol + 1</td></tr>
+<tr class="memitem:a4f8edb6d65daf338a25fd4cdb224a708" id="r_a4f8edb6d65daf338a25fd4cdb224a708"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f8edb6d65daf338a25fd4cdb224a708">navBorderWidth</a> = <a class="el" href="#a70d99ca75641c230eecc8319cae0ebd9">navBorderRightCol</a> - <a class="el" href="#aca766f31b533ddb3c89b24104c0a566e">navBorderLeftCol</a> + 1</td></tr>
 <tr class="separator:a4f8edb6d65daf338a25fd4cdb224a708"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="afe82d3cada814378c27c49c8fcf21819" name="afe82d3cada814378c27c49c8fcf21819"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe82d3cada814378c27c49c8fcf21819">&#9670;&#160;</a></span>botRow</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::botRow = <a class="el" href="#ad8130006601aa8409cfd3b85cf463f8a">minRows</a> - 1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af90c227bbc25b50fe25e7a01000ef141" name="af90c227bbc25b50fe25e7a01000ef141"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af90c227bbc25b50fe25e7a01000ef141">&#9670;&#160;</a></span>height</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::height = <a class="el" href="#ad8130006601aa8409cfd3b85cf463f8a">minRows</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad33a593afa13e0b80635897d5668edf1" name="ad33a593afa13e0b80635897d5668edf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad33a593afa13e0b80635897d5668edf1">&#9670;&#160;</a></span>leftCol</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::leftCol = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5a473f0d97595e1861339e1a6b2e8659" name="a5a473f0d97595e1861339e1a6b2e8659"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a473f0d97595e1861339e1a6b2e8659">&#9670;&#160;</a></span>minCols</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::minCols = 100</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad8130006601aa8409cfd3b85cf463f8a" name="ad8130006601aa8409cfd3b85cf463f8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8130006601aa8409cfd3b85cf463f8a">&#9670;&#160;</a></span>minRows</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::minRows = 41</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6416df4a6c5061d2701e3c4699f55c6d" name="a6416df4a6c5061d2701e3c4699f55c6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6416df4a6c5061d2701e3c4699f55c6d">&#9670;&#160;</a></span>navBorderBotRow</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::navBorderBotRow = <a class="el" href="#afe82d3cada814378c27c49c8fcf21819">botRow</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef13fbec70d2c5762ac727a822a03554" name="aef13fbec70d2c5762ac727a822a03554"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef13fbec70d2c5762ac727a822a03554">&#9670;&#160;</a></span>navBorderHeight</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::navBorderHeight = <a class="el" href="#a6416df4a6c5061d2701e3c4699f55c6d">navBorderBotRow</a> - <a class="el" href="#a75b0fc1c64bab642e10fb95bda556230">navBorderTopRow</a> + 1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca766f31b533ddb3c89b24104c0a566e" name="aca766f31b533ddb3c89b24104c0a566e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca766f31b533ddb3c89b24104c0a566e">&#9670;&#160;</a></span>navBorderLeftCol</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::navBorderLeftCol = <a class="el" href="#ad33a593afa13e0b80635897d5668edf1">leftCol</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a70d99ca75641c230eecc8319cae0ebd9" name="a70d99ca75641c230eecc8319cae0ebd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70d99ca75641c230eecc8319cae0ebd9">&#9670;&#160;</a></span>navBorderRightCol</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::navBorderRightCol = <a class="el" href="#af220904bd3f38cef138c440070602987">rightCol</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a75b0fc1c64bab642e10fb95bda556230" name="a75b0fc1c64bab642e10fb95bda556230"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75b0fc1c64bab642e10fb95bda556230">&#9670;&#160;</a></span>navBorderTopRow</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::navBorderTopRow = 38</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4f8edb6d65daf338a25fd4cdb224a708" name="a4f8edb6d65daf338a25fd4cdb224a708"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f8edb6d65daf338a25fd4cdb224a708">&#9670;&#160;</a></span>navBorderWidth</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::navBorderWidth = <a class="el" href="#a70d99ca75641c230eecc8319cae0ebd9">navBorderRightCol</a> - <a class="el" href="#aca766f31b533ddb3c89b24104c0a566e">navBorderLeftCol</a> + 1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af220904bd3f38cef138c440070602987" name="af220904bd3f38cef138c440070602987"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af220904bd3f38cef138c440070602987">&#9670;&#160;</a></span>rightCol</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::rightCol = <a class="el" href="#a5a473f0d97595e1861339e1a6b2e8659">minCols</a> - 1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a384a419a14a8f57c201f2980519c30bf" name="a384a419a14a8f57c201f2980519c30bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a384a419a14a8f57c201f2980519c30bf">&#9670;&#160;</a></span>topRow</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::topRow = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a12c1bb11c68dffdc5b4bd5c2bd2470ab" name="a12c1bb11c68dffdc5b4bd5c2bd2470ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12c1bb11c68dffdc5b4bd5c2bd2470ab">&#9670;&#160;</a></span>width</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::LayoutConsole::width = <a class="el" href="#a5a473f0d97595e1861339e1a6b2e8659">minCols</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/lib-cui/include/cui/layouts/<a class="el" href="LayoutConsole_8h_source.html">LayoutConsole.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

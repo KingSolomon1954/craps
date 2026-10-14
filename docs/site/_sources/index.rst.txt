@@ -21,7 +21,6 @@ Documentation for |AppName| version |version|.
     Static Analysis Results  <static-analysis/report/index>
     Design Document          <design-doc/design-doc>
     Licenses                 <licenses/licenses>
-    Open Source Inventory    <licenses/opensource>
 
 The following documents are available:
 ======================================
@@ -46,13 +45,8 @@ The following documents are available:
     Documentation of the design of |AppName|
 
 :doc:`Licenses <licenses/licenses>`
-    Announces open source licenses and usage rights applicable
-    to the source code and repository.
-
-:doc:`Open Source Inventory<licenses/opensource>`
-    List of open source packages.
+    Open source licenses and usages.
 
 .. * :ref:`genindex`
 .. * :ref:`modindex`
 .. * :ref:`search`
-

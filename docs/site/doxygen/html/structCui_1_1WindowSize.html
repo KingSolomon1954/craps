@@ -5,7 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<<<<<<<< HEAD:docs/site/doxygen/html/classCui_1_1CuiReceiver.html
+<title>RoyalCraps: Cui::CuiReceiver Class Reference</title>
+========
 <title>RoyalCraps: Cui::WindowSize Struct Reference</title>
+>>>>>>>> fix/docs:docs/site/doxygen/html/structCui_1_1WindowSize.html
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,34 +89,102 @@ $(function(){ initResizable(false); });
 
 <div id="nav-path" class="navpath">
   <ul>
+<<<<<<<< HEAD:docs/site/doxygen/html/classCui_1_1CuiReceiver.html
+<li class="navelem"><a class="el" href="namespaceCui.html">Cui</a></li><li class="navelem"><a class="el" href="classCui_1_1CuiReceiver.html">CuiReceiver</a></li>  </ul>
+========
 <li class="navelem"><a class="el" href="namespaceCui.html">Cui</a></li><li class="navelem"><a class="el" href="structCui_1_1WindowSize.html">WindowSize</a></li>  </ul>
+>>>>>>>> fix/docs:docs/site/doxygen/html/structCui_1_1WindowSize.html
 </div>
 </div><!-- top -->
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<<<<<<<< HEAD:docs/site/doxygen/html/classCui_1_1CuiReceiver.html
+<a href="classCui_1_1CuiReceiver-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Cui::CuiReceiver Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Receives application GameEvents.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="CuiReceiver_8h_source.html">CuiReceiver.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Lifecycle</h2></td></tr>
+<tr class="memitem:a0514254481b469432c1a4a5808c19918" id="r_a0514254481b469432c1a4a5808c19918"><td class="memItemLeft" align="right" valign="top"><a id="a0514254481b469432c1a4a5808c19918" name="a0514254481b469432c1a4a5808c19918"></a>
+static <a class="el" href="classCui_1_1CuiReceiver.html">CuiReceiver</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>instance</b> ()</td></tr>
+<tr class="separator:a0514254481b469432c1a4a5808c19918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Receives application GameEvents. </p>
+<p>Receives application GameEvents and converts them into work orders for the <a class="el" href="classCui_1_1CuiThread.html" title="CuiThread processes CUI work orders and also obtains keypresses and manipulates surfaces.">CuiThread</a>.</p>
+<p>Responsibilities of <a class="el" href="classCui_1_1CuiReceiver.html" title="Receives application GameEvents.">CuiReceiver</a>:</p>
+<ul>
+<li>Event handler for GameEvents the CUI is interested in </li>
+<li>Is the interface between the Controller's view vocabulary and the CUI's surface vocabulary. </li>
+<li>Subscribes to Controller::EventManager </li>
+<li>Converts events into work orders and enqueues the work order to the <a class="el" href="classCui_1_1CuiThread.html" title="CuiThread processes CUI work orders and also obtains keypresses and manipulates surfaces.">CuiThread</a> for processing. </li>
+</ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/lib-cui/include/cui/core/<a class="el" href="CuiReceiver_8h_source.html">CuiReceiver.h</a></li>
+<li>src/lib-cui/src/core/<b>CuiReceiver.cpp</b></li>
+========
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structCui_1_1WindowSize-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Cui::WindowSize Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="CuiStructs_8h_source.html">CuiStructs.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a1f7e727dfc239799bec5f688848794a6" id="r_a1f7e727dfc239799bec5f688848794a6"><td class="memItemLeft" align="right" valign="top"><a id="a1f7e727dfc239799bec5f688848794a6" name="a1f7e727dfc239799bec5f688848794a6"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>rows</b> = 0</td></tr>
+<tr class="memitem:a1f7e727dfc239799bec5f688848794a6" id="r_a1f7e727dfc239799bec5f688848794a6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f7e727dfc239799bec5f688848794a6">rows</a> = 0</td></tr>
 <tr class="separator:a1f7e727dfc239799bec5f688848794a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4804f40856ffb99bcc3c4946c8bcbc2e" id="r_a4804f40856ffb99bcc3c4946c8bcbc2e"><td class="memItemLeft" align="right" valign="top"><a id="a4804f40856ffb99bcc3c4946c8bcbc2e" name="a4804f40856ffb99bcc3c4946c8bcbc2e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>cols</b> = 0</td></tr>
+<tr class="memitem:a4804f40856ffb99bcc3c4946c8bcbc2e" id="r_a4804f40856ffb99bcc3c4946c8bcbc2e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4804f40856ffb99bcc3c4946c8bcbc2e">cols</a> = 0</td></tr>
 <tr class="separator:a4804f40856ffb99bcc3c4946c8bcbc2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a4804f40856ffb99bcc3c4946c8bcbc2e" name="a4804f40856ffb99bcc3c4946c8bcbc2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4804f40856ffb99bcc3c4946c8bcbc2e">&#9670;&#160;</a></span>cols</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::WindowSize::cols = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1f7e727dfc239799bec5f688848794a6" name="a1f7e727dfc239799bec5f688848794a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f7e727dfc239799bec5f688848794a6">&#9670;&#160;</a></span>rows</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Cui::WindowSize::rows = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/lib-cui/include/cui/core/<a class="el" href="CuiStructs_8h_source.html">CuiStructs.h</a></li>
+>>>>>>>> fix/docs:docs/site/doxygen/html/structCui_1_1WindowSize.html
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
+<<<<<<<< HEAD:docs/site/doxygen/html/classCui_1_1CuiReceiver.html
 Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+========
+Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+>>>>>>>> fix/docs:docs/site/doxygen/html/structCui_1_1WindowSize.html
 </small></address>
 </div><!-- doc-content -->
 </body>

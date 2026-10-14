@@ -1,6 +1,27 @@
 var searchData=
 [
-  ['hardway_0',['Hardway',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a6e52cf4a9d3e411fad7918897b5cde85',1,'EnumBetName.h']]],
-  ['hardwayworking_1',['hardwayWorking',['../classCraps_1_1CrapsBet.html#ab3c3e7b5af1c0a20acdd5e24cee89b31',1,'Craps::CrapsBet']]],
-  ['horn_2',['Horn',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a5cf73e808193af68b60d465bf312e789',1,'EnumBetName.h']]]
+  ['handlekey_0',['handleKey',['../classCui_1_1PanelBase.html#a482a6995a39e031a93f39f6174237b68',1,'Cui::PanelBase::handleKey()'],['../classCui_1_1SurfaceBase.html#a35a048432a8eed8ce06bf358340bc278',1,'Cui::SurfaceBase::handleKey()'],['../classCui_1_1DialogConfirm.html#a67b82e15add3fe34c0a38e30687da86e',1,'Cui::DialogConfirm::handleKey()'],['../classCui_1_1DialogMessage.html#a0e3f9e1706f22c8f7d1cc9b319617788',1,'Cui::DialogMessage::handleKey()'],['../classCui_1_1SurfaceManager.html#ad7912505267badb370239d596d836b9e',1,'Cui::SurfaceManager::handleKey()'],['../classCui_1_1MenuBetting.html#aea0bc4d6f703878f43c9bf980e6e3853',1,'Cui::MenuBetting::handleKey()'],['../classCui_1_1MenuConfigure.html#addc951924bfedf7702686a5a06342dc3',1,'Cui::MenuConfigure::handleKey()'],['../classCui_1_1MenuControl.html#a150ef75b3ca1ce8815d39334ea29d471',1,'Cui::MenuControl::handleKey()'],['../classCui_1_1MenuNavBarViews.html#ab3fdb6c757d779992a2ae34d684d3113',1,'Cui::MenuNavBarViews::handleKey()'],['../classCui_1_1MenuOddsBet.html#a57283b2facdd17e280dfa44e6c92de0e',1,'Cui::MenuOddsBet::handleKey()'],['../classCui_1_1MenuPivot.html#ae9e0abc05818de52bfb0c0a979834041',1,'Cui::MenuPivot::handleKey()'],['../classCui_1_1MenuPlaceBet.html#a69289055426a924e08326db4d205f33f',1,'Cui::MenuPlaceBet::handleKey()'],['../classCui_1_1WindowNavBar.html#ae448a9026abc0505796f1a8aa35ae0b2',1,'Cui::WindowNavBar::handleKey()'],['../classCui_1_1ScreenCrapsTable.html#aed953ca895b1e787006aac3908e6aec3',1,'Cui::ScreenCrapsTable::handleKey()']]],
+  ['handlemenukey_1',['handleMenuKey',['../classCui_1_1DialogAckError.html#a4e44362949b39ef80058719be384387d',1,'Cui::DialogAckError::handleMenuKey()'],['../classCui_1_1DialogAmountEntry.html#ac21a38114b90d7eaa58c742bd7337660',1,'Cui::DialogAmountEntry::handleMenuKey()']]],
+  ['hard10_2',['Hard10',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3eae6b8cc95b57e81218b9fe89cb82f4091',1,'Cui::CuiUtils']]],
+  ['hard4_3',['Hard4',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3eabb366151d4f99c1dded9d362686f2f47',1,'Cui::CuiUtils']]],
+  ['hard6_4',['Hard6',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3ea83999f1aba3b3d43e7036d6501f7a6e1',1,'Cui::CuiUtils']]],
+  ['hard8_5',['Hard8',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3ea92c755ce341685d3503550c3ea6b88f5',1,'Cui::CuiUtils']]],
+  ['hardway_6',['Hardway',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a6e52cf4a9d3e411fad7918897b5cde85',1,'EnumBetName.h']]],
+  ['hardwaycounts_7',['hardwayCounts',['../classCraps_1_1RollStats.html#a6f8a6754977d898e1cb6b5f167bd47b6',1,'Craps::RollStats']]],
+  ['hardwaystr_8',['HardwayStr',['../EnumBetName_8cpp.html#a6be2f7f4dbc952108693e7c7bcb34b2b',1,'EnumBetName.cpp']]],
+  ['hardwayworking_9',['hardwayWorking',['../classCraps_1_1CrapsBet.html#ab3c3e7b5af1c0a20acdd5e24cee89b31',1,'Craps::CrapsBet']]],
+  ['haserror_10',['hasError',['../classGen_1_1ErrorPass.html#a3735d3d872aad6eb5a8baf353951898c',1,'Gen::ErrorPass']]],
+  ['hasexpired_11',['hasExpired',['../classGen_1_1Timepoint.html#ada0f4f24aa2ec71025adbf0416453e77',1,'Gen::Timepoint']]],
+  ['haveanyoddscapablebet_12',['haveAnyOddsCapableBet',['../classCraps_1_1Player.html#a4ca7d5199f8dc73a58ebc08bc9e946fb',1,'Craps::Player']]],
+  ['havebet_13',['haveBet',['../classCraps_1_1CrapsTable.html#ad005b0530e99a28c624890f095646db2',1,'Craps::CrapsTable::haveBet()'],['../classCraps_1_1Player.html#a8e6ac099aa83a806889ab5f40b1a7f22',1,'Craps::Player::haveBet()']]],
+  ['haveplayer_14',['havePlayer',['../classCraps_1_1CrapsTable.html#a82046ef30f4da37821fd18a6734fb49e',1,'Craps::CrapsTable']]],
+  ['height_15',['height',['../structCui_1_1LayoutConsole.html#af90c227bbc25b50fe25e7a01000ef141',1,'Cui::LayoutConsole::height'],['../classCui_1_1LayoutCrapsScreen.html#ad0055f9119892c073610ec13f5eebf79',1,'Cui::LayoutCrapsScreen::height']]],
+  ['horn_16',['Horn',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3ea5cf73e808193af68b60d465bf312e789',1,'Cui::CuiUtils::Horn'],['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a5cf73e808193af68b60d465bf312e789',1,'Horn:&#160;EnumBetName.h']]],
+  ['hornstr_17',['HornStr',['../EnumBetName_8cpp.html#a61efb5f0f3dbea3db58ca354fd2fbd6c',1,'EnumBetName.cpp']]],
+  ['housebriefborderbotrow_18',['houseBriefBorderBotRow',['../classCui_1_1LayoutCrapsScreen.html#ac2c80d19ccec0fd725c6a0beb3d95d0b',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefborderheight_19',['houseBriefBorderHeight',['../classCui_1_1LayoutCrapsScreen.html#a25297d4be29eab55cfbc2ecdd5af7ef9',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefborderleftcol_20',['houseBriefBorderLeftCol',['../classCui_1_1LayoutCrapsScreen.html#affccca34fd61e159f9090ae4bcba61cd',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefborderrightcol_21',['houseBriefBorderRightCol',['../classCui_1_1LayoutCrapsScreen.html#a3d192297a88e504da1bb768a617e456f',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefbordertoprow_22',['houseBriefBorderTopRow',['../classCui_1_1LayoutCrapsScreen.html#ab4e2b1b8efb968d91c902db79c851f80',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefborderwidth_23',['houseBriefBorderWidth',['../classCui_1_1LayoutCrapsScreen.html#a39922413b0ce74d28ffa9ab1cc9bda54',1,'Cui::LayoutCrapsScreen']]]
 ];

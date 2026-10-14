@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['name_0',['name',['../classCtrl_1_1SessionSummary.html#a2f7ee921b19b641175f99477674d597a',1,'Ctrl::SessionSummary']]],
+  ['navborderbotrow_1',['navBorderBotRow',['../structCui_1_1LayoutConsole.html#a6416df4a6c5061d2701e3c4699f55c6d',1,'Cui::LayoutConsole']]],
+  ['navborderheight_2',['navBorderHeight',['../structCui_1_1LayoutConsole.html#aef13fbec70d2c5762ac727a822a03554',1,'Cui::LayoutConsole']]],
+  ['navborderleftcol_3',['navBorderLeftCol',['../structCui_1_1LayoutConsole.html#aca766f31b533ddb3c89b24104c0a566e',1,'Cui::LayoutConsole']]],
+  ['navborderrightcol_4',['navBorderRightCol',['../structCui_1_1LayoutConsole.html#a70d99ca75641c230eecc8319cae0ebd9',1,'Cui::LayoutConsole']]],
+  ['navbordertoprow_5',['navBorderTopRow',['../structCui_1_1LayoutConsole.html#a75b0fc1c64bab642e10fb95bda556230',1,'Cui::LayoutConsole']]],
+  ['navborderwidth_6',['navBorderWidth',['../structCui_1_1LayoutConsole.html#a4f8edb6d65daf338a25fd4cdb224a708',1,'Cui::LayoutConsole']]],
+  ['netbalance_7',['netBalance',['../structCtrl_1_1UslTableBalanceChanged.html#a09b140ecaa5464bb974fb45cfe61cba4',1,'Ctrl::UslTableBalanceChanged::netBalance'],['../structCtrl_1_1UslPlayerBalanceChanged.html#aebeb4d51b9f44a096c15e3f5e0e959a5',1,'Ctrl::UslPlayerBalanceChanged::netBalance']]],
+  ['numbercounts_8',['numberCounts',['../classCraps_1_1RollStats.html#a83db41d41be3a0a428ee57a08b9fe77d',1,'Craps::RollStats']]],
+  ['numbets_9',['numBets',['../structCraps_1_1SessionHistory_1_1Summary.html#a0c96a9e5a90fd28b28afbeb81fcef3ca',1,'Craps::SessionHistory::Summary']]],
+  ['numbetskeeponeroll_10',['numBetsKeepOneRoll',['../classCraps_1_1BetStats.html#aaf0bb079aeaeb96b141384553e2f146b',1,'Craps::BetStats']]],
+  ['numbetslose_11',['numBetsLose',['../structCraps_1_1LastRollStats.html#ab2292e0ff6db807efc386c042c48a4b8',1,'Craps::LastRollStats']]],
+  ['numbetsloseoneroll_12',['numBetsLoseOneRoll',['../classCraps_1_1BetStats.html#a5c4c30991c26d6cdddf0a4db252cfc6c',1,'Craps::BetStats']]],
+  ['numbetsmade_13',['numBetsMade',['../classCtrl_1_1SessionSummary.html#a458d23f2f19687ce06e8b31c7ecb5b5b',1,'Ctrl::SessionSummary']]],
+  ['numbetsoneroll_14',['numBetsOneRoll',['../classCraps_1_1BetStats.html#a81981ccf59f8241fad142870c77a25b2',1,'Craps::BetStats']]],
+  ['numbetsontable_15',['numBetsOnTable',['../structCraps_1_1LastRollStats.html#a9e10c1b74108c3a8f79282fa3a8fafcd',1,'Craps::LastRollStats']]],
+  ['numbetswin_16',['numBetsWin',['../structCraps_1_1LastRollStats.html#aab6b5794ac0735e093939436a52fe9bc',1,'Craps::LastRollStats']]],
+  ['numbetswinoneroll_17',['numBetsWinOneRoll',['../classCraps_1_1BetStats.html#ad842550b2673a210e7bccec73c243958',1,'Craps::BetStats']]],
+  ['numdeposits_18',['numDeposits',['../classCraps_1_1BankStats.html#ace9f0d957eb495e773f02f466db0fa86',1,'Craps::BankStats']]],
+  ['numerator_19',['numerator',['../structCraps_1_1OddsTables_1_1OddsEntry.html#a0e0ebcedcb0c17690a8e060bab5d2933',1,'Craps::OddsTables::OddsEntry']]],
+  ['numplayers_20',['numPlayers',['../classCtrl_1_1SessionSummary.html#af14b8ae6e60a714db38a4e05d6957460',1,'Ctrl::SessionSummary::numPlayers'],['../structCraps_1_1SessionHistory_1_1Summary.html#a8b98180e97178c5c55a15e410a6b4eb9',1,'Craps::SessionHistory::Summary::numPlayers']]],
+  ['numpointsestablished_21',['numPointsEstablished',['../classCraps_1_1RollStats.html#a9a5f66b44b16af86b97054486e502305',1,'Craps::RollStats']]],
+  ['numrefills_22',['numRefills',['../classCraps_1_1BankStats.html#a562ab0cf9cec359d271b6de87485624e',1,'Craps::BankStats']]],
+  ['numrolls_23',['numRolls',['../classCtrl_1_1SessionSummary.html#aa9930281f25fad142f8542eda3088ed4',1,'Ctrl::SessionSummary::numRolls'],['../classCraps_1_1RollStats.html#ac18d07f04f3a586776799338dd6a93df',1,'Craps::RollStats::numRolls']]],
+  ['numwithdrawals_24',['numWithdrawals',['../classCraps_1_1BankStats.html#af4314b6c019985e879492253fc209524',1,'Craps::BankStats']]]
+];

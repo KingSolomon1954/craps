@@ -1,0 +1,11 @@
+<map id="src/lib&#45;gen/include/gen/BuildInfo.h" name="src/lib&#45;gen/include/gen/BuildInfo.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="323,5,464,45"/>
+<area shape="rect" id="Node000002" href="$ConfigCommandLine_8cpp.html" title=" " alt="" coords="5,93,216,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="319,52,173,96,172,91,317,47"/>
+<area shape="rect" id="Node000003" href="$GameMain_8cpp.html" title=" " alt="" coords="240,93,387,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="368,57,333,95,329,91,364,54"/>
+<area shape="rect" id="Node000004" href="$Globals_8cpp.html" title=" " alt="" coords="411,93,539,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="423,54,459,91,455,95,419,57"/>
+<area shape="rect" id="Node000005" href="$BuildInfo_8cpp.html" title=" " alt="" coords="563,101,765,126"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="466,47,629,98,627,103,465,52"/>
+</map>

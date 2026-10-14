@@ -1,0 +1,19 @@
+<map id="src/lib&#45;controller/include/controller/UndoBet.h" name="src/lib&#45;controller/include/controller/UndoBet.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="538,5,677,60"/>
+<area shape="rect" id="Node000002" href="$UndoManager_8h.html" title=" " alt="" coords="458,108,597,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="580,72,550,110,546,106,576,69"/>
+<area shape="rect" id="Node000009" href="$UndoBet_8cpp.html" title=" " alt="" coords="621,115,753,155"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="639,69,674,113,670,117,635,72"/>
+<area shape="rect" id="Node000003" href="$CrapsReaders_8cpp.html" title=" " alt="" coords="5,211,172,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="445,157,173,214,172,209,444,152"/>
+<area shape="rect" id="Node000004" href="$Globals_8cpp.html" title=" " alt="" coords="197,211,325,251"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="446,168,315,213,314,208,444,163"/>
+<area shape="rect" id="Node000005" href="$TableManager_8cpp.html" title=" " alt="" coords="349,211,516,251"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="492,175,454,213,450,209,489,171"/>
+<area shape="rect" id="Node000006" href="$UndoManager_8cpp.html" title=" " alt="" coords="540,211,707,251"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="566,171,606,209,602,213,563,175"/>
+<area shape="rect" id="Node000007" href="$CrapsCommands_8cpp.html" title=" " alt="" coords="731,211,942,251"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="610,160,611,160,772,208,771,213,609,165,609,165"/>
+<area shape="rect" id="Node000008" href="$CrapsEventHandlers_8cpp.html" title=" " alt="" coords="966,211,1198,251"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="610,160,611,160,706,179,781,189,954,208,966,210,965,215,954,213,781,194,705,184,609,165,609,165"/>
+</map>

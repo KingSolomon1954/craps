@@ -1,0 +1,14 @@
+<map id="src/lib&#45;craps/include/craps/CrapsTypes.h" name="src/lib&#45;craps/include/craps/CrapsTypes.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="81,5,233,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="136,167,195,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,47,49,60,22,76,13,85,9,95,9,106,14,117,36,140,64,155,94,166,123,172,121,177,92,171,62,160,33,144,10,120,4,107,4,94,9,82,19,72,46,55,80,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="24,93,101,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,48,89,86,86,82,133,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="126,93,189,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,46,160,79,155,79,155,46"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="213,93,275,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="180,44,223,82,219,86,177,48"/>
+<area shape="rect" id="Node000006" href="$Uuid_8h.html" title=" " alt="" coords="299,93,391,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="203,43,306,85,304,90,201,48"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="317,121,208,164,206,159,315,116"/>
+</map>

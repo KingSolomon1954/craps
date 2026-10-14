@@ -1,0 +1,18 @@
+<map id="src/lib&#45;cui/include/cui/panels/WindowNavBar.h" name="src/lib&#45;cui/include/cui/panels/WindowNavBar.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="285,5,491,45"/>
+<area shape="rect" id="Node000002" href="$PanelBase_8h.html" title=" " alt="" coords="199,93,366,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="364,48,311,87,308,83,361,43"/>
+<area shape="rect" id="Node000007" href="$LayoutConsole_8h.html" title=" " alt="" coords="391,93,596,119"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="415,43,468,83,465,87,412,48"/>
+<area shape="rect" id="Node000003" href="$SurfaceBase_8h.html" title=" " alt="" coords="129,167,309,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="274,121,240,158,236,155,270,117"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="309,240,368,265"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="294,117,309,139,322,166,332,196,338,226,333,227,327,198,318,168,304,142,289,120"/>
+<area shape="rect" id="Node000004" href="$CuiStructs_8h.html" title=" " alt="" coords="5,240,160,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="198,194,118,236,116,231,196,190"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="185,240,269,265"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="223,192,227,226,221,227,217,193"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="239,190,308,230,306,235,237,194"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="459,167,528,192"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="496,119,496,153,491,153,491,119"/>
+</map>

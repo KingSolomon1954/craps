@@ -93,7 +93,7 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">OddsTables.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//----------------------------------------------------------------</span></div>
+<a href="OddsTables_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// File: OddsTables.h</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//</span></div>
@@ -110,13 +110,14 @@ $(function(){ initResizable(false); });
 <div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structCraps_1_1OddsTables_1_1OddsEntry.html">   14</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structCraps_1_1OddsTables_1_1OddsEntry.html">OddsEntry</a></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numerator;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> denominator;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structCraps_1_1OddsTables_1_1OddsEntry.html#a0e0ebcedcb0c17690a8e060bab5d2933">   16</a></span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="structCraps_1_1OddsTables_1_1OddsEntry.html#a0e0ebcedcb0c17690a8e060bab5d2933">numerator</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structCraps_1_1OddsTables_1_1OddsEntry.html#a97e0140710b178db0b41c7e9819a65b7">   17</a></span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="structCraps_1_1OddsTables_1_1OddsEntry.html#a97e0140710b178db0b41c7e9819a65b7">denominator</a>;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    };</div>
 </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="comment">// Used for calculating payouts in Pass, Come, Buy bets</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structCraps_1_1OddsTables_1_1OddsEntry.html">OddsEntry</a> oddsPass[13] =</div>
+<div class="foldopen" id="foldopen00021" data-start="{" data-end="};">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classCraps_1_1OddsTables.html#a4e1cd74f67e3a435657ea051a38d90ae">   21</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structCraps_1_1OddsTables_1_1OddsEntry.html">OddsEntry</a> <a class="code hl_variable" href="classCraps_1_1OddsTables.html#a4e1cd74f67e3a435657ea051a38d90ae">oddsPass</a>[13] =</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        {1,1},    <span class="comment">// 0</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        {1,1},    <span class="comment">// 1</span></div>
@@ -132,9 +133,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        {1,1},    <span class="comment">// 11</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        {1,1}     <span class="comment">// 12</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    };</div>
+</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">// Used for calculating payouts in DontPass, DontCome, Lay bets</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> OddsEntry oddsDont[13] =</div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="};">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classCraps_1_1OddsTables.html#a63c2a6380d75c6d36fbd7c085d4b8935">   39</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structCraps_1_1OddsTables_1_1OddsEntry.html">OddsEntry</a> <a class="code hl_variable" href="classCraps_1_1OddsTables.html#a63c2a6380d75c6d36fbd7c085d4b8935">oddsDont</a>[13] =</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    {</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        {1,1},    <span class="comment">// 0</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        {1,1},    <span class="comment">// 1</span></div>
@@ -150,9 +153,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        {1,1},    <span class="comment">// 11</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        {1,1}     <span class="comment">// 12</span></div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    };</div>
+</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// Used for calculating payouts in Place bets</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> OddsEntry oddsPlace[13] =</div>
+<div class="foldopen" id="foldopen00057" data-start="{" data-end="};">
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classCraps_1_1OddsTables.html#a7ec1cbfe488979f69fa83013d0de1520">   57</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structCraps_1_1OddsTables_1_1OddsEntry.html">OddsEntry</a> <a class="code hl_variable" href="classCraps_1_1OddsTables.html#a7ec1cbfe488979f69fa83013d0de1520">oddsPlace</a>[13] =</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    {</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        {1,1},    <span class="comment">// 0</span></div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        {1,1},    <span class="comment">// 1</span></div>
@@ -168,9 +173,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        {1,1},    <span class="comment">// 11</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        {1,1}     <span class="comment">// 12</span></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    };</div>
+</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// Used for calculating payouts in Hardway bets</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> OddsEntry oddsHardway[13] =</div>
+<div class="foldopen" id="foldopen00075" data-start="{" data-end="};">
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classCraps_1_1OddsTables.html#a9b96d5db624bd773913752e11964871b">   75</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structCraps_1_1OddsTables_1_1OddsEntry.html">OddsEntry</a> <a class="code hl_variable" href="classCraps_1_1OddsTables.html#a9b96d5db624bd773913752e11964871b">oddsHardway</a>[13] =</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    {</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        {1,1},    <span class="comment">// 0</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        {1,1},    <span class="comment">// 1</span></div>
@@ -186,9 +193,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        {1,1},    <span class="comment">// 11</span></div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        {1,1}     <span class="comment">// 12</span></div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    };</div>
+</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="comment">// Used for calculating payouts in Field bets</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> OddsEntry oddsField[13] =</div>
+<div class="foldopen" id="foldopen00093" data-start="{" data-end="};">
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="classCraps_1_1OddsTables.html#a89c784752e73192f5eaa3e190a8a613b">   93</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structCraps_1_1OddsTables_1_1OddsEntry.html">OddsEntry</a> <a class="code hl_variable" href="classCraps_1_1OddsTables.html#a89c784752e73192f5eaa3e190a8a613b">oddsField</a>[13] =</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    {</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        {0,0},    <span class="comment">// 0</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        {0,0},    <span class="comment">// 1</span></div>
@@ -204,6 +213,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        {0,0},    <span class="comment">// 11</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        {3,1}     <span class="comment">// 12</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    };</div>
+</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>};</div>
 </div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
@@ -212,12 +222,19 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="ttc" id="aclassCraps_1_1OddsTables_html"><div class="ttname"><a href="classCraps_1_1OddsTables.html">Craps::OddsTables</a></div><div class="ttdoc">Tables specifying odds for payouts.</div><div class="ttdef"><b>Definition</b> OddsTables.h:12</div></div>
+<div class="ttc" id="aclassCraps_1_1OddsTables_html_a4e1cd74f67e3a435657ea051a38d90ae"><div class="ttname"><a href="classCraps_1_1OddsTables.html#a4e1cd74f67e3a435657ea051a38d90ae">Craps::OddsTables::oddsPass</a></div><div class="ttdeci">static constexpr OddsEntry oddsPass[13]</div><div class="ttdef"><b>Definition</b> OddsTables.h:21</div></div>
+<div class="ttc" id="aclassCraps_1_1OddsTables_html_a63c2a6380d75c6d36fbd7c085d4b8935"><div class="ttname"><a href="classCraps_1_1OddsTables.html#a63c2a6380d75c6d36fbd7c085d4b8935">Craps::OddsTables::oddsDont</a></div><div class="ttdeci">static constexpr OddsEntry oddsDont[13]</div><div class="ttdef"><b>Definition</b> OddsTables.h:39</div></div>
+<div class="ttc" id="aclassCraps_1_1OddsTables_html_a7ec1cbfe488979f69fa83013d0de1520"><div class="ttname"><a href="classCraps_1_1OddsTables.html#a7ec1cbfe488979f69fa83013d0de1520">Craps::OddsTables::oddsPlace</a></div><div class="ttdeci">static constexpr OddsEntry oddsPlace[13]</div><div class="ttdef"><b>Definition</b> OddsTables.h:57</div></div>
+<div class="ttc" id="aclassCraps_1_1OddsTables_html_a89c784752e73192f5eaa3e190a8a613b"><div class="ttname"><a href="classCraps_1_1OddsTables.html#a89c784752e73192f5eaa3e190a8a613b">Craps::OddsTables::oddsField</a></div><div class="ttdeci">static constexpr OddsEntry oddsField[13]</div><div class="ttdef"><b>Definition</b> OddsTables.h:93</div></div>
+<div class="ttc" id="aclassCraps_1_1OddsTables_html_a9b96d5db624bd773913752e11964871b"><div class="ttname"><a href="classCraps_1_1OddsTables.html#a9b96d5db624bd773913752e11964871b">Craps::OddsTables::oddsHardway</a></div><div class="ttdeci">static constexpr OddsEntry oddsHardway[13]</div><div class="ttdef"><b>Definition</b> OddsTables.h:75</div></div>
 <div class="ttc" id="anamespaceCraps_html"><div class="ttname"><a href="namespaceCraps.html">Craps</a></div><div class="ttdoc">Craps Library (lib-craps)</div><div class="ttdef"><b>Definition</b> CrapsReaders.h:24</div></div>
 <div class="ttc" id="astructCraps_1_1OddsTables_1_1OddsEntry_html"><div class="ttname"><a href="structCraps_1_1OddsTables_1_1OddsEntry.html">Craps::OddsTables::OddsEntry</a></div><div class="ttdef"><b>Definition</b> OddsTables.h:15</div></div>
+<div class="ttc" id="astructCraps_1_1OddsTables_1_1OddsEntry_html_a0e0ebcedcb0c17690a8e060bab5d2933"><div class="ttname"><a href="structCraps_1_1OddsTables_1_1OddsEntry.html#a0e0ebcedcb0c17690a8e060bab5d2933">Craps::OddsTables::OddsEntry::numerator</a></div><div class="ttdeci">unsigned int numerator</div><div class="ttdef"><b>Definition</b> OddsTables.h:16</div></div>
+<div class="ttc" id="astructCraps_1_1OddsTables_1_1OddsEntry_html_a97e0140710b178db0b41c7e9819a65b7"><div class="ttname"><a href="structCraps_1_1OddsTables_1_1OddsEntry.html#a97e0140710b178db0b41c7e9819a65b7">Craps::OddsTables::OddsEntry::denominator</a></div><div class="ttdeci">unsigned int denominator</div><div class="ttdef"><b>Definition</b> OddsTables.h:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Oct 14 2026 19:08:48 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

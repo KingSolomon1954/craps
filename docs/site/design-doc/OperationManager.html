@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Purpose &mdash; RoyalCraps 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RoyalCraps
+              <img src="../_static/logo1-102x102.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../manpage/manpage.html">Manpage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doxygen/html/index.html">Doxygen API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-coverage/html/index.html">Code Coverage Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static-analysis/report/index.html">Static Analysis Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design-doc.html">Design Document</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses/licenses.html">Licenses</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RoyalCraps</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Purpose</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/design-doc/OperationManager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="purpose">
+<h1>Purpose<a class="headerlink" href="#purpose" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> coordinates the lifecycle of multi-stage user operations in the CUI.</p>
+<p>An operation represents a user-initiated task that may involve navigating a chain of menus, obtaining user confirmation, issuing an asynchronous request to the Craps Engine, processing the corresponding response, and presenting any resulting errors.</p>
+<p>The manager maintains the state of the active operation and determines what action should occur as the operation progresses through its stages.</p>
+<p>Although betting is a primary use case, <code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> is not specific to betting. It supports any CUI operation that requires coordinated interaction across menus, dialogs, and asynchronous request/response events.</p>
+</section>
+<section id="use-cases">
+<h1>Use Cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h1>
+<section id="making-a-bet">
+<h2>Making a bet<a class="headerlink" href="#making-a-bet" title="Link to this heading"></a></h2>
+<p>A player navigates through one or more betting menus to configure a bet. When the player has completed the required selections, the CUI issues a <code class="docutils literal notranslate"><span class="pre">ReqMakeBet</span></code> request event to the Craps Engine.</p>
+<p><code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> tracks the operation, associates the request with its eventual response, and determines the next action based on the result.</p>
+<ul class="simple">
+<li><p><strong>Success:</strong> The betting menu chain is unwound, returning the player to the appropriate underlying screen.</p></li>
+<li><p><strong>Failure:</strong> An error dialog is presented. After the player acknowledges the error, the error dialog is dismissed and the betting menu chain is unwound or otherwise restored according to the intended interaction.</p></li>
+</ul>
+</section>
+<section id="quitting-the-game">
+<h2>Quitting the game<a class="headerlink" href="#quitting-the-game" title="Link to this heading"></a></h2>
+<p>When the player requests to quit, the CUI presents a <code class="docutils literal notranslate"><span class="pre">DialogConfirmation</span></code>. The manager associates the confirmation response with the pending quit operation.</p>
+<ul class="simple">
+<li><p><strong>Confirmed:</strong> The manager initiates the quit request by publishing the appropriate asynchronous request event.</p></li>
+<li><p><strong>Cancelled:</strong> The operation is abandoned, and the player returns to the preceding interface without issuing the quit request.</p></li>
+</ul>
+<p>Other operations requiring confirmation or multi-stage interaction follow the same general pattern.</p>
+</section>
+</section>
+<section id="responsibilities">
+<h1>Responsibilities<a class="headerlink" href="#responsibilities" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><strong>Track the active operation.</strong> Maintain the identity, type, and current stage of the operation in progress.</p></li>
+<li><p><strong>Coordinate multi-stage workflows.</strong> Track progress through menu selection, confirmation, request submission, response processing, error acknowledgement, and completion as applicable.</p></li>
+<li><p><strong>Initiate asynchronous requests.</strong> Publish the appropriate request event when the operation reaches the stage at which the request should be issued. For example, publish <code class="docutils literal notranslate"><span class="pre">ReqMakeBet</span></code> when a bet has been fully configured.</p></li>
+<li><p><strong>Correlate requests and responses.</strong> Retain the correlation ID and any necessary operation context so that an incoming response event can be matched to the active request and operation.</p></li>
+<li><p><strong>Process operation results.</strong> Determine whether the response indicates success or failure and advance the operation accordingly.</p></li>
+<li><p><strong>Coordinate error handling.</strong> On failure, request presentation of the appropriate error dialog, retain the operation context while the dialog is active, and process the player’s acknowledgement.</p></li>
+<li><p><strong>Manage surface-stack transitions.</strong> Initiate the appropriate dismissal or unwinding of menus and dialogs when the operation succeeds, is cancelled, or finishes error handling. Leave actual surface-stack manipulation to <code class="docutils literal notranslate"><span class="pre">SurfaceManager</span></code>.</p></li>
+<li><p><strong>Handle confirmation outcomes.</strong> Associate confirmation responses with the operation that requested them and proceed according to the player’s decision.</p></li>
+<li><p><strong>Complete or cancel operations.</strong> Release the active operation’s state when its lifecycle has finished, ensuring that subsequent operations can begin.</p></li>
+</ul>
+</section>
+<section id="operating-constraints">
+<h1>Operating Constraints<a class="headerlink" href="#operating-constraints" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><strong>One active operation at a time.</strong> The CUI may have at most one operation managed by <code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> in progress. A new operation must not overwrite or interfere with an existing operation.</p></li>
+<li><p><strong>Asynchronous request/response processing.</strong> Issuing a request does not imply that the operation has succeeded. The operation remains active until its result has been processed and any required follow-up interaction has completed.</p></li>
+<li><p><strong>Correlation-based response matching.</strong> A response must be associated with the request that produced it. Unmatched, stale, or unrelated responses must not advance or complete the active operation.</p></li>
+<li><p><strong>CUI thread ownership.</strong> All operation-state transitions and resulting CUI actions must respect the CUI’s thread-ownership rules. Incoming events from other threads must be routed to the CUI thread before they cause UI or operation-state changes.</p></li>
+<li><p><strong>Separation of responsibilities.</strong> <code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> coordinates operations; menus collect choices; dialogs communicate information and collect confirmation or acknowledgement; <code class="docutils literal notranslate"><span class="pre">SurfaceManager</span></code> manages the surface stack; and the Craps Engine executes game operations and reports their results.</p></li>
+</ul>
+</section>
+<section id="completion">
+<h1>Completion<a class="headerlink" href="#completion" title="Link to this heading"></a></h1>
+<p>An operation is complete when its intended outcome has been reached and all required user interaction and CUI cleanup have finished.</p>
+<p>Depending on the operation, completion may follow a successful response, cancellation of a confirmation, or acknowledgement of an error.</p>
+<p>Once complete, the manager releases the operation’s state and becomes available to coordinate the next operation.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, KingSolomon1954.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -93,7 +93,7 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">EventLoop.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//----------------------------------------------------------------</span></div>
+<a href="EventLoop_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// File: EventLoop.h</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//</span></div>
@@ -115,13 +115,13 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classCtrl_1_1EventLoop.html">   19</a></span><span class="keyword">class </span><a class="code hl_class" href="classCtrl_1_1EventLoop.html">EventLoop</a></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">using </span>Callback = std::function&lt;void(<a class="code hl_struct" href="structCtrl_1_1GameEvent.html">GameEvent</a>*)&gt;;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classCtrl_1_1EventLoop.html#a1b30fb2faf3a912d743e5cb70eddc30a">   22</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classCtrl_1_1EventLoop.html#a1b30fb2faf3a912d743e5cb70eddc30a">Callback</a> = std::function&lt;void(<a class="code hl_struct" href="structCtrl_1_1GameEvent.html">GameEvent</a>*)&gt;;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classCtrl_1_1EventLoop.html">EventLoop</a>(<span class="keyword">const</span> Callback dispatchCb);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>   <a class="code hl_class" href="classCtrl_1_1EventLoop.html">~EventLoop</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> stop();</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classCtrl_1_1EventLoop.html#a952275738d19e932043129a0666eea4f">EventLoop</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="classCtrl_1_1EventLoop.html#a1b30fb2faf3a912d743e5cb70eddc30a">Callback</a> dispatchCb);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classCtrl_1_1EventLoop.html#ab413f09506065be8c6ad611562eb24f2">   27</a></span>   <a class="code hl_function" href="classCtrl_1_1EventLoop.html#ab413f09506065be8c6ad611562eb24f2">~EventLoop</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classCtrl_1_1EventLoop.html#ac0c0fb89065a4f24ac403ade039c64eb">stop</a>();</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordtype">void</span> enqueue(GameEvent::GameEventPtr ev);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classCtrl_1_1EventLoop.html#ab2b6e31a96c4b2d68d9cb901ed801acd">enqueue</a>(GameEvent::GameEventPtr ev);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">private</span>:</div>
@@ -132,7 +132,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::condition_variable queueCv_;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">// Order matters</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    Callback dispatchEventCb_;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <a class="code hl_typedef" href="classCtrl_1_1EventLoop.html#a1b30fb2faf3a912d743e5cb70eddc30a">Callback</a> dispatchEventCb_;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::thread thread_;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">void</span> run();</div>
@@ -145,12 +145,17 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="ttc" id="aclassCtrl_1_1EventLoop_html"><div class="ttname"><a href="classCtrl_1_1EventLoop.html">Ctrl::EventLoop</a></div><div class="ttdoc">UI (Console or GUI) enqueues events. The loop processes events.</div><div class="ttdef"><b>Definition</b> EventLoop.h:20</div></div>
+<div class="ttc" id="aclassCtrl_1_1EventLoop_html_a1b30fb2faf3a912d743e5cb70eddc30a"><div class="ttname"><a href="classCtrl_1_1EventLoop.html#a1b30fb2faf3a912d743e5cb70eddc30a">Ctrl::EventLoop::Callback</a></div><div class="ttdeci">std::function&lt; void(GameEvent *)&gt; Callback</div><div class="ttdef"><b>Definition</b> EventLoop.h:22</div></div>
+<div class="ttc" id="aclassCtrl_1_1EventLoop_html_a952275738d19e932043129a0666eea4f"><div class="ttname"><a href="classCtrl_1_1EventLoop.html#a952275738d19e932043129a0666eea4f">Ctrl::EventLoop::EventLoop</a></div><div class="ttdeci">EventLoop(const Callback dispatchCb)</div><div class="ttdef"><b>Definition</b> EventLoop.cpp:13</div></div>
+<div class="ttc" id="aclassCtrl_1_1EventLoop_html_ab2b6e31a96c4b2d68d9cb901ed801acd"><div class="ttname"><a href="classCtrl_1_1EventLoop.html#ab2b6e31a96c4b2d68d9cb901ed801acd">Ctrl::EventLoop::enqueue</a></div><div class="ttdeci">void enqueue(GameEvent::GameEventPtr ev)</div><div class="ttdef"><b>Definition</b> EventLoop.cpp:22</div></div>
+<div class="ttc" id="aclassCtrl_1_1EventLoop_html_ab413f09506065be8c6ad611562eb24f2"><div class="ttname"><a href="classCtrl_1_1EventLoop.html#ab413f09506065be8c6ad611562eb24f2">Ctrl::EventLoop::~EventLoop</a></div><div class="ttdeci">~EventLoop()=default</div></div>
+<div class="ttc" id="aclassCtrl_1_1EventLoop_html_ac0c0fb89065a4f24ac403ade039c64eb"><div class="ttname"><a href="classCtrl_1_1EventLoop.html#ac0c0fb89065a4f24ac403ade039c64eb">Ctrl::EventLoop::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdef"><b>Definition</b> EventLoop.cpp:32</div></div>
 <div class="ttc" id="anamespaceCtrl_html"><div class="ttname"><a href="namespaceCtrl.html">Ctrl</a></div><div class="ttdoc">Controller Library (lib-controller)</div><div class="ttdef"><b>Definition</b> AutoFill.h:14</div></div>
-<div class="ttc" id="astructCtrl_1_1GameEvent_html"><div class="ttname"><a href="structCtrl_1_1GameEvent.html">Ctrl::GameEvent</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:76</div></div>
+<div class="ttc" id="astructCtrl_1_1GameEvent_html"><div class="ttname"><a href="structCtrl_1_1GameEvent.html">Ctrl::GameEvent</a></div><div class="ttdoc">Base class for all Events.</div><div class="ttdef"><b>Definition</b> GameEvents.h:104</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Oct 14 2026 19:08:48 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

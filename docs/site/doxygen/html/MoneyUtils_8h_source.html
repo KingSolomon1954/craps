@@ -93,7 +93,7 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">MoneyUtils.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//----------------------------------------------------------------</span></div>
+<a href="MoneyUtils_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// File: MoneyUtils.h</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//</span></div>
@@ -109,33 +109,42 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceGen.html">Gen</a> {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">using </span>Money = unsigned;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="namespaceGen.html#af1d28285ac316d18d7ae6668a09a8b40">   17</a></span><span class="keyword">using </span><a class="code hl_class" href="classGen_1_1Money.html">Money</a> = unsigned;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span>MoneyUtils {</div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespaceGen_1_1MoneyUtils.html">   19</a></span><span class="keyword">namespace </span>MoneyUtils {</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">// String conversions</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>std::string <a class="code hl_function" href="namespaceEnumBetName.html#a9f68ae3d87e7c11051da1da206a93e19">toString</a>(Money amount,</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                     <span class="keywordtype">bool</span> showDollar = <span class="keyword">true</span>,</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>std::string <a class="code hl_function" href="namespaceGen_1_1MoneyUtils.html#a34ed8b4d120975f5e1245f33ca144e4f">toString</a>(<a class="code hl_class" href="classGen_1_1Money.html">Money</a> amount,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                     <span class="keywordtype">bool</span> <a class="code hl_function" href="namespaceGen.html#a0f3080c62212442a139af5d154dee972">showDollar</a> = <span class="keyword">true</span>,</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>                     <span class="keywordtype">bool</span> withCommas = <span class="keyword">true</span>);  <span class="comment">// &quot;$1,234&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>std::string toStringNoCommas(Money amount);    <span class="comment">// &quot;$1234&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>std::string toStringNoDollar(Money amount);    <span class="comment">// &quot;1,234&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>std::string toStringPlain   (Money amount);    <span class="comment">// &quot;1234&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>Money <a class="code hl_function" href="namespaceEnumBetName.html#ae75bd2552e1c971e9f503df4751d1cff">fromString</a>(<span class="keyword">const</span> std::string&amp; str);      <span class="comment">// Accepts &quot;$1,234&quot;, throws</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>std::string <a class="code hl_function" href="namespaceGen_1_1MoneyUtils.html#a87d23e23c65802b592daa41a395960b3">toStringNoCommas</a>(<a class="code hl_class" href="classGen_1_1Money.html">Money</a> amount);    <span class="comment">// &quot;$1234&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>std::string <a class="code hl_function" href="namespaceGen_1_1MoneyUtils.html#a71fc7a49ec721a6758241f250f9b7a01">toStringNoDollar</a>(<a class="code hl_class" href="classGen_1_1Money.html">Money</a> amount);    <span class="comment">// &quot;1,234&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>std::string <a class="code hl_function" href="namespaceGen_1_1MoneyUtils.html#aae703a6f0f55000f733c0e22863f9dc5">toStringPlain</a>   (<a class="code hl_class" href="classGen_1_1Money.html">Money</a> amount);    <span class="comment">// &quot;1234&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><a class="code hl_class" href="classGen_1_1Money.html">Money</a> <a class="code hl_function" href="namespaceGen_1_1MoneyUtils.html#a5f5df7e5c13b71d81a00eb107b984e82">fromString</a>(<span class="keyword">const</span> std::string&amp; str);      <span class="comment">// Accepts &quot;$1,234&quot;, throws</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">// YAML support</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>YAML::Node toYAML(Money value);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>Money fromYAML(<span class="keyword">const</span> YAML::Node&amp; node);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>YAML::Node <a class="code hl_function" href="namespaceGen_1_1MoneyUtils.html#a055b25fb90c84b3e4435349ca95eac46">toYAML</a>(<a class="code hl_class" href="classGen_1_1Money.html">Money</a> value);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><a class="code hl_class" href="classGen_1_1Money.html">Money</a> <a class="code hl_function" href="namespaceGen_1_1MoneyUtils.html#adc540d4f3bf7b1aead2e8126ee463ab3">fromYAML</a>(<span class="keyword">const</span> YAML::Node&amp; node);</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}}  <span class="comment">// namespace Gen::MoneyUtils</span></div>
+</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">//----------------------------------------------------------------</span></div>
-<div class="ttc" id="anamespaceEnumBetName_html_a9f68ae3d87e7c11051da1da206a93e19"><div class="ttname"><a href="namespaceEnumBetName.html#a9f68ae3d87e7c11051da1da206a93e19">EnumBetName::toString</a></div><div class="ttdeci">std::string toString(BetName b) noexcept</div><div class="ttdef"><b>Definition</b> EnumBetName.cpp:39</div></div>
-<div class="ttc" id="anamespaceEnumBetName_html_ae75bd2552e1c971e9f503df4751d1cff"><div class="ttname"><a href="namespaceEnumBetName.html#ae75bd2552e1c971e9f503df4751d1cff">EnumBetName::fromString</a></div><div class="ttdeci">BetName fromString(const std::string &amp;s)</div><div class="ttdef"><b>Definition</b> EnumBetName.cpp:81</div></div>
+<div class="ttc" id="aclassGen_1_1Money_html"><div class="ttname"><a href="classGen_1_1Money.html">Gen::Money</a></div><div class="ttdoc">Manipulates Money.</div><div class="ttdef"><b>Definition</b> Money.h:85</div></div>
+<div class="ttc" id="anamespaceGen_1_1MoneyUtils_html_a055b25fb90c84b3e4435349ca95eac46"><div class="ttname"><a href="namespaceGen_1_1MoneyUtils.html#a055b25fb90c84b3e4435349ca95eac46">Gen::MoneyUtils::toYAML</a></div><div class="ttdeci">YAML::Node toYAML(Money value)</div><div class="ttdef"><b>Definition</b> MoneyUtils.cpp:107</div></div>
+<div class="ttc" id="anamespaceGen_1_1MoneyUtils_html_a34ed8b4d120975f5e1245f33ca144e4f"><div class="ttname"><a href="namespaceGen_1_1MoneyUtils.html#a34ed8b4d120975f5e1245f33ca144e4f">Gen::MoneyUtils::toString</a></div><div class="ttdeci">std::string toString(Money amount, bool showDollar=true, bool withCommas=true)</div><div class="ttdef"><b>Definition</b> MoneyUtils.cpp:16</div></div>
+<div class="ttc" id="anamespaceGen_1_1MoneyUtils_html_a5f5df7e5c13b71d81a00eb107b984e82"><div class="ttname"><a href="namespaceGen_1_1MoneyUtils.html#a5f5df7e5c13b71d81a00eb107b984e82">Gen::MoneyUtils::fromString</a></div><div class="ttdeci">Money fromString(const std::string &amp;str)</div><div class="ttdef"><b>Definition</b> MoneyUtils.cpp:78</div></div>
+<div class="ttc" id="anamespaceGen_1_1MoneyUtils_html_a71fc7a49ec721a6758241f250f9b7a01"><div class="ttname"><a href="namespaceGen_1_1MoneyUtils.html#a71fc7a49ec721a6758241f250f9b7a01">Gen::MoneyUtils::toStringNoDollar</a></div><div class="ttdeci">std::string toStringNoDollar(Money amount)</div><div class="ttdef"><b>Definition</b> MoneyUtils.cpp:58</div></div>
+<div class="ttc" id="anamespaceGen_1_1MoneyUtils_html_a87d23e23c65802b592daa41a395960b3"><div class="ttname"><a href="namespaceGen_1_1MoneyUtils.html#a87d23e23c65802b592daa41a395960b3">Gen::MoneyUtils::toStringNoCommas</a></div><div class="ttdeci">std::string toStringNoCommas(Money amount)</div><div class="ttdef"><b>Definition</b> MoneyUtils.cpp:48</div></div>
+<div class="ttc" id="anamespaceGen_1_1MoneyUtils_html_aae703a6f0f55000f733c0e22863f9dc5"><div class="ttname"><a href="namespaceGen_1_1MoneyUtils.html#aae703a6f0f55000f733c0e22863f9dc5">Gen::MoneyUtils::toStringPlain</a></div><div class="ttdeci">std::string toStringPlain(Money amount)</div><div class="ttdef"><b>Definition</b> MoneyUtils.cpp:68</div></div>
+<div class="ttc" id="anamespaceGen_1_1MoneyUtils_html_adc540d4f3bf7b1aead2e8126ee463ab3"><div class="ttname"><a href="namespaceGen_1_1MoneyUtils.html#adc540d4f3bf7b1aead2e8126ee463ab3">Gen::MoneyUtils::fromYAML</a></div><div class="ttdeci">Money fromYAML(const YAML::Node &amp;node)</div><div class="ttdef"><b>Definition</b> MoneyUtils.cpp:117</div></div>
 <div class="ttc" id="anamespaceGen_html"><div class="ttname"><a href="namespaceGen.html">Gen</a></div><div class="ttdoc">General Purpose Library (lib-gen)</div><div class="ttdef"><b>Definition</b> ConfigCommandLine.h:11</div></div>
+<div class="ttc" id="anamespaceGen_html_a0f3080c62212442a139af5d154dee972"><div class="ttname"><a href="namespaceGen.html#a0f3080c62212442a139af5d154dee972">Gen::showDollar</a></div><div class="ttdeci">std::ios_base &amp; showDollar(std::ios_base &amp;os)</div><div class="ttdef"><b>Definition</b> Money.h:44</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Oct 14 2026 19:08:48 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

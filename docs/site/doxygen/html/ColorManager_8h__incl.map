@@ -1,0 +1,22 @@
+<map id="src/lib&#45;cui/include/cui/managers/ColorManager.h" name="src/lib&#45;cui/include/cui/managers/ColorManager.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="59,5,279,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,61,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,48,67,89,64,84,135,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="86,93,157,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,47,138,83,133,80,155,44"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="181,93,256,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="184,44,206,80,202,83,179,47"/>
+<area shape="rect" id="Node000005" href="$CrapsTypes_8h.html" title=" " alt="" coords="280,93,427,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="214,43,315,85,313,90,212,48"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="332,240,391,265"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="294,121,256,133,223,148,212,157,206,167,205,178,210,191,232,213,260,229,290,239,319,245,317,250,288,244,258,234,229,217,206,193,200,179,201,166,208,154,220,144,254,128,292,116"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="220,167,297,192"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="340,121,287,160,284,156,337,117"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="322,167,385,192"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="356,119,356,153,351,153,351,119"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="409,167,471,192"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="369,117,417,156,414,160,366,121"/>
+<area shape="rect" id="Node000010" href="$Uuid_8h.html" title=" " alt="" coords="495,167,587,192"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="384,116,499,159,497,164,383,121"/>
+<area shape="poly" id="edge10_Node000010_Node000006" title=" " alt="" coords="513,195,404,237,402,232,511,190"/>
+</map>

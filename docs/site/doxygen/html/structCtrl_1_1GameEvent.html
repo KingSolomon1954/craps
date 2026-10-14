@@ -97,12 +97,17 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">Ctrl::GameEvent Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Base class for all Events.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="GameEvents_8h_source.html">GameEvents.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Ctrl::GameEvent:</div>
 <div class="dyncontent">
 <div class="center"><img src="structCtrl_1_1GameEvent__inherit__graph.png" border="0" usemap="#aCtrl_1_1GameEvent_inherit__map" alt="Inheritance graph"/></div>
 <map name="aCtrl_1_1GameEvent_inherit__map" id="aCtrl_1_1GameEvent_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,425,135,451"/>
+<area shape="rect" title="Base class for all Events." alt="" coords="5,425,135,451"/>
 <area shape="rect" href="structCtrl_1_1ReqRollDice.html" title=" " alt="" coords="229,5,361,31"/>
 <area shape="poly" title=" " alt="" coords="68,411,69,338,83,238,97,184,117,131,145,83,181,40,203,26,228,18,229,23,205,30,184,44,149,86,122,134,102,186,88,239,75,338,73,412"/>
 <area shape="rect" href="structCtrl_1_1ReqTerminate.html" title=" " alt="" coords="223,55,366,80"/>
@@ -144,32 +149,144 @@ Inheritance diagram for Ctrl::GameEvent:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aaf34c3551bb0788e918626fb8094a5b7" id="r_aaf34c3551bb0788e918626fb8094a5b7"><td class="memItemLeft" align="right" valign="top"><a id="aaf34c3551bb0788e918626fb8094a5b7" name="aaf34c3551bb0788e918626fb8094a5b7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>GameEvent</b> (EventSource source, EventType type)</td></tr>
+<tr class="memitem:aaf34c3551bb0788e918626fb8094a5b7" id="r_aaf34c3551bb0788e918626fb8094a5b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf34c3551bb0788e918626fb8094a5b7">GameEvent</a> (<a class="el" href="namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8">EventSource</a> <a class="el" href="#a66812f709d4fbfaa3726f8a1b735d79f">source</a>, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3">EventType</a> <a class="el" href="#a53ef7373c3ee6381b0b6d14e5d879a99">type</a>)</td></tr>
 <tr class="separator:aaf34c3551bb0788e918626fb8094a5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a66812f709d4fbfaa3726f8a1b735d79f" id="r_a66812f709d4fbfaa3726f8a1b735d79f"><td class="memItemLeft" align="right" valign="top"><a id="a66812f709d4fbfaa3726f8a1b735d79f" name="a66812f709d4fbfaa3726f8a1b735d79f"></a>
-EventSource&#160;</td><td class="memItemRight" valign="bottom"><b>source</b> = EventSource::Unset</td></tr>
+<tr class="memitem:a66812f709d4fbfaa3726f8a1b735d79f" id="r_a66812f709d4fbfaa3726f8a1b735d79f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8">EventSource</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66812f709d4fbfaa3726f8a1b735d79f">source</a> = <a class="el" href="namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8ac9f88e098f6fe4e4e112eeb05ccb9671">EventSource::Unset</a></td></tr>
+<tr class="memdesc:a66812f709d4fbfaa3726f8a1b735d79f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Came from where.  <br /></td></tr>
 <tr class="separator:a66812f709d4fbfaa3726f8a1b735d79f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53ef7373c3ee6381b0b6d14e5d879a99" id="r_a53ef7373c3ee6381b0b6d14e5d879a99"><td class="memItemLeft" align="right" valign="top"><a id="a53ef7373c3ee6381b0b6d14e5d879a99" name="a53ef7373c3ee6381b0b6d14e5d879a99"></a>
-EventType&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = EventType::Unset</td></tr>
+<tr class="memitem:a53ef7373c3ee6381b0b6d14e5d879a99" id="r_a53ef7373c3ee6381b0b6d14e5d879a99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53ef7373c3ee6381b0b6d14e5d879a99">type</a> = <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac9f88e098f6fe4e4e112eeb05ccb9671">EventType::Unset</a></td></tr>
+<tr class="memdesc:a53ef7373c3ee6381b0b6d14e5d879a99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the Event.  <br /></td></tr>
 <tr class="separator:a53ef7373c3ee6381b0b6d14e5d879a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f9b11093f87b6915dafcd4e40e3060e" id="r_a9f9b11093f87b6915dafcd4e40e3060e"><td class="memItemLeft" align="right" valign="top"><a id="a9f9b11093f87b6915dafcd4e40e3060e" name="a9f9b11093f87b6915dafcd4e40e3060e"></a>
-EventId&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> = 0</td></tr>
+<tr class="memitem:a9f9b11093f87b6915dafcd4e40e3060e" id="r_a9f9b11093f87b6915dafcd4e40e3060e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCtrl.html#a45de7de396e69e49884327ced79b5d01">EventId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f9b11093f87b6915dafcd4e40e3060e">id</a> = 0</td></tr>
+<tr class="memdesc:a9f9b11093f87b6915dafcd4e40e3060e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique ID.  <br /></td></tr>
 <tr class="separator:a9f9b11093f87b6915dafcd4e40e3060e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8719399b0a5c26e99f16bae45bc515ed" id="r_a8719399b0a5c26e99f16bae45bc515ed"><td class="memItemLeft" align="right" valign="top"><a id="a8719399b0a5c26e99f16bae45bc515ed" name="a8719399b0a5c26e99f16bae45bc515ed"></a>
-CorrelationId&#160;</td><td class="memItemRight" valign="bottom"><b>correlationId</b> = 0</td></tr>
+<tr class="memitem:a8719399b0a5c26e99f16bae45bc515ed" id="r_a8719399b0a5c26e99f16bae45bc515ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCtrl.html#a469de83a5b91f8ca630e556d9bcf9f46">CorrelationId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8719399b0a5c26e99f16bae45bc515ed">correlationId</a> = 0</td></tr>
+<tr class="memdesc:a8719399b0a5c26e99f16bae45bc515ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Correlation ID.  <br /></td></tr>
 <tr class="separator:a8719399b0a5c26e99f16bae45bc515ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Base class for all Events. </p>
+<p>There are three categories of Events:</p>
+<ul>
+<li>Request Events (prefix Req) - requesting some action be taken </li>
+<li>Response Events (prefix Rsp) - response to a request </li>
+<li>Unsolicited Events (prefix Usl) - something of interest happened</li>
+</ul>
+<p>There are three Sources of Events, aligned with the Model/View/Controller design (See <a class="el" href="namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8" title="The source of an Event.">Ctrl::EventSource</a>):</p>
+<ul>
+<li>Model - The <a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> engine </li>
+<li>View - The CUI or GUI </li>
+<li>Controller - The Controller</li>
+</ul>
+<p>Unique ID (See <a class="el" href="namespaceCtrl.html#a45de7de396e69e49884327ced79b5d01" title="A unique ID.">Ctrl::EventId</a>):</p>
+<p>Every event gets a globally unique value for unique ID.</p>
+<p>Correlation ID (See <a class="el" href="namespaceCtrl.html#a469de83a5b91f8ca630e556d9bcf9f46" title="An ID to match Response Events to Request Events.">Ctrl::CorrelationId</a>):</p>
+<p>Every event also carries a correlationId allowing users to match up Requests with Responses. By default, for convenience, the correlationId is set to the uniqueId. In the case of Response Events, the caller is responsible for overwriting the correlationId with the source event's correlationId. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aaf34c3551bb0788e918626fb8094a5b7" name="aaf34c3551bb0788e918626fb8094a5b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf34c3551bb0788e918626fb8094a5b7">&#9670;&#160;</a></span>GameEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Ctrl::GameEvent::GameEvent </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8">EventSource</a></td>          <td class="paramname"><span class="paramname"><em>source</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3">EventType</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a8719399b0a5c26e99f16bae45bc515ed" name="a8719399b0a5c26e99f16bae45bc515ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8719399b0a5c26e99f16bae45bc515ed">&#9670;&#160;</a></span>correlationId</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCtrl.html#a469de83a5b91f8ca630e556d9bcf9f46">CorrelationId</a> Ctrl::GameEvent::correlationId = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Correlation ID. </p>
+
+</div>
+</div>
+<a id="a9f9b11093f87b6915dafcd4e40e3060e" name="a9f9b11093f87b6915dafcd4e40e3060e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f9b11093f87b6915dafcd4e40e3060e">&#9670;&#160;</a></span>id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCtrl.html#a45de7de396e69e49884327ced79b5d01">EventId</a> Ctrl::GameEvent::id = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Unique ID. </p>
+
+</div>
+</div>
+<a id="a66812f709d4fbfaa3726f8a1b735d79f" name="a66812f709d4fbfaa3726f8a1b735d79f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66812f709d4fbfaa3726f8a1b735d79f">&#9670;&#160;</a></span>source</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8">EventSource</a> Ctrl::GameEvent::source = <a class="el" href="namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8ac9f88e098f6fe4e4e112eeb05ccb9671">EventSource::Unset</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Came from where. </p>
+
+</div>
+</div>
+<a id="a53ef7373c3ee6381b0b6d14e5d879a99" name="a53ef7373c3ee6381b0b6d14e5d879a99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53ef7373c3ee6381b0b6d14e5d879a99">&#9670;&#160;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3">EventType</a> Ctrl::GameEvent::type = <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac9f88e098f6fe4e4e112eeb05ccb9671">EventType::Unset</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Name of the Event. </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/lib-controller/include/controller/<a class="el" href="GameEvents_8h_source.html">GameEvents.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 11 2026 18:48:52 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

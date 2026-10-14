@@ -57,34 +57,58 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Design Document</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#user-story">User Story</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#design-goals">Design Goals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#system-context">System Context</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#application-context">Application Context</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#interfaces">Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#startup-shutdown">Startup/Shutdown</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#startup-behavior">Startup Behavior</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#design">Design</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#processing-flow">Processing Flow</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#command-line">Command Line</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#startup-shutdown">Startup/Shutdown</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#logging-design">Logging Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#threads">Threads</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#memory-management">Memory Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#global-data">Global Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#threads">Threads</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#security">Security</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#timers">Timers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#properties">Properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#error-handling">Error Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#state-management">State Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#statistics">Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-flow">Processing Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main-cpp">main.cpp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#persistence">Persistence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crc-cards">CRC Cards</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#library-general">Library General</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#library-codec">Library CODEC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#crc-cards">CRC Cards</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#logmanager-crc-card">LogManager CRC Card</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#errormanager-crc-card">ErrorManager CRC Card</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#craps-engine">Craps Engine</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#players">Players</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tables">Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#betting">Betting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#statistics">Statistics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#controller">Controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#interfaces">Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-handling">Event Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#console-user-interface">Console User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#operationmanager-crc-card">OperationManager CRC Card</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#purpose">Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-cases">Use Cases</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#responsibilities">Responsibilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#operating-constraints">Operating Constraints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#completion">Completion</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cuimain-crc-card">CuiMain CRC Card</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#screencrapstable-crc-card">ScreenCrapsTable CRC Card</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#graphical-user-interface">Graphical User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#physics-engine">Physics engine</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#library-general">Library General</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#multi-layer-configuration">Multi-Layer Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eventmanager">EventManager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logger">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#timers">Timers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security">Security</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#quality-attributes">Quality Attributes</a></li>
@@ -101,7 +125,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../licenses/licenses.html">Licenses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../licenses/opensource.html">Open Source Inventory</a></li>
 </ul>
 
         </div>
@@ -153,20 +176,20 @@ engineers may find it useful.</p>
 <nav class="contents local" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#user-story" id="id7">User Story</a></p></li>
-<li><p><a class="reference internal" href="#design-goals" id="id8">Design Goals</a></p></li>
-<li><p><a class="reference internal" href="#system-context" id="id9">System Context</a></p></li>
-<li><p><a class="reference internal" href="#application-context" id="id10">Application Context</a></p></li>
-<li><p><a class="reference internal" href="#design" id="id11">Design</a></p></li>
-<li><p><a class="reference internal" href="#library-general" id="id12">Library General</a></p></li>
-<li><p><a class="reference internal" href="#library-codec" id="id13">Library CODEC</a></p></li>
-<li><p><a class="reference internal" href="#crc-cards" id="id14">CRC Cards</a></p></li>
-<li><p><a class="reference internal" href="#quality-attributes" id="id15">Quality Attributes</a></p></li>
-<li><p><a class="reference internal" href="#collateral-design" id="id16">Collateral Design</a></p></li>
+<li><p><a class="reference internal" href="#user-story" id="id6">User Story</a></p></li>
+<li><p><a class="reference internal" href="#design-goals" id="id7">Design Goals</a></p></li>
+<li><p><a class="reference internal" href="#application-context" id="id8">Application Context</a></p></li>
+<li><p><a class="reference internal" href="#craps-engine" id="id9">Craps Engine</a></p></li>
+<li><p><a class="reference internal" href="#controller" id="id10">Controller</a></p></li>
+<li><p><a class="reference internal" href="#console-user-interface" id="id11">Console User Interface</a></p></li>
+<li><p><a class="reference internal" href="#graphical-user-interface" id="id12">Graphical User Interface</a></p></li>
+<li><p><a class="reference internal" href="#library-general" id="id13">Library General</a></p></li>
+<li><p><a class="reference internal" href="#quality-attributes" id="id14">Quality Attributes</a></p></li>
+<li><p><a class="reference internal" href="#collateral-design" id="id15">Collateral Design</a></p></li>
 </ul>
 </nav>
 <section id="user-story">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">User Story</a><a class="headerlink" href="#user-story" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">User Story</a><a class="headerlink" href="#user-story" title="Link to this heading"></a></h2>
 <p>As a user of Royal Craps, I want to:</p>
 <ul class="simple">
 <li><p>TBS</p></li>
@@ -175,107 +198,118 @@ engineers may find it useful.</p>
 </ul>
 </section>
 <section id="design-goals">
-<h2><a class="toc-backref" href="#id8" role="doc-backlink">Design Goals</a><a class="headerlink" href="#design-goals" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Design Goals</a><a class="headerlink" href="#design-goals" title="Link to this heading"></a></h2>
 <p>Important application design goals and constraints:</p>
 <ul class="simple">
 <li><p>Goal 1</p></li>
 <li><p>Goal 2</p></li>
 </ul>
 </section>
-<section id="system-context">
-<h2><a class="toc-backref" href="#id9" role="doc-backlink">System Context</a><a class="headerlink" href="#system-context" title="Link to this heading"></a></h2>
-<div class="admonition-instructions admonition">
-<p class="admonition-title">Instructions</p>
-<p>In this section describe the application’s position in the context of
-a larger system of applications, if such is the case. Then eliminate
-this admonition from the design-doc.rst file. If your application is
-more of a standalone application then just delete this section, as
-the next section covers application context.</p>
-</div>
-<p>Royal Craps is a high performance C++ application that is
-part of a larger system.</p>
-<figure class="align-default" id="id1">
-<img alt="System Context View" src="../_images/ContextSystem.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Figure:</strong> System Context View</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
-</figcaption>
-</figure>
-<p>Be aware that the above figure is a simplified approximation of
-the actual system.</p>
-</section>
 <section id="application-context">
-<h2><a class="toc-backref" href="#id10" role="doc-backlink">Application Context</a><a class="headerlink" href="#application-context" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Application Context</a><a class="headerlink" href="#application-context" title="Link to this heading"></a></h2>
 <div class="admonition-instructions admonition">
 <p class="admonition-title">Instructions</p>
 <p>In this section describe the application’s view of its processing
 context. Create or modify the following diagram to agree with your
 app. Then eliminate this admonition from the design-doc.rst file.</p>
 </div>
+<p>The Royal Craps design is a single process application with multiple
+threads written specifically for Linux. C++ is the language choice.</p>
 <p>The following figure shows Royal Craps’s view of its processing
 environment.</p>
-<figure class="align-default" id="id2">
+<figure class="align-center" id="id1">
 <img alt="Application Context Diagram" src="../_images/ContextApplication.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure:</strong> Application Context Diagram</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-text"><strong>Figure:</strong> Application Context Diagram</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>&lt;Add text describing context. Should mention all items shown
-on context diagram.&gt;</p>
-<section id="interfaces">
-<h3>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading"></a></h3>
-<p>Royal Craps communicates with several external components over several
-interfaces. This section briefly identifies those interfaces and the
-type of messages associated with each.</p>
-<p>As seen in the application context diagram above, Royal Craps
-interfaces with the following external components:</p>
-<p><strong>Interface 1</strong></p>
+<p>The design conforms the Model/View/Controller design paradigm. There is
+the CUI and GUI making up the View, the Controller, and the Craps Engine
+making up the Model. Implementation-wise, we have:</p>
 <ul class="simple">
-<li><p>Protocol</p></li>
-<li><p>Messages</p></li>
+<li><p>Model - <code class="docutils literal notranslate"><span class="pre">lib-craps</span></code></p></li>
+<li><p>View - <code class="docutils literal notranslate"><span class="pre">lib-cui</span></code> / <code class="docutils literal notranslate"><span class="pre">lib-gui</span></code></p></li>
+<li><p>Controller - <code class="docutils literal notranslate"><span class="pre">lib-controller</span></code></p></li>
 </ul>
-<p><strong>Interface 2</strong></p>
-<ul class="simple">
-<li><p>Protocol</p></li>
-<li><p>Messages</p></li>
-</ul>
-</section>
-</section>
-<section id="design">
-<h2><a class="toc-backref" href="#id11" role="doc-backlink">Design</a><a class="headerlink" href="#design" title="Link to this heading"></a></h2>
-<p>The design is a C++ single process application with multiple
-threads. C++ is used due to its performance characteristics.
-This section presents the major design elements.</p>
-<p>&lt;Add more description&gt;</p>
-<section id="processing-flow">
-<h3>Processing Flow<a class="headerlink" href="#processing-flow" title="Link to this heading"></a></h3>
-<p>&lt;Describe processing flow to agree with diagram&gt;</p>
-<figure class="align-default" id="id3">
-<img alt="Processing Flow" src="../_images/ProcessingFlow.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Figure:</strong> Processing Flow</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
-</figcaption>
-</figure>
-<div class="admonition-instructions admonition">
-<p class="admonition-title">Instructions</p>
-<p>A sampling of important design elements are given below and should be
-discussed in most any design. Eliminate those that are not appropriate
-for your application. Add elements that might be missing. Note that
-you must add your own elements that focus on the significant
-processing which is the purpose of your application.  For example a
-satellite processing application might have a design element called
-SatelliteManager.</p>
-</div>
-</section>
-<section id="command-line">
-<h3>Command Line<a class="headerlink" href="#command-line" title="Link to this heading"></a></h3>
-<p>TBS</p>
-</section>
+<p>There is no database, just a bunch of persistent files.
+The application performs no networking.</p>
 <section id="startup-shutdown">
 <h3>Startup/Shutdown<a class="headerlink" href="#startup-shutdown" title="Link to this heading"></a></h3>
-<p>TBS</p>
+<section id="startup-behavior">
+<h4>Startup Behavior<a class="headerlink" href="#startup-behavior" title="Link to this heading"></a></h4>
+<p>RoyalCraps determines its startup behavior by checking whether a saved
+current game exists.</p>
+<section id="first-startup">
+<h5>First Startup<a class="headerlink" href="#first-startup" title="Link to this heading"></a></h5>
+<p>If no saved current game is found, RoyalCraps performs the following steps:</p>
+<ol class="arabic simple">
+<li><p>Create a new player named <code class="docutils literal notranslate"><span class="pre">Unnamed</span></code>.</p></li>
+<li><p>Set the player’s bank to <code class="docutils literal notranslate"><span class="pre">10,000</span></code>.</p></li>
+<li><p>Select the default table, <code class="docutils literal notranslate"><span class="pre">Las</span> <span class="pre">Vegas</span> <span class="pre">Daytime</span></code>.</p></li>
+<li><p>Display <a class="reference internal" href="#screencrapstable-crc-card"><span class="std std-ref">ScreenCrapsTable</span></a>.</p></li>
+</ol>
+<p>The game is automatically saved under the name <code class="docutils literal notranslate"><span class="pre">Unnamed</span></code> when the game
+ends.</p>
+<section id="player-configuration-during-first-startup">
+<h6>Player Configuration During First Startup<a class="headerlink" href="#player-configuration-during-first-startup" title="Link to this heading"></a></h6>
+<p>During the first session, the player can use
+<code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">-&gt;</span> <span class="pre">Configure</span></code> to perform the following operations.</p>
+<dl>
+<dt>Rename Player</dt><dd><p>Prompts for a new player name and renames the current player.
+The associated save file or files are renamed accordingly.</p>
+</dd>
+<dt>New Player</dt><dd><p>Prompts for the name of a new player.</p>
+<p>Before switching players, RoyalCraps saves the current player.  It
+then creates and activates the new player with the following defaults:</p>
+<ul class="simple">
+<li><p>Bank: <code class="docutils literal notranslate"><span class="pre">10,000</span></code></p></li>
+<li><p>Table: the currently selected table</p></li>
+<li><p>Game state: reset for the new player</p></li>
+</ul>
+</dd>
+<dt>Choose Player</dt><dd><p>Because no other players exist during the first session, RoyalCraps
+displays the following message and makes no change:</p>
+<p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">other</span> <span class="pre">players</span> <span class="pre">to</span> <span class="pre">choose</span> <span class="pre">from</span> <span class="pre">at</span> <span class="pre">this</span> <span class="pre">time.</span></code></p>
+</dd>
+</dl>
 </section>
-<section id="logging-design">
-<h3>Logging Design<a class="headerlink" href="#logging-design" title="Link to this heading"></a></h3>
+</section>
+<section id="subsequent-startups">
+<h5>Subsequent Startups<a class="headerlink" href="#subsequent-startups" title="Link to this heading"></a></h5>
+<p>If a saved current game exists, RoyalCraps:</p>
+<ol class="arabic simple">
+<li><p>Loads the last saved game.</p></li>
+<li><p>Restores the associated player, bank, table, and game state.</p></li>
+<li><p>Displays <a class="reference internal" href="#screencrapstable-crc-card"><span class="std std-ref">ScreenCrapsTable</span></a>.</p></li>
+<li><p>Allows the player to continue from the point at which the game was
+last saved.</p></li>
+</ol>
+<section id="player-configuration-during-subsequent-startups">
+<h6>Player Configuration During Subsequent Startups<a class="headerlink" href="#player-configuration-during-subsequent-startups" title="Link to this heading"></a></h6>
+<p>During subsequent sessions, the player can use
+<code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">-&gt;</span> <span class="pre">Configure</span></code> to perform the following operations.</p>
+<dl>
+<dt>Choose Player</dt><dd><p>Displays the list of available players and prompts the player to
+select one.</p>
+<p>Before switching players, RoyalCraps saves the current player.  It
+then loads the selected player’s saved game, including that player’s
+table and game state.</p>
+</dd>
+<dt>New Player</dt><dd><p>Prompts for the name of a new player.</p>
+<p>The current player is saved before the new player is created.  The
+new player is initialized with a bank of <code class="docutils literal notranslate"><span class="pre">10,000</span></code> and uses the
+currently selected table with a reset game state.</p>
+</dd>
+<dt>Rename Player</dt><dd><p>Prompts for a new player name and renames the current player.
+The associated save file or files are renamed accordingly.</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+</section>
+<section id="threads">
+<h3>Threads<a class="headerlink" href="#threads" title="Link to this heading"></a></h3>
 <p>TBS</p>
 </section>
 <section id="memory-management">
@@ -285,92 +319,211 @@ SatelliteManager.</p>
 <section id="global-data">
 <h3>Global Data<a class="headerlink" href="#global-data" title="Link to this heading"></a></h3>
 <p>TBS</p>
-</section>
-<section id="threads">
-<h3>Threads<a class="headerlink" href="#threads" title="Link to this heading"></a></h3>
-<p>TBS</p>
-</section>
-<section id="security">
-<h3>Security<a class="headerlink" href="#security" title="Link to this heading"></a></h3>
-<p>TBS</p>
-</section>
-<section id="timers">
-<h3>Timers<a class="headerlink" href="#timers" title="Link to this heading"></a></h3>
-<p>TBS</p>
-</section>
-<section id="properties">
-<h3>Properties<a class="headerlink" href="#properties" title="Link to this heading"></a></h3>
-<p>TBS</p>
-</section>
-<section id="configuration">
-<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
-<p>TBS</p>
-</section>
-<section id="error-handling">
-<h3>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h3>
-<p>TBS</p>
-<figure class="align-default" id="id4">
-<img alt="Error Sequence Diagram" src="../_images/ErrorSeq.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Figure:</strong> Error Sequence Diagram</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
-</figcaption>
-</figure>
+<p>GameEvents</p>
 </section>
 <section id="state-management">
 <h3>State Management<a class="headerlink" href="#state-management" title="Link to this heading"></a></h3>
 <p>TBS</p>
-<figure class="align-default" id="id5">
+<figure class="align-default" id="id2">
 <img alt="State Diagram" src="../_images/StateDiagram.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure:</strong> State Diagram</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+<p><span class="caption-text"><strong>Figure:</strong> State Diagram</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
-<section id="statistics">
-<h3>Statistics<a class="headerlink" href="#statistics" title="Link to this heading"></a></h3>
+<section id="processing-flow">
+<h3>Processing Flow<a class="headerlink" href="#processing-flow" title="Link to this heading"></a></h3>
+<p>&lt;Describe processing flow to agree with diagram&gt;</p>
+<figure class="align-default" id="id3">
+<img alt="Processing Flow" src="../_images/ProcessingFlow.png" />
+<figcaption>
+<p><span class="caption-text"><strong>Figure:</strong> Processing Flow</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="main-cpp">
+<h3>main.cpp<a class="headerlink" href="#main-cpp" title="Link to this heading"></a></h3>
 <p>TBS</p>
 </section>
 <section id="persistence">
 <h3>Persistence<a class="headerlink" href="#persistence" title="Link to this heading"></a></h3>
 <p>TBS</p>
 </section>
-</section>
-<section id="library-general">
-<h2><a class="toc-backref" href="#id12" role="doc-backlink">Library General</a><a class="headerlink" href="#library-general" title="Link to this heading"></a></h2>
-<p>TBS</p>
-</section>
-<section id="library-codec">
-<h2><a class="toc-backref" href="#id13" role="doc-backlink">Library CODEC</a><a class="headerlink" href="#library-codec" title="Link to this heading"></a></h2>
-<p>TBS</p>
-</section>
 <section id="crc-cards">
-<h2><a class="toc-backref" href="#id14" role="doc-backlink">CRC Cards</a><a class="headerlink" href="#crc-cards" title="Link to this heading"></a></h2>
-<p>This section presents the high level identification of the major classes
-in Royal Craps. First a static UML class diagram is presented. Then
-each major class, in its own paragraph is presented using the CRC cards
-design methodology.</p>
+<h3>CRC Cards<a class="headerlink" href="#crc-cards" title="Link to this heading"></a></h3>
 <p>CRC cards is succinct methodology for object oriented designs where CRC
 stands for classes, responsibilities, and collaborations. CRC cards are
 used to discover, collect and document class information. Using CRC
 cards, each card represents a class and its properties, and is shown in
 its own paragraph. See <a class="reference external" href="http://www.extremeprogramming.org/rules/crccards.html">Extreme Programming CRC Cards</a> or <a class="reference external" href="https://en.wikipedia.org/wiki/Class-responsibility-collaboration_card">wikipedia</a>.</p>
-<figure class="align-default" id="id6">
+<p>Each design section below presents their important classes using CRC cards.</p>
+<p>Some sections will present a UML class as well. Something like these.</p>
+<figure class="align-default" id="id4">
 <img alt="Static Class Diagram" src="../_images/StaticClassDiagram.png" />
 <figcaption>
-<p><span class="caption-text"><strong>Figure:</strong> Static Class Diagram</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+<p><span class="caption-text"><strong>Figure:</strong> Static Class Diagram</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<section id="logmanager-crc-card">
-<h3>LogManager CRC Card<a class="headerlink" href="#logmanager-crc-card" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="craps-engine">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Craps Engine</a><a class="headerlink" href="#craps-engine" title="Link to this heading"></a></h2>
+<section id="players">
+<h3>Players<a class="headerlink" href="#players" title="Link to this heading"></a></h3>
 <p>TBS</p>
 </section>
-<section id="errormanager-crc-card">
-<h3>ErrorManager CRC Card<a class="headerlink" href="#errormanager-crc-card" title="Link to this heading"></a></h3>
+<section id="tables">
+<h3>Tables<a class="headerlink" href="#tables" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="betting">
+<h3>Betting<a class="headerlink" href="#betting" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="statistics">
+<h3>Statistics<a class="headerlink" href="#statistics" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+</section>
+<section id="controller">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Controller</a><a class="headerlink" href="#controller" title="Link to this heading"></a></h2>
+<section id="interfaces">
+<h3>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="event-handling">
+<h3>Event Handling<a class="headerlink" href="#event-handling" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>Command Line</p>
+<p>Configuration Files</p>
+<p>Environment Vars</p>
+<p>TBS</p>
+</section>
+</section>
+<section id="console-user-interface">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Console User Interface</a><a class="headerlink" href="#console-user-interface" title="Link to this heading"></a></h2>
+<p>TBS</p>
+<section id="operationmanager-crc-card">
+<h3>OperationManager CRC Card<a class="headerlink" href="#operationmanager-crc-card" title="Link to this heading"></a></h3>
+<section id="purpose">
+<h4>Purpose<a class="headerlink" href="#purpose" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> coordinates the lifecycle of multi-stage user operations in the CUI.</p>
+<p>An operation represents a user-initiated task that may involve navigating a chain of menus, obtaining user confirmation, issuing an asynchronous request to the Craps Engine, processing the corresponding response, and presenting any resulting errors.</p>
+<p>The manager maintains the state of the active operation and determines what action should occur as the operation progresses through its stages.</p>
+<p>Although betting is a primary use case, <code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> is not specific to betting. It supports any CUI operation that requires coordinated interaction across menus, dialogs, and asynchronous request/response events.</p>
+</section>
+<section id="use-cases">
+<h4>Use Cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h4>
+<section id="making-a-bet">
+<h5>Making a bet<a class="headerlink" href="#making-a-bet" title="Link to this heading"></a></h5>
+<p>A player navigates through one or more betting menus to configure a bet. When the player has completed the required selections, the CUI issues a <code class="docutils literal notranslate"><span class="pre">ReqMakeBet</span></code> request event to the Craps Engine.</p>
+<p><code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> tracks the operation, associates the request with its eventual response, and determines the next action based on the result.</p>
+<ul class="simple">
+<li><p><strong>Success:</strong> The betting menu chain is unwound, returning the player to the appropriate underlying screen.</p></li>
+<li><p><strong>Failure:</strong> An error dialog is presented. After the player acknowledges the error, the error dialog is dismissed and the betting menu chain is unwound or otherwise restored according to the intended interaction.</p></li>
+</ul>
+</section>
+<section id="quitting-the-game">
+<h5>Quitting the game<a class="headerlink" href="#quitting-the-game" title="Link to this heading"></a></h5>
+<p>When the player requests to quit, the CUI presents a <code class="docutils literal notranslate"><span class="pre">DialogConfirmation</span></code>. The manager associates the confirmation response with the pending quit operation.</p>
+<ul class="simple">
+<li><p><strong>Confirmed:</strong> The manager initiates the quit request by publishing the appropriate asynchronous request event.</p></li>
+<li><p><strong>Cancelled:</strong> The operation is abandoned, and the player returns to the preceding interface without issuing the quit request.</p></li>
+</ul>
+<p>Other operations requiring confirmation or multi-stage interaction follow the same general pattern.</p>
+</section>
+</section>
+<section id="responsibilities">
+<h4>Responsibilities<a class="headerlink" href="#responsibilities" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Track the active operation.</strong> Maintain the identity, type, and current stage of the operation in progress.</p></li>
+<li><p><strong>Coordinate multi-stage workflows.</strong> Track progress through menu selection, confirmation, request submission, response processing, error acknowledgement, and completion as applicable.</p></li>
+<li><p><strong>Initiate asynchronous requests.</strong> Publish the appropriate request event when the operation reaches the stage at which the request should be issued. For example, publish <code class="docutils literal notranslate"><span class="pre">ReqMakeBet</span></code> when a bet has been fully configured.</p></li>
+<li><p><strong>Correlate requests and responses.</strong> Retain the correlation ID and any necessary operation context so that an incoming response event can be matched to the active request and operation.</p></li>
+<li><p><strong>Process operation results.</strong> Determine whether the response indicates success or failure and advance the operation accordingly.</p></li>
+<li><p><strong>Coordinate error handling.</strong> On failure, request presentation of the appropriate error dialog, retain the operation context while the dialog is active, and process the player’s acknowledgement.</p></li>
+<li><p><strong>Manage surface-stack transitions.</strong> Initiate the appropriate dismissal or unwinding of menus and dialogs when the operation succeeds, is cancelled, or finishes error handling. Leave actual surface-stack manipulation to <code class="docutils literal notranslate"><span class="pre">SurfaceManager</span></code>.</p></li>
+<li><p><strong>Handle confirmation outcomes.</strong> Associate confirmation responses with the operation that requested them and proceed according to the player’s decision.</p></li>
+<li><p><strong>Complete or cancel operations.</strong> Release the active operation’s state when its lifecycle has finished, ensuring that subsequent operations can begin.</p></li>
+</ul>
+</section>
+<section id="operating-constraints">
+<h4>Operating Constraints<a class="headerlink" href="#operating-constraints" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>One active operation at a time.</strong> The CUI may have at most one operation managed by <code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> in progress. A new operation must not overwrite or interfere with an existing operation.</p></li>
+<li><p><strong>Asynchronous request/response processing.</strong> Issuing a request does not imply that the operation has succeeded. The operation remains active until its result has been processed and any required follow-up interaction has completed.</p></li>
+<li><p><strong>Correlation-based response matching.</strong> A response must be associated with the request that produced it. Unmatched, stale, or unrelated responses must not advance or complete the active operation.</p></li>
+<li><p><strong>CUI thread ownership.</strong> All operation-state transitions and resulting CUI actions must respect the CUI’s thread-ownership rules. Incoming events from other threads must be routed to the CUI thread before they cause UI or operation-state changes.</p></li>
+<li><p><strong>Separation of responsibilities.</strong> <code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> coordinates operations; menus collect choices; dialogs communicate information and collect confirmation or acknowledgement; <code class="docutils literal notranslate"><span class="pre">SurfaceManager</span></code> manages the surface stack; and the Craps Engine executes game operations and reports their results.</p></li>
+</ul>
+</section>
+<section id="completion">
+<h4>Completion<a class="headerlink" href="#completion" title="Link to this heading"></a></h4>
+<p>An operation is complete when its intended outcome has been reached and all required user interaction and CUI cleanup have finished.</p>
+<p>Depending on the operation, completion may follow a successful response, cancellation of a confirmation, or acknowledgement of an error.</p>
+<p>Once complete, the manager releases the operation’s state and becomes available to coordinate the next operation.</p>
+</section>
+</section>
+<section id="cuimain-crc-card">
+<h3>CuiMain CRC Card<a class="headerlink" href="#cuimain-crc-card" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="screencrapstable-crc-card">
+<h3>ScreenCrapsTable CRC Card<a class="headerlink" href="#screencrapstable-crc-card" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+</section>
+<section id="graphical-user-interface">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Graphical User Interface</a><a class="headerlink" href="#graphical-user-interface" title="Link to this heading"></a></h2>
+<p>TBS</p>
+<section id="physics-engine">
+<h3>Physics engine<a class="headerlink" href="#physics-engine" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+</section>
+<section id="library-general">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Library General</a><a class="headerlink" href="#library-general" title="Link to this heading"></a></h2>
+<p>lib-gen is a C++ library providing general purpose cross cutting
+design elements that most any application can use.</p>
+<section id="multi-layer-configuration">
+<h3>Multi-Layer Configuration<a class="headerlink" href="#multi-layer-configuration" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="error-handling">
+<h3>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h3>
+<p>TBS</p>
+<p>Error Passing</p>
+<p>Exceptions</p>
+<p>ErrorDialogs</p>
+<figure class="align-default" id="id5">
+<img alt="Error Sequence Diagram" src="../_images/ErrorSeq.png" />
+<figcaption>
+<p><span class="caption-text"><strong>Figure:</strong> Error Sequence Diagram</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="eventmanager">
+<h3>EventManager<a class="headerlink" href="#eventmanager" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="logger">
+<h3>Logger<a class="headerlink" href="#logger" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="timers">
+<h3>Timers<a class="headerlink" href="#timers" title="Link to this heading"></a></h3>
+<p>TBS</p>
+</section>
+<section id="security">
+<h3>Security<a class="headerlink" href="#security" title="Link to this heading"></a></h3>
 <p>TBS</p>
 </section>
 </section>
 <section id="quality-attributes">
-<h2><a class="toc-backref" href="#id15" role="doc-backlink">Quality Attributes</a><a class="headerlink" href="#quality-attributes" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Quality Attributes</a><a class="headerlink" href="#quality-attributes" title="Link to this heading"></a></h2>
 <p>This section identifies the quality attributes that are most important
 in this design. The first group of elements are considered the higher
 priority concerns for the design of this application.</p>
@@ -410,7 +563,7 @@ priority concerns for the design of this application.</p>
 </div>
 </section>
 <section id="collateral-design">
-<h2><a class="toc-backref" href="#id16" role="doc-backlink">Collateral Design</a><a class="headerlink" href="#collateral-design" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">Collateral Design</a><a class="headerlink" href="#collateral-design" title="Link to this heading"></a></h2>
 <section id="language">
 <h3>Language<a class="headerlink" href="#language" title="Link to this heading"></a></h3>
 <p>Implementation language is C++.</p>

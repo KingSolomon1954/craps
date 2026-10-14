@@ -1,0 +1,15 @@
+<map id="src/lib&#45;cui/include/cui/bases/DialogBase.h" name="src/lib&#45;cui/include/cui/bases/DialogBase.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="280,5,457,45"/>
+<area shape="rect" id="Node000002" href="$DialogConfirm_8h.html" title=" " alt="" coords="150,93,355,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="334,56,280,95,277,91,330,52"/>
+<area shape="rect" id="Node000005" href="$DialogMessage_8h.html" title=" " alt="" coords="380,93,592,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="407,52,462,91,458,95,404,56"/>
+<area shape="rect" id="Node000003" href="$DialogConfirm_8cpp.html" title=" " alt="" coords="5,181,164,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="205,142,123,184,120,179,203,137"/>
+<area shape="rect" id="Node000004" href="$WindowNavBar_8cpp.html" title=" " alt="" coords="189,181,343,221"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="260,146,266,181,260,182,255,147"/>
+<area shape="rect" id="Node000006" href="$DialogMessage_8cpp.html" title=" " alt="" coords="393,181,552,221"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="484,147,478,182,473,181,478,146"/>
+<area shape="rect" id="Node000007" href="$MenuBetting_8cpp.html" title=" " alt="" coords="576,181,732,221"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="536,137,618,179,616,184,534,142"/>
+</map>
