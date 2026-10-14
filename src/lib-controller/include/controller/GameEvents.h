@@ -18,22 +18,22 @@ namespace Ctrl {
 enum class EventSource
 {
     Unset,
-    Model,
-    View,
-    Controller
+    Model,                    ///< Craps engine originated event
+    View,                     ///< View ( Cui / Gui ) originated event
+    Controller                ///< Controller ( Ctrl ) originated event
 };
 
 enum class EventType
 {
-    Unset,
-    
+    Unset,                     ///< uninitialized, treat as illegal
+
     // Requests
     ReqRollDice,
-    ReqMakeBet,                // not yet implemented
+    ReqMakeBet,
     ReqRemoveBet,              // not yet implemented
     ReqChangeBet,              // not yet implemented
     ReqTerminate,
-    
+
     // Responses
     RspMakeBet,                // not yet implemented
     RspRemoveBet,              // not yet implemented
@@ -51,12 +51,12 @@ enum class EventType
     UslNewShooter,
     UslBettingOpened,
     UslBetMade,                // not yet implemented
-    UslBetResolved,            // not yet implemented Player decided to remove a bet
-    UslBetRemoved,             // not yet implemented Player decided to remove a bet
-    UslBetChanged,             // not yet implemented Player decided to change a bet
+    UslBetResolved,            // not yet implemented
+    UslBetRemoved,             // not yet implemented
+    UslBetChanged,             // not yet implemented
     UslTableBalanceChanged,    // not yet implemented
     UslPlayerBalanceChanged,   // not yet implemented
-    
+
     UslPlayerJoinedTable,
     UslPlayerLeftTable,
     UslCountdownRollDice       // not yet implemented
@@ -67,17 +67,45 @@ enum class EventType
 using EventId       = std::uint64_t;
 using CorrelationId = std::uint64_t;
 
-EventId getNextEventId();
+EventId       getNextEventId();
 CorrelationId getNextCorrelationId();
-    
-//----------------------------------------------------------------
 
+/*-----------------------------------------------------------*//**
+
+@brief Base class for all Events
+
+There are three categories of Events:
+
+@li Request Events (prefix Req) - requesting some action be taken
+@li Response Events (prefix Rsp) - response to a request
+@li Unsolicited Events (prefix Usl) - something of interest happened
+
+There are three Sources of Events, aligned with the
+Model/View/Controller design (See Ctrl::EventSource):
+
+@li Model - The Craps engine
+@li View - The CUI or GUI
+@li Controller - The Controller
+
+Unique ID (See Ctrl::EventId):
+
+Every event gets a globally unique value for unique ID.
+
+Correlation ID (See Ctrl::CorrelationId):
+
+Every event also carries a correlationId allowing users to match up
+Requests with Responses.  By default, for convenience, the correlationId
+is set to the uniqueId. In the case of Response Events, the caller is
+responsible for overwriting the correlationId with the source event's
+correlationId.
+
+*/
 struct GameEvent
 {
-    EventSource   source        = EventSource::Unset;
-    EventType     type          = EventType::Unset;
-    EventId       id            = 0;
-    CorrelationId correlationId = 0;
+    EventSource   source        = EventSource::Unset;  ///< Came from where
+    EventType     type          = EventType::Unset;    ///< Name of the Event
+    EventId       id            = 0;                   ///< Unique ID
+    CorrelationId correlationId = 0;                   ///< Correlation ID
 
     GameEvent(EventSource source, EventType type)
         : source(source),
@@ -85,10 +113,6 @@ struct GameEvent
           id(getNextEventId()),
           correlationId(getNextCorrelationId())
     {
-        // All events get a value for unique ID and a correlationId. In
-        // the case of response events (or other related events), the
-        // caller is responsible for overwriting the correlationId with
-        // the source event's correlationId.
     }
 };
 
@@ -132,7 +156,7 @@ struct UslDiceNewValue : public GameEvent
     unsigned val = 0;
     unsigned d1 = 0;
     unsigned d2 = 0;
-    
+
     UslDiceNewValue()
         : GameEvent{EventSource::Model, EventType::UslDiceNewValue}
     {}
@@ -189,7 +213,7 @@ struct UslPassLineWinner : public GameEvent
 struct UslNewShooter : public GameEvent
 {
     Craps::PlayerId playerId;
-    
+
     UslNewShooter()
         : GameEvent{EventSource::Model, EventType::UslNewShooter}
     {}
@@ -201,7 +225,7 @@ struct UslTableBalanceChanged : public GameEvent
 {
     Gen::Money balance;          // how much left in bank
     int        netBalance;       // profit/loss this session
-    
+
     UslTableBalanceChanged()
         : GameEvent{EventSource::Model, EventType::UslTableBalanceChanged}
     {}
@@ -214,7 +238,7 @@ struct UslPlayerBalanceChanged : public GameEvent
     Craps::PlayerId playerId;
     Gen::Money      balance;     // how much left in bank
     int             netBalance;  // profit/loss this session
-    
+
     UslPlayerBalanceChanged()
         : GameEvent{EventSource::Model, EventType::UslPlayerBalanceChanged}
     {}
@@ -230,7 +254,7 @@ struct UslBetMade : public GameEvent
     Gen::Money      contractAmount = 0;
     Gen::Money      oddsAmount     = 0;
     unsigned        pivot          = 0;
-    
+
     UslBetMade()
         : GameEvent{EventSource::Model, EventType::UslBetMade}
     {}
@@ -240,12 +264,12 @@ struct UslBetMade : public GameEvent
 
 struct UslBetResolved : public GameEvent
 {
-    Craps::PlayerId playerId;       
-    BetName         betName    = BetName::Invalid;
-    Craps::BetId    betId      = 0;
-    Gen::Money      amountWin  = 0;
-    Gen::Money      amountLose = 0;
-    
+    Craps::PlayerId playerId;                      ///< Player ID
+    BetName         betName    = BetName::Invalid; ///< Bet Name
+    Craps::BetId    betId      = 0;                ///< Bet ID
+    Gen::Money      amountWin  = 0;                ///< Amount won
+    Gen::Money      amountLose = 0;                ///< Amount lost
+
     UslBetResolved()
         : GameEvent{EventSource::Model, EventType::UslBetResolved}
     {}
@@ -256,7 +280,7 @@ struct UslBetResolved : public GameEvent
 struct UslPlayerJoinedTable : public GameEvent
 {
     Craps::PlayerId playerId;
-    
+
     UslPlayerJoinedTable()
         : GameEvent{EventSource::Model, EventType::UslPlayerJoinedTable}
     {}
@@ -267,7 +291,7 @@ struct UslPlayerJoinedTable : public GameEvent
 struct UslPlayerLeftTable : public GameEvent
 {
     Craps::PlayerId playerId;
-    
+
     UslPlayerLeftTable()
         : GameEvent{EventSource::Model, EventType::UslPlayerLeftTable}
     {}
@@ -297,10 +321,53 @@ struct ReqTerminate : public GameEvent
 
 //----------------------------------------------------------------
 
-    
+/*-----------------------------------------------------------*//**
 
+@enum EventSource
 
+@brief The source of an Event
 
+The source aligns with the Model/View/Controller (MVC) design
+where:
+
+@li Model = the event came from the Craps Engine (lib-craps)
+@li View = the event came from the CUI (lib-cui) or GUI (lib-gui)
+@li Controller = the event came from the Controlloer (lib-controller)
+*/
+
+/*-----------------------------------------------------------*//**
+
+@enum EventType
+
+@brief The name of the Event
+
+A unique name that describes the purpose of the Event.
+
+*/
+
+/*-----------------------------------------------------------*//**
+
+@typedef EventId
+
+@brief A unique ID
+
+Every event gets a unique value for unique ID.
+
+*/
+
+/*-----------------------------------------------------------*//**
+
+@typedef CorrelationId
+
+@brief An ID to match Response Events to Request Events
+
+Every event carries a correlationId allowing users to match up Requests
+with Responses.  By default, and for convenience, a correlationId is set
+to the uniqueId. In the case of Response Events, the caller is
+responsible for overwriting the correlationId with the source event's
+correlationId.
+
+*/
 
 } // namespace Ctrl
 
@@ -317,7 +384,7 @@ struct ReqTerminate : public GameEvent
 
 
 
-#if 0    
+#if 0
 
 enum class EventType
 {
@@ -338,7 +405,7 @@ enum class EventType
     CmdApplyQuickBet,
     CmdDeleteQuickBetByLookup,
     CmdDeleteQuickBetByIndex,
-    
+
     ViewSuccess,
     ViewErrorDialog,
     ViewMakeBetSuccess,
@@ -351,8 +418,8 @@ enum class EventType
 };
 
 //----------------------------------------------------------------
-//    
-// Cmd Events 
+//
+// Cmd Events
 //
 //----------------------------------------------------------------
 
@@ -363,7 +430,7 @@ struct CmdMakeBet : public GameEvent
     BetName         betName;
     Gen::Money      contractAmount;
     size_t          pivot;
-    
+
     EventType type() const override
     {
         return EventType::CmdMakeBet;
@@ -377,7 +444,7 @@ struct CmdMakeBetAuto : public GameEvent
     BetName         betName;
     Gen::Money      contractAmount;
     size_t          pivot;
-    
+
     EventType type() const override
     {
         return EventType::CmdMakeBetAuto;
@@ -389,7 +456,7 @@ struct CmdBetSetContractAmount : public GameEvent
     uint64_t     correlationId;
     Craps::BetId betId;
     Gen::Money   contractAmount;
-    
+
     EventType type() const override
     {
         return EventType::CmdBetSetContractAmount;
@@ -401,7 +468,7 @@ struct CmdBetSetOddsAmount : public GameEvent
     uint64_t        correlationId;
     Craps::BetId    betId;
     Gen::Money      oddsAmount;
-    
+
     EventType type() const override
     {
         return EventType::CmdBetSetOddsAmount;
@@ -412,7 +479,7 @@ struct CmdBetSetOffComeOutRoll : public GameEvent
 {
     uint64_t        correlationId;
     Craps::BetId    betId;
-    
+
     EventType type() const override
     {
         return EventType::CmdBetSetOffComeOutRoll;
@@ -423,7 +490,7 @@ struct CmdBetSetOnComeOutRoll : public GameEvent
 {
     uint64_t        correlationId;
     Craps::BetId    betId;
-    
+
     EventType type() const override
     {
         return EventType::CmdBetSetOnComeOutRoll;
@@ -434,7 +501,7 @@ struct CmdBetSetHardwayOff : public GameEvent
 {
     uint64_t        correlationId;
     Craps::BetId    betId;
-    
+
     EventType type() const override
     {
         return EventType::CmdBetSetHardwayOff;
@@ -445,7 +512,7 @@ struct CmdBetSetHardwayOn : public GameEvent
 {
     uint64_t        correlationId;
     Craps::BetId    betId;
-    
+
     EventType type() const override
     {
         return EventType::CmdBetSetHardwayOn;
@@ -456,7 +523,7 @@ struct CmdRollDice : public GameEvent
 {
     uint64_t       correlationId;
     Craps::TableId tableId;
-    
+
     EventType type() const override
     {
         return EventType::CmdRollDice;
@@ -562,9 +629,19 @@ struct CmdDeleteQuickBetByIndex : public GameEvent
     }
 };
 
+
+
+
+
+
+
+
+
+
+
 //----------------------------------------------------------------
-//    
-// View Events 
+//
+// View Events
 //
 //----------------------------------------------------------------
 
@@ -642,7 +719,7 @@ struct ViewRollDiceCountDown : public GameEvent
     uint64_t       correlationId;
     Craps::TableId tableId;
     int            numSeconds;
-    
+
     EventType type() const override
     {
         return EventType::ViewRollDiceCountDown;
@@ -652,7 +729,7 @@ struct ViewRollDiceCountDown : public GameEvent
 struct ViewRollDiceAnimation : public GameEvent
 {
     uint64_t       correlationId;
-    
+
     EventType type() const override
     {
         return EventType::ViewRollDiceAnimation;
@@ -669,7 +746,7 @@ struct ViewProgramExit : public GameEvent
     }
 };
 
-    
+
 struct TimerEvent : public GameEvent
 {
     std::chrono::steady_clock::time_point time;
@@ -679,4 +756,3 @@ struct TimerEvent : public GameEvent
     }
 };
 #endif
-    

@@ -353,7 +353,7 @@ MenuOddsBet::populate()
 bool
 MenuOddsBet::handleKey(int ch)
 {
-    if (ch == 27)  // escape
+    if (ch == 27 || ch == '.')  // . or escape
     {
         back();
         return true;

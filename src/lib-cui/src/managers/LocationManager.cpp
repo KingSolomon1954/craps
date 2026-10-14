@@ -35,15 +35,17 @@ LocationManager::findPosition(const LocationRequest& request,
                               const std::string& parentName,
                               const std::string& surfaceName)
 {
+    assert(request.kind != LocationKind::Panel);      // Panels do not get moved
+    assert(request.kind != LocationKind::FullScreen); // Same for full screens
     assert(request.size.rows > 0 && request.size.cols > 0);
+    
     std::optional<WindowPosition> position;
 
     if (request.kind == LocationKind::Dialog)
     {
         position = findDialogPosition(request);
     }
-    
-    if (request.kind == LocationKind::Menu)
+    else if (request.kind == LocationKind::Menu)
     {
         auto pr = getRect(parentName);
         if (!pr)
@@ -57,21 +59,21 @@ LocationManager::findPosition(const LocationRequest& request,
             LOG_TRACE("findPosition() back from findMenuPosition");
         }
     }
-    
-    if (request.kind == LocationKind::Independent)
+    else if (request.kind == LocationKind::Independent)
     {
         position = findIndependentPosition(request);
     }
 
     if (!position)
     {
-        LOG_TRACE("findPosition() returning std::nullopt");
+        std::string s = "LocationManager::findPosition() returning std::nullopt. "
+                        "Unable to find position for: " +
+                        surfaceName + " parent: " + parentName;
+        LOG_TRACE(s);
         assert(position);
-        throw std::runtime_error("LocationManager::findPosition() Unable "
-            "to find  position for: " + surfaceName + " parent: " + parentName);
+        throw std::runtime_error(s);
     }
 
-    
     // Add or replace existing rectangle location
     windows_[surfaceName] = {position->row,
                              position->col,
@@ -94,7 +96,7 @@ LocationManager::findDialogPosition(const LocationRequest& request) const
         request.size.cols
     };
 
-    if (fitsOnScreen(rect) && !overlapsExisting(rect))
+    if (fitsOnScreen(rect))
     {
         return WindowPosition{row, col};
     }

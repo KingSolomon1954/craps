@@ -57,9 +57,11 @@ The structure is used to convey the results of a bet after a dice throw.
 The DecisionRecord contains the following fields to convey handling by
 the caller:
 
-@var pBet - the bet associated with this result
+@var DecisionRecord::pBet
+    The bet associated with this result
 
-@var decision -indicates that a decision has been reached for this bet.
+@var DecisionRecord::decision
+    Indicates that a decision has been reached for this bet.
 
     When true, this bet has reached a decision, and one or more of the
     win, lose, returnToPlayer fields in this record will have non-zero
@@ -73,7 +75,8 @@ the caller:
     pivot field, if zero, will be set to the dice value for
     Pass/Come/DontPass/DontCome bets.
 
-@var pivotAssigned - indicates whether a pivot for this bet has been freshly
+@var DecisionRecord::pivotAssigned
+    Indicates whether a pivot for this bet has been freshly
     established. For example, a Come bet has now been moved to the "6".
 
     When true, the pivot has been assigned. Caller uses this
@@ -84,26 +87,29 @@ the caller:
     assigned to the already established point, as if the player made a
     PassLine bet after point was established.
 
-@var win - if non-zero, then this bet has won the given amount.
+@var DecisionRecord::win
+    If non-zero, then this bet has won the given amount.
 
     The calculation includes odds winnings. The caller implementation
     should take this win amount and add it with the original
     contractAmount and oddsAmount to give back to the player.
 
-@var lose - if non-zero, then this bet has lost the given amount.
+@var DecisionRecord::lose
+    If non-zero, then this bet has lost the given amount.
 
     The amount is the contractBet plus odds bet, if any. The caller
     implementation should add this amount to the table's banking system
     and subtract this amount from the player's wallet if not already
     done so.
 
-@var returnToPlayer - if non-zero then the given amount should be returned
-    to the player.
+@var DecisionRecord::returnToPlayer
+    I non-zero then the given amount should be returned to the player.
 
     Note this is not a win or lose. This happens when a point-based bet
     wins/loses during a come out roll and setOffComeOutRoll() is true.
 
-@var commission - Lay and Buy bets require a 5% commission if they win.
+@var DecisionRecord::commission
+    Lay and Buy bets require a 5% commission if they win.
 
     This amount has been subtracted from the win amount.  The table's
     banking system should deposit this amount if non-zero.

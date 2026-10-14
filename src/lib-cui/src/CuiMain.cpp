@@ -139,7 +139,7 @@ CuiMain::promptUserToResize(int haveRows, int haveCols,
                             int needRows, int needCols)
 {
     clear();
-    mvprintw(0, 0, "Terminal is too small for %s", Gbl::appNameScreen);
+    mvprintw(0, 0, "Terminal is too small for %s", Gbl::appNameScreen.c_str());
     mvprintw(1, 0, "Have: %d rows x %d cols", haveRows, haveCols);
     mvprintw(2, 0, "Need: %d rows x %d cols", needRows, needCols);
     mvprintw(4, 0, "Resize automatically? [y/n]: ");

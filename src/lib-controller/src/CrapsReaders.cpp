@@ -97,6 +97,25 @@ CrapsReaders::readPlayerGetOddsBets(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsReaders::readPlayerHaveAnyOddsCapableBet(
+    const Craps::PlayerId& playerId,
+    bool& haveBets,
+    Gen::ErrorPass& ep)
+{
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr)
+    {
+        ep.prepend(diagPrefix("playerName", "retrieve player bets"));
+        return Gen::ReturnCode::Fail;
+    }
+
+    haveBets = p->haveAnyOddsCapableBet();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsReaders::readPlayerName(
     const Craps::PlayerId& playerId,
     std::string& playerName,

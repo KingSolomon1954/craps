@@ -18,7 +18,6 @@ public:
     /// @name Lifecycle
     /// @{
     /// @}
-    /// @}
 
     /// @name Modifiers
     /// @{

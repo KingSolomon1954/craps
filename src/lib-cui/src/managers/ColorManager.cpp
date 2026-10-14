@@ -42,17 +42,21 @@ ColorManager::initialize()
 void
 ColorManager::initColorPairs()
 {
-    init_pair(DefaultScreen,  COLOR_GREEN,  COLOR_BLACK);
+    init_pair(DefaultScreen,  COLOR_GREEN,   COLOR_BLACK);
     init_pair(SevenOut,       COLOR_RED,     -1);
     init_pair(PassLineWinner, COLOR_YELLOW,  -1);
     init_pair(Point,          COLOR_MAGENTA, -1);
+    init_pair(InfoMessage,    COLOR_WHITE,   -1);
+    init_pair(WarnMessage,    COLOR_YELLOW,  -1);
+    init_pair(ErrorMessage,   COLOR_RED,     -1);
+    init_pair(CustomMessage,  COLOR_MAGENTA, -1);
 
-    init_pair(PlayerColor1, COLOR_WHITE,   -1);
-    init_pair(PlayerColor2, COLOR_MAGENTA, -1);
-    init_pair(PlayerColor3, COLOR_YELLOW,  -1);
-    init_pair(PlayerColor4, COLOR_BLUE,    -1);
-    init_pair(PlayerColor5, COLOR_RED,     -1);
-    init_pair(PlayerColor6, COLOR_CYAN,    -1);
+    init_pair(PlayerColor1,   COLOR_WHITE,   -1);
+    init_pair(PlayerColor2,   COLOR_MAGENTA, -1);
+    init_pair(PlayerColor3,   COLOR_YELLOW,  -1);
+    init_pair(PlayerColor4,   COLOR_BLUE,    -1);
+    init_pair(PlayerColor5,   COLOR_RED,     -1);
+    init_pair(PlayerColor6,   COLOR_CYAN,    -1);
 
     bkgd(' ' | COLOR_PAIR(DefaultScreen));
 }
@@ -112,6 +116,20 @@ ColorManager::pair(Color color) const
 
         case Color::Point:
             return Point;
+
+        case Color::InfoMessage:
+            return InfoMessage;
+
+        case Color::WarnMessage:
+            return WarnMessage;
+
+        case Color::ErrorMessage:
+            return ErrorMessage;
+
+        case Color::CustomMessage:
+            return CustomMessage;
+            
+        default: assert(false);
     }
 
     return DefaultScreen;

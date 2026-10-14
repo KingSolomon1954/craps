@@ -180,11 +180,11 @@ public:
 
 /*-----------------------------------------------------------*//**
 
-@class CrapsBet Implementation
+@class CrapsBet
 
-@brief A bet on the craps table.
+@brief A bet on the Craps table.
 
-Manage a craps bet on the table.
+Manage a Craps bet on the table.
 
 */
 

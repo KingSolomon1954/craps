@@ -29,9 +29,6 @@ Process the command line into configuration structure
 
 @param[in] multiConfig
     The multi-layer configuration structure.
-
-@param[in,out] cfg
-    The configuration layer we populate.
 */
 void
 ConfigCommandLine::processCmdLine(int argc, char* argv[],

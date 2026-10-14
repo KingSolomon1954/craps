@@ -57,7 +57,6 @@ If 2 pthreads are waiting, and signal() is called 6 times,
 the two pthreads will wake up and 4 signals will
 go unheard.
 
-@ingroup thread
 */
 
 } // namespace Gen

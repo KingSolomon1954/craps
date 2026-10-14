@@ -35,7 +35,7 @@ public:
     
 private:
     WindowPosition  winPos_;
-    WindowSize      winSize_ = {23, 25};  // rows, cols
+    WindowSize      winSize_ = {25, 25};  // rows, cols
     BetName         betName_ = BetName::Invalid;
 
 private:    
@@ -56,6 +56,8 @@ private:
     void prepDialogAmount();
     void activateDialogAmount();
     void activateMenuPivot();
+    void activateMenuOddsBet();
+    bool hasQualifyingOddsBets();
     void back();
 };
 

@@ -273,11 +273,8 @@ house bank and not returned to the player.  If that is not desired
 behavior then first remove player's bets with force
 (Player::removeBetForce()) ahead of this call.
 
-@param[in] pPlayer
+@param[in] player
     the player of interest
-
-@param[in,out] ep
-    if error, ep has the reason
 
 @return
     Success, otherwise fail and ep holds the reason.
@@ -511,7 +508,7 @@ conditions are true:
 @param[in,out] pBet
     The bet of interest.
 
-@param[in] amount
+@param[in] oddsAmount
     The amount to set it to. Clobbers any previous setting.
 
 @param[in,out] ep

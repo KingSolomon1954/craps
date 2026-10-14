@@ -50,6 +50,10 @@ public:
         const Craps::PlayerId& playerId,
         Craps::BetIds& betIds,
         Gen::ErrorPass& ep);
+    static Gen::ReturnCode readPlayerHaveAnyOddsCapableBet(
+        const Craps::PlayerId& playerId,
+        bool& haveOddsBets,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerName(
         const Craps::PlayerId& playerId,
         std::string& playerName,
@@ -259,16 +263,13 @@ private:
 
 @class CrapsReaders
 
-@brief UI retrieves read-only information directly from the model
+@brief Retrieves read-only information directly from the model
 
 A collection of functions that retrieves information from the model
-directly, bypassing the EventLoop. These are read-only retrievals that
-do not change the game state.
+directly, without incurring the overhead of Req/Rsp events.  These are
+read-only retrievals that do not change the game state.
 
-See class CrapsCommands for issueing commands
-that change the model state.
-
-Both GUI and CUI go through this interface.
+Used mainly by the CUI and GUI to populate dynamic menus as needed.
 
 */    
 

@@ -17,7 +17,7 @@ using namespace Ctrl;
 
 Process defaults
 
-@param[in,out] pCfg
+@param[in,out] multiConfig
     The multi-layer configuration structure to populate.
 */
 void

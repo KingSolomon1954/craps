@@ -19,9 +19,6 @@ Process environment variables.
 
 @param[in,out] multiConfig
     The multi-layer configuration structure.
-
-@param[in,out] cfg
-    The configuration layer we populate.
 */
 void
 ConfigEnv::processEnv(Gen::MultiLayerConfig& multiConfig)

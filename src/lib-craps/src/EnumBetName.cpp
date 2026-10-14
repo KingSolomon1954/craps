@@ -29,7 +29,7 @@ constexpr const char* InvalidStr  = "Invalid";
 
 Convert enum to string.
 
-@param[in] d
+@param[in] b
     The enum of interest.
 
 @return
