@@ -234,7 +234,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
                 case 8:
                 case 9:
                 case 10: return CuiBetName::PassLineOdds;
-                default: assert(false);
+                default: assert(false && "PassLine bad pivot");
             }
             
         case BetName::DontPass:
@@ -247,7 +247,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
                 case 8:
                 case 9:
                 case 10: return CuiBetName::DontPassOdds;
-                default: assert(false);
+                default: assert(false && "DontPass bad pivot");
             }
 
         case BetName::Come:
@@ -260,7 +260,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
                 case 8:  return CuiBetName::Come8;
                 case 9:  return CuiBetName::Come9;
                 case 10: return CuiBetName::Come10;
-                default: assert(false);
+                default: assert(false && "Come bad pivot");
             }
 
         case BetName::DontCome:
@@ -273,7 +273,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
                 case 8:  return CuiBetName::DontCome8;
                 case 9:  return CuiBetName::DontCome9;
                 case 10: return CuiBetName::DontCome10;
-                default: assert(false);
+                default: assert(false && "DontCome bad pivot");
             }
 
         case BetName::Place:
@@ -285,7 +285,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
                 case 8:  return CuiBetName::Place8;
                 case 9:  return CuiBetName::Place9;
                 case 10: return CuiBetName::Place10;
-                default: assert(false);
+                default: assert(false && "Place bad pivot");
             }
 
         case BetName::Buy:
@@ -297,7 +297,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
                 case 8:  return CuiBetName::Buy8;
                 case 9:  return CuiBetName::Buy9;
                 case 10: return CuiBetName::Buy10;
-                default: assert(false);
+                default: assert(false && "Buy bad pivot");
             }
 
         case BetName::Lay:
@@ -309,7 +309,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
                 case 8:  return CuiBetName::Lay8;
                 case 9:  return CuiBetName::Lay9;
                 case 10: return CuiBetName::Lay10;
-                default: assert(false);
+                default: assert(false && "Lay bad pivot");
             }
 
         case BetName::Hardway:
@@ -319,7 +319,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
                 case 6:  return CuiBetName::Hard6;
                 case 8:  return CuiBetName::Hard8;
                 case 10: return CuiBetName::Hard10;
-                default: assert(false);
+                default: assert(false && "Hardway bad pivot");
             }
 
         case BetName::CandE: return CuiBetName::CandE;
@@ -332,7 +332,7 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
 
         case BetName::Horn: return CuiBetName::Horn;
 
-        default: assert(false);
+        default: assert(false && "Unhandled BetName");
     }
 }
 

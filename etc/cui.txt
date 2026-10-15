@@ -1211,8 +1211,8 @@ Help Menu
 
 
 
-ErrorDialog
-───────────
+DialogAckError
+──────────────
 🚫 U+1F6AB ⛔ L'\u26D4' 🛑 U+1F6D1  ❌ U+274C 	🔒 U+1F512
 🔆 U+1F506 💲 U+1F4B2   📝 U+1F4DD  🔨 U+1F528  📂 U+1F4C1
 ❕ U+2755  📜 U+1F4DC
@@ -1223,8 +1223,8 @@ L'\u26D4' // ⛔ No entry
 L'\u2757' // ❗ Heavy exclamation mark
 L'\u2620' // ☠ Skull and crossbones
 
-ErrorDialog
-───────────
+DialogAckError
+──────────────
 Header, always shows "Error", followed by ErrorType, and ErrorName
 Section Description, always shows supplied text
 Section Probable cause appears only if non-empty

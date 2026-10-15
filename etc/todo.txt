@@ -45,6 +45,8 @@ Complete the first round-trip bet made by the CUI.
 In CUI, need DialogBetAmount
 In CUI, implement DialogAckError layers of info
 
+(Done) Fix GitHub Actions, so docs are built and deployed
+(Done) Update design doc
 (Done) Integrated DialogMessage, added colorized introducers
 (Done) Beefed up ErrorPass and propagate throughout, needs more attention
 (Done) Introduced zeus::expected library

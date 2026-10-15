@@ -129,7 +129,7 @@ ColorManager::pair(Color color) const
         case Color::CustomMessage:
             return CustomMessage;
             
-        default: assert(false);
+        default: assert(false && "Unhandled color");
     }
 
     return DefaultScreen;

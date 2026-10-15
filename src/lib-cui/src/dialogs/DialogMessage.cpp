@@ -132,7 +132,7 @@ DialogMessage::titleSize()
     }
     else
     {
-        assert(false);
+        assert(false && "Unhandled label");
     }
     return ncols;
 }
@@ -447,7 +447,7 @@ DialogMessage::drawTitle()
     }
     else
     {
-        assert(false);
+        assert(false && "Unhandled title label");
     }
     waddstr(pWin_, msg_.brief.c_str());
 }

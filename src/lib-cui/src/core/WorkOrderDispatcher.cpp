@@ -69,7 +69,7 @@ WorkOrderDispatcher::process(const WorkOrderSurface& wo)
         break;
 
     default:
-        assert(false);
+        assert(false && "Unhandled SurfaceType");
     }
 }
 
