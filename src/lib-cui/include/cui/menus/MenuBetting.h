@@ -34,9 +34,9 @@ public:
     /// @}
     
 private:
-    WindowPosition  winPos_;
-    WindowSize      winSize_ = {25, 25};  // rows, cols
-    BetName         betName_ = BetName::Invalid;
+    WindowPosition winPos_;
+    WindowSize     winSize_ = {25, 25};  // rows, cols
+    BetName        betName_ = BetName::Invalid;
 
 private:    
     MenuBetting();  // Private ctor

@@ -10,8 +10,8 @@
 #include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/Logger.h>
-#include <gen/StringUtils.h>  // For wrapText()
-#include <cassert>
+#include <gen/StringUtils.h>
+#include <wchar.h>
 
 using namespace Cui;
 
@@ -64,6 +64,7 @@ DialogError::eraseFields()
     et_.cause.clear();
     et_.repair.clear();
     et_.addinfo.clear();
+    et_.trace.clear();
 }
 
 //----------------------------------------------------------------
@@ -71,22 +72,25 @@ DialogError::eraseFields()
 void
 DialogError::buildDialogEntries(const Gen::ErrorPass& ep)
 {
-    formatDescription(ep.description());
-    formatProbableCause(ep.probableCause());
+    formatTitle         (ep);
+    formatDescription   (ep.description());
+    formatProbableCause (ep.probableCause());
     formatProposedRepair(ep.proposedRepair());
     formatAdditionalInfo(ep.additionalInfo());
-    formatTrace(ep.stackTrace());    
+    formatTrace         (ep);
 }
 
 //----------------------------------------------------------------
 
 void
-DialogError::formatTitle(const std::string& errorName,
-                         const std::string& errorType)
+DialogError::formatTitle(const Gen::ErrorPass& ep)
 {
-    et_.title.fmtdText[0] = "Title Section";
-    et_.title.nCols = et_.title.fmtdText[0].size();
-    et_.title.nRows = et_.title.fmtdText.size();
+    Section& s = et_.title;  // convenience
+    
+    s.fmtdText[0] = " " + ep.errorTypeStr() + ". " + ep.errorNameStr() + ".";
+    int introLen = titleStr_.size() + 4;  // +4 for 2 emojis
+    s.nCols = s.fmtdText[0].size() + introLen;
+    s.nRows = s.fmtdText.size();
 }
 
 //----------------------------------------------------------------
@@ -94,9 +98,12 @@ DialogError::formatTitle(const std::string& errorName,
 void
 DialogError::formatDescription(const std::string& description)
 {
-    et_.desc.fmtdText[0] = "Description Section";
-    et_.desc.nCols = et_.desc.fmtdText[0].size();
-    et_.desc.nRows = et_.desc.fmtdText.size();
+    Section& s = et_.desc;  // convenience
+
+    wrapString(description, s.fmtdText); 
+    int introLen = descriptionStr_.size() + 3;  // +3 for emoji + space
+    s.nCols = std::max(maxLength(s.fmtdText), introLen);
+    s.nRows = s.fmtdText.size() + 1; // +1 for intro;
 }
 
 //----------------------------------------------------------------
@@ -104,9 +111,14 @@ DialogError::formatDescription(const std::string& description)
 void
 DialogError::formatProbableCause(const std::string& probableCause)
 {
-    et_.cause.fmtdText[0] = "Probable Cause Section";
-    et_.cause.nCols = et_.cause.fmtdText[0].size();
-    et_.cause.nRows = et_.cause.fmtdText.size();
+    if (probableCause.empty()) return;  // Skip empty section
+    
+    Section& s = et_.cause;  // convenience
+
+    wrapString(probableCause, s.fmtdText);
+    int introLen = probableCauseStr_.size() + 3;  // +3 for emoji + space
+    s.nCols = std::max(maxLength(s.fmtdText), introLen);
+    s.nRows = s.fmtdText.size() + 1; // +1 for intro
 }
 
 //----------------------------------------------------------------
@@ -114,9 +126,14 @@ DialogError::formatProbableCause(const std::string& probableCause)
 void
 DialogError::formatProposedRepair(const std::string& proposedRepair)
 {
-    et_.repair.fmtdText[0] = "Proposed Repair Section";
-    et_.repair.nCols = et_.repair.fmtdText[0].size();
-    et_.repair.nRows = et_.repair.fmtdText.size();
+    if (proposedRepair.empty()) return;  // Skip empty section
+    
+    Section& s = et_.repair;  // convenience
+
+    wrapString(proposedRepair, s.fmtdText); 
+    int introLen = proposedRepairStr_.size() + 3;  // +3 for emoji + space
+    s.nCols = std::max(maxLength(s.fmtdText), introLen);
+    s.nRows = s.fmtdText.size() + 1; // +1 for intro
 }
 
 //----------------------------------------------------------------
@@ -124,19 +141,60 @@ DialogError::formatProposedRepair(const std::string& proposedRepair)
 void
 DialogError::formatAdditionalInfo(const std::string& additionalInfo)
 {
-    et_.addinfo.fmtdText[0] = "Additional Info Section";
-    et_.addinfo.nCols = et_.addinfo.fmtdText[0].size();
-    et_.addinfo.nRows = et_.addinfo.fmtdText.size();
+    if (additionalInfo.empty()) return;  // Skip empty section
+    
+    Section& s = et_.addinfo;  // convenience
+
+    wrapString(additionalInfo, s.fmtdText); 
+    int introLen = additionalInfoStr_.size() + 3;  // +3 for emoji + space
+    s.nCols = std::max(maxLength(s.fmtdText), introLen);
+    s.nRows = s.fmtdText.size() + 1; // +1 for intro
 }
 
 //----------------------------------------------------------------
 
 void
-DialogError::formatTrace(const Aos& stackTrace)
+DialogError::formatTrace(const Gen::ErrorPass& ep)
 {
-    et_.trace.fmtdText[0] = "Trace Section";
-    et_.trace.nCols = et_.trace.fmtdText[0].size();
-    et_.trace.nRows = et_.trace.fmtdText.size();
+    using E = Gen::ErrorPass::ErrorType;
+    
+    if (ep.errorType() != ep.errorTypeStr(E::ProgrammingError) ||
+        ep.stackTrace().size() == 0) return;  // Skip empty section
+    
+    Section& s = et_.trace;  // convenience
+
+    wrapStrings(ep.stackTrace(), s.fmtdText); 
+    int introLen = traceStr_.size() + 3;  // +3 for emoji + space
+    s.nCols = std::max(maxLength(s.fmtdText), introLen);
+    s.nRows = s.fmtdText.size() + 1; // +1 for intro
+}
+
+//----------------------------------------------------------------
+
+int
+DialogError::wrapWidth()
+{
+    constexpr int preferredWidth = 76;
+    constexpr int screenMargin = 4;
+
+    const int maxWidth = std::max(1, LayoutConsole::minCols - screenMargin);
+    return std::min(preferredWidth, maxWidth);
+}
+
+//----------------------------------------------------------------
+
+void
+DialogError::wrapString(const std::string& s, Aos& result)
+{
+    Gen::StringUtils::wrapFormattedString(s, wrapWidth(), result);
+}
+
+//----------------------------------------------------------------
+
+void
+DialogError::wrapStrings(const Aos& source, Aos& result)
+{
+    Gen::StringUtils::wrapFormattedStrings(source, wrapWidth(), result);
 }
 
 //----------------------------------------------------------------
@@ -154,15 +212,14 @@ DialogError::calcSize()
     winSize_.cols = nCols + borderCols + blankCols;
 
     // Rows
+    const     int linesBetweenSects  = numSections() - 1;
     constexpr int borderRows  = 2; // Top + bot border
     constexpr int promptRows = 2;  // Prompt row + horz line above it
-    int nSections = numSections();
-    int nRows     = numRows();     // Num rows of all formatted sections
-    winSize_.rows = borderRows + promptRows + (nSections - 1);
+    winSize_.rows = numRows() + borderRows + promptRows + linesBetweenSects;
     
-    LOG_TRACE("DialogError::calcSize(): winSize_.rows = " +
-              std::to_string(winSize_.rows) +  " winSize_.cols = " +
-              std::to_string(winSize_.cols));
+    LOG_TRACE("DialogError::calcSize():"
+              " winSize_.rows = " + std::to_string(winSize_.rows) +
+              " winSize_.cols = " + std::to_string(winSize_.cols));
 }
 
 //----------------------------------------------------------------
@@ -210,6 +267,19 @@ DialogError::numSections()
     return nSects;
 }
     
+//----------------------------------------------------------------
+
+int
+DialogError::maxLength(const Aos& vos)
+{
+    size_t maxLen = 0;
+    for (const auto& l : vos)   // For each string in vector of strings
+    {
+        maxLen = std::max(maxLen, l.size());
+    }
+    return maxLen;
+}
+
 //----------------------------------------------------------------
 //
 // SurfaceManager wants our window size and more.
@@ -290,102 +360,299 @@ DialogError::draw()
 //----------------------------------------------------------------
 
 int
-DialogError::drawTitle(int startingRow)
+DialogError::drawTitle(int startRow)
 {
-    // draw title
-    mvwaddstr(pWin_, startingRow, 2, et_.title.fmtdText[0].c_str());
-
-    // draw bottom horz border + side junctions
-    mvwhline(pWin_, startingRow + 1, 1, ACS_HLINE, winSize_.cols - 2);
-    mvwaddch(pWin_, startingRow + 1, 0, ACS_LTEE);
-    mvwaddch(pWin_, startingRow + 1, winSize_.cols - 1, ACS_RTEE);
-    
-    return 2;  // How many rows were drawn
+    int nRows = 0;
+    nRows += drawIntroTitle(startRow);
+    waddstr(pWin_, et_.title.fmtdText[0].c_str());  // Add to end of intro
+    nRows += drawSectionSep(startRow + nRows);
+    return nRows;
 }
 
 //----------------------------------------------------------------
 
 int
-DialogError::drawDesc(int startingRow)
+DialogError::drawDesc(int startRow)
 {
-    mvwaddstr(pWin_, startingRow, 2, et_.desc.fmtdText[0].c_str());
-
-    // draw bottom horz border + side junctions
-    mvwhline(pWin_, startingRow + 1, 1, ACS_HLINE, winSize_.cols - 2);
-    mvwaddch(pWin_, startingRow + 1, 0, ACS_LTEE);
-    mvwaddch(pWin_, startingRow + 1, winSize_.cols - 1, ACS_RTEE);
+    if (et_.desc.nCols == 0) return 0;  // Skip empty section
     
-    return 2;  // How many rows were drawn
+    int nRows = 0;
+    nRows += drawIntroDesc(startRow);
+    nRows += drawFmtdText(startRow, et_.desc.fmtdText);
+    nRows += drawSectionSep(startRow + nRows);
+    return nRows;
 }
 
 //----------------------------------------------------------------
 
 int
-DialogError::drawCause(int startingRow)
+DialogError::drawCause(int startRow)
 {
-    mvwaddstr(pWin_, startingRow, 2, et_.cause.fmtdText[0].c_str());
-
-    // draw bottom horz border + side junctions
-    mvwhline(pWin_, startingRow + 1, 1, ACS_HLINE, winSize_.cols - 2);
-    mvwaddch(pWin_, startingRow + 1, 0, ACS_LTEE);
-    mvwaddch(pWin_, startingRow + 1, winSize_.cols - 1, ACS_RTEE);
+    if (et_.cause.nCols == 0) return 0;  // Skip empty section
     
-    return 2;  // How many rows were drawn
+    int nRows = 0;
+    nRows += drawIntroCause(startRow);
+    nRows += drawFmtdText(startRow, et_.cause.fmtdText);
+    nRows += drawSectionSep(startRow + nRows);
+    return nRows;
 }
 
 //----------------------------------------------------------------
 
 int
-DialogError::drawRepair(int startingRow)
+DialogError::drawRepair(int startRow)
 {
-    mvwaddstr(pWin_, startingRow, 2, et_.repair.fmtdText[0].c_str());
-
-    // draw bottom horz border + side junctions
-    mvwhline(pWin_, startingRow + 1, 1, ACS_HLINE, winSize_.cols - 2);
-    mvwaddch(pWin_, startingRow + 1, 0, ACS_LTEE);
-    mvwaddch(pWin_, startingRow + 1, winSize_.cols - 1, ACS_RTEE);
+    if (et_.repair.nCols == 0) return 0;  // Skip empty section
     
-    return 2;  // How many rows were drawn
+    int nRows = 0;
+    nRows += drawIntroRepair(startRow);
+    nRows += drawFmtdText(startRow, et_.repair.fmtdText);
+    nRows += drawSectionSep(startRow + nRows);
+    return nRows;
 }
 
 //----------------------------------------------------------------
 
 int
-DialogError::drawAddinfo(int startingRow)
+DialogError::drawAddinfo(int startRow)
 {
-    mvwaddstr(pWin_, startingRow, 2, et_.addinfo.fmtdText[0].c_str());
-
-    // draw bottom horz border + side junctions
-    mvwhline(pWin_, startingRow + 1, 1, ACS_HLINE, winSize_.cols - 2);
-    mvwaddch(pWin_, startingRow + 1, 0, ACS_LTEE);
-    mvwaddch(pWin_, startingRow + 1, winSize_.cols - 1, ACS_RTEE);
+    if (et_.addinfo.nCols == 0) return 0;  // Skip empty section
     
-    return 2;  // How many rows were drawn
+    int nRows = 0;
+    nRows += drawIntroAddinfo(startRow);
+    nRows += drawFmtdText(startRow, et_.addinfo.fmtdText);
+    nRows += drawSectionSep(startRow + nRows);
+    return nRows;
 }
 
 //----------------------------------------------------------------
 
 int
-DialogError::drawTrace(int startingRow)
+DialogError::drawTrace(int startRow)
 {
-    mvwaddstr(pWin_, startingRow, 2, et_.trace.fmtdText[0].c_str());
-
-    // draw bottom horz border + side junctions
-    mvwhline(pWin_, startingRow + 1, 1, ACS_HLINE, winSize_.cols - 2);
-    mvwaddch(pWin_, startingRow + 1, 0, ACS_LTEE);
-    mvwaddch(pWin_, startingRow + 1, winSize_.cols - 1, ACS_RTEE);
+    if (et_.trace.nCols == 0) return 0;  // Skip empty section
     
-    return 2;  // How many rows were drawn
+    int nRows = 0;
+    nRows += drawIntroTrace(startRow);
+    nRows += drawFmtdText(startRow, et_.trace.fmtdText);
+    nRows += drawSectionSep(startRow + nRows);
+    return nRows;
 }
 
 //----------------------------------------------------------------
 
 int
-DialogError::drawPrompt(int startingRow)
+DialogError::drawPrompt(int startRow)
 {
-    mvwaddstr(pWin_, startingRow, 2, "[. or esc or enter] OK");
+    mvwaddstr(pWin_, startRow, 2, "[. or esc or enter] OK");
     
     return 1;  // How many rows were drawn
+}
+
+//----------------------------------------------------------------
+
+int
+DialogError::drawIntroTitle(int startRow)
+{
+    const std::wstring left   = L"\U0000274C";  // ❌ U+274C
+    const std::wstring right  = L"\U00002755";  // ❕ U+2755
+    const std::wstring middle = titleStr_;
+    const std::wstring label  = left + middle + right;
+
+    attrTitle(true);
+    mvwaddwstr(pWin_, startRow, 2, label.data());
+    attrTitle(false);
+    return 1;
+}
+
+//----------------------------------------------------------------
+
+int
+DialogError::drawIntroDesc(int startRow)
+{
+    const std::wstring left   = L"\U0001F4DC";      // 📜 U+1F4DC
+    const std::wstring right  = L" Description:";
+    const std::wstring label  = left + right;
+
+    attrDesc(true);
+    mvwaddwstr(pWin_, startRow, 2, label.data());
+    attrDesc(false);
+    return 1;
+}
+    
+//----------------------------------------------------------------
+
+int
+DialogError::drawIntroCause(int startRow)
+{
+    const std::wstring left   = L"\U0001F4C1";      // 📂 U+1F4C1
+    const std::wstring right  = probableCauseStr_;
+    const std::wstring label  = left + right;
+
+    attrCause(true);
+    mvwaddwstr(pWin_, startRow, 2, label.data());
+    attrCause(false);
+    return 1;
+}
+    
+//----------------------------------------------------------------
+
+int
+DialogError::drawIntroRepair(int startRow)
+{
+    const std::wstring left   = L"\U0001F528";      // 🔨 U+1F528
+    const std::wstring right  = proposedRepairStr_;
+    const std::wstring label  = left + right;
+
+    attrRepair(true);
+    mvwaddwstr(pWin_, startRow, 2, label.data());
+    attrRepair(false);
+    return 1;
+}
+    
+//----------------------------------------------------------------
+
+int
+DialogError::drawIntroAddinfo(int startRow)
+{
+    const std::wstring left   = L"\U0001F506";      // 🔆 U+1F506
+    const std::wstring right  = additionalInfoStr_;
+    const std::wstring label  = left + right;
+
+    attrAddinfo(true);
+    mvwaddwstr(pWin_, startRow, 2, label.data());
+    attrAddinfo(false);
+    return 1;
+}
+    
+//----------------------------------------------------------------
+
+int
+DialogError::drawIntroTrace(int startRow)
+{
+    const std::wstring left   = L"\U0001F447";      // 👇 U+1F447
+    const std::wstring right  = traceStr_;
+    const std::wstring label  = left + right;
+
+    attrTrace(true);
+    mvwaddwstr(pWin_, startRow, 2, label.data());
+    attrTrace(false);
+    return 1;
+}
+    
+//----------------------------------------------------------------
+
+void
+DialogError::attrTitle(bool onOff)
+{
+    if (onOff == true)
+    {
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorTitle)));
+    }
+    else
+    {
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorTitle)));
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+DialogError::attrDesc(bool onOff)
+{
+    if (onOff == true)
+    {
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorDesc)));
+    }
+    else
+    {
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorDesc)));
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+DialogError::attrCause(bool onOff)
+{
+    if (onOff == true)
+    {
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorCause)));
+    }
+    else
+    {
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorCause)));
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+DialogError::attrRepair(bool onOff)
+{
+    if (onOff == true)
+    {
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorRepair)));
+    }
+    else
+    {
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorRepair)));
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+DialogError::attrAddinfo(bool onOff)
+{
+    if (onOff == true)
+    {
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorAddinfo)));
+    }
+    else
+    {
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorAddinfo)));
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+DialogError::attrTrace(bool onOff)
+{
+    if (onOff == true)
+    {
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorTrace)));
+    }
+    else
+    {
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogErrorTrace)));
+    }
+}
+
+//----------------------------------------------------------------
+
+int
+DialogError::drawSectionSep(int startRow)
+{
+    mvwhline(pWin_, startRow, 1, ACS_HLINE, winSize_.cols - 2);
+    mvwaddch(pWin_, startRow, 0, ACS_LTEE);
+    mvwaddch(pWin_, startRow, winSize_.cols - 1, ACS_RTEE);
+    return 1;  // How many rows were drawn
+}
+
+//----------------------------------------------------------------
+
+int
+DialogError::drawFmtdText(int startRow, const Aos& text)
+{
+    int row = startRow;
+    for (const auto& line : text)
+    {
+        mvwprintw(pWin_, row++, 2, "%s", line.c_str());
+    }
+    
+    return text.size();
 }
 
 //----------------------------------------------------------------
@@ -397,7 +664,7 @@ DialogError::handleKey(int ch)
     {
     case 10 :  // enter key
     case 27 :  // escape key
-    case '.': back(); return true; break;
+    case '.': back(); return true;
     default : return false;
     }
 }
@@ -412,25 +679,3 @@ DialogError::back()
 }
 
 //----------------------------------------------------------------
-
-
-
-//----------------------------------------------------------------
-
-#if 0
-
-// For Wrapping text
-
-    const int maxDialogWidth = 80;
-
-    // Wrap message into multiple lines (max width = 76 chars for padding)
-    int wrapWidth = std::min(maxDialogWidth - 4, screenCols - 4);
-    std::vector<std::string> lines = Gen::StringUtils::wrapText(message_, wrapWidth);
-    int msgLines = static_cast<int>(lines.size());
-
-    // Box dimensions
-    int boxWidth = std::min(maxDialogWidth, screenCols - 2);
-    int boxHeight = msgLines + 4; // border + message lines + prompt
-
-#endif    
-

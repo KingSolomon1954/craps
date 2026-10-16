@@ -33,8 +33,8 @@ public:
     /// @}
     
 private:
-    WindowPosition  winPos_;
-    WindowSize      winSize_ = {9, 23};  // rows, cols
+    WindowPosition winPos_;
+    WindowSize     winSize_ = {9, 23};  // rows, cols
 
 private:
     MenuNavBarViews();  // Private ctor

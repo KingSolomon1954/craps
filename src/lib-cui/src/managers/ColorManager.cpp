@@ -42,21 +42,29 @@ ColorManager::initialize()
 void
 ColorManager::initColorPairs()
 {
-    init_pair(DefaultScreen,  COLOR_GREEN,   COLOR_BLACK);
-    init_pair(SevenOut,       COLOR_RED,     -1);
-    init_pair(PassLineWinner, COLOR_YELLOW,  -1);
-    init_pair(Point,          COLOR_MAGENTA, -1);
-    init_pair(InfoMessage,    COLOR_WHITE,   -1);
-    init_pair(WarnMessage,    COLOR_YELLOW,  -1);
-    init_pair(ErrorMessage,   COLOR_RED,     -1);
-    init_pair(CustomMessage,  COLOR_MAGENTA, -1);
+    init_pair(DefaultScreen,        COLOR_GREEN,   COLOR_BLACK);
 
-    init_pair(PlayerColor1,   COLOR_WHITE,   -1);
-    init_pair(PlayerColor2,   COLOR_MAGENTA, -1);
-    init_pair(PlayerColor3,   COLOR_YELLOW,  -1);
-    init_pair(PlayerColor4,   COLOR_BLUE,    -1);
-    init_pair(PlayerColor5,   COLOR_RED,     -1);
-    init_pair(PlayerColor6,   COLOR_CYAN,    -1);
+    init_pair(PlayerColor1,         COLOR_WHITE,   -1);
+    init_pair(PlayerColor2,         COLOR_MAGENTA, -1);
+    init_pair(PlayerColor3,         COLOR_YELLOW,  -1);
+    init_pair(PlayerColor4,         COLOR_BLUE,    -1);
+    init_pair(PlayerColor5,         COLOR_RED,     -1);
+    init_pair(PlayerColor6,         COLOR_CYAN,    -1);
+
+    init_pair(SevenOut,             COLOR_RED,     -1);
+    init_pair(PassLineWinner,       COLOR_YELLOW,  -1);
+    init_pair(Point,                COLOR_MAGENTA, -1);
+    init_pair(DialogMessageInfo,    COLOR_WHITE,   -1);
+    init_pair(DialogMessageWarn,    COLOR_YELLOW,  -1);
+    init_pair(DialogMessageError,   COLOR_RED,     -1);
+    init_pair(DialogMessageCustom,  COLOR_MAGENTA, -1);
+
+    init_pair(DialogErrorTitle,     COLOR_RED  ,   -1);
+    init_pair(DialogErrorDesc,      COLOR_YELLOW,  -1);
+    init_pair(DialogErrorCause,     COLOR_WHITE,   -1);
+    init_pair(DialogErrorRepair,    COLOR_BLUE,    -1);
+    init_pair(DialogErrorAddinfo,   COLOR_CYAN,    -1);
+    init_pair(DialogErrorTrace,     COLOR_MAGENTA, -1);
 
     bkgd(' ' | COLOR_PAIR(DefaultScreen));
 }
@@ -105,29 +113,20 @@ ColorManager::pair(Color color) const
 {
     switch (color)
     {
-        case Color::DefaultScreen:
-            return DefaultScreen;
-
-        case Color::SevenOut:
-            return SevenOut;
-
-        case Color::PassLineWinner:
-            return PassLineWinner;
-
-        case Color::Point:
-            return Point;
-
-        case Color::InfoMessage:
-            return InfoMessage;
-
-        case Color::WarnMessage:
-            return WarnMessage;
-
-        case Color::ErrorMessage:
-            return ErrorMessage;
-
-        case Color::CustomMessage:
-            return CustomMessage;
+        case Color::DefaultScreen:       return DefaultScreen;
+        case Color::SevenOut:            return SevenOut;
+        case Color::PassLineWinner:      return PassLineWinner;
+        case Color::Point:               return Point;
+        case Color::DialogMessageInfo:   return DialogMessageInfo;
+        case Color::DialogMessageWarn:   return DialogMessageWarn;
+        case Color::DialogMessageError:  return DialogMessageError;
+        case Color::DialogMessageCustom: return DialogMessageCustom;
+        case Color::DialogErrorTitle:    return DialogErrorTitle;
+        case Color::DialogErrorDesc:     return DialogErrorDesc;
+        case Color::DialogErrorCause:    return DialogErrorCause;
+        case Color::DialogErrorRepair:   return DialogErrorRepair;
+        case Color::DialogErrorAddinfo:  return DialogErrorAddinfo;
+        case Color::DialogErrorTrace:    return DialogErrorTrace;
             
         default: assert(false && "Unhandled color");
     }

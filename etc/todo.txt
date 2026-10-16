@@ -43,9 +43,9 @@ Implement ReqMakeBet, to include UndoManager
 Add dialog confirm when quitting game tied to operations manager
 Complete the first round-trip bet made by the CUI.
 In CUI, need DialogBetAmount
-In CUI, implement DialogAckError layers of info
 
-(Done) Fix GitHub Actions, so docs are built and deployed
+(Done) In CUI, implemented DialogError
+(Done) Fix GitHub Actions. Docs are once again built and deployed
 (Done) Update design doc
 (Done) Integrated DialogMessage, added colorized introducers
 (Done) Beefed up ErrorPass and propagate throughout, needs more attention

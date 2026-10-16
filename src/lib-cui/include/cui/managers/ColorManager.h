@@ -20,10 +20,16 @@ enum class Color
     SevenOut,
     PassLineWinner,
     Point,
-    InfoMessage,
-    WarnMessage,
-    ErrorMessage,
-    CustomMessage
+    DialogMessageInfo,
+    DialogMessageWarn,
+    DialogMessageError,
+    DialogMessageCustom,
+    DialogErrorTitle,
+    DialogErrorDesc,
+    DialogErrorCause,
+    DialogErrorRepair,
+    DialogErrorAddinfo,
+    DialogErrorTrace
 };
 
 enum class PlayerColor : std::size_t
@@ -68,21 +74,28 @@ public:
 private:
     static constexpr std::size_t MaxPlayerColors = 6;
 
-    static constexpr short DefaultScreen  = 1;
-    static constexpr short SevenOut       = 2;
-    static constexpr short PassLineWinner = 3;
-    static constexpr short Point          = 4;
-    static constexpr short InfoMessage    = 5;
-    static constexpr short WarnMessage    = 6;
-    static constexpr short ErrorMessage   = 7; 
-    static constexpr short CustomMessage  = 8;
+    static constexpr short DefaultScreen       = 1;
+    
+    static constexpr short PlayerColor1        = 2;
+    static constexpr short PlayerColor2        = 3;
+    static constexpr short PlayerColor3        = 4;
+    static constexpr short PlayerColor4        = 5;
+    static constexpr short PlayerColor5        = 6;
+    static constexpr short PlayerColor6        = 7;
 
-    static constexpr short PlayerColor1   = 9;
-    static constexpr short PlayerColor2   = 10;
-    static constexpr short PlayerColor3   = 11;
-    static constexpr short PlayerColor4   = 12;
-    static constexpr short PlayerColor5   = 13;
-    static constexpr short PlayerColor6   = 14;
+    static constexpr short SevenOut            = 8;
+    static constexpr short PassLineWinner      = 9;
+    static constexpr short Point               = 10;
+    static constexpr short DialogMessageInfo   = 11;
+    static constexpr short DialogMessageWarn   = 12;
+    static constexpr short DialogMessageError  = 13; 
+    static constexpr short DialogMessageCustom = 14;
+    static constexpr short DialogErrorTitle    = 15;
+    static constexpr short DialogErrorDesc     = 16;
+    static constexpr short DialogErrorCause    = 17;
+    static constexpr short DialogErrorRepair   = 18;
+    static constexpr short DialogErrorAddinfo  = 19;
+    static constexpr short DialogErrorTrace    = 20;
 
     static constexpr std::array<short, MaxPlayerColors>
         PlayerColorPairs{

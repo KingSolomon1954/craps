@@ -1215,7 +1215,8 @@ DialogAckError
 ──────────────
 🚫 U+1F6AB ⛔ L'\u26D4' 🛑 U+1F6D1  ❌ U+274C 	🔒 U+1F512
 🔆 U+1F506 💲 U+1F4B2   📝 U+1F4DD  🔨 U+1F528  📂 U+1F4C1
-❕ U+2755  📜 U+1F4DC
+❕ U+2755  📜 U+1F4DC   👇 U+1F447
+
 
 L'\u2716' // ✖ Heavy multiplication X
 L'\u2718' // ✘ Ballot X
@@ -1247,7 +1248,7 @@ Section Trace appears only if a programmatic type error
 │ 🔆 Additional Info:                                       │
 │                                                           │
 ├───────────────────────────────────────────────────────────┤
-│ 👇 Trace                                                  │
+│ 👇 Trace:                                                 │
 │                                                           │
 ├───────────────────────────────────────────────────────────┤
 │ [. or esc] OK                                             │

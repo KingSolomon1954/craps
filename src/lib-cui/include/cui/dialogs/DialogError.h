@@ -8,14 +8,11 @@
 
 #include <cui/bases/DialogBase.h>
 #include <gen/ErrorPass.h>
-#include <array>
 #include <string>
 #include <vector>
 
 namespace Cui {
 
-class ConsoleView;  // fwd
-    
 class DialogError : public DialogBase
 {
 public:
@@ -47,13 +44,11 @@ private:
     
     struct Section
     {
-        std::string introText;
         Aos fmtdText;
         int nRows = 0;
         int nCols = 0;
         void clear()
         {
-            introText.clear();
             fmtdText.clear();
             nRows = nCols = 0;
         }
@@ -73,30 +68,54 @@ private:
     WindowSize     winSize_ = {5, 50};  // Arbitrary for initializaiton
     ErrorText      et_;
 
+    const std::wstring titleStr_          = L" Error ";
+    const std::wstring descriptionStr_    = L" Description:";
+    const std::wstring probableCauseStr_  = L" Probable Cause:";
+    const std::wstring proposedRepairStr_ = L" Proposed Repair:";
+    const std::wstring additionalInfoStr_ = L" Additional Info:";
+    const std::wstring traceStr_          = L" Trace:";
+
 private:
     DialogError();
 
-    void doAck();
     void eraseFields();
     void buildDialogEntries  (const Gen::ErrorPass& ep);
-    void formatTitle         (const std::string& errorName,
-                              const std::string& errorType);
+    void formatTitle(const Gen::ErrorPass& ep);
     void formatDescription   (const std::string& description);
     void formatProbableCause (const std::string& probableCause);
     void formatProposedRepair(const std::string& proposedRepair);
     void formatAdditionalInfo(const std::string& additionalInfo);
-    void formatTrace         (const Aos& stackTrace);
+    void formatTrace         (const Gen::ErrorPass& ep);
+    void wrapString (const std::string& s, Aos& result);
+    void wrapStrings(const Aos& source,    Aos& result);
     void calcSize();
+    int wrapWidth();
     int maxNumCols();
     int numRows();
+    int maxLength (const Aos& vos);
     int numSections();
-    int drawDesc   (int startingRow);
-    int drawTitle  (int startingRow);
-    int drawCause  (int startingRow);
-    int drawRepair (int startingRow);
-    int drawAddinfo(int startingRow);
-    int drawTrace  (int startingRow);
-    int drawPrompt (int startingRow);
+    int drawTitle  (int startRow);
+    int drawDesc   (int startRow);
+    int drawCause  (int startRow);
+    int drawRepair (int startRow);
+    int drawAddinfo(int startRow);
+    int drawTrace  (int startRow);
+    int drawPrompt (int startRow);
+    int drawIntroTitle  (int startRow);
+    int drawIntroDesc   (int startRow);
+    int drawIntroCause  (int startRow);
+    int drawIntroRepair (int startRow);
+    int drawIntroAddinfo(int startRow);
+    int drawIntroTrace  (int startRow);
+    int drawSectionSep  (int startRow);
+    int drawFmtdText(int startRow, const Aos& text);
+    void attrTitle  (bool onOff);
+    void attrDesc   (bool onOff);
+    void attrCause  (bool onOff);
+    void attrRepair (bool onOff);
+    void attrAddinfo(bool onOff);
+    void attrTrace  (bool onOff);
+
     void back();
 };
 
@@ -109,9 +128,6 @@ private:
 Caller must call configure before pushing dialog to
 SurfaceManager. The dialog displays several sections
 some of which are optional depending on the configuration.
-
-There is no result to obtain. When the user presses
-a key the dialog is done.
 
 @li Title bar always shows "Error", followed by ErrorType, and 
     ErrorName. ErrorType and ErrorName can never be empty.

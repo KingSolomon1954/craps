@@ -476,19 +476,19 @@ DialogMessage::attrOn()
     }
     else if (msg_.label == MessageLabel::Custom)
     {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::CustomMessage)));
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageCustom)));
     }
     else if (msg_.label == MessageLabel::Info)
     {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::InfoMessage)));
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageInfo)));
     }
     else if (msg_.label == MessageLabel::Warning)
     {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::WarnMessage)));
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageWarn)));
     }
     else if (msg_.label == MessageLabel::Error)
     {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::ErrorMessage)));
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageError)));
     }
 }
 
@@ -503,19 +503,19 @@ DialogMessage::attrOff()
     }
     else if (msg_.label == MessageLabel::Custom)
     {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::CustomMessage)));
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageCustom)));
     }
     else if (msg_.label == MessageLabel::Info)
     {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::InfoMessage)));
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageInfo)));
     }
     else if (msg_.label == MessageLabel::Warning)
     {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::WarnMessage)));
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageWarn)));
     }
     else if (msg_.label == MessageLabel::Error)
     {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::ErrorMessage)));
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageError)));
     }
 }
 
@@ -528,7 +528,7 @@ DialogMessage::handleKey(int ch)
     {
     case 10 :  // enter key
     case 27 :  // escape key
-    case '.': back(); return true; break;
+    case '.': back(); return true;
     default : return false;
     }
 }
