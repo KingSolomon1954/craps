@@ -12,7 +12,7 @@ add_library(cui STATIC
     src/core/CuiThread.cpp
     src/core/CuiUtils.cpp
     src/core/WorkOrderDispatcher.cpp
-#   src/dialogs/DialogAckError.cpp
+    src/dialogs/DialogError.cpp
 #   src/dialogs/DialogAmountEntry.cpp
     src/dialogs/DialogConfirm.cpp
     src/dialogs/DialogMessage.cpp

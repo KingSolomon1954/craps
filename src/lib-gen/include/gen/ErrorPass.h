@@ -61,6 +61,7 @@ public:
         EnvironmentalError,
         EquipmentError,
         ProcessingError,
+        ProgrammingError,
         QualityOfServiceError
     };
 
@@ -120,11 +121,11 @@ public:
     /// @name Observers
     /// @{
     operator const std::string&()         const;
-    const std::string& errorName()         const;
-    const std::string& errorType()         const;
-    ErrorPass::Severity severity()         const;
-    const std::string& errorNameStr()      const;
-    const std::string& errorTypeStr()      const;
+    const std::string& errorName()        const;
+    const std::string& errorType()        const;
+    ErrorPass::Severity severity()        const;
+    const std::string& errorNameStr()     const;
+    const std::string& errorTypeStr()     const;
     const std::string& severityStr()      const;
     const std::string& fileName()         const;
     const std::string& funcName()         const;

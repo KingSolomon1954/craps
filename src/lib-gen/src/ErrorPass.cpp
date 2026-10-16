@@ -97,29 +97,29 @@ ErrorPass::errorNameStr() const
 namespace
 {
     const std::string UnsetErrorNameStr            = "UnsetErrorName";
-    const std::string NullPointerErrorStr          = "NullPointerError";
-    const std::string NullValueErrorStr            = "NullValueError";
-    const std::string InvalidArgumentErrorStr      = "InvalidArgumentError";
-    const std::string RangeErrorStr                = "RangeError";
-    const std::string TimeoutErrorStr              = "TimeoutError";
-    const std::string LogicErrorStr                = "LogicError";
-    const std::string IllegalStateErrorStr         = "IllegalStateError";
-    const std::string InvalidAccessErrorStr        = "InvalidAccessError";
-    const std::string NoPermissionErrorStr         = "NoPermissionError";
+    const std::string NullPointerErrorStr          = "Null pointe";
+    const std::string NullValueErrorStr            = "Null value";
+    const std::string InvalidArgumentErrorStr      = "Invalid argument";
+    const std::string RangeErrorStr                = "Out of range";
+    const std::string TimeoutErrorStr              = "Timeout";
+    const std::string LogicErrorStr                = "Logic error";
+    const std::string IllegalStateErrorStr         = "Illegal state";
+    const std::string InvalidAccessErrorStr        = "Invalid access";
+    const std::string NoPermissionErrorStr         = "No permission";
     const std::string SignalErrorStr               = "SignalError";
-    const std::string NotFoundErrorStr             = "NotFoundError";
-    const std::string ExistsErrorStr               = "ExistsError";
-    const std::string SystemCallErrorStr           = "SystemCallError";
-    const std::string LengthErrorStr               = "LengthError";
-    const std::string OverflowErrorStr             = "OverflowError";
-    const std::string UnderflowErrorStr            = "UnderflowError";
-    const std::string DataFormatErrorStr           = "DataFormatError";
-    const std::string InputOutputErrorStr          = "InputOutputError";
-    const std::string NetworkErrorStr              = "NetworkError";
-    const std::string ConfigurationErrorStr        = "ConfigurationError";
-    const std::string CaughtExceptionStr           = "CaughtException";
-    const std::string OperationNotPossibleErrorStr = "OperationNotPossibleError";
-    const std::string NotImplementedErrorStr       = "NotImplementedError";
+    const std::string NotFoundErrorStr             = "Item not found";
+    const std::string ExistsErrorStr               = "Item already exists";
+    const std::string SystemCallErrorStr           = "System call error";
+    const std::string LengthErrorStr               = "Length error";
+    const std::string OverflowErrorStr             = "Overflow error";
+    const std::string UnderflowErrorStr            = "Underflow error";
+    const std::string DataFormatErrorStr           = "Data format error";
+    const std::string InputOutputErrorStr          = "Input output error";
+    const std::string NetworkErrorStr              = "Network error";
+    const std::string ConfigurationErrorStr        = "Configuration error";
+    const std::string CaughtExceptionStr           = "Caught exception";
+    const std::string OperationNotPossibleErrorStr = "Operation not possible";
+    const std::string NotImplementedErrorStr       = "Not Implemented";
 }
 
 const std::string&
@@ -128,29 +128,29 @@ ErrorPass::errorNameStr(const ErrorPass::ErrorName& en)
     switch (en)
     {
     case ErrorName::UnsetErrorName:            return UnsetErrorNameStr;
+    case ErrorName::CaughtException:           return CaughtExceptionStr;
+    case ErrorName::ConfigurationError:        return ConfigurationErrorStr;
+    case ErrorName::DataFormatError:           return DataFormatErrorStr;
+    case ErrorName::ExistsError:               return ExistsErrorStr;
+    case ErrorName::IllegalStateError:         return IllegalStateErrorStr;
+    case ErrorName::InputOutputError:          return InputOutputErrorStr;
+    case ErrorName::InvalidAccessError:        return InvalidAccessErrorStr;
+    case ErrorName::InvalidArgumentError:      return InvalidArgumentErrorStr;
+    case ErrorName::LengthError:               return LengthErrorStr;
+    case ErrorName::LogicError:                return LogicErrorStr;
+    case ErrorName::NetworkError:              return NetworkErrorStr;
+    case ErrorName::NoPermissionError:         return NoPermissionErrorStr;
+    case ErrorName::NotFoundError:             return NotFoundErrorStr;
+    case ErrorName::NotImplementedError:       return NotImplementedErrorStr;
     case ErrorName::NullPointerError:          return NullPointerErrorStr;
     case ErrorName::NullValueError:            return NullValueErrorStr;
-    case ErrorName::InvalidArgumentError:      return InvalidArgumentErrorStr;
-    case ErrorName::RangeError:                return RangeErrorStr;
-    case ErrorName::TimeoutError:              return TimeoutErrorStr;
-    case ErrorName::LogicError:                return LogicErrorStr;
-    case ErrorName::IllegalStateError:         return IllegalStateErrorStr;
-    case ErrorName::InvalidAccessError:        return InvalidAccessErrorStr;
-    case ErrorName::NoPermissionError:         return NoPermissionErrorStr;
-    case ErrorName::SignalError:               return SignalErrorStr;
-    case ErrorName::NotFoundError:             return NotFoundErrorStr;
-    case ErrorName::ExistsError:               return ExistsErrorStr;
-    case ErrorName::SystemCallError:           return SystemCallErrorStr;
-    case ErrorName::LengthError:               return LengthErrorStr;
-    case ErrorName::OverflowError:             return OverflowErrorStr;
-    case ErrorName::UnderflowError:            return UnderflowErrorStr;
-    case ErrorName::DataFormatError:           return DataFormatErrorStr;
-    case ErrorName::InputOutputError:          return InputOutputErrorStr;
-    case ErrorName::NetworkError:              return NetworkErrorStr;
-    case ErrorName::ConfigurationError:        return ConfigurationErrorStr;
-    case ErrorName::CaughtException:           return CaughtExceptionStr;
     case ErrorName::OperationNotPossibleError: return OperationNotPossibleErrorStr;
-    case ErrorName::NotImplementedError:       return NotImplementedErrorStr;
+    case ErrorName::OverflowError:             return OverflowErrorStr;
+    case ErrorName::RangeError:                return RangeErrorStr;
+    case ErrorName::SignalError:               return SignalErrorStr;
+    case ErrorName::SystemCallError:           return SystemCallErrorStr;
+    case ErrorName::TimeoutError:              return TimeoutErrorStr;
+    case ErrorName::UnderflowError:            return UnderflowErrorStr;
     }
     return UnsetErrorNameStr;
 }
@@ -176,11 +176,12 @@ ErrorPass::errorTypeStr() const
 namespace
 {
     const std::string ErrorTypeNotSpecifiedStr  = "ErrorTypeNotSpecified";
-    const std::string CommunicationsErrorStr    = "CommunicationsError";
-    const std::string EnvironmentalErrorStr     = "EnvironmentalError";
-    const std::string EquipmentErrorStr         = "EquipmentError";
-    const std::string ProcessingErrorStr        = "ProcessingError";
-    const std::string QualityOfServiceErrorStr  = "QualityOfServiceError";
+    const std::string CommunicationsErrorStr    = "Communications Error";
+    const std::string EnvironmentalErrorStr     = "Environmental Error";
+    const std::string EquipmentErrorStr         = "Equipment Error";
+    const std::string ProcessingErrorStr        = "Processing Error";
+    const std::string ProgrammingErrorStr       = "Programming Error";
+    const std::string QualityOfServiceErrorStr  = "Quality of Service Error";
 }
 
 const std::string&
@@ -194,6 +195,7 @@ ErrorPass::errorTypeStr(const ErrorPass::ErrorType& et)
     case ErrorType::EnvironmentalError:    return EnvironmentalErrorStr;
     case ErrorType::EquipmentError:        return EquipmentErrorStr;
     case ErrorType::ProcessingError:       return ProcessingErrorStr;
+    case ErrorType::ProgrammingError:      return ProgrammingErrorStr;
     case ErrorType::QualityOfServiceError: return QualityOfServiceErrorStr;
     }
     return ErrorTypeNotSpecifiedStr;

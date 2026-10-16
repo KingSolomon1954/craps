@@ -28,8 +28,8 @@ DialogMessage::DialogMessage()
 DialogMessage&
 DialogMessage::instance()
 {
-    static DialogMessage dialog;
-    return dialog;
+    static DialogMessage dm;
+    return dm;
 }
 
 /*-----------------------------------------------------------*//**
@@ -356,6 +356,7 @@ DialogMessage::setLocation(WindowPosition pos)
 
 //----------------------------------------------------------------
 //
+//     0123456789 123456789 123456789 123456789 123456789 123456789 1234
 // 0   ┌───────────────────────────────────────────────────────────────┐
 // 1   │ Warning: Insufficient funds                                   │
 // 2   ├───────────────────────────────────────────────────────────────┤
