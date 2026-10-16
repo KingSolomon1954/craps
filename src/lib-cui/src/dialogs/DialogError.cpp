@@ -208,15 +208,35 @@ DialogError::calcSize()
     constexpr int borderCols = 2; // 2 vertical borders
     constexpr int blankCols  = 2; // 2 empty columns adjacent to borders
 
-    int nCols = maxNumCols();     // Max col of all formatted sections
+    int nCols = maxNumCols();     // Max col of all sections, including intro labels
     winSize_.cols = nCols + borderCols + blankCols;
 
     // Rows
-    const     int linesBetweenSects  = numSections() - 1;
-    constexpr int borderRows  = 2; // Top + bot border
-    constexpr int promptRows = 2;  // Prompt row + horz line above it
-    winSize_.rows = numRows() + borderRows + promptRows + linesBetweenSects;
-    
+    constexpr int borderRows  = 2; // Top + bottom border
+    constexpr int promptRows  = 2; // Prompt row + horizontal line above it
+
+    auto calcRows = [&]()
+    {
+        const int linesBetweenSects = std::max(0, numSections() - 1);
+        return numRows() + borderRows + promptRows + linesBetweenSects;
+    };
+
+    winSize_.rows = calcRows();
+
+    // If necessary, trim the trace from the bottom until the dialog fits.
+    while (winSize_.rows > LayoutConsole::minRows &&
+           !et_.trace.fmtdText.empty())
+    {
+        et_.trace.fmtdText.pop_back();
+
+        // Keep the trace metadata consistent with its formatted text.
+        et_.trace.nRows = static_cast<int>(et_.trace.fmtdText.size());
+        et_.trace.nCols = maxLength(et_.trace.fmtdText);
+
+        // Recalculate because the trace section may now be empty.
+        winSize_.rows = calcRows();
+    }
+
     LOG_TRACE("DialogError::calcSize():"
               " winSize_.rows = " + std::to_string(winSize_.rows) +
               " winSize_.cols = " + std::to_string(winSize_.cols));
@@ -227,14 +247,12 @@ DialogError::calcSize()
 int
 DialogError::numRows()
 {
-    int nRows = 0;
-    nRows = std::max(nRows, et_.title.nRows);
-    nRows = std::max(nRows, et_.desc.nRows);
-    nRows = std::max(nRows, et_.cause.nRows);
-    nRows = std::max(nRows, et_.repair.nRows);
-    nRows = std::max(nRows, et_.addinfo.nRows);
-    nRows = std::max(nRows, et_.trace.nRows);
-    return nRows;
+    return et_.title.nRows   +
+           et_.desc.nRows    +
+           et_.cause.nRows   +
+           et_.repair.nRows  +
+           et_.addinfo.nRows +
+           et_.trace.nRows;
 }
 
 //----------------------------------------------------------------
