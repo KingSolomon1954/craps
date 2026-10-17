@@ -19,7 +19,6 @@ Save Config to yaml file
 Need unit test for initial bank money
 Need unit test for undo bet capability
 Need unit test ConfigManagerTest
-Need unit test CrapsInterface
 
 Minimum bets are wrong. Allow $1 bets for proposition bets,
 hardways, fix min field bet.
@@ -44,6 +43,7 @@ Add dialog confirm when quitting game tied to operations manager
 Complete the first round-trip bet made by the CUI.
 In CUI, need DialogBetAmount
 
+(Done) Bring DialogMessage and DialogError into alignment
 (Done) In CUI, implemented DialogError
 (Done) Fix GitHub Actions. Docs are once again built and deployed
 (Done) Update design doc

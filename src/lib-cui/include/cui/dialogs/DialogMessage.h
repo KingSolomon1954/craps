@@ -66,21 +66,27 @@ private:
     // Creating dialog box entries
     int buildDialogEntries();
     int formatPrompt();
-    int titleSize();
-    int maxSizeDetail();
+    int maxColsTitle();
+    int maxColsDetail();
     void calcSize(int maxCols);
     void eraseFields();
-    void formatDetail();
+    void formatText();
 
     // Window creation and drawing
     void drawBorders();
-    void drawStaticContent();
+    void drawPrompt();
     void drawTitle();
-    void drawDetail();
-    void populate();
-    void attrOn();
-    void attrOff();
-
+    void drawText();
+    void drawCustomLabel();
+    void drawInfoLabel();
+    void drawWarnLabel();
+    void drawErrorLabel();
+    void attrOn    (bool onOff);
+    void attrCustom(bool onOff);
+    void attrInfo  (bool onOff);
+    void attrWarn  (bool onOff);
+    void attrError (bool onOff);
+    
     // Processing hotKeys
     void back();
     

@@ -1159,44 +1159,78 @@ Stats Menu
 ──────────────────────────────────────────────────────────────────────────────
 [C] CONTROL     [B] BETTING     [V] VIEW     [S] STATS     | [H] Help [Q] Quit
 
-Enter Amount Dialog Box
-───────────────────────
 
-With respect to the popup subwindow for entering bet amounts, it has some
-special behaviors that I'm still thinking through.  Since it is already
-focused on a particular bet and amount, it is natural to use it to help
-configure some automatic behaviors.
+DialogAmount
+────────────
 
-The Amount Entry subwindow will support two menu entries
-such that if selected it uses the current entry value for:
+DialogAmount prompts the player to enter an amount for
+a given bet. The dialog is first "configured" before pushing
+to SurfaceManager, similar to other menus and dialogs.
 
-* setting the auto fill value for the current bet type, to be used for
+DialogAmount has some special behaviors. Since it is already focused on
+a particular bet and amount, it is natural to use it to help configure
+some automatic behaviors.
+
+DialogAmount will support two menu entries such that if selected it uses
+the current entry value for:
+
+* Setting the auto fill value for the current bet type, to be used for
   default filling future bets of this type with the given amount.
 
-* using the current bet type and amount to configure a quick bet. A
+* Using the current bet type and amount to configure a Quick Bet. A
   quick bet is shortcut that is assigned to a particular bet and amount,
-  and is given a fixed menu entry on the quick bet menu.  So for
-  example, the user presses 'q' (quick bet menu) followed by 'a' (the
-  first configured quick bet) could mean make a Place Bet on the 6 for
-  100.
+  and is given a fixed menu entry on the QuickBet menu.  So for example,
+  the user presses 'q' (quick bet menu) followed by 'a' (the first
+  configured quick bet) could mean make a Place Bet on the 6 for 100.
 
-┌──────────────────────────┐
-│ Place Bet on 6           │
-├──────────────────────────┤
-│                          │
-│ Enter amount: 100        │
-│                          │
-│ [enter] Submit Bet       │
-│                          │
-│ [s] Save as AutoFill     │
-│ [q] Save as Quick Bet    │
-│                          │
-│ [esc] Back               │
-│                          │
-└──────────────────────────┘
+Some examples:
 
-Amount.returnTarget = PlaceMenu
-Amount.returnTarget = BettingMenu
+┌───────────────────────┐
+│ Place Bet on 6        │
+├───────────────────────┤
+│                       │
+│ Enter amount: 100     │
+│                       │
+│ [enter] Submit Bet    │
+│ [s] Save as AutoFill  │
+│ [q] Save as Quick Bet │
+│ [h] Help              │
+│ [esc] Back            │
+└───────────────────────┘
+
+┌───────────────────────┐
+│ Pass Line Bet         │
+├───────────────────────┤
+│                       │
+│ Enter amount: 100     │
+│                       │
+│ [enter] Submit Bet    │
+│ [s] Save as AutoFill  │
+│ [q] Save as Quick Bet │
+│ [?] Help              │
+│ [. or esc] Back       │
+└───────────────────────┘
+
+If the player selects the [h] Help prompt then
+a DialogMessage is opened showing something like this:
+
+┌───────────────────────────────────────────────────────────┐
+│ Info: Place Bet 6 or 8                                    │
+├───────────────────────────────────────────────────────────┤
+│ Pays 7:6. A bet of $12 pays $14 Return $26                │
+│ Bet stays on table until a 7 or 6 is rolled               │
+│ Loses on 7. Wins on 6 or 8, respectively                  │
+│ Can be bet anytime                                        │
+│                                                           │
+│ AutoFill - Use amount to populate this bet each time      │
+│            Use amount of zero to cancel AutoFill          │
+│ QuickBet - Remember this bet and amount as a Quick Bet    │
+│            Use amount of zero to cancel QuickBet          │
+│ AutoFill and QuickBet selections are silent               │
+├───────────────────────────────────────────────────────────┤
+│ [. or esc or enter] Back                                  │
+└───────────────────────────────────────────────────────────┘ 
+
 
 Help Menu
 ─────────

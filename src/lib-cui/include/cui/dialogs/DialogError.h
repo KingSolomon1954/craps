@@ -78,6 +78,7 @@ private:
 private:
     DialogError();
 
+    // Creating dialog box entries
     void eraseFields();
     void buildDialogEntries  (const Gen::ErrorPass& ep);
     void formatTitle(const Gen::ErrorPass& ep);
@@ -94,13 +95,15 @@ private:
     int numRows();
     int maxLength (const Aos& vos);
     int numSections();
-    int drawTitle  (int startRow);
-    int drawDesc   (int startRow);
-    int drawCause  (int startRow);
-    int drawRepair (int startRow);
-    int drawAddinfo(int startRow);
-    int drawTrace  (int startRow);
-    int drawPrompt (int startRow);
+
+    // Window creation and drawing
+    int drawTitle       (int startRow);
+    int drawDesc        (int startRow);
+    int drawCause       (int startRow);
+    int drawRepair      (int startRow);
+    int drawAddinfo     (int startRow);
+    int drawTrace       (int startRow);
+    int drawPrompt      (int startRow);
     int drawIntroTitle  (int startRow);
     int drawIntroDesc   (int startRow);
     int drawIntroCause  (int startRow);
@@ -108,7 +111,7 @@ private:
     int drawIntroAddinfo(int startRow);
     int drawIntroTrace  (int startRow);
     int drawSectionSep  (int startRow);
-    int drawFmtdText(int startRow, const Aos& text);
+    int drawFmtdText    (int startRow, const Aos& text);
     void attrTitle  (bool onOff);
     void attrDesc   (bool onOff);
     void attrCause  (bool onOff);
@@ -116,6 +119,7 @@ private:
     void attrAddinfo(bool onOff);
     void attrTrace  (bool onOff);
 
+    // Processing hotKeys
     void back();
 };
 
