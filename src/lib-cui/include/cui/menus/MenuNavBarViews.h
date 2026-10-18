@@ -33,7 +33,7 @@ public:
     /// @}
     
 private:
-    WindowPosition winPos_;
+    WindowPosition winPos_{};
     WindowSize     winSize_ = {9, 23};  // rows, cols
 
 private:

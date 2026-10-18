@@ -8,7 +8,7 @@
 
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
-#include <cui/dialogs/DialogAmount.h>
+#include <cui/dialogs/DialogBetAmount.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
@@ -267,7 +267,7 @@ void
 MenuPivot::processSelection(int pivot)
 {
     populateCarrier(pivot);
-    activateDialogAmount();
+    activateDialogBetAmount();
 }
 
 //----------------------------------------------------------------
@@ -281,9 +281,9 @@ MenuPivot::populateCarrier(int pivot)
 //----------------------------------------------------------------
 
 void
-MenuPivot::activateDialogAmount()
+MenuPivot::activateDialogBetAmount()
 {
-    SurfaceManager::instance().pushSurface(&DialogAmount::instance());
+    SurfaceManager::instance().pushSurface(&DialogBetAmount::instance());
 }
 
 //----------------------------------------------------------------

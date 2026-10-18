@@ -11,8 +11,9 @@ add_library(cui STATIC
     src/core/CuiSender.cpp
     src/core/CuiThread.cpp
     src/core/CuiUtils.cpp
+    src/core/LineInput.cpp
     src/core/WorkOrderDispatcher.cpp
-    src/dialogs/DialogAmount.cpp
+    src/dialogs/DialogBetAmount.cpp
     src/dialogs/DialogConfirm.cpp
     src/dialogs/DialogError.cpp
     src/dialogs/DialogMessage.cpp

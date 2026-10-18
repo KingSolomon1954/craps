@@ -1,26 +1,25 @@
 //----------------------------------------------------------------
 //
-// File: DialogAmount.cpp
+// File: DialogBetAmount.cpp
 //
 //----------------------------------------------------------------
 
-#include <cui/dialogs/DialogAmount.h>
+#include <cui/dialogs/DialogBetAmount.h>
 #include <cui/core/CuiUtils.h>
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
-#include <cassert>
-#include <cctype>
-#include <cstring>
+#include <limits>
+#include <stdexcept>
 
 using namespace Cui;
 
 //----------------------------------------------------------------
 
-DialogAmount::DialogAmount()
-    : DialogBase("DialogAmount")
+DialogBetAmount::DialogBetAmount()
+    : DialogBase("DialogBetAmount")
 {
     // Create an initial WINDOW at location 0,0. Gets resized later.
     newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
@@ -29,17 +28,17 @@ DialogAmount::DialogAmount()
 
 //----------------------------------------------------------------
 
-DialogAmount&
-DialogAmount::instance()
+DialogBetAmount&
+DialogBetAmount::instance()
 {
-    static DialogAmount da;
+    static DialogBetAmount da;
     return da;
 }
 
 //----------------------------------------------------------------
 
 void
-DialogAmount::onAttach(SurfaceBase* pParent)
+DialogBetAmount::onAttach(SurfaceBase* pParent)
 {
     prepLineInput();
     curs_set(1);
@@ -48,7 +47,7 @@ DialogAmount::onAttach(SurfaceBase* pParent)
 //----------------------------------------------------------------
 
 void
-DialogAmount::onDetach()
+DialogBetAmount::onDetach()
 {
     curs_set(0);
 }
@@ -61,7 +60,7 @@ DialogAmount::onDetach()
 // See setLocation() below. 
 //
 LocationRequest
-DialogAmount::getLocationRequest() const
+DialogBetAmount::getLocationRequest() const
 {
     LocationRequest req;
     req.kind      = LocationKind::Dialog;
@@ -80,7 +79,7 @@ DialogAmount::getLocationRequest() const
 // call draw() on us.
 //
 void
-DialogAmount::setLocation(WindowPosition pos)
+DialogBetAmount::setLocation(WindowPosition pos)
 {
     winPos_ = pos;
     resize(winSize_);  // Dynamic menu needs resizing
@@ -104,7 +103,7 @@ DialogAmount::setLocation(WindowPosition pos)
 // 11 └──────────────────────────┘
 //
 void
-DialogAmount::draw()
+DialogBetAmount::draw()
 {
     // Reuse already filled window over and over
     drawTitle();
@@ -119,7 +118,7 @@ DialogAmount::draw()
 // and we don't call werase().
 //
 void
-DialogAmount::drawStaticContent()
+DialogBetAmount::drawStaticContent()
 {
     drawBorders();
     drawPrompts();
@@ -128,7 +127,7 @@ DialogAmount::drawStaticContent()
 //----------------------------------------------------------------
 
 void
-DialogAmount::drawBorders()
+DialogBetAmount::drawBorders()
 {
     box(pWin_, 0, 0);
 
@@ -141,7 +140,7 @@ DialogAmount::drawBorders()
 //----------------------------------------------------------------
 
 void
-DialogAmount::drawPrompts()
+DialogBetAmount::drawPrompts()
 {
     int row = 4;
     for (const std::string_view s : Prompts)
@@ -153,7 +152,7 @@ DialogAmount::drawPrompts()
 //----------------------------------------------------------------
 
 void
-DialogAmount::drawTitle()
+DialogBetAmount::drawTitle()
 {
     const std::string title = CarrierBet::instance().getTitleAmount();
     std::string s = prepTitle(title);
@@ -163,7 +162,7 @@ DialogAmount::drawTitle()
 //----------------------------------------------------------------
 
 std::string
-DialogAmount::prepTitle(const std::string& title)
+DialogBetAmount::prepTitle(const std::string& title)
 {
     constexpr std::size_t MaxColsTitle = 22;
     std::string result = title.substr(0, MaxColsTitle);  // Too big
@@ -176,25 +175,32 @@ DialogAmount::prepTitle(const std::string& title)
 // Override menu base class
 //
 bool
-DialogAmount::handleKey(int ch)
+DialogBetAmount::handleKey(int ch)
 {
     switch (ch)
     {
-    case '\r': 
-    case '\n': doEnter();           return true;
-    case 'a' : doAutoFill();        return true;
+    case '\r':
+    case '\n':
+    case KEY_ENTER: doEnter();      return true;
+    case 's' : doAutoFill();        return true;
     case 'q' : doQuickBet();        return true;
     case '?' : doHelp();            return true;
     case '.' :
-    case 27  : back();               return true;
-    default  : return handleLineInput(ch);
+    case 27  : back();              return true;
+    default:
+        if (lineInput_.handleKey(ch))
+        {
+            drawInput();
+            return true;
+        }
+        return false;
     }
 }
 
 //----------------------------------------------------------------
 
 void
-DialogAmount::back()
+DialogBetAmount::back()
 {
     // Set our own state in base class to reflect cancel.
     // Also informs parent surfaces of the state of operation.
@@ -206,79 +212,18 @@ DialogAmount::back()
 }
 
 //----------------------------------------------------------------
-//
-// Gather then interpret command line input
-//
-bool
-DialogAmount::handleLineInput(int ch)
-{
-    if (ch == KEY_BACKSPACE || ch == 127)  // Backspace
-    { 
-        if (cursorPos_ > 0)
-        {
-            lineBuffer_.erase(cursorPos_ - 1, 1);
-            --cursorPos_;
-            drawInput();
-        }
-    }
-    else if (ch == KEY_DC)                 // Delete key
-    {
-        if (cursorPos_ < lineBuffer_.size())
-        {
-            lineBuffer_.erase(cursorPos_, 1);
-            drawInput();
-        }
-    }
-    else if (ch == KEY_LEFT)               // Move cursor left
-    {
-        if (cursorPos_ > 0)
-        {
-            --cursorPos_;
-            drawInput();
-        }
-    }
-    else if (ch == KEY_RIGHT)              // Move cursor right
-    {
-        if (cursorPos_ < lineBuffer_.size())
-        {
-            ++cursorPos_;
-            drawInput();
-        }
-    }
-    else if (std::isdigit(ch))             // Only allow digits
-    {
-        if (lineBuffer_.size() >= inputCharsMax_)
-        {
-            beep();
-        }
-        else
-        {
-            lineBuffer_.insert(cursorPos_, 1, static_cast<char>(ch));
-            ++cursorPos_;
-            drawInput();
-        }
-    }
-    else
-    {
-        return false;  // Ignore other keys
-    }
-    return true;
-}
-
-//----------------------------------------------------------------
 
 void
-DialogAmount::drawInput()
+DialogBetAmount::drawInput()
 {
     // Erase the entry field area to avoid leftover characters
     mvwaddstr(pWin_, inputRow_, inputCol_, eraseInput_.c_str());
 
     // Print the current buffer
-    mvwaddstr(pWin_, inputRow_, inputCol_, lineBuffer_.c_str());
-//    mvwprintw(pWin_, inputRow_, inputCol_, "%s", lineBuffer_.c_str());
+    mvwaddstr(pWin_, inputRow_, inputCol_, lineInput_.value().c_str());
 
     // Place the cursor at the correct position
-    wmove(pWin_, inputRow_, inputCol_ + static_cast<int>(cursorPos_));
+    wmove(pWin_, inputRow_, inputCol_ + static_cast<int>(lineInput_.cursorPosition()));
 
     wnoutrefresh(pWin_);
     doupdate();
@@ -287,9 +232,9 @@ DialogAmount::drawInput()
 //----------------------------------------------------------------
 
 void
-DialogAmount::doEnter()
+DialogBetAmount::doEnter()
 {
-    if (lineBuffer_.empty())
+    if (lineInput_.value().empty())
     {
         beep();  // Reject empty input
         return;
@@ -297,7 +242,7 @@ DialogAmount::doEnter()
 
     try
     {
-        long long val = std::stoll(lineBuffer_);
+        long long val = std::stoll(lineInput_.value());
         if (val < 0)
         {
             beep();  // Reject negative values
@@ -312,6 +257,7 @@ DialogAmount::doEnter()
         }
 
         inputAmount_ = static_cast<Gen::Money>(val);
+        processAmount();
     }
     catch (const std::invalid_argument&)
     {
@@ -326,27 +272,29 @@ DialogAmount::doEnter()
 //----------------------------------------------------------------
 
 void
-DialogAmount::doAutoFill()
+DialogBetAmount::doAutoFill()
 {
+    CarrierBet::instance().setAmount(inputAmount_);
+    
     // TODO - maybe tell CarrierBet to do auto fill
-    // CarrierBet::instance().setAmount(inputAmount_);
     // CarrierBet::instance().doAutoFill();
 }    
 
 //----------------------------------------------------------------
 
 void
-DialogAmount::doQuickBet()
+DialogBetAmount::doQuickBet()
 {
+    CarrierBet::instance().setAmount(inputAmount_);
+    
     // TODO - maybe tell CarrierBet to do quickBet
-    // CarrierBet::instance().setAmount(inputAmount_);
     // CarrierBet::instance().doQuickBet();
 }    
 
 //----------------------------------------------------------------
 
 void
-DialogAmount::doHelp()
+DialogBetAmount::doHelp()
 {
     // TODO
 }    
@@ -354,33 +302,22 @@ DialogAmount::doHelp()
 //----------------------------------------------------------------
 
 void
-DialogAmount::prepLineInput()
+DialogBetAmount::prepLineInput()
 {
-    clearLineInput();
-    auto preFill = CarrierBet::instance().getPreFillAmount();
+    lineInput_.clear();
+    inputAmount_ = 0;
+    const auto preFill = CarrierBet::instance().getPreFillAmount();
     if (preFill > 0)
-    {
-        lineBuffer_ = std::to_string(preFill);
-    }
+        lineInput_.setValue(std::to_string(preFill));
 }
 
 //----------------------------------------------------------------
 
 void
-DialogAmount::clearLineInput()
+DialogBetAmount::processAmount()
 {
-    lineBuffer_.clear();
-    inputAmount_ = 0;
-    cursorPos_   = 0;
-}    
-
-//----------------------------------------------------------------
-
-void
-DialogAmount::processAmount()
-{
+    CarrierBet::instance().setAmount(inputAmount_);
     // TODO
-    // Fill out the Carrier Bet
     // Involve OperationManager:: make the bet
     // Hang around, we'll get popped by SurfaceManager when
     // op manager completes

@@ -27,6 +27,7 @@ public:
     void setPlayerId      (const Craps::PlayerId& id);
     void setBetName       (BetName betName);
     void setPivot         (unsigned pivot);
+    void setAmount        (const Gen::Money& amount);
     void setContractAmount(const Gen::Money& amount);
     void setOddsAmount    (const Gen::Money& amount);
     void setDesireOdds    ();

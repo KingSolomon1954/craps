@@ -91,7 +91,7 @@ private:
     void back();
     
 private:
-    WindowPosition winPos_;
+    WindowPosition winPos_{};
     WindowSize     winSize_ = {5, 50};  // Arbitrary for initializaiton
     MessageText    msg_;
 

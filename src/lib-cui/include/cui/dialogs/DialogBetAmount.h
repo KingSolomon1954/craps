@@ -1,32 +1,32 @@
 //----------------------------------------------------------------
 //
-// File: DialogAmount.h
+// File: DialogBetAmount.h
 //
 //----------------------------------------------------------------
 
 #pragma once
 
 #include <cui/bases/DialogBase.h>
+#include <cui/core/LineInput.h>
 #include <gen/MoneyUtils.h>
 #include <craps/EnumBetName.h>
 #include <array>
-#include <functional>
+#include <string>
+#include <string_view>
 
 namespace Cui {
 
-class ConsoleView;  // fwd
-    
-class DialogAmount : public DialogBase
+class DialogBetAmount : public DialogBase
 {
 public:
     /// @name Lifecycle
     /// @{
-   ~DialogAmount() = default;
-    static DialogAmount& instance();
-    DialogAmount(const DialogAmount&)            = delete;
-    DialogAmount& operator=(const DialogAmount&) = delete;
-    DialogAmount(DialogAmount&&)                 = delete;
-    DialogAmount& operator=(DialogAmount&&)      = delete;
+   ~DialogBetAmount() = default;
+    static DialogBetAmount& instance();
+    DialogBetAmount(const DialogBetAmount&)            = delete;
+    DialogBetAmount& operator=(const DialogBetAmount&) = delete;
+    DialogBetAmount(DialogBetAmount&&)                 = delete;
+    DialogBetAmount& operator=(DialogBetAmount&&)      = delete;
     /// @}
 
     /// @name Modifiers
@@ -45,7 +45,7 @@ public:
     /// @}
     
 private:
-    WindowPosition winPos_;
+    WindowPosition winPos_{};
     static constexpr WindowSize winSize_ = {12, 26};  // rows, cols, Fixed size
 
     static constexpr std::array<std::string_view, 7> Prompts
@@ -53,24 +53,23 @@ private:
         "Enter amount:",
         "",
         "[enter] Submit Bet",
-        "[a] Save as AutoFill",
+        "[s] Save as AutoFill",
         "[q] Save as Quick Bet",
         "[?] Help",
         "[. or esc] Back"
     };
 
-    // Line buffer management
-    std::string lineBuffer_;
-    Gen::Money inputAmount_ = 0;
-    size_t cursorPos_       = 0;
+    // Input field layout and editing state
     static constexpr int inputRow_ = 4;
     static constexpr int inputCol_ = 2 + Prompts[0].size() + 1;
     static constexpr int numInputBlanks_ = winSize_.cols - inputCol_ - 1;
     static constexpr int inputCharsMax_ = 8;
+    Gen::Money inputAmount_ = 0;
+    LineInput lineInput_{inputCharsMax_};
     const std::string eraseInput_ = std::string(numInputBlanks_, ' ');
 
 private:
-    DialogAmount();  // Private ctor
+    DialogBetAmount();  // Private ctor
 
     // Drawing
     void drawStaticContent();
@@ -82,8 +81,6 @@ private:
 
     // Input processing
     void prepLineInput();
-    void clearLineInput();
-    bool handleLineInput(int ch);
     void back();
     void doEnter();
     void doAutoFill();
@@ -94,20 +91,20 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class DialogAmount
+@class DialogBetAmount
 
 @brief Obtains bet amount from user
 
-DialogAmount prompts the player to enter an amount for
+DialogBetAmount prompts the player to enter an amount for
 a given bet. The dialog is first "configured" before pushing
 to SurfaceManager, similar to other menus and dialogs.
 
-DialogAmount has some special behaviors. Since it is already focused on
-a particular bet and amount, it is natural to use it to help configure
-some automatic behaviors.
+DialogBetAmount has some special behaviors. Since it is already focused
+on a particular bet and amount, it is natural to use it to help 
+configure some automatic behaviors.
 
-DialogAmount will support two menu entries such that if selected it uses
-the current entry value for:
+DialogBetAmount will support two menu entries such that if selected it 
+uses the current entry value for:
 
 @li Setting the auto fill value for the current bet type, to be used for
     default filling future bets of this type with the given amount.

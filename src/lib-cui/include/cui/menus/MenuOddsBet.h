@@ -63,7 +63,7 @@ private:
     Craps::PlayerId playerId_;
     Bets            activeOddsBets_;
     MenuEntries     menuEntries_;
-    WindowPosition  winPos_;
+    WindowPosition  winPos_{};
     WindowSize      winSize_;
     
 private:    
@@ -99,7 +99,7 @@ private:
     void processSelection(const Craps::BetId& betId);
     BetInfo& findBet(const Craps::BetId& betId);
     void populateCarrier(const BetInfo& bet);
-    void activateDialogAmount();
+    void activateDialogBetAmount();
 };
 
 /*-----------------------------------------------------------*//**

@@ -7,7 +7,7 @@
 #include <cui/menus/MenuOddsBet.h>
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
-#include <cui/dialogs/DialogAmount.h>
+#include <cui/dialogs/DialogBetAmount.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
@@ -375,7 +375,7 @@ MenuOddsBet::processSelection(const Craps::BetId& betId)
 {
     const BetInfo& bet = findBet(betId);
     populateCarrier(bet);
-    activateDialogAmount();
+    activateDialogBetAmount();
 }
 
 //----------------------------------------------------------------
@@ -414,9 +414,9 @@ MenuOddsBet::populateCarrier(const BetInfo& bet)
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::activateDialogAmount()
+MenuOddsBet::activateDialogBetAmount()
 {
-    SurfaceManager::instance().pushSurface(&DialogAmount::instance());
+    SurfaceManager::instance().pushSurface(&DialogBetAmount::instance());
 }
 
 //----------------------------------------------------------------

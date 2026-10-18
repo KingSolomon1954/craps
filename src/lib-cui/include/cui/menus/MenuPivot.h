@@ -36,7 +36,7 @@ public:
     /// @}
 
 private:
-    WindowPosition   winPos_;
+    WindowPosition   winPos_{};
     const WindowSize winSize_ = {11, 24};  // rows, cols
     BetName betName_ = BetName::Invalid;
     
@@ -101,7 +101,7 @@ private:
     bool handleKeyAllNumbers(int ch);
     void processSelection(int num);
     void populateCarrier (int pivot);
-    void activateDialogAmount();
+    void activateDialogBetAmount();
     void back();
 };
 

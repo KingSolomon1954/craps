@@ -51,7 +51,7 @@ private:
     void processSelection(OperationResult r);
 
 private:
-    WindowPosition  winPos_  = {0, 0};
+    WindowPosition  winPos_{};
     WindowSize      winSize_ = {5, 50};  // Arbitrary for initializaiton
     bool            configured_ = false;
     std::string     text_;               // title bar message

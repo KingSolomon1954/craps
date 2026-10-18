@@ -34,7 +34,7 @@ public:
     /// @}
     
 private:
-    WindowPosition winPos_;
+    WindowPosition winPos_{};
     WindowSize     winSize_ = {25, 25};  // rows, cols
     BetName        betName_ = BetName::Invalid;
 

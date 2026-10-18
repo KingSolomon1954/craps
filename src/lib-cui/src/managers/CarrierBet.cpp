@@ -60,6 +60,17 @@ CarrierBet::setPivot(unsigned pivot)
 //----------------------------------------------------------------
 
 void
+CarrierBet::setAmount(const Gen::Money& amount)
+{
+    if (wantOdds_)
+        oddsAmount_ = amount;
+    else
+        contractAmount_ = amount;
+}
+
+//----------------------------------------------------------------
+
+void
 CarrierBet::setContractAmount(const Gen::Money& amount)
 {
     contractAmount_ = amount;
