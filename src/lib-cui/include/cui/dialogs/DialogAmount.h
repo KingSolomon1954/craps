@@ -42,7 +42,6 @@ public:
     void draw()                          override;
     bool handleKey(int ch)               override;
     void setLocation(WindowPosition pos) override;
-    void configure(const Config& cfg);
     /// @}
 
     /// @name Observers
@@ -77,13 +76,13 @@ private:
 private:
     DialogAmount();  // Private ctor
 
-    std::string prepTitle(const std::string& title);
     void clear();
         
     void drawStaticContent();
     void drawBorders();
     void drawPrompts();
     void drawTitle();
+    std::string prepTitle(const std::string& title);
     
     bool handleLineInput(int ch);
     void back();

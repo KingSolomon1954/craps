@@ -28,7 +28,6 @@ public:
     void draw()                          override;
     bool handleKey(int ch)               override;
     void setLocation(WindowPosition pos) override;
-    void onResume()                      override;
     /// @}
 
     /// @name Observers

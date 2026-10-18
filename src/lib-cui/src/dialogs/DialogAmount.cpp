@@ -36,49 +36,6 @@ DialogAmount::instance()
     return da;
 }
 
-/*-----------------------------------------------------------*//**
-
-Caller configures what is to be displayed.
-
-This is designed as a fixed size window, sized to handle the
-largest expected title string provided by the caller for bets,
-which is this: "Dont Come Odds on the 10". Any
-string longer than 24 characters is capped to 24.
-
-
-Upon return, ErrorText is formatted and ready to be drawn.
-
-ErrorText structure knows the number of sections to be drawn. Each
-section is already formatted (wrapped as necessary), max rows and cols
-of each section are known. winPos_ and winSize_ have been updated.
-
-*/
-void
-DialogAmount::configure(const Config& cfg)
-{
-    clear();
-    
-    title_          = prepTitle(cfg.title);
-    betName_        = cfg.betName;
-    pivot_          = cfg.pivot;
-    preFillAmount_  = cfg.preFillAmount;
-
-    assert(betName_ != BetName::Invalid);
-    assert(title_.size() > 0);
-}
-
-//----------------------------------------------------------------
-
-std::string
-DialogAmount::prepTitle(const std::string& title)
-{
-    constexpr std::size_t MaxColsTitle = 22;
-    std::string result = title.substr(0, MaxColsTitle);  // Too big
-    result.resize(MaxColsTitle, ' ');
-
-    return result;
-}
-
 //----------------------------------------------------------------
 //
 // SurfaceManager wants our window size and more.
@@ -181,8 +138,23 @@ DialogAmount::drawPrompts()
 void
 DialogAmount::drawTitle()
 {
-    std::string title = CarrierBet::instance().getTitleAmount();
-    mvwaddstr(pWin_, 1, 2, title.c_str());
+    const std::string title = CarrierBet::instance().getTitleAmount();
+    std::string s = prepTitle(title);
+    mvwaddstr(pWin_, 1, 2, s.c_str());
+}
+
+//----------------------------------------------------------------
+
+std::string
+DialogAmount::prepTitle(const std::string& title)
+{
+    constexpr std::size_t MaxColsTitle = 22;
+    std::string result = title.substr(0, MaxColsTitle);  // Too big
+    result.resize(MaxColsTitle, ' ');
+
+    LOG_TRACE("prepTitle() result = \"" + result +
+              "\" size " + std::to_string(result.size()));
+    return result;
 }
 
 //----------------------------------------------------------------
