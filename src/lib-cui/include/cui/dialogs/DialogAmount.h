@@ -19,14 +19,6 @@ class ConsoleView;  // fwd
 class DialogAmount : public DialogBase
 {
 public:
-    struct Config
-    {
-        std::string title;
-        BetName     betName;
-        unsigned    pivot;
-        Gen::Money  preFillAmount = 0;
-    };
-    
     /// @name Lifecycle
     /// @{
    ~DialogAmount() = default;
@@ -42,6 +34,9 @@ public:
     void draw()                          override;
     bool handleKey(int ch)               override;
     void setLocation(WindowPosition pos) override;
+    void onAttach(SurfaceBase* pParent)  override;  // from Surface
+    void onDetach()                      override;  // from Surface
+
     /// @}
 
     /// @name Observers
@@ -50,46 +45,50 @@ public:
     /// @}
     
 private:
-    WindowPosition   winPos_;
-    const WindowSize winSize_ = {12, 26};  // rows, cols, Fixed size
-    Config           cfg_;
+    WindowPosition winPos_;
+    static constexpr WindowSize winSize_ = {12, 26};  // rows, cols, Fixed size
 
     static constexpr std::array<std::string_view, 7> Prompts
     {
         "Enter amount:",
         "",
         "[enter] Submit Bet",
-        "[s] Save as AutoFill",
+        "[a] Save as AutoFill",
         "[q] Save as Quick Bet",
         "[?] Help",
         "[. or esc] Back"
     };
 
-    std::string title_;
-    BetName betName_;
-    unsigned pivot_           = 0;
-    Gen::Money preFillAmount_ = 0;
-    Gen::Money inputAmount_   = 0;
-    size_t cursorPos_         = 0;
+    // Line buffer management
     std::string lineBuffer_;
+    Gen::Money inputAmount_ = 0;
+    size_t cursorPos_       = 0;
+    static constexpr int inputRow_ = 4;
+    static constexpr int inputCol_ = 2 + Prompts[0].size() + 1;
+    static constexpr int numInputBlanks_ = winSize_.cols - inputCol_ - 1;
+    static constexpr int inputCharsMax_ = 8;
+    const std::string eraseInput_ = std::string(numInputBlanks_, ' ');
 
 private:
     DialogAmount();  // Private ctor
 
-    void clear();
-        
+    // Drawing
     void drawStaticContent();
     void drawBorders();
     void drawPrompts();
     void drawTitle();
+    void drawInput();
     std::string prepTitle(const std::string& title);
-    
+
+    // Input processing
+    void prepLineInput();
+    void clearLineInput();
     bool handleLineInput(int ch);
     void back();
     void doEnter();
     void doAutoFill();
     void doQuickBet();
-    void drawInput();
+    void doHelp();
     void processAmount();
 };
 

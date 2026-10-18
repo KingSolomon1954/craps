@@ -41,8 +41,11 @@ Rewrite QuickBet for new CUI design
 Implement ReqMakeBet, to include UndoManager
 Add dialog confirm when quitting game tied to operations manager
 Complete the first round-trip bet made by the CUI.
-In CUI, need DialogBetAmount
+Lift out DialogAmount LineInput processing, make it resuable.
 
+(Done) Fix DialogAmount line input processing, show cursor.
+(Done) Elminated configure() in menus, using CarrierBet instead
+(Done) In CUI, implemented DialogAmount
 (Done) Bring DialogMessage and DialogError into alignment
 (Done) In CUI, implemented DialogError
 (Done) Fix GitHub Actions. Docs are once again built and deployed

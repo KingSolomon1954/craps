@@ -41,6 +41,7 @@ public:
     Gen::Money        getOddsAmount    () const;
     bool              wantOdds         () const;
     std::string       getTitleAmount   () const;
+    Gen::Money        getPreFillAmount () const;
     /// @}
 
 private:

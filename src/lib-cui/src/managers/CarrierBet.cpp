@@ -123,6 +123,14 @@ CarrierBet::getOddsAmount() const
 
 //----------------------------------------------------------------
 
+Gen::Money
+CarrierBet::getPreFillAmount() const
+{
+    return 0;
+}
+
+//----------------------------------------------------------------
+
 bool
 CarrierBet::wantOdds() const
 {

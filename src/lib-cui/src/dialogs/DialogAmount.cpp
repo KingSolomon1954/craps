@@ -37,6 +37,23 @@ DialogAmount::instance()
 }
 
 //----------------------------------------------------------------
+
+void
+DialogAmount::onAttach(SurfaceBase* pParent)
+{
+    prepLineInput();
+    curs_set(1);
+}
+
+//----------------------------------------------------------------
+
+void
+DialogAmount::onDetach()
+{
+    curs_set(0);
+}
+
+//----------------------------------------------------------------
 //
 // SurfaceManager wants our window size and more.
 // This occurs in context of SurfaceManager::pushSurface()
@@ -89,9 +106,9 @@ DialogAmount::setLocation(WindowPosition pos)
 void
 DialogAmount::draw()
 {
-    // Just reuse already filled window over and over
+    // Reuse already filled window over and over
     drawTitle();
-    // touchwin(pWin_);
+    drawInput();
     
     CuiUtils::transfer(pWin_);
 }
@@ -150,10 +167,7 @@ DialogAmount::prepTitle(const std::string& title)
 {
     constexpr std::size_t MaxColsTitle = 22;
     std::string result = title.substr(0, MaxColsTitle);  // Too big
-    result.resize(MaxColsTitle, ' ');
-
-    LOG_TRACE("prepTitle() result = \"" + result +
-              "\" size " + std::to_string(result.size()));
+    result.resize(MaxColsTitle, ' ');                    // Pad it
     return result;
 }
 
@@ -170,6 +184,7 @@ DialogAmount::handleKey(int ch)
     case '\n': doEnter();           return true;
     case 'a' : doAutoFill();        return true;
     case 'q' : doQuickBet();        return true;
+    case '?' : doHelp();            return true;
     case '.' :
     case 27  : back();               return true;
     default  : return handleLineInput(ch);
@@ -231,10 +246,17 @@ DialogAmount::handleLineInput(int ch)
         }
     }
     else if (std::isdigit(ch))             // Only allow digits
-    { 
-        lineBuffer_.insert(cursorPos_, 1, static_cast<char>(ch));
-        ++cursorPos_;
-        drawInput();
+    {
+        if (lineBuffer_.size() >= inputCharsMax_)
+        {
+            beep();
+        }
+        else
+        {
+            lineBuffer_.insert(cursorPos_, 1, static_cast<char>(ch));
+            ++cursorPos_;
+            drawInput();
+        }
     }
     else
     {
@@ -248,22 +270,18 @@ DialogAmount::handleLineInput(int ch)
 void
 DialogAmount::drawInput()
 {
-    // Determine where the input field starts
-    int inputRow = 4;
-    int inputCol = 2 + static_cast<int>(strlen("Enter amount: "));
-    size_t numBlanks = winSize_.cols - inputCol;
-    std::string eraseInput(numBlanks, ' ');
-        
-    // Clear the entry field area to avoid leftover characters
-    mvwaddstr(pWin_, inputRow, inputCol, eraseInput.c_str());
+    // Erase the entry field area to avoid leftover characters
+    mvwaddstr(pWin_, inputRow_, inputCol_, eraseInput_.c_str());
 
     // Print the current buffer
-    mvwprintw(pWin_, inputRow, inputCol, "%s", lineBuffer_.c_str());
+    mvwaddstr(pWin_, inputRow_, inputCol_, lineBuffer_.c_str());
+//    mvwprintw(pWin_, inputRow_, inputCol_, "%s", lineBuffer_.c_str());
 
     // Place the cursor at the correct position
-    wmove(pWin_, inputRow, inputCol + static_cast<int>(cursorPos_));
+    wmove(pWin_, inputRow_, inputCol_ + static_cast<int>(cursorPos_));
 
     wnoutrefresh(pWin_);
+    doupdate();
 }
 
 //----------------------------------------------------------------
@@ -310,7 +328,9 @@ DialogAmount::doEnter()
 void
 DialogAmount::doAutoFill()
 {
-    (void) inputAmount_;
+    // TODO - maybe tell CarrierBet to do auto fill
+    // CarrierBet::instance().setAmount(inputAmount_);
+    // CarrierBet::instance().doAutoFill();
 }    
 
 //----------------------------------------------------------------
@@ -318,16 +338,38 @@ DialogAmount::doAutoFill()
 void
 DialogAmount::doQuickBet()
 {
-    (void) inputAmount_;
+    // TODO - maybe tell CarrierBet to do quickBet
+    // CarrierBet::instance().setAmount(inputAmount_);
+    // CarrierBet::instance().doQuickBet();
 }    
 
 //----------------------------------------------------------------
 
 void
-DialogAmount::clear()
+DialogAmount::doHelp()
+{
+    // TODO
+}    
+
+//----------------------------------------------------------------
+
+void
+DialogAmount::prepLineInput()
+{
+    clearLineInput();
+    auto preFill = CarrierBet::instance().getPreFillAmount();
+    if (preFill > 0)
+    {
+        lineBuffer_ = std::to_string(preFill);
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+DialogAmount::clearLineInput()
 {
     lineBuffer_.clear();
-    preFillAmount_ = 0;
     inputAmount_ = 0;
     cursorPos_   = 0;
 }    
@@ -339,8 +381,9 @@ DialogAmount::processAmount()
 {
     // TODO
     // Fill out the Carrier Bet
-    // OperationManager:: make the bet
-    // We get popped SurfaceManager stack when op manager completes
+    // Involve OperationManager:: make the bet
+    // Hang around, we'll get popped by SurfaceManager when
+    // op manager completes
 }
 
 //----------------------------------------------------------------
