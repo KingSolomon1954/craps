@@ -1013,6 +1013,16 @@ CrapsReaders::getUserPlayerName()
 
 //----------------------------------------------------------------
 
+const Craps::PlayerId&
+CrapsReaders::getUserPlayerId()
+{
+    auto* p = Gbl::pPlayerMgr->getUserPlayer();
+    assert(p && "getUserPlayerName():Error");
+    return p->getPlayerId();
+}
+
+//----------------------------------------------------------------
+
 // Private helper
 std::string
 CrapsReaders::diagPrefix(

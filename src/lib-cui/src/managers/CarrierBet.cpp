@@ -5,6 +5,8 @@
 //---------------------------------------------------------------
 
 #include <cui/managers/CarrierBet.h>
+#include <gen/Logger.h>
+#include <cassert>
 
 using namespace Cui;
 
@@ -28,6 +30,7 @@ CarrierBet::clear()
     pivot_          = 0;
     oddsAmount_     = 0;
     contractAmount_ = 0;
+    wantOdds_       = false;
 }
 
 //----------------------------------------------------------------
@@ -41,7 +44,7 @@ CarrierBet::setPlayerId(const Craps::PlayerId& id)
 //----------------------------------------------------------------
 
 void
-CarrierBet::setBetType(BetName betName)
+CarrierBet::setBetName(BetName betName)
 {
     betName_ = betName;
 }
@@ -67,7 +70,15 @@ CarrierBet::setContractAmount(const Gen::Money& amount)
 void
 CarrierBet::setOddsAmount(const Gen::Money& amount)
 {
-    contractAmount_ = amount;
+    oddsAmount_ = amount;
+}
+
+//----------------------------------------------------------------
+
+void
+CarrierBet::setDesireOdds()
+{
+    wantOdds_ = true;
 }
 
 //----------------------------------------------------------------
@@ -107,7 +118,55 @@ CarrierBet::getContractAmount() const
 Gen::Money
 CarrierBet::getOddsAmount() const
 {
-    return contractAmount_;
+    return oddsAmount_;
 }
 
 //----------------------------------------------------------------
+
+bool
+CarrierBet::wantOdds() const
+{
+    return wantOdds_;
+}
+
+//----------------------------------------------------------------
+
+std::string
+CarrierBet::getTitleAmount() const
+{
+    std::string oddsStr;   // empty
+    std::string pivotStr;  // empty
+    
+    if (wantOdds_)
+    {
+        assert(pivot_ != 0);
+        oddsStr = " Odds ";
+    }
+
+    if (pivot_ != 0)
+    {
+        pivotStr = " on the " + std::to_string(pivot_);    
+    }
+    
+    return EnumBetName::toString(betName_) +
+           oddsStr + " Bet" + pivotStr;
+}
+
+//----------------------------------------------------------------
+
+
+#if 0
+
+// TODO responsible for building titles for various menus
+// menus and dialogs will query CarrierBet for a title.
+
+//----------------------------------------------------------------
+
+std::string
+MenuPivot::amtTitle(int pivot)
+{
+    return EnumBetName::toString(betName_) +
+           " Bet on the " + std::to_string(pivot);
+}
+
+#endif

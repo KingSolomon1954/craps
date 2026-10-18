@@ -7,6 +7,7 @@
 #include <cui/menus/MenuOddsBet.h>
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
+#include <cui/dialogs/DialogAmount.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
@@ -22,6 +23,7 @@ MenuOddsBet::MenuOddsBet()
 {
     // Create an initial WINDOW at location 0,0. Gets resized later.
     newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
+    
     // Dynamically built menu, so no initial fillWindow();
 }
 
@@ -35,43 +37,23 @@ MenuOddsBet::instance()
 }
 
 //----------------------------------------------------------------
-//
-// Create a vector of bets that are odds capable.
-//
+
 void
 MenuOddsBet::gatherBets()
 {
-    getPlayerId();     // playerId_ is set
-    gatherBetsInfo();  // bets_ is populated
-}
-
-//----------------------------------------------------------------
-
-void
-MenuOddsBet::getPlayerId()
-{
-    Gen::ErrorPass  ep;
-    auto rc = Ctrl::CrapsReaders::getUserPlayer(playerId_, ep);
-    assert(rc == Gen::ReturnCode::Success);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuOddsBet::gatherBetsInfo()
-{
     Craps::BetIds ids;
-    getBetIds(ids);     // fills in betIdList
-    gatherBetsDetail(ids); // use betIdList
+    getBetIds(ids);        // fills in betIdList
+    gatherBetsDetail(ids); // bets_ is now populated
 }
 
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::getBetIds(Craps::BetIds& ids)
+MenuOddsBet::getBetIds(Craps::BetIds& bids)
 {
     Gen::ErrorPass ep;
-    auto rc = Ctrl::CrapsReaders::readPlayerGetOddsBets(playerId_, ids, ep); 
+    auto pid = CarrierBet::instance().getPlayerId();
+    auto rc = Ctrl::CrapsReaders::readPlayerGetOddsBets(pid, bids, ep); 
     assert(rc == Gen::ReturnCode::Success);
 }
 
@@ -393,7 +375,6 @@ MenuOddsBet::processSelection(const Craps::BetId& betId)
 {
     const BetInfo& bet = findBet(betId);
     populateCarrier(bet);
-    prepDialogAmount(bet);
     activateDialogAmount();
 }
 
@@ -425,19 +406,9 @@ MenuOddsBet::populateCarrier(const BetInfo& bet)
 {
     auto cb = CarrierBet::instance();
     cb.clear();
-    cb.setBetType(bet.betName);
+    cb.setBetName(bet.betName);
     cb.setPivot(bet.pivot);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuOddsBet::prepDialogAmount(const BetInfo& bet)
-{
-    // TODO
-    // DialogBetAmount::setPrompt("Odds on %s", bet.pivot);
-    // auto amount = getAutoFillAmount(OddsBet, bet.pivot);
-    // DialogBetAmount::preFill(amount);
+    cb.setDesireOdds();
 }
 
 //----------------------------------------------------------------
@@ -445,8 +416,7 @@ MenuOddsBet::prepDialogAmount(const BetInfo& bet)
 void
 MenuOddsBet::activateDialogAmount()
 {
-    // TODO
-    // SurfaceManager::pushSurface(AmountDialog::instance());
+    SurfaceManager::instance().pushSurface(&DialogAmount::instance());
 }
 
 //----------------------------------------------------------------

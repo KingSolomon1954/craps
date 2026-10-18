@@ -71,8 +71,6 @@ private:
 
     // Gathering bets
     void gatherBets();
-    void getPlayerId();
-    void gatherBetsInfo();
     void getBetIds(Craps::BetIds& ids);
     void gatherBetsDetail(const Craps::BetIds& ids);
     void sortBetsByCreated();
@@ -101,7 +99,6 @@ private:
     void processSelection(const Craps::BetId& betId);
     BetInfo& findBet(const Craps::BetId& betId);
     void populateCarrier(const BetInfo& bet);
-    void prepDialogAmount(const BetInfo& bet);
     void activateDialogAmount();
 };
 

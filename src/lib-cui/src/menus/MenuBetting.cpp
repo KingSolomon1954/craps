@@ -24,11 +24,9 @@ using namespace Cui;
 MenuBetting::MenuBetting()
     : MenuBase("MenuBetting")
 {
-    LOG_TRACE("Entered MenuBetting::constructor() ");
     // Create an initial WINDOW at location 0,0. Gets positioned later.
     newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
     fillWindow();
-    LOG_TRACE("Leaving MenuBetting::constructor() ");
 }
 
 //----------------------------------------------------------------
@@ -228,11 +226,22 @@ MenuBetting::doBets(BetName betName)
 //----------------------------------------------------------------
 
 void
+MenuBetting::populateCarrier()
+{
+    auto& cb = CarrierBet::instance();
+    cb.clear();
+    cb.setPlayerId(Ctrl::CrapsReaders::getUserPlayerId());
+    cb.setBetName(betName_);
+}
+
+//----------------------------------------------------------------
+
+void
 MenuBetting::doGetAmount()
 {
     LOG_TRACE("MenuBetting::doGetAmount() " + EnumBetName::toString(betName_));
+    
     populateCarrier();
-    prepDialogAmount();
     activateDialogAmount();
 }
 
@@ -241,6 +250,8 @@ MenuBetting::doGetAmount()
 void
 MenuBetting::doGetPivot()
 {
+    LOG_TRACE("MenuBetting::doGetPivot() " + EnumBetName::toString(betName_));
+
     populateCarrier();
     activateMenuPivot();
 }
@@ -248,18 +259,9 @@ MenuBetting::doGetPivot()
 //----------------------------------------------------------------
 
 void
-MenuBetting::populateCarrier()
-{
-    auto cb = CarrierBet::instance();
-    cb.clear();
-    cb.setBetType(betName_);
-}
-
-//----------------------------------------------------------------
-
-void
 MenuBetting::doOddsBets()
 {
+    populateCarrier();
     activateMenuOddsBet();
 }
 
@@ -301,20 +303,10 @@ void
 MenuBetting::doRollDice()
 {
     LOG_TRACE("MenuBetting::doRollDice()");
+    
     if (SurfaceManager::instance().isActiveSurface(this))
         SurfaceManager::instance().popSurface();
     CuiSender::instance().reqRollDice();
-}
-
-//----------------------------------------------------------------
-
-void
-MenuBetting::prepDialogAmount()
-{
-    // TODO
-    // DialogBetAmount::setPrompt("Amount for %s" bet, EnumBetName::toString(betName_));
-    // auto amount = getAutoFillAmount(betName_);
-    // DialogBetAmount::preFill(amount);
 }
 
 //----------------------------------------------------------------
@@ -331,7 +323,6 @@ MenuBetting::activateDialogAmount()
 void
 MenuBetting::activateMenuPivot()
 {
-    MenuPivot::instance().configure(betName_);
     SurfaceManager::instance().pushSurface(&MenuPivot::instance());
 }
 

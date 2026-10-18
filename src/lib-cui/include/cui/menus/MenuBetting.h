@@ -18,6 +18,7 @@ public:
     /// @name Lifecycle
     /// @{
    ~MenuBetting() = default;
+    static MenuBetting& instance();
     /// @}
 
     /// @name Modifiers
@@ -29,7 +30,6 @@ public:
 
     /// @name Observers
     /// @{
-    static MenuBetting& instance();
     LocationRequest getLocationRequest() const override;
     /// @}
     
@@ -53,7 +53,6 @@ private:
     void doQuickBet();
     void doRollDice();
     void populateCarrier();
-    void prepDialogAmount();
     void activateDialogAmount();
     void activateMenuPivot();
     void activateMenuOddsBet();

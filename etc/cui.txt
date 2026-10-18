@@ -1185,31 +1185,31 @@ the current entry value for:
 
 Some examples:
 
-┌───────────────────────┐
-│ Place Bet on 6        │
-├───────────────────────┤
-│                       │
-│ Enter amount: 100     │
-│                       │
-│ [enter] Submit Bet    │
-│ [s] Save as AutoFill  │
-│ [q] Save as Quick Bet │
-│ [h] Help              │
-│ [esc] Back            │
-└───────────────────────┘
+┌──────────────────────────┐
+│ Place Bet on 6           │
+├──────────────────────────┤
+│                          │
+│ Enter amount: 100        │
+│                          │
+│ [enter] Submit Bet       │
+│ [s] Save as AutoFill     │
+│ [q] Save as Quick Bet    │
+│ [?] Help                 │
+│ [. or esc] Back          │
+└──────────────────────────┘
 
-┌───────────────────────┐
-│ Pass Line Bet         │
-├───────────────────────┤
-│                       │
-│ Enter amount: 100     │
-│                       │
-│ [enter] Submit Bet    │
-│ [s] Save as AutoFill  │
-│ [q] Save as Quick Bet │
-│ [?] Help              │
-│ [. or esc] Back       │
-└───────────────────────┘
+┌──────────────────────────┐
+│ Dont Come Odds on the 10 │
+├──────────────────────────┤
+│                          │
+│ Enter amount: 100        │
+│                          │
+│ [enter] Submit Bet       │
+│ [s] Save as AutoFill     │
+│ [q] Save as Quick Bet    │
+│ [?] Help                 │
+│ [. or esc] Back          │
+└──────────────────────────┘
 
 If the player selects the [h] Help prompt then
 a DialogMessage is opened showing something like this:
