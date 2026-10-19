@@ -7,6 +7,7 @@
 #include <cui/menus/MenuBetting.h>
 #include <cui/menus/MenuPivot.h>
 #include <cui/menus/MenuOddsBet.h>
+#include <cui/dialogs/DialogBetAmount.h>
 #include <cui/dialogs/DialogMessage.h>
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
@@ -242,7 +243,7 @@ MenuBetting::doGetAmount()
     LOG_TRACE("MenuBetting::doGetAmount() " + EnumBetName::toString(betName_));
     
     populateCarrier();
-    activateDialogAmount();
+    activateDialogBetAmount();
 }
 
 //----------------------------------------------------------------
@@ -312,10 +313,9 @@ MenuBetting::doRollDice()
 //----------------------------------------------------------------
 
 void
-MenuBetting::activateDialogAmount()
+MenuBetting::activateDialogBetAmount()
 {
-    // TODO
-    // ConsoleManager::pushSurface(AmountDialog);
+    SurfaceManager::instance().pushSurface(&DialogBetAmount::instance());
 }
 
 //----------------------------------------------------------------

@@ -5,6 +5,7 @@
 //---------------------------------------------------------------
 
 #include <cui/managers/CarrierBet.h>
+#include <controller/AutoFill.h>
 #include <gen/Logger.h>
 #include <cassert>
 
@@ -151,7 +152,7 @@ CarrierBet::wantOdds() const
 //----------------------------------------------------------------
 
 std::string
-CarrierBet::getTitleAmount() const
+CarrierBet::getTitleBetAmount() const
 {
     std::string oddsStr;   // empty
     std::string pivotStr;  // empty
@@ -169,6 +170,21 @@ CarrierBet::getTitleAmount() const
     
     return EnumBetName::toString(betName_) +
            oddsStr + " Bet" + pivotStr;
+}
+
+//----------------------------------------------------------------
+
+void
+CarrierBet::setAutoFill()
+{
+    Ctrl::AutoFill::AutoFillEntry afe
+    {
+        betName_,
+        pivot_,
+        wantOdds_,
+        wantOdds_ ? oddsAmount_ : contractAmount_
+    };
+    Ctrl::AutoFill::instance().setAutoFill(afe);
 }
 
 //----------------------------------------------------------------

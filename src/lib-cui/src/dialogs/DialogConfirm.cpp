@@ -32,7 +32,7 @@ DialogConfirm::instance()
 //----------------------------------------------------------------
 //
 void
-DialogConfirm::configure(const std::string& textLine)
+DialogConfirm::configure(std::string_view textLine)
 {
     text_ = textLine;
     configured_ = true;

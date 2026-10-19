@@ -53,7 +53,7 @@ private:
     void doQuickBet();
     void doRollDice();
     void populateCarrier();
-    void activateDialogAmount();
+    void activateDialogBetAmount();
     void activateMenuPivot();
     void activateMenuOddsBet();
     bool hasQualifyingOddsBets();

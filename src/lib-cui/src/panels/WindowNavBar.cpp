@@ -73,7 +73,7 @@ WindowNavBar::populate()
 // Allow caller to specify the content of the nav bar window.
 //
 void
-WindowNavBar::configure(const std::string& textLine)
+WindowNavBar::configure(std::string_view textLine)
 {
     werase(pWin_);
     textLine_ = textLine;

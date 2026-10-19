@@ -217,7 +217,7 @@ WindowAnimation::drawAnimationShooter()
 //----------------------------------------------------------------
 
 void
-WindowAnimation::drawShooter(const std::string& name, PlayerColor pc)
+WindowAnimation::drawShooter(std::string_view name, PlayerColor pc)
 {
     std::string label = "Shooter: ";
     int len = label.size() + name.size();
@@ -227,7 +227,7 @@ WindowAnimation::drawShooter(const std::string& name, PlayerColor pc)
     mvwaddstr(pWin_, 0, startPos, label.c_str());
 
     wattron(pWin_, COLOR_PAIR(ColorManager::instance().pair(pc)));
-    mvwaddstr(pWin_, 0, startPos + label.size(), name.c_str());
+    mvwaddstr(pWin_, 0, startPos + label.size(), name.data()); 
     wattroff(pWin_, COLOR_PAIR(ColorManager::instance().pair(pc)));
 }
 

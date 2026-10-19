@@ -154,8 +154,8 @@ DialogBetAmount::drawPrompts()
 void
 DialogBetAmount::drawTitle()
 {
-    const std::string title = CarrierBet::instance().getTitleAmount();
-    std::string s = prepTitle(title);
+    const std::string title = CarrierBet::instance().getTitleBetAmount();
+    const std::string s = prepTitle(title);
     mvwaddstr(pWin_, 1, 2, s.c_str());
 }
 
