@@ -53,6 +53,7 @@ using GameEvent = std::variant<
     Ctrl::UslBettingOpened,
     Ctrl::UslBetMade,
     Ctrl::UslBetResolved,
+    Ctrl::UslAutoFillChanged,
     Ctrl::UslTableBalanceChanged,
     Ctrl::UslPlayerBalanceChanged
     >;

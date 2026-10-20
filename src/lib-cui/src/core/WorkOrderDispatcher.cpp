@@ -213,6 +213,22 @@ WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslAutoFillChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslAutoFillChanged)");
+
+    // TODO
+    // WindowMessageArea::instance().onAutoFillChanged(
+    //         Craps::PlayerId playerId;
+    //         BetName         betName;
+    //         unsigned        pivot;
+    //         bool            forOdds;
+    //         Gen::Money      amount;
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslTableBalanceChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslTableBalanceChanged)");

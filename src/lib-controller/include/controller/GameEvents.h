@@ -57,6 +57,7 @@ enum class EventType
     UslTableBalanceChanged,    // not yet implemented
     UslPlayerBalanceChanged,   // not yet implemented
 
+    UslAutoFillChanged,
     UslPlayerJoinedTable,
     UslPlayerLeftTable,
     UslCountdownRollDice       // not yet implemented
@@ -272,6 +273,21 @@ struct UslBetResolved : public GameEvent
 
     UslBetResolved()
         : GameEvent{EventSource::Model, EventType::UslBetResolved}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslAutoFillChanged : public GameEvent
+{
+    Craps::PlayerId playerId;                      ///< Player ID  
+    BetName         betName = BetName::Invalid;    ///< Bet Name   
+    unsigned        pivot   = 0;                   ///< Bet ID     
+    bool            forOdds = false;               ///< Amount won 
+    Gen::Money      amount  = 0;                   ///< Amount lost
+            
+    UslAutoFillChanged()
+        : GameEvent{EventSource::Model, EventType::UslAutoFillChanged}
     {}
 };
 

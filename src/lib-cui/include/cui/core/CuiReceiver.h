@@ -40,6 +40,7 @@ private:
     void onBettingOpened       (const Ctrl::UslBettingOpened& ev)        const;
     void onBetMade             (const Ctrl::UslBetMade& ev)              const;
     void onBetResolved         (const Ctrl::UslBetResolved& ev)          const;
+    void onAutoFillChanged     (const Ctrl::UslAutoFillChanged& ev)      const;
     void onTableBalanceChanged (const Ctrl::UslTableBalanceChanged& ev)  const;
     void onPlayerBalanceChanged(const Ctrl::UslPlayerBalanceChanged& ev) const;
 };
