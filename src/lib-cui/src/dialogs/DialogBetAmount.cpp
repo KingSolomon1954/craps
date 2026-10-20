@@ -182,7 +182,7 @@ DialogBetAmount::handleKey(int ch)
     case '\r':
     case '\n':
     case KEY_ENTER: doEnter();      return true;
-    case 's' : doAutoFill();        return true;
+    case 'a' : doAutoFill();        return true;
     case 'q' : doQuickBet();        return true;
     case '?' : doHelp();            return true;
     case '.' :
@@ -275,9 +275,7 @@ void
 DialogBetAmount::doAutoFill()
 {
     CarrierBet::instance().setAmount(inputAmount_);
-    
-    // TODO - maybe tell CarrierBet to do auto fill
-    // CarrierBet::instance().doAutoFill();
+    CarrierBet::instance().setAutoFill();
 }    
 
 //----------------------------------------------------------------
@@ -286,9 +284,7 @@ void
 DialogBetAmount::doQuickBet()
 {
     CarrierBet::instance().setAmount(inputAmount_);
-    
-    // TODO - maybe tell CarrierBet to do quickBet
-    // CarrierBet::instance().doQuickBet();
+    CarrierBet::instance().setQuickBet();
 }    
 
 //----------------------------------------------------------------

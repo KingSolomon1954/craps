@@ -37,14 +37,17 @@ Implement the many MenuConfiguration options
 Need to inhibit various actions during animation roll
 Need OperationTracker (manages interactive lifecycle)
 OperationTracker needs correlationId matching
-Rewrite QuickBet for new CUI design
+Implement QuickBet::applyQuickBet for new CUI design
 Implement ReqMakeBet, to include UndoManager
+Implement WindowMessageArea
 Add dialog confirm when quitting game tied to operations manager
 Complete the first round-trip bet made by the CUI.
 
-(Done) Added new event UslAutoFillChanged.
-(Done) Lift out DialogAmount LineInput processing, make it resuable.
-(Done) Fix DialogAmount line input processing, show cursor.
+(Done) Implemented ReqAutoFill and ReqQuickBet
+(Done) Added new event UslQuickBetChanged. Published it
+(Done) Added new event UslAutoFillChanged. Published it
+(Done) Made LineInput processing resuable. New class LineInput
+(Done) Fix DialogAmount line input processing, show cursor
 (Done) Elminated configure() in menus, using CarrierBet instead
 (Done) In CUI, implemented DialogAmount
 (Done) Bring DialogMessage and DialogError into alignment

@@ -32,6 +32,7 @@ public:
     void setOddsAmount    (const Gen::Money& amount);
     void setDesireOdds    ();
     void setAutoFill      ();
+    void setQuickBet      ();
     /// @}
 
     /// @name Observers
@@ -43,20 +44,19 @@ public:
     Gen::Money        getOddsAmount    () const;
     Gen::Money        getPreFillAmount () const;
     std::string       getTitleBetAmount() const;
-    bool              wantOdds         () const;
+    bool              isOddsBet        () const;
     /// @}
 
 private:
     CarrierBet() = default;  // Private ctor
 
     Craps::PlayerId playerId_;
-    Craps::BetId    betId_   = 0;
-    BetName         betName_ = BetName::Invalid;
-    unsigned        pivot_   = 0;
-    Gen::Money      contractAmount_;
-    Gen::Money      oddsAmount_;
-    bool            wantOdds_ = false;
-
+    Craps::BetId    betId_          = 0;
+    BetName         betName_        = BetName::Invalid;
+    unsigned        pivot_          = 0;
+    Gen::Money      contractAmount_ = 0;
+    Gen::Money      oddsAmount_     = 0;
+    bool            isOddsBet_      = false;
 };
 
 /*-----------------------------------------------------------*//**

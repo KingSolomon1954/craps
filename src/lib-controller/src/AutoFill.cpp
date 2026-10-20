@@ -54,11 +54,11 @@ AutoFill::setAutoFill(const AutoFillEntry& afe)
     }
 
     Ctrl::UslAutoFillChanged ev;
-    ev.playerId = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
-    ev.betName  = afe.betName;
-    ev.pivot    = afe.pivot;
-    ev.forOdds  = afe.isOddsBet;
-    ev.amount   = afe.amount;
+    ev.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
+    ev.betName   = afe.betName;
+    ev.pivot     = afe.pivot;
+    ev.isOddsBet = afe.isOddsBet;
+    ev.amount    = afe.amount;
 
     Gen::EventManager::instance().publish(ev);
 }

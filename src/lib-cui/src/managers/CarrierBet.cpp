@@ -5,7 +5,7 @@
 //---------------------------------------------------------------
 
 #include <cui/managers/CarrierBet.h>
-#include <controller/AutoFill.h>
+#include <cui/core/CuiSender.h>
 #include <gen/Logger.h>
 #include <cassert>
 
@@ -31,7 +31,7 @@ CarrierBet::clear()
     pivot_          = 0;
     oddsAmount_     = 0;
     contractAmount_ = 0;
-    wantOdds_       = false;
+    isOddsBet_      = false;
 }
 
 //----------------------------------------------------------------
@@ -63,7 +63,7 @@ CarrierBet::setPivot(unsigned pivot)
 void
 CarrierBet::setAmount(const Gen::Money& amount)
 {
-    if (wantOdds_)
+    if (isOddsBet_)
         oddsAmount_ = amount;
     else
         contractAmount_ = amount;
@@ -90,7 +90,7 @@ CarrierBet::setOddsAmount(const Gen::Money& amount)
 void
 CarrierBet::setDesireOdds()
 {
-    wantOdds_ = true;
+    isOddsBet_ = true;
 }
 
 //----------------------------------------------------------------
@@ -144,9 +144,9 @@ CarrierBet::getPreFillAmount() const
 //----------------------------------------------------------------
 
 bool
-CarrierBet::wantOdds() const
+CarrierBet::isOddsBet() const
 {
-    return wantOdds_;
+    return isOddsBet_;
 }
 
 //----------------------------------------------------------------
@@ -157,7 +157,7 @@ CarrierBet::getTitleBetAmount() const
     std::string oddsStr;   // empty
     std::string pivotStr;  // empty
     
-    if (wantOdds_)
+    if (isOddsBet_)
     {
         assert(pivot_ != 0);
         oddsStr = " Odds ";
@@ -177,31 +177,23 @@ CarrierBet::getTitleBetAmount() const
 void
 CarrierBet::setAutoFill()
 {
-    Ctrl::AutoFill::AutoFillEntry afe
-    {
+    CuiSender::instance().reqAutoFill(
         betName_,
         pivot_,
-        wantOdds_,
-        wantOdds_ ? oddsAmount_ : contractAmount_
-    };
-    Ctrl::AutoFill::instance().setAutoFill(afe);
+        isOddsBet_,
+        isOddsBet_ ? oddsAmount_ : contractAmount_);
 }
 
 //----------------------------------------------------------------
 
-
-#if 0
-
-// TODO responsible for building titles for various menus
-// menus and dialogs will query CarrierBet for a title.
-
-//----------------------------------------------------------------
-
-std::string
-MenuPivot::amtTitle(int pivot)
+void
+CarrierBet::setQuickBet()
 {
-    return EnumBetName::toString(betName_) +
-           " Bet on the " + std::to_string(pivot);
+    CuiSender::instance().reqQuickBet(
+        betName_,
+        pivot_,
+        isOddsBet_,
+        isOddsBet_ ? oddsAmount_ : contractAmount_);
 }
 
-#endif
+//----------------------------------------------------------------

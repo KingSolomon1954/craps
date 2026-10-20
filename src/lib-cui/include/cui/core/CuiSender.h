@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <craps/EnumBetName.h>
+#include <gen/MoneyUtils.h>
+
 namespace Cui {
 
 class CuiSender
@@ -21,6 +24,14 @@ public:
     /// @name Modifiers
     /// @{
     void reqRollDice();
+    void reqAutoFill(BetName betName,
+                     unsigned pivot,
+                     bool isOddsBet,
+                     Gen::Money amount);
+    void reqQuickBet(BetName betName,
+                     unsigned pivot,
+                     bool isOddsBet,
+                     Gen::Money amount);
     /// @}
 
     /// @name Observers

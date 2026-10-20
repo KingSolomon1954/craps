@@ -32,6 +32,9 @@ enum class EventType
     ReqMakeBet,
     ReqRemoveBet,              // not yet implemented
     ReqChangeBet,              // not yet implemented
+    ReqAutoFill,
+    ReqQuickBet,
+
     ReqTerminate,
 
     // Responses
@@ -50,14 +53,15 @@ enum class EventType
     UslPassLineWinner,
     UslNewShooter,
     UslBettingOpened,
-    UslBetMade,                // not yet implemented
-    UslBetResolved,            // not yet implemented
+    UslBetMade,
+    UslBetResolved,
     UslBetRemoved,             // not yet implemented
     UslBetChanged,             // not yet implemented
-    UslTableBalanceChanged,    // not yet implemented
-    UslPlayerBalanceChanged,   // not yet implemented
+    UslTableBalanceChanged,
+    UslPlayerBalanceChanged,
 
     UslAutoFillChanged,
+    UslQuickBetChanged,
     UslPlayerJoinedTable,
     UslPlayerLeftTable,
     UslCountdownRollDice       // not yet implemented
@@ -280,14 +284,29 @@ struct UslBetResolved : public GameEvent
 
 struct UslAutoFillChanged : public GameEvent
 {
-    Craps::PlayerId playerId;                      ///< Player ID  
-    BetName         betName = BetName::Invalid;    ///< Bet Name   
-    unsigned        pivot   = 0;                   ///< Bet ID     
-    bool            forOdds = false;               ///< Amount won 
-    Gen::Money      amount  = 0;                   ///< Amount lost
+    Craps::PlayerId playerId;                        ///< Player ID  
+    BetName         betName   = BetName::Invalid;    ///< Bet Name   
+    unsigned        pivot     = 0;                   ///< Bet ID     
+    bool            isOddsBet = false;               ///< Amount is for odds
+    Gen::Money      amount    = 0;                   ///< Amount
             
     UslAutoFillChanged()
         : GameEvent{EventSource::Model, EventType::UslAutoFillChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslQuickBetChanged : public GameEvent
+{
+    Craps::PlayerId playerId;                        ///< Player ID  
+    BetName         betName   = BetName::Invalid;    ///< Bet Name   
+    unsigned        pivot     = 0;                   ///< Bet ID     
+    bool            isOddsBet = false;               ///< Amount is for odds
+    Gen::Money      amount    = 0;                   ///< Amount
+            
+    UslQuickBetChanged()
+        : GameEvent{EventSource::Model, EventType::UslQuickBetChanged}
     {}
 };
 
@@ -323,6 +342,34 @@ struct ReqRollDice : public GameEvent
 {
     ReqRollDice()
         : GameEvent{EventSource::View, EventType::ReqRollDice}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct ReqAutoFill : public GameEvent              // No response to this
+{
+    BetName         betName   = BetName::Invalid;  ///< Bet Name   
+    unsigned        pivot     = 0;                 ///< Bet ID     
+    bool            isOddsBet = false;             ///< Amount is for odds
+    Gen::Money      amount    = 0;                 ///< Amount
+
+    ReqAutoFill()
+        : GameEvent{EventSource::View, EventType::ReqAutoFill}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct ReqQuickBet : public GameEvent              // No response to this
+{
+    BetName         betName   = BetName::Invalid;  ///< Bet Name   
+    unsigned        pivot     = 0;                 ///< Bet ID     
+    bool            isOddsBet = false;             ///< Amount is for odds
+    Gen::Money      amount    = 0;                 ///< Amount
+
+    ReqQuickBet()
+        : GameEvent{EventSource::View, EventType::ReqQuickBet}
     {}
 };
 

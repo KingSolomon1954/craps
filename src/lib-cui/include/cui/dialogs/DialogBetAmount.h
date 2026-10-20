@@ -53,7 +53,7 @@ private:
         "Enter amount:",
         "",
         "[enter] Submit Bet",
-        "[s] Save as AutoFill",
+        "[a] Save as AutoFill",
         "[q] Save as Quick Bet",
         "[?] Help",
         "[. or esc] Back"

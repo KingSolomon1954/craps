@@ -229,6 +229,22 @@ WorkOrderDispatcher::process(const Ctrl::UslAutoFillChanged& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslQuickBetChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslQuickBetChanged)");
+
+    // TODO
+    // WindowMessageArea::instance().onQuickBetChanged(
+    //         Craps::PlayerId playerId;
+    //         BetName         betName;
+    //         unsigned        pivot;
+    //         bool            forOdds;
+    //         Gen::Money      amount;
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslTableBalanceChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslTableBalanceChanged)");

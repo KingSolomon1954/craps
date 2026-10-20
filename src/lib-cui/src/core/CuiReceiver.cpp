@@ -123,6 +123,13 @@ CuiReceiver::CuiReceiver()
         {
             this->onAutoFillChanged(ev);
         });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslQuickBetChanged");
+    Gen::EventManager::instance().subscribe<Ctrl::UslQuickBetChanged>(
+        [this](const Ctrl::UslQuickBetChanged& ev)
+        {
+            this->onQuickBetChanged(ev);
+        });
 }
 
 //----------------------------------------------------------------
@@ -281,6 +288,17 @@ void
 CuiReceiver::onAutoFillChanged(const Ctrl::UslAutoFillChanged& ev) const
 {
     LOG_TRACE("CuiReceiver()::onAutoFillChanged()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onQuickBetChanged(const Ctrl::UslQuickBetChanged& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onQuickBetChanged()");
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);

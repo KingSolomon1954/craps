@@ -42,6 +42,7 @@ private:
     void process(const Ctrl::UslBettingOpened& ev);
     void process(const Ctrl::UslBetResolved& ev);
     void process(const Ctrl::UslAutoFillChanged& ev);
+    void process(const Ctrl::UslQuickBetChanged& ev);
     void process(const Ctrl::UslTableBalanceChanged& ev);
     void process(const Ctrl::UslPlayerBalanceChanged& ev);
 };
