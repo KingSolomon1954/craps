@@ -294,8 +294,8 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
     if (pBet == nullptr || fifBadAddBet(pBet, ep))
     {
         ep.prepend(s);
-        ep.setErrorName("Betting Error");
-        ep.setErrorType(Et::ProcessingError);
+        // ep.setErrorName() is set in lower functions
+        ep.setErrorType("Betting Error");
         ep.setSeverity(Es::Indeterminate);
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }

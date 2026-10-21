@@ -6,6 +6,7 @@
 
 #include <cui/core/WorkOrderDispatcher.h>
 #include <cui/managers/SurfaceManager.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/panels/WindowAnimation.h>
 #include <cui/panels/WindowHouseBrief.h>
 #include <cui/panels/WindowPlayerBrief.h>
@@ -113,7 +114,7 @@ WorkOrderDispatcher::process(const Ctrl::UslDiceNewValue& ev)
     
     WindowAnimation::instance().onDiceNewValue  (ev.d1, ev.d2, ev.rollCount);
     WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
-    WindowTitleBar::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
+    WindowTitleBar::instance().onDiceNewValue   (ev.d1, ev.d2, ev.rollCount);
 }
 
 //----------------------------------------------------------------
@@ -134,7 +135,7 @@ WorkOrderDispatcher::process(const Ctrl::UslPointEstablished& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslPointEstablished)");
 
-    WindowTitleBar::instance().onPointEstablished(ev.point);
+    WindowTitleBar::instance().onPointEstablished   (ev.point);
     WindowRollHistory::instance().onPointEstablished(ev.point);
 }
 
@@ -168,7 +169,7 @@ WorkOrderDispatcher::process(const Ctrl::UslNewShooter& ev)
     LOG_TRACE("WorkOrderDispatcher::process(UslNewShooter)");
 
     WindowPlayerBrief::instance().onNewShooter(ev.playerId);
-    WindowAnimation::instance().onNewShooter(ev.playerId);
+    WindowAnimation::instance().onNewShooter  (ev.playerId);
 }
 
 //----------------------------------------------------------------
@@ -262,6 +263,15 @@ WorkOrderDispatcher::process(const Ctrl::UslPlayerBalanceChanged& ev)
 
     WindowPlayerBrief::instance().onPlayerBalanceChanged(
         ev.playerId, ev.balance, ev.netBalance);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspMakeBet& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspMakeBet)");
+    OperationManager::instance().onMakeBetResponse(ev);
 }
 
 //----------------------------------------------------------------

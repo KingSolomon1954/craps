@@ -45,6 +45,14 @@ CarrierBet::setPlayerId(const Craps::PlayerId& id)
 //----------------------------------------------------------------
 
 void
+CarrierBet::setBetId(Craps::BetId betId)
+{
+    betId_ = betId;
+}
+
+//----------------------------------------------------------------
+
+void
 CarrierBet::setBetName(BetName betName)
 {
     betName_ = betName;
@@ -99,6 +107,14 @@ Craps::PlayerId
 CarrierBet::getPlayerId() const
 {
     return playerId_;
+}
+
+//----------------------------------------------------------------
+
+Craps::BetId
+CarrierBet::getBetId() const
+{
+    return betId_;
 }
 
 //----------------------------------------------------------------

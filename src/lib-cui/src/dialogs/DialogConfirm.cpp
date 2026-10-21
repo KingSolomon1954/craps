@@ -6,6 +6,7 @@
 
 #include <cui/dialogs/DialogConfirm.h>
 #include <cui/managers/SurfaceManager.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/core/CuiUtils.h>
 #include <cassert>
 
@@ -198,6 +199,7 @@ DialogConfirm::processSelection(OperationResult r)
 {
     setOperationResult(r);
     SurfaceManager::instance().popSurface();
+    OperationManager::instance().onConfirmationResult(r);
 }
 
 //----------------------------------------------------------------

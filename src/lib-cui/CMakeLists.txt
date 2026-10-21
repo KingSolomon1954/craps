@@ -21,6 +21,7 @@ add_library(cui STATIC
     src/managers/CarrierBet.cpp
     src/managers/ColorManager.cpp
     src/managers/LocationManager.cpp
+    src/managers/OperationManager.cpp
     src/managers/SurfaceManager.cpp
     src/menus/MenuBetting.cpp
     src/menus/MenuControl.cpp

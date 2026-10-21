@@ -22,6 +22,54 @@ CuiSender::instance()
 
 //----------------------------------------------------------------
 
+Ctrl::CorrelationId
+CuiSender::reqMakeBet(const Craps::PlayerId& playerId,
+                      BetName betName,
+                      Gen::Money contractAmount,
+                      unsigned pivot)
+{
+    LOG_TRACE("CuiSender::reqMakeBet()");
+
+    Ctrl::ReqMakeBet ev;
+    ev.playerId       = playerId;
+    ev.betName        = betName;
+    ev.contractAmount = contractAmount;
+    ev.pivot          = pivot;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
+CuiSender::reqOddsBet(const Craps::PlayerId& playerId,
+                      Craps::BetId betId,
+                      Gen::Money oddsAmount)
+{
+    LOG_TRACE("CuiSender::reqOddsBet()");
+
+    Ctrl::ReqOddsBet ev;
+    ev.playerId       = playerId;
+    ev.betId          = betId;
+    ev.oddsAmount     = oddsAmount;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+void
+CuiSender::reqTerminate()
+{
+    LOG_TRACE("CuiSender::reqTerminate()");
+
+    Gen::EventManager::instance().publish(Ctrl::ReqTerminate{});
+}
+
+//----------------------------------------------------------------
+
 void
 CuiSender::reqRollDice()
 {
@@ -33,9 +81,9 @@ CuiSender::reqRollDice()
 //----------------------------------------------------------------
 
 void
-CuiSender::reqAutoFill(BetName betName,
-                       unsigned pivot,
-                       bool isOddsBet,
+CuiSender::reqAutoFill(BetName    betName,
+                       unsigned   pivot,
+                       bool       isOddsBet,
                        Gen::Money amount)
 {
     LOG_TRACE("CuiSender::reqAutoFill()");
@@ -51,9 +99,9 @@ CuiSender::reqAutoFill(BetName betName,
 //----------------------------------------------------------------
 
 void
-CuiSender::reqQuickBet(BetName betName,
-                       unsigned pivot,
-                       bool isOddsBet,
+CuiSender::reqQuickBet(BetName    betName,
+                       unsigned   pivot,
+                       bool       isOddsBet,
                        Gen::Money amount)
 {
     LOG_TRACE("CuiSender::reqQuickBet()");

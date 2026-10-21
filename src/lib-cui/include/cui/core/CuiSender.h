@@ -8,6 +8,8 @@
 
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>
+#include <craps/CrapsTypes.h>
+#include <controller/GameEvents.h>
 
 namespace Cui {
 
@@ -23,7 +25,15 @@ public:
 
     /// @name Modifiers
     /// @{
+    void reqTerminate();
     void reqRollDice();
+    Ctrl::CorrelationId reqMakeBet(const Craps::PlayerId& playerId,
+                                   BetName betName,
+                                   Gen::Money contractAmount,
+                                   unsigned pivot);
+    Ctrl::CorrelationId reqOddsBet(const Craps::PlayerId& playerId,
+                                   Craps::BetId betId,
+                                   Gen::Money oddsAmount);
     void reqAutoFill(BetName betName,
                      unsigned pivot,
                      bool isOddsBet,

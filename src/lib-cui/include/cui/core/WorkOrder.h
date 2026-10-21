@@ -56,7 +56,8 @@ using GameEvent = std::variant<
     Ctrl::UslAutoFillChanged,
     Ctrl::UslQuickBetChanged,
     Ctrl::UslTableBalanceChanged,
-    Ctrl::UslPlayerBalanceChanged
+    Ctrl::UslPlayerBalanceChanged,
+    Ctrl::RspMakeBet
     >;
     
 struct WorkOrderEvent

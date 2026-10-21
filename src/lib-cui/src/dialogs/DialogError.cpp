@@ -8,6 +8,7 @@
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/managers/ColorManager.h>
 #include <cui/managers/SurfaceManager.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/Logger.h>
 #include <gen/StringUtils.h>
@@ -52,6 +53,7 @@ DialogError::configure(const Gen::ErrorPass& ep)
     eraseFields();
     buildDialogEntries(ep);
     calcSize();
+    LOG_TRACE("Exiting DialogError::configure()");
 }
 
 //----------------------------------------------------------------
@@ -86,8 +88,7 @@ void
 DialogError::formatTitle(const Gen::ErrorPass& ep)
 {
     Section& s = et_.title;  // convenience
-    
-    s.fmtdText[0] = " " + ep.errorTypeStr() + ". " + ep.errorNameStr() + ".";
+    s.fmtdText.push_back(" " + ep.errorTypeStr() + ". " + ep.errorNameStr() + ".");
     int introLen = titleStr_.size() + 4;  // +4 for 2 emojis
     s.nCols = s.fmtdText[0].size() + introLen;
     s.nRows = s.fmtdText.size();
@@ -694,6 +695,7 @@ DialogError::back()
 {
     setOperationResult(OperationResult::Acknowledged);
     SurfaceManager::instance().popSurface();
+    OperationManager::instance().onErrorAcknowledged();
 }
 
 //----------------------------------------------------------------

@@ -25,6 +25,7 @@ public:
     /// @{
     void clear();
     void setPlayerId      (const Craps::PlayerId& id);
+    void setBetId         (Craps::BetId betId);
     void setBetName       (BetName betName);
     void setPivot         (unsigned pivot);
     void setAmount        (const Gen::Money& amount);
@@ -38,6 +39,7 @@ public:
     /// @name Observers
     /// @{
     Craps::PlayerId   getPlayerId      () const;
+    Craps::BetId      getBetId         () const;
     BetName           getBetName       () const;
     unsigned          getPivot         () const;
     Gen::Money        getContractAmount() const;

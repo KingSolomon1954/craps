@@ -26,6 +26,13 @@ CuiReceiver::instance()
 
 CuiReceiver::CuiReceiver()
 {
+    LOG_TRACE("CuiReceiver() subscribing to RspMakeBet");
+    Gen::EventManager::instance().subscribe<Ctrl::RspMakeBet>(
+        [this](const Ctrl::RspMakeBet& ev)
+        {
+            this->onMakeBetResponse(ev);
+        });
+
     LOG_TRACE("CuiReceiver() subscribing to UslBettingClosed");
     Gen::EventManager::instance().subscribe<Ctrl::UslBettingClosed>(
         [this](const Ctrl::UslBettingClosed& ev)
@@ -130,6 +137,16 @@ CuiReceiver::CuiReceiver()
         {
             this->onQuickBetChanged(ev);
         });
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onMakeBetResponse(const Ctrl::RspMakeBet& ev) const
+{
+    LOG_TRACE("CuiReceiver::onMakeBetResponse()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
 }
 
 //----------------------------------------------------------------

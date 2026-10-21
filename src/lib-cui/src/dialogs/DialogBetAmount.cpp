@@ -8,6 +8,7 @@
 #include <cui/core/CuiUtils.h>
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/managers/CarrierBet.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
@@ -313,10 +314,9 @@ void
 DialogBetAmount::processAmount()
 {
     CarrierBet::instance().setAmount(inputAmount_);
-    // TODO
-    // Involve OperationManager:: make the bet
-    // Hang around, we'll get popped by SurfaceManager when
-    // op manager completes
+    // Keep this dialog active until the asynchronous request responds.
+    // OperationManager owns the rest of this workflow.
+    (void) OperationManager::instance().makeBet();
 }
 
 //----------------------------------------------------------------

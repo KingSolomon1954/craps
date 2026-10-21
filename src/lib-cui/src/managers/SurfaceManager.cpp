@@ -175,6 +175,22 @@ SurfaceManager::popSurface()
 //----------------------------------------------------------------
 
 void
+SurfaceManager::popToRoot()
+{
+    while (stack_.size() > 1)
+    {
+        SurfaceBase* pSurface = stack_.back();
+        stack_.pop_back();
+        locationMgr_.release(pSurface->surfaceName());
+        pSurface->onDetach();
+        stack_.back()->onResume();
+    }
+    draw();
+}
+
+//----------------------------------------------------------------
+
+void
 SurfaceManager::popSurfaces()
 {
     LOG_TRACE("SurfaceManager::popSurfaces()");

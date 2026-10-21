@@ -8,6 +8,7 @@
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>
+#include <gen/ErrorPass.h>
 #include <atomic>
 #include <string>
 #include <chrono>
@@ -30,6 +31,7 @@ enum class EventType
     // Requests
     ReqRollDice,
     ReqMakeBet,
+    ReqOddsBet,
     ReqRemoveBet,              // not yet implemented
     ReqChangeBet,              // not yet implemented
     ReqAutoFill,
@@ -38,7 +40,8 @@ enum class EventType
     ReqTerminate,
 
     // Responses
-    RspMakeBet,                // not yet implemented
+    RspMakeBet,
+    RspOddsBet,
     RspRemoveBet,              // not yet implemented
     RspChangeBet,              // not yet implemented
 
@@ -336,6 +339,61 @@ struct UslPlayerLeftTable : public GameEvent
 //
 // Requests
 //
+//----------------------------------------------------------------
+
+struct ReqMakeBet : public GameEvent
+{
+    Craps::PlayerId playerId;
+    BetName         betName = BetName::Invalid;
+    unsigned        pivot = 0;
+    Gen::Money      contractAmount = 0;
+
+    ReqMakeBet()
+        : GameEvent{EventSource::View, EventType::ReqMakeBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct RspMakeBet : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    Craps::BetId    betId = 0;
+    Gen::ErrorPass  error;
+
+    RspMakeBet()
+        : GameEvent{EventSource::Controller, EventType::RspMakeBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct ReqOddsBet : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId = 0;
+    Gen::Money      oddsAmount = 0;
+
+    ReqOddsBet()
+        : GameEvent{EventSource::View, EventType::ReqOddsBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct RspOddsBet : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    Craps::BetId    betId = 0;
+    Gen::ErrorPass  error;
+
+    RspOddsBet()
+        : GameEvent{EventSource::Controller, EventType::RspOddsBet}
+    {}
+};
+
 //----------------------------------------------------------------
 
 struct ReqRollDice : public GameEvent
