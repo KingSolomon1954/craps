@@ -94,6 +94,12 @@ CuiSender::reqAutoFill(BetName    betName,
     ev.isOddsBet = isOddsBet;
     ev.amount    = amount;
     Gen::EventManager::instance().publish(ev);
+
+LOG_TRACE("CuiSender::reqAutoFill()"
+          " betName:" + EnumBetName::toString(betName)    +
+          " pivot:"   + std::to_string(pivot)             +
+          " isOdds:"  + (isOddsBet ? "true" : "false" ) +
+          " amount:"  + std::to_string(amount));
 }
 
 //----------------------------------------------------------------

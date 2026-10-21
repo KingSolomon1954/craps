@@ -232,42 +232,89 @@ DialogBetAmount::drawInput()
 
 //----------------------------------------------------------------
 
-void
-DialogBetAmount::doEnter()
+bool
+DialogBetAmount::readInputAmount()
 {
-    if (lineInput_.value().empty())
+    const std::string& value = lineInput_.value();
+
+    if (value.empty())
+        return false;
+
+    try
     {
-        beep();  // Reject empty input
-        return;
+        std::size_t parsed = 0;
+        const long long val = std::stoll(value, &parsed);
+
+        // Require the entire input to be valid.
+        if (parsed != value.size() ||
+            val < 0 ||
+            val > std::numeric_limits<Gen::Money>::max())
+        {
+            return false;
+        }
+
+        inputAmount_ = static_cast<Gen::Money>(val);
+        return true;
+    }
+    catch (const std::invalid_argument&)
+    {
+        return false;
+    }
+    catch (const std::out_of_range&)
+    {
+        return false;
+    }
+}
+
+#if 0
+
+bool
+DialogBetAmount::updateInputAmount()
+{
+    if (lineBuffer_.empty())
+    {
+        inputAmount_ = 0;
+        return false;
     }
 
     try
     {
-        long long val = std::stoll(lineInput_.value());
-        if (val < 0)
-        {
-            beep();  // Reject negative values
-            return;
-        }
+        const long long val = std::stoll(lineBuffer_);
 
-        // Clamp to Gen::Money range if needed
-        if (val > std::numeric_limits<Gen::Money>::max())
+        // Reject invalid or partially parsed input.
+        if (val < 0 ||
+            val > std::numeric_limits<Gen::Money>::max())
         {
-            beep();
-            return;
+            return false;
         }
 
         inputAmount_ = static_cast<Gen::Money>(val);
-        processAmount();
+        return true;
     }
     catch (const std::invalid_argument&)
     {
-        beep(); // Non-numeric input
+        return false;
     }
     catch (const std::out_of_range&)
     {
-        beep(); // Too large for stoll
+        return false;
     }
+}
+
+#endif
+
+//----------------------------------------------------------------
+
+void
+DialogBetAmount::doEnter()
+{
+    if (!readInputAmount())
+    {
+        beep();
+        return;
+    }
+
+    processAmount();
 }
 
 //----------------------------------------------------------------
@@ -275,17 +322,29 @@ DialogBetAmount::doEnter()
 void
 DialogBetAmount::doAutoFill()
 {
+    if (!readInputAmount())
+    {
+        beep();
+        return;
+    }
+
     CarrierBet::instance().setAmount(inputAmount_);
-    CarrierBet::instance().setAutoFill();
-}    
+    OperationManager::instance().autoFill();
+}
 
 //----------------------------------------------------------------
 
 void
 DialogBetAmount::doQuickBet()
 {
+    if (!readInputAmount())
+    {
+        beep();
+        return;
+    }
+
     CarrierBet::instance().setAmount(inputAmount_);
-    CarrierBet::instance().setQuickBet();
+    OperationManager::instance().quickBet();
 }    
 
 //----------------------------------------------------------------
@@ -302,12 +361,31 @@ void
 DialogBetAmount::prepLineInput()
 {
     lineInput_.clear();
-    inputAmount_ = 0;
-    const auto preFill = CarrierBet::instance().getPreFillAmount();
-    if (preFill > 0)
-        lineInput_.setValue(std::to_string(preFill));
+    inputAmount_ = getPrefillAmount();
+    lineInput_.setValue(std::to_string(inputAmount_));
 }
 
+//----------------------------------------------------------------
+
+Gen::Money
+DialogBetAmount::getPrefillAmount() const
+{
+    const auto& cb = CarrierBet::instance();
+    
+    Ctrl::AutoFill::AutoFillEntry afe
+    {
+        cb.getBetName(),
+        cb.getPivot(),
+        cb.isOddsBet(),
+        0                  // AutoFill returns preFillAmount here
+    };
+
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::getAutoFill(afe, ep);
+    
+    return afe.amount;
+}
+    
 //----------------------------------------------------------------
 
 void

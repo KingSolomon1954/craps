@@ -78,9 +78,11 @@ private:
     void drawTitle();
     void drawInput();
     std::string prepTitle(const std::string& title);
+    Gen::Money getPrefillAmount() const;
 
     // Input processing
     void prepLineInput();
+    bool readInputAmount();
     void back();
     void doEnter();
     void doAutoFill();

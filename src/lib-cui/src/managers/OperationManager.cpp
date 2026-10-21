@@ -182,6 +182,43 @@ OperationManager::onConfirmationResult(SurfaceBase::OperationResult result)
 }
 
 //----------------------------------------------------------------
+//
+// Operation to Set Up an AutoFill
+//
+// DialogBetAmount calls this. This is a single-step operation, unlike
+// other workflows that have a lifetime across several menus.
+//
+void
+OperationManager::autoFill()
+{
+    const auto& cb = CarrierBet::instance();
+    CuiSender::instance().reqAutoFill(
+        cb.getBetName(),
+        cb.getPivot(),
+        cb.isOddsBet(),
+        cb.isOddsBet() ? cb.getOddsAmount() : cb.getContractAmount());
+}
+
+//----------------------------------------------------------------
+//
+// Operation to Set Up a QuickBet
+//
+// DialogBetAmount calls this. This is a single-step operation, unlike
+// other workflows that have a lifetime across several menus.
+//
+
+void
+OperationManager::quickBet()
+{
+    const auto& cb = CarrierBet::instance();
+    CuiSender::instance().reqQuickBet(
+        cb.getBetName(),
+        cb.getPivot(),
+        cb.isOddsBet(),
+        cb.isOddsBet() ? cb.getOddsAmount() : cb.getContractAmount());
+}
+
+//----------------------------------------------------------------
 
 void
 OperationManager::finish()

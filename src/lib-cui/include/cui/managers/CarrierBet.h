@@ -32,8 +32,6 @@ public:
     void setContractAmount(const Gen::Money& amount);
     void setOddsAmount    (const Gen::Money& amount);
     void setDesireOdds    ();
-    void setAutoFill      ();
-    void setQuickBet      ();
     /// @}
 
     /// @name Observers
@@ -44,7 +42,6 @@ public:
     unsigned          getPivot         () const;
     Gen::Money        getContractAmount() const;
     Gen::Money        getOddsAmount    () const;
-    Gen::Money        getPreFillAmount () const;
     std::string       getTitleBetAmount() const;
     bool              isOddsBet        () const;
     /// @}

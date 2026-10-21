@@ -901,17 +901,15 @@ CrapsReaders::readTableList()
 
 Gen::ReturnCode
 CrapsReaders::getAutoFill(
-    AutoFill::AutoFillEntry& entry,
+    AutoFill::AutoFillEntry& afe,
     Gen::ErrorPass& ep)
 {
-    AutoFill::AutoFillEntry afe;
-    if (AutoFill::instance().getAutoFill(afe) == Gen::ReturnCode::Success)
+    if (AutoFill::instance().getAutoFill(afe) == Gen::ReturnCode::Fail)
     {
-        entry.amount = afe.amount;
+        ep.setDescription("No such auto fill entry exists.");
         return Gen::ReturnCode::Fail;
     }
-    ep.setDescription("No such auto fill entry exists.");
-    return Gen::ReturnCode::Fail;
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

@@ -11,6 +11,7 @@
 #include <craps/CrapsTypes.h>
 #include <craps/Player.h>
 #include <gen/EventManager.h>
+#include <gen/Logger.h>
 #include <cassert>
 
 using namespace Ctrl;

@@ -5,7 +5,6 @@
 //---------------------------------------------------------------
 
 #include <cui/managers/CarrierBet.h>
-#include <cui/core/CuiSender.h>
 #include <gen/Logger.h>
 #include <cassert>
 
@@ -151,14 +150,6 @@ CarrierBet::getOddsAmount() const
 
 //----------------------------------------------------------------
 
-Gen::Money
-CarrierBet::getPreFillAmount() const
-{
-    return 0;
-}
-
-//----------------------------------------------------------------
-
 bool
 CarrierBet::isOddsBet() const
 {
@@ -186,30 +177,6 @@ CarrierBet::getTitleBetAmount() const
     
     return EnumBetName::toString(betName_) +
            oddsStr + " Bet" + pivotStr;
-}
-
-//----------------------------------------------------------------
-
-void
-CarrierBet::setAutoFill()
-{
-    CuiSender::instance().reqAutoFill(
-        betName_,
-        pivot_,
-        isOddsBet_,
-        isOddsBet_ ? oddsAmount_ : contractAmount_);
-}
-
-//----------------------------------------------------------------
-
-void
-CarrierBet::setQuickBet()
-{
-    CuiSender::instance().reqQuickBet(
-        betName_,
-        pivot_,
-        isOddsBet_,
-        isOddsBet_ ? oddsAmount_ : contractAmount_);
 }
 
 //----------------------------------------------------------------
