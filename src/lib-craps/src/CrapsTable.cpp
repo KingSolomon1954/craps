@@ -972,7 +972,7 @@ CrapsTable::disburseDone()
 {
     for (auto p : players_)
     {
-        p->bettingClosed();
+        p->disburseDone();
     }
 }
 

@@ -201,8 +201,11 @@ WindowHouseBrief::populateLast()
 void
 WindowHouseBrief::populateOnTable()
 {
+    std::string               b = " bets, ";
+    if (numBetsOnTable_ == 1) b = " bet, ";
+    
     std::string s = "On table: ";
-    s += std::to_string(numBetsOnTable_) + " bets, ";
+    s += std::to_string(numBetsOnTable_) + b;
     s += Gen::MoneyUtils::toString(amtOnTable_);
 
     mvwaddstr(pWin_, 4, 1, s.c_str());

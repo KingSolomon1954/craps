@@ -257,6 +257,39 @@ WorkOrderDispatcher::process(const Ctrl::UslTableBalanceChanged& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslPlayerBetsChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslPlayerBetsChanged)");
+
+    WindowPlayerBrief::instance().onPlayerBetsChanged(
+        ev.playerId, ev.numBetsOnTable, ev.amountOnTable);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslPlayerSessionStatsChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslPlayerSessionStatsChanged)");
+
+    WindowPlayerBrief::instance().onPlayerSessionStatsChanged(
+        ev.playerId, ev.numBetsWon, ev.numBetsLost);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslPlayerLastRollStatsChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslPlayerLastRollStatsChanged)");
+
+    WindowPlayerBrief::instance().onPlayerLastRollStatsChanged(
+        ev.playerId, ev.stats);
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslPlayerBalanceChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslPlayerBalanceChanged)");

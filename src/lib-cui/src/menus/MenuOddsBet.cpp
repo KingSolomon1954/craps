@@ -11,6 +11,7 @@
 #include <cui/core/CuiUtils.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
+#include <gen/Logger.h>
 #include <algorithm>
 #include <cassert>
 
@@ -44,6 +45,7 @@ MenuOddsBet::gatherBets()
     Craps::BetIds ids;
     getBetIds(ids);        // fills in betIdList
     gatherBetsDetail(ids); // bets_ is now populated
+    LOG_TRACE("Exiting MenuOddsBet::gatherBets()");
 }
 
 //----------------------------------------------------------------
@@ -102,6 +104,7 @@ MenuOddsBet::buildMenuEntries()
     menuEntries_.clear();
     buildMenuBets();
     addBackEntry();  // Add the entry to cancel
+    LOG_TRACE("Exiting MenuOddsBet::buildMenuEntries()");
 }
 
 //----------------------------------------------------------------
@@ -373,6 +376,8 @@ MenuOddsBet::back()
 void
 MenuOddsBet::processSelection(const Craps::BetId& betId)
 {
+    LOG_TRACE("MenuOddsBet::processSelection() betId:" + std::to_string(betId));
+    
     const BetInfo& bet = findBet(betId);
     populateCarrier(bet);
     activateDialogBetAmount();
@@ -383,6 +388,8 @@ MenuOddsBet::processSelection(const Craps::BetId& betId)
 MenuOddsBet::BetInfo&
 MenuOddsBet::findBet(const Craps::BetId& betId)
 {
+    LOG_TRACE("MenuOddsBet::findBet() size activeOddsBets:" + std::to_string(activeOddsBets_.size()));
+    
     auto it = std::find_if(
         activeOddsBets_.begin(),
         activeOddsBets_.end(),

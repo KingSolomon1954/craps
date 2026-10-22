@@ -41,10 +41,15 @@
 
 ### Implement WindowMessageArea
 
-### Complete the first round-trip bet made by the CUI.
-
 ### Implement ReqMakeBet, to include UndoManager
 
+### Fix MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?
+
+(Done) Debug & fix WindowPlayerBrief
+(Done) Added new events to populate WindowPlayerBrief
+(Done) Debug & fix WindowHouseBrief
+(Done) New events needed to populate WindowHouseBrief
+(Done) Complete the first round-trip bet made by the CUI
 (Done) Add DialogConfirm when quitting game tied to operations manager\
 (Done) OperationTracker needs correlationId matching\
 (Done) OperationTracker (manages interactive lifecycle)\

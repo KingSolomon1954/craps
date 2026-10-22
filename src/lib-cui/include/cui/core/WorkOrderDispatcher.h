@@ -30,7 +30,6 @@ private:
     void process(const WorkOrderSurface& wo);
     void process(const WorkOrderEvent& wo);
     
-    void process(const Ctrl::UslBetMade& ev);
     void process(const Ctrl::UslBettingClosed& ev);
     void process(const Ctrl::UslDiceThrowStart& ev);
     void process(const Ctrl::UslDiceNewValue& ev);
@@ -40,14 +39,28 @@ private:
     void process(const Ctrl::UslPassLineWinner& ev);
     void process(const Ctrl::UslNewShooter& ev);
     void process(const Ctrl::UslBettingOpened& ev);
+//  void process(const Ctrl::UslCountdownRollDice& ev);
+    
+    void process(const Ctrl::UslBetMade& ev);
     void process(const Ctrl::UslBetResolved& ev);
+//  void process(const Ctrl::UslBetRemoved& ev);
+//  void process(const Ctrl::UslBetChanged& ev);
+    void process(const Ctrl::UslAutoFillChanged& ev);
+    void process(const Ctrl::UslQuickBetChanged& ev);
+    
     void process(const Ctrl::UslTableBetsChanged& ev);
     void process(const Ctrl::UslTableSessionStatsChanged& ev);
     void process(const Ctrl::UslTableLastRollStatsChanged& ev);
     void process(const Ctrl::UslTableBalanceChanged& ev);
+
+    void process(const Ctrl::UslPlayerBetsChanged& ev);
+    void process(const Ctrl::UslPlayerSessionStatsChanged& ev);
+    void process(const Ctrl::UslPlayerLastRollStatsChanged& ev);
     void process(const Ctrl::UslPlayerBalanceChanged& ev);
-    void process(const Ctrl::UslAutoFillChanged& ev);
-    void process(const Ctrl::UslQuickBetChanged& ev);
+
+//  void process(const Ctrl::UslPlayerJoinedTable& ev);
+//  void process(const Ctrl::UslPlayerLeftTable& ev);
+    
     void process(const Ctrl::RspMakeBet& ev);
 };
 

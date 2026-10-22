@@ -14,7 +14,7 @@
 namespace Cui
 {
 
-    class WindowHouseBrief : PanelBase
+class WindowHouseBrief : PanelBase
 {
 public:
     /// @name Lifecycle
@@ -28,8 +28,8 @@ public:
     void onResolveBetsEnd();
     void onTableBetsChanged(unsigned numBetsOnTable, Gen::Money amountOnTable);
     void onTableSessionStatsChanged(unsigned numBetsWon, unsigned numBetsLost);
-    void onTableBalanceChanged(Gen::Money balance, int netBalance);
     void onTableLastRollStatsChanged(const Craps::LastRollStats& lrs);
+    void onTableBalanceChanged(Gen::Money balance, int netBalance);
     /// @}
 
     /// @name Observers

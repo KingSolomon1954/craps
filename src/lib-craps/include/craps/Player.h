@@ -138,11 +138,13 @@ private:
     BetPtr findBetById(const BetId& betId) const;
     bool removeBetByPtr(BetPtr& pBet);
     void setName(const std::string& playerName);
-    void sendEventBetResolved(const PlayerId& playerId,
-                              BetName         betName,
+    void sendEventBetResolved(BetName         betName,
                               BetId           betId,
                               Gen::Money      amountWin,
                               Gen::Money      amountLose) const;
+    void sendEventPlayerBetsChanged()                     const;
+    void sendEventPlayerSessionStatsChanged()             const;
+    void sendEventPlayerLastRollStatsChanged()            const;
     void sendEventPlayerBalanceChanged()                  const;
 
     // Validity checks with diagnostics

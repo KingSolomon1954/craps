@@ -9,6 +9,7 @@
 #include <cui/bases/PanelBase.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <craps/CrapsTypes.h>
+#include <craps/LastRollStats.h>
 #include <gen/MoneyUtils.h>
 
 namespace Cui
@@ -25,12 +26,22 @@ public:
     /// @name Modifiers
     /// @{
     void draw() override;
-    void onPlayerBalanceChanged(
-        Craps::PlayerId playerId,
-        Gen::Money      balance,         // how much left in wallet
-        int             netBalance);     // profit/loss this session
     void onResolveBetsEnd();
-    void onNewShooter(const Craps::PlayerId& playerId);
+    void onNewShooter(       const Craps::PlayerId& playerId);
+    void onPlayerBetsChanged(const Craps::PlayerId& playerId,
+                             unsigned numBetsOnTable,
+                             Gen::Money amountOnTable);
+    void onPlayerSessionStatsChanged(
+                             const Craps::PlayerId& playerId,
+                             unsigned numBetsWon,
+                             unsigned numBetsLost);
+    void onPlayerLastRollStatsChanged(
+                             const Craps::PlayerId& playerId,
+                             const Craps::LastRollStats& lrs);
+    void onPlayerBalanceChanged(
+                             const Craps::PlayerId& playerId,
+                             Gen::Money balance,  // how much left in wallet
+                             int netBalance);     // profit/loss this session
     /// @}
 
     /// @name Observers
