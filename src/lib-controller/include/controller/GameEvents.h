@@ -7,6 +7,7 @@
 #pragma once
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
+#include <craps/LastRollStats.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
 #include <atomic>
@@ -60,6 +61,10 @@ enum class EventType
     UslBetResolved,
     UslBetRemoved,             // not yet implemented
     UslBetChanged,             // not yet implemented
+    
+    UslTableBetsChanged,
+    UslTableSessionStatsChanged,
+    UslTableLastRollStatsChanged,
     UslTableBalanceChanged,
     UslPlayerBalanceChanged,
 
@@ -229,31 +234,6 @@ struct UslNewShooter : public GameEvent
 
 //----------------------------------------------------------------
 
-struct UslTableBalanceChanged : public GameEvent
-{
-    Gen::Money balance;          // how much left in bank
-    int        netBalance;       // profit/loss this session
-
-    UslTableBalanceChanged()
-        : GameEvent{EventSource::Model, EventType::UslTableBalanceChanged}
-    {}
-};
-
-//----------------------------------------------------------------
-
-struct UslPlayerBalanceChanged : public GameEvent
-{
-    Craps::PlayerId playerId;
-    Gen::Money      balance;     // how much left in bank
-    int             netBalance;  // profit/loss this session
-
-    UslPlayerBalanceChanged()
-        : GameEvent{EventSource::Model, EventType::UslPlayerBalanceChanged}
-    {}
-};
-
-//----------------------------------------------------------------
-
 struct UslBetMade : public GameEvent
 {
     Craps::PlayerId playerId;
@@ -280,6 +260,66 @@ struct UslBetResolved : public GameEvent
 
     UslBetResolved()
         : GameEvent{EventSource::Model, EventType::UslBetResolved}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslTableBetsChanged : public GameEvent
+{
+    unsigned   numBetsOnTable;
+    Gen::Money amountOnTable;
+
+    UslTableBetsChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableBetsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslTableSessionStatsChanged : public GameEvent
+{
+    unsigned numBetsWon;
+    unsigned numBetsLost;
+
+    UslTableSessionStatsChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableSessionStatsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslTableLastRollStatsChanged : public GameEvent
+{
+    Craps::LastRollStats stats;
+
+    UslTableLastRollStatsChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableLastRollStatsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslTableBalanceChanged : public GameEvent
+{
+    Gen::Money balance;          // how much left in bank
+    int        netBalance;       // profit/loss this session
+
+    UslTableBalanceChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableBalanceChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerBalanceChanged : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Gen::Money      balance;     // how much left in bank
+    int             netBalance;  // profit/loss this session
+
+    UslPlayerBalanceChanged()
+        : GameEvent{EventSource::Model, EventType::UslPlayerBalanceChanged}
     {}
 };
 

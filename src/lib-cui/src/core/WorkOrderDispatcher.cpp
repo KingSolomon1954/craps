@@ -214,6 +214,60 @@ WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslTableBetsChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslTableBetsChanged)");
+
+    WindowHouseBrief::instance().onTableBetsChanged(
+        ev.numBetsOnTable, ev.amountOnTable);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslTableSessionStatsChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslTableSessionStatsChanged)");
+
+    WindowHouseBrief::instance().onTableSessionStatsChanged(
+        ev.numBetsWon, ev.numBetsLost);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslTableLastRollStatsChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslTableLastRollStatsChanged)");
+
+    WindowHouseBrief::instance().onTableLastRollStatsChanged(ev.stats);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslTableBalanceChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslTableBalanceChanged)");
+
+    WindowHouseBrief::instance().onTableBalanceChanged(
+        ev.balance, ev.netBalance);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslPlayerBalanceChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslPlayerBalanceChanged)");
+
+    WindowPlayerBrief::instance().onPlayerBalanceChanged(
+        ev.playerId, ev.balance, ev.netBalance);
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslAutoFillChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslAutoFillChanged)");
@@ -241,28 +295,6 @@ WorkOrderDispatcher::process(const Ctrl::UslQuickBetChanged& ev)
     //         unsigned        pivot;
     //         bool            forOdds;
     //         Gen::Money      amount;
-}
-
-//----------------------------------------------------------------
-
-void
-WorkOrderDispatcher::process(const Ctrl::UslTableBalanceChanged& ev)
-{
-    LOG_TRACE("WorkOrderDispatcher::process(UslTableBalanceChanged)");
-
-    WindowHouseBrief::instance().onTableBalanceChanged(
-        ev.balance, ev.netBalance);
-}
-
-//----------------------------------------------------------------
-
-void
-WorkOrderDispatcher::process(const Ctrl::UslPlayerBalanceChanged& ev)
-{
-    LOG_TRACE("WorkOrderDispatcher::process(UslPlayerBalanceChanged)");
-
-    WindowPlayerBrief::instance().onPlayerBalanceChanged(
-        ev.playerId, ev.balance, ev.netBalance);
 }
 
 //----------------------------------------------------------------

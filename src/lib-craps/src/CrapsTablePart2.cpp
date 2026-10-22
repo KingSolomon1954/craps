@@ -364,7 +364,7 @@ CrapsTable::withinMinMaxSideBets(BetName betName,
                                  Gen::Money amt,
                                  Gen::ErrorPass& ep) const
 {
-    Gen::Money min, max = 0;
+    Gen::Money min{}, max{};
 
     if (betName == BetName::Field && (amt < minFieldBet_ || amt > maxFieldBet_))
     {

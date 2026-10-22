@@ -41,10 +41,13 @@ private:
     void process(const Ctrl::UslNewShooter& ev);
     void process(const Ctrl::UslBettingOpened& ev);
     void process(const Ctrl::UslBetResolved& ev);
-    void process(const Ctrl::UslAutoFillChanged& ev);
-    void process(const Ctrl::UslQuickBetChanged& ev);
+    void process(const Ctrl::UslTableBetsChanged& ev);
+    void process(const Ctrl::UslTableSessionStatsChanged& ev);
+    void process(const Ctrl::UslTableLastRollStatsChanged& ev);
     void process(const Ctrl::UslTableBalanceChanged& ev);
     void process(const Ctrl::UslPlayerBalanceChanged& ev);
+    void process(const Ctrl::UslAutoFillChanged& ev);
+    void process(const Ctrl::UslQuickBetChanged& ev);
     void process(const Ctrl::RspMakeBet& ev);
 };
 

@@ -143,6 +143,7 @@ private:
                               BetId           betId,
                               Gen::Money      amountWin,
                               Gen::Money      amountLose) const;
+    void sendEventPlayerBalanceChanged()                  const;
 
     // Validity checks with diagnostics
     void diagBadBetId(const std::string& funcName, BetId betId) const;

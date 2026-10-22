@@ -110,13 +110,34 @@ CuiReceiver::CuiReceiver()
             this->onBetResolved(ev);
         });
 
+    LOG_TRACE("CuiReceiver() subscribing to UslTableBetsChanged");
+    Gen::EventManager::instance().subscribe<Ctrl::UslTableBetsChanged>(
+        [this](const Ctrl::UslTableBetsChanged& ev)
+        {
+            this->onTableBetsChanged(ev);
+        });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslTableSessionStatsChanged");
+    Gen::EventManager::instance().subscribe<Ctrl::UslTableSessionStatsChanged>(
+        [this](const Ctrl::UslTableSessionStatsChanged& ev)
+        {
+            this->onTableSessionStatsChanged(ev);
+        });
+
+    LOG_TRACE("CuiReceiver() subscribing to UslTableLastRollStatsChanged");
+    Gen::EventManager::instance().subscribe<Ctrl::UslTableLastRollStatsChanged>(
+        [this](const Ctrl::UslTableLastRollStatsChanged& ev)
+        {
+            this->onTableLastRollStatsChanged(ev);
+        });
+
     LOG_TRACE("CuiReceiver() subscribing to UslTableBalanceChanged");
     Gen::EventManager::instance().subscribe<Ctrl::UslTableBalanceChanged>(
         [this](const Ctrl::UslTableBalanceChanged& ev)
         {
             this->onTableBalanceChanged(ev);
         });
-
+    
     LOG_TRACE("CuiReceiver() subscribing to UslPlayerBalanceChanged");
     Gen::EventManager::instance().subscribe<Ctrl::UslPlayerBalanceChanged>(
         [this](const Ctrl::UslPlayerBalanceChanged& ev)
@@ -272,6 +293,39 @@ void
 CuiReceiver::onBetResolved(const Ctrl::UslBetResolved& ev) const
 {
     LOG_TRACE("CuiReceiver()::onBetResolved()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onTableBetsChanged (const Ctrl::UslTableBetsChanged& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onTableBetsChanged()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onTableLastRollStatsChanged(const Ctrl::UslTableLastRollStatsChanged& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onTableLastRollStatsChanged()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+   
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onTableSessionStatsChanged(const Ctrl::UslTableSessionStatsChanged& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onTableSessionStatsChanged()");
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);

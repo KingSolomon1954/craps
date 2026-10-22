@@ -296,9 +296,10 @@ CrapsTable::removePlayer(Player& player)
     removePlayerBets(&player);   // Bet money given to the house bank.
     removePlayerByPtr(&player);
 
-    Ctrl::UslPlayerLeftTable ev;
-    ev.playerId = player.getPlayerId();
-    Gen::EventManager::instance().publish(ev);
+    sendEventPlayerLeftTable(player);
+    sendEventTableBetsChanged();
+    sendEventTableBalanceChanged();
+    
     return {};
 }
 
@@ -327,6 +328,7 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
 
     sendEventBetMade(*pBet);
+    sendEventTableBetsChanged();
 
     return Gen::ReturnCode::Success;
 }
@@ -416,8 +418,11 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
         ep.setErrorName("Betting Error");
         return Gen::ReturnCode::Fail;
     }
-
+    
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
+    
+    void sendEventTableBetsChanged();
+    
     return Gen::ReturnCode::Success;
 }
 
@@ -487,6 +492,8 @@ CrapsTable::setContractAmount(BetPtr pBet,
     if (fifBadMultiples     (*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
 
     pBet->setContractAmountInternal(newAmount);
+    sendEventTableBetsChanged();
+    
     return Gen::ReturnCode::Success;
 }
 
@@ -537,8 +544,30 @@ CrapsTable::setOddsAmount(BetPtr pBet,
     pBet->setOddsAmountInternal(oddsAmount);
 
     sendEventBetMade(*pBet);
+    sendEventTableBetsChanged();
 
     return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::sendEventPlayerLeftTable(const Player& player) const
+{
+    Ctrl::UslPlayerLeftTable ev;
+    ev.playerId = player.getPlayerId();
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::sendEventTableBalanceChanged() const
+{
+    Ctrl::UslTableBalanceChanged ev;
+    ev.balance    = getBalance();               // balance from session start
+    ev.netBalance = houseBank_.getSessionNet(); // profit/loss this session
+    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------
@@ -554,6 +583,39 @@ CrapsTable::sendEventBetMade(const CrapsBet& bet) const
     ev.oddsAmount     = bet.oddsAmount();
     ev.pivot          = bet.pivot();
 
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void        
+CrapsTable::sendEventTableSessionStatsChanged() const
+{
+    Ctrl::UslTableSessionStatsChanged ev;
+    ev.numBetsWon  = currentStats_.betStats.totNumLoseAllBets;
+    ev.numBetsLost = currentStats_.betStats.totNumWinsAllBets;
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void        
+CrapsTable::sendEventTableLastRollStatsChanged() const
+{
+    Ctrl::UslTableLastRollStatsChanged lrs{};
+    lrs.stats = lastRollStats_;
+    Gen::EventManager::instance().publish(lrs);
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::sendEventTableBetsChanged() const
+{
+    Ctrl::UslTableBetsChanged ev;
+    ev.numBetsOnTable = getNumBetsOnTable();
+    ev.amountOnTable  = getAmountOnTable();
+    
     Gen::EventManager::instance().publish(ev);
 }
 
@@ -754,7 +816,11 @@ CrapsTable::resolveBets()
     dispenseResults();
     trimTableBets();
     clearDrl();
+    
     Gen::EventManager::instance().publish(Ctrl::UslResolveBetsEnd{});
+    sendEventTableBetsChanged();
+    sendEventTableLastRollStatsChanged();
+    sendEventTableSessionStatsChanged();
 }
 
 //----------------------------------------------------------------
@@ -844,10 +910,7 @@ CrapsTable::disburseHouseResults()
     }
     if (changed)
     {
-        Ctrl::UslTableBalanceChanged ev;
-        ev.balance    = getBalance();               // balance from session start
-        ev.netBalance = houseBank_.getSessionNet(); // balance from session start
-        Gen::EventManager::instance().publish(ev);
+        sendEventTableBalanceChanged();
     }
 }
 

@@ -301,6 +301,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
     }
 
     wallet_.withdraw(contractAmount);
+    sendEventPlayerBalanceChanged();
     bets_.push_back(pBet);
     return pBet;
 }
@@ -356,6 +357,8 @@ Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState)
 
     int deltaOdds = pBet->oddsAmount() - prevState.oddsAmount();
     applyDelta(deltaOdds);
+
+    sendEventPlayerBalanceChanged();
 }
 
 //----------------------------------------------------------------
@@ -441,6 +444,7 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
+    sendEventPlayerBalanceChanged();
     return {};
 }
 
@@ -623,12 +627,7 @@ Player::disburseDone()
 {
     if (lastRollStats_.amountWin > 0 || lastRollStats_.amountLose > 0)
     {
-        Ctrl::UslPlayerBalanceChanged ev;
-        ev.playerId   = playerId_;
-        ev.balance    = getBalance();    // how much left in wallet
-        ev.netBalance = getSessionNet(); // profilt/loss session start
-
-        Gen::EventManager::instance().publish(ev);
+        sendEventPlayerBalanceChanged();
     }
 }
 
@@ -647,6 +646,19 @@ Player::sendEventBetResolved(const PlayerId& playerId,
     ev.betId      = betId,
     ev.amountWin  = amountWin;
     ev.amountLose = amountLose;
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+Player::sendEventPlayerBalanceChanged() const
+{
+    Ctrl::UslPlayerBalanceChanged ev;
+    ev.playerId   = playerId_;
+    ev.balance    = getBalance();    // how much left in wallet
+    ev.netBalance = getSessionNet(); // profilt/loss session start
 
     Gen::EventManager::instance().publish(ev);
 }

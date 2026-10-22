@@ -252,8 +252,11 @@ WindowPlayerBrief::onPlayerBalanceChanged(
     Gen::Money      balance,      // how much left in wallet
     int             netBalance)   // profit/loss this session
 {
+    LOG_TRACE("WindowPlayerBrief::onPlayerBalanceChanged(1)");
+    
     if (playerId != playerId_) return;
     
+    LOG_TRACE("WindowPlayerBrief::onPlayerBalanceChanged(2)");
     balance_    = balance;    
     netBalance_ = netBalance;
 }

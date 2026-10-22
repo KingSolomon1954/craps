@@ -8,6 +8,7 @@
 
 #include <cui/bases/PanelBase.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <craps/LastRollStats.h>
 #include <gen/MoneyUtils.h>
 
 namespace Cui
@@ -25,7 +26,10 @@ public:
     /// @{
     void draw() override;
     void onResolveBetsEnd();
+    void onTableBetsChanged(unsigned numBetsOnTable, Gen::Money amountOnTable);
+    void onTableSessionStatsChanged(unsigned numBetsWon, unsigned numBetsLost);
     void onTableBalanceChanged(Gen::Money balance, int netBalance);
+    void onTableLastRollStatsChanged(const Craps::LastRollStats& lrs);
     /// @}
 
     /// @name Observers
