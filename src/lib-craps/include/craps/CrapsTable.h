@@ -209,6 +209,7 @@ private:
 
     void sendEventPlayerLeftTable(const Player& player) const;
     void sendEventBetMade(const CrapsBet& bet)          const;
+    void sendEventBetChanged(const CrapsBet& bet)       const;
     void sendEventTableLastRollStatsChanged()           const;
     void sendEventTableSessionStatsChanged()            const;
     void sendEventTableBetsChanged()                    const;

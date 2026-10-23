@@ -167,16 +167,14 @@ CarrierBet::getTitleBetAmount() const
     if (isOddsBet_)
     {
         assert(pivot_ != 0);
-        oddsStr = " Odds ";
+        oddsStr = "Odds ";
     }
 
     if (pivot_ != 0)
     {
-        pivotStr = " on the " + std::to_string(pivot_);    
+        pivotStr = "on the " + std::to_string(pivot_);    
     }
-    
-    return EnumBetName::toString(betName_) +
-           oddsStr + " Bet" + pivotStr;
+    return EnumBetName::toString(betName_) + " bet " + oddsStr + pivotStr;
 }
 
 //----------------------------------------------------------------

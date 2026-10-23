@@ -42,20 +42,21 @@ MenuOddsBet::instance()
 void
 MenuOddsBet::gatherBets()
 {
-    Craps::BetIds ids;
-    getBetIds(ids);        // fills in betIdList
-    gatherBetsDetail(ids); // bets_ is now populated
+    Craps::BetIds betIds;
+    getBetIds(betIds);        // fills in betIdList
+    gatherBetsDetail(betIds); // bets_ is now populated
+    
     LOG_TRACE("Exiting MenuOddsBet::gatherBets()");
 }
 
 //----------------------------------------------------------------
 
 void
-MenuOddsBet::getBetIds(Craps::BetIds& bids)
+MenuOddsBet::getBetIds(Craps::BetIds& betIds)
 {
     Gen::ErrorPass ep;
     auto pid = CarrierBet::instance().getPlayerId();
-    auto rc = Ctrl::CrapsReaders::readPlayerGetOddsBets(pid, bids, ep); 
+    auto rc = Ctrl::CrapsReaders::readPlayerGetOddsBets(pid, betIds, ep); 
     assert(rc == Gen::ReturnCode::Success);
 }
 
@@ -72,6 +73,7 @@ MenuOddsBet::gatherBetsDetail(const Craps::BetIds& ids)
         BetInfo bi;
 
         bi.betId = id;
+        LOG_DEBUG("MenuOddsBet::gatherBetsDetail() betId:" + std::to_string(id));
         Ctrl::CrapsReaders::readBetPlayerId      (id, bi.playerId,          ep);
         Ctrl::CrapsReaders::readBetName          (id, bi.betName,           ep);
         Ctrl::CrapsReaders::readBetPivot         (id, bi.pivot,             ep);
@@ -271,10 +273,10 @@ MenuOddsBet::setLocation(WindowPosition pos)
 void
 MenuOddsBet::draw()
 {
-    if (shortCircuit())
-    {
-        return;   // Only one odds bet? then skip this menu
-    }
+//    if (shortCircuit())
+//    {
+//        return;   // Only one odds bet? then skip this menu
+//    }
     
     werase(pWin_);
     drawBorders();
@@ -288,11 +290,13 @@ MenuOddsBet::draw()
 bool
 MenuOddsBet::shortCircuit()
 {
+    LOG_TRACE("MenuOddsBet::shortCircuit()");
     shouldSkip_ = false;
-    if (menuEntries_.size() == 2)
+
+    if (activeOddsBets_.size() == 1)
     {
         shouldSkip_ = true;
-        processSelection(menuEntries_[1].betId);
+        processSelection(activeOddsBets_[0].betId);
         return true;
     }
     return false;
@@ -411,11 +415,15 @@ MenuOddsBet::findBet(const Craps::BetId& betId)
 void
 MenuOddsBet::populateCarrier(const BetInfo& bet)
 {
-    auto cb = CarrierBet::instance();
-    cb.clear();
+    LOG_DEBUG("MenuOddsBet::populateCarrier() "
+              " betName:" + EnumBetName::toString(bet.betName) +
+              " betId:"   + std::to_string(bet.betId) +
+              " pivot:"   + std::to_string(bet.pivot));
+
+    auto& cb = CarrierBet::instance();
     cb.setBetName(bet.betName);
+    cb.setBetId(bet.betId);
     cb.setPivot(bet.pivot);
-    cb.setDesireOdds();
 }
 
 //----------------------------------------------------------------

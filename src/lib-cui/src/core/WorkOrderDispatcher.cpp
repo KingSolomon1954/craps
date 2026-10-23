@@ -214,6 +214,22 @@ WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslBetChanged& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslBetChanged)");
+
+    WindowPlayerArea::instance().onBetChanged(
+        ev.playerId,
+        ev.betId,
+        ev.betName,
+        ev.contractAmount,
+        ev.oddsAmount,
+        ev.pivot);
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslTableBetsChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslTableBetsChanged)");
@@ -336,7 +352,16 @@ void
 WorkOrderDispatcher::process(const Ctrl::RspMakeBet& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(RspMakeBet)");
-    OperationManager::instance().onMakeBetResponse(ev);
+    OperationManager::instance().onRspMakeBet(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspOddsBet& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspOddsBet)");
+    OperationManager::instance().onRspOddsBet(ev);
 }
 
 //----------------------------------------------------------------

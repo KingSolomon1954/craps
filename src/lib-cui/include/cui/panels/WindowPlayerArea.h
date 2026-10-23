@@ -43,6 +43,14 @@ public:
         Gen::Money             oddsAmount,
         unsigned               pivot);
 
+    void onBetChanged(
+        const Craps::PlayerId& playerId,
+        Craps::BetId           betId,
+        BetName                betName,
+        Gen::Money             contractAmount,
+        Gen::Money             oddsAmount,
+        unsigned               pivot);
+
     void onBetResolved(
         const Craps::PlayerId& playerId,
         BetName                betName,

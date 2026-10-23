@@ -90,15 +90,16 @@ OperationManager::doOddsBet(const CarrierBet& cb)
 //----------------------------------------------------------------
 
 void
-OperationManager::onMakeBetResponse(const Ctrl::RspMakeBet& ev)
+OperationManager::onRspMakeBet(const Ctrl::RspMakeBet& ev)
 {
-    LOG_TRACE("OperationManager::onMakeBetResponse()");
+    LOG_TRACE("OperationManager::onRspMakeBet() "
+              "correlationId = " + std::to_string(correlationId_));
              
     if (stage_ != Stage::AwaitingResponse ||
         type_  != OperationType::MakeBet  ||
         ev.correlationId != correlationId_)
     {
-        LOG_WARN("OperationManager::onMakeBetResponse(): ignoring "
+        LOG_WARN("OperationManager::onRspMakeBet(): ignoring "
                  "unmatched RspMakeBet: rsp.correlationId = "       +
                  std::to_string(ev.correlationId)                   +
                  ", have correlationId_ = "                         +
@@ -109,6 +110,37 @@ OperationManager::onMakeBetResponse(const Ctrl::RspMakeBet& ev)
     if (ev.accepted)
     {
         // ReqMakeBet has succeeded. Unwind the active betting workflow.
+        SurfaceManager::instance().popToRoot();
+        finish();
+        return;
+    }
+
+    showError(ev.error);
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRspOddsBet(const Ctrl::RspOddsBet& ev)
+{
+    LOG_TRACE("OperationManager::onRspOddsBet() "
+              "correlationId = " + std::to_string(correlationId_));
+             
+    if (stage_ != Stage::AwaitingResponse ||
+        type_  != OperationType::MakeBet  ||
+        ev.correlationId != correlationId_)
+    {
+        LOG_WARN("OperationManager::onRspMakeBet(): ignoring "
+                 "unmatched RspMakeBet: rsp.correlationId = "       +
+                 std::to_string(ev.correlationId)                   +
+                 ", have correlationId_ = "                         +
+                 std::to_string(correlationId_));
+        return;
+    }
+
+    if (ev.accepted)
+    {
+        // ReqOddsBet has succeeded. Unwind the active betting workflow.
         SurfaceManager::instance().popToRoot();
         finish();
         return;

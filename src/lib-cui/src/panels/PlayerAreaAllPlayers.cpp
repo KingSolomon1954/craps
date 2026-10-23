@@ -280,6 +280,25 @@ PlayerAreaAllPlayers::onBetMade(
     
 //----------------------------------------------------------------
 
+void
+PlayerAreaAllPlayers::onBetChanged(
+    const Craps::PlayerId& playerId,
+    Craps::BetId           betId,
+    BetName                betName,
+    Gen::Money             contractAmount,
+    Gen::Money             oddsAmount,
+    unsigned               pivot)
+{
+    onBetMade(playerId,
+              betId,
+              betName,
+              contractAmount,
+              oddsAmount,
+              pivot);
+}
+    
+//----------------------------------------------------------------
+
 std::size_t
 PlayerAreaAllPlayers::getBetIndex(CuiUtils::CuiBetName betName,
                                   std::size_t playerIndex) const

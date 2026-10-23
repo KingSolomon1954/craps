@@ -420,6 +420,9 @@ CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
     }
     
     tableBets_[static_cast<size_t>(pBet->betName())].remove(pBet);
+
+    // No adjustment to bank is needed. Bet is just sitting
+    // on the table, not using any house money.
     
     void sendEventTableBetsChanged();
     
@@ -492,6 +495,7 @@ CrapsTable::setContractAmount(BetPtr pBet,
     if (fifBadMultiples     (*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
 
     pBet->setContractAmountInternal(newAmount);
+    sendEventBetChanged(*pBet);
     sendEventTableBetsChanged();
     
     return Gen::ReturnCode::Success;
@@ -543,7 +547,9 @@ CrapsTable::setOddsAmount(BetPtr pBet,
 
     pBet->setOddsAmountInternal(oddsAmount);
 
-    sendEventBetMade(*pBet);
+// TODO need to adjust amount on table
+    
+    sendEventBetChanged(*pBet);
     sendEventTableBetsChanged();
 
     return Gen::ReturnCode::Success;
@@ -576,6 +582,23 @@ void
 CrapsTable::sendEventBetMade(const CrapsBet& bet) const
 {
     Ctrl::UslBetMade ev;
+    ev.playerId       = bet.player().getPlayerId();
+    ev.betId          = bet.betId();
+    ev.betName        = bet.betName();
+    ev.contractAmount = bet.contractAmount();
+    ev.oddsAmount     = bet.oddsAmount();
+    ev.pivot          = bet.pivot();
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::sendEventBetChanged(const CrapsBet& bet) const
+{
+    Ctrl::UslBetChanged ev;
+    
     ev.playerId       = bet.player().getPlayerId();
     ev.betId          = bet.betId();
     ev.betName        = bet.betName();
@@ -1348,6 +1371,25 @@ CrapsTable::bumpRecentRolls(const Dice& dice)
     }
     recentRolls_.push_back(dice);
 }
+
+//----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //----------------------------------------------------------------
 //

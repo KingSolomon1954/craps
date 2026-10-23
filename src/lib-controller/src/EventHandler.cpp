@@ -30,6 +30,12 @@ EventHandler::EventHandler()
             this->onReqMakeBet(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::ReqOddsBet>(
+        [this](const Ctrl::ReqOddsBet& ev)
+        {
+            this->onReqOddsBet(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::ReqRollDice>(
         [this](const Ctrl::ReqRollDice& ev)
         {
@@ -102,104 +108,45 @@ EventHandler::onReqMakeBet(const Ctrl::ReqMakeBet& ev) const
 
 //----------------------------------------------------------------
 
-#if 0
-
 void
 EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
 {
     LOG_TRACE("Entered Controller::EventHandler::onReqOddsBet()");
 
-    Ctrl::RspMakeBet rsp;
+    Ctrl::RspOddsBet rsp;
     rsp.correlationId = ev.correlationId;
     rsp.playerId      = ev.playerId;
+    rsp.betId         = ev.betId;
 
     Gen::ErrorPass ep;
     Craps::Player* pPlayer = Gbl::pPlayerMgr->getPlayer(ev.playerId, ep);
     assert(pPlayer);
     if (pPlayer == nullptr)
     {
-        LOG_TRACE("EventHandler::onReqMakeBet() pPlayer is null");
+        LOG_TRACE("EventHandler::onReqOddsBet() pPlayer is null");
         rsp.error = std::move(ep);
     }
-    else if (ev.contractAmount > 0 && ev.oddsAmount > 0)
+    
+    LOG_TRACE("EventHandler::onReqMakeBet() making odds bet");
+    auto betPtr = pPlayer->getBet(ev.betId, ep);
+    if (!betPtr)
     {
-        const std::string s = "contractAmount and oddsAmount are both non-zero";
-        assert(false && s.c_str());
-        LOG_TRACE("EventHandler::onReqMakeBet() " + s);
-        
-        // Contract and odds are separate operations in the CUI workflow.
-        // Reject a combined request before making any model changes.
-        using En = Gen::ErrorPass::ErrorName;
-        using Et = Gen::ErrorPass::ErrorType;
-        using Es = Gen::ErrorPass::Severity;
-
-        EP_SET(ep, En::IllegalStateError, Et::ProgrammingError,
-               Es::Indeterminate, s);
         rsp.error = std::move(ep);
     }
-    else if (ev.contractAmount > 0)
+    else
     {
-        LOG_TRACE("EventHandler::onReqMakeBet() making contract bet");
-        
-        auto result = pPlayer->makeBet(ev.betName,
-                                       ev.contractAmount,
-                                       ev.pivot);
+        auto result = pPlayer->setOddsAmount(betPtr, ev.oddsAmount);
         if (!result)
         {
-            LOG_TRACE("EventHandler::onReqMakeBet() making contract bet");
             rsp.error = std::move(result).error();
         }
         else
         {
-            LOG_TRACE("EventHandler::onReqMakeBet() contract bet accepted");
-            auto bet = std::move(result).value();
             rsp.accepted = true;
-            rsp.betId = bet->betId();
         }
     }
-    else if (ev.oddsAmount > 0)
-    {
-        LOG_TRACE("EventHandler::onReqMakeBet() making odds bet");
-        
-        // An odds-only operation updates an existing odds-capable bet.
-        const Craps::BetId betId = pPlayer->getBet(ev.betName, ev.pivot, ep);
-        if (betId == 0)
-        {
-            ep.setDescription("No existing bet matches the requested bet type and point.");
-            rsp.error = std::move(ep);
-        }
-        else
-        {
-            auto bet = pPlayer->getBet(betId, ep);
-            if (!bet)
-            {
-                rsp.error = std::move(ep);
-            }
-            else
-            {
-                auto oddsResult = pPlayer->setOddsAmount(bet, ev.oddsAmount);
-                if (!oddsResult)
-                {
-                    rsp.error = std::move(oddsResult).error();
-                }
-                else
-                {
-                    rsp.accepted = true;
-                    rsp.betId = betId;
-                }
-            }
-        }
-    }
-    else
-    {
-        ep.setDescription("A bet must include a positive contract or odds amount.");
-        rsp.error = std::move(ep);
-    }
-
     Gen::EventManager::instance().publish(rsp);
 }
-
-#endif
 
 //----------------------------------------------------------------
 

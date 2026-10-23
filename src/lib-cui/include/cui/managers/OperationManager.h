@@ -35,7 +35,8 @@ public:
     void quickBet();     // Workflow: Set up an QuickBet entry
 
     // Called only on the CUI thread by WorkOrderDispatcher / dialogs.
-    void onMakeBetResponse(const Ctrl::RspMakeBet& response);
+    void onRspMakeBet(const Ctrl::RspMakeBet& response);
+    void onRspOddsBet(const Ctrl::RspOddsBet& response);
     void onConfirmationResult(SurfaceBase::OperationResult result);
     void onErrorAcknowledged();
     /// @}

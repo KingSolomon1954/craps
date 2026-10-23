@@ -449,7 +449,9 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
+    sendEventPlayerBetsChanged();
     sendEventPlayerBalanceChanged();
+
     return {};
 }
 

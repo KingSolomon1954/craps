@@ -28,8 +28,6 @@ CuiSender::reqMakeBet(const Craps::PlayerId& playerId,
                       Gen::Money contractAmount,
                       unsigned pivot)
 {
-    LOG_TRACE("CuiSender::reqMakeBet()");
-
     Ctrl::ReqMakeBet ev;
     ev.playerId       = playerId;
     ev.betName        = betName;
@@ -37,6 +35,10 @@ CuiSender::reqMakeBet(const Craps::PlayerId& playerId,
     ev.pivot          = pivot;
     const auto correlationId = ev.correlationId;
     Gen::EventManager::instance().publish(ev);
+    
+    LOG_DEBUG("CuiSender::reqMakeBet() correlationId = " +
+              std::to_string(correlationId));
+    
     return correlationId;
 }
 
@@ -55,6 +57,10 @@ CuiSender::reqOddsBet(const Craps::PlayerId& playerId,
     ev.oddsAmount     = oddsAmount;
     const auto correlationId = ev.correlationId;
     Gen::EventManager::instance().publish(ev);
+    
+    LOG_DEBUG("CuiSender::reqOddsBet() correlationId = " +
+              std::to_string(correlationId));
+    
     return correlationId;
 }
 

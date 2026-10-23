@@ -29,7 +29,8 @@ public:
     /// @}
 
 private:
-    void onMakeBetResponse           (const Ctrl::RspMakeBet& ev)                   const;
+    void onRspMakeBet                (const Ctrl::RspMakeBet& ev)                   const;
+    void onRspOddsBet                (const Ctrl::RspOddsBet& ev)                   const;
     void onBettingClosed             (const Ctrl::UslBettingClosed& ev)             const;
     void onDiceNewValue              (const Ctrl::UslDiceNewValue& ev)              const;
     void onDiceThrowStart            (const Ctrl::UslDiceThrowStart& ev)            const;

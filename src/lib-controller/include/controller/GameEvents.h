@@ -61,7 +61,7 @@ enum class EventType
     UslBetMade,
     UslBetResolved,
     UslBetRemoved,             // not yet implemented
-    UslBetChanged,             // not yet implemented
+    UslBetChanged,
     UslAutoFillChanged,
     UslQuickBetChanged,
     
@@ -248,6 +248,22 @@ struct UslBetMade : public GameEvent
 
     UslBetMade()
         : GameEvent{EventSource::Model, EventType::UslBetMade}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslBetChanged : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId;
+    BetName         betName;
+    Gen::Money      contractAmount = 0;
+    Gen::Money      oddsAmount     = 0;
+    unsigned        pivot          = 0;
+
+    UslBetChanged()
+        : GameEvent{EventSource::Model, EventType::UslBetChanged}
     {}
 };
 

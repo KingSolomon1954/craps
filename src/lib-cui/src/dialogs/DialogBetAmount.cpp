@@ -266,43 +266,6 @@ DialogBetAmount::readInputAmount()
     }
 }
 
-#if 0
-
-bool
-DialogBetAmount::updateInputAmount()
-{
-    if (lineBuffer_.empty())
-    {
-        inputAmount_ = 0;
-        return false;
-    }
-
-    try
-    {
-        const long long val = std::stoll(lineBuffer_);
-
-        // Reject invalid or partially parsed input.
-        if (val < 0 ||
-            val > std::numeric_limits<Gen::Money>::max())
-        {
-            return false;
-        }
-
-        inputAmount_ = static_cast<Gen::Money>(val);
-        return true;
-    }
-    catch (const std::invalid_argument&)
-    {
-        return false;
-    }
-    catch (const std::out_of_range&)
-    {
-        return false;
-    }
-}
-
-#endif
-
 //----------------------------------------------------------------
 
 void

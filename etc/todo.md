@@ -43,8 +43,11 @@
 
 ### Implement ReqMakeBet, to include UndoManager
 
-### Fix MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?
+### Fix multiple odds bets for same bet and number MenuOddsBet
 
+### Setting an Odds bet shows as two bets on the table and player brief
+
+(Done) Fixed MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?
 (Done) Debug & fix WindowPlayerBrief
 (Done) Added new events to populate WindowPlayerBrief
 (Done) Debug & fix WindowHouseBrief
