@@ -46,7 +46,8 @@ public:
     
 private:
     WindowPosition winPos_{};
-    static constexpr WindowSize winSize_ = {12, 26};  // rows, cols, Fixed size
+    // "DontCome bet Odds on the 10"  (27)
+    static constexpr WindowSize winSize_ = {12, 31};  // rows, cols, Fixed size
 
     static constexpr std::array<std::string_view, 7> Prompts
     {

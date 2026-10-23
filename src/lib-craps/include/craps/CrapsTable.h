@@ -14,6 +14,7 @@
 #include <craps/LastRollStats.h>
 #include <craps/TableConfig.h>
 #include <craps/TableStats.h>
+#include <gen/Debug.h>
 #include <gen/ErrorPass.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ReturnCode.h>
@@ -257,6 +258,8 @@ private:
                               Gen::Money amt,
                               Gen::ErrorPass& ep) const;
     std::string diagLimits   (Gen::Money amt) const;
+    
+    D(void logBet(const std::string& t, const CrapsBet& bet);)
 
     // Default bank constants for table
     static constexpr unsigned InitialStartingBankBalance_ = 3000000;

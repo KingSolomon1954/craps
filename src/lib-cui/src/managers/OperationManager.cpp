@@ -78,13 +78,14 @@ OperationManager::doContractBet(const CarrierBet& cb)
 void
 OperationManager::doOddsBet(const CarrierBet& cb)
 {
+    LOG_TRACE("OperationManager::doOddsBet(): request correlationId = " +
+              std::to_string(correlationId_));
+    
     correlationId_ = CuiSender::instance().reqOddsBet(
                          cb.getPlayerId(),
                          cb.getBetId(),
                          cb.getOddsAmount());
 
-    LOG_TRACE("OperationManager::doOddsBet(): request correlationId = " +
-              std::to_string(correlationId_));
 }
 
 //----------------------------------------------------------------

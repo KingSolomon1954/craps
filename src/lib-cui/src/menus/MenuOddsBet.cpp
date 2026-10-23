@@ -10,6 +10,7 @@
 #include <cui/dialogs/DialogBetAmount.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/MoneyUtils.h>
+#include <gen/Debug.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
 #include <algorithm>
@@ -82,8 +83,24 @@ MenuOddsBet::gatherBetsDetail(const Craps::BetIds& ids)
         Ctrl::CrapsReaders::readBetWhenCreated   (id, bi.whenCreated,       ep);
         
         activeOddsBets_.push_back(bi);
+        D(logBetInfo(bi);)
     }
     sortBetsByCreated();
+}
+
+//----------------------------------------------------------------
+
+void
+MenuOddsBet::logBetInfo(const BetInfo& bi)
+{
+    std::string s = "\nMenuOddsBet BetInfo: "
+        "    \n      playerId: " + bi.playerId +
+        "    \n         betId: " + std::to_string(bi.betId)          +
+        "    \n       betName: " + EnumBetName::toString(bi.betName) +
+        "    \n      betPivot: " + std::to_string(bi.pivot)          +
+        "    \ncontractAmount: " + std::to_string(bi.contractAmount) +
+        "    \n    oddsAmount: " + std::to_string(bi.currentOddsAmount);
+    LOG_DEBUG(s);
 }
 
 //----------------------------------------------------------------
@@ -273,10 +290,10 @@ MenuOddsBet::setLocation(WindowPosition pos)
 void
 MenuOddsBet::draw()
 {
-//    if (shortCircuit())
-//    {
-//        return;   // Only one odds bet? then skip this menu
-//    }
+    if (shortCircuit())
+    {
+        return;   // Only one odds bet? then skip this menu
+    }
     
     werase(pWin_);
     drawBorders();
@@ -290,7 +307,6 @@ MenuOddsBet::draw()
 bool
 MenuOddsBet::shortCircuit()
 {
-    LOG_TRACE("MenuOddsBet::shortCircuit()");
     shouldSkip_ = false;
 
     if (activeOddsBets_.size() == 1)
@@ -380,8 +396,6 @@ MenuOddsBet::back()
 void
 MenuOddsBet::processSelection(const Craps::BetId& betId)
 {
-    LOG_TRACE("MenuOddsBet::processSelection() betId:" + std::to_string(betId));
-    
     const BetInfo& bet = findBet(betId);
     populateCarrier(bet);
     activateDialogBetAmount();
@@ -392,8 +406,6 @@ MenuOddsBet::processSelection(const Craps::BetId& betId)
 MenuOddsBet::BetInfo&
 MenuOddsBet::findBet(const Craps::BetId& betId)
 {
-    LOG_TRACE("MenuOddsBet::findBet() size activeOddsBets:" + std::to_string(activeOddsBets_.size()));
-    
     auto it = std::find_if(
         activeOddsBets_.begin(),
         activeOddsBets_.end(),
@@ -415,15 +427,17 @@ MenuOddsBet::findBet(const Craps::BetId& betId)
 void
 MenuOddsBet::populateCarrier(const BetInfo& bet)
 {
-    LOG_DEBUG("MenuOddsBet::populateCarrier() "
-              " betName:" + EnumBetName::toString(bet.betName) +
-              " betId:"   + std::to_string(bet.betId) +
-              " pivot:"   + std::to_string(bet.pivot));
-
     auto& cb = CarrierBet::instance();
     cb.setBetName(bet.betName);
     cb.setBetId(bet.betId);
     cb.setPivot(bet.pivot);
+    cb.setDesireOdds();
+
+    LOG_DEBUG("\nMenuOddsBet::populateCarrier() "
+              "\n      betName:" + EnumBetName::toString(cb.getBetName()) +
+              "\n        betId:" + std::to_string(cb.getBetId())          +
+              "\n        pivot:" + std::to_string(cb.getPivot())          +
+              "\n    isOddsBet:" + (cb.isOddsBet() ? "true" : "false" ));
 }
 
 //----------------------------------------------------------------

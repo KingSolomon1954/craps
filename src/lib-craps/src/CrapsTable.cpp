@@ -327,6 +327,8 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
 
+    D(logBet("CrapsTable::addBet()", *pBet);)
+
     sendEventBetMade(*pBet);
     sendEventTableBetsChanged();
 
@@ -495,6 +497,8 @@ CrapsTable::setContractAmount(BetPtr pBet,
     if (fifBadMultiples     (*pBet, newAmount, 2, ep)) return Gen::ReturnCode::Fail;
 
     pBet->setContractAmountInternal(newAmount);
+
+    D(logBet("CrapsTable::setContractAmount()", *pBet);)
     sendEventBetChanged(*pBet);
     sendEventTableBetsChanged();
     
@@ -547,8 +551,8 @@ CrapsTable::setOddsAmount(BetPtr pBet,
 
     pBet->setOddsAmountInternal(oddsAmount);
 
-// TODO need to adjust amount on table
-    
+    D(logBet("CrapsTable::setOddsAmount()", *pBet);)
+
     sendEventBetChanged(*pBet);
     sendEventTableBetsChanged();
 
@@ -1373,7 +1377,20 @@ CrapsTable::bumpRecentRolls(const Dice& dice)
 }
 
 //----------------------------------------------------------------
+//
+// Debugging
+//
+#ifdef DEBUG
+void
+CrapsTable::logBet(const std::string& t, const CrapsBet& bet)
+{
+    std::stringstream s;
+    s << "\n" << t << "\n" << bet;
+    LOG_DEBUG(s.str());
+}
+#endif
 
+//----------------------------------------------------------------
 
 
 

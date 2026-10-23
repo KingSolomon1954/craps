@@ -63,7 +63,7 @@ private:
     Craps::PlayerId playerId_;
     Bets            activeOddsBets_;
     MenuEntries     menuEntries_;
-    WindowPosition  winPos_{};
+    WindowPosition  winPos_{10, 10};  // Arbitrary, gets set later
     WindowSize      winSize_;
     
 private:    
@@ -84,6 +84,7 @@ private:
     std::string formatAmount(const BetInfo& bet);
     std::string formatPivot (const BetInfo& bet);
     std::string formatHotKey(const char hotKey);
+    void logBetInfo(const BetInfo& bi);
 
     bool shortCircuit();
 

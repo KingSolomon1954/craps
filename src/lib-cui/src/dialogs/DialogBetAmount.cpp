@@ -165,7 +165,7 @@ DialogBetAmount::drawTitle()
 std::string
 DialogBetAmount::prepTitle(const std::string& title)
 {
-    constexpr std::size_t MaxColsTitle = 22;
+    constexpr std::size_t MaxColsTitle = 27;
     std::string result = title.substr(0, MaxColsTitle);  // Too big
     result.resize(MaxColsTitle, ' ');                    // Pad it
     return result;
