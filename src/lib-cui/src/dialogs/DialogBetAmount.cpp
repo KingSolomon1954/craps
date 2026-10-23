@@ -93,20 +93,6 @@ DialogBetAmount::setLocation(WindowPosition pos)
 // 0  ┌─────────────────────────────┐
 // 1  │ DontCome bet Odds on the 10 │
 // 2  ├─────────────────────────────┤
-// 3  │                             │
-// 4  │ Enter amount: 100           │
-// 5  │                             │
-// 6  │ [enter] Submit Bet          │
-// 7  │ [s] Save as AutoFill        │
-// 8  │ [q] Save as Quick Bet       │
-// 9  │ [?] Help                    │
-// 10 │ [. or esc] Back             │
-// 11 └─────────────────────────────┘
-//
-//    0123456789 123456789 1234567890
-// 0  ┌─────────────────────────────┐
-// 1  │ DontCome bet Odds on the 10 │
-// 2  ├─────────────────────────────┤
 // 3  │ Pays 1:2 use multiple of 2  │
 // 4  │                             │
 // 5  │ Enter amount: 100           │

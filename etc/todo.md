@@ -39,10 +39,13 @@
 
 ### Implement QuickBet::applyQuickBet for new CUI design
 
+### Implement WindowPlayerArea - show bets on screen
+
 ### Implement WindowMessageArea
 
 ### Implement ReqMakeBet, to include UndoManager
 
+(Done) Add payout hint to DialogBetAmount
 (Done) Fix window width of MenuOddsBet
 (Done) Fix multiple odds bets for same bet and number MenuOddsBet
 (Done) Setting an Odds bet shows as two bets on the table and player brief
