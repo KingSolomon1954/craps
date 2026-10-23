@@ -47,7 +47,7 @@ public:
 private:
     WindowPosition winPos_{};
     // "DontCome bet Odds on the 10"  (27)
-    static constexpr WindowSize winSize_ = {12, 31};  // rows, cols, Fixed size
+    static constexpr WindowSize winSize_ = {13, 31};  // rows, cols, Fixed size
 
     static constexpr std::array<std::string_view, 7> Prompts
     {
@@ -61,7 +61,7 @@ private:
     };
 
     // Input field layout and editing state
-    static constexpr int inputRow_ = 4;
+    static constexpr int inputRow_ = 5;
     static constexpr int inputCol_ = 2 + Prompts[0].size() + 1;
     static constexpr int numInputBlanks_ = winSize_.cols - inputCol_ - 1;
     static constexpr int inputCharsMax_ = 8;
@@ -75,6 +75,7 @@ private:
     // Drawing
     void drawStaticContent();
     void drawBorders();
+    void drawHintMultiples();
     void drawPrompts();
     void drawTitle();
     void drawInput();

@@ -89,25 +89,41 @@ DialogBetAmount::setLocation(WindowPosition pos)
 
 //----------------------------------------------------------------
 //
-//    0123456789 123456789 1234567
-// 0  ┌──────────────────────────┐
-// 1  │ Dont Come Odds on the 10 │
-// 2  ├──────────────────────────┤
-// 3  │                          │
-// 4  │ Enter amount: 100        │
-// 5  │                          │
-// 6  │ [enter] Submit Bet       │
-// 7  │ [s] Save as AutoFill     │
-// 8  │ [q] Save as Quick Bet    │
-// 9  │ [?] Help                 │
-// 10 │ [. or esc] Back          │
-// 11 └──────────────────────────┘
+//    0123456789 123456789 1234567890
+// 0  ┌─────────────────────────────┐
+// 1  │ DontCome bet Odds on the 10 │
+// 2  ├─────────────────────────────┤
+// 3  │                             │
+// 4  │ Enter amount: 100           │
+// 5  │                             │
+// 6  │ [enter] Submit Bet          │
+// 7  │ [s] Save as AutoFill        │
+// 8  │ [q] Save as Quick Bet       │
+// 9  │ [?] Help                    │
+// 10 │ [. or esc] Back             │
+// 11 └─────────────────────────────┘
+//
+//    0123456789 123456789 1234567890
+// 0  ┌─────────────────────────────┐
+// 1  │ DontCome bet Odds on the 10 │
+// 2  ├─────────────────────────────┤
+// 3  │ Pays 1:2 use multiple of 2  │
+// 4  │                             │
+// 5  │ Enter amount: 100           │
+// 6  │                             │
+// 7  │ [enter] Submit Bet          │
+// 8  │ [s] Save as AutoFill        │
+// 9  │ [q] Save as Quick Bet       │
+// 10 │ [?] Help                    │
+// 11 │ [. or esc] Back             │
+// 12 └─────────────────────────────┘
 //
 void
 DialogBetAmount::draw()
 {
     // Reuse already filled window over and over
     drawTitle();
+    drawHintMultiples();
     drawInput();
     
     CuiUtils::transfer(pWin_);
@@ -141,9 +157,55 @@ DialogBetAmount::drawBorders()
 //----------------------------------------------------------------
 
 void
+DialogBetAmount::drawHintMultiples()
+{
+    LOG_TRACE("DialogBetAmount::drawHintMultiples()");
+    std::string hint = "Pays 1:1                  ";  // extra blanks to erase
+    const auto& cb = CarrierBet::instance();
+    
+    if (cb.isOddsBet())
+    {
+        LOG_TRACE("DialogBetAmount::drawHintMultiples() isOddsBet: true");
+        auto betName = cb.getBetName();
+        auto pivot   = cb.getPivot();
+        
+        if (betName == BetName::PassLine || betName == BetName::Come)
+        {
+            LOG_TRACE("DialogBetAmount::drawHintMultiples() do-side");
+            switch (pivot)
+            {
+            case  4: 
+            case 10: hint = "Pays 2:1 use multiple of 1"; break;
+            case  5: 
+            case  9: hint = "Pays 3:2 use multiple of 2"; break;
+            case  6: 
+            case  8: hint = "Pays 6:5 use multiple of 5"; break;
+            }
+        }
+        else if (betName == BetName::DontPass || betName == BetName::DontCome)
+        {
+            LOG_TRACE("DialogBetAmount::drawHintMultiples() dont-side");
+            switch (pivot)
+            {
+            case  4: 
+            case 10: hint = "Pays 1:2 use multiple of 2"; break;
+            case  5: 
+            case  9: hint = "Pays 2:3:use multiple of 3"; break;
+            case  6: 
+            case  8: hint = "Pays 5:6 use multiple of 6"; break;
+            }
+        }
+    }
+    
+    mvwaddstr(pWin_, 3, 2, hint.c_str());
+}
+
+//----------------------------------------------------------------
+
+void
 DialogBetAmount::drawPrompts()
 {
-    int row = 4;
+    int row = 5;
     for (const std::string_view s : Prompts)
     {
         mvwaddstr(pWin_, row++, 2, s.data());
