@@ -8,6 +8,7 @@
 
 #include <cui/bases/DialogBase.h>
 #include <string>
+#include <string_view>
 
 //----------------------------------------------------------------
 
@@ -32,7 +33,7 @@ public:
     void onAttach(SurfaceBase* pParent)  override;
     void onDetach()                      override;
     void setLocation(WindowPosition pos) override;
-    void configure(const std::string& message);
+    void configure(std::string_view message);
     /// @}
     
     /// @name Observers
@@ -51,7 +52,7 @@ private:
     void processSelection(OperationResult r);
 
 private:
-    WindowPosition  winPos_;
+    WindowPosition  winPos_{};
     WindowSize      winSize_ = {5, 50};  // Arbitrary for initializaiton
     bool            configured_ = false;
     std::string     text_;               // title bar message

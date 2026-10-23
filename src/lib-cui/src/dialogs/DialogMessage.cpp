@@ -10,6 +10,7 @@
 #include <cui/managers/ColorManager.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/Logger.h>
+#include <gen/StringUtils.h>
 #include <cassert>
 
 using namespace Cui;
@@ -28,8 +29,8 @@ DialogMessage::DialogMessage()
 DialogMessage&
 DialogMessage::instance()
 {
-    static DialogMessage dialog;
-    return dialog;
+    static DialogMessage dm;
+    return dm;
 }
 
 /*-----------------------------------------------------------*//**
@@ -53,7 +54,8 @@ The formatting of the detail field adheres to these rules:
 @li Multiple consecutive newlines are preserved as blank lines.
 @li Normal whitespace separates words.
 @li Lines are word-wrapped to a maximum width.
-@li A word longer than the available width is hard-wrapped rather than overflowing the window.
+@li A word longer than the available width is hard-wrapped rather than
+    overflowing the window.
 @li Leading/trailing whitespace is discarded from each resulting display line.
 */
 void
@@ -62,6 +64,22 @@ DialogMessage::configure(const MessageText& msg)
     assert(msg.label != MessageLabel::Unset);  // Must have a specified type
     eraseFields();
     msg_ = msg;
+    
+    int maxCols = buildDialogEntries();
+    calcSize(maxCols);    // Determine our height/width
+                          // winSize_ is now populated
+}
+
+//----------------------------------------------------------------
+
+int
+DialogMessage::buildDialogEntries()
+{
+    int maxCols = maxColsTitle();
+    maxCols = std::max(maxCols, formatPrompt());
+    formatText();
+    maxCols = std::max(maxCols, maxColsDetail());
+    return maxCols;
 }
 
 //----------------------------------------------------------------
@@ -77,20 +95,31 @@ DialogMessage::eraseFields()
 
 //----------------------------------------------------------------
 
-int
-DialogMessage::buildDialogEntries()
+void
+DialogMessage::formatText()
 {
-    int maxCols = titleSize();
-    maxCols = std::max(maxCols, formatPrompt());
-    formatDetail();
-    maxCols = std::max(maxCols, maxSizeDetail());
-    return maxCols;
+    constexpr int preferredWidth = 76;
+    constexpr int screenMargin   = 4;
+
+    const int maxWidth = std::max(1, LayoutConsole::minCols - screenMargin);
+    const int width    = std::min(preferredWidth, maxWidth);
+
+    Gen::StringUtils::wrapFormattedString(msg_.detail, width, msgFmtd_.detail);
 }
 
 //----------------------------------------------------------------
 
 int
-DialogMessage::maxSizeDetail()
+DialogMessage::formatPrompt()
+{
+    msgFmtd_.prompt = "[. or esc or enter] Back";
+    return msgFmtd_.prompt.size();
+}
+
+//----------------------------------------------------------------
+
+int
+DialogMessage::maxColsDetail()
 {
     int cols = 0;
     for (const auto& e : msgFmtd_.detail)
@@ -106,175 +135,23 @@ DialogMessage::maxSizeDetail()
 // here since we need to colorize parts of it later.
 //
 int
-DialogMessage::titleSize()
+DialogMessage::maxColsTitle()
 {
-    int ncols = msg_.brief.size();
-
-    if (msg_.label == MessageLabel::None)
-    {
-        // no action, doesn't get an introducer label, just the .brief
-    }
-    else if (msg_.label == MessageLabel::Custom)
-    {
-        ncols += msg_.customLabel.size();
-    }
-    else if (msg_.label == MessageLabel::Info)
-    {
-        ncols += InfoLabel_.size();
-    }
-    else if (msg_.label == MessageLabel::Warning)
-    {
-        ncols += WarnLabel_.size();
-    }
-    else if (msg_.label == MessageLabel::Error)
-    {
-        ncols += ErrorLabel_.size();
-    }
-    else
-    {
-        assert(false);
-    }
-    return ncols;
-}
-
-//----------------------------------------------------------------
-
-void
-DialogMessage::formatDetail()
-{
-    constexpr int preferredWidth = 76;
-    constexpr int screenMargin   = 4;
-
-    msgFmtd_.detail.clear();
-    if (msg_.detail.empty()) return;
-
-    // Determine the maximum useful line width.
-    const int maxWidth = std::max(1, LayoutConsole::minCols - screenMargin);
-    const int width    = std::min(preferredWidth, maxWidth);
+    int nCols = 0;
     
-    // Normalize CRLF/CR into '\n'.  A newline is treated as an
-    // explicit line/paragraph break.
-    std::string text;
-    text.reserve(msg_.detail.size());
-
-    for (size_t i = 0; i < msg_.detail.size(); ++i)
-    {
-        if (msg_.detail[i] == '\r')
-        {
-            if (i + 1 < msg_.detail.size() &&
-                msg_.detail[i + 1] == '\n')
-            {
-                ++i;
-            }
-
-            text += '\n';
-        }
-        else
-        {
-            text += msg_.detail[i];
-        }
-    }
-
-    // Process one explicit line at a time.  This preserves blank
-    // lines supplied by the caller.
-    size_t start = 0;
-
-    while (start <= text.size())
-    {
-        const size_t end = text.find('\n', start);
-        const size_t len = (end == std::string::npos)
-                         ? text.size() - start
-                         : end - start;
-
-        std::string line = text.substr(start, len);
-
-        // Strip leading/trailing whitespace from the supplied line.
-        const auto first = line.find_first_not_of(" \t");
-        const auto last  = line.find_last_not_of(" \t");
-
-        if (first == std::string::npos)
-        {
-            // Explicit blank line.
-            msgFmtd_.detail.emplace_back();
-        }
-        else
-        {
-            line = line.substr(first, last - first + 1);
-
-            size_t pos = 0;
-
-            while (pos < line.size())
-            {
-                // Skip whitespace before the next word.
-                while (pos < line.size() &&
-                       (line[pos] == ' ' || line[pos] == '\t'))
-                {
-                    ++pos;
-                }
-
-                if (pos >= line.size())
-                    break;
-
-                const size_t remaining = line.size() - pos;
-
-                // If the remaining text fits, we're done with this
-                // explicit input line.
-                if (remaining <= static_cast<size_t>(width))
-                {
-                    msgFmtd_.detail.push_back(line.substr(pos));
-                    break;
-                }
-
-                // Find the last whitespace that fits in the line.
-                size_t breakPos = pos + width;
-
-                while (breakPos > pos &&
-                       line[breakPos] != ' ' &&
-                       line[breakPos] != '\t')
-                {
-                    --breakPos;
-                }
-
-                if (breakPos == pos)
-                {
-                    // A single word is longer than the display width.
-                    // Hard-wrap it rather than allowing it to overflow.
-                    msgFmtd_.detail.push_back(
-                        line.substr(pos, width));
-
-                    pos += width;
-                }
-                else
-                {
-                    msgFmtd_.detail.push_back(
-                        line.substr(pos, breakPos - pos));
-
-                    pos = breakPos;
-
-                    // Skip whitespace at the wrap point.
-                    while (pos < line.size() &&
-                           (line[pos] == ' ' || line[pos] == '\t'))
-                    {
-                        ++pos;
-                    }
-                }
-            }
-        }
-
-        if (end == std::string::npos)
-            break;
-
-        start = end + 1;
-    }
-}
-
-//----------------------------------------------------------------
-
-int
-DialogMessage::formatPrompt()
-{
-    msgFmtd_.prompt = "[. or esc or enter] Back";
-    return msgFmtd_.prompt.size();
+    if (msg_.label == MessageLabel::None)
+        nCols = 0; // no introducer label, just the .brief
+    else if (msg_.label == MessageLabel::Custom)
+        nCols = msg_.customLabel.size();
+    else if (msg_.label == MessageLabel::Info)
+        nCols = InfoLabel_.size();
+    else if (msg_.label == MessageLabel::Warning)
+        nCols = WarnLabel_.size();
+    else if (msg_.label == MessageLabel::Error)
+        nCols = ErrorLabel_.size();
+    else assert(false && "Unhandled label");
+    
+    return nCols + msg_.brief.size();
 }
 
 //----------------------------------------------------------------
@@ -285,9 +162,7 @@ DialogMessage::onAttach(SurfaceBase* pParent)
     assert(msg_.label != MessageLabel::Unset);  // Must first call configure() 
     
     SurfaceBase::onAttach(pParent);
-    int maxCols = buildDialogEntries();
-    calcSize(maxCols);    // Determine our height/width
-                          // winSize_ is now populated
+    
     // Next, surface manager will ask for our locationRequest
 }
 
@@ -315,9 +190,10 @@ DialogMessage::calcSize(int maxCols)
     winSize_.cols = maxCols + blankCols + borderCols;
     winSize_.rows = static_cast<int>(msgFmtd_.detail.size()) +
                     titleRows + promptRows;
-    LOG_TRACE("DialogMessage::calcSize(): winSize_.rows = " +
-              std::to_string(winSize_.rows) +  " winSize_.cols = " +
-              std::to_string(winSize_.cols));
+
+    LOG_TRACE("DialogMessage::calcSize():"
+              " winSize_.rows = " + std::to_string(winSize_.rows) +
+              " winSize_.cols = " + std::to_string(winSize_.cols));
 }
 
 //----------------------------------------------------------------
@@ -356,6 +232,7 @@ DialogMessage::setLocation(WindowPosition pos)
 
 //----------------------------------------------------------------
 //
+//     0123456789 123456789 123456789 123456789 123456789 123456789 1234
 // 0   ┌───────────────────────────────────────────────────────────────┐
 // 1   │ Warning: Insufficient funds                                   │
 // 2   ├───────────────────────────────────────────────────────────────┤
@@ -371,9 +248,12 @@ void
 DialogMessage::draw()
 {
     werase(pWin_);
+
     drawBorders();
-    drawStaticContent();
-    populate();
+    drawPrompt();    
+    drawTitle();
+    drawText();
+    
     CuiUtils::transfer(pWin_);
 }
 
@@ -398,7 +278,7 @@ DialogMessage::drawBorders()
 //----------------------------------------------------------------
 
 void
-DialogMessage::drawStaticContent()
+DialogMessage::drawPrompt()
 {
     mvwprintw(pWin_, winSize_.rows - 2, 2, msgFmtd_.prompt.c_str());
 }
@@ -406,56 +286,64 @@ DialogMessage::drawStaticContent()
 //----------------------------------------------------------------
 
 void
-DialogMessage::populate()
-{
-    drawTitle();
-    drawDetail();
-}
-
-//----------------------------------------------------------------
-
-void
 DialogMessage::drawTitle()
 {
-    if (msg_.label == MessageLabel::None)
-    {
-        // do nothing
-    }
-    else if (msg_.label == MessageLabel::Custom)
-    {
-        attrOn();
-        mvwaddstr(pWin_, 1, 2, msg_.customLabel.c_str());
-        attrOff();
-    }
-    else if (msg_.label == MessageLabel::Info)
-    {
-        attrOn();
-        mvwaddstr(pWin_, 1, 2, InfoLabel_.c_str());
-        attrOff();
-    }
-    else if (msg_.label == MessageLabel::Warning)
-    {
-        attrOn();
-        mvwaddstr(pWin_, 1, 2, WarnLabel_.c_str());
-        attrOff();
-    }
-    else if (msg_.label == MessageLabel::Error)
-    {
-        attrOn();
-        mvwaddstr(pWin_, 1, 2, ErrorLabel_.c_str());
-        attrOff();
-    }
-    else
-    {
-        assert(false);
-    }
+    drawCustomLabel();
+    drawInfoLabel();
+    drawWarnLabel();
+    drawErrorLabel();
+    
     waddstr(pWin_, msg_.brief.c_str());
 }
 
 //----------------------------------------------------------------
 
 void
-DialogMessage::drawDetail()
+DialogMessage::drawCustomLabel()
+{
+    if (msg_.label != MessageLabel::Custom) return;
+    attrOn(true);
+    mvwaddstr(pWin_, 1, 2, msg_.customLabel.c_str());
+    attrOn(false);
+}
+    
+//----------------------------------------------------------------
+
+void
+DialogMessage::drawInfoLabel()
+{
+    if (msg_.label != MessageLabel::Info) return;
+    attrOn(true);
+    mvwaddstr(pWin_, 1, 2, InfoLabel_.c_str());
+    attrOn(false);
+}
+
+//----------------------------------------------------------------
+
+void
+DialogMessage::drawWarnLabel()
+{
+    if (msg_.label != MessageLabel::Warning) return;
+    attrOn(true);
+    mvwaddstr(pWin_, 1, 2, WarnLabel_.c_str());
+    attrOn(false);
+}
+    
+//----------------------------------------------------------------
+
+void
+DialogMessage::drawErrorLabel()
+{
+    if (msg_.label != MessageLabel::Error) return;
+    attrOn(true);
+    mvwaddstr(pWin_, 1, 2, ErrorLabel_.c_str());
+    attrOn(false);
+}
+    
+//----------------------------------------------------------------
+
+void
+DialogMessage::drawText()
 {        
     int row = 3;
     for (const auto& line : msgFmtd_.detail)
@@ -467,55 +355,60 @@ DialogMessage::drawDetail()
 //----------------------------------------------------------------
 
 void
-DialogMessage::attrOn()
+DialogMessage::attrOn(bool onOff)
 {
-    if (msg_.label == MessageLabel::None)
-    {
-        // do nothing
-    }
-    else if (msg_.label == MessageLabel::Custom)
-    {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::CustomMessage)));
-    }
+    if (msg_.label == MessageLabel::Custom)
+        attrCustom(onOff);
     else if (msg_.label == MessageLabel::Info)
-    {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::InfoMessage)));
-    }
+        attrInfo(onOff);
     else if (msg_.label == MessageLabel::Warning)
-    {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::WarnMessage)));
-    }
+        attrWarn(onOff);
     else if (msg_.label == MessageLabel::Error)
-    {
-        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::ErrorMessage)));
-    }
+        attrError(onOff);
 }
 
 //----------------------------------------------------------------
 
 void
-DialogMessage::attrOff()
+DialogMessage::attrCustom(bool onOff)
 {
-    if (msg_.label == MessageLabel::None)
-    {
-        // do nothing
-    }
-    else if (msg_.label == MessageLabel::Custom)
-    {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::CustomMessage)));
-    }
-    else if (msg_.label == MessageLabel::Info)
-    {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::InfoMessage)));
-    }
-    else if (msg_.label == MessageLabel::Warning)
-    {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::WarnMessage)));
-    }
-    else if (msg_.label == MessageLabel::Error)
-    {
-        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::ErrorMessage)));
-    }
+    if (onOff)
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageCustom)));
+    else
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageCustom)));
+}
+
+//----------------------------------------------------------------
+
+void
+DialogMessage::attrInfo(bool onOff)
+{
+    if (onOff)
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageInfo)));
+    else
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageInfo)));
+}
+
+//----------------------------------------------------------------
+
+void
+DialogMessage::attrWarn(bool onOff)
+{
+    if (onOff)
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageWarn)));
+    else
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageWarn)));
+}
+
+//----------------------------------------------------------------
+
+void
+DialogMessage::attrError(bool onOff)
+{
+    if (onOff)
+        wattron(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageError)));
+    else
+        wattroff(pWin_, A_BOLD | COLOR_PAIR(ColorManager::instance().pair(Color::DialogMessageError)));
 }
 
 //----------------------------------------------------------------
@@ -527,7 +420,7 @@ DialogMessage::handleKey(int ch)
     {
     case 10 :  // enter key
     case 27 :  // escape key
-    case '.': back(); return true; break;
+    case '.': back(); return true;
     default : return false;
     }
 }

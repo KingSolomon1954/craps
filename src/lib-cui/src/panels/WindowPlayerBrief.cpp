@@ -9,8 +9,6 @@
 #include <cui/core/CuiStructs.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/managers/ColorManager.h>
-#include <controller/CrapsReaders.h>
-#include <craps/LastRollStats.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
 #include <iomanip>
@@ -50,6 +48,7 @@ WindowPlayerBrief::initPlayer()
     assert(rc == Gen::ReturnCode::Success);
     
     playerName_ = Ctrl::CrapsReaders::getUserPlayerName();
+    (void) Ctrl::CrapsReaders::readPlayerBalance(playerId_, balance_, ep);
 }
 
 //----------------------------------------------------------------
@@ -151,11 +150,18 @@ WindowPlayerBrief::populateBalance()
 {
     //  │ Bal: $2,000 Net: +$8,280       │
 
+    int positiveNum = netBalance_;
+    
     std::string plusOrMinus("+");
-    if (netBalance_ < 0) plusOrMinus = "-";
+    if (netBalance_ < 0)
+    {
+        positiveNum = -netBalance_;
+        plusOrMinus = "-";
+    }
 
     std::string s = "Bal: " + Gen::MoneyUtils::toString(balance_);
-    s += " (" + plusOrMinus + Gen::MoneyUtils::toString(netBalance_);
+    s += " (" + plusOrMinus + Gen::MoneyUtils::toString(
+                              static_cast<unsigned>(positiveNum));
     s += ")";
 
     mvwaddstr(pWin_, 2, 1, s.c_str());
@@ -223,6 +229,7 @@ WindowPlayerBrief::populateLast()
     if (total < 0)
     {
         plusOrMinus = "-";
+        total = -total;    // avoid to_string() adding its own "-"
     }
 
     s += plusOrMinus + "$" + std::to_string(total) + " ";
@@ -237,8 +244,11 @@ WindowPlayerBrief::populateLast()
 void
 WindowPlayerBrief::populateOnTable()
 {
+    std::string               b = " bets, ";
+    if (numBetsOnTable_ == 1) b = " bet, ";
+    
     std::string s = "On table: ";
-    s += std::to_string(numBetsOnTable_) + " bets, ";
+    s += std::to_string(numBetsOnTable_) + b;
     s += Gen::MoneyUtils::toString(amtOnTable_);
 
     mvwaddstr(pWin_, 6, 1, s.c_str());
@@ -247,34 +257,9 @@ WindowPlayerBrief::populateOnTable()
 //----------------------------------------------------------------
 
 void
-WindowPlayerBrief::onPlayerBalanceChanged(
-    Craps::PlayerId playerId,
-    Gen::Money      balance,      // how much left in wallet
-    int             netBalance)   // profit/loss this session
-{
-    if (playerId != playerId_) return;
-    
-    balance_    = balance;    
-    netBalance_ = netBalance;
-}
-
-//----------------------------------------------------------------
-
-void
 WindowPlayerBrief::onResolveBetsEnd()
 {
-    Gen::ErrorPass ep;
-    Craps::LastRollStats lrs;
-    
-    auto rc = Ctrl::CrapsReaders::readPlayerLastRollStats(playerId_, lrs, ep);
-    assert(rc == Gen::ReturnCode::Success);
-
-    numBetsPlayerWins_    = lrs.numBetsWin;
-    numBetsPlayerLoses_   = lrs.numBetsLose;
-    playerIntakeLastRoll_ = lrs.amountWin;
-    playerOutputLastRoll_ = lrs.amountLose;
-    numBetsOnTable_       = lrs.numBetsOnTable;
-    amtOnTable_           = lrs.amountOnTable;
+    // Empty
 }
 
 //----------------------------------------------------------------
@@ -294,3 +279,57 @@ WindowPlayerBrief::onNewShooter(const Craps::PlayerId& playerId)
 
 //----------------------------------------------------------------
 
+void
+WindowPlayerBrief::onPlayerBetsChanged(
+    const Craps::PlayerId& playerId,
+    unsigned numBetsOnTable,
+    Gen::Money amountOnTable)
+{
+    if (playerId != playerId_) return;
+
+    numBetsOnTable_ = numBetsOnTable;
+    amtOnTable_     = amountOnTable;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerBrief::onPlayerSessionStatsChanged(
+    const Craps::PlayerId& playerId,
+    unsigned numBetsWon,
+    unsigned numBetsLost)
+{
+    if (playerId != playerId_) return;
+
+    numBetsPlayerWins_  = numBetsWon;
+    numBetsPlayerLoses_ = numBetsLost;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerBrief::onPlayerLastRollStatsChanged(
+    const Craps::PlayerId& playerId,
+    const Craps::LastRollStats& lrs)
+{
+    if (playerId != playerId_) return;
+
+    playerIntakeLastRoll_ = lrs.amountWin;
+    playerOutputLastRoll_ = lrs.amountLose;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerBrief::onPlayerBalanceChanged(
+    const Craps::PlayerId& playerId,
+    Gen::Money             balance,     // how much left in wallet
+    int                    netBalance)  // profit/loss this session
+{
+    if (playerId != playerId_) return;
+    
+    balance_    = balance;    
+    netBalance_ = netBalance;
+}
+
+//----------------------------------------------------------------

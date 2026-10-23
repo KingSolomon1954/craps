@@ -76,6 +76,16 @@ public:
     
     static const std::string whiteSpace;  ///< these chars " \t\v\f\r\n"
 
+    static void wrapFormattedString(const std::string& s,
+                                    int maxWidth,
+                                    std::vector<std::string>& result);
+    static void wrapFormattedStrings(const std::vector<std::string>& strings,
+                                     int maxWidth,
+                                     std::vector<std::string>& result);
+    static void wrapLine(const std::string& line,
+                         size_t maxWidth,
+                         std::vector<std::string>& result);
+    
     static std::vector<std::string> wrapText(const std::string& text,
                                              int wrapWidth);
 };

@@ -14,6 +14,7 @@
 #include <craps/LastRollStats.h>
 #include <craps/TableConfig.h>
 #include <craps/TableStats.h>
+#include <gen/Debug.h>
 #include <gen/ErrorPass.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ReturnCode.h>
@@ -124,7 +125,7 @@ private:
     // order matters
     TableId tableId_;  // Table-1, Table-2, ...
     TableConfig config_;
-    Bank houseBank_;  // overriden by yaml
+    Bank houseBank_;   // overriden by yaml
 
     // order doesn't matter
     std::string tableName_;
@@ -207,7 +208,13 @@ private:
     void disbursePlayerLoses();
     void disbursePlayerKeeps();
 
-    void sendEventBetMade(const CrapsBet& bet) const;
+    void sendEventPlayerLeftTable(const Player& player) const;
+    void sendEventBetMade(const CrapsBet& bet)          const;
+    void sendEventBetChanged(const CrapsBet& bet)       const;
+    void sendEventTableLastRollStatsChanged()           const;
+    void sendEventTableSessionStatsChanged()            const;
+    void sendEventTableBetsChanged()                    const;
+    void sendEventTableBalanceChanged()                 const;
 
     // File operations
     void saveFile() const;
@@ -251,6 +258,8 @@ private:
                               Gen::Money amt,
                               Gen::ErrorPass& ep) const;
     std::string diagLimits   (Gen::Money amt) const;
+    
+    D(void logBet(const std::string& t, const CrapsBet& bet);)
 
     // Default bank constants for table
     static constexpr unsigned InitialStartingBankBalance_ = 3000000;

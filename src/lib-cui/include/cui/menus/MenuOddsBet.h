@@ -63,7 +63,7 @@ private:
     Craps::PlayerId playerId_;
     Bets            activeOddsBets_;
     MenuEntries     menuEntries_;
-    WindowPosition  winPos_;
+    WindowPosition  winPos_{10, 10};  // Arbitrary, gets set later
     WindowSize      winSize_;
     
 private:    
@@ -71,8 +71,6 @@ private:
 
     // Gathering bets
     void gatherBets();
-    void getPlayerId();
-    void gatherBetsInfo();
     void getBetIds(Craps::BetIds& ids);
     void gatherBetsDetail(const Craps::BetIds& ids);
     void sortBetsByCreated();
@@ -86,6 +84,7 @@ private:
     std::string formatAmount(const BetInfo& bet);
     std::string formatPivot (const BetInfo& bet);
     std::string formatHotKey(const char hotKey);
+    void logBetInfo(const BetInfo& bi);
 
     bool shortCircuit();
 
@@ -101,8 +100,7 @@ private:
     void processSelection(const Craps::BetId& betId);
     BetInfo& findBet(const Craps::BetId& betId);
     void populateCarrier(const BetInfo& bet);
-    void prepDialogAmount(const BetInfo& bet);
-    void activateDialogAmount();
+    void activateDialogBetAmount();
 };
 
 /*-----------------------------------------------------------*//**

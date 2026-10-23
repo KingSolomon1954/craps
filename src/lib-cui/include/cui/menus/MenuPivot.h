@@ -28,7 +28,6 @@ public:
     void draw()                          override;
     bool handleKey(int ch)               override;
     void setLocation(WindowPosition pos) override;
-    void configure(BetName betName);
     /// @}
 
     /// @name Observers
@@ -37,9 +36,9 @@ public:
     /// @}
 
 private:
-    WindowPosition   winPos_;
+    WindowPosition   winPos_{};
     const WindowSize winSize_ = {11, 24};  // rows, cols
-    BetName betName_;
+    BetName betName_ = BetName::Invalid;
     
     using NumberPrompts = std::array<std::string_view, 6>;
     
@@ -89,16 +88,20 @@ private:
 
 private:
     MenuPivot();  // Private ctor
+
+    // Drawing
+    void drawStaticContent();
+    void drawTitle();
+    void drawPrompts();
     void selectTitle();
     void selectPrompts();
-    void drawStaticContent();
-    void populate();
+
+    // Input processing
     bool handleKeyHardways(int ch);
     bool handleKeyAllNumbers(int ch);
     void processSelection(int num);
     void populateCarrier (int pivot);
-    void prepDialogAmount(int pivot);
-    void activateDialogAmount();
+    void activateDialogBetAmount();
     void back();
 };
 

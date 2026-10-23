@@ -231,3 +231,28 @@ WindowPlayerArea::onBetResolved(
 
 //----------------------------------------------------------------
 
+void
+WindowPlayerArea::onBetChanged(
+    const Craps::PlayerId& playerId,
+    Craps::BetId           betId,
+    BetName                betName,
+    Gen::Money             contractAmount,
+    Gen::Money             oddsAmount,
+    unsigned               pivot)
+{
+    allPlayersView_.onBetChanged(playerId,
+                                 betId,
+                                 betName,
+                                 contractAmount,
+                                 oddsAmount,
+                                 pivot);
+    onePlayerView_.onBetChanged(playerId,
+                                 betId,
+                                 betName,
+                                 contractAmount,
+                                 oddsAmount,
+                                 pivot);
+}
+
+//----------------------------------------------------------------
+

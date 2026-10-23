@@ -390,6 +390,188 @@ StringUtils::toLower(const std::string& s1)
     return result; 
 }
 
+/*-----------------------------------------------------------*//**
+
+Wrap one explicit input line into lines no wider than maxWidth.
+
+Leading and trailing spaces and tabs are removed. Words are kept
+together where possible; a word longer than maxWidth is hard-wrapped.
+
+@param[in]  line     The input line, without its line terminator.
+@param[in]  maxWidth Maximum output line width; must be at least 1.
+@param[out] result   Receives the wrapped line or lines. An empty
+                     input line produces one empty output line.
+*/
+void
+StringUtils::wrapLine(const std::string& line,
+                      size_t maxWidth,
+                      std::vector<std::string>& result)
+{
+    const auto first = line.find_first_not_of(" \t");
+
+    if (first == std::string::npos)
+    {
+        result.emplace_back();
+        return;
+    }
+
+    const auto last = line.find_last_not_of(" \t");
+    const std::string trimmed = line.substr(first, last - first + 1);
+
+    size_t pos = 0;
+
+    while (pos < trimmed.size())
+    {
+        // Skip whitespace before the next word.
+        while (pos < trimmed.size() &&
+               (trimmed[pos] == ' ' || trimmed[pos] == '\t'))
+        {
+            ++pos;
+        }
+
+        if (pos >= trimmed.size())
+            break;
+
+        const size_t remaining = trimmed.size() - pos;
+
+        if (remaining <= maxWidth)
+        {
+            result.push_back(trimmed.substr(pos));
+            break;
+        }
+
+        // Search backwards for whitespace within the allowed width.
+        size_t breakPos = pos + maxWidth;
+
+        while (breakPos > pos &&
+               trimmed[breakPos] != ' ' &&
+               trimmed[breakPos] != '\t')
+        {
+            --breakPos;
+        }
+
+        if (breakPos == pos)
+        {
+            // The next word exceeds maxWidth; hard-wrap it.
+            result.push_back(trimmed.substr(pos, maxWidth));
+            pos += maxWidth;
+        }
+        else
+        {
+            result.push_back(trimmed.substr(pos, breakPos - pos));
+            pos = breakPos;
+        }
+    }
+}
+
+/*-----------------------------------------------------------*//**
+
+Wrap a vector of possibly formatted strings into a single vector
+of output lines.
+
+Each input string is wrapped independently using
+wrapFormattedString(). Explicit line breaks and blank lines within each
+input string are preserved. The resulting lines are appended in the same
+order as the input strings.
+
+@note One design detail: this treats each vector element as an
+independent formatted string. It does not merge adjacent elements into
+one paragraph, so each element's leading/trailing whitespace handling
+and explicit line breaks follow the behavior of wrapFormattedString().
+
+@param[in]  strings  The input strings to wrap.
+@param[in]  maxWidth Maximum number of characters per output line;
+                     values less than 1 are treated as 1.
+@param[out] result   Receives all wrapped lines, in input order.
+                     Existing contents are cleared before processing.
+*/
+void
+StringUtils::wrapFormattedStrings(
+    const std::vector<std::string>& strings,
+    int maxWidth,
+    std::vector<std::string>& result)
+{
+    result.clear();
+
+    std::vector<std::string> wrapped;
+
+    for (const auto& s : strings)
+    {
+        StringUtils::wrapFormattedString(s, maxWidth, wrapped);
+
+        result.insert(result.end(),
+                      wrapped.begin(),
+                      wrapped.end());
+    }
+}
+
+/*-----------------------------------------------------------*//**
+  
+Wrap a formatted string into lines of a specified maximum width.
+
+Existing line breaks are preserved, including blank lines. CRLF,
+CR, and LF are recognized as line endings. Lines are trimmed of
+leading and trailing spaces and tabs, and long lines are wrapped
+at whitespace where possible. Words longer than maxWidth are
+hard-wrapped.
+
+Some important details:
+
+@li Empty input: Returns an empty vector.
+@li Blank lines: Preserved, including consecutive line breaks.
+@li Trailing newline: Preserves the final empty line. For example,
+    "Hello\n" produces {"Hello", ""}.
+@li Long words: Hard-wrapped to respect the width limit.
+@li Whitespace: Leading and trailing spaces and tabs are stripped
+    from each explicit input line; wrapping whitespace is not retained.
+@li Width: A value below 1 is treated as 1.
+
+One subtle point: this wraps by bytes/characters in std::string, not
+terminal display columns. That's appropriate for ordinary ASCII text,
+but UTF-8 characters and wide terminal glyphs may occupy multiple bytes
+or columns.
+
+@param[in]  s        The input string to wrap.
+@param[in]  maxWidth Maximum number of characters per output line;
+                     values less than 1 are treated as 1.
+@param[out] result   Receives the wrapped lines. Existing contents
+                     are cleared before the result is generated.
+*/
+void
+StringUtils::wrapFormattedString(const std::string& s,
+                                 int maxWidth,
+                                 std::vector<std::string>& result)
+{
+    result.clear();
+
+    const size_t width = static_cast<size_t>(std::max(1, maxWidth));
+
+    size_t start = 0;
+
+    while (start <= s.size())
+    {
+        const size_t end = s.find_first_of("\r\n", start);
+        const size_t len = (end == std::string::npos)
+                         ? s.size() - start
+                         : end - start;
+
+        wrapLine(s.substr(start, len), width, result);
+
+        if (end == std::string::npos)
+            break;
+
+        // Consume the line ending, treating CRLF as a single newline.
+        start = end + 1;
+
+        if (s[end] == '\r' &&
+            start < s.size() &&
+            s[start] == '\n')
+        {
+            ++start;
+        }
+    }
+}
+
 //----------------------------------------------------------------
 
 std::vector<std::string>

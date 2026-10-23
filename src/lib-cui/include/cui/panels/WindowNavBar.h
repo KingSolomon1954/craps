@@ -8,6 +8,8 @@
 
 #include <cui/bases/PanelBase.h>
 #include <cui/layouts/LayoutConsole.h>
+#include <string>
+#include <string_view>
 
 namespace Cui
 {
@@ -25,7 +27,7 @@ public:
     void draw()            override;
     bool handleKey(int ch) override;
     void onResume()        override;
-    void configure(const std::string& textLine);
+    void configure(const std::string_view textLine);    
     /// @}
 
     /// @name Observers

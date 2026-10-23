@@ -5,10 +5,12 @@
 //----------------------------------------------------------------
 
 #include <controller/QuickBet.h>
+#include <controller/GameEvents.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <craps/CrapsTypes.h>
 #include <craps/Player.h>
+#include <gen/EventManager.h>
 #include <cassert>
 
 using namespace Ctrl;
@@ -88,6 +90,15 @@ QuickBet::setQuickBet(const QuickBetEntry& qbe)
     {
         bets_.push_back(qbe);    // No match: add new entry
     }
+
+    Ctrl::UslQuickBetChanged ev;
+    ev.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
+    ev.betName   = qbe.betName;
+    ev.pivot     = qbe.pivot;
+    ev.isOddsBet = qbe.isOddsBet;
+    ev.amount    = qbe.amount;
+
+    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------

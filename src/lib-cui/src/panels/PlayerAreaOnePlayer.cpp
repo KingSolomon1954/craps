@@ -334,6 +334,25 @@ PlayerAreaOnePlayer::onBetMade(
 //----------------------------------------------------------------
 
 void
+PlayerAreaOnePlayer::onBetChanged(
+    const Craps::PlayerId& playerId,
+    Craps::BetId           betId,
+    BetName                betName,
+    Gen::Money             contractAmount,
+    Gen::Money             oddsAmount,
+    unsigned               pivot)
+{
+    onBetMade(playerId,
+              betId,
+              betName,
+              contractAmount,
+              oddsAmount,
+              pivot);
+}
+
+//----------------------------------------------------------------
+
+void
 PlayerAreaOnePlayer::onBetResolved(
     const Craps::PlayerId& playerId,
     BetName                betName,

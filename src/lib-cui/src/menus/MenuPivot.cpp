@@ -8,7 +8,9 @@
 
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
+#include <cui/dialogs/DialogBetAmount.h>
 #include <cui/core/CuiUtils.h>
+#include <gen/Logger.h>
 #include <ncurses.h>
 #include <cassert>
 
@@ -31,84 +33,6 @@ MenuPivot::instance()
 {
     static MenuPivot menu;
     return menu;
-}
-
-//----------------------------------------------------------------
-//
-// Fills in the window like this, just this once at init time.
-// 
-// Later, multiple calls to draw() just transfers the already
-// filled window.
-//
-//    0123456789012345678901
-// 0  ┌────────────────────┐
-// 1  │ Place Which Number │
-// 2  ├────────────────────┤
-// 3  │ [4] Place 4        │
-// 4  │ [5] Place 5        │
-// 5  │ [6] Place 6        │
-// 6  │ [8] Place 8        │
-// 7  │ [9] Place 9        │
-// 8  │ [0] Place 10       │
-// 9  │ [. or esc] Back    │
-// 10 └────────────────────┘
-//
-void
-MenuPivot::configure(BetName betName)
-{
-    betName_ = betName;
-    selectTitle  ();
-    selectPrompts();
-}
-
-//----------------------------------------------------------------
-
-void
-MenuPivot::selectTitle()
-{
-    switch (betName_)
-    {
-    case BetName::Place:
-        activeTitle_ = "Place Which Number  ";
-        break;
-
-    case BetName::Buy:
-        activeTitle_ = "Buy Which Number    ";
-        break;
-
-    case BetName::Lay:
-        activeTitle_ = "Lay Which Number    ";
-        break;
-
-    case BetName::Hardway:
-        activeTitle_ = "Hardway Which Number";
-        break;
-    }
-}
-
-//----------------------------------------------------------------
-
-void
-MenuPivot::selectPrompts()
-{
-    switch (betName_)
-    {
-    case BetName::Place:
-        pNumberPrompts_ = &promptsPlace_;
-        break;
-
-    case BetName::Buy:
-        pNumberPrompts_ = &promptsBuy_;
-        break;
-
-    case BetName::Lay:
-        pNumberPrompts_ = &promptsLay_;
-        break;
-    
-    case BetName::Hardway:
-        pNumberPrompts_ = &promptsHardway_;
-        break;
-    }
 }
 
 //----------------------------------------------------------------
@@ -145,13 +69,30 @@ MenuPivot::setLocation(WindowPosition pos)
 }
 
 //----------------------------------------------------------------
-
+//
+//    0123456789 123456789 1
+// 0  ┌────────────────────┐
+// 1  │ Place Which Number │
+// 2  ├────────────────────┤
+// 3  │ [4] Place 4        │
+// 4  │ [5] Place 5        │
+// 5  │ [6] Place 6        │
+// 6  │ [8] Place 8        │
+// 7  │ [9] Place 9        │
+// 8  │ [0] Place 10       │
+// 9  │ [. or esc] Back    │
+// 10 └────────────────────┘
+//
 void
 MenuPivot::draw()
 {
-    // Just reuse already filled window over and over
-    populate();
+    betName_ = CarrierBet::instance().getBetName();
+    assert(betName_ != BetName::Invalid);
+
+    drawTitle();
+    drawPrompts();
     touchwin(pWin_);
+    
     CuiUtils::transfer(pWin_);
 }    
 
@@ -174,21 +115,79 @@ MenuPivot::drawStaticContent()
 }
 
 //----------------------------------------------------------------
-//
-// Updates dynamic field content.
-//
+
 void
-MenuPivot::populate()
+MenuPivot::drawTitle()
 {
-    assert(pNumberPrompts_);
+    selectTitle();
     
     mvwaddstr(pWin_, 1, 2, activeTitle_.data());
+}
+
+//----------------------------------------------------------------
+
+void
+MenuPivot::drawPrompts()
+{
+    selectPrompts();
     
     int row = 3;
     for (const std::string_view s : *pNumberPrompts_)
     {
         mvwaddstr(pWin_, row++, 2, s.data());
     }
+}
+
+//----------------------------------------------------------------
+
+void
+MenuPivot::selectTitle()
+{
+    switch (betName_)
+    {
+    case BetName::Place:
+        activeTitle_ = "Place Which Number  ";
+        break;
+
+    case BetName::Buy:
+        activeTitle_ = "Buy Which Number    ";
+        break;
+
+    case BetName::Lay:
+        activeTitle_ = "Lay Which Number    ";
+        break;
+
+    case BetName::Hardway:
+        activeTitle_ = "Hardway Which Number";
+        break;
+    }
+    assert(betName_ != BetName::Invalid);
+}
+
+//----------------------------------------------------------------
+
+void
+MenuPivot::selectPrompts()
+{
+    switch (betName_)
+    {
+    case BetName::Place:
+        pNumberPrompts_ = &promptsPlace_;
+        break;
+
+    case BetName::Buy:
+        pNumberPrompts_ = &promptsBuy_;
+        break;
+
+    case BetName::Lay:
+        pNumberPrompts_ = &promptsLay_;
+        break;
+    
+    case BetName::Hardway:
+        pNumberPrompts_ = &promptsHardway_;
+        break;
+    }
+    assert(pNumberPrompts_ != nullptr);
 }
 
 //----------------------------------------------------------------
@@ -268,8 +267,7 @@ void
 MenuPivot::processSelection(int pivot)
 {
     populateCarrier(pivot);
-    prepDialogAmount(pivot);
-    activateDialogAmount();
+    activateDialogBetAmount();
 }
 
 //----------------------------------------------------------------
@@ -277,30 +275,15 @@ MenuPivot::processSelection(int pivot)
 void
 MenuPivot::populateCarrier(int pivot)
 {
-    auto cb = CarrierBet::instance();
-    cb.clear();
-    cb.setBetType(BetName::Place);
-    cb.setPivot(pivot);
+    CarrierBet::instance().setPivot(pivot);
 }
 
 //----------------------------------------------------------------
 
 void
-MenuPivot::prepDialogAmount(int pivot)
+MenuPivot::activateDialogBetAmount()
 {
-    // TODO
-    // DialogBetAmount::setPrompt("Place Bet on %s", pivot);
-    // auto amount = getAutoFillAmount(BetType::Pivot, pivot);
-    // DialogBetAmount::preFill(amount);
-}
-
-//----------------------------------------------------------------
-
-void
-MenuPivot::activateDialogAmount()
-{
-    // TODO
-    // SurfaceManager::pushSurface(AmountDialog);
+    SurfaceManager::instance().pushSurface(&DialogBetAmount::instance());
 }
 
 //----------------------------------------------------------------

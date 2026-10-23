@@ -11,21 +11,22 @@ add_library(cui STATIC
     src/core/CuiSender.cpp
     src/core/CuiThread.cpp
     src/core/CuiUtils.cpp
+    src/core/LineInput.cpp
     src/core/WorkOrderDispatcher.cpp
-#   src/dialogs/DialogAckError.cpp
-#   src/dialogs/DialogAmountEntry.cpp
+    src/dialogs/DialogBetAmount.cpp
     src/dialogs/DialogConfirm.cpp
+    src/dialogs/DialogError.cpp
     src/dialogs/DialogMessage.cpp
     src/layouts/LayoutCrapsScreen.cpp
     src/managers/CarrierBet.cpp
     src/managers/ColorManager.cpp
     src/managers/LocationManager.cpp
+    src/managers/OperationManager.cpp
     src/managers/SurfaceManager.cpp
     src/menus/MenuBetting.cpp
     src/menus/MenuControl.cpp
     src/menus/MenuConfigure.cpp
     src/menus/MenuOddsBet.cpp
-    src/menus/MenuPlaceBet.cpp
     src/menus/MenuPivot.cpp
     src/menus/MenuNavBarViews.cpp
     src/panels/PlayerAreaAllPlayers.cpp
@@ -38,6 +39,7 @@ add_library(cui STATIC
     src/panels/WindowRollHistory.cpp
     src/panels/WindowTitleBar.cpp
     src/screens/ScreenCrapsTable.cpp
+#   src/menus/MenuPlaceBet.cpp
 )
 
 target_include_directories(cui

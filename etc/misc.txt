@@ -1,0 +1,57 @@
+
+
+Odds Table
+──────────
+num   pass   dont    buy   lay     place    hardway
+0     0,0    0,0     0,0    0,0      0,0      0,0
+1     0,0    0,0     0,0    0,0      0,0      0,0
+2     0,0    0,0     0,0    0,0      0,0      0,0
+3     0,0    0,0     0,0    0,0      0,0      0,0
+4     2,1    1,2     2,1    1,2      9,5      7,1
+5     3,2    2,3     3,2    2,3      7,5      0,0
+6     6,5    5,6     6,5    5,6      7,6      9,1
+7     0,0    0,0     0,0    0,0      0,0      0,0
+8     6,5    5,6     6,5    5,6      7,6      9,1
+9     3,2    2,3     3,2    2,3      7,5      0,0
+10    2,1    1,2     2,1    1,2      9,5      7,1
+11    0,0    0,0     0,0    0,0      0,0      0,0
+12    0,0    0,0     0,0    0,0      0,0      0,0
+
+Tech Considerations
+───────────────────
+
+Layer           Tech
+--------------- ----------------------------------------
+Engine          Unreal Engine 5
+Programming     C++ (with Blueprint where convenient)
+Animation       Blender/Maya → FBX → Unreal Sequences
+UI              UMG (Unreal Motion Graphics)
+Audio           Unreal Sound Cues (dice rolls, chip sounds, dealer voice)
+VFX (Optional)  Niagara (for casino glow or excitement FX)
+
+Runtime Directory Structure
+───────────────────────────
+
+The standard runtime directories for royalcraps are:
+
+*  System-Wide Config: /etc/royalcraps/config.conf
+   * Purpose: Default settings for all users (e.g., default bet limits, game rules).
+   * Access: Read-only for users; writable by admins.
+*  User-Specific Config: $XDG_CONFIG_HOME/royalcraps/config.conf (defaults to ~/.config/royalcraps/config.conf)
+   * Purpose: User-customized settings (e.g., key bindings, display preferences).
+   * Access: Read/write for the user.
+*  Save Games: $XDG_DATA_HOME/royalcraps/saves/ (defaults to ~/.local/share/royalcraps/saves/)
+   * Purpose: Store game state (e.g., chips, bet history).
+   * Access: Read/write for the user.
+*  Shared Data: /usr/share/games/royalcraps/
+   *Purpose: Static assets (e.g., ASCII dice art, rule descriptions).
+   *Access: Read-only for users.
+*  Variable Data: /var/games/royalcraps/
+   * Purpose: System-wide data like global high scores.
+   * Access: Writable by the game (e.g., via games group).
+*  Cache: $XDG_CACHE_HOME/royalcraps/ (defaults to ~/.cache/royalcraps/)
+   * Purpose: Temporary data (e.g., precomputed animations).
+   * Access: Read/write for the user.
+*  Executable: /usr/games/royalcraps
+   * Purpose: Game binary
+

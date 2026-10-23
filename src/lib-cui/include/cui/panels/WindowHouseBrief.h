@@ -8,12 +8,13 @@
 
 #include <cui/bases/PanelBase.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <craps/LastRollStats.h>
 #include <gen/MoneyUtils.h>
 
 namespace Cui
 {
 
-    class WindowHouseBrief : PanelBase
+class WindowHouseBrief : PanelBase
 {
 public:
     /// @name Lifecycle
@@ -25,6 +26,9 @@ public:
     /// @{
     void draw() override;
     void onResolveBetsEnd();
+    void onTableBetsChanged(unsigned numBetsOnTable, Gen::Money amountOnTable);
+    void onTableSessionStatsChanged(unsigned numBetsWon, unsigned numBetsLost);
+    void onTableLastRollStatsChanged(const Craps::LastRollStats& lrs);
     void onTableBalanceChanged(Gen::Money balance, int netBalance);
     /// @}
 

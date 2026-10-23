@@ -10,6 +10,7 @@
 #include <cui/layouts/LayoutConsole.h>
 #include <cui/menus/MenuControl.h>
 #include <cui/managers/SurfaceManager.h>
+#include <cui/managers/OperationManager.h>
 #include <controller/GameEvents.h>
 #include <gen/EventManager.h>
 #include <gen/Logger.h>
@@ -73,7 +74,7 @@ WindowNavBar::populate()
 // Allow caller to specify the content of the nav bar window.
 //
 void
-WindowNavBar::configure(const std::string& textLine)
+WindowNavBar::configure(std::string_view textLine)
 {
     werase(pWin_);
     textLine_ = textLine;
@@ -155,12 +156,7 @@ WindowNavBar::doQuit()
 {
     LOG_TRACE("WindowNavBar::doQuit()");
 
-    Gen::EventManager::instance().publish(Ctrl::ReqTerminate{});
-
-    // TODO  Need a confirm dialog box tied to operationis maangers.
-    // instead of the following.
-    //    DialogConfirm::instance().configure("Are you sure you want to Quit?");
-    //    SurfaceManager::instance().pushSurface(&DialogConfirm::instance());
+    (void) OperationManager::instance().confirmQuit();
 }
 
 //----------------------------------------------------------------

@@ -7,7 +7,9 @@
 #pragma once
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
+#include <craps/LastRollStats.h>
 #include <gen/MoneyUtils.h>
+#include <gen/ErrorPass.h>
 #include <atomic>
 #include <string>
 #include <chrono>
@@ -30,12 +32,16 @@ enum class EventType
     // Requests
     ReqRollDice,
     ReqMakeBet,
+    ReqOddsBet,
     ReqRemoveBet,              // not yet implemented
     ReqChangeBet,              // not yet implemented
+    ReqAutoFill,
+    ReqQuickBet,
     ReqTerminate,
 
     // Responses
-    RspMakeBet,                // not yet implemented
+    RspMakeBet,
+    RspOddsBet,
     RspRemoveBet,              // not yet implemented
     RspChangeBet,              // not yet implemented
 
@@ -50,16 +56,26 @@ enum class EventType
     UslPassLineWinner,
     UslNewShooter,
     UslBettingOpened,
-    UslBetMade,                // not yet implemented
-    UslBetResolved,            // not yet implemented
-    UslBetRemoved,             // not yet implemented
-    UslBetChanged,             // not yet implemented
-    UslTableBalanceChanged,    // not yet implemented
-    UslPlayerBalanceChanged,   // not yet implemented
+    UslCountdownRollDice,      // not yet implemented
 
+    UslBetMade,
+    UslBetResolved,
+    UslBetRemoved,             // not yet implemented
+    UslBetChanged,
+    UslAutoFillChanged,
+    UslQuickBetChanged,
+    
+    UslTableBetsChanged,
+    UslTableSessionStatsChanged,
+    UslTableLastRollStatsChanged,
+    UslTableBalanceChanged,
+    
+    UslPlayerBetsChanged,
+    UslPlayerSessionStatsChanged,
+    UslPlayerLastRollStatsChanged,
+    UslPlayerBalanceChanged,
     UslPlayerJoinedTable,
-    UslPlayerLeftTable,
-    UslCountdownRollDice       // not yet implemented
+    UslPlayerLeftTable
 };
 
 //----------------------------------------------------------------
@@ -221,31 +237,6 @@ struct UslNewShooter : public GameEvent
 
 //----------------------------------------------------------------
 
-struct UslTableBalanceChanged : public GameEvent
-{
-    Gen::Money balance;          // how much left in bank
-    int        netBalance;       // profit/loss this session
-
-    UslTableBalanceChanged()
-        : GameEvent{EventSource::Model, EventType::UslTableBalanceChanged}
-    {}
-};
-
-//----------------------------------------------------------------
-
-struct UslPlayerBalanceChanged : public GameEvent
-{
-    Craps::PlayerId playerId;
-    Gen::Money      balance;     // how much left in bank
-    int             netBalance;  // profit/loss this session
-
-    UslPlayerBalanceChanged()
-        : GameEvent{EventSource::Model, EventType::UslPlayerBalanceChanged}
-    {}
-};
-
-//----------------------------------------------------------------
-
 struct UslBetMade : public GameEvent
 {
     Craps::PlayerId playerId;
@@ -262,6 +253,22 @@ struct UslBetMade : public GameEvent
 
 //----------------------------------------------------------------
 
+struct UslBetChanged : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId;
+    BetName         betName;
+    Gen::Money      contractAmount = 0;
+    Gen::Money      oddsAmount     = 0;
+    unsigned        pivot          = 0;
+
+    UslBetChanged()
+        : GameEvent{EventSource::Model, EventType::UslBetChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
 struct UslBetResolved : public GameEvent
 {
     Craps::PlayerId playerId;                      ///< Player ID
@@ -272,6 +279,134 @@ struct UslBetResolved : public GameEvent
 
     UslBetResolved()
         : GameEvent{EventSource::Model, EventType::UslBetResolved}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslAutoFillChanged : public GameEvent
+{
+    Craps::PlayerId playerId;                        ///< Player ID  
+    BetName         betName   = BetName::Invalid;    ///< Bet Name   
+    unsigned        pivot     = 0;                   ///< Bet ID     
+    bool            isOddsBet = false;               ///< Amount is for odds
+    Gen::Money      amount    = 0;                   ///< Amount
+            
+    UslAutoFillChanged()
+        : GameEvent{EventSource::Model, EventType::UslAutoFillChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslQuickBetChanged : public GameEvent
+{
+    Craps::PlayerId playerId;                        ///< Player ID  
+    BetName         betName   = BetName::Invalid;    ///< Bet Name   
+    unsigned        pivot     = 0;                   ///< Bet ID     
+    bool            isOddsBet = false;               ///< Amount is for odds
+    Gen::Money      amount    = 0;                   ///< Amount
+            
+    UslQuickBetChanged()
+        : GameEvent{EventSource::Model, EventType::UslQuickBetChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslTableBetsChanged : public GameEvent
+{
+    unsigned   numBetsOnTable;
+    Gen::Money amountOnTable;
+
+    UslTableBetsChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableBetsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslTableSessionStatsChanged : public GameEvent
+{
+    unsigned numBetsWon;
+    unsigned numBetsLost;
+
+    UslTableSessionStatsChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableSessionStatsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslTableLastRollStatsChanged : public GameEvent
+{
+    Craps::LastRollStats stats;
+
+    UslTableLastRollStatsChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableLastRollStatsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslTableBalanceChanged : public GameEvent
+{
+    Gen::Money balance;          // how much left in bank
+    int        netBalance;       // profit/loss this session
+
+    UslTableBalanceChanged()
+        : GameEvent{EventSource::Model, EventType::UslTableBalanceChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerBetsChanged : public GameEvent
+{
+    Craps::PlayerId playerId;
+    unsigned        numBetsOnTable;
+    Gen::Money      amountOnTable;
+
+    UslPlayerBetsChanged()
+        : GameEvent{EventSource::Model, EventType::UslPlayerBetsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerSessionStatsChanged : public GameEvent
+{
+    Craps::PlayerId playerId;
+    unsigned numBetsWon;
+    unsigned numBetsLost;
+
+    UslPlayerSessionStatsChanged()
+        : GameEvent{EventSource::Model, EventType::UslPlayerSessionStatsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerLastRollStatsChanged : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::LastRollStats stats;
+
+    UslPlayerLastRollStatsChanged()
+        : GameEvent{EventSource::Model, EventType::UslPlayerLastRollStatsChanged}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslPlayerBalanceChanged : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Gen::Money      balance;     // how much left in bank
+    int             netBalance;  // profit/loss this session
+
+    UslPlayerBalanceChanged()
+        : GameEvent{EventSource::Model, EventType::UslPlayerBalanceChanged}
     {}
 };
 
@@ -303,10 +438,93 @@ struct UslPlayerLeftTable : public GameEvent
 //
 //----------------------------------------------------------------
 
+struct ReqMakeBet : public GameEvent
+{
+    Craps::PlayerId playerId;
+    BetName         betName = BetName::Invalid;
+    unsigned        pivot = 0;
+    Gen::Money      contractAmount = 0;
+
+    ReqMakeBet()
+        : GameEvent{EventSource::View, EventType::ReqMakeBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct RspMakeBet : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    Craps::BetId    betId = 0;
+    Gen::ErrorPass  error;
+
+    RspMakeBet()
+        : GameEvent{EventSource::Controller, EventType::RspMakeBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct ReqOddsBet : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId = 0;
+    Gen::Money      oddsAmount = 0;
+
+    ReqOddsBet()
+        : GameEvent{EventSource::View, EventType::ReqOddsBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct RspOddsBet : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    Craps::BetId    betId = 0;
+    Gen::ErrorPass  error;
+
+    RspOddsBet()
+        : GameEvent{EventSource::Controller, EventType::RspOddsBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
 struct ReqRollDice : public GameEvent
 {
     ReqRollDice()
         : GameEvent{EventSource::View, EventType::ReqRollDice}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct ReqAutoFill : public GameEvent              // No response to this
+{
+    BetName         betName   = BetName::Invalid;  ///< Bet Name   
+    unsigned        pivot     = 0;                 ///< Bet ID     
+    bool            isOddsBet = false;             ///< Amount is for odds
+    Gen::Money      amount    = 0;                 ///< Amount
+
+    ReqAutoFill()
+        : GameEvent{EventSource::View, EventType::ReqAutoFill}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct ReqQuickBet : public GameEvent              // No response to this
+{
+    BetName         betName   = BetName::Invalid;  ///< Bet Name   
+    unsigned        pivot     = 0;                 ///< Bet ID     
+    bool            isOddsBet = false;             ///< Amount is for odds
+    Gen::Money      amount    = 0;                 ///< Amount
+
+    ReqQuickBet()
+        : GameEvent{EventSource::View, EventType::ReqQuickBet}
     {}
 };
 
@@ -318,8 +536,6 @@ struct ReqTerminate : public GameEvent
         : GameEvent{EventSource::View, EventType::ReqTerminate}
     {}
 };
-
-//----------------------------------------------------------------
 
 /*-----------------------------------------------------------*//**
 
@@ -372,387 +588,3 @@ correlationId.
 } // namespace Ctrl
 
 //----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-#if 0
-
-enum class EventType
-{
-    CmdPlayerJoinTable,
-    CmdPlayerLeaveTable,
-    CmdMakeBet,
-    CmdMakeBetAuto,
-    CmdBetSetContractAmount,
-    CmdBetSetOddsAmount,
-    CmdBetSetOffComeOutRoll,
-    CmdBetSetOnComeOutRoll,
-    CmdBetSetHardwayOff,
-    CmdBetSetHardwayOn,
-    CmdRollDice,
-    CmdSetAutoFill,
-    CmdDeleteAutoFill,
-    CmdSetQuickBet,
-    CmdApplyQuickBet,
-    CmdDeleteQuickBetByLookup,
-    CmdDeleteQuickBetByIndex,
-
-    ViewSuccess,
-    ViewErrorDialog,
-    ViewMakeBetSuccess,
-    ViewMakeBetAutoSuccess,
-    ViewMakeBetAutoError,
-    ViewMakeOddsBetSuccess,
-    ViewRollDiceCountDown,
-    ViewRollDiceAnimation,
-    ViewProgramExit
-};
-
-//----------------------------------------------------------------
-//
-// Cmd Events
-//
-//----------------------------------------------------------------
-
-struct CmdMakeBet : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::PlayerId playerId;
-    BetName         betName;
-    Gen::Money      contractAmount;
-    size_t          pivot;
-
-    EventType type() const override
-    {
-        return EventType::CmdMakeBet;
-    }
-};
-
-struct CmdMakeBetAuto : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::PlayerId playerId;
-    BetName         betName;
-    Gen::Money      contractAmount;
-    size_t          pivot;
-
-    EventType type() const override
-    {
-        return EventType::CmdMakeBetAuto;
-    }
-};
-
-struct CmdBetSetContractAmount : public GameEvent
-{
-    uint64_t     correlationId;
-    Craps::BetId betId;
-    Gen::Money   contractAmount;
-
-    EventType type() const override
-    {
-        return EventType::CmdBetSetContractAmount;
-    }
-};
-
-struct CmdBetSetOddsAmount : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::BetId    betId;
-    Gen::Money      oddsAmount;
-
-    EventType type() const override
-    {
-        return EventType::CmdBetSetOddsAmount;
-    }
-};
-
-struct CmdBetSetOffComeOutRoll : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::BetId    betId;
-
-    EventType type() const override
-    {
-        return EventType::CmdBetSetOffComeOutRoll;
-    }
-};
-
-struct CmdBetSetOnComeOutRoll : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::BetId    betId;
-
-    EventType type() const override
-    {
-        return EventType::CmdBetSetOnComeOutRoll;
-    }
-};
-
-struct CmdBetSetHardwayOff : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::BetId    betId;
-
-    EventType type() const override
-    {
-        return EventType::CmdBetSetHardwayOff;
-    }
-};
-
-struct CmdBetSetHardwayOn : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::BetId    betId;
-
-    EventType type() const override
-    {
-        return EventType::CmdBetSetHardwayOn;
-    }
-};
-
-struct CmdRollDice : public GameEvent
-{
-    uint64_t       correlationId;
-    Craps::TableId tableId;
-
-    EventType type() const override
-    {
-        return EventType::CmdRollDice;
-    }
-};
-
-struct CmdPlayerJoinTable : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::PlayerId playerId;
-    Craps::TableId  tableId;
-    EventType type() const override
-    {
-        return EventType::CmdPlayerJoinTable;
-    }
-};
-
-struct CmdPlayerLeaveTable : public GameEvent
-{
-    uint64_t        correlationId;
-    Craps::PlayerId playerId;
-    EventType type() const override
-    {
-        return EventType::CmdPlayerLeaveTable;
-    }
-};
-
-struct CmdSetAutoFill : public GameEvent
-{
-    uint64_t    correlationId;
-    BetName     betName;
-    size_t      pivot;
-    bool        oddsBet;
-    Gen::Money  amount;
-
-    EventType type() const override
-    {
-        return EventType::CmdSetAutoFill;
-    }
-};
-
-struct CmdDeleteAutoFill : public GameEvent
-{
-    uint64_t    correlationId;
-    BetName     betName;
-    size_t      pivot;
-    bool        oddsBet;
-    Gen::Money  amount;
-
-    EventType type() const override
-    {
-        return EventType::CmdDeleteAutoFill;
-    }
-};
-
-struct CmdSetQuickBet : public GameEvent
-{
-    uint64_t    correlationId;
-    BetName     betName;
-    size_t      pivot;
-    bool        oddsBet;
-    Gen::Money  amount;
-
-    EventType type() const override
-    {
-        return EventType::CmdSetQuickBet;
-    }
-};
-
-struct CmdApplyQuickBet : public GameEvent
-{
-    uint64_t    correlationId;
-    size_t      index;
-
-    EventType type() const override
-    {
-        return EventType::CmdApplyQuickBet;
-    }
-};
-
-struct CmdDeleteQuickBetByLookup : public GameEvent
-{
-    uint64_t    correlationId;
-    BetName     betName;
-    size_t      pivot;
-    bool        oddsBet;
-    Gen::Money  amount;
-
-    EventType type() const override
-    {
-        return EventType::CmdDeleteQuickBetByLookup;
-    }
-};
-
-struct CmdDeleteQuickBetByIndex : public GameEvent
-{
-    uint64_t    correlationId;
-    size_t      index;
-
-    EventType type() const override
-    {
-        return EventType::CmdDeleteQuickBetByIndex;
-    }
-};
-
-
-
-
-
-
-
-
-
-
-
-//----------------------------------------------------------------
-//
-// View Events
-//
-//----------------------------------------------------------------
-
-struct ViewErrorDialog : public GameEvent
-{
-    EventType orgEventType;
-    uint64_t correlationId;
-    std::string diag;
-
-    EventType type() const override
-    {
-        return EventType::ViewErrorDialog;
-    }
-};
-
-struct ViewSuccess : public GameEvent // Generic success for most events
-{
-    uint64_t correlationId;
-    Craps::BetId betId;
-    Craps::PlayerId playerId;
-
-    EventType type() const override
-    {
-        return EventType::ViewSuccess;
-    }
-};
-
-struct ViewMakeBetSuccess : public GameEvent
-{
-    uint64_t correlationId;
-    Craps::BetId betId;
-
-    EventType type() const override
-    {
-        return EventType::ViewMakeBetSuccess;
-    }
-};
-
-struct ViewMakeOddsBetSuccess : public GameEvent
-{
-    uint64_t correlationId;
-    Craps::BetId betId;
-
-    EventType type() const override
-    {
-        return EventType::ViewMakeOddsBetSuccess;
-    }
-};
-
-struct ViewMakeBetAutoSuccess : public GameEvent
-{
-    uint64_t correlationId;
-    Craps::BetId betId;
-
-    EventType type() const override
-    {
-        return EventType::ViewMakeBetAutoSuccess;
-    }
-};
-
-struct ViewMakeBetAutoError : public GameEvent
-{
-    EventType orgEventType;
-    uint64_t correlationId;
-    Craps::PlayerId playerId;
-    std::string diag;
-    EventType type() const override
-    {
-        return EventType::ViewMakeBetAutoError;
-    }
-};
-
-struct ViewRollDiceCountDown : public GameEvent
-{
-    uint64_t       correlationId;
-    Craps::TableId tableId;
-    int            numSeconds;
-
-    EventType type() const override
-    {
-        return EventType::ViewRollDiceCountDown;
-    }
-};
-
-struct ViewRollDiceAnimation : public GameEvent
-{
-    uint64_t       correlationId;
-
-    EventType type() const override
-    {
-        return EventType::ViewRollDiceAnimation;
-    }
-};
-
-struct ViewProgramExit : public GameEvent
-{
-    // TODO
-    int signal;
-    EventType type() const override
-    {
-        return EventType::ViewProgramExit;
-    }
-};
-
-
-struct TimerEvent : public GameEvent
-{
-    std::chrono::steady_clock::time_point time;
-    EventType type() const override
-    {
-        return EventType::Timer;
-    }
-};
-#endif

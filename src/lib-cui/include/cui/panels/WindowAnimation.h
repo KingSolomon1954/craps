@@ -12,6 +12,7 @@
 #include <craps/CrapsTypes.h>
 #include <gen/TimerManager.h>
 #include <string>
+#include <string_view>
 
 namespace Cui
 {
@@ -110,7 +111,7 @@ private:
     void drawBanner();
     void drawShowingShooter();
     void drawAnimationShooter();
-    void drawShooter(const std::string& name, PlayerColor pc);
+    void drawShooter(std::string_view name, PlayerColor pc);
     void drawZeroRoll();
     void drawAnimation();
     void drawShowingRoll();

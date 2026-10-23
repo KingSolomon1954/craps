@@ -5,6 +5,8 @@
 //---------------------------------------------------------------
 
 #include <cui/managers/CarrierBet.h>
+#include <gen/Logger.h>
+#include <cassert>
 
 using namespace Cui;
 
@@ -28,6 +30,7 @@ CarrierBet::clear()
     pivot_          = 0;
     oddsAmount_     = 0;
     contractAmount_ = 0;
+    isOddsBet_      = false;
 }
 
 //----------------------------------------------------------------
@@ -41,7 +44,15 @@ CarrierBet::setPlayerId(const Craps::PlayerId& id)
 //----------------------------------------------------------------
 
 void
-CarrierBet::setBetType(BetName betName)
+CarrierBet::setBetId(Craps::BetId betId)
+{
+    betId_ = betId;
+}
+
+//----------------------------------------------------------------
+
+void
+CarrierBet::setBetName(BetName betName)
 {
     betName_ = betName;
 }
@@ -57,6 +68,17 @@ CarrierBet::setPivot(unsigned pivot)
 //----------------------------------------------------------------
 
 void
+CarrierBet::setAmount(const Gen::Money& amount)
+{
+    if (isOddsBet_)
+        oddsAmount_ = amount;
+    else
+        contractAmount_ = amount;
+}
+
+//----------------------------------------------------------------
+
+void
 CarrierBet::setContractAmount(const Gen::Money& amount)
 {
     contractAmount_ = amount;
@@ -67,7 +89,15 @@ CarrierBet::setContractAmount(const Gen::Money& amount)
 void
 CarrierBet::setOddsAmount(const Gen::Money& amount)
 {
-    contractAmount_ = amount;
+    oddsAmount_ = amount;
+}
+
+//----------------------------------------------------------------
+
+void
+CarrierBet::setDesireOdds()
+{
+    isOddsBet_ = true;
 }
 
 //----------------------------------------------------------------
@@ -76,6 +106,14 @@ Craps::PlayerId
 CarrierBet::getPlayerId() const
 {
     return playerId_;
+}
+
+//----------------------------------------------------------------
+
+Craps::BetId
+CarrierBet::getBetId() const
+{
+    return betId_;
 }
 
 //----------------------------------------------------------------
@@ -107,7 +145,36 @@ CarrierBet::getContractAmount() const
 Gen::Money
 CarrierBet::getOddsAmount() const
 {
-    return contractAmount_;
+    return oddsAmount_;
+}
+
+//----------------------------------------------------------------
+
+bool
+CarrierBet::isOddsBet() const
+{
+    return isOddsBet_;
+}
+
+//----------------------------------------------------------------
+
+std::string
+CarrierBet::getTitleBetAmount() const
+{
+    std::string oddsStr;   // empty
+    std::string pivotStr;  // empty
+    
+    if (isOddsBet_)
+    {
+        assert(pivot_ != 0);
+        oddsStr = "Odds ";
+    }
+
+    if (pivot_ != 0)
+    {
+        pivotStr = "on the " + std::to_string(pivot_);    
+    }
+    return EnumBetName::toString(betName_) + " bet " + oddsStr + pivotStr;
 }
 
 //----------------------------------------------------------------

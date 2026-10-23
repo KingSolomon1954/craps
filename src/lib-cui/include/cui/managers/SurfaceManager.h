@@ -31,6 +31,7 @@ public:
     void pushSurface(SurfaceBase* pSurface);  // overlay (pauses previous top)
     void popSurface ();                       // remove top, resume new top
     void popSurfaces();                       // remove top until menu claims control
+    void popToRoot();                         // remove all overlays and menus
     bool handleKey(int ch);
     SurfaceBase* activeSurface() const;
     bool isActiveSurface(SurfaceBase* pSurface) const;

@@ -18,6 +18,7 @@ public:
     /// @name Lifecycle
     /// @{
    ~MenuBetting() = default;
+    static MenuBetting& instance();
     /// @}
 
     /// @name Modifiers
@@ -29,14 +30,13 @@ public:
 
     /// @name Observers
     /// @{
-    static MenuBetting& instance();
     LocationRequest getLocationRequest() const override;
     /// @}
     
 private:
-    WindowPosition  winPos_;
-    WindowSize      winSize_ = {25, 25};  // rows, cols
-    BetName         betName_ = BetName::Invalid;
+    WindowPosition winPos_{};
+    WindowSize     winSize_ = {25, 25};  // rows, cols
+    BetName        betName_ = BetName::Invalid;
 
 private:    
     MenuBetting();  // Private ctor
@@ -53,8 +53,7 @@ private:
     void doQuickBet();
     void doRollDice();
     void populateCarrier();
-    void prepDialogAmount();
-    void activateDialogAmount();
+    void activateDialogBetAmount();
     void activateMenuPivot();
     void activateMenuOddsBet();
     bool hasQualifyingOddsBets();

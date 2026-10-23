@@ -6,6 +6,7 @@
 
 #include <cui/dialogs/DialogConfirm.h>
 #include <cui/managers/SurfaceManager.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/core/CuiUtils.h>
 #include <cassert>
 
@@ -32,7 +33,7 @@ DialogConfirm::instance()
 //----------------------------------------------------------------
 //
 void
-DialogConfirm::configure(const std::string& textLine)
+DialogConfirm::configure(std::string_view textLine)
 {
     text_ = textLine;
     configured_ = true;
@@ -198,6 +199,7 @@ DialogConfirm::processSelection(OperationResult r)
 {
     setOperationResult(r);
     SurfaceManager::instance().popSurface();
+    OperationManager::instance().onConfirmationResult(r);
 }
 
 //----------------------------------------------------------------

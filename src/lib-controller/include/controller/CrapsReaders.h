@@ -238,6 +238,7 @@ public:
         Craps::PlayerId& playerId,
         Gen::ErrorPass& ep);
     static std::string getUserPlayerName();
+    static const Craps::PlayerId& getUserPlayerId();
     
     // Auto Fill
     static Gen::ReturnCode getAutoFill(

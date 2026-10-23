@@ -5,6 +5,14 @@
 //----------------------------------------------------------------
 
 #include <controller/AutoFill.h>
+#include <controller/GameEvents.h>
+#include <controller/Globals.h>
+#include <controller/PlayerManager.h>
+#include <craps/CrapsTypes.h>
+#include <craps/Player.h>
+#include <gen/EventManager.h>
+#include <gen/Logger.h>
+#include <cassert>
 
 using namespace Ctrl;
 
@@ -45,6 +53,15 @@ AutoFill::setAutoFill(const AutoFillEntry& afe)
     {
         fills_.push_back(afe);    // No match: add new entry
     }
+
+    Ctrl::UslAutoFillChanged ev;
+    ev.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
+    ev.betName   = afe.betName;
+    ev.pivot     = afe.pivot;
+    ev.isOddsBet = afe.isOddsBet;
+    ev.amount    = afe.amount;
+
+    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------

@@ -33,7 +33,7 @@ public:
     /// @}
     
 private:
-    WindowPosition   winPos_;
+    WindowPosition   winPos_{};
     const WindowSize winSize_ = {14, 25};  // rows, cols
 
 private:

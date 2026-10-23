@@ -294,14 +294,18 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
     if (pBet == nullptr || fifBadAddBet(pBet, ep))
     {
         ep.prepend(s);
-        ep.setErrorName("Betting Error");
-        ep.setErrorType(Et::ProcessingError);
+        // ep.setErrorName() is set in lower functions
+        ep.setErrorType("Betting Error");
         ep.setSeverity(Es::Indeterminate);
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
     wallet_.withdraw(contractAmount);
     bets_.push_back(pBet);
+
+    sendEventPlayerBalanceChanged();
+    sendEventPlayerBetsChanged();
+    
     return pBet;
 }
 
@@ -323,6 +327,8 @@ Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
     wallet_.withdraw(pBet->contractAmount() + pBet->oddsAmount());
     bets_.push_back(pBet);
     (void) pTable_->addBet(pBet, ep);
+    
+    sendEventPlayerBetsChanged();
     return Gen::ReturnCode::Success;
 }
 
@@ -356,6 +362,8 @@ Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState)
 
     int deltaOdds = pBet->oddsAmount() - prevState.oddsAmount();
     applyDelta(deltaOdds);
+
+    sendEventPlayerBalanceChanged();
 }
 
 //----------------------------------------------------------------
@@ -377,7 +385,7 @@ Player::makeShared(BetName betName,
     }
     catch(std::invalid_argument& e)
     {
-        EP_SET(ep, En::CaughtException, Et::ProcessingError,
+        EP_SET(ep, En::InvalidArgumentError, Et::ProcessingError,
                Es::Major, e.what());
         return nullptr;
     }
@@ -440,6 +448,9 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
         ep.prepend(diagPrefix(2));
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
+
+    sendEventPlayerBetsChanged();
+    sendEventPlayerBalanceChanged();
 
     return {};
 }
@@ -531,8 +542,7 @@ Player::processWin(const DecisionRecord& dr)
     lastRollStats_.amountWin += dr.win;
     lastRollStats_.numBetsWin++;
 
-    sendEventBetResolved(playerId_, pBet->betName(),
-                         pBet->betId(), dr.win, dr.lose);
+    sendEventBetResolved(pBet->betName(), pBet->betId(), dr.win, dr.lose);
 
     (void) removeBetByPtr(pBet);
 }
@@ -572,6 +582,9 @@ Player::processLose(const DecisionRecord& dr)
     currentStats_.recordLose(*(dr.pBet), dr.lose);
     lastRollStats_.amountLose += dr.lose;
     lastRollStats_.numBetsLose++;
+
+    sendEventBetResolved(pBet->betName(), pBet->betId(), dr.win, dr.lose);
+    
     (void) removeBetByPtr(pBet);  // Done with this bet
 }
 
@@ -614,7 +627,7 @@ bets. Can't use events for this since bets will have already have been
 removed by the time we see those events here.
 
 Close out lastRollStats (no need to do that here as it is cleared in
-betting closed) and publish event.  Always send the event. Doesn't
+betting closed) and publish events.  Always send the event. Doesn't
 matter if no bets had a decision.  Want last roll stats to show +$0
 change on screen.
 */
@@ -623,30 +636,77 @@ Player::disburseDone()
 {
     if (lastRollStats_.amountWin > 0 || lastRollStats_.amountLose > 0)
     {
-        Ctrl::UslPlayerBalanceChanged ev;
-        ev.playerId   = playerId_;
-        ev.balance    = getBalance();    // how much left in wallet
-        ev.netBalance = getSessionNet(); // profilt/loss session start
-
-        Gen::EventManager::instance().publish(ev);
+        sendEventPlayerBetsChanged();
+        sendEventPlayerSessionStatsChanged();
+        sendEventPlayerBalanceChanged();
     }
+    sendEventPlayerLastRollStatsChanged();
 }
 
 //----------------------------------------------------------------
 
 void
-Player::sendEventBetResolved(const PlayerId& playerId,
-                             BetName         betName,
+Player::sendEventBetResolved(BetName         betName,
                              BetId           betId,
                              Gen::Money      amountWin,
                              Gen::Money      amountLose) const
 {
     Ctrl::UslBetResolved ev;
-    ev.playerId   = playerId,
+    ev.playerId   = playerId_,
     ev.betName    = betName,
     ev.betId      = betId,
     ev.amountWin  = amountWin;
     ev.amountLose = amountLose;
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+Player::sendEventPlayerBetsChanged() const
+{
+    Ctrl::UslPlayerBetsChanged ev;
+    ev.playerId       = playerId_;
+    ev.numBetsOnTable = getNumBetsOnTable();
+    ev.amountOnTable  = getAmountOnTable();
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+Player::sendEventPlayerSessionStatsChanged() const
+{
+    Ctrl::UslPlayerSessionStatsChanged ev;
+    ev.playerId    = playerId_;
+    ev.numBetsWon  = currentStats_.betStats.totNumWinsAllBets;
+    ev.numBetsLost = currentStats_.betStats.totNumLoseAllBets;
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void        
+Player::sendEventPlayerLastRollStatsChanged() const
+{
+    Ctrl::UslPlayerLastRollStatsChanged lrs{};
+    lrs.playerId = playerId_;
+    lrs.stats    = lastRollStats_;
+    Gen::EventManager::instance().publish(lrs);
+}
+
+//----------------------------------------------------------------
+
+void
+Player::sendEventPlayerBalanceChanged() const
+{
+    Ctrl::UslPlayerBalanceChanged ev;
+    ev.playerId   = playerId_;
+    ev.balance    = getBalance();    // how much left in wallet
+    ev.netBalance = getSessionNet(); // profilt/loss session start
 
     Gen::EventManager::instance().publish(ev);
 }
@@ -816,6 +876,10 @@ Player::removeBet(const BetId& betId)
 
     wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount());
     bets_.erase(it, bets_.end());  // remove from our list of bets
+
+    sendEventPlayerBetsChanged();
+    sendEventPlayerBalanceChanged();
+
     return {};
 }
 

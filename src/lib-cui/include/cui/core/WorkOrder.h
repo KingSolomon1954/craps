@@ -51,10 +51,27 @@ using GameEvent = std::variant<
     Ctrl::UslPassLineWinner,
     Ctrl::UslNewShooter,
     Ctrl::UslBettingOpened,
+//  Ctrl::UslCountdownRollDice,      // not yet implemented
+    
     Ctrl::UslBetMade,
     Ctrl::UslBetResolved,
+//  Ctrl::UslBetRemoved,             // not yet implemented
+    Ctrl::UslBetChanged,
+    Ctrl::UslAutoFillChanged,
+    Ctrl::UslQuickBetChanged,
+    
+    Ctrl::UslTableBetsChanged,
+    Ctrl::UslTableSessionStatsChanged,
+    Ctrl::UslTableLastRollStatsChanged,
     Ctrl::UslTableBalanceChanged,
-    Ctrl::UslPlayerBalanceChanged
+
+    Ctrl::UslPlayerBetsChanged,
+    Ctrl::UslPlayerSessionStatsChanged,
+    Ctrl::UslPlayerLastRollStatsChanged,
+    Ctrl::UslPlayerBalanceChanged,
+    
+    Ctrl::RspMakeBet,
+    Ctrl::RspOddsBet
     >;
     
 struct WorkOrderEvent

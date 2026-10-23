@@ -18,37 +18,44 @@ public:
     /// @name Lifecycle
     /// @{
    ~CarrierBet() = default;
+    static CarrierBet& instance();
     /// @}
 
     /// @name Modifiers
     /// @{
     void clear();
     void setPlayerId      (const Craps::PlayerId& id);
-    void setBetType       (BetName betName);
+    void setBetId         (Craps::BetId betId);
+    void setBetName       (BetName betName);
     void setPivot         (unsigned pivot);
+    void setAmount        (const Gen::Money& amount);
     void setContractAmount(const Gen::Money& amount);
     void setOddsAmount    (const Gen::Money& amount);
+    void setDesireOdds    ();
     /// @}
 
     /// @name Observers
     /// @{
-    static CarrierBet& instance();
-    Craps::PlayerId   getPlayerId()       const;
-    BetName           getBetName ()       const;
-    unsigned          getPivot   ()       const;
+    Craps::PlayerId   getPlayerId      () const;
+    Craps::BetId      getBetId         () const;
+    BetName           getBetName       () const;
+    unsigned          getPivot         () const;
     Gen::Money        getContractAmount() const;
-    Gen::Money        getOddsAmount()     const;
+    Gen::Money        getOddsAmount    () const;
+    std::string       getTitleBetAmount() const;
+    bool              isOddsBet        () const;
     /// @}
 
 private:
-    Craps::PlayerId playerId_;
-    Craps::BetId    betId_;
-    BetName         betName_;
-    unsigned        pivot_;
-    Gen::Money      contractAmount_;
-    Gen::Money      oddsAmount_;
+    CarrierBet() = default;  // Private ctor
 
-    CarrierBet() = default;
+    Craps::PlayerId playerId_;
+    Craps::BetId    betId_          = 0;
+    BetName         betName_        = BetName::Invalid;
+    unsigned        pivot_          = 0;
+    Gen::Money      contractAmount_ = 0;
+    Gen::Money      oddsAmount_     = 0;
+    bool            isOddsBet_      = false;
 };
 
 /*-----------------------------------------------------------*//**

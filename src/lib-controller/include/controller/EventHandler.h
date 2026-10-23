@@ -28,7 +28,11 @@ public:
     /// @}
 
 private:
-    void onReqRollDice(const Ctrl::ReqRollDice& ev) const;
+    void onReqMakeBet  (const Ctrl::ReqMakeBet& ev)   const;
+    void onReqOddsBet  (const Ctrl::ReqOddsBet& ev)   const;
+    void onReqRollDice (const Ctrl::ReqRollDice& ev)  const;
+    void onReqAutoFill (const Ctrl::ReqAutoFill& ev)  const;
+    void onReqQuickBet (const Ctrl::ReqQuickBet& ev)  const;
     void onReqTerminate(const Ctrl::ReqTerminate& ev) const;
 };
 

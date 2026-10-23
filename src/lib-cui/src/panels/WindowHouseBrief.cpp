@@ -9,8 +9,6 @@
 #include <cui/core/CuiUtils.h>
 #include <cui/core/CuiStructs.h>
 #include <craps/CrapsTypes.h>
-#include <craps/LastRollStats.h>
-#include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
 #include <gen/ReturnCode.h>
@@ -112,11 +110,16 @@ WindowHouseBrief::populate()
 void
 WindowHouseBrief::populateNetBalance()
 {
+    int positiveNum = netBalance_;
+    
     std::string plusOrMinus("+");
-    if (netBalance_ < 0) plusOrMinus = "-";
-
-    std::string s = "House Net: " + plusOrMinus +
-        Gen::MoneyUtils::toString(static_cast<unsigned>(netBalance_));
+    if (netBalance_ < 0)
+    {
+        positiveNum = -netBalance_;
+        plusOrMinus = "-";
+    }
+    std::string s = "House Net: " + plusOrMinus + 
+        Gen::MoneyUtils::toString(static_cast<unsigned>(positiveNum));
 
     mvwaddstr(pWin_, 0, 1, s.c_str());
 }
@@ -183,6 +186,7 @@ WindowHouseBrief::populateLast()
     if (total < 0)
     {
         plusOrMinus = "-";
+        total = -total;    // avoid to_string() adding its own "-"
     }
 
     s += plusOrMinus + "$" + std::to_string(total) + " ";
@@ -197,11 +201,36 @@ WindowHouseBrief::populateLast()
 void
 WindowHouseBrief::populateOnTable()
 {
+    std::string               b = " bets, ";
+    if (numBetsOnTable_ == 1) b = " bet, ";
+    
     std::string s = "On table: ";
-    s += std::to_string(numBetsOnTable_) + " bets, ";
+    s += std::to_string(numBetsOnTable_) + b;
     s += Gen::MoneyUtils::toString(amtOnTable_);
 
     mvwaddstr(pWin_, 4, 1, s.c_str());
+}
+
+//----------------------------------------------------------------
+
+void
+WindowHouseBrief::onTableBetsChanged(
+    unsigned   numBetsOnTable,
+    Gen::Money amountOnTable)
+{
+    numBetsOnTable_  = numBetsOnTable;
+    amtOnTable_      = amountOnTable;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowHouseBrief::onTableSessionStatsChanged(
+    unsigned numBetsWon,
+    unsigned numBetsLost)
+{
+    numBetsTableWins_  = numBetsWon;
+    numBetsTableLoses_ = numBetsLost;
 }
 
 //----------------------------------------------------------------
@@ -218,25 +247,18 @@ WindowHouseBrief::onTableBalanceChanged(
 //----------------------------------------------------------------
 
 void
-WindowHouseBrief::onResolveBetsEnd()
+WindowHouseBrief::onTableLastRollStatsChanged(const Craps::LastRollStats& lrs)
 {
-    Gen::ErrorPass ep;
-    Craps::TableId tid;
-    
-    auto rc = Ctrl::CrapsReaders::getActiveCrapsTable(tid, ep);
-    assert(rc == Gen::ReturnCode::Success);
-
-    Craps::LastRollStats lrs;
-    
-    rc = Ctrl::CrapsReaders::readTableLastRollStats(tid, lrs, ep);
-    assert(rc == Gen::ReturnCode::Success);
-
-    numBetsTableWins_    = lrs.numBetsWin;
-    numBetsTableLoses_   = lrs.numBetsLose;
     tableIntakeLastRoll_ = lrs.amountWin;
     tableOutputLastRoll_ = lrs.amountLose;
-    numBetsOnTable_      = lrs.numBetsOnTable;
-    amtOnTable_          = lrs.amountOnTable;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowHouseBrief::onResolveBetsEnd()
+{
+    // empty
 }
 
 //----------------------------------------------------------------
