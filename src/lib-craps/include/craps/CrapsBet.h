@@ -49,20 +49,20 @@ public:
 
     /// @name Observers
     /// @{
-    Player&        player()         const;
-    BetId          betId()          const;
-    BetName        betName()        const;
-    unsigned       pivot()          const;
-    unsigned       contractAmount() const;
-    unsigned       oddsAmount()     const;
-    bool           offComeOutRoll() const;
-    bool           hardwayWorking() const;
-    unsigned       distance()       const;
-    Gen::Timepoint whenCreated()    const;
-    Gen::Timepoint whenDecided()    const;
-    std::string    diagBetId()      const;  // "bet(betId:33, betName:DontCome(4))"
-    
+    Player&        player()          const;
+    BetId          betId()           const;
+    BetName        betName()         const;
+    unsigned       pivot()           const;
+    unsigned       contractAmount()  const;
+    unsigned       oddsAmount()      const;
+    bool           offComeOutRoll()  const;
+    bool           hardwayWorking()  const;
+    unsigned       distance()        const;
+    Gen::Timepoint whenCreated()     const;
+    Gen::Timepoint whenDecided()     const;
+    std::string    diagBetId()       const;  // "bet(betId:33, betName:DontCome(4))"
     bool operator==(const CrapsBet&) const;
+    void           logBet(std::string_view intro) const;
     /// @}
 
 private:

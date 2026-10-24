@@ -70,37 +70,37 @@ EventHandler::EventHandler()
 void
 EventHandler::onReqMakeBet(const Ctrl::ReqMakeBet& ev) const
 {
-    LOG_TRACE("Entered Controller::EventHandler::onReqMakeBet()");
+    const std::string fname("EventHandler::onReqMakeBet(): ");
+    LOG_TRACE("Entered " + fname);
 
     Ctrl::RspMakeBet rsp;
     rsp.correlationId = ev.correlationId;
     rsp.playerId      = ev.playerId;
-
+    
     Gen::ErrorPass ep;
     Craps::Player* pPlayer = Gbl::pPlayerMgr->getPlayer(ev.playerId, ep);
     if (pPlayer == nullptr)
     {
         assert(false && "pPlayer is null");
-        LOG_TRACE("EventHandler::onReqMakeBet() pPlayer is null");
+        ep.prepend(fname);
         rsp.error = std::move(ep);
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
     }
-
-    LOG_TRACE("EventHandler::onReqMakeBet() making contract bet");
-    auto result = pPlayer->makeBet(ev.betName,
-                                   ev.contractAmount,
-                                   ev.pivot);
-    if (!result)
-    {
-        LOG_TRACE("EventHandler::onReqMakeBet() error back from makeBet()");
-        rsp.error = std::move(result).error();
-        LOG_TRACE(rsp.error.description());
-        }
     else
     {
-        LOG_TRACE("EventHandler::onReqMakeBet() make bet accepted");
-        auto pBet = std::move(result).value();
-        rsp.accepted = true;
-        rsp.betId = pBet->betId();
+        auto result = pPlayer->makeBet(ev.betName,
+                                       ev.contractAmount,
+                                       ev.pivot);
+        if (!result)
+        {
+            rsp.error = std::move(result).error();
+        }
+        else
+        {
+            auto pBet = std::move(result).value();
+            rsp.accepted = true;
+            rsp.betId = pBet->betId();
+        }
     }
 
     Gen::EventManager::instance().publish(rsp);
@@ -111,7 +111,8 @@ EventHandler::onReqMakeBet(const Ctrl::ReqMakeBet& ev) const
 void
 EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
 {
-    LOG_TRACE("Entered Controller::EventHandler::onReqOddsBet()");
+    const std::string fname("EventHandler::onReqOddsBet(): ");
+    LOG_TRACE("Entered " + fname);
 
     Ctrl::RspOddsBet rsp;
     rsp.correlationId = ev.correlationId;
@@ -120,29 +121,33 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
 
     Gen::ErrorPass ep;
     Craps::Player* pPlayer = Gbl::pPlayerMgr->getPlayer(ev.playerId, ep);
-    assert(pPlayer);
     if (pPlayer == nullptr)
     {
-        LOG_TRACE("EventHandler::onReqOddsBet() pPlayer is null");
+        assert(false && "pPlayer is null");
+        ep.prepend(fname);
         rsp.error = std::move(ep);
-    }
-    
-    LOG_TRACE("EventHandler::onReqMakeBet() making odds bet");
-    auto betPtr = pPlayer->getBet(ev.betId, ep);
-    if (!betPtr)
-    {
-        rsp.error = std::move(ep);
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
     }
     else
     {
-        auto result = pPlayer->setOddsAmount(betPtr, ev.oddsAmount);
-        if (!result)
+        auto betPtr = pPlayer->getBet(ev.betId, ep);
+        if (!betPtr)
         {
-            rsp.error = std::move(result).error();
+            ep.prepend(fname);
+            LOG_ERROR(fname + " Error" + ep.fullDesc());
+            rsp.error = std::move(ep);
         }
         else
         {
-            rsp.accepted = true;
+            auto result = pPlayer->setOddsAmount(betPtr, ev.oddsAmount);
+            if (!result)
+            {
+                rsp.error = std::move(result).error();
+            }
+            else
+            {
+                rsp.accepted = true;
+            }
         }
     }
     Gen::EventManager::instance().publish(rsp);

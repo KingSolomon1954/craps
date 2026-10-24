@@ -551,7 +551,7 @@ CrapsTable::setOddsAmount(BetPtr pBet,
 
     pBet->setOddsAmountInternal(oddsAmount);
 
-    D(logBet("CrapsTable::setOddsAmount()", *pBet);)
+    pBet->logBet("CrapsTable::setOddsAmount()");
 
     sendEventBetChanged(*pBet);
     sendEventTableBetsChanged();

@@ -152,7 +152,9 @@ private:
     std::string diagPrefix(size_t idx)                          const;
     bool fifNoTable(Gen::ErrorPass& ep)                         const;
     bool fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep)         const;
-    bool fifInsufficientFunds(BetPtr pBet,  Gen::Money amount,
+    bool fifInsufficientFunds(BetPtr pBet,
+                              Gen::Money newAmount,
+                              Gen::Money oldAmount,
                               Gen::ErrorPass& ep)               const;
     bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep)         const;
 
