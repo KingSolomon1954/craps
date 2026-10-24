@@ -11,6 +11,7 @@
 #include <craps/CrapsTypes.h>
 #include <craps/Player.h>
 #include <gen/EventManager.h>
+#include <gen/Logger.h>
 #include <cassert>
 
 using namespace Ctrl;
@@ -99,6 +100,14 @@ QuickBet::setQuickBet(const QuickBetEntry& qbe)
     ev.amount    = qbe.amount;
 
     Gen::EventManager::instance().publish(ev);
+
+    std::string s = "QuickBet Configured"
+        "\n    playerId: " + ev.playerId                        +
+        "\n     betName: " + EnumBetName::toString(qbe.betName) +
+        "\n       pivot: " + std::to_string(qbe.pivot)          +
+        "\n   idOddsBet: " + (qbe.pivot ? "true" : "false")     +
+        "\n      amount: " + std::to_string(qbe.amount);
+        LOG_INFO(s);
 }
 
 //----------------------------------------------------------------

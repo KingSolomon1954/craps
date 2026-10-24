@@ -62,6 +62,14 @@ AutoFill::setAutoFill(const AutoFillEntry& afe)
     ev.amount    = afe.amount;
 
     Gen::EventManager::instance().publish(ev);
+
+    std::string s = "AutoFill Configured"
+        "\n    playerId: " + ev.playerId                        +
+        "\n     betName: " + EnumBetName::toString(afe.betName) +
+        "\n       pivot: " + std::to_string(afe.pivot)          +
+        "\n   idOddsBet: " + (afe.pivot ? "true" : "false")     +
+        "\n      amount: " + std::to_string(afe.amount);
+        LOG_INFO(s);
 }
 
 //----------------------------------------------------------------

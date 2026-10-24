@@ -83,7 +83,7 @@ MenuOddsBet::gatherBetsDetail(const Craps::BetIds& ids)
         Ctrl::CrapsReaders::readBetWhenCreated   (id, bi.whenCreated,       ep);
         
         activeOddsBets_.push_back(bi);
-        D(logBetInfo(bi);)
+        // logBetInfo(bi);
     }
     sortBetsByCreated();
 }

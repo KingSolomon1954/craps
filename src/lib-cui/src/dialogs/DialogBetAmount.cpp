@@ -176,7 +176,7 @@ DialogBetAmount::drawHintMultiples()
             case  4: 
             case 10: hint = "Pays 1:2 use multiple of 2"; break;
             case  5: 
-            case  9: hint = "Pays 2:3:use multiple of 3"; break;
+            case  9: hint = "Pays 2:3 use multiple of 3"; break;
             case  6: 
             case  8: hint = "Pays 5:6 use multiple of 6"; break;
             }
