@@ -364,6 +364,36 @@ CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 bool
+CrapsTable::isBetAllowed(BetName betName, std::string& str) const
+{
+    std::string_view s1 = " bet is not allowed on come out roll. ";
+                      
+    if (point_ == 0)  // coming out
+    {
+        if (betName == BetName::Come || betName == BetName::DontCome)
+        {
+            std::string s2 = EnumBetName::toString(betName) + std::string(s1);
+            std::string s3 = "Pass line";
+            if (betName == BetName::DontCome) s3 = "Dont Pass";
+            str = s2 + "Use " +  s3 + " bet instead.";
+            return false;
+        }
+    }
+    else
+    {
+        if (betName == BetName::DontPass)
+        {
+            std::string s2 = EnumBetName::toString(betName) + std::string(s1);
+            str = s2 + "Use Dont Come bet instead.";
+            return false;
+        }
+    }
+    return true;
+}
+
+//----------------------------------------------------------------
+
+bool
 CrapsTable::isBetRemovable(BetPtr pBet) const
 {
     if (pBet == nullptr) return false;

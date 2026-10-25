@@ -100,7 +100,7 @@ DialogBetAmount::setLocation(WindowPosition pos)
 // 5  │ Enter amount: 100           │
 // 6  │                             │
 // 7  │ [enter] Submit Bet          │
-// 8  │ [s] Save as AutoFill        │
+// 8  │ [a] Save as AutoFill        │
 // 9  │ [q] Save as Quick Bet       │
 // 10 │ [?] Help                    │
 // 11 │ [. or esc] Back             │

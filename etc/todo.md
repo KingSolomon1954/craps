@@ -39,12 +39,23 @@
 
 ### Implement QuickBet::applyQuickBet for new CUI design
 
+### Implement MenuQuickBet
+
+### Implement doQuickBet in MenuBetting
+
+### Implement UndoLastBet in MenuBetting
+
+### Implement RemoveBets in MenuBetting
+
+### Implement doBetFlags in MenuBetting
+
 ### Implement WindowPlayerArea - show bets on screen
 
 ### Implement WindowMessageArea
 
 ### Implement ReqMakeBet, to include UndoManager
 
+(Done) Early illegal bet test - jump to error immediatly
 (Done) Place, Buy, Lay  bet odds hints
 (Done) Add LastFill feature
 (Done) Add payout hint to DialogBetAmount

@@ -94,6 +94,10 @@ public:
     static const PlayerManifest::PlayerList& readPlayerList();
     
     // Bet related
+    static Gen::ReturnCode readBetIsAllowed(
+        const BetName& betName,
+        bool& isBetAllowed,
+        std::string& str);
     static Gen::ReturnCode readBetIsRemovable(
         const Craps::BetId& betid,
         bool& isRemovable,

@@ -290,10 +290,22 @@ CrapsReaders::readPlayerList()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsReaders::readBetIsAllowed(
+    const BetName& betName,
+    bool& isBetAllowed,
+    std::string& str)
+{
+    isBetAllowed = Gbl::pTable->isBetAllowed(betName, str);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsReaders::readBetIsRemovable(
     const Craps::BetId& betId,
     bool& isRemovable,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     auto pBet = Gbl::pTable->getBet(betId, ep);
     if (pBet == nullptr)
