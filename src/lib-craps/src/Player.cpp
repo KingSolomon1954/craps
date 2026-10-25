@@ -310,7 +310,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 
     sendEventPlayerBalanceChanged();
     sendEventPlayerBetsChanged();
-    pBet->logBet(fname + "() Success");
+    pBet->logBet(fname + "() Accepted");
     
     return pBet;
 }
@@ -459,7 +459,7 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
 
     sendEventPlayerBetsChanged();
     sendEventPlayerBalanceChanged();
-    pBet->logBet(fname + " Success");
+    pBet->logBet(fname + " Accepted");
 
     return {};
 }
@@ -524,7 +524,7 @@ Player::setContractAmount(
 
     sendEventPlayerBetsChanged();
     sendEventPlayerBalanceChanged();
-    pBet->logBet(fname + " Success");
+    pBet->logBet(fname + " Accepted");
 
     return {};
 }

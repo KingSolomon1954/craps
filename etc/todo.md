@@ -45,6 +45,8 @@
 
 ### Implement ReqMakeBet, to include UndoManager
 
+(Done) Place, Buy, Lay  bet odds hints
+(Done) Add LastFill feature
 (Done) Add payout hint to DialogBetAmount
 (Done) Fix window width of MenuOddsBet
 (Done) Fix multiple odds bets for same bet and number MenuOddsBet

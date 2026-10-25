@@ -5,12 +5,12 @@
 //----------------------------------------------------------------
 
 #include <cui/managers/OperationManager.h>
+#include <cui/managers/CarrierBet.h>
+#include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiSender.h>
 #include <cui/dialogs/DialogBetAmount.h>
 #include <cui/dialogs/DialogConfirm.h>
 #include <cui/dialogs/DialogError.h>
-#include <cui/managers/CarrierBet.h>
-#include <cui/managers/SurfaceManager.h>
 #include <gen/Logger.h>
 #include <string>
 

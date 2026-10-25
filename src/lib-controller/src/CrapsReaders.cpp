@@ -895,6 +895,25 @@ CrapsReaders::readTableList()
 
 //----------------------------------------------------------------
 //
+// Last Fill
+//
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsReaders::getLastFill(
+    LastFill::LastFillEntry& lfe,
+    Gen::ErrorPass& ep)
+{
+    if (LastFill::instance().getLastFill(lfe) == Gen::ReturnCode::Fail)
+    {
+        ep.setDescription("No such last fill entry exists.");
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+//
 // Auto Fills
 //
 //----------------------------------------------------------------

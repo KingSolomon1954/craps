@@ -10,6 +10,7 @@
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/AutoFill.h>
+#include <controller/LastFill.h>
 #include <controller/QuickBet.h>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
@@ -97,9 +98,11 @@ EventHandler::onReqMakeBet(const Ctrl::ReqMakeBet& ev) const
         }
         else
         {
-            auto pBet = std::move(result).value();
+            auto betPtr = std::move(result).value();
             rsp.accepted = true;
-            rsp.betId = pBet->betId();
+            rsp.betId = betPtr->betId();
+            
+            setLastFill(*betPtr, false); // Set/replace last fill
         }
     }
 
@@ -147,10 +150,24 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
             else
             {
                 rsp.accepted = true;
+                setLastFill(*betPtr, true); // Set/replace last fill
             }
         }
     }
     Gen::EventManager::instance().publish(rsp);
+}
+
+//----------------------------------------------------------------
+
+void
+EventHandler::setLastFill(const Craps::CrapsBet& bet, bool isOddsBet) const
+{
+    LastFill::LastFillEntry lfe;
+    lfe.betName   = bet.betName();
+    lfe.pivot     = bet.pivot();
+    lfe.isOddsBet = isOddsBet;
+    lfe.amount    = (isOddsBet ? bet.oddsAmount() : bet.contractAmount());
+    LastFill::instance().setLastFill(lfe);
 }
 
 //----------------------------------------------------------------

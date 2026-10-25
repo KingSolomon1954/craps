@@ -60,7 +60,46 @@ private:
         "[. or esc] Back"
     };
 
-    // Input field layout and editing state
+    using Hints = std::array<std::string_view, 4>;
+    static constexpr Hints defaultHints{
+        "Pays 1:1                  ",
+        "Pays 1:1                  ",
+        "Pays 1:1                  ",
+        "Pays 1:1                  "
+    };
+
+    static constexpr Hints passCome{
+        "Pays 2:1 use multiple of 1",
+        "Pays 3:2 use multiple of 2",
+        "Pays 6:5 use multiple of 5",
+        "Pays 1:1                  "
+    };
+    static constexpr Hints dontPassCome{
+        "Pays 1:2 use multiple of 2",
+        "Pays 2:3 use multiple of 3",
+        "Pays 5:6 use multiple of 6",
+        "Pays 1:1                  "
+    };
+    static constexpr Hints place{
+        "Pays 9:5 use multiple of 5",
+        "Pays 7:5 use multiple of 5",
+        "Pays 7:6 use multiple of 6",
+        "Pays 1:1                  "
+    };
+    static constexpr Hints buy{
+        "Pays 2:1 use multiple of 1",
+        "Pays 3:2 use multiple of 2",
+        "Pays 6:5 use multiple of 6",
+        "Pays 1:1                  "
+    };
+    static constexpr Hints lay{
+        "Pays 1:2 use multiple of 2",
+        "Pays 2:3 use multiple of 3",
+        "Pays 5:6 use multiple of 6",
+        "Pays 1:1                  "
+    };
+
+    // Input field layout and editing
     static constexpr int inputRow_ = 5;
     static constexpr int inputCol_ = 2 + Prompts[0].size() + 1;
     static constexpr int numInputBlanks_ = winSize_.cols - inputCol_ - 1;
@@ -81,6 +120,8 @@ private:
     void drawInput();
     std::string prepTitle(const std::string& title);
     Gen::Money getPrefillAmount() const;
+    Gen::Money getAutoFill() const;
+    Gen::Money getLastFill() const;
 
     // Input processing
     void prepLineInput();

@@ -23,6 +23,7 @@ add_library(controller STATIC
     src/PlayerManager.cpp
     src/PlayerManifest.cpp
     src/Properties.cpp
+    src/LastFill.cpp
     src/QuickBet.cpp
     src/TableManager.cpp
     src/TableManifest.cpp

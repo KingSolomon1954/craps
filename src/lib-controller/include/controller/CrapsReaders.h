@@ -13,6 +13,7 @@
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
 #include <controller/AutoFill.h>
+#include <controller/LastFill.h>
 #include <controller/QuickBet.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
@@ -240,7 +241,11 @@ public:
     static std::string getUserPlayerName();
     static const Craps::PlayerId& getUserPlayerId();
     
-    // Auto Fill
+    // Last Fill
+    static Gen::ReturnCode getLastFill(
+        LastFill::LastFillEntry& entry,
+        Gen::ErrorPass& ep);
+
     static Gen::ReturnCode getAutoFill(
         AutoFill::AutoFillEntry& entry,
         Gen::ErrorPass& ep);
