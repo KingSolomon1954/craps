@@ -60,7 +60,7 @@ DialogBetAmount::onDetach()
 // SurfaceManager wants our window size and more.
 // This occurs in context of SurfaceManager::pushSurface()
 // SurfaceManager informs us shortly of our screen position.
-// See setLocation() below. 
+// See setLocation() below.
 //
 LocationRequest
 DialogBetAmount::getLocationRequest() const
@@ -113,7 +113,7 @@ DialogBetAmount::draw()
     drawTitle();
     drawHintMultiples();
     drawInput();
-    
+
     CuiUtils::transfer(pWin_);
 }
 
@@ -128,7 +128,7 @@ DialogBetAmount::drawStaticContent()
     drawBorders();
     drawPrompts();
 }
-    
+
 //----------------------------------------------------------------
 
 void
@@ -166,7 +166,7 @@ DialogBetAmount::drawHintMultiples()
     const auto index      = static_cast<std::size_t>(pointGroup);
     std::string_view hint = defaultHints[index];
     const auto betName    = cb.getBetName();
-    
+
     if (cb.isOddsBet())
     {
         if (betName == BetName::PassLine || betName == BetName::Come)
@@ -354,7 +354,7 @@ DialogBetAmount::doQuickBet()
 
     CarrierBet::instance().setAmount(inputAmount_);
     OperationManager::instance().quickBet();
-}    
+}
 
 //----------------------------------------------------------------
 
@@ -362,7 +362,7 @@ void
 DialogBetAmount::doHelp()
 {
     // TODO
-}    
+}
 
 //----------------------------------------------------------------
 
@@ -401,10 +401,10 @@ DialogBetAmount::getAutoFill() const
 
     Gen::ErrorPass ep;
     (void) Ctrl::CrapsReaders::getAutoFill(afe, ep);
-    
+
     return afe.amount;
 }
-    
+
 //----------------------------------------------------------------
 
 Gen::Money
@@ -422,7 +422,7 @@ DialogBetAmount::getLastFill() const
 
     Gen::ErrorPass ep;
     (void) Ctrl::CrapsReaders::getLastFill(lfe, ep);
-    
+
     return lfe.amount;
 }
 
@@ -438,4 +438,3 @@ DialogBetAmount::processAmount()
 }
 
 //----------------------------------------------------------------
-

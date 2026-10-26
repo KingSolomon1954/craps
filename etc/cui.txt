@@ -1231,14 +1231,15 @@ Consider this for an embellished Dialog
 │                                                           │
 ├───────────────────────────────────────────────────────────┤
 │ Pays 7:6  Loses on 7. Wins on 6                           │
+│ True Odds 6:5 House Edge 1.52%                            │
+│ $12 bet -> $14 profit; $26 total returned                 │
 │ Bet stays on table until a 7 or 6 is rolled               │
-│ A bet of $12 pays $14 Returns $26                         │
 │ Can be bet anytime, can be removed anytime                │
 │ Off on Come out roll by default (configurable)            │
-│ True Odds 3:2 House Edge 4.00$                            │
 ├───────────────────────────────────────────────────────────┤
-│ Your Bets:     4       Win rate: xx.x%   Expected: yy.y%  │
-│ Anchor Bets:  30       Win rate: 40.0%   Expected: 45.5%  │
+│ Total: $320               Net: +$x  Expected: -$y         │
+│ Counts: 4 1W,3L           Win rate: xx.x% Expected: yy.y% │
+│ Simulated: 30 10W,20L     Win rate: 40.0% Expected: 45.5% │
 └───────────────────────────────────────────────────────────┘
 
 If the player selects the [h] Help prompt then
@@ -1256,10 +1257,10 @@ a DialogMessage is opened showing something like this:
 ├───────────────────────────────────────────────────────────┤
 │ Won: 12  Lost: 18                                         │
 ├───────────────────────────────────────────────────────────┤
-│ AutoFill - Use amount to populate this bet each time      │
-│            Use amount of zero to cancel AutoFill          │
+│ AutoFill - Amount will pre-fill this bet each time        │
+│            Amount of zero will cancel AutoFill            │
 │ QuickBet - Remember this bet and amount as a Quick Bet    │
-│            Use amount of zero to cancel QuickBet          │
+│            Amount of zero will cancel QuickBet            │
 │ AutoFill and QuickBet selections are silent               │
 ├───────────────────────────────────────────────────────────┤
 │ [. or esc or enter] Back                                  │
