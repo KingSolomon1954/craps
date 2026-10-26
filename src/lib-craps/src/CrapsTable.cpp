@@ -887,7 +887,8 @@ CrapsTable::evalOneBet(CrapsBet& bet)
     }
     else
     {
-        std::cout << ep.description() << std::endl;
+        LOG_ERROR("CrapsTable::evalOneBet() " + ep.description());
+//      std::cout << ep.description() << std::endl;
     }
 }
 

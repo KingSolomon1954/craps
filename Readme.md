@@ -58,4 +58,4 @@ To be supplied
 - Project setup from KingSolomon1954/cpp-bootstrap
 - GNU Makefile
 - Podman or Docker
-- C++, ncurses
+- C++, CMake, Conan, ncurses

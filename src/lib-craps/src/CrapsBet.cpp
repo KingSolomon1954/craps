@@ -13,6 +13,7 @@
 #include <craps/DecisionRecord.h>
 #include <craps/Player.h>
 #include <craps/Dice.h>
+#include <gen/Debug.h>
 #include <gen/ErrorPass.h>
 #include <gen/MoneyUtils.h>
 #include <gen/StringUtils.h>
@@ -304,37 +305,19 @@ Payout strategy:
 @param [in] dice
     the dice roll to evaluate
 
-@param [inout] dr
+@param [out] dr
     The DecisionRecord contains the results of the evaluation.
     If successful then dr has valid contents, otherwise
     dr should be ignored and ep has description of the error.
 
-@param [inout] ep
-    If evaluation fails, then ep describes the error.
-
-*/
-
-/*-----------------------------------------------------------*//**
-
-Evaluates all bets to determine win/lose.
-
-@param [in] point
-    The point
-@param [in] dice
-    The dice roll
-@param [out] dr
-    Results returned in the given DecisionRecord
 @param [out] ep
-    Holds error description if an error is encountered
-@return
-    ReturnCode::Success and dr is filled out, otherwise
-    ReturnCode::Fail, dr is undefined and ep holds reason why
+    If evaluation fails, then ep describes the error.
 */
 Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
                    DecisionRecord& dr, Gen::ErrorPass& ep)
 {
-//  diagEvalEntered(point, dice);  // TODO use debug conditional
+    D(diagEvalEntered(point, dice);)
     if (!validArgsEval(point, ep))
     {
         return diagEvalProcError(ep);
@@ -374,6 +357,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
 
 //----------------------------------------------------------------
 
+#ifdef DEBUG
 void
 CrapsBet::diagEvalEntered(unsigned point, const Dice& dice) const
 {
@@ -382,6 +366,7 @@ CrapsBet::diagEvalEntered(unsigned point, const Dice& dice) const
               << dice.d1() << ","
               << dice.d2() << "))" << std::endl;
 }
+#endif
 
 //----------------------------------------------------------------
 
