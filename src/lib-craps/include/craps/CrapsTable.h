@@ -97,6 +97,7 @@ public:
     bool                    isBettingOpen()             const;
     bool                    isBetRemovable(BetPtr pBet) const;
     bool                    havePlayer(Player* pPlayer) const;
+    bool                    isBetAllowed(BetName name, std::string& str) const;
     const SessionHistory::Sessions& getSessionHistory() const;
     /// @}
 

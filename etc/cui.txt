@@ -56,7 +56,7 @@ include/cui/
 
     dialogs/
         DialogAckError.h
-        DialogAmountEntry.h
+        DialogBetAmount.h
 
     layouts/
         LayoutConsole.h
@@ -147,7 +147,7 @@ Surfaces
     │     └── ...
     │
     └── DialogBase
-          ├── DialogAmount
+          ├── DialogBetAmount
           ├── DialogConfirm
           └── ...
 
@@ -1160,56 +1160,86 @@ Stats Menu
 [C] CONTROL     [B] BETTING     [V] VIEW     [S] STATS     | [H] Help [Q] Quit
 
 
-DialogAmount
-────────────
+DialogBetAmount
+───────────────
 
-DialogAmount prompts the player to enter an amount for
-a given bet. The dialog is first "configured" before pushing
-to SurfaceManager, similar to other menus and dialogs.
+DialogBetAmount prompts the player to enter an amount for a given
+bet. The dialog is specific for betting and not suitable for obtaining
+number entries that are not bets. The dialog configures itself using the
+CarrierBet to properly setup bet the prompting and fill states.
 
-DialogAmount has some special behaviors. Since it is already focused on
-a particular bet and amount, it is natural to use it to help configure
-some automatic behaviors.
+DialogBetAmount has some special behaviors. Since it is already focused
+on a particular bet and amount, it is natural to use it to 
+configure or cancel QuickBets and AutoFills.
 
-DialogAmount will support two menu entries such that if selected it uses
-the current entry value for:
+* Entering an amount and then selecting "Save as AutoFill" means the 
+  amount for the current bet type will be use to pre-fill the 
+  amount on a future bets of the same type.
 
-* Setting the auto fill value for the current bet type, to be used for
-  default filling future bets of this type with the given amount.
-
-* Using the current bet type and amount to configure a Quick Bet. A
-  quick bet is shortcut that is assigned to a particular bet and amount,
-  and is given a fixed menu entry on the QuickBet menu.  So for example,
-  the user presses 'q' (quick bet menu) followed by 'a' (the first
-  configured quick bet) could mean make a Place Bet on the 6 for 100.
+* Entering an amount and then selecting "Save as QuickBet" means the
+  current amouint and bet type is configureed as a Quick Bet. A quick
+  bet is shortcut that is assigned a particular bet and amount, and is
+  given a fixed menu entry on the QuickBet menu.  So for example, the
+  user presses 'q' (quick bet menu) followed by 'a' (the first
+  configured quick bet) might mean make a Place Bet on the 6 for
+  100. QuickBets bypasses the chain of menus needed to make a bet.
 
 Some examples:
 
-┌──────────────────────────┐
-│ Place Bet on 6           │
-├──────────────────────────┤
-│                          │
-│ Enter amount: 100        │
-│                          │
-│ [enter] Submit Bet       │
-│ [s] Save as AutoFill     │
-│ [q] Save as Quick Bet    │
-│ [?] Help                 │
-│ [. or esc] Back          │
-└──────────────────────────┘
+┌─────────────────────────────┐
+│ Place Bet on 6              │
+├─────────────────────────────┤
+│ Pays 7:6 use multiples of 6 │
+│                             │
+│ Enter amount: 100           │
+│                             │
+│ [enter] Submit Bet          │
+│ [a] Save as AutoFill        │
+│ [q] Save as Quick Bet       │
+│ [?] Help                    │
+│ [. or esc] Back             │
+└─────────────────────────────┘
 
-┌──────────────────────────┐
-│ Dont Come Odds on the 10 │
-├──────────────────────────┤
-│                          │
-│ Enter amount: 100        │
-│                          │
-│ [enter] Submit Bet       │
-│ [s] Save as AutoFill     │
-│ [q] Save as Quick Bet    │
-│ [?] Help                 │
-│ [. or esc] Back          │
-└──────────────────────────┘
+┌─────────────────────────────┐
+│ Dont Come Odds on the 10    │
+├─────────────────────────────┤
+│ Pays 2:1 use multiples of 1 │
+│                             │
+│ Enter amount: 100           │
+│                             │
+│ [enter] Submit Bet          │
+│ [a] Save as AutoFill        │
+│ [q] Save as Quick Bet       │
+│ [?] Help                    │
+│ [. or esc] Back             │
+└─────────────────────────────┘
+
+Consider this for an embellished Dialog
+
+┌───────────────────────────────────────────────────────────┐
+│ Place Bet on the 6                                        │
+├───────────────────────────────────────────────────────────┤
+│ Pays 7:6 use multiples of 6                               │
+│                                                           │
+│ Enter amount: 100                                         │
+│                                                           │
+│ [enter] Submit Bet                                        │
+│ [a] Save as AutoFill                                      │
+│ [q] Save as Quick Bet                                     │
+│ [?] Help                                                  │
+│ [. or esc] Back                                           │
+│                                                           │
+├───────────────────────────────────────────────────────────┤
+│ Pays 7:6  Loses on 7. Wins on 6                           │
+│ Bet stays on table until a 7 or 6 is rolled               │
+│ A bet of $12 pays $14 Returns $26                         │
+│ Can be bet anytime, can be removed anytime                │
+│ Off on Come out roll by default (configurable)            │
+│ True Odds 3:2 House Edge 4.00$                            │
+├───────────────────────────────────────────────────────────┤
+│ Your Bets:     4       Win rate: xx.x%   Expected: yy.y%  │
+│ Anchor Bets:  30       Win rate: 40.0%   Expected: 45.5%  │
+└───────────────────────────────────────────────────────────┘
 
 If the player selects the [h] Help prompt then
 a DialogMessage is opened showing something like this:
@@ -1217,11 +1247,15 @@ a DialogMessage is opened showing something like this:
 ┌───────────────────────────────────────────────────────────┐
 │ Info: Place Bet 6 or 8                                    │
 ├───────────────────────────────────────────────────────────┤
-│ Pays 7:6. A bet of $12 pays $14 Return $26                │
+│ Pays 7:6. A bet of $12 pays $14 Returns $26               │
 │ Bet stays on table until a 7 or 6 is rolled               │
 │ Loses on 7. Wins on 6 or 8, respectively                  │
-│ Can be bet anytime                                        │
-│                                                           │
+│ Can be bet anytime, can be removed anytime                │
+│ Off on Come out roll by default (configurable)            │
+│ True Odds 3:2 House Edge 4.00$                            │
+├───────────────────────────────────────────────────────────┤
+│ Won: 12  Lost: 18                                         │
+├───────────────────────────────────────────────────────────┤
 │ AutoFill - Use amount to populate this bet each time      │
 │            Use amount of zero to cancel AutoFill          │
 │ QuickBet - Remember this bet and amount as a Quick Bet    │

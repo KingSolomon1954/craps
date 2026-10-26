@@ -10,6 +10,8 @@
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
+#include <controller/AutoFill.h>
+#include <controller/LastFill.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
 #include <limits>
@@ -98,7 +100,7 @@ DialogBetAmount::setLocation(WindowPosition pos)
 // 5  │ Enter amount: 100           │
 // 6  │                             │
 // 7  │ [enter] Submit Bet          │
-// 8  │ [s] Save as AutoFill        │
+// 8  │ [a] Save as AutoFill        │
 // 9  │ [q] Save as Quick Bet       │
 // 10 │ [?] Help                    │
 // 11 │ [. or esc] Back             │
@@ -145,45 +147,41 @@ DialogBetAmount::drawBorders()
 void
 DialogBetAmount::drawHintMultiples()
 {
-    LOG_TRACE("DialogBetAmount::drawHintMultiples()");
-    std::string hint = "Pays 1:1                  ";  // extra blanks to erase
     const auto& cb = CarrierBet::instance();
+
+    // Group points with identical payout rules.
+    enum class PointGroup { FourTen, FiveNine, SixEight, Other };
+
+    PointGroup pointGroup = PointGroup::Other;
+    switch (cb.getPivot())
+    {
+    case 4:
+    case 10: pointGroup = PointGroup::FourTen; break;
+    case 5:
+    case 9:  pointGroup = PointGroup::FiveNine; break;
+    case 6:
+    case 8:  pointGroup = PointGroup::SixEight; break;
+    }
+
+    const auto index      = static_cast<std::size_t>(pointGroup);
+    std::string_view hint = defaultHints[index];
+    const auto betName    = cb.getBetName();
     
     if (cb.isOddsBet())
     {
-        LOG_TRACE("DialogBetAmount::drawHintMultiples() isOddsBet: true");
-        auto betName = cb.getBetName();
-        auto pivot   = cb.getPivot();
-        
         if (betName == BetName::PassLine || betName == BetName::Come)
-        {
-            LOG_TRACE("DialogBetAmount::drawHintMultiples() do-side");
-            switch (pivot)
-            {
-            case  4: 
-            case 10: hint = "Pays 2:1 use multiple of 1"; break;
-            case  5: 
-            case  9: hint = "Pays 3:2 use multiple of 2"; break;
-            case  6: 
-            case  8: hint = "Pays 6:5 use multiple of 5"; break;
-            }
-        }
+            hint = passCome[index];
         else if (betName == BetName::DontPass || betName == BetName::DontCome)
-        {
-            LOG_TRACE("DialogBetAmount::drawHintMultiples() dont-side");
-            switch (pivot)
-            {
-            case  4: 
-            case 10: hint = "Pays 1:2 use multiple of 2"; break;
-            case  5: 
-            case  9: hint = "Pays 2:3:use multiple of 3"; break;
-            case  6: 
-            case  8: hint = "Pays 5:6 use multiple of 6"; break;
-            }
-        }
+            hint = dontPassCome[index];
     }
-    
-    mvwaddstr(pWin_, 3, 2, hint.c_str());
+    else if (betName == BetName::Place)
+        hint = place[index];
+    else if (betName == BetName::Buy)
+        hint = buy[index];
+    else if (betName == BetName::Lay)
+        hint = lay[index];
+
+    mvwaddstr(pWin_, 3, 2, hint.data());
 }
 
 //----------------------------------------------------------------
@@ -381,8 +379,18 @@ DialogBetAmount::prepLineInput()
 Gen::Money
 DialogBetAmount::getPrefillAmount() const
 {
+    auto fill = getAutoFill();
+    if (fill == 0) fill = getLastFill();
+    return fill;
+}
+
+//----------------------------------------------------------------
+
+Gen::Money
+DialogBetAmount::getAutoFill() const
+{
     const auto& cb = CarrierBet::instance();
-    
+
     Ctrl::AutoFill::AutoFillEntry afe
     {
         cb.getBetName(),
@@ -397,6 +405,27 @@ DialogBetAmount::getPrefillAmount() const
     return afe.amount;
 }
     
+//----------------------------------------------------------------
+
+Gen::Money
+DialogBetAmount::getLastFill() const
+{
+    const auto& cb = CarrierBet::instance();
+
+    Ctrl::LastFill::LastFillEntry lfe
+    {
+        cb.getBetName(),
+        cb.getPivot(),
+        cb.isOddsBet(),
+        0                  // LastFill returns preFillAmount here
+    };
+
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::getLastFill(lfe, ep);
+    
+    return lfe.amount;
+}
+
 //----------------------------------------------------------------
 
 void

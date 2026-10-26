@@ -290,10 +290,22 @@ CrapsReaders::readPlayerList()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsReaders::readBetIsAllowed(
+    const BetName& betName,
+    bool& isBetAllowed,
+    std::string& str)
+{
+    isBetAllowed = Gbl::pTable->isBetAllowed(betName, str);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsReaders::readBetIsRemovable(
     const Craps::BetId& betId,
     bool& isRemovable,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     auto pBet = Gbl::pTable->getBet(betId, ep);
     if (pBet == nullptr)
@@ -891,6 +903,25 @@ const TableManifest::TableList&
 CrapsReaders::readTableList()
 {
     return Gbl::pTableMgr->getTableList();
+}
+
+//----------------------------------------------------------------
+//
+// Last Fill
+//
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsReaders::getLastFill(
+    LastFill::LastFillEntry& lfe,
+    Gen::ErrorPass& ep)
+{
+    if (LastFill::instance().getLastFill(lfe) == Gen::ReturnCode::Fail)
+    {
+        ep.setDescription("No such last fill entry exists.");
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

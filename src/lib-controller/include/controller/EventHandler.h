@@ -7,6 +7,7 @@
 #pragma once
 
 #include <controller/GameEvents.h>
+#include <craps/CrapsTypes.h>
 
 namespace Ctrl {
 
@@ -28,12 +29,13 @@ public:
     /// @}
 
 private:
-    void onReqMakeBet  (const Ctrl::ReqMakeBet& ev)   const;
-    void onReqOddsBet  (const Ctrl::ReqOddsBet& ev)   const;
-    void onReqRollDice (const Ctrl::ReqRollDice& ev)  const;
-    void onReqAutoFill (const Ctrl::ReqAutoFill& ev)  const;
-    void onReqQuickBet (const Ctrl::ReqQuickBet& ev)  const;
-    void onReqTerminate(const Ctrl::ReqTerminate& ev) const;
+    void onReqMakeBet  (const Ctrl::ReqMakeBet& ev)       const;
+    void onReqOddsBet  (const Ctrl::ReqOddsBet& ev)       const;
+    void onReqRollDice (const Ctrl::ReqRollDice& ev)      const;
+    void onReqAutoFill (const Ctrl::ReqAutoFill& ev)      const;
+    void onReqQuickBet (const Ctrl::ReqQuickBet& ev)      const;
+    void onReqTerminate(const Ctrl::ReqTerminate& ev)     const;
+    void setLastFill(const Craps::CrapsBet& bet, bool isOddsBet) const;
 };
 
 /*-----------------------------------------------------------*//**

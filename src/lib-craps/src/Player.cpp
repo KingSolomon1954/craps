@@ -278,15 +278,19 @@ Makes a bet on the table.
 zeus::expected<BetPtr, Gen::ErrorPass>
 Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 {
+    const std::string fname("Player::makeBet");
+    LOG_TRACE(fname + "(" + playerName_ + "): making contract bet");
+    
     Gen::ErrorPass ep;
     std::string s = "Unable to make bet(" +
                     std::to_string(contractAmount) +
                     ") for player: " + playerName_ + ". ";
 
     if (fifNoTable(ep)  ||
-        fifInsufficientFunds(nullptr, contractAmount, ep))
+        fifInsufficientFunds(nullptr, contractAmount, 0, ep))
     {
         ep.prepend(s);
+        LOG_ERROR(fname + "() Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
@@ -297,6 +301,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
         // ep.setErrorName() is set in lower functions
         ep.setErrorType("Betting Error");
         ep.setSeverity(Es::Indeterminate);
+        LOG_ERROR(fname + "() Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
@@ -305,6 +310,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 
     sendEventPlayerBalanceChanged();
     sendEventPlayerBetsChanged();
+    pBet->logBet(fname + "() Accepted");
     
     return pBet;
 }
@@ -419,38 +425,41 @@ conditions are true:
 @li fif prefix means "fault if"
 */
 zeus::expected<void, Gen::ErrorPass>
-Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
+Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
 {
+    const std::string fname("Player::setOddsAmount()");
+    Gen::ErrorPass ep;
+    
     // fif prefix means "fault if"
 
-    Gen::ErrorPass ep;
     if (fifMissingBet(pBet, ep)                     ||
         fifNoTable(ep)                              ||
-        fifInsufficientFunds(pBet, oddsAmount, ep))
+        fifInsufficientFunds(pBet, newAmount, pBet->oddsAmount(), ep))
     {
-        ep.prepend("Unable to set odds(" + std::to_string(oddsAmount) +
+        ep.prepend("Unable to set odds(" + std::to_string(newAmount) +
             ") for player: " + playerName_ + ". ");
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
     
     Gen::Money saveOddsAmount = pBet->oddsAmount();
     
-// std::cout << "wallet_.deposit = " << pBet->oddsAmount() << std::endl;
     wallet_.deposit(pBet->oddsAmount());  // give back old amount, if any
-// std::cout << "wallet_.withdraw = " << oddsAmount << std::endl;
-    wallet_.withdraw(oddsAmount);         // take out new amount
+    wallet_.withdraw(newAmount);          // take out new amount
     
-    auto rc = pTable_->setOddsAmount(pBet, oddsAmount, ep);
+    auto rc = pTable_->setOddsAmount(pBet, newAmount, ep);
     if (rc == Gen::ReturnCode::Fail)         // Bet was rejected
     {                                        // Restore prev amount
-        wallet_.deposit(oddsAmount);
+        wallet_.deposit(newAmount);
         wallet_.withdraw(saveOddsAmount);
         ep.prepend(diagPrefix(2));
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
     sendEventPlayerBetsChanged();
     sendEventPlayerBalanceChanged();
+    pBet->logBet(fname + " Accepted");
 
     return {};
 }
@@ -476,7 +485,6 @@ Changes the contract amount of a bet on the table.
 
 @internal
 @li fif prefix means "fault if"
-@li Sca suffix means "set contract amount"
 @li 2 is the index to select the right diagPrefix
 */
 zeus::expected<void, Gen::ErrorPass>
@@ -484,12 +492,39 @@ Player::setContractAmount(
     BetPtr pBet,
     Gen::Money newAmount)
 {
-    // TODO
-    // Figure out if adding/subtracting
-    // Check sufficient funds in wallet
-    // call pTable_->setContractAmount()
-    // if success adjust wallet, change contractAmount_, send event
-    // if fail leave wallet alone, keep existing contractAmount_
+    const std::string fname("Player::setContractAmount()");
+    Gen::ErrorPass ep;
+    
+    // fif prefix means "fault if"
+
+    if (fifMissingBet(pBet, ep)                   ||
+        fifNoTable(ep)                            ||
+        fifInsufficientFunds(pBet, newAmount, pBet->contractAmount(), ep))
+    {
+        ep.prepend("Unable to set contract amount(" + std::to_string(newAmount) +
+            ") for player: " + playerName_ + ". ");
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+    
+    Gen::Money saveContractAmount = pBet->contractAmount();
+    
+    wallet_.deposit(pBet->contractAmount());  // give back old amount, if any
+    wallet_.withdraw(newAmount);              // take out new amount
+    
+    auto rc = pTable_->setContractAmount(pBet, newAmount, ep);
+    if (rc == Gen::ReturnCode::Fail)         // Bet was rejected
+    {                                        // Restore prev amount
+        wallet_.deposit(newAmount);
+        wallet_.withdraw(saveContractAmount);
+        ep.prepend(diagPrefix(2));
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
+    sendEventPlayerBetsChanged();
+    sendEventPlayerBalanceChanged();
+    pBet->logBet(fname + " Accepted");
 
     return {};
 }
@@ -542,8 +577,10 @@ Player::processWin(const DecisionRecord& dr)
     lastRollStats_.amountWin += dr.win;
     lastRollStats_.numBetsWin++;
 
+    sendEventBetResolved(pBet->betName(), pBet->betId(), dr);
+#if 0
     sendEventBetResolved(pBet->betName(), pBet->betId(), dr.win, dr.lose);
-
+#endif
     (void) removeBetByPtr(pBet);
 }
 
@@ -583,8 +620,10 @@ Player::processLose(const DecisionRecord& dr)
     lastRollStats_.amountLose += dr.lose;
     lastRollStats_.numBetsLose++;
 
+    sendEventBetResolved(pBet->betName(), pBet->betId(), dr);
+#if 0    
     sendEventBetResolved(pBet->betName(), pBet->betId(), dr.win, dr.lose);
-    
+#endif    
     (void) removeBetByPtr(pBet);  // Done with this bet
 }
 
@@ -646,6 +685,24 @@ Player::disburseDone()
 //----------------------------------------------------------------
 
 void
+Player::sendEventBetResolved(BetName betName,
+                             BetId betId,
+                             const DecisionRecord& dr) const
+{
+    Ctrl::UslBetResolved ev;
+    ev.playerId       = playerId_,
+    ev.betName        = betName,
+    ev.betId          = betId,
+    ev.amountWin      = dr.win;
+    ev.amountLose     = dr.lose;
+    ev.returnToPlayer = dr.returnToPlayer;
+    ev.commission      = dr.commission;
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+#if 0
+void
 Player::sendEventBetResolved(BetName         betName,
                              BetId           betId,
                              Gen::Money      amountWin,
@@ -660,6 +717,8 @@ Player::sendEventBetResolved(BetName         betName,
 
     Gen::EventManager::instance().publish(ev);
 }
+
+#endif
 
 //----------------------------------------------------------------
 
@@ -1078,7 +1137,8 @@ Player::fifNoTable(Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 bool
-Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
+Player::fifInsufficientFunds(BetPtr pBet, Gen::Money newAmount,
+                             Gen::Money oldAmount,
                              Gen::ErrorPass& ep) const
 {
     // fault if insufficient funds and sets ep error diag
@@ -1089,11 +1149,11 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
     int diff = 0;
     if (pBet == nullptr)
     {
-        diff = amount;
+        diff = newAmount;
     }
     else
     {
-        diff = amount - pBet->oddsAmount();
+        diff = newAmount - oldAmount;
     }
 
     if (diff <= 0)
@@ -1105,7 +1165,7 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
     {
         std::string s = "Player " + playerName_ +
             " has insufficient funds to make a " +
-            Gen::MoneyUtils::toString(amount)    +
+            Gen::MoneyUtils::toString(newAmount)    +
             " bet; current balance:"             +
             Gen::MoneyUtils::toString(getBalance()) + ".";
         EP_SET(ep, En::UnderflowError, Et::ProcessingError,
@@ -1170,55 +1230,3 @@ Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
 }
 
 //----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-#if 0
-std::string
-Player::serialize() const
-{
-    return uuid_ + "," + name_ + "," + std::to_string(wallet_.getBalance());
-}
-#endif
-
-//----------------------------------------------------------------
-
-#if 0
-Player
-Player::deserialize(const std::string& line)
-{
-    std::istringstream ss(line);
-    std::string uuidStr, nameStr, balanceStr;
-    std::getline(ss, uuidStr, ',');
-    std::getline(ss, nameStr, ',');
-    std::getline(ss, balanceStr);
-    return Player(uuidStr, nameStr, std::stol(balanceStr));
-}
-#endif
-
-//----------------------------------------------------------------
-
-#if 0
-bool
-Player::removeBetById(unsigned betId)
-{
-    auto it = std::remove_if(bets_.begin(), bets_.end(),
-                   [betId](const BetIntfcPtr& b)
-                   {
-                       return b->betId() == betId;
-                   });
-    if (it != bets_.end())
-    {
-        bets_.erase(it, bets_.end());
-        return true;
-    }
-    return false;
-}
-#endif

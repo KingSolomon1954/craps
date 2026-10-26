@@ -15,6 +15,7 @@
 #include <craps/Dice.h>
 #include <gen/Debug.h>
 #include <gen/ErrorPass.h>
+#include <gen/Logger.h>
 #include <gen/MoneyUtils.h>
 #include <gen/StringUtils.h>
 
@@ -1313,6 +1314,16 @@ Gen::Timepoint
 CrapsBet::whenDecided() const
 {
     return whenDecided_;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::logBet(std::string_view intro) const
+{
+    std::stringstream s;
+    s << "\n" << intro << "\n" << *this;
+    LOG_INFO(s.str());
 }
 
 //----------------------------------------------------------------

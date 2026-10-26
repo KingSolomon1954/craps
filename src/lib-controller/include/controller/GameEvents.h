@@ -271,11 +271,13 @@ struct UslBetChanged : public GameEvent
 
 struct UslBetResolved : public GameEvent
 {
-    Craps::PlayerId playerId;                      ///< Player ID
-    BetName         betName    = BetName::Invalid; ///< Bet Name
-    Craps::BetId    betId      = 0;                ///< Bet ID
-    Gen::Money      amountWin  = 0;                ///< Amount won
-    Gen::Money      amountLose = 0;                ///< Amount lost
+    Craps::PlayerId playerId;                          ///< Player ID
+    BetName         betName        = BetName::Invalid; ///< Bet Name
+    Craps::BetId    betId          = 0;                ///< Bet ID
+    Gen::Money      amountWin      = 0;                ///< Amount won
+    Gen::Money      amountLose     = 0;                ///< Amount lost
+    Gen::Money      returnToPlayer = 0;                ///< Due to "Off"
+    Gen::Money      commission     = 0;                ///< Deducted Buy/Lay
 
     UslBetResolved()
         : GameEvent{EventSource::Model, EventType::UslBetResolved}
