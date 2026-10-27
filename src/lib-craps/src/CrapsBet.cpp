@@ -358,16 +358,16 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
 
 //----------------------------------------------------------------
 
-#ifdef DEBUG
 void
 CrapsBet::diagEvalEntered(unsigned point, const Dice& dice) const
 {
-    std::cout << "CrapsBet::evaluate(point:" << point
-              << " dice:" << dice.value() << " ("
-              << dice.d1() << ","
-              << dice.d2() << "))" << std::endl;
+    std::stringstream s;
+    s << "CrapsBet::evaluate(point:" << point
+      << " dice:" << dice.value() << " ("
+      << dice.d1() << ","
+      << dice.d2() << "))" << std::endl;
+    LOG_TRACE(s.str());
 }
-#endif
 
 //----------------------------------------------------------------
 
@@ -375,8 +375,7 @@ Gen::ReturnCode
 CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 {
     std::string s("CrapsBet::evaluate(): Error evaluating betId:");
-    s += std::to_string(betId_) + " betName:" + EnumBetName::toString(betName_) + ". ";
-    ep.prepend(s);
+    ep.prepend(s + diagBetId() + ". ");
     return Gen::ReturnCode::Fail;
 }
 
@@ -385,15 +384,12 @@ CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 std::string
 CrapsBet::diagBetId() const
 {
-    std::string s = "bet(betId:" + std::to_string(betId_) +
-        ", betName:" + EnumBetName::toString(betName_);
-
+    std::string s = "bet(betName:" + EnumBetName::toString(betName_);
     if (pivot_ != 0)
     {
         s += "(" + std::to_string(pivot_) + ")";
     }
-
-    s += ")";
+    s += " betId:" + std::to_string(betId_) + ")";
     return s;
 }
 

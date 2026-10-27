@@ -76,6 +76,8 @@ Player::processWin() removes the bet from the player, and
 CrapsTable::trimTableBets() removes it from the table. All three parts
 need to agree on the intended lifecycle of a Place bet.
 
+### Fix evaluation() processing and various bugs
+
 (Done) Early illegal bet test - jump to error immediatly
 (Done) Place, Buy, Lay  bet odds hints
 (Done) Add LastFill feature
