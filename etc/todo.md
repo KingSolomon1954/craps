@@ -66,6 +66,14 @@ track that amount independently.
 
 ### Fix Place bets being removed from table after a win
 
+### Want DialogBetAmount to say Max Bet, current bet, off-on-comeout
+
+### Allow same bet to add to existing bet 
+
+### Want illegal bets to be unselectable in menus (grayed-out)
+
+Fix Place bets being removed from table after a win
+
 I'd introduce an explicit distinction in the decision/resolution model
 between:
 - Outcome resolved: the roll produced a win or loss.

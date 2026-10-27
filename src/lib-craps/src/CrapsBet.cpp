@@ -349,9 +349,22 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         return diagEvalProcError(ep);
     }
     distance_++;
+    dr.removeBet = dr.decision;
     if (dr.decision)
     {
         whenDecided_.setToNow();
+
+        // These wagers pay a winning outcome but remain active until they
+        // lose or the player removes them. Their original stake therefore
+        // remains on the table after a win.
+        if (dr.win > 0 &&
+            (betName_ == BetName::Place ||
+             betName_ == BetName::Buy   ||
+             betName_ == BetName::Lay   ||
+             betName_ == BetName::Hardway))
+        {
+            dr.removeBet = false;
+        }
     }
     return Gen::ReturnCode::Success;
 }
@@ -361,12 +374,8 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
 void
 CrapsBet::diagEvalEntered(unsigned point, const Dice& dice) const
 {
-    std::stringstream s;
-    s << "CrapsBet::evaluate(point:" << point
-      << " dice:" << dice.value() << " ("
-      << dice.d1() << ","
-      << dice.d2() << "))" << std::endl;
-    LOG_TRACE(s.str());
+    LOG_TRACE("CrapsBet::evaluate(point:" + std::to_string(point) +
+              " " + dice.toString());
 }
 
 //----------------------------------------------------------------
@@ -455,7 +464,9 @@ CrapsBet::calcWinPointBet(
 
     if (offComeOutRoll_ && returnOdds)
     {
-        dr.returnToPlayer = oddsAmount_;
+        // The winning settlement returns contractAmount_ and oddsAmount_
+        // to the player. Do not also put oddsAmount_ in returnToPlayer,
+        // or the odds stake would be credited twice.
         return;
     }
 
@@ -857,6 +868,7 @@ CrapsBet::evalLay(
         dr.win = calculateOddsPayout(contractAmount_,
                                      odds.numerator,
                                      odds.denominator);
+        // Lay commission is 5% of the gross winnings.
         dr.commission = static_cast<unsigned>(dr.win * (5.0f / 100.0f));
         dr.win -= dr.commission;
     }
@@ -903,6 +915,7 @@ CrapsBet::evalBuy(
         dr.win = calculateOddsPayout(contractAmount_,
                                      odds.numerator,
                                      odds.denominator);
+        // Buy commission is 5% of the amount wagered.
         dr.commission = static_cast<unsigned>(contractAmount_ * (5.0f / 100.0f));
         dr.win -= dr.commission;
     }
@@ -943,8 +956,10 @@ CrapsBet::evalField(
 
     if (dcn == Win)
     {
-        dr.win = contractAmount_;
-        if (d == 2 || d == 12) dr.win += contractAmount_;  // pays double
+        const auto& odds = OddsTables::oddsField[d];
+        dr.win = calculateOddsPayout(contractAmount_,
+                                     odds.numerator,
+                                     odds.denominator);
     }
     if (dcn == Lose)
     {
@@ -1252,7 +1267,7 @@ void
 CrapsBet::setHardwayOn()
 {
     if (betName_ != BetName::Hardway) return;
-    offComeOutRoll_ = true;
+    offComeOutRoll_ = false;
 }
 
 /*-----------------------------------------------------------*//**
@@ -1267,7 +1282,7 @@ void
 CrapsBet::setHardwayOff()
 {
     if (betName_ != BetName::Hardway) return;
-    offComeOutRoll_ = false;
+    offComeOutRoll_ = true;
 }
 
 /*-----------------------------------------------------------*//**
@@ -1353,7 +1368,9 @@ operator<< (std::ostream& out, const DecisionRecord& dr)
     " pivotAssigned: " << dr.pivotAssigned            << std::endl <<
     "           win: " << dr.win                      << std::endl <<
     "          lose: " << dr.lose                     << std::endl <<
-    "returnToPlayer: " << dr.returnToPlayer           << std::endl;
+    "returnToPlayer: " << dr.returnToPlayer           << std::endl <<
+    "    commission: " << dr.commission                << std::endl <<
+    "     removeBet: " << dr.removeBet                 << std::endl;
     return out;
 }
 

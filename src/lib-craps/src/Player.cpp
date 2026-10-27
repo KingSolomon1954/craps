@@ -568,7 +568,16 @@ Player::processWin(const DecisionRecord& dr)
     }
 
     wallet_.deposit(dr.returnToPlayer);
-    wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
+    if (dr.removeBet)
+    {
+        // A terminal win returns the original stakes as well as the profit.
+        wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
+    }
+    else
+    {
+        // The wager remains active, so its original stake stays on the table.
+        wallet_.deposit(dr.win);
+    }
 
     // std::cout << playerName_ << ": processWin(" << pBet->betName() <<
     //     ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
@@ -581,7 +590,10 @@ Player::processWin(const DecisionRecord& dr)
 #if 0
     sendEventBetResolved(pBet->betName(), pBet->betId(), dr.win, dr.lose);
 #endif
-    (void) removeBetByPtr(pBet);
+    if (dr.removeBet)
+    {
+        (void) removeBetByPtr(pBet);
+    }
 }
 
 /*-----------------------------------------------------------*//**

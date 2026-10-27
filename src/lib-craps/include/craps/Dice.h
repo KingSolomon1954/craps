@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace Craps {
 
 class Dice
@@ -25,10 +27,11 @@ public:
 
     /// @name Observers
     /// @{
-    unsigned value()     const;
-    unsigned d1()        const;
-    unsigned d2()        const;
-    unsigned rollCount() const;
+    unsigned value()             const;
+    unsigned d1()                const;
+    unsigned d2()                const;
+    unsigned rollCount()         const;
+    std::string toString()       const;
     bool operator==(const Dice&) const = default;  // Only generates ==
     /// @}
 

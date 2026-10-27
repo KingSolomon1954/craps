@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <craps/Dice.h>
+#include <fmt/format.h>
 #include <iostream>
 #include <random>
 #include <stdexcept>
@@ -80,6 +81,14 @@ Dice::getRandomNumber(int min, int max) const
     static std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist(min, max);
     return dist(gen);
+}
+
+//----------------------------------------------------------------
+
+std::string
+Dice::toString() const
+{
+    return fmt::format("{}({},{})", d1_ + d2_, d1_, d2_);
 }
 
 //----------------------------------------------------------------

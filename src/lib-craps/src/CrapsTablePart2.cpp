@@ -245,7 +245,7 @@ CrapsTable::fifBadMinMaxSideBets(const CrapsBet& bet, Gen::Money amt,
                                  size_t idx, Gen::ErrorPass& ep) const
 {
     // fault if exceeded limits and sets ep error diag
-    if (!withinMinMaxSideBets(bet.betName(), bet.contractAmount(), ep))
+    if (!withinMinMaxSideBets(bet.betName(), amt, ep))
     {
         ep.prepend(diagPrefix(idx, bet));
         ep.setErrorName(Gen::ErrorPass::ErrorName::RangeError);

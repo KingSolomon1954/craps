@@ -785,6 +785,7 @@ CrapsTable::declareDiceNewValue()
     ev.d1        = dice_.d1();
     ev.d2        = dice_.d2();
     Gen::EventManager::instance().publish(ev);
+    LOG_DEBUG("CrapsTable() roll dice; " + dice_.toString());
 }
 
 //----------------------------------------------------------------
@@ -958,7 +959,10 @@ CrapsTable::disburseHouseResults()
         if (r.win > 0)  // player wins, house loses
         {
             changed = true;
-            houseBank_.withdraw(r.win);
+            // r.win is net of commission. Withdraw gross winnings, then
+            // credit the commission below, so the bank's net change equals
+            // the amount actually paid to the player.
+            houseBank_.withdraw(r.win + r.commission);
             lastRollStats_.amountLose += r.win;
             lastRollStats_.numBetsLose++;
         }
@@ -1037,8 +1041,9 @@ CrapsTable::disburseDone()
 
 //----------------------------------------------------------------
 //
-// Remove bets from table that had a decision.
+// Remove bets whose resolved outcome ends the wager.
 //
+// A win can be resolved while a Place/Buy/Lay/Hardway wager remains active.
 // Only trim after dispensing results. Need the bet object in-scope
 // when player processes a decision record. A player implementation
 // might not be holding their bet pointers, yet still want to access
@@ -1050,7 +1055,7 @@ CrapsTable::trimTableBets()
 {
     for (const auto& dr : drl_)
     {
-        if (!dr.decision) continue;
+        if (!dr.removeBet) continue;
 
         for (size_t i = 0; i < tableBets_.size(); ++i)
         {

@@ -23,6 +23,8 @@ struct DecisionRecord
     Gen::Money lose           = 0;
     Gen::Money returnToPlayer = 0;
     Gen::Money commission     = 0;
+    // An outcome may be resolved while the wager remains active (e.g. a winning Place bet).
+    bool removeBet            = true;
 
     bool operator==(const DecisionRecord& other) const
     {
@@ -32,7 +34,8 @@ struct DecisionRecord
                win            == other.win            &&
                lose           == other.lose           &&
                returnToPlayer == other.returnToPlayer &&
-               commission     == other.commission;
+               commission     == other.commission     &&
+               removeBet      == other.removeBet;
     }
     void reset()
     {
@@ -43,6 +46,7 @@ struct DecisionRecord
         lose           = 0;
         returnToPlayer = 0;
         commission     = 0;
+        removeBet      = true;
     }
 };
 
@@ -63,10 +67,9 @@ the caller:
 @var DecisionRecord::decision
     Indicates that a decision has been reached for this bet.
 
-    When true, this bet has reached a decision, and one or more of the
-    win, lose, returnToPlayer fields in this record will have non-zero
-    values. It is the caller's responsibility to remove the bet from
-    the craps table.
+    When true, this bet has a resolved outcome on this roll. One or more
+    of the win, lose, or returnToPlayer fields may be non-zero. This does
+    not by itself mean the wager has ended; see removeBet.
 
     When false, this bet has not reached a decision and should remain on
     on the Craps table. The win, lose, retrunToPlayer fields will all be
@@ -74,6 +77,11 @@ the caller:
     come out rolls (i.e, the passed in point is zero) then the CrapsBet
     pivot field, if zero, will be set to the dice value for
     Pass/Come/DontPass/DontCome bets.
+
+@var DecisionRecord::removeBet
+    Indicates whether the wager should be removed from the player and table
+    after this outcome is settled. A winning Place, Buy, Lay, or Hardway bet
+    can resolve a win while remaining active.
 
 @var DecisionRecord::pivotAssigned
     Indicates whether a pivot for this bet has been freshly
@@ -90,9 +98,10 @@ the caller:
 @var DecisionRecord::win
     If non-zero, then this bet has won the given amount.
 
-    The calculation includes odds winnings. The caller implementation
-    should take this win amount and add it with the original
-    contractAmount and oddsAmount to give back to the player.
+    The calculation includes odds winnings and is net of any commission.
+    If removeBet is true, the caller returns the original contract and odds
+    stakes along with this profit. If removeBet is false, only this profit is
+    credited because the original stake remains active on the table.
 
 @var DecisionRecord::lose
     If non-zero, then this bet has lost the given amount.
@@ -105,8 +114,9 @@ the caller:
 @var DecisionRecord::returnToPlayer
     I non-zero then the given amount should be returned to the player.
 
-    Note this is not a win or lose. This happens when a point-based bet
-    wins/loses during a come out roll and setOffComeOutRoll() is true.
+    This is an additional refund, used when odds are off during a come-out
+    roll and the odds stake must be returned on a losing outcome. A winning
+    bet already receives its stake as part of normal winning settlement.
 
 @var DecisionRecord::commission
     Lay and Buy bets require a 5% commission if they win.
