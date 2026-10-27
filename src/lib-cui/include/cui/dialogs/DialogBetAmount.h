@@ -47,12 +47,10 @@ public:
 private:
     WindowPosition winPos_{};
     // "DontCome bet Odds on the 10"  (27)
-    static constexpr WindowSize winSize_ = {13, 31};  // rows, cols, Fixed size
+    static constexpr WindowSize winSize_ = {24, 59};  // rows, cols, fixed size
 
-    static constexpr std::array<std::string_view, 7> Prompts
+    static constexpr std::array<std::string_view, 5> Prompts
     {
-        "Enter amount:",
-        "",
         "[enter] Submit Bet",
         "[a] Save as AutoFill",
         "[q] Save as Quick Bet",
@@ -101,7 +99,7 @@ private:
 
     // Input field layout and editing
     static constexpr int inputRow_ = 5;
-    static constexpr int inputCol_ = 2 + Prompts[0].size() + 1;
+    static constexpr int inputCol_ = 2 + std::string_view("Enter amount:").size() + 1;
     static constexpr int numInputBlanks_ = winSize_.cols - inputCol_ - 1;
     static constexpr int inputCharsMax_ = 8;
     Gen::Money inputAmount_ = 0;
@@ -115,6 +113,8 @@ private:
     void drawStaticContent();
     void drawBorders();
     void drawHintMultiples();
+    void drawReference();
+    void drawStatistics();
     void drawPrompts();
     void drawTitle();
     void drawInput();

@@ -37,6 +37,15 @@
 
 ### Need to inhibit various actions during animation roll
 
+### Track contract-only amounts separately in BetStats
+
+BetStats records contract and odds amounts under the same bet-type
+key. The displayed expectation therefore uses the selected bet profile's
+house edge against the combined recorded amount. That is an estimate,
+not an exact expected loss, because the statistics don't retain the
+contract-only amount separately. A future model-level refinement could
+track that amount independently.
+
 ### Implement QuickBet::applyQuickBet for new CUI design
 
 ### Implement MenuQuickBet
@@ -54,6 +63,18 @@
 ### Implement WindowMessageArea
 
 ### Implement ReqMakeBet, to include UndoManager
+
+### Fix Place bets being removed from table after a win
+
+I'd introduce an explicit distinction in the decision/resolution model
+between:
+- Outcome resolved: the roll produced a win or loss.
+- Wager remains active: the original bet continues after that outcome.
+
+Bottom line: evalPlace() marks the win as a final decision,
+Player::processWin() removes the bet from the player, and
+CrapsTable::trimTableBets() removes it from the table. All three parts
+need to agree on the intended lifecycle of a Place bet.
 
 (Done) Early illegal bet test - jump to error immediatly
 (Done) Place, Buy, Lay  bet odds hints
