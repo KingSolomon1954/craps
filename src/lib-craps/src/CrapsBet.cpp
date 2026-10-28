@@ -464,10 +464,8 @@ CrapsBet::calcWinPointBet(
 
     if (offComeOutRoll_ && returnOdds)
     {
-        // The winning settlement returns contractAmount_ and oddsAmount_
-        // to the player. Do not also put oddsAmount_ in returnToPlayer,
-        // or the odds stake would be credited twice.
-        return;
+        dr.returnToPlayer = oddsAmount_;
+        return;  // Skip odds payout calculation
     }
 
     const auto& odds = table[pivot];

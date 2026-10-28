@@ -1208,7 +1208,9 @@ void field1(Player* p1, unsigned point, unsigned d1, unsigned d2)
     CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
-    if (dice.value() == 2 || dice.value() == 12)
+    if (dice.value() == 12)
+        CHECK(dr.win == 300);
+    else if (dice.value() == 2)
         CHECK(dr.win == 200);
     else
         CHECK(dr.win == 100);

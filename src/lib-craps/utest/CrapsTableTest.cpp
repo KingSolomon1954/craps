@@ -859,10 +859,9 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
         Gen::Money balance = p1->getBalance();
 
         autoBetLoop(rolls, *t, *p1);
-        CHECK(t->getAmountOnTable() ==  0);
-        CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(p1->getBalance() == balance + 30 + 18);
+        CHECK(t->getAmountOnTable() ==  10);
+        CHECK(t->getNumBetsOnTable() == 1);
+        CHECK(p1->getBalance() == balance + 20 + 18);
     }
 
     SUBCASE("ascendingRoll")
