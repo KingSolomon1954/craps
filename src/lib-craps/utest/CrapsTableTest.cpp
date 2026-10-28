@@ -506,6 +506,10 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         CHECK(t->setContractAmount(b1, 15, ep) == Gen::ReturnCode::Success);
         CHECK(b1->contractAmount() == 15);
 
+        // Validate the requested amount, not the old amount already on table.
+        CHECK(t->setContractAmount(b1, 2001, ep) == Gen::ReturnCode::Fail);
+        CHECK(b1->contractAmount() == 15);
+
         // Change contract bet to zero
         CHECK(t->setContractAmount(b1, 0, ep) == Gen::ReturnCode::Fail);
         CHECK(b1->contractAmount() == 15);
@@ -630,7 +634,6 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
     SUBCASE("firstRoll")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        Gen::ErrorPass ep;
         
         // First roll, no players, it's a come out roll.
         CHECK(t->isComeOutRoll());
@@ -1962,3 +1965,131 @@ SessionStats:
 }
 
 //----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Buy win accounting and lifetime")
+{
+    CrapsTable t("Table-1", config);
+    auto joined = p1->joinTable(t);
+    REQUIRE(joined);
+
+    // Keep point 6 established while the Buy 4 wins, so the following
+    // seven is a seven-out rather than a come-out roll.
+    t.testSetState(6, 2, 2);
+    const auto startingBalance = p1->getBalance();
+    auto betResult = p1->makeBet(BetName::Buy, 100, 4);
+    REQUIRE(betResult);
+
+    const auto bankBefore = t.getBankCurrentStats();
+    const auto depositedBefore = bankBefore.amtDeposited;
+    const auto withdrawnBefore = bankBefore.amtWithdrawn;
+
+    // A 2:1 gross profit of $200 less $5 commission pays $195.
+    t.testRollDice(2, 2);
+    CHECK(p1->getBalance() == startingBalance + 95);
+    CHECK(p1->getNumBetsOnTable() == 1);
+    CHECK(t.getNumBetsOnTable() == 1);
+    CHECK(t.getAmountOnTable() == 100);
+
+    auto bankAfterWin = t.getBankCurrentStats();
+    CHECK(bankAfterWin.amtWithdrawn - withdrawnBefore == 200);
+    CHECK(bankAfterWin.amtDeposited - depositedBefore == 5);
+
+    // A later seven ends the still-active Buy wager.
+    const auto balanceAfterWin = p1->getBalance();
+    t.testRollDice(3, 4);
+    CHECK(p1->getBalance() == balanceAfterWin);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getAmountOnTable() == 0);
+
+    const auto bankAfterLoss = t.getBankCurrentStats();
+    CHECK(bankAfterLoss.amtWithdrawn - withdrawnBefore == 200);
+    CHECK(bankAfterLoss.amtDeposited - depositedBefore == 105);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Come odds refunded once on come-out win")
+{
+    CrapsTable t("Table-1", config);
+    auto joined = p1->joinTable(t);
+    REQUIRE(joined);
+
+    // Create an existing Come 4 bet with odds while a point is established.
+    t.testSetState(4, 2, 2);
+    const auto startingBalance = p1->getBalance();
+    auto betResult = p1->makeBet(BetName::Come, 100, 0);
+    REQUIRE(betResult);
+    auto bet = betResult.value();
+    bet->testSetPivot(4);
+    auto oddsResult = p1->setOddsAmount(bet, 200);
+    REQUIRE(oddsResult);
+
+    // On the come-out roll, the contract wins but the odds are off and must
+    // be returned. The odds stake must not also be returned a second time.
+    t.testSetState(0, 2, 2);
+    t.testRollDice(2, 2);
+
+    CHECK(p1->getBalance() == startingBalance + 100);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getAmountOnTable() == 0);
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Lay commission accounting and lifetime")
+{
+    CrapsTable t("Table-1", config);
+    auto joined = p1->joinTable(t);
+    REQUIRE(joined);
+
+    t.testSetState(4, 3, 4);
+    const auto startingBalance = p1->getBalance();
+    auto betResult = p1->makeBet(BetName::Lay, 100, 4);
+    REQUIRE(betResult);
+
+    const auto bankBefore = t.getBankCurrentStats();
+    const auto depositedBefore = bankBefore.amtDeposited;
+    const auto withdrawnBefore = bankBefore.amtWithdrawn;
+
+    // Lay 4 wins $50 gross, with $2 commission (5% of gross winnings).
+    t.testRollDice(3, 4);
+    CHECK(p1->getBalance() == startingBalance - 52);
+    CHECK(p1->getNumBetsOnTable() == 1);
+    CHECK(t.getNumBetsOnTable() == 1);
+    CHECK(t.getAmountOnTable() == 100);
+
+    const auto bankAfterWin = t.getBankCurrentStats();
+    CHECK(bankAfterWin.amtWithdrawn - withdrawnBefore == 50);
+    CHECK(bankAfterWin.amtDeposited - depositedBefore == 2);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:DontCome odds refunded once on come-out win")
+{
+    CrapsTable t("Table-1", config);
+    auto joined = p1->joinTable(t);
+    REQUIRE(joined);
+
+    // Create an existing Don't Come 4 bet with odds while a point is known.
+    t.testSetState(4, 3, 1);
+    const auto startingBalance = p1->getBalance();
+    auto betResult = p1->makeBet(BetName::DontCome, 100, 0);
+    REQUIRE(betResult);
+    auto bet = betResult.value();
+    bet->testSetPivot(4);
+    auto oddsResult = p1->setOddsAmount(bet, 200);
+    REQUIRE(oddsResult);
+
+    // Seven on the come-out roll wins Don't Come; off odds are refunded once.
+    t.testSetState(0, 3, 4);
+    t.testRollDice(3, 4);
+
+    CHECK(p1->getBalance() == startingBalance + 100);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getAmountOnTable() == 0);
+}
+
+//----------------------------------------------------------------
+

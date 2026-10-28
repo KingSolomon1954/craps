@@ -915,7 +915,7 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Lay")
 {
     SUBCASE("decisions")
     {
-        Gen::ErrorPass ep;
+//        Gen::ErrorPass ep;
         DecisionRecord dr;
         Dice dice;
 
@@ -1046,7 +1046,6 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture,"CrapsBet:evaluate:Hardway")
 {
     SUBCASE("decisions")
     {
-        Gen::ErrorPass ep;
         DecisionRecord dr;
         Dice dice;
 
@@ -1527,3 +1526,69 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Horn")
 }
 
 //----------------------------------------------------------------
+
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:resolved wager lifetime")
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice;
+
+    // A resolved win does not end a Place/Buy/Lay/Hardway wager.
+    dice.set(2, 2);
+    CrapsBet place(p1, BetName::Place, 100, 4);
+    REQUIRE(place.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+
+    CrapsBet buy(p1, BetName::Buy, 100, 4);
+    REQUIRE(buy.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+
+    CrapsBet hardway(p1, BetName::Hardway, 100, 4);
+    REQUIRE(hardway.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+
+    dice.set(3, 4); // seven wins the Lay 4 wager
+    CrapsBet lay(p1, BetName::Lay, 100, 4);
+    REQUIRE(lay.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+
+    // A terminal loss ends a Place wager.
+    CrapsBet losingPlace(p1, BetName::Place, 100, 4);
+    REQUIRE(losingPlace.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.lose > 0);
+    CHECK(dr.removeBet);
+}
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:Hardway on/off")
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice;
+    dice.set(2, 2); // hard 4
+
+    CrapsBet hardway(p1, BetName::Hardway, 100, 4);
+
+    hardway.setHardwayOff();
+    REQUIRE(hardway.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK_FALSE(dr.decision);
+    CHECK(dr.win == 0);
+    CHECK(dr.lose == 0);
+
+    hardway.setHardwayOn();
+    REQUIRE(hardway.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+}

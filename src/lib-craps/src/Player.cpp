@@ -571,7 +571,15 @@ Player::processWin(const DecisionRecord& dr)
     if (dr.removeBet)
     {
         // A terminal win returns the original stakes as well as the profit.
-        wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
+        // When returnToPlayer already refunds the odds stake (odds are off
+        // during a come-out roll), do not return that same stake a second time.
+        const Gen::Money oddsReturnedSeparately =
+            (dr.returnToPlayer != 0 &&
+             dr.returnToPlayer == pBet->oddsAmount())
+                ? pBet->oddsAmount()
+                : 0;
+        wallet_.deposit(dr.win + pBet->contractAmount() +
+                        pBet->oddsAmount() - oddsReturnedSeparately);
     }
     else
     {

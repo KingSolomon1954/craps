@@ -64,28 +64,14 @@ track that amount independently.
 
 ### Implement ReqMakeBet, to include UndoManager
 
-### Fix Place bets being removed from table after a win
-
-### Want DialogBetAmount to say Max Bet, current bet, off-on-comeout
+### Want DialogBetAmount to show Max Bet, current bet, off-on-comeout
 
 ### Allow same bet to add to existing bet 
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
-Fix Place bets being removed from table after a win
-
-I'd introduce an explicit distinction in the decision/resolution model
-between:
-- Outcome resolved: the roll produced a win or loss.
-- Wager remains active: the original bet continues after that outcome.
-
-Bottom line: evalPlace() marks the win as a final decision,
-Player::processWin() removes the bet from the player, and
-CrapsTable::trimTableBets() removes it from the table. All three parts
-need to agree on the intended lifecycle of a Place bet.
-
-### Fix evaluation() processing and various bugs
-
+(Done) Fix evaluation() processing and various bugs
+(Done) Fix Place bets being removed from table after a win
 (Done) Early illegal bet test - jump to error immediatly
 (Done) Place, Buy, Lay  bet odds hints
 (Done) Add LastFill feature
@@ -93,7 +79,7 @@ need to agree on the intended lifecycle of a Place bet.
 (Done) Fix window width of MenuOddsBet
 (Done) Fix multiple odds bets for same bet and number MenuOddsBet
 (Done) Setting an Odds bet shows as two bets on the table and player brief
-(Done) Fixed MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?
+(Done) Fix MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?
 (Done) Debug & fix WindowPlayerBrief
 (Done) Added new events to populate WindowPlayerBrief
 (Done) Debug & fix WindowHouseBrief

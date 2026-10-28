@@ -112,11 +112,11 @@ the caller:
     done so.
 
 @var DecisionRecord::returnToPlayer
-    I non-zero then the given amount should be returned to the player.
+    If non-zero, the given amount should be returned to the player.
 
-    This is an additional refund, used when odds are off during a come-out
-    roll and the odds stake must be returned on a losing outcome. A winning
-    bet already receives its stake as part of normal winning settlement.
+    This is used when odds are off during a come-out roll. It can accompany
+    either a win or a loss. When a winning settlement also returns the
+    original odds stake, the caller must avoid returning that stake twice.
 
 @var DecisionRecord::commission
     Lay and Buy bets require a 5% commission if they win.

@@ -140,7 +140,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
         result = p1->joinTable(*t); CHECK(result);
         REQUIRE(t->getNumBetsOnTable() == 0);
         REQUIRE(p1->getNumBetsOnTable() == 0);
-        t->testSetState(0, 5, 5);  // point 0, d1=5, d2=5
+        t->testSetState(4, 5, 5);  // establish a point so odds can be set  // point 0, d1=5, d2=5
         
         // Put down a pass line bet, coming out
         result2 = p1->makeBet(BetName::PassLine, 100, 0);
@@ -359,9 +359,11 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         REQUIRE(p1->getNumBetsOnTable() == 1);
         p1->bettingClosed();
         DecisionRecord r1{b1.get(), true, false, 140, 0, 0, 0};
+        r1.removeBet = false;  // A winning Place wager remains active.
         p1->processWin(r1);
-        CHECK(p1->getBalance() == bal + 140);
-        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getBalance() == bal + 20);  // wager remains on table
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(t->getNumBetsOnTable() == 1);
 
         // check player stats
         auto stats = p1->getCurrentStats();
@@ -436,22 +438,28 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         auto b1 = result2.value();
         REQUIRE(p1->getNumBetsOnTable() == 1);
         DecisionRecord r1{b1.get(), true, false, 195, 0, 0, 5};
+        r1.removeBet = false;  // Buy wagers also remain active after a win.
         p1->processWin(r1);
-        CHECK(p1->getBalance() == bal + 195);
-        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getBalance() == bal + 95);  // $100 wager remains on table
+        CHECK(p1->getNumBetsOnTable() == 1);
 
-        // Come bets return odds money, make point then roll 7
-        bal = p1->getBalance();
-        t->testSetState(4, 5, 5);  // point 0, d1=5, d2=5
-        result2 = p1->makeBet(BetName::Come, 100, 0); REQUIRE(result2);
+        // Come bet hits its number on the come-out roll with odds off.
+        // Use a separate player because the Buy wager above remains active.
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config));
+        result1 = p2->joinTable(*t); REQUIRE(result1);
+        bal = p2->getBalance();
+        t->testSetState(6, 5, 5);  // establish a point so odds can be set
+        result2 = p2->makeBet(BetName::Come, 100, 0); REQUIRE(result2);
         auto b2 = result2.value();
-        REQUIRE(p1->getNumBetsOnTable() == 1);
-        b2->testSetPivot(10);  // avoid dice roll, setup bet to have a point
-        result1 = p1->setOddsAmount(b2, 200); REQUIRE(result1);
+        REQUIRE(p2->getNumBetsOnTable() == 1);
+        b2->testSetPivot(10);  // simulate an existing Come 10 bet
+        result1 = p2->setOddsAmount(b2, 200); REQUIRE(result1);
         DecisionRecord r2{b2.get(), true, false, 100, 0, 200, 0};
-        p1->processWin(r2);
-        CHECK(p1->getBalance() == bal + 100 + 200);
-        CHECK(p1->getNumBetsOnTable() == 0);
+        p2->processWin(r2);
+        // The odds stake is represented by returnToPlayer, so settlement
+        // must not also return it as part of the ordinary stake refund.
+        CHECK(p2->getBalance() == bal + 100);
+        CHECK(p2->getNumBetsOnTable() == 0);
     }
 }
 
