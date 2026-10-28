@@ -22,6 +22,14 @@
 - Allow $1 bets for proposition bets, hardways,
 - fix min field bet
 
+### Need updated Table Rules
+
+- field bet wins double on 2, triple on 12
+- enforce multiples in odds bets
+- specify commision amounts for buy/lay
+- specify commision collected on wager or on winning
+- more
+
 ### Add world bet
 
 ### Add Roll History Format A,B,C,D to multi-configuration

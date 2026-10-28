@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <craps/CrapsBet.h>
+#include <algorithm>
 
 #include <cassert>
 #include <iostream>
@@ -94,9 +95,12 @@ CrapsBet::CrapsBet(
     , pivot_  (pivot)
     , contractAmount_(contractAmount)
 {
-    assert(pPlayer != nullptr);
     try
     {
+        if (pPlayer_ == nullptr)
+        {
+            throw std::invalid_argument("Bad \"pPlayer\": cannot be nullptr.");
+        }
         checkBetName();         // throws
         checkContractAmount();  // throws
         checkLinePivot();       // throws
@@ -116,9 +120,13 @@ CrapsBet::CrapsBet(
 void
 CrapsBet::checkBetName()
 {
-    if (betName_ == BetName::Invalid)
+    const auto it = std::find(EnumBetName::enumerators.begin(),
+                              EnumBetName::enumerators.end(), betName_);
+    if (it == EnumBetName::enumerators.end())
     {
-        throw std::invalid_argument("Bad \"betName\": cannot be \"BetName::Invalid\".");
+        throw std::invalid_argument(
+            "Bad \"betName\": must be a valid craps bet name; "
+            "BetName::Count, BetName::Invalid, and unknown values are not valid bets.");
     }
 }
 

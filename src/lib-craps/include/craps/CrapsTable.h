@@ -96,9 +96,9 @@ public:
     bool                    isComeOutRoll()             const;
     bool                    isBettingOpen()             const;
     bool                    isBetRemovable(BetPtr pBet) const;
-    bool                    havePlayer(Player* pPlayer) const;
+    bool                    havePlayer(const Player* pPlayer)            const;
     bool                    isBetAllowed(BetName name, std::string& str) const;
-    const SessionHistory::Sessions& getSessionHistory() const;
+    const SessionHistory::Sessions& getSessionHistory()                  const;
     /// @}
 
 #if 0
@@ -186,15 +186,15 @@ private:
 private:
     bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
     void throwDice();
-    void resolveBets();
+    bool resolveBets();
     void advanceState();
     void advanceShooter();
     void bumpRecentRolls(const Dice& dice);
-    void evaluateBets();
+    bool evaluateBets();
     void dispenseResults();
     void trimTableBets();
     void clearDrl();
-    void evalOneBet(CrapsBet& bet);
+    bool evalOneBet(CrapsBet& bet);
 
     void declareBettingClosed();
     void declareDiceThrowStart();
@@ -213,13 +213,17 @@ private:
     void disbursePlayerLoses();
     void disbursePlayerKeeps();
 
-    void sendEventPlayerLeftTable(const Player& player) const;
-    void sendEventBetMade(const CrapsBet& bet)          const;
-    void sendEventBetChanged(const CrapsBet& bet)       const;
-    void sendEventTableLastRollStatsChanged()           const;
-    void sendEventTableSessionStatsChanged()            const;
-    void sendEventTableBetsChanged()                    const;
-    void sendEventTableBalanceChanged()                 const;
+    void sendEventPlayerJoinedTable(const Player& player) const;
+    void sendEventPlayerLeftTable  (const Player& player) const;
+    void sendEventBetMade          (const CrapsBet& bet)  const;
+    void sendEventBetRemoved       (const CrapsBet& bet)  const;
+    void sendEventBetChanged       (const CrapsBet& bet)  const;
+    void sendEventTableLastRollStatsChanged()             const;
+    void sendEventTableSessionStatsChanged()              const;
+    void sendEventTableBetsChanged()                      const;
+    void sendEventTableBalanceChanged()                   const;
+    void sendEventBetEvaluationFailed(const CrapsBet& bet,
+                                 const std::string& diag) const;
 
     // File operations
     void saveFile() const;
@@ -231,38 +235,29 @@ private:
 
     // Validity checks with diagnostics, in CrapsTablePart2.cpp
     std::string diagPrefix    (size_t idx, const CrapsBet& bet) const;
-    bool fifBettingClosed     (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
-    bool fifMissingBet        (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) const;
-    bool fifMissingPlayer     (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifHaveBet           (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifComeDisallowed    (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifDontPassDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifBadBetTypeForOdds (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifZeroPivotForOdds  (const CrapsBet& bet, Gen::ErrorPass& ep) const;
-    bool fifBadMinMaxLineBets (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool fifBadMinMaxSideBets (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool fifZeroAmount        (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool fifBadPassLineChange (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool fifBadDontPassChange (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool fifBadMultiples      (const CrapsBet& bet, Gen::Money amt,
-                               size_t idx, Gen::ErrorPass& ep) const;
-    bool fifBadMinMaxForOdds  (const CrapsBet& bet, Gen::Money amt,
-                               Gen::ErrorPass& ep) const;
-    bool withinMinMaxLineBets(BetName betName,
-                              Gen::Money contractAmount,
-                              Gen::ErrorPass& ep) const;
-    bool withinMinMaxSideBets(BetName betName,
-                              Gen::Money contractAmount,
-                              Gen::ErrorPass& ep) const;
-    bool goodMultiplesSideBets(BetName betName,
-                              Gen::Money amt,
-                              Gen::ErrorPass& ep) const;
-    std::string diagLimits   (Gen::Money amt) const;
+    std::string diagLimits(Gen::Money amt) const;
+    bool fifBettingClosed     (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep)                 const;
+    bool fifMissingPlayer     (const CrapsBet& bet,  Gen::ErrorPass& ep)                            const;
+    bool fifHavePlayer        (const Player& player, Gen::ErrorPass& ep)                            const;
+    bool fifMaxPlayers        (Gen::ErrorPass& ep)                                                  const;
+    bool fifBetPtrNull        (const BetPtr pBet, const std::string& fName, Gen::ErrorPass& ep)     const;
+    bool fifMissingBet        (const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep)                 const;
+    bool fifHaveBet           (const CrapsBet& bet, Gen::ErrorPass& ep)                             const;                
+    bool fifComeDisallowed    (const CrapsBet& bet, Gen::ErrorPass& ep)                             const;
+    bool fifDontPassDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep)                             const;
+    bool fifBetMustRemain     (BetPtr pBet,         Gen::ErrorPass& ep)                             const;
+    bool fifBadBetTypeForOdds (const CrapsBet& bet, Gen::ErrorPass& ep)                             const;
+    bool fifZeroPivotForOdds  (const CrapsBet& bet, Gen::ErrorPass& ep)                             const;
+    bool fifBadMinMaxLineBets (const CrapsBet& bet, Gen::Money amt, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxSideBets (const CrapsBet& bet, Gen::Money amt, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifZeroAmount        (const CrapsBet& bet, Gen::Money amt, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadPassLineChange (const CrapsBet& bet, Gen::Money amt, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadDontPassChange (const CrapsBet& bet, Gen::Money amt, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMultiples      (const CrapsBet& bet, Gen::Money amt, size_t idx, Gen::ErrorPass& ep) const;
+    bool fifBadMinMaxForOdds  (const CrapsBet& bet, Gen::Money amt, Gen::ErrorPass& ep)             const;
+    bool withinMinMaxLineBets (BetName betName, Gen::Money contractAmount, Gen::ErrorPass& ep)      const;
+    bool withinMinMaxSideBets (BetName betName, Gen::Money contractAmount, Gen::ErrorPass& ep)      const;
+    bool goodMultiplesSideBets(BetName betName, Gen::Money amt, Gen::ErrorPass& ep)                 const;
     
     D(void logBet(const std::string& t, const CrapsBet& bet);)
 

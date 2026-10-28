@@ -23,16 +23,19 @@ CrapsTable::diagPrefix(size_t idx, const CrapsBet& bet) const
     if (idx == 1)
     {
         diag += "addBet(): Unable to add ";
-    }
-    if (idx == 2)
+    } else if (idx == 2)
     {
         diag += "setContractAmount(): Unable to set contract amount for ";
-    }
-    if (idx == 3)
+    } else if (idx == 3)
     {
         diag += "setOddsAmount(): Unable to set odds amount for ";
+    } else if (idx == 4)
+    {
+        diag += "removtBet(): Unable to remove bet for ";
+    } else
+    {
+        assert(false && "diag bad index");
     }
-    if (idx > 3) assert(false);
 
     return diag + bet.diagBetId() + "; ";
 }
@@ -73,6 +76,34 @@ CrapsTable::fifMissingPlayer(const CrapsBet& bet, Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 bool
+CrapsTable::fifMaxPlayers(Gen::ErrorPass& ep) const
+{
+    if (players_.size() == MaxPlayers)
+    {
+        EP_SET(ep, En::OverflowError, Et::ProcessingError, Es::Indeterminate,
+               "Maximum players already at table.");
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsTable::fifHavePlayer(const Player& player, Gen::ErrorPass& ep) const
+{
+    if (havePlayer(&player))
+    {
+        EP_SET(ep, En::ExistsError, Et::ProcessingError, Es::Indeterminate,
+               "Player already at table.");
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+
+bool
 CrapsTable::fifHaveBet(const CrapsBet& bet, Gen::ErrorPass& ep) const
 {
     // fault if already have bet and sets ep error diag
@@ -82,6 +113,22 @@ CrapsTable::fifHaveBet(const CrapsBet& bet, Gen::ErrorPass& ep) const
                           bet.player().getName()         +
                           " has already made this bet.");
         ep.setErrorName(Gen::ErrorPass::ErrorName::ExistsError);
+        return true;
+    }
+    return false;
+}
+        
+//----------------------------------------------------------------
+
+bool
+CrapsTable::fifBetPtrNull(const BetPtr       pBet,
+                          const std::string& fName,
+                          Gen::ErrorPass&    ep) const
+{
+    // fault if betPtr is null
+    if (pBet == nullptr)
+    {
+        ep.setDescription("CrapsTable::" + fName + " pBet is nullptr.");
         return true;
     }
     return false;
@@ -103,6 +150,23 @@ CrapsTable::fifMissingBet(const CrapsBet& bet, size_t idx, Gen::ErrorPass& ep) c
     return false;
 }
         
+//----------------------------------------------------------------
+
+bool
+CrapsTable::fifBetMustRemain(BetPtr pBet, Gen::ErrorPass& ep) const
+{
+    if (!isBetRemovable(pBet))
+    {
+        EP_SET(ep, En::UnsetErrorName, Et::ProcessingError, Es::Indeterminate,
+               "Unable to remove bet. PassLine|Come bets with points "
+               "must remain on table until a decision; " +
+               pBet->diagBetId() + ".");
+        ep.setErrorName("Betting Error");
+        return true;
+    }
+    return false;
+}
+    
 //----------------------------------------------------------------
 
 bool

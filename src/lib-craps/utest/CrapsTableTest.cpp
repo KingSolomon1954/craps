@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
 #include <zeus/expected.hpp>
@@ -63,6 +64,52 @@ struct CrapsTableFixture
 };
 
 //----------------------------------------------------------------
+
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:reject null bet pointers")
+{
+    CrapsTable t("Table-1", config);
+    BetPtr noBet;
+    Gen::ErrorPass epAdd;
+    Gen::ErrorPass epRemove;
+    Gen::ErrorPass epContract;
+    Gen::ErrorPass epOdds;
+
+    CHECK(t.addBet(noBet, epAdd) == Gen::ReturnCode::Fail);
+    CHECK_FALSE(epAdd.description().empty());
+
+    CHECK(t.removeBet(noBet, epRemove) == Gen::ReturnCode::Fail);
+    CHECK_FALSE(epRemove.description().empty());
+
+    CHECK(t.setContractAmount(noBet, 10, epContract) == Gen::ReturnCode::Fail);
+    CHECK_FALSE(epContract.description().empty());
+
+    CHECK(t.setOddsAmount(noBet, 10, epOdds) == Gen::ReturnCode::Fail);
+    CHECK_FALSE(epOdds.description().empty());
+
+    CHECK_FALSE(t.isBetRemovable(noBet));
+    t.removeBetForce(noBet); // Must log and return without dereferencing.
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propagated")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    REQUIRE(p1->makeBet(BetName::Field, 10, 0));
+
+    // Point 3 is invalid. The roll must not be partially settled or advance
+    // the point; an UslBetEvaluationFailed event is published for the bet.
+    t.testSetState(3, 1, 2);
+    t.testRollDice(1, 1);
+    CHECK(t.isBettingOpen());
+    CHECK(t.getPoint() == 3);
+    CHECK(p1->getNumBetsOnTable() == 1);
+    CHECK(t.getNumBetsOnTable() == 1);
+}
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 {

@@ -60,7 +60,8 @@ enum class EventType
 
     UslBetMade,
     UslBetResolved,
-    UslBetRemoved,             // not yet implemented
+    UslBetEvaluationFailed,
+    UslBetRemoved,
     UslBetChanged,
     UslAutoFillChanged,
     UslQuickBetChanged,
@@ -248,6 +249,33 @@ struct UslBetMade : public GameEvent
 
     UslBetMade()
         : GameEvent{EventSource::Model, EventType::UslBetMade}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslBetEvaluationFailed : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId;
+    BetName         betName = BetName::Invalid;
+    std::string     description;
+
+    UslBetEvaluationFailed()
+        : GameEvent{EventSource::Model, EventType::UslBetEvaluationFailed}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslBetRemoved : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId;
+    BetName         betName = BetName::Invalid;
+
+    UslBetRemoved()
+        : GameEvent{EventSource::Model, EventType::UslBetRemoved}
     {}
 };
 

@@ -110,6 +110,10 @@ TEST_CASE_FIXTURE(CrapsBetPart1Fixture, "CrapsBet:Constructor")
     {
         CHECK_THROWS_AS(CrapsBet b(p1, BetName::Invalid, 100),
                                    std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(p1, BetName::Count, 100),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(nullptr, BetName::Field, 100),
+                                   std::invalid_argument);
         CHECK_THROWS_AS(CrapsBet b(p1, BetName::PassLine, 0),
                                    std::invalid_argument);
         
