@@ -1592,3 +1592,52 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:Hardway on/off")
     CHECK(dr.win > 0);
     CHECK_FALSE(dr.removeBet);
 }
+
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:World")
+{
+    struct Case { unsigned d1; unsigned d2; unsigned payout; };
+    const Case wins[] = {
+        {1, 1, 26}, {1, 2, 11}, {5, 6, 11}, {6, 6, 26}, {3, 4, 0}
+    };
+    for (const auto& c : wins)
+    {
+        Gen::ErrorPass ep;
+        DecisionRecord dr;
+        Dice dice; dice.set(c.d1, c.d2);
+        CrapsBet b(p1, BetName::World, 5);
+        CHECK(b.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision);
+        CHECK(dr.win == c.payout);
+        CHECK(dr.lose == 0);
+        CHECK(dr.pivotAssigned == false);
+    }
+
+    const unsigned losingTotals[][2] = {
+        {1, 3}, {1, 4}, {1, 5}, {3, 5}, {4, 5}, {5, 5}
+    };
+    for (const auto& roll : losingTotals)
+    {
+        Gen::ErrorPass ep;
+        DecisionRecord dr;
+        Dice dice; dice.set(roll[0], roll[1]);
+        CrapsBet b(p1, BetName::World, 5);
+        CHECK(b.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 5);
+    }
+
+    // Invalid amounts are rejected defensively even when evaluating a bet
+    // without passing through CrapsTable's normal amount validation.
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice; dice.set(3, 4);
+    CrapsBet invalidBet(p1, BetName::World, 6);
+    CHECK(invalidBet.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Fail);
+    CHECK(ep.description().find("multiple of 5") != std::string::npos);
+}
+
+//----------------------------------------------------------------

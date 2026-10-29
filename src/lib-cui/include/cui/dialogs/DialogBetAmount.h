@@ -96,6 +96,33 @@ private:
         "Pays 5:6 use multiple of 6",
         "Pays 1:1                  "
     };
+    // Aggregate proposition bets have their own payout and denomination
+    // hints. The repeated entries keep the same interface as point-based
+    // hints while making these independent of the selected point group.
+    static constexpr Hints anyCrapsHints{
+        "Pays 7:1; multiple of $1",
+        "Pays 7:1; multiple of $1",
+        "Pays 7:1; multiple of $1",
+        "Pays 7:1; multiple of $1"
+    };
+    static constexpr Hints candEHints{
+        "Craps 7:1, Eleven 15:1; multiple of $2",
+        "Craps 7:1, Eleven 15:1; multiple of $2",
+        "Craps 7:1, Eleven 15:1; multiple of $2",
+        "Craps 7:1, Eleven 15:1; multiple of $2"
+    };
+    static constexpr Hints hornHints{
+        "Pays 30:1 / 15:1; multiple of $4",
+        "Pays 30:1 / 15:1; multiple of $4",
+        "Pays 30:1 / 15:1; multiple of $4",
+        "Pays 30:1 / 15:1; multiple of $4"
+    };
+    static constexpr Hints worldHints{
+        "Pays 30:1 / 15:1 / 4:1; multiple of $5",
+        "Pays 30:1 / 15:1 / 4:1; multiple of $5",
+        "Pays 30:1 / 15:1 / 4:1; multiple of $5",
+        "Pays 30:1 / 15:1 / 4:1; multiple of $5"
+    };
 
     // Input field layout and editing
     static constexpr int inputRow_ = 5;

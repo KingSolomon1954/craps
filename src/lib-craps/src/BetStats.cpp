@@ -253,6 +253,7 @@ BetTypeStats::BetTypeStats()
     wins["AnySeven"];      lose["AnySeven"];
     wins["CandE"];         lose["CandE"];
     wins["Horn"];          lose["Horn"];
+    wins["World"];         lose["World"];
 }
 
 //-----------------------------------------------------------------
@@ -336,6 +337,20 @@ BetTypeStats::fromYAML(const YAML::Node& node)
         BetStat stat;
         stat.fromYAML(it->second);
         lose[key] = stat;
+    }
+
+    // Older saved statistics files do not yet contain newer bet types.
+    // Preserve compatibility and keep every supported bet name addressable.
+    const BetTypeStats defaults;
+    for (const auto& [key, stat] : defaults.wins)
+    {
+        (void) stat;
+        wins.try_emplace(key);
+    }
+    for (const auto& [key, stat] : defaults.lose)
+    {
+        (void) stat;
+        lose.try_emplace(key);
     }
 }
 

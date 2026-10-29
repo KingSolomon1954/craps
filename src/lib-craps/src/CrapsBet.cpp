@@ -56,13 +56,14 @@ CrapsTable, allowing the application better freedom of design.
     The amount of the bet. Throws if this is zero.
     For C&E bets, min bet is 2 must be a multiple of 2.
     For Horn bets, min bet is 4 must be a multiple of 4.
+    For World bets, min bet is 5 must be a multiple of 5.
 
 @param[in] pivot
     The number this bet is focused on. For example a Place bet must set
     the pivot to 4,5,6,8,9 or 10 otherwise a std::invalid_argument
     exception is thrown.
 
-    For Field, AnyCraps, AnySeven, C&E and Horn bets, the pivot is
+    For Field, AnyCraps, AnySeven, C&E, Horn and World bets, the pivot is
     unused and internally set to 0.
 
     For PassLine/Come/DontPass/DontCome bets, the caller sets the pivot
@@ -206,7 +207,8 @@ CrapsBet::checkSideBets()
         betName_ == BetName::AnyCraps ||
         betName_ == BetName::AnySeven ||
         betName_ == BetName::CandE    ||
-        betName_ == BetName::Horn)
+        betName_ == BetName::Horn     ||
+        betName_ == BetName::World)
     {
         pivot_ = 0;  // Quietly force it to 0.
     }
@@ -349,6 +351,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         case BetName::AnySeven: rc = evalAnySeven(point, dice, dr, ep); break;
         case BetName::CandE   : rc = evalCandE   (point, dice, dr, ep); break;
         case BetName::Horn    : rc = evalHorn    (point, dice, dr, ep); break;
+        case BetName::World   : rc = evalWorld   (point, dice, dr, ep); break;
         case BetName::Count   : // fall through
         case BetName::Invalid : return Gen::ReturnCode::Fail;           break;
     }
@@ -1112,6 +1115,46 @@ CrapsBet::evalHorn(
     else if (dice.value() == 3 || dice.value() == 11)
     {
         dr.win = (contractAmount_ / 4) * 15;
+    }
+    else
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = true;
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalWorld(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)
+{
+    (void) point;  // World is a one-roll proposition bet.
+
+    // Table validation normally guarantees this. Keep evaluation safe when
+    // called directly by tests or another model client with an invalid wager.
+    if (contractAmount_ < 5 || contractAmount_ % 5 != 0)
+    {
+        ep.setDescription("World bet amount must be a multiple of 5 and at least 5.");
+        return Gen::ReturnCode::Fail;
+    }
+
+    const auto& odds = OddsTables::oddsWorld[dice.value()];
+    if (odds.numerator != 0)
+    {
+        // The total wager is five equal components: 2, 3, 7, 11 and 12.
+        // The winning component pays its stated profit, while the other four
+        // component stakes are lost. dr.win is the net profit for the whole
+        // World wager. A 7 is therefore a break-even outcome (4 - 4 = 0).
+        const Gen::Money component = contractAmount_ / 5;
+        const Gen::Money componentProfit =
+            component * odds.numerator / odds.denominator;
+        const Gen::Money losingComponents = contractAmount_ - component;
+        dr.win = componentProfit - losingComponents;
     }
     else
     {

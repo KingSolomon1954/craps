@@ -442,6 +442,10 @@ CrapsTable::withinMinMaxSideBets(BetName betName,
     {
         min = minHornBet_; max = maxHornBet_;
     }
+    if (betName == BetName::World && (amt < minWorldBet_ || amt > maxWorldBet_))
+    {
+        min = minWorldBet_; max = maxWorldBet_;
+    }
     if (min != 0 || max != 0)
     {
         std::string minStr = std::to_string(min);
@@ -472,6 +476,13 @@ CrapsTable::goodMultiplesSideBets(BetName betName,
         ep.setDescription("This bet must be a multiple of 4. " +
                           Gen::MoneyUtils::toString(amt)       +
                           " is not a multiple of 4.");
+        return false;
+    }
+    if (betName == BetName::World && (amt % 5 != 0))
+    {
+        ep.setDescription("This bet must be a multiple of 5. " +
+                          Gen::MoneyUtils::toString(amt)       +
+                          " is not a multiple of 5.");
         return false;
     }
     return true;

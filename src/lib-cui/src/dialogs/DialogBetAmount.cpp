@@ -129,7 +129,7 @@ isRollOutcomeBet(BetName name)
 {
     return name == BetName::Field || name == BetName::AnyCraps ||
            name == BetName::AnySeven || name == BetName::CandE ||
-           name == BetName::Horn;
+           name == BetName::Horn || name == BetName::World;
 }
 
 //----------------------------------------------------------------
@@ -200,6 +200,8 @@ profileFor(BetName name, unsigned pivot)
         p = {2.7778, 16.6667, 0, 0, "Loses on all other rolls", "Wins on craps or 11"};
     else if (name == BetName::Horn)
         p = {0.0, 16.6667, 0, 0, "Loses on all other rolls", "Wins on 2, 3, 11, 12"};
+    else if (name == BetName::World)
+        p = {13.3333, 33.3333, 0, 0, "Loses on all other rolls", "Wins on 2, 3, 7, 11, 12"};
     return p;
 }
 
@@ -415,6 +417,14 @@ static constexpr RefArray Horn{
     "Bet resolves on the next roll",
     "Can be bet before any roll"
 };
+static constexpr RefArray World{
+    "Pays 30:1 on 2 or 12, 15:1 on 3 or 11, 4:1 on 7",
+    "Five equal components: one each on 2, 3, 7, 11 and 12",
+    "$5 World bet: $1 on each of the five totals",
+    "One roll only; all five components settle independently",
+    "Any total other than 2, 3, 7, 11 or 12 loses",
+    "Requires a wager that is a multiple of $5"
+};
 
 const RefArray&
 referenceFor(BetName name, unsigned pivot, bool oddsBet)
@@ -443,6 +453,7 @@ referenceFor(BetName name, unsigned pivot, bool oddsBet)
     case BetName::AnySeven: return AnySeven;
     case BetName::CandE:    return CandE;
     case BetName::Horn:     return Horn;
+    case BetName::World:    return World;
     default:                return Passline;
     }
 }
@@ -605,6 +616,14 @@ DialogBetAmount::drawHintMultiples()
         hint = buy[index];
     else if (betName == BetName::Lay)
         hint = lay[index];
+    else if (betName == BetName::AnyCraps)
+        hint = anyCrapsHints[index];
+    else if (betName == BetName::CandE)
+        hint = candEHints[index];
+    else if (betName == BetName::Horn)
+        hint = hornHints[index];
+    else if (betName == BetName::World)
+        hint = worldHints[index];
 
     mvwaddstr(pWin_, 3, 2, padLine(std::string(hint)).c_str());
 }

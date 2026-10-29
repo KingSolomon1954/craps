@@ -23,6 +23,7 @@ constexpr const char* AnyCrapsStr = "AnyCraps";
 constexpr const char* AnySevenStr = "AnySeven";
 constexpr const char* CandEStr    = "C&E";
 constexpr const char* HornStr     = "Horn";
+constexpr const char* WorldStr    = "World";
 constexpr const char* InvalidStr  = "Invalid";
 
 /*-----------------------------------------------------------*//**
@@ -53,6 +54,7 @@ EnumBetName::toString(BetName b) noexcept
     case BetName::AnySeven: return AnySevenStr;
     case BetName::CandE:    return CandEStr;
     case BetName::Horn:     return HornStr;
+    case BetName::World:    return WorldStr;
     case BetName::Count:    // fall through
     case BetName::Invalid:  break; // quiet the compiler
     }
@@ -68,7 +70,7 @@ Convert BetName string to enum.
     Matches against these strings:
     "Invalid", "PassLine", "Come", "DontPass", "DontCome",
     "Place", "Lay", "Buy", "Hardway", "Field", "AnyCraps",
-    "AnySeven", "C&E", or "Horn".
+    "AnySeven", "C&E", "Horn", or "World".
 
 @return
     Enum value.
@@ -203,6 +205,10 @@ EnumBetName::fromUnsigned(size_t v) noexcept
     else if (v == static_cast<size_t>(BetName::Horn))
     {
         return BetName::Horn;
+    }
+    else if (v == static_cast<size_t>(BetName::World))
+    {
+        return BetName::World;
     }
     else
     {

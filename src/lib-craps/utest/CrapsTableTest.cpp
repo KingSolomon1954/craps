@@ -1042,6 +1042,8 @@ Rules:
   maxCandEBet: 2000
   minHornBet: 4
   maxHornBet: 2000
+  minWorldBet: 5
+  maxWorldBet: 2000
 Bank:
   originalStartBalance: 3000000
   sessionStartBalance: 3000000
@@ -2140,3 +2142,73 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:DontCome odds refunded once on 
 
 //----------------------------------------------------------------
 
+
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet settlement and statistics")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    const auto startingBalance = p1->getBalance();
+    const auto bankBefore = t.getBankCurrentStats();
+    const auto depositedBefore = bankBefore.amtDeposited;
+    const auto withdrawnBefore = bankBefore.amtWithdrawn;
+
+    // On 7, the $1 winning component earns $4 and the other $4 lose:
+    // net player profit is zero, but the bet is classified as a win.
+    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    t.testRollDice(3, 4);
+    CHECK(p1->getBalance() == startingBalance);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(p1->getLastRollStats().amountWin == 4);
+    CHECK(p1->getLastRollStats().amountLose == 4);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").count == 1);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").amount == 0);
+    auto bankAfterWin = t.getBankCurrentStats();
+    CHECK(bankAfterWin.amtDeposited - depositedBefore == 4);
+    CHECK(bankAfterWin.amtWithdrawn - withdrawnBefore == 4);
+
+    // On 2, the $1 component wins $30 and the other $4 lose, for $26 net.
+    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    t.testRollDice(1, 1);
+    CHECK(p1->getBalance() == startingBalance + 26);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").count == 2);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").amount == 26);
+    auto bankAfterBigWin = t.getBankCurrentStats();
+    CHECK(bankAfterBigWin.amtDeposited - depositedBefore == 8);
+    CHECK(bankAfterBigWin.amtWithdrawn - withdrawnBefore == 34);
+
+    // A non-winning total loses the entire five-component wager.
+    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    t.testRollDice(1, 3); // 4
+    CHECK(p1->getBalance() == startingBalance + 21);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.lose.at("World").count == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet amount validation")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    Gen::ErrorPass ep;
+    auto b1 = std::make_shared<CrapsBet>(p1, BetName::World, 5);
+    CHECK(t.addBet(b1, ep) == Gen::ReturnCode::Success);
+
+    // Remove the valid wager before testing invalid values.
+    ep.clear();
+    CHECK(t.removeBet(b1, ep) == Gen::ReturnCode::Success);
+
+    auto b2 = std::make_shared<CrapsBet>(p1, BetName::World, 6);
+    ep.clear();
+    CHECK(t.addBet(b2, ep) == Gen::ReturnCode::Fail);
+    CHECK(ep.description().find("multiple of 5") != std::string::npos);
+
+    auto b3 = std::make_shared<CrapsBet>(p1, BetName::World, 4);
+    ep.clear();
+    CHECK(t.addBet(b3, ep) == Gen::ReturnCode::Fail);
+}

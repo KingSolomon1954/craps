@@ -155,6 +155,8 @@ private:
     unsigned maxCandEBet_ = 1000;
     unsigned minHornBet_  = 4;
     unsigned maxHornBet_  = 1000;
+    unsigned minWorldBet_ = 5;
+    unsigned maxWorldBet_ = 1000;
     // field bet wins double on 2, triple on 12
     // enforce multiples in odds bets
     // specify commision amounts for buy/lay

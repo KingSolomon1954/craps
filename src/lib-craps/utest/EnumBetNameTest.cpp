@@ -66,6 +66,10 @@ TEST_CASE("EnumBetName:toString")
     val = BetName::Horn;
     s = EnumBetName::toString(val);
     CHECK(s == "Horn");
+
+    val = BetName::World;
+    s = EnumBetName::toString(val);
+    CHECK(s == "World");
 }
 
 //----------------------------------------------------------------
@@ -112,6 +116,9 @@ TEST_CASE("EnumBetName:fromString")
 
     s = "Horn";
     CHECK(BetName::Horn == EnumBetName::fromString(s));
+
+    s = "world";
+    CHECK(BetName::World == EnumBetName::fromString(s));
 
     CHECK_THROWS_AS((void)EnumBetName::fromString("XYZ"),
                     std::invalid_argument);
@@ -184,6 +191,7 @@ TEST_CASE("EnumBetName:fromUnsigned")
     CHECK(BetName::AnySeven  == EnumBetName::fromUnsigned(10u));
     CHECK(BetName::CandE     == EnumBetName::fromUnsigned(11u));
     CHECK(BetName::Horn      == EnumBetName::fromUnsigned(12u));
+    CHECK(BetName::World     == EnumBetName::fromUnsigned(13u));
     CHECK(BetName::Invalid   == EnumBetName::fromUnsigned(99u));
 }
 
@@ -192,7 +200,7 @@ TEST_CASE("EnumBetName:fromUnsigned")
 TEST_CASE("EnumBetName:listAsString")
 {
     std::string s = "PassLine Come DontPass DontCome Place Lay Buy "
-                    "Hardway Field AnyCraps AnySeven C&E Horn";
+                    "Hardway Field AnyCraps AnySeven C&E Horn World";
     CHECK(s == EnumBetName::listAsString());
 }
 

@@ -160,6 +160,8 @@ CrapsTable::rulesFromYAML(const YAML::Node& node)
     maxCandEBet_ = node["maxCandEBet"].as<unsigned>();
     minHornBet_  = node["minHornBet"].as<unsigned>();
     maxHornBet_  = node["maxHornBet"].as<unsigned>();
+    minWorldBet_ = node["minWorldBet"] ? node["minWorldBet"].as<unsigned>() : 5;
+    maxWorldBet_ = node["maxWorldBet"] ? node["maxWorldBet"].as<unsigned>() : 1000;
 }
 
 //----------------------------------------------------------------
@@ -179,6 +181,8 @@ CrapsTable::rulesToYAML() const
     node["maxCandEBet"] = maxCandEBet_;
     node["minHornBet"]  = minHornBet_;
     node["maxHornBet"]  = maxHornBet_;
+    node["minWorldBet"] = minWorldBet_;
+    node["maxWorldBet"] = maxWorldBet_;
     return node;
 }
 
@@ -859,6 +863,34 @@ CrapsTable::disburseHouseResults()
 
     for (const auto& r : drl_)
     {
+        // World is one aggregate wager in the model, but its five components
+        // settle separately. The player-side win is the net profit after the
+        // four losing components; the bank must still record those component
+        // losses and pay the winning component's gross profit. This also
+        // handles a 7, where the net profit is zero but $4 is won and paid.
+        if (r.pBet != nullptr && r.pBet->betName() == BetName::World &&
+            r.decision && r.lose == 0)
+        {
+            const Gen::Money component = r.pBet->contractAmount() / 5;
+            const Gen::Money losingComponents =
+                r.pBet->contractAmount() - component;
+            const Gen::Money grossComponentProfit = r.win + losingComponents;
+            if (losingComponents > 0)
+            {
+                houseBank_.deposit(losingComponents);
+                lastRollStats_.amountWin += losingComponents;
+                lastRollStats_.numBetsWin++;
+            }
+            if (grossComponentProfit > 0)
+            {
+                houseBank_.withdraw(grossComponentProfit);
+                lastRollStats_.amountLose += grossComponentProfit;
+                lastRollStats_.numBetsLose++;
+            }
+            changed = true;
+            continue;
+        }
+
         if (r.lose > 0)  // player loses, house wins
         {
             changed = true;
@@ -894,7 +926,9 @@ CrapsTable::disbursePlayerWins()
 {
     for (const auto& r : drl_)
     {
-        if (r.win > 0)
+        if (r.win > 0 ||
+            (r.pBet != nullptr && r.pBet->betName() == BetName::World &&
+             r.decision && r.lose == 0))
         {
             r.pBet->player().processWin(r);
             currentStats_.recordWin(*(r.pBet), r.win);

@@ -573,7 +573,9 @@ Called by CrapsTable to dish out a winning bet to a Player.
 void
 Player::processWin(const DecisionRecord& dr)
 {
-    if (dr.pBet == nullptr || dr.win <= 0)
+    if (dr.pBet == nullptr ||
+        (dr.win <= 0 &&
+         !(dr.pBet->betName() == BetName::World && dr.decision && dr.lose == 0)))
     {
         LOG_ERROR("Player::processWin(): invalid DecisionRecord (null bet or non-positive win).");
         return;
@@ -611,7 +613,21 @@ Player::processWin(const DecisionRecord& dr)
     }
 
     currentStats_.recordWin(*(dr.pBet), dr.win);
-    lastRollStats_.amountWin += dr.win;
+    if (pBet->betName() == BetName::World && dr.decision && dr.lose == 0)
+    {
+        // The aggregate World bet's net profit hides the component cashflows.
+        // Keep Last Roll comparable with the house: record the winning
+        // component's gross profit and the four losing component stakes.
+        const Gen::Money component = pBet->contractAmount() / 5;
+        const Gen::Money losingComponents =
+            pBet->contractAmount() - component;
+        lastRollStats_.amountWin += dr.win + losingComponents;
+        lastRollStats_.amountLose += losingComponents;
+    }
+    else
+    {
+        lastRollStats_.amountWin += dr.win;
+    }
     lastRollStats_.numBetsWin++;
 
     sendEventBetResolved(pBet->betName(), pBet->betId(), dr);
@@ -707,7 +723,11 @@ change on screen.
 void
 Player::disburseDone()
 {
-    if (lastRollStats_.amountWin > 0 || lastRollStats_.amountLose > 0)
+    // A settled bet can have zero net money movement. World is an example:
+    // on a 7, its winning component's profit offsets the four losing
+    // components. Still publish the changed bet/statistics state so the CUI
+    // does not remain stale until another roll with non-zero money movement.
+    if (lastRollStats_.numBetsWin > 0 || lastRollStats_.numBetsLose > 0)
     {
         sendEventPlayerBetsChanged();
         sendEventPlayerSessionStatsChanged();

@@ -106,6 +106,25 @@ public:
         {1,1},    // 11
         {3,1}     // 12
     };
+
+    // Used for calculating World bet payouts. Each component is one fifth
+    // of the total wager; entries are profit odds for the winning component.
+    static constexpr OddsEntry oddsWorld[13] =
+    {
+        {0,0},    // 0
+        {0,0},    // 1
+        {30,1},   // 2
+        {15,1},   // 3
+        {0,0},    // 4
+        {0,0},    // 5
+        {0,0},    // 6
+        {4,1},    // 7
+        {0,0},    // 8
+        {0,0},    // 9
+        {0,0},    // 10
+        {15,1},   // 11
+        {30,1}    // 12
+    };
 };
 
 /*-----------------------------------------------------------*//**

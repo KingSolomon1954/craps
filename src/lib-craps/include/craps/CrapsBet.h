@@ -142,6 +142,9 @@ private:
     Gen::ReturnCode evalHorn(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalWorld(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
     Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
     unsigned calculateOddsPayout(unsigned amount,
