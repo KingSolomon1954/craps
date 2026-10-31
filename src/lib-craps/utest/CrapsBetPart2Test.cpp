@@ -1661,3 +1661,47 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Field uses TableRules
     CHECK(dr.decision);
     CHECK(dr.win == 150); // 101 * 3 / 2 = 151, rounded down to 5-unit
 }
+
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:TableRules:odds rounding and commissions")
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice;
+    TableRules rules;
+
+    SUBCASE("Odds payout rounds down to configured unit")
+    {
+        CrapsBet bet(p1, BetName::PassLine, 100, 6);
+        bet.testSetOddsAmount(12);
+        rules.odds.rounding = TableRules::PayoutRounding::Down;
+        rules.odds.payoutUnit = 5;
+        dice.set(3, 3); // 6 wins; $12 odds at 6:5 yields $14, rounded down to $10
+        CHECK(bet.testEvaluate(6, dice, rules, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.win == 110);
+    }
+
+    SUBCASE("Buy commission can be configured on wager")
+    {
+        CrapsBet bet(p1, BetName::Buy, 1000, 4);
+        rules.buyCommission.basis = TableRules::CommissionBasis::OnWager;
+        rules.buyCommission.basisPoints = 1000; // 10%
+        rules.buyCommission.minimum = 0;
+        dice.set(2, 2); // 4 wins Buy 4; gross profit is $2,000
+        CHECK(bet.testEvaluate(4, dice, rules, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.commission == 100);
+        CHECK(dr.win == 1900);
+    }
+
+    SUBCASE("Lay commission can be configured on win")
+    {
+        CrapsBet bet(p1, BetName::Lay, 1000, 4);
+        rules.layCommission.basis = TableRules::CommissionBasis::OnWin;
+        rules.layCommission.basisPoints = 1000; // 10%
+        rules.layCommission.minimum = 75;
+        dice.set(3, 4); // 7 wins Lay 4; gross profit is $500
+        CHECK(bet.testEvaluate(4, dice, rules, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.commission == 75);
+        CHECK(dr.win == 425);
+    }
+}

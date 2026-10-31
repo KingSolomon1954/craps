@@ -242,6 +242,9 @@ void TableRules::validate() const
     if (!validUnit(payoutUnit) || !validUnit(odds.payoutUnit) ||
         !validUnit(buyCommission.roundingUnit) || !validUnit(layCommission.roundingUnit))
         throw std::runtime_error("TableRules payout and commission units must be positive");
+    if (buyCommission.collection != CommissionCollection::OnWinningDecision ||
+        layCommission.collection != CommissionCollection::OnWinningDecision)
+        throw std::runtime_error("Commission collection on placement is not supported yet");
     if (odds.style == OddsLimitStyle::FlatMultiplier && odds.flatMultiplier == 0)
         throw std::runtime_error("Flat odds multiplier must be greater than zero");
     if (odds.style == OddsLimitStyle::PointSchedule)
