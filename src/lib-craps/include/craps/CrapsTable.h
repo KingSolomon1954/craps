@@ -161,6 +161,8 @@ private:
     // enforce multiples in odds bets
     // specify commision amounts for buy/lay
     // specify commision collected on wager or on winning
+    // odds limit based on what I can win or what I can lay?
+    // same for aggregate bets (C&E, horn, world, etc)
 
     CrapsTable();  // private ctor
 

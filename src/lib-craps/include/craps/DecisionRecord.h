@@ -23,8 +23,9 @@ struct DecisionRecord
     Gen::Money lose           = 0;
     Gen::Money returnToPlayer = 0;
     Gen::Money commission     = 0;
-    // An outcome may be resolved while the wager remains active (e.g. a winning Place bet).
-    bool removeBet            = true;
+    bool removeBet            = true;  // An outcome may be resolved
+                                       // while the wager remains active 
+                                       // (e.g. a winning Place bet).
 
     bool operator==(const DecisionRecord& other) const
     {

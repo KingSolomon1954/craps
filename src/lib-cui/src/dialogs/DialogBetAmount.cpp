@@ -19,6 +19,8 @@
 #include <gen/Logger.h>
 #include <ncurses.h>
 #include <limits>
+#include <array>
+#include <string_view>
 #include <stdexcept>
 #include <iomanip>
 #include <map>
@@ -31,6 +33,50 @@ using namespace Cui;
 namespace
 {
 constexpr int ContentWidth = 56;
+
+using Hints = std::array<std::string_view, 4>;
+
+constexpr Hints DefaultHints{
+    "Pays 1:1                  ",
+    "Pays 1:1                  ",
+    "Pays 1:1                  ",
+    "Pays 1:1                  "
+};
+
+constexpr Hints PassComeHints{
+    "Pays 2:1 use multiple of 1",
+    "Pays 3:2 use multiple of 2",
+    "Pays 6:5 use multiple of 5",
+    "Pays 1:1                  "
+};
+
+constexpr Hints DontPassComeHints{
+    "Pays 1:2 use multiple of 2",
+    "Pays 2:3 use multiple of 3",
+    "Pays 5:6 use multiple of 6",
+    "Pays 1:1                  "
+};
+
+constexpr Hints PlaceHints{
+    "Pays 9:5 use multiple of 5",
+    "Pays 7:5 use multiple of 5",
+    "Pays 7:6 use multiple of 6",
+    "Pays 1:1                  "
+};
+
+constexpr Hints BuyHints{
+    "Pays 2:1 use multiple of 1",
+    "Pays 3:2 use multiple of 2",
+    "Pays 6:5 use multiple of 6",
+    "Pays 1:1                  "
+};
+
+constexpr Hints LayHints{
+    "Pays 1:2 use multiple of 2",
+    "Pays 2:3 use multiple of 3",
+    "Pays 5:6 use multiple of 6",
+    "Pays 1:1                  "
+};
 
 std::string
 padLine(std::string text)
@@ -600,30 +646,22 @@ DialogBetAmount::drawHintMultiples()
     }
 
     const auto index      = static_cast<std::size_t>(pointGroup);
-    std::string_view hint = defaultHints[index];
+    std::string_view hint = DefaultHints[index];
     const auto betName    = cb.getBetName();
 
     if (cb.isOddsBet())
     {
         if (betName == BetName::PassLine || betName == BetName::Come)
-            hint = passCome[index];
+            hint = PassComeHints[index];
         else if (betName == BetName::DontPass || betName == BetName::DontCome)
-            hint = dontPassCome[index];
+            hint = DontPassComeHints[index];
     }
     else if (betName == BetName::Place)
-        hint = place[index];
+        hint = PlaceHints[index];
     else if (betName == BetName::Buy)
-        hint = buy[index];
+        hint = BuyHints[index];
     else if (betName == BetName::Lay)
-        hint = lay[index];
-    else if (betName == BetName::AnyCraps)
-        hint = anyCrapsHints[index];
-    else if (betName == BetName::CandE)
-        hint = candEHints[index];
-    else if (betName == BetName::Horn)
-        hint = hornHints[index];
-    else if (betName == BetName::World)
-        hint = worldHints[index];
+        hint = LayHints[index];
 
     mvwaddstr(pWin_, 3, 2, padLine(std::string(hint)).c_str());
 }

@@ -2085,6 +2085,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Come odds refunded once on come
     CHECK(t.getAmountOnTable() == 0);
 }
 
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Lay commission accounting and lifetime")
 {
     CrapsTable t("Table-1", config);
@@ -2141,8 +2143,6 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:DontCome odds refunded once on 
 }
 
 //----------------------------------------------------------------
-
-
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet settlement and statistics")
 {
@@ -2212,3 +2212,5 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet amount validation")
     ep.clear();
     CHECK(t.addBet(b3, ep) == Gen::ReturnCode::Fail);
 }
+
+//----------------------------------------------------------------
