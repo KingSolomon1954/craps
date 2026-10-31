@@ -175,6 +175,13 @@ CrapsTable::rulesFromYAML(const YAML::Node& node)
     readLimit(BetName::CandE, "minCandEBet", "maxCandEBet", 2, 1000, 2);
     readLimit(BetName::Horn, "minHornBet", "maxHornBet", 4, 1000, 4);
     readLimit(BetName::World, "minWorldBet", "maxWorldBet", 5, 1000, 5);
+
+    // New nested rules override legacy defaults when present. Legacy files
+    // remain readable and retain their historical settings.
+    if (node["advanced"])
+        rules_.fromYAML(node["advanced"]);
+    else
+        rules_.validate();
 }
 
 //----------------------------------------------------------------
@@ -203,6 +210,7 @@ CrapsTable::rulesToYAML() const
     node["maxHornBet"] = horn.maximum;
     node["minWorldBet"] = world.minimum;
     node["maxWorldBet"] = world.maximum;
+    node["advanced"] = rules_.toYAML();
     return node;
 }
 

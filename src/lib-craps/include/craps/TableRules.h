@@ -7,6 +7,7 @@
 #include <array>
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>
+#include <yaml-cpp/yaml.h>
 
 namespace Craps {
 
@@ -108,6 +109,10 @@ struct TableRules
 
     const WagerLimit& wagerLimit(BetName name) const;
     WagerLimit& wagerLimit(BetName name);
+
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);
+    void validate() const;
 };
 
 } // namespace Craps
