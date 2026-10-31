@@ -535,6 +535,20 @@ CrapsReaders::readTableMinMaxRules()
 
 //----------------------------------------------------------------
 
+Craps::TableRules
+CrapsReaders::readTableRules()
+{
+    Craps::TableId tid;
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::getActiveCrapsTable(tid, ep);
+
+    auto pTable = Gbl::pTableMgr->getTable(tid, ep);
+    assert(pTable);
+    return pTable->getTableRules();
+}
+
+//----------------------------------------------------------------
+
 Gen::Money
 CrapsReaders::readHouseBalance()
 {

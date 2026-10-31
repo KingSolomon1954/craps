@@ -271,7 +271,7 @@ CrapsTable::fifBadDontPassChange(const CrapsBet& bet, Gen::Money amt,
             else
             {
                 // Reducing bet OK; but have to deal with odds
-                if (bet.oddsAmount() > (amt * maxLineBet_))
+                if (bet.oddsAmount() > (amt * rules_.wagerLimit(bet.betName()).maximum))
                 {
                     ep.setDescription(diagPrefix(2, bet) + 
                     "Cannot reduce contract bet due to large odds bet. First"
@@ -379,15 +379,15 @@ CrapsTable::fifBadMinMaxForOdds(const CrapsBet& bet, Gen::Money amt,
     // fault if odds amount is out of range and sets ep error diag
     
     // Minimum odds is zero. But no need to test for that.
-    if (amt > (bet.contractAmount() * maxOdds_))
+    if (amt > (bet.contractAmount() * rules_.odds.flatMultiplier))
     {
         ep.setDescription(diagPrefix(3, bet)                           +
             Gen::MoneyUtils::toString(amt)                             +
-            " exceeds table limit of " + std::to_string(maxOdds_)      +
+            " exceeds table limit of " + std::to_string(rules_.odds.flatMultiplier)      +
             "x odds; Contract amount is "                              +
             Gen::MoneyUtils::toString(bet.contractAmount())            +
             " which allows max odds amount of "                        +
-            Gen::MoneyUtils::toString(bet.contractAmount() * maxOdds_) +  ".");
+            Gen::MoneyUtils::toString(bet.contractAmount() * rules_.odds.flatMultiplier) +  ".");
         ep.setErrorName(Gen::ErrorPass::ErrorName::RangeError);
         return true;
     }
@@ -398,7 +398,7 @@ CrapsTable::fifBadMinMaxForOdds(const CrapsBet& bet, Gen::Money amt,
 
 bool
 CrapsTable::withinMinMaxLineBets(BetName betName,
-                                 Gen::Money amount,
+                                 Gen::Money amt,
                                  Gen::ErrorPass& ep) const
 {
     if (betName == BetName::PassLine ||
@@ -409,12 +409,12 @@ CrapsTable::withinMinMaxLineBets(BetName betName,
         betName == BetName::Buy      ||
         betName == BetName::Lay)
     {
-        if (amount < minLineBet_ || amount > maxLineBet_)
+        const auto& limit = rules_.wagerLimit(betName);
+        if (amt < limit.minimum || amt > limit.maximum)
         {
-            std::string min = std::to_string(minLineBet_);
-            std::string max = std::to_string(maxLineBet_);
-            ep.setDescription(diagLimits(amount) +
-                              "(min:" + min + ",max:" + max + ").");
+            ep.setDescription(diagLimits(amt) +
+                "(min:" + std::to_string(limit.minimum) +
+                ",max:" + std::to_string(limit.maximum) + ").");
             return false;
         }
     }
@@ -428,31 +428,17 @@ CrapsTable::withinMinMaxSideBets(BetName betName,
                                  Gen::Money amt,
                                  Gen::ErrorPass& ep) const
 {
-    Gen::Money min{}, max{};
+    if (betName != BetName::Field && betName != BetName::CandE &&
+        betName != BetName::Horn && betName != BetName::World)
+        return true;
 
-    if (betName == BetName::Field && (amt < minFieldBet_ || amt > maxFieldBet_))
+    const auto& limit = rules_.wagerLimit(betName);
+    if (amt < limit.minimum || amt > limit.maximum)
     {
-        min = minFieldBet_; max = maxFieldBet_;
-    }
-    if (betName == BetName::CandE && (amt < minCandEBet_ || amt > maxCandEBet_))
-    {
-        min = minCandEBet_; max = maxCandEBet_;
-    }
-    if (betName == BetName::Horn && (amt < minHornBet_ || amt > maxHornBet_))
-    {
-        min = minHornBet_; max = maxHornBet_;
-    }
-    if (betName == BetName::World && (amt < minWorldBet_ || amt > maxWorldBet_))
-    {
-        min = minWorldBet_; max = maxWorldBet_;
-    }
-    if (min != 0 || max != 0)
-    {
-        std::string minStr = std::to_string(min);
-        std::string maxStr = std::to_string(max);
         ep.setDescription(diagLimits(amt) +
-                          "(min:" + minStr + ",max:" + maxStr + ").");
-            return false;
+            "(min:" + std::to_string(limit.minimum) +
+            ",max:" + std::to_string(limit.maximum) + ").");
+        return false;
     }
     return true;
 }
@@ -464,25 +450,14 @@ CrapsTable::goodMultiplesSideBets(BetName betName,
                           Gen::Money amt,
                           Gen::ErrorPass& ep) const
 {
-    if (betName == BetName::CandE && (amt % 2 != 0))
+    const auto increment = rules_.wagerLimit(betName).increment;
+    if (increment > 1 && (amt % increment != 0))
     {
-        ep.setDescription("This bet must be a multiple of 2. " +
-                          Gen::MoneyUtils::toString(amt)       +
-                          " is not a multiple of 2.");
-        return false;
-    }
-    if (betName == BetName::Horn && (amt % 4 != 0))
-    {
-        ep.setDescription("This bet must be a multiple of 4. " +
-                          Gen::MoneyUtils::toString(amt)       +
-                          " is not a multiple of 4.");
-        return false;
-    }
-    if (betName == BetName::World && (amt % 5 != 0))
-    {
-        ep.setDescription("This bet must be a multiple of 5. " +
-                          Gen::MoneyUtils::toString(amt)       +
-                          " is not a multiple of 5.");
+        ep.setDescription("This bet must be a multiple of " +
+                          std::to_string(increment) + ". " +
+                          Gen::MoneyUtils::toString(amt) +
+                          " is not a multiple of " +
+                          std::to_string(increment) + ".");
         return false;
     }
     return true;

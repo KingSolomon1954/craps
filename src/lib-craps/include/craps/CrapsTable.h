@@ -13,6 +13,7 @@
 #include <craps/Dice.h>
 #include <craps/LastRollStats.h>
 #include <craps/TableConfig.h>
+#include <craps/TableRules.h>
 #include <craps/TableStats.h>
 #include <gen/Debug.h>
 #include <gen/ErrorPass.h>
@@ -91,6 +92,7 @@ public:
     unsigned                getMinLineBet()             const;
     unsigned                getMaxLineBet()             const;
     unsigned                getMaxOdds()                const;
+    const TableRules&       getTableRules()             const;
     BetPtr                  getBet (const BetId& betId, Gen::ErrorPass& ep) const;
     bool                    haveBet(const BetId& betId) const;
     bool                    isComeOutRoll()             const;
@@ -143,26 +145,7 @@ private:
     LastRollStats lastRollStats_;
     RecentRolls recentRolls_;  // Front element is oldest roll
 
-    // Move these to a rules struct
-    unsigned maxOdds_     = 5;
-    unsigned minLineBet_  = 5;
-    unsigned maxLineBet_  = 1000;
-    unsigned minPlaceBet_ = 5;
-    unsigned maxPlaceBet_ = 1000;
-    unsigned minFieldBet_ = 1;
-    unsigned maxFieldBet_ = 1000;
-    unsigned minCandEBet_ = 2;
-    unsigned maxCandEBet_ = 1000;
-    unsigned minHornBet_  = 4;
-    unsigned maxHornBet_  = 1000;
-    unsigned minWorldBet_ = 5;
-    unsigned maxWorldBet_ = 1000;
-    // field bet wins double on 2, triple on 12
-    // enforce multiples in odds bets
-    // specify commision amounts for buy/lay
-    // specify commision collected on wager or on winning
-    // odds limit based on what I can win or what I can lay?
-    // same for aggregate bets (C&E, horn, world, etc)
+    TableRules rules_;
 
     CrapsTable();  // private ctor
 

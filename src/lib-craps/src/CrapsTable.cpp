@@ -149,19 +149,32 @@ CrapsTable::fromYAML(const YAML::Node& node)
 void
 CrapsTable::rulesFromYAML(const YAML::Node& node)
 {
-    maxOdds_     = node["maxOdds"].as<unsigned>();
-    minLineBet_  = node["minLineBet"].as<unsigned>();
-    maxLineBet_  = node["maxLineBet"].as<unsigned>();
-    minPlaceBet_ = node["minPlaceBet"].as<unsigned>();
-    maxPlaceBet_ = node["maxPlaceBet"].as<unsigned>();
-    minFieldBet_ = node["minFieldBet"].as<unsigned>();
-    maxFieldBet_ = node["maxFieldBet"].as<unsigned>();
-    minCandEBet_ = node["minCandEBet"].as<unsigned>();
-    maxCandEBet_ = node["maxCandEBet"].as<unsigned>();
-    minHornBet_  = node["minHornBet"].as<unsigned>();
-    maxHornBet_  = node["maxHornBet"].as<unsigned>();
-    minWorldBet_ = node["minWorldBet"] ? node["minWorldBet"].as<unsigned>() : 5;
-    maxWorldBet_ = node["maxWorldBet"] ? node["maxWorldBet"].as<unsigned>() : 1000;
+    // Read the legacy flat keys for existing table files.  The in-memory
+    // representation is now TableRules; the expanded nested YAML format is
+    // introduced separately so old user configurations remain loadable.
+    auto readLimit = [&](BetName name, const char* minKey, const char* maxKey,
+                         Gen::Money defaultMin, Gen::Money defaultMax,
+                         Gen::Money defaultIncrement)
+    {
+        auto& limit = rules_.wagerLimit(name);
+        limit.minimum = node[minKey] ? node[minKey].as<Gen::Money>() : defaultMin;
+        limit.maximum = node[maxKey] ? node[maxKey].as<Gen::Money>() : defaultMax;
+        limit.increment = defaultIncrement;
+    };
+
+    rules_.odds.flatMultiplier = node["maxOdds"] ? node["maxOdds"].as<unsigned>() : 5;
+    rules_.odds.style = TableRules::OddsLimitStyle::FlatMultiplier;
+    readLimit(BetName::PassLine, "minLineBet", "maxLineBet", 5, 1000, 1);
+    readLimit(BetName::Come, "minLineBet", "maxLineBet", 5, 1000, 1);
+    readLimit(BetName::DontPass, "minLineBet", "maxLineBet", 5, 1000, 1);
+    readLimit(BetName::DontCome, "minLineBet", "maxLineBet", 5, 1000, 1);
+    readLimit(BetName::Buy, "minLineBet", "maxLineBet", 5, 1000, 1);
+    readLimit(BetName::Lay, "minLineBet", "maxLineBet", 5, 1000, 1);
+    readLimit(BetName::Place, "minPlaceBet", "maxPlaceBet", 5, 1000, 1);
+    readLimit(BetName::Field, "minFieldBet", "maxFieldBet", 1, 1000, 1);
+    readLimit(BetName::CandE, "minCandEBet", "maxCandEBet", 2, 1000, 2);
+    readLimit(BetName::Horn, "minHornBet", "maxHornBet", 4, 1000, 4);
+    readLimit(BetName::World, "minWorldBet", "maxWorldBet", 5, 1000, 5);
 }
 
 //----------------------------------------------------------------
@@ -169,20 +182,27 @@ CrapsTable::rulesFromYAML(const YAML::Node& node)
 YAML::Node
 CrapsTable::rulesToYAML() const
 {
+    // Preserve the established file format during this migration step.
     YAML::Node node;
-    node["maxOdds"]     = maxOdds_;
-    node["minLineBet"]  = minLineBet_;
-    node["maxLineBet"]  = maxLineBet_;
-    node["minPlaceBet"] = minPlaceBet_;
-    node["maxPlaceBet"] = maxPlaceBet_;
-    node["minFieldBet"] = minFieldBet_;
-    node["maxFieldBet"] = maxFieldBet_;
-    node["minCandEBet"] = minCandEBet_;
-    node["maxCandEBet"] = maxCandEBet_;
-    node["minHornBet"]  = minHornBet_;
-    node["maxHornBet"]  = maxHornBet_;
-    node["minWorldBet"] = minWorldBet_;
-    node["maxWorldBet"] = maxWorldBet_;
+    node["maxOdds"] = rules_.odds.flatMultiplier;
+    const auto& line = rules_.wagerLimit(BetName::PassLine);
+    const auto& place = rules_.wagerLimit(BetName::Place);
+    const auto& field = rules_.wagerLimit(BetName::Field);
+    const auto& cande = rules_.wagerLimit(BetName::CandE);
+    const auto& horn = rules_.wagerLimit(BetName::Horn);
+    const auto& world = rules_.wagerLimit(BetName::World);
+    node["minLineBet"] = line.minimum;
+    node["maxLineBet"] = line.maximum;
+    node["minPlaceBet"] = place.minimum;
+    node["maxPlaceBet"] = place.maximum;
+    node["minFieldBet"] = field.minimum;
+    node["maxFieldBet"] = field.maximum;
+    node["minCandEBet"] = cande.minimum;
+    node["maxCandEBet"] = cande.maximum;
+    node["minHornBet"] = horn.minimum;
+    node["maxHornBet"] = horn.maximum;
+    node["minWorldBet"] = world.minimum;
+    node["maxWorldBet"] = world.maximum;
     return node;
 }
 
@@ -1191,7 +1211,7 @@ CrapsTable::getNumRolls() const
 unsigned
 CrapsTable::getMinLineBet() const
 {
-    return minLineBet_;
+    return rules_.wagerLimit(BetName::PassLine).minimum;
 }
 
 //----------------------------------------------------------------
@@ -1199,7 +1219,7 @@ CrapsTable::getMinLineBet() const
 unsigned
 CrapsTable::getMaxLineBet() const
 {
-    return maxLineBet_;
+    return rules_.wagerLimit(BetName::PassLine).maximum;
 }
 
 //----------------------------------------------------------------
@@ -1207,7 +1227,15 @@ CrapsTable::getMaxLineBet() const
 unsigned
 CrapsTable::getMaxOdds() const
 {
-    return maxOdds_;
+    return rules_.odds.flatMultiplier;
+}
+
+//----------------------------------------------------------------
+
+const TableRules&
+CrapsTable::getTableRules() const
+{
+    return rules_;
 }
 
 //----------------------------------------------------------------

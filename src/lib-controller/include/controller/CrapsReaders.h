@@ -17,6 +17,7 @@
 #include <controller/QuickBet.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
+#include <craps/TableRules.h>
 #include <craps/SessionHistory.h>
 #include <gen/ErrorPass.h>
 #include <gen/MoneyUtils.h>
@@ -154,6 +155,7 @@ public:
     };
     
     static TableMinMaxRules readTableMinMaxRules();
+    static Craps::TableRules readTableRules();
     static Gen::Money readHouseBalance();
     static Gen::ReturnCode readTableNumPlayers(
         const Craps::TableId& tableId,

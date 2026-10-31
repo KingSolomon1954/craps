@@ -22,6 +22,7 @@ add_library(craps STATIC
     src/RollStats.cpp
     src/SessionHistory.cpp
     src/TableStats.cpp
+    src/TableRules.cpp
 )
 
 target_include_directories(craps
