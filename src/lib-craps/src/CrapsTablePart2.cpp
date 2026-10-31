@@ -7,6 +7,8 @@
 //----------------------------------------------------------------
 
 #include <craps/CrapsTable.h>
+#include <algorithm>
+#include <cstdint>
 #include <craps/Player.h>
 #include <cassert>
 #include <craps/CrapsBet.h>
@@ -376,18 +378,48 @@ bool
 CrapsTable::fifBadMinMaxForOdds(const CrapsBet& bet, Gen::Money amt,
                                 Gen::ErrorPass& ep) const
 {
-    // fault if odds amount is out of range and sets ep error diag
-    
-    // Minimum odds is zero. But no need to test for that.
-    if (amt > (bet.contractAmount() * rules_.odds.flatMultiplier))
+    // Minimum odds is zero. Determine the point-specific multiplier first.
+    const unsigned pivot = bet.pivot();
+    const unsigned multiplier =
+        rules_.odds.style == TableRules::OddsLimitStyle::FlatMultiplier
+            ? rules_.odds.flatMultiplier
+            : (pivot < rules_.odds.pointMultipliers.size()
+                ? rules_.odds.pointMultipliers[pivot] : 0);
+
+    Gen::Money maximum = bet.contractAmount() * multiplier;
+    if (rules_.odds.maximumWager > 0)
+        maximum = std::min(maximum, rules_.odds.maximumWager);
+
+    // A potential-win cap is converted back to a conservative maximum odds
+    // stake using the true-odds payout for this contract bet.
+    if (rules_.odds.maximumPotentialWin > 0)
     {
-        ep.setDescription(diagPrefix(3, bet)                           +
-            Gen::MoneyUtils::toString(amt)                             +
-            " exceeds table limit of " + std::to_string(rules_.odds.flatMultiplier)      +
-            "x odds; Contract amount is "                              +
-            Gen::MoneyUtils::toString(bet.contractAmount())            +
-            " which allows max odds amount of "                        +
-            Gen::MoneyUtils::toString(bet.contractAmount() * rules_.odds.flatMultiplier) +  ".");
+        const OddsTables::OddsEntry* payout = nullptr;
+        if (bet.betName() == BetName::DontPass || bet.betName() == BetName::DontCome)
+            payout = &OddsTables::oddsDont[pivot];
+        else
+            payout = &OddsTables::oddsPass[pivot];
+
+        if (payout->numerator > 0)
+        {
+            const std::uint64_t cap = rules_.odds.maximumPotentialWin;
+            const std::uint64_t denominator = payout->denominator;
+            const std::uint64_t numerator = payout->numerator;
+            const auto maxByWin = static_cast<Gen::Money>(
+                (((cap + 1) * denominator) - 1) / numerator);
+            maximum = std::min(maximum, maxByWin);
+        }
+        else
+            maximum = 0;
+    }
+
+    if (amt > maximum)
+    {
+        ep.setDescription(diagPrefix(3, bet) +
+            Gen::MoneyUtils::toString(amt) +
+            " exceeds the maximum odds amount of " +
+            Gen::MoneyUtils::toString(maximum) +
+            " for this contract and table rules.");
         ep.setErrorName(Gen::ErrorPass::ErrorName::RangeError);
         return true;
     }

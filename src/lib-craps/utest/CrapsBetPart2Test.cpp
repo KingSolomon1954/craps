@@ -21,6 +21,7 @@
 #include <craps/Dice.h>
 #include <craps/EnumBetName.h>
 #include <craps/Player.h>
+#include <craps/TableRules.h>
 
 using namespace Craps;
 
@@ -1641,3 +1642,22 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:World")
 }
 
 //----------------------------------------------------------------
+
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Field uses TableRules")
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice;
+    dice.set(1, 1); // Field 2
+
+    CrapsBet bet(p1, BetName::Field, 101);
+    TableRules rules;
+    rules.fieldPayouts[2] = {3, 2};
+    rules.payoutUnit = 5;
+    rules.payoutRounding = TableRules::PayoutRounding::Down;
+
+    CHECK(bet.testEvaluate(0, dice, rules, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win == 150); // 101 * 3 / 2 = 151, rounded down to 5-unit
+}

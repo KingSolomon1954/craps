@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <craps/CrapsBet.h>
+#include <craps/TableRules.h>
 #include <algorithm>
 
 #include <cassert>
@@ -328,6 +329,15 @@ Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
                    DecisionRecord& dr, Gen::ErrorPass& ep)
 {
+    static const TableRules defaultRules{};
+    return evaluate(point, dice, defaultRules, dr, ep);
+}
+
+Gen::ReturnCode
+CrapsBet::evaluate(unsigned point, const Dice& dice,
+                   const TableRules& rules,
+                   DecisionRecord& dr, Gen::ErrorPass& ep)
+{
     D(diagEvalEntered(point, dice);)
     if (!validArgsEval(point, ep))
     {
@@ -346,7 +356,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         case BetName::Buy     : rc = evalBuy     (point, dice, dr, ep); break;
         case BetName::Lay     : rc = evalLay     (point, dice, dr, ep); break;
         case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
-        case BetName::Field   : rc = evalField   (point, dice, dr, ep); break;
+        case BetName::Field   : rc = evalField   (point, dice, rules, dr, ep); break;
         case BetName::AnyCraps: rc = evalAnyCraps(point, dice, dr, ep); break;
         case BetName::AnySeven: rc = evalAnySeven(point, dice, dr, ep); break;
         case BetName::CandE   : rc = evalCandE   (point, dice, dr, ep); break;
@@ -942,6 +952,7 @@ Gen::ReturnCode
 CrapsBet::evalField(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -965,10 +976,19 @@ CrapsBet::evalField(
 
     if (dcn == Win)
     {
-        const auto& odds = OddsTables::oddsField[d];
-        dr.win = calculateOddsPayout(contractAmount_,
-                                     odds.numerator,
-                                     odds.denominator);
+        const auto& odds = rules.fieldPayouts[d];
+        if (odds.numerator == 0)
+        {
+            ep.setDescription("No Field payout is configured for dice total " +
+                              std::to_string(d) + ".");
+            return Gen::ReturnCode::Fail;
+        }
+        const Gen::Money rawPayout =
+            (contractAmount_ * odds.numerator) / odds.denominator;
+        if (rules.payoutRounding == TableRules::PayoutRounding::Down)
+            dr.win = (rawPayout / rules.payoutUnit) * rules.payoutUnit;
+        else
+            dr.win = rawPayout;
     }
     if (dcn == Lose)
     {

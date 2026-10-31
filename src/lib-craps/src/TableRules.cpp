@@ -3,6 +3,7 @@
 //----------------------------------------------------------------
 
 #include <craps/TableRules.h>
+#include <initializer_list>
 #include <stdexcept>
 #include <string>
 
@@ -243,6 +244,13 @@ void TableRules::validate() const
         throw std::runtime_error("TableRules payout and commission units must be positive");
     if (odds.style == OddsLimitStyle::FlatMultiplier && odds.flatMultiplier == 0)
         throw std::runtime_error("Flat odds multiplier must be greater than zero");
+    if (odds.style == OddsLimitStyle::PointSchedule)
+    {
+        for (const unsigned point : {4u, 5u, 6u, 8u, 9u, 10u})
+            if (odds.pointMultipliers[point] == 0)
+                throw std::runtime_error("Point-schedule odds multiplier must be greater than zero for point " +
+                                         std::to_string(point));
+    }
     for (const auto& payout : fieldPayouts)
         if (payout.denominator == 0)
             throw std::runtime_error("Field payout denominator must be greater than zero");

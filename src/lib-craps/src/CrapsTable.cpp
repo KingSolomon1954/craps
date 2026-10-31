@@ -855,7 +855,7 @@ CrapsTable::evalOneBet(CrapsBet& bet)
     DecisionRecord dr;
     Gen::ErrorPass ep;
 
-    if (bet.evaluate(point_, dice_, dr, ep) == Gen::ReturnCode::Success)
+    if (bet.evaluate(point_, dice_, rules_, dr, ep) == Gen::ReturnCode::Success)
     {
         drl_.push_back(dr);
         return true;

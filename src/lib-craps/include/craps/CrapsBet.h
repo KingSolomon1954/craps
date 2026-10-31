@@ -27,6 +27,7 @@ namespace Craps {
 class Dice;            // fwd
 class DecisionRecord;  // fwd
 class Player;          // fwd
+struct TableRules;     // fwd
     
 class CrapsBet
 {
@@ -96,6 +97,9 @@ private:
 
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
+                             const TableRules& rules,
+                             DecisionRecord& dr, Gen::ErrorPass& ep);
     void checkBetName();
     void checkContractAmount();
     void checkLinePivot();
@@ -128,7 +132,7 @@ private:
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalField(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalAnyCraps(
         unsigned point, const Dice& dice,
@@ -177,6 +181,10 @@ public:
     Gen::ReturnCode testEvaluate(unsigned point, const Dice& dice,
                                  DecisionRecord& dr, Gen::ErrorPass& ep)
     { return evaluate(point, dice, dr, ep); }
+    Gen::ReturnCode testEvaluate(unsigned point, const Dice& dice,
+                                 const TableRules& rules, DecisionRecord& dr,
+                                 Gen::ErrorPass& ep)
+    { return evaluate(point, dice, rules, dr, ep); }
 #endif
     
 };  // class CrapsBet
