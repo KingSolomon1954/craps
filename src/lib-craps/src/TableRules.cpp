@@ -1,5 +1,7 @@
 //----------------------------------------------------------------
+//
 // File: TableRules.cpp
+//
 //----------------------------------------------------------------
 
 #include <craps/TableRules.h>
@@ -7,7 +9,9 @@
 #include <stdexcept>
 #include <string>
 
-namespace Craps {
+using namespace Craps;
+
+//----------------------------------------------------------------
 
 TableRules::TableRules()
 {
@@ -16,9 +20,9 @@ TableRules::TableRules()
         limit = {5, 1000, 1};
 
     wagerLimit(BetName::Field) = {1, 1000, 1};
-    wagerLimit(BetName::CandE)  = {2, 1000, 2};
-    wagerLimit(BetName::Horn)   = {4, 1000, 4};
-    wagerLimit(BetName::World)  = {5, 1000, 5};
+    wagerLimit(BetName::CandE) = {2, 1000, 2};
+    wagerLimit(BetName::Horn)  = {4, 1000, 4};
+    wagerLimit(BetName::World) = {5, 1000, 5};
 
     fieldPayouts[2]  = {2, 1};
     fieldPayouts[3]  = {1, 1};
@@ -34,15 +38,18 @@ TableRules::TableRules()
     // 3-4-5x odds schedule is available as a named alternative.  The
     // default remains the historical flat 5x table rule.
     odds.pointMultipliers.fill(0);
-    odds.pointMultipliers[4] = 3;
-    odds.pointMultipliers[5] = 4;
-    odds.pointMultipliers[6] = 5;
-    odds.pointMultipliers[8] = 5;
-    odds.pointMultipliers[9] = 4;
+    odds.pointMultipliers[4]  = 3;
+    odds.pointMultipliers[5]  = 4;
+    odds.pointMultipliers[6]  = 5;
+    odds.pointMultipliers[8]  = 5;
+    odds.pointMultipliers[9]  = 4;
     odds.pointMultipliers[10] = 3;
 }
 
-const TableRules::WagerLimit& TableRules::wagerLimit(BetName name) const
+//----------------------------------------------------------------
+
+const TableRules::WagerLimit&
+TableRules::wagerLimit(BetName name) const
 {
     const auto index = static_cast<std::size_t>(name);
     if (index >= wagers.size())
@@ -50,7 +57,10 @@ const TableRules::WagerLimit& TableRules::wagerLimit(BetName name) const
     return wagers[index];
 }
 
-TableRules::WagerLimit& TableRules::wagerLimit(BetName name)
+//----------------------------------------------------------------
+
+TableRules::WagerLimit&
+TableRules::wagerLimit(BetName name)
 {
     const auto index = static_cast<std::size_t>(name);
     if (index >= wagers.size())
@@ -58,8 +68,10 @@ TableRules::WagerLimit& TableRules::wagerLimit(BetName name)
     return wagers[index];
 }
 
+//----------------------------------------------------------------
 
-YAML::Node TableRules::toYAML() const
+YAML::Node
+TableRules::toYAML() const
 {
     YAML::Node node;
     YAML::Node wagerNode;
@@ -120,7 +132,10 @@ YAML::Node TableRules::toYAML() const
     return node;
 }
 
-void TableRules::fromYAML(const YAML::Node& node)
+//----------------------------------------------------------------
+
+void
+TableRules::fromYAML(const YAML::Node& node)
 {
     if (!node || !node.IsMap())
         throw std::runtime_error("TableRules YAML must be a map");
@@ -230,7 +245,10 @@ void TableRules::fromYAML(const YAML::Node& node)
     validate();
 }
 
-void TableRules::validate() const
+//----------------------------------------------------------------
+
+void
+TableRules::validate() const
 {
     auto validUnit = [](Gen::Money value) { return value > 0; };
     for (const auto name : EnumBetName::enumerators)
@@ -259,4 +277,5 @@ void TableRules::validate() const
             throw std::runtime_error("Field payout denominator must be greater than zero");
 }
 
-} // namespace Craps
+//----------------------------------------------------------------
+

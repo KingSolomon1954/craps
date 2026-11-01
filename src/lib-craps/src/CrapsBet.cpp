@@ -460,6 +460,8 @@ CrapsBet::calculateOddsPayout(
     return payout;
 }
 
+//----------------------------------------------------------------
+
 Gen::Money
 CrapsBet::calculateCommission(
     Gen::Money grossWin,
@@ -1463,8 +1465,8 @@ operator<< (std::ostream& out, const DecisionRecord& dr)
     "           win: " << dr.win                      << std::endl <<
     "          lose: " << dr.lose                     << std::endl <<
     "returnToPlayer: " << dr.returnToPlayer           << std::endl <<
-    "    commission: " << dr.commission                << std::endl <<
-    "     removeBet: " << dr.removeBet                 << std::endl;
+    "    commission: " << dr.commission               << std::endl <<
+    "     removeBet: " << dr.removeBet                << std::endl;
     return out;
 }
 

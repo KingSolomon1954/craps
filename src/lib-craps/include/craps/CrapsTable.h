@@ -103,11 +103,6 @@ public:
     const SessionHistory::Sessions& getSessionHistory()                  const;
     /// @}
 
-#if 0
-    void resetTable();
-    std::vector<CrapsBet> getBetsForPlayer(const std::string& playerName) const;
-
-#endif
     // Unit test access points
 #ifdef UNIT_TEST
 public:
@@ -184,8 +179,6 @@ private:
     bool evalOneBet(CrapsBet& bet);
 
     void declareBettingClosed();
-    void declareDiceThrowStart();
-    void declareDiceNewValue();
     void declareBettingOpen();
     void disburseDone();
 
@@ -205,6 +198,8 @@ private:
     void sendEventBetMade          (const CrapsBet& bet)  const;
     void sendEventBetRemoved       (const CrapsBet& bet)  const;
     void sendEventBetChanged       (const CrapsBet& bet)  const;
+    void sendEventDiceNewValue()                          const;
+    void sendEventTableResolveBetsEnd()                   const;
     void sendEventTableLastRollStatsChanged()             const;
     void sendEventTableSessionStatsChanged()              const;
     void sendEventTableBetsChanged()                      const;
@@ -246,8 +241,6 @@ private:
     bool withinMinMaxSideBets (BetName betName, Gen::Money contractAmount, Gen::ErrorPass& ep)      const;
     bool goodMultiplesSideBets(BetName betName, Gen::Money amt, Gen::ErrorPass& ep)                 const;
     
-    D(void logBet(const std::string& t, const CrapsBet& bet);)
-
     // Default bank constants for table
     static constexpr unsigned InitialStartingBankBalance_ = 3000000;
     static constexpr unsigned RefillThreshold_            = 1500000;

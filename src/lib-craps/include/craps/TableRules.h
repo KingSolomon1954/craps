@@ -1,5 +1,7 @@
 //----------------------------------------------------------------
+//
 // File: TableRules.h
+//
 //----------------------------------------------------------------
 
 #pragma once
@@ -22,8 +24,8 @@ struct TableRules
 {
     struct WagerLimit
     {
-        Gen::Money minimum = 0;
-        Gen::Money maximum = 0;
+        Gen::Money minimum   = 0;
+        Gen::Money maximum   = 0;
         Gen::Money increment = 1;
     };
 
@@ -72,7 +74,7 @@ struct TableRules
 
     struct Payout
     {
-        unsigned numerator = 1;
+        unsigned numerator   = 1;
         unsigned denominator = 1;
     };
 
@@ -116,3 +118,5 @@ struct TableRules
 };
 
 } // namespace Craps
+
+//----------------------------------------------------------------

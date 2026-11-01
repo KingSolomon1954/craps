@@ -350,7 +350,7 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 
     tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
 
-    D(logBet("CrapsTable::addBet()", *pBet);)
+    D(pBet->logBet("CrapsTable::addBet()");)
 
     sendEventBetMade(*pBet);
     sendEventTableBetsChanged();
@@ -542,7 +542,7 @@ CrapsTable::setContractAmount(BetPtr pBet,
 
     pBet->setContractAmountInternal(newAmount);
 
-    D(logBet("CrapsTable::setContractAmount()", *pBet);)
+    D(pBet->logBet("CrapsTable::setContractAmount()");)
 
     sendEventBetChanged(*pBet);
     sendEventTableBetsChanged();
@@ -597,7 +597,7 @@ CrapsTable::setOddsAmount(BetPtr pBet,
 
     pBet->setOddsAmountInternal(oddsAmount);
 
-    D(logBet("CrapsTable::setOddsAmount()", *pBet);)
+    D(pBet->logBet("CrapsTable::setOddsAmount()");)
         
     sendEventBetChanged(*pBet);
     sendEventTableBetsChanged();
@@ -701,35 +701,10 @@ CrapsTable::declareBettingOpen()
 //----------------------------------------------------------------
 
 void
-CrapsTable::declareDiceThrowStart()
-{
-    Ctrl::UslDiceThrowStart ev0;
-    ev0.rollCount = dice_.rollCount();
-    Gen::EventManager::instance().publish(ev0);
-}
-
-//----------------------------------------------------------------
-
-void
-CrapsTable::declareDiceNewValue()
-{
-    Ctrl::UslDiceNewValue ev;
-    ev.rollCount = dice_.rollCount();
-    ev.val       = dice_.value();
-    ev.d1        = dice_.d1();
-    ev.d2        = dice_.d2();
-    Gen::EventManager::instance().publish(ev);
-    LOG_DEBUG("CrapsTable() roll dice; " + dice_.toString());
-}
-
-//----------------------------------------------------------------
-
-void
 CrapsTable::throwDice()
 {
-    declareDiceThrowStart();
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
-    declareDiceNewValue();
+    sendEventDiceNewValue();
 }
 
 //----------------------------------------------------------------
@@ -810,14 +785,14 @@ CrapsTable::resolveBets()
         // No player or house accounting has run yet. Discard every decision
         // so a failed evaluation cannot partially settle the table.
         clearDrl();
-        Gen::EventManager::instance().publish(Ctrl::UslResolveBetsEnd{});
+        sendEventTableResolveBetsEnd();
         return false;
     }
     dispenseResults();
     trimTableBets();
     clearDrl();
     
-    Gen::EventManager::instance().publish(Ctrl::UslResolveBetsEnd{});
+    sendEventTableResolveBetsEnd();
     sendEventTableBetsChanged();
     sendEventTableLastRollStatsChanged();
     sendEventTableSessionStatsChanged();
@@ -1473,6 +1448,28 @@ CrapsTable::sendEventBetChanged(const CrapsBet& bet) const
 
 //----------------------------------------------------------------
 
+void
+CrapsTable::sendEventDiceNewValue() const
+{
+    Ctrl::UslDiceNewValue ev;
+    ev.rollCount = dice_.rollCount();
+    ev.val       = dice_.value();
+    ev.d1        = dice_.d1();
+    ev.d2        = dice_.d2();
+    Gen::EventManager::instance().publish(ev);
+    LOG_DEBUG("CrapsTable() roll dice; " + dice_.toString());
+}
+
+//----------------------------------------------------------------
+
+void        
+CrapsTable::sendEventTableResolveBetsEnd() const
+{
+    Gen::EventManager::instance().publish(Ctrl::UslResolveBetsEnd{});
+}
+
+//----------------------------------------------------------------
+
 void        
 CrapsTable::sendEventTableSessionStatsChanged() const
 {
@@ -1519,20 +1516,6 @@ CrapsTable::sendEventBetEvaluationFailed(const CrapsBet& bet,
 
     Gen::EventManager::instance().publish(ev);
 }
-
-//----------------------------------------------------------------
-//
-// Debugging
-//
-#ifdef DEBUG
-void
-CrapsTable::logBet(const std::string& t, const CrapsBet& bet)
-{
-    std::stringstream s;
-    s << "\n" << t << "\n" << bet;
-    LOG_DEBUG(s.str());
-}
-#endif
 
 //----------------------------------------------------------------
 
