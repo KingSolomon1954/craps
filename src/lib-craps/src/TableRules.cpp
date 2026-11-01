@@ -11,6 +11,21 @@
 
 using namespace Craps;
 
+namespace
+{
+// C&E has historically appeared in configuration files under both its
+// display name ("C&E") and its identifier-style name ("CandE"). Keep this
+// compatibility local to TableRules rather than changing EnumBetName.
+YAML::Node findAggregateEntry(const YAML::Node& aggregates, BetName name)
+{
+    const auto canonicalName = EnumBetName::toString(name);
+    auto entry = aggregates[canonicalName];
+    if (entry || name != BetName::CandE)
+        return entry;
+    return aggregates["CandE"];
+}
+}
+
 //----------------------------------------------------------------
 
 TableRules::TableRules()
@@ -70,6 +85,28 @@ TableRules::wagerLimit(BetName name)
 
 //----------------------------------------------------------------
 
+const TableRules::AggregateLimit&
+TableRules::aggregateLimit(BetName name) const
+{
+    const auto index = static_cast<std::size_t>(name);
+    if (index >= aggregateLimits.size())
+        throw std::out_of_range("Invalid bet name in TableRules::aggregateLimit");
+    return aggregateLimits[index];
+}
+
+//----------------------------------------------------------------
+
+TableRules::AggregateLimit&
+TableRules::aggregateLimit(BetName name)
+{
+    const auto index = static_cast<std::size_t>(name);
+    if (index >= aggregateLimits.size())
+        throw std::out_of_range("Invalid bet name in TableRules::aggregateLimit");
+    return aggregateLimits[index];
+}
+
+//----------------------------------------------------------------
+
 YAML::Node
 TableRules::toYAML() const
 {
@@ -125,10 +162,18 @@ TableRules::toYAML() const
     };
     node["buyCommission"] = commissionToYAML(buyCommission);
     node["layCommission"] = commissionToYAML(layCommission);
-    node["aggregateLimitBasis"] = aggregateLimitBasis == LimitBasis::AmountWagered
-        ? "amountWagered" : "potentialWin";
-    node["aggregateMaximumPotentialWin"] = aggregateMaximumPotentialWin;
-    node["enforceAggregateComponentLimits"] = enforceAggregateComponentLimits;
+    YAML::Node aggregateNode;
+    for (const auto name : {BetName::CandE, BetName::Horn, BetName::World})
+    {
+        const auto& limit = aggregateLimit(name);
+        YAML::Node entry;
+        entry["basis"] = limit.basis == LimitBasis::AmountWagered
+            ? "amountWagered" : "potentialWin";
+        entry["maximumPotentialWin"] = limit.maximumPotentialWin;
+        entry["maximumComponentWager"] = limit.maximumComponentWager;
+        aggregateNode[EnumBetName::toString(name)] = entry;
+    }
+    node["aggregates"] = aggregateNode;
     return node;
 }
 
@@ -231,17 +276,51 @@ TableRules::fromYAML(const YAML::Node& node)
     readCommission(node["buyCommission"], buyCommission, "buyCommission");
     readCommission(node["layCommission"], layCommission, "layCommission");
 
-    if (node["aggregateLimitBasis"])
+    // Read the earlier table-wide aggregate settings for backward
+    // compatibility, then allow the per-bet settings to override them.
+    if (node["aggregateLimitBasis"] || node["aggregateMaximumPotentialWin"] ||
+        node["aggregateMaximumComponentWager"])
     {
-        const auto basis = node["aggregateLimitBasis"].as<std::string>();
-        if (basis == "amountWagered") aggregateLimitBasis = LimitBasis::AmountWagered;
-        else if (basis == "potentialWin") aggregateLimitBasis = LimitBasis::PotentialWin;
-        else throw std::runtime_error("Unknown aggregateLimitBasis: " + basis);
+        LimitBasis basis = LimitBasis::AmountWagered;
+        if (node["aggregateLimitBasis"])
+        {
+            const auto value = node["aggregateLimitBasis"].as<std::string>();
+            if (value == "amountWagered") basis = LimitBasis::AmountWagered;
+            else if (value == "potentialWin") basis = LimitBasis::PotentialWin;
+            else throw std::runtime_error("Unknown aggregateLimitBasis: " + value);
+        }
+        for (const auto name : {BetName::CandE, BetName::Horn, BetName::World})
+        {
+            auto& limit = aggregateLimit(name);
+            limit.basis = basis;
+            if (node["aggregateMaximumPotentialWin"])
+                limit.maximumPotentialWin = node["aggregateMaximumPotentialWin"].as<Gen::Money>();
+            if (node["aggregateMaximumComponentWager"])
+                limit.maximumComponentWager = node["aggregateMaximumComponentWager"].as<Gen::Money>();
+        }
     }
-    if (node["aggregateMaximumPotentialWin"])
-        aggregateMaximumPotentialWin = node["aggregateMaximumPotentialWin"].as<Gen::Money>();
-    if (node["enforceAggregateComponentLimits"])
-        enforceAggregateComponentLimits = node["enforceAggregateComponentLimits"].as<bool>();
+    if (const auto aggregatesNode = node["aggregates"])
+    {
+        if (!aggregatesNode.IsMap())
+            throw std::runtime_error("TableRules.aggregates must be a map");
+        for (const auto name : {BetName::CandE, BetName::Horn, BetName::World})
+        {
+            const auto entry = findAggregateEntry(aggregatesNode, name);
+            if (!entry) continue;
+            auto& limit = aggregateLimit(name);
+            if (entry["basis"])
+            {
+                const auto basis = entry["basis"].as<std::string>();
+                if (basis == "amountWagered") limit.basis = LimitBasis::AmountWagered;
+                else if (basis == "potentialWin") limit.basis = LimitBasis::PotentialWin;
+                else throw std::runtime_error("Unknown aggregate limit basis for " + EnumBetName::toString(name));
+            }
+            if (entry["maximumPotentialWin"])
+                limit.maximumPotentialWin = entry["maximumPotentialWin"].as<Gen::Money>();
+            if (entry["maximumComponentWager"])
+                limit.maximumComponentWager = entry["maximumComponentWager"].as<Gen::Money>();
+        }
+    }
     validate();
 }
 
@@ -260,9 +339,11 @@ TableRules::validate() const
     if (!validUnit(payoutUnit) || !validUnit(odds.payoutUnit) ||
         !validUnit(buyCommission.roundingUnit) || !validUnit(layCommission.roundingUnit))
         throw std::runtime_error("TableRules payout and commission units must be positive");
-    if (buyCommission.collection != CommissionCollection::OnWinningDecision ||
-        layCommission.collection != CommissionCollection::OnWinningDecision)
-        throw std::runtime_error("Commission collection on placement is not supported yet");
+    if ((buyCommission.collection == CommissionCollection::OnPlacement &&
+         buyCommission.basis != CommissionBasis::OnWager) ||
+        (layCommission.collection == CommissionCollection::OnPlacement &&
+         layCommission.basis != CommissionBasis::OnWager))
+        throw std::runtime_error("Commission collected on placement must be based on the wager");
     if (odds.style == OddsLimitStyle::FlatMultiplier && odds.flatMultiplier == 0)
         throw std::runtime_error("Flat odds multiplier must be greater than zero");
     if (odds.style == OddsLimitStyle::PointSchedule)

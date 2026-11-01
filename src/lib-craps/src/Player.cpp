@@ -236,8 +236,12 @@ Player::leaveTable()
     for (auto it = bets_.begin(); it != bets_.end(); ) // no increment here
     {
         auto pBet = *it;
+        const Gen::Money placementFee = pBet->hasDecision()
+            ? 0 : pBet->placementCommission();
         pTable_->removeBetForce(pBet);
-        wallet_.deposit(pBet->contractAmount() + pBet->oddsAmount());
+        if (placementFee > 0)
+            pTable_->refundPlacementCommission(*pBet);
+        wallet_.deposit(pBet->contractAmount() + pBet->oddsAmount() + placementFee);
         it = bets_.erase(it); // returns next valid iterator
     }
 
@@ -294,17 +298,35 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
     }
 
     auto pBet = makeShared(betName, contractAmount, pivot, ep);
-    if (pBet == nullptr || fifBadAddBet(pBet, ep))
+    if (pBet == nullptr)
     {
         ep.prepend(s);
-        // ep.setErrorName() is set in lower functions
         ep.setErrorType("Betting Error");
         ep.setSeverity(Es::Indeterminate);
         LOG_ERROR(fname + "() Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
-    wallet_.withdraw(contractAmount);
+    const Gen::Money placementFee = pTable_->placementCommission(*pBet, pBet->contractAmount());
+    if (placementFee > 0 &&
+        fifInsufficientFunds(nullptr, contractAmount + placementFee, 0, ep))
+    {
+        ep.prepend(s);
+        LOG_ERROR(fname + "() Error" + ep.fullDesc());
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+    if (fifBadAddBet(pBet, ep))
+    {
+        ep.prepend(s);
+        ep.setErrorType("Betting Error");
+        ep.setSeverity(Es::Indeterminate);
+        LOG_ERROR(fname + "() Error" + ep.fullDesc());
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
+    wallet_.withdraw(contractAmount + placementFee);
+    if (placementFee > 0)
+        pTable_->collectPlacementCommission(*pBet, placementFee);
     bets_.push_back(pBet);
 
     sendEventPlayerBalanceChanged();
@@ -341,14 +363,22 @@ Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
                Es::Indeterminate, "Player::restoreBet(): player has not joined a table.");
         return Gen::ReturnCode::Fail;
     }
+    const bool feeAlreadyCollected = pBet->placementCommission() > 0;
+    const Gen::Money placementFee = feeAlreadyCollected
+        ? pBet->placementCommission()
+        : (pBet->hasDecision() ? 0 : pTable_->placementCommission(*pBet, pBet->contractAmount()));
     if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
     {
         return Gen::ReturnCode::Fail;
     }
-    wallet_.withdraw(pBet->contractAmount() + pBet->oddsAmount());
+    wallet_.withdraw(pBet->contractAmount() + pBet->oddsAmount() +
+                     (feeAlreadyCollected ? 0 : placementFee));
+    if (!feeAlreadyCollected && placementFee > 0)
+        pTable_->collectPlacementCommission(*pBet, placementFee);
     bets_.push_back(pBet);
 
     sendEventPlayerBetsChanged();
+    sendEventPlayerBalanceChanged();
     return Gen::ReturnCode::Success;
 }
 
@@ -388,6 +418,16 @@ Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState)
 
     int deltaOdds = pBet->oddsAmount() - prevState.oddsAmount();
     applyDelta(deltaOdds);
+
+    const Gen::Money currentFee = pBet->placementCommission();
+    const Gen::Money previousFee = prevState.placementCommission();
+    applyDelta(static_cast<int>(currentFee) - static_cast<int>(previousFee));
+    if (currentFee != previousFee && pTable_)
+    {
+        pTable_->refundPlacementCommission(*pBet);
+        if (previousFee > 0)
+            pTable_->collectPlacementCommission(*pBet, previousFee);
+    }
 
     sendEventPlayerBalanceChanged();
 }
@@ -517,9 +557,13 @@ Player::setContractAmount(
     
     // fif prefix means "fault if"
 
+    const Gen::Money oldPlacementFee = pBet ? pBet->placementCommission() : 0;
+    const Gen::Money newPlacementFee =
+        (pBet && pTable_) ? pTable_->placementCommission(*pBet, newAmount) : 0;
     if (fifMissingBet(pBet, ep)                   ||
         fifNoTable(ep)                            ||
-        fifInsufficientFunds(pBet, newAmount, pBet->contractAmount(), ep))
+        fifInsufficientFunds(pBet, newAmount + newPlacementFee,
+                             pBet->contractAmount() + oldPlacementFee, ep))
     {
         ep.prepend("Unable to set contract amount(" + std::to_string(newAmount) +
             ") for player: " + playerName_ + ". ");
@@ -529,19 +573,25 @@ Player::setContractAmount(
     
     Gen::Money saveContractAmount = pBet->contractAmount();
     
-    wallet_.deposit(pBet->contractAmount());  // give back old amount, if any
-    wallet_.withdraw(newAmount);              // take out new amount
+    wallet_.deposit(saveContractAmount + oldPlacementFee);
+    wallet_.withdraw(newAmount + newPlacementFee);
     
     auto rc = pTable_->setContractAmount(pBet, newAmount, ep);
-    if (rc == Gen::ReturnCode::Fail)         // Bet was rejected
-    {                                        // Restore prev amount
-        wallet_.deposit(newAmount);
-        wallet_.withdraw(saveContractAmount);
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        wallet_.deposit(newAmount + newPlacementFee);
+        wallet_.withdraw(saveContractAmount + oldPlacementFee);
         ep.prepend(diagPrefix(2));
         LOG_ERROR(fname + " Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
+    if (oldPlacementFee != newPlacementFee)
+    {
+        pTable_->refundPlacementCommission(*pBet);
+        if (newPlacementFee > 0)
+            pTable_->collectPlacementCommission(*pBet, newPlacementFee);
+    }
     sendEventPlayerBetsChanged();
     sendEventPlayerBalanceChanged();
     pBet->logBet(fname + " Accepted");
@@ -898,7 +948,11 @@ Player::removeBet(const BetId& betId)
         return zeus::unexpected(std::move(ep));
     }
 
-    wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount());
+    const Gen::Money placementFee = (*it)->hasDecision()
+        ? 0 : (*it)->placementCommission();
+    if (placementFee > 0)
+        pTable_->refundPlacementCommission(*(*it));
+    wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount() + placementFee);
     bets_.erase(it, bets_.end());  // remove from our list of bets
 
     sendEventPlayerBetsChanged();

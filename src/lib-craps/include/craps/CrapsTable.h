@@ -166,6 +166,12 @@ private:
     DecisionList drl_;
 
 private:
+    friend class Player;
+
+    Gen::Money placementCommission(const CrapsBet& bet, Gen::Money contractAmount) const;
+    void collectPlacementCommission(CrapsBet& bet, Gen::Money amount);
+    void refundPlacementCommission(CrapsBet& bet);
+
     bool betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const;
     void throwDice();
     bool resolveBets();
@@ -198,6 +204,7 @@ private:
     void sendEventBetMade          (const CrapsBet& bet)  const;
     void sendEventBetRemoved       (const CrapsBet& bet)  const;
     void sendEventBetChanged       (const CrapsBet& bet)  const;
+    void sendEventDiceThrowStart()                        const;
     void sendEventDiceNewValue()                          const;
     void sendEventTableResolveBetsEnd()                   const;
     void sendEventTableLastRollStatsChanged()             const;

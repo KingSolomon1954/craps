@@ -120,10 +120,11 @@ the caller:
     original odds stake, the caller must avoid returning that stake twice.
 
 @var DecisionRecord::commission
-    Lay and Buy bets require a 5% commission if they win.
-
-    This amount has been subtracted from the win amount.  The table's
-    banking system should deposit this amount if non-zero.
+    Lay and Buy bets may incur commission when the winning decision is
+    settled. This amount has been subtracted from the win amount. The
+    table banking system deposits it if non-zero. Commission configured
+    for collection on placement is handled by Player/CrapsTable when the
+    wager is accepted and is therefore not represented here.
 */
 
 } // namespace Craps

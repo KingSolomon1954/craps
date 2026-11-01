@@ -56,6 +56,8 @@ public:
     unsigned       pivot()           const;
     unsigned       contractAmount()  const;
     unsigned       oddsAmount()      const;
+    Gen::Money     placementCommission() const; // Commission already collected on placement
+    bool           hasDecision() const;           // A roll has resolved this bet at least once
     bool           offComeOutRoll()  const;
     bool           hardwayWorking()  const;
     unsigned       distance()        const;
@@ -76,6 +78,8 @@ private:
 
     // Order doesn't matter
     Gen::Money oddsAmount_     = 0;
+    Gen::Money placementCommission_ = 0; // retained after a winning Buy/Lay decision
+    bool hasDecision_ = false;
     bool offComeOutRoll_       = true;
     unsigned distance_         = 0;  // num rolls until decision
     Gen::Timepoint whenCreated_;
@@ -167,10 +171,12 @@ private:
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
     void setContractAmountInternal(Gen::Money amount); // called by CrapsTable
     void setOddsAmountInternal    (Gen::Money amount); // called by CrapsTable
+    void setPlacementCommissionInternal(Gen::Money amount); // called by CrapsTable/Player
     void setPivotInternal         (unsigned pivot);    // called by CrapsTable
     void setDistanceInternal      (unsigned distance); // called by unit test
 
     friend class CrapsTable;
+    friend class Player;
     friend class TableStats;
 
     // Unit test access points

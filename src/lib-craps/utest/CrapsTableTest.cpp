@@ -95,6 +95,129 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:reject null bet pointers")
 
 //----------------------------------------------------------------
 
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collected and refunded on cancellation")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["buyCommission"]["collection"] = "onPlacement";
+    rules["buyCommission"]["basis"] = "onWager";
+    rules["buyCommission"]["basisPoints"] = 500;
+    rules["buyCommission"]["minimum"] = 0;
+    rules["buyCommission"]["roundingUnit"] = 1;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+    REQUIRE(p1->joinTable(*table));
+
+    const Gen::Money playerBefore = p1->getBalance();
+    const int houseBefore = table->getBalance();
+    auto result = p1->makeBet(BetName::Buy, 100, 4);
+    REQUIRE(result);
+    CHECK(p1->getBalance() == playerBefore - 105);
+    CHECK(table->getBalance() == houseBefore + 5);
+    CHECK(result.value()->placementCommission() == 5);
+
+    REQUIRE(p1->removeBet(result.value()->betId()));
+    CHECK(p1->getBalance() == playerBefore);
+    CHECK(table->getBalance() == houseBefore);
+    CHECK(result.value()->placementCommission() == 0);
+
+    Gen::ErrorPass ep;
+    CHECK(p1->restoreBet(result.value(), ep) == Gen::ReturnCode::Success);
+    CHECK(p1->getBalance() == playerBefore - 105);
+    CHECK(table->getBalance() == houseBefore + 5);
+    REQUIRE(p1->removeBet(result.value()->betId()));
+    CHECK(p1->getBalance() == playerBefore);
+    CHECK(table->getBalance() == houseBefore);
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not charged or refunded twice after a win")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["buyCommission"]["collection"] = "onPlacement";
+    rules["buyCommission"]["basis"] = "onWager";
+    rules["buyCommission"]["basisPoints"] = 500;
+    rules["buyCommission"]["minimum"] = 0;
+    rules["buyCommission"]["roundingUnit"] = 1;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+    REQUIRE(p1->joinTable(*table));
+
+    const Gen::Money playerBefore = p1->getBalance();
+    auto result = p1->makeBet(BetName::Buy, 100, 4);
+    REQUIRE(result);
+    CHECK(p1->getBalance() == playerBefore - 105);
+
+    table->testSetState(4, 2, 2);
+    table->testRollDice(2, 2); // Buy 4 wins and remains active.
+    CHECK(result.value()->hasDecision());
+    CHECK(result.value()->placementCommission() == 5);
+    CHECK(p1->getBalance() == playerBefore + 95);
+
+    const int houseAfterWin = table->getBalance();
+    REQUIRE(p1->removeBet(result.value()->betId()));
+    CHECK(p1->getBalance() == playerBefore + 195);
+    CHECK(result.value()->placementCommission() == 5);
+    CHECK(table->getBalance() == houseAfterWin);
+
+    Gen::ErrorPass ep;
+    CHECK(p1->restoreBet(result.value(), ep) == Gen::ReturnCode::Success);
+    CHECK(p1->getBalance() == playerBefore + 95);
+    CHECK(table->getBalance() == houseAfterWin);
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limit is enforced")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["aggregates"] = YAML::Node(YAML::NodeType::Map);
+    rules["aggregates"]["CandE"]["maximumComponentWager"] = 3;
+    rules["aggregates"]["World"]["maximumComponentWager"] = 3;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+    REQUIRE(p1->joinTable(*table));
+
+    auto tooLarge = p1->makeBet(BetName::CandE, 8, 0);
+    CHECK_FALSE(tooLarge);
+    auto allowed = p1->makeBet(BetName::CandE, 6, 0);
+    CHECK(allowed);
+
+    auto worldTooLarge = p1->makeBet(BetName::World, 20, 0);
+    CHECK_FALSE(worldTooLarge);
+    auto worldAllowed = p1->makeBet(BetName::World, 15, 0);
+    CHECK(worldAllowed);
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate potential win limit is enforced")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["aggregates"] = YAML::Node(YAML::NodeType::Map);
+    rules["aggregates"]["Horn"]["basis"] = "potentialWin";
+    rules["aggregates"]["Horn"]["maximumPotentialWin"] = 200;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+    REQUIRE(p1->joinTable(*table));
+
+    auto tooLarge = p1->makeBet(BetName::Horn, 40, 0); // max win = 300
+    CHECK_FALSE(tooLarge);
+    auto allowed = p1->makeBet(BetName::Horn, 20, 0); // max win = 150
+    CHECK(allowed);
+}
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propagated")
 {
     CrapsTable t("Table-1", config);

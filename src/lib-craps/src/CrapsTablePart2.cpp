@@ -472,6 +472,54 @@ CrapsTable::withinMinMaxSideBets(BetName betName,
             ",max:" + std::to_string(limit.maximum) + ").");
         return false;
     }
+
+    unsigned components = 0;
+    switch (betName)
+    {
+        case BetName::CandE: components = 2; break;
+        case BetName::Horn:  components = 4; break;
+        case BetName::World: components = 5; break;
+        default: break;
+    }
+    if (components == 0) return true;
+
+    const auto& aggregate = rules_.aggregateLimit(betName);
+    if (amt % components != 0)
+    {
+        ep.setDescription("This bet must be a multiple of " +
+                          std::to_string(components) + ". " +
+                          Gen::MoneyUtils::toString(amt) +
+                          " cannot be divided evenly among its " +
+                          std::to_string(components) + " components.");
+        return false;
+    }
+    const Gen::Money component = amt / components;
+    if (aggregate.maximumComponentWager > 0 &&
+        component > aggregate.maximumComponentWager)
+    {
+        ep.setDescription("Aggregate component wager " +
+            Gen::MoneyUtils::toString(component) + " exceeds component maximum " +
+            Gen::MoneyUtils::toString(aggregate.maximumComponentWager) + ".");
+        return false;
+    }
+
+    if (aggregate.basis == TableRules::LimitBasis::PotentialWin &&
+        aggregate.maximumPotentialWin > 0)
+    {
+        std::uint64_t numerator = 0;
+        std::uint64_t denominator = 1;
+        if (betName == BetName::CandE) { numerator = 15; denominator = 2; }
+        else if (betName == BetName::Horn) { numerator = 30; denominator = 4; }
+        else { numerator = 26; denominator = 5; }
+        const std::uint64_t potentialWin =
+            (static_cast<std::uint64_t>(amt) * numerator) / denominator;
+        if (potentialWin > aggregate.maximumPotentialWin)
+        {
+            ep.setDescription("Aggregate bet potential win exceeds table maximum " +
+                Gen::MoneyUtils::toString(aggregate.maximumPotentialWin) + ".");
+            return false;
+        }
+    }
     return true;
 }
 

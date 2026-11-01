@@ -26,9 +26,9 @@ TEST_CASE("TableRules: YAML round trip preserves configurable rules")
     source.buyCommission.collection = TableRules::CommissionCollection::OnPlacement;
     source.buyCommission.minimum = 1;
     source.buyCommission.roundingUnit = 1;
-    source.aggregateLimitBasis = TableRules::LimitBasis::PotentialWin;
-    source.aggregateMaximumPotentialWin = 1000;
-    source.enforceAggregateComponentLimits = true;
+    source.aggregateLimit(BetName::World).basis = TableRules::LimitBasis::PotentialWin;
+    source.aggregateLimit(BetName::World).maximumPotentialWin = 1000;
+    source.aggregateLimit(BetName::World).maximumComponentWager = 25;
 
     const YAML::Node yaml = source.toYAML();
     TableRules restored;
@@ -49,9 +49,31 @@ TEST_CASE("TableRules: YAML round trip preserves configurable rules")
     CHECK(restored.buyCommission.basis == TableRules::CommissionBasis::OnWager);
     CHECK(restored.buyCommission.collection == TableRules::CommissionCollection::OnPlacement);
     CHECK(restored.buyCommission.minimum == 1);
-    CHECK(restored.aggregateLimitBasis == TableRules::LimitBasis::PotentialWin);
-    CHECK(restored.aggregateMaximumPotentialWin == 1000);
-    CHECK(restored.enforceAggregateComponentLimits);
+    CHECK(restored.aggregateLimit(BetName::World).basis == TableRules::LimitBasis::PotentialWin);
+    CHECK(restored.aggregateLimit(BetName::World).maximumPotentialWin == 1000);
+    CHECK(restored.aggregateLimit(BetName::World).maximumComponentWager == 25);
+    CHECK(restored.aggregateLimit(BetName::CandE).basis == TableRules::LimitBasis::AmountWagered);
+    CHECK(restored.aggregateLimit(BetName::CandE).maximumPotentialWin == 0);
+}
+
+
+TEST_CASE("TableRules: reads legacy table-wide aggregate settings")
+{
+    TableRules defaults;
+    YAML::Node yaml = defaults.toYAML();
+    yaml.remove("aggregates");
+    yaml["aggregateLimitBasis"] = "potentialWin";
+    yaml["aggregateMaximumPotentialWin"] = 750;
+    yaml["aggregateMaximumComponentWager"] = 20;
+
+    TableRules restored;
+    restored.fromYAML(yaml);
+    for (const auto name : {BetName::CandE, BetName::Horn, BetName::World})
+    {
+        CHECK(restored.aggregateLimit(name).basis == TableRules::LimitBasis::PotentialWin);
+        CHECK(restored.aggregateLimit(name).maximumPotentialWin == 750);
+        CHECK(restored.aggregateLimit(name).maximumComponentWager == 20);
+    }
 }
 
 TEST_CASE("TableRules: rejects invalid configuration")
@@ -68,4 +90,31 @@ TEST_CASE("TableRules: rejects invalid configuration")
     yaml = rules.toYAML();
     yaml["fieldPayouts"]["12"]["denominator"] = 0;
     CHECK_THROWS(rules.fromYAML(yaml));
+
+    TableRules validRules;
+    yaml = validRules.toYAML();
+    yaml["buyCommission"]["collection"] = "onPlacement";
+    yaml["buyCommission"]["basis"] = "onWin";
+    CHECK_THROWS(rules.fromYAML(yaml));
+}
+
+
+TEST_CASE("TableRules: accepts both C&E aggregate YAML keys")
+{
+    YAML::Node yaml = YAML::Load(R"yaml(
+aggregates:
+  CandE:
+    maximumComponentWager: 3
+)yaml");
+    TableRules rules;
+    rules.fromYAML(yaml);
+    CHECK(rules.aggregateLimit(BetName::CandE).maximumComponentWager == 3);
+
+    yaml = YAML::Load(R"yaml(
+aggregates:
+  "C&E":
+    maximumComponentWager: 7
+)yaml");
+    rules.fromYAML(yaml);
+    CHECK(rules.aggregateLimit(BetName::CandE).maximumComponentWager == 7);
 }

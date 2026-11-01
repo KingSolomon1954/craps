@@ -101,16 +101,26 @@ struct TableRules
     Commission buyCommission{};
     Commission layCommission{};
 
-    // Aggregate wager constraints can apply to the whole bet and/or each
-    // component.  A zero cap means no additional cap.
-    LimitBasis aggregateLimitBasis = LimitBasis::AmountWagered;
-    Gen::Money aggregateMaximumPotentialWin = 0;
-    bool enforceAggregateComponentLimits = false;
+    struct AggregateLimit
+    {
+        // AmountWagered uses the bet's WagerLimit.maximum as the total cap.
+        // PotentialWin applies maximumPotentialWin to the model's maximum
+        // DecisionRecord win for this aggregate bet.
+        LimitBasis basis = LimitBasis::AmountWagered;
+        Gen::Money maximumPotentialWin = 0;
+        Gen::Money maximumComponentWager = 0; // zero means no per-component cap
+    };
+
+    // Aggregate rules are per bet type: C&E, Horn, and World need not share
+    // the same total-wager basis or component/potential-win limits.
+    std::array<AggregateLimit, EnumBetName::enumerators.size()> aggregateLimits{};
 
     TableRules();
 
     const WagerLimit& wagerLimit(BetName name) const;
     WagerLimit& wagerLimit(BetName name);
+    const AggregateLimit& aggregateLimit(BetName name) const;
+    AggregateLimit& aggregateLimit(BetName name);
 
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);

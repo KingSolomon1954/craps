@@ -226,6 +226,8 @@ CrapsBet::operator==(const CrapsBet& other) const
            pivot_          == other.pivot_          &&
            contractAmount_ == other.contractAmount_ &&
            oddsAmount_     == other.oddsAmount_     &&
+           placementCommission_ == other.placementCommission_ &&
+           hasDecision_ == other.hasDecision_ &&
            offComeOutRoll_ == other.offComeOutRoll_ &&
            distance_       == other.distance_       &&
            whenCreated_    == other.whenCreated_    &&
@@ -262,6 +264,14 @@ void
 CrapsBet::setOddsAmountInternal(Gen::Money newAmount)
 {
     oddsAmount_ = newAmount;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::setPlacementCommissionInternal(Gen::Money amount)
+{
+    placementCommission_ = amount;
 }
 
 /*-----------------------------------------------------------*//**
@@ -374,6 +384,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     dr.removeBet = dr.decision;
     if (dr.decision)
     {
+        hasDecision_ = true;
         whenDecided_.setToNow();
 
         // These wagers pay a winning outcome but remain active until they
@@ -468,6 +479,9 @@ CrapsBet::calculateCommission(
     Gen::Money wager,
     const TableRules::Commission& rules) const
 {
+    if (rules.collection == TableRules::CommissionCollection::OnPlacement)
+        return 0; // Already collected when the bet was accepted.
+
     const Gen::Money basis = rules.basis == TableRules::CommissionBasis::OnWager
         ? wager : grossWin;
     const auto raw = static_cast<std::uint64_t>(basis) * rules.basisPoints;
@@ -1295,6 +1309,22 @@ unsigned
 CrapsBet::oddsAmount() const
 {
     return oddsAmount_;
+}
+
+//----------------------------------------------------------------
+
+Gen::Money
+CrapsBet::placementCommission() const
+{
+    return placementCommission_;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsBet::hasDecision() const
+{
+    return hasDecision_;
 }
 
 /*-----------------------------------------------------------*//**

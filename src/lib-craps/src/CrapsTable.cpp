@@ -6,6 +6,7 @@
 
 #include <craps/CrapsTable.h>
 #include <algorithm>
+#include <cstdint>
 #include <craps/Player.h>
 #include <controller/GameEvents.h>
 #include <controller/Globals.h>
@@ -704,6 +705,7 @@ void
 CrapsTable::throwDice()
 {
     if (isTestRoll_) dice_ = testRollDice_; else dice_.roll();
+    sendEventDiceThrowStart();
     sendEventDiceNewValue();
 }
 
@@ -1222,6 +1224,55 @@ CrapsTable::getTableRules() const
 }
 
 //----------------------------------------------------------------
+
+Gen::Money
+CrapsTable::placementCommission(const CrapsBet& bet, Gen::Money contractAmount) const
+{
+    const TableRules::Commission* commission = nullptr;
+    if (bet.betName() == BetName::Buy)
+        commission = &rules_.buyCommission;
+    else if (bet.betName() == BetName::Lay)
+        commission = &rules_.layCommission;
+
+    if (commission == nullptr ||
+        commission->collection != TableRules::CommissionCollection::OnPlacement)
+        return 0;
+
+    const std::uint64_t raw =
+        static_cast<std::uint64_t>(contractAmount) * commission->basisPoints;
+    Gen::Money amount = static_cast<Gen::Money>(raw / 10000);
+    if (commission->rounding == TableRules::PayoutRounding::Down &&
+        commission->roundingUnit > 1)
+        amount = (amount / commission->roundingUnit) * commission->roundingUnit;
+    if (contractAmount > 0 && amount < commission->minimum)
+        amount = commission->minimum;
+    return amount;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::collectPlacementCommission(CrapsBet& bet, Gen::Money amount)
+{
+    if (amount <= 0) return;
+    houseBank_.deposit(amount);
+    bet.setPlacementCommissionInternal(amount);
+    sendEventTableBalanceChanged();
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::refundPlacementCommission(CrapsBet& bet)
+{
+    const Gen::Money amount = bet.placementCommission();
+    if (amount <= 0) return;
+    houseBank_.withdraw(amount);
+    bet.setPlacementCommissionInternal(0);
+    sendEventTableBalanceChanged();
+}
+
+//----------------------------------------------------------------
 //
 // Gets today's running session balance. Always +/- starting from 0.
 //
@@ -1443,6 +1494,16 @@ CrapsTable::sendEventBetChanged(const CrapsBet& bet) const
     ev.oddsAmount     = bet.oddsAmount();
     ev.pivot          = bet.pivot();
 
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsTable::sendEventDiceThrowStart() const
+{
+    Ctrl::UslDiceThrowStart ev;
+    ev.rollCount = dice_.rollCount();
     Gen::EventManager::instance().publish(ev);
 }
 
