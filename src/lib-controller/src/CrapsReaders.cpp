@@ -410,6 +410,55 @@ CrapsReaders::readBetOddsAmount(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsReaders::readBetAmountLimits(
+    const Craps::PlayerId& playerId,
+    BetName betName,
+    unsigned pivot,
+    bool oddsBet,
+    Gen::Money contractAmount,
+    Craps::BetAmountLimits& limits,
+    Gen::ErrorPass& ep)
+{
+    auto pPlayer = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (pPlayer == nullptr)
+    {
+        ep.prepend(diagPrefix("betAmountLimits", "retrieve player"));
+        return Gen::ReturnCode::Fail;
+    }
+
+    // A player's matching contract bet supplies both the current amount and,
+    // for odds, the contract amount used to calculate the odds ceiling.
+    const auto betId = pPlayer->getBet(betName, pivot, ep);
+    Craps::BetPtr pBet;
+    if (betId != 0)
+    {
+        pBet = pPlayer->getBet(betId, ep);
+        if (pBet == nullptr)
+        {
+            ep.prepend(diagPrefix("betAmountLimits", "retrieve existing bet"));
+            return Gen::ReturnCode::Fail;
+        }
+        limits.currentAmount = oddsBet ? pBet->oddsAmount() : pBet->contractAmount();
+        if (oddsBet && contractAmount == 0)
+            contractAmount = pBet->contractAmount();
+    }
+    else
+        limits.currentAmount = 0;
+
+    limits.minimum = 0;
+    limits.maximum = 0;
+    limits.increment = 1;
+    const auto modelLimits = Gbl::pTable->getBetAmountLimits(
+        betName, pivot, oddsBet, contractAmount);
+    limits.minimum = modelLimits.minimum;
+    limits.maximum = modelLimits.maximum;
+    limits.increment = modelLimits.increment;
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsReaders::readBetOffComeOutRoll(
     const Craps::BetId& betId,
     bool& offComeOutRoll,

@@ -173,6 +173,31 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not ch
     CHECK(table->getBalance() == houseAfterWin);
 }
 
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: bet amount limits reflect table rules")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["odds"]["maximumWager"] = 37;
+    rules["odds"]["wagerIncrement"] = 5;
+    rules["aggregates"]["World"]["maximumComponentWager"] = 3;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+
+    const auto world = table->getBetAmountLimits(BetName::World, 0, false, 0);
+    CHECK(world.minimum == 5);
+    CHECK(world.maximum == 15);
+    CHECK(world.increment == 5);
+
+    const auto odds = table->getBetAmountLimits(BetName::PassLine, 4, true, 10);
+    CHECK(odds.minimum == 5);
+    CHECK(odds.maximum == 35);
+    CHECK(odds.increment == 5);
+}
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limit is enforced")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());

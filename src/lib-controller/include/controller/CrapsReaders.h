@@ -123,6 +123,14 @@ public:
         const Craps::BetId& betId,
         Gen::Money& oddsAmount,
         Gen::ErrorPass& ep);
+    static Gen::ReturnCode readBetAmountLimits(
+        const Craps::PlayerId& playerId,
+        BetName betName,
+        unsigned pivot,
+        bool oddsBet,
+        Gen::Money contractAmount,
+        Craps::BetAmountLimits& limits,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode readBetOffComeOutRoll(
         const Craps::BetId& betId,
         bool& offComeOutRoll,

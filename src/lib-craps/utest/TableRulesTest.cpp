@@ -16,6 +16,7 @@ TEST_CASE("TableRules: YAML round trip preserves configurable rules")
     source.odds.pointMultipliers[5] = 4;
     source.odds.pointMultipliers[6] = 5;
     source.odds.maximumWager = 250;
+    source.odds.wagerIncrement = 5;
     source.odds.maximumPotentialWin = 600;
     source.odds.rounding = TableRules::PayoutRounding::Down;
     source.odds.payoutUnit = 5;
@@ -42,6 +43,7 @@ TEST_CASE("TableRules: YAML round trip preserves configurable rules")
     CHECK(restored.odds.pointMultipliers[5] == 4);
     CHECK(restored.odds.pointMultipliers[6] == 5);
     CHECK(restored.odds.maximumWager == 250);
+    CHECK(restored.odds.wagerIncrement == 5);
     CHECK(restored.odds.maximumPotentialWin == 600);
     CHECK(restored.odds.payoutUnit == 5);
     CHECK(restored.fieldPayouts[2].numerator == 2);

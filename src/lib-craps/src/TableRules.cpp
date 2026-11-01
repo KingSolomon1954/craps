@@ -131,6 +131,7 @@ TableRules::toYAML() const
     for (const auto multiplier : odds.pointMultipliers)
         oddsNode["pointMultipliers"].push_back(multiplier);
     oddsNode["maximumWager"] = odds.maximumWager;
+    oddsNode["wagerIncrement"] = odds.wagerIncrement;
     oddsNode["maximumPotentialWin"] = odds.maximumPotentialWin;
     oddsNode["rounding"] = odds.rounding == PayoutRounding::Down ? "down" : "exact";
     oddsNode["payoutUnit"] = odds.payoutUnit;
@@ -218,6 +219,7 @@ TableRules::fromYAML(const YAML::Node& node)
                 odds.pointMultipliers[i] = points[i].as<unsigned>();
         }
         if (oddsNode["maximumWager"]) odds.maximumWager = oddsNode["maximumWager"].as<Gen::Money>();
+        if (oddsNode["wagerIncrement"]) odds.wagerIncrement = oddsNode["wagerIncrement"].as<Gen::Money>();
         if (oddsNode["maximumPotentialWin"]) odds.maximumPotentialWin = oddsNode["maximumPotentialWin"].as<Gen::Money>();
         if (oddsNode["rounding"])
         {
@@ -337,6 +339,7 @@ TableRules::validate() const
             throw std::runtime_error("Invalid wager limits for " + EnumBetName::toString(name));
     }
     if (!validUnit(payoutUnit) || !validUnit(odds.payoutUnit) ||
+        !validUnit(odds.wagerIncrement) ||
         !validUnit(buyCommission.roundingUnit) || !validUnit(layCommission.roundingUnit))
         throw std::runtime_error("TableRules payout and commission units must be positive");
     if ((buyCommission.collection == CommissionCollection::OnPlacement &&

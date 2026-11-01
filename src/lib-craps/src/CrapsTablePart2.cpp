@@ -9,6 +9,7 @@
 #include <craps/CrapsTable.h>
 #include <algorithm>
 #include <cstdint>
+#include <limits>
 #include <craps/Player.h>
 #include <cassert>
 #include <craps/CrapsBet.h>
@@ -17,6 +18,101 @@
 using namespace Craps;
 
 //----------------------------------------------------------------
+
+
+//----------------------------------------------------------------
+
+BetAmountLimits
+CrapsTable::getBetAmountLimits(BetName betName,
+                              unsigned pivot,
+                              bool oddsBet,
+                              Gen::Money contractAmount) const
+{
+    BetAmountLimits limits;
+    const auto toMoney = [](std::uint64_t value)
+    {
+        return static_cast<Gen::Money>(std::min<std::uint64_t>(
+            value, std::numeric_limits<Gen::Money>::max()));
+    };
+
+    if (oddsBet)
+    {
+        limits.increment = rules_.odds.wagerIncrement;
+        limits.minimum = limits.increment;
+        if (contractAmount == 0 ||
+            (pivot != 4 && pivot != 5 && pivot != 6 &&
+             pivot != 8 && pivot != 9 && pivot != 10))
+            return limits;
+
+        const unsigned multiplier =
+            rules_.odds.style == TableRules::OddsLimitStyle::FlatMultiplier
+                ? rules_.odds.flatMultiplier
+                : rules_.odds.pointMultipliers[pivot];
+        limits.maximum = toMoney(
+            static_cast<std::uint64_t>(contractAmount) * multiplier);
+        if (rules_.odds.maximumWager > 0)
+            limits.maximum = std::min(limits.maximum, rules_.odds.maximumWager);
+
+        if (rules_.odds.maximumPotentialWin > 0)
+        {
+            const auto& payout =
+                (betName == BetName::DontPass || betName == BetName::DontCome)
+                    ? OddsTables::oddsDont[pivot] : OddsTables::oddsPass[pivot];
+            if (payout.numerator == 0)
+                limits.maximum = 0;
+            else
+            {
+                const std::uint64_t cap = rules_.odds.maximumPotentialWin;
+                const std::uint64_t numerator = payout.numerator;
+                const std::uint64_t denominator = payout.denominator;
+                const auto maxByWin = static_cast<Gen::Money>(
+                    (((cap + 1) * denominator) - 1) / numerator);
+                limits.maximum = std::min(limits.maximum, maxByWin);
+            }
+        }
+        // The permitted amount must also satisfy the configured wager increment.
+        limits.maximum -= limits.maximum % limits.increment;
+        return limits;
+    }
+
+    const auto& wager = rules_.wagerLimit(betName);
+    limits.minimum = wager.minimum;
+    limits.maximum = wager.maximum;
+    limits.increment = wager.increment;
+
+    unsigned components = 0;
+    switch (betName)
+    {
+        case BetName::CandE: components = 2; break;
+        case BetName::Horn:  components = 4; break;
+        case BetName::World: components = 5; break;
+        default: break;
+    }
+    if (components != 0)
+    {
+        const auto& aggregate = rules_.aggregateLimit(betName);
+        if (aggregate.maximumComponentWager > 0)
+            limits.maximum = std::min(limits.maximum, toMoney(
+                static_cast<std::uint64_t>(aggregate.maximumComponentWager) * components));
+        if (aggregate.basis == TableRules::LimitBasis::PotentialWin &&
+            aggregate.maximumPotentialWin > 0)
+        {
+            std::uint64_t numerator = 0;
+            std::uint64_t denominator = 1;
+            if (betName == BetName::CandE) { numerator = 15; denominator = 2; }
+            else if (betName == BetName::Horn) { numerator = 30; denominator = 4; }
+            else { numerator = 26; denominator = 5; }
+            const auto cap = static_cast<std::uint64_t>(aggregate.maximumPotentialWin);
+            const auto maxByWin = static_cast<Gen::Money>(
+                (((cap + 1) * denominator) - 1) / numerator);
+            limits.maximum = std::min(limits.maximum, maxByWin);
+        }
+    }
+    limits.maximum -= limits.maximum % limits.increment;
+    if (limits.minimum % limits.increment != 0)
+        limits.minimum += limits.increment - (limits.minimum % limits.increment);
+    return limits;
+}
 
 std::string
 CrapsTable::diagPrefix(size_t idx, const CrapsBet& bet) const
@@ -378,47 +474,25 @@ bool
 CrapsTable::fifBadMinMaxForOdds(const CrapsBet& bet, Gen::Money amt,
                                 Gen::ErrorPass& ep) const
 {
-    // Minimum odds is zero. Determine the point-specific multiplier first.
-    const unsigned pivot = bet.pivot();
-    const unsigned multiplier =
-        rules_.odds.style == TableRules::OddsLimitStyle::FlatMultiplier
-            ? rules_.odds.flatMultiplier
-            : (pivot < rules_.odds.pointMultipliers.size()
-                ? rules_.odds.pointMultipliers[pivot] : 0);
+    const auto limits = getBetAmountLimits(
+        bet.betName(), bet.pivot(), true, bet.contractAmount());
 
-    Gen::Money maximum = bet.contractAmount() * multiplier;
-    if (rules_.odds.maximumWager > 0)
-        maximum = std::min(maximum, rules_.odds.maximumWager);
-
-    // A potential-win cap is converted back to a conservative maximum odds
-    // stake using the true-odds payout for this contract bet.
-    if (rules_.odds.maximumPotentialWin > 0)
+    // Zero remains valid as the way to remove an existing odds wager.
+    if (amt != 0 && (amt % limits.increment) != 0)
     {
-        const OddsTables::OddsEntry* payout = nullptr;
-        if (bet.betName() == BetName::DontPass || bet.betName() == BetName::DontCome)
-            payout = &OddsTables::oddsDont[pivot];
-        else
-            payout = &OddsTables::oddsPass[pivot];
-
-        if (payout->numerator > 0)
-        {
-            const std::uint64_t cap = rules_.odds.maximumPotentialWin;
-            const std::uint64_t denominator = payout->denominator;
-            const std::uint64_t numerator = payout->numerator;
-            const auto maxByWin = static_cast<Gen::Money>(
-                (((cap + 1) * denominator) - 1) / numerator);
-            maximum = std::min(maximum, maxByWin);
-        }
-        else
-            maximum = 0;
+        ep.setDescription(diagPrefix(3, bet) +
+            "Odds wager must be a multiple of " +
+            std::to_string(limits.increment) + ".");
+        ep.setErrorName("Not a Multiple");
+        return true;
     }
 
-    if (amt > maximum)
+    if (amt > limits.maximum)
     {
         ep.setDescription(diagPrefix(3, bet) +
             Gen::MoneyUtils::toString(amt) +
             " exceeds the maximum odds amount of " +
-            Gen::MoneyUtils::toString(maximum) +
+            Gen::MoneyUtils::toString(limits.maximum) +
             " for this contract and table rules.");
         ep.setErrorName(Gen::ErrorPass::ErrorName::RangeError);
         return true;

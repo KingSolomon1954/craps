@@ -93,6 +93,10 @@ public:
     unsigned                getMaxLineBet()             const;
     unsigned                getMaxOdds()                const;
     const TableRules&       getTableRules()             const;
+    BetAmountLimits          getBetAmountLimits(BetName betName,
+                                                unsigned pivot,
+                                                bool oddsBet,
+                                                Gen::Money contractAmount) const;
     BetPtr                  getBet (const BetId& betId, Gen::ErrorPass& ep) const;
     bool                    haveBet(const BetId& betId) const;
     bool                    isComeOutRoll()             const;

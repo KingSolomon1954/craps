@@ -13,6 +13,14 @@
 
 namespace Craps {
 
+struct BetAmountLimits
+{
+    Gen::Money minimum = 0;
+    Gen::Money maximum = 0;
+    Gen::Money increment = 1;
+    Gen::Money currentAmount = 0; // populated by the controller reader
+};
+
 /**
  * Rules governing wagers, odds, payouts, and commissions at a craps table.
  *
@@ -67,6 +75,7 @@ struct TableRules
         // unless a future rule explicitly gives them meaning.
         std::array<unsigned, 13> pointMultipliers{};
         Gen::Money maximumWager = 0;      // zero means no separate cap
+        Gen::Money wagerIncrement = 1;  // required odds-wager multiple
         Gen::Money maximumPotentialWin = 0;
         PayoutRounding rounding = PayoutRounding::Down;
         Gen::Money payoutUnit = 1;
