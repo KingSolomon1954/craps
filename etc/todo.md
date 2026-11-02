@@ -12,23 +12,17 @@
 
 ### Save Config to yaml file
 
+### AutoFills saved to config
+
+### QuickBets saved to config
+
+### LastBets saved to config
+
 ### Need unit test for initial bank money
 
 ### Need unit test for undo bet capability
 
 ### Need unit test ConfigManagerTest
-
-### Minimum bets are wrong.
-- Allow $1 bets for proposition bets, hardways,
-- fix min field bet
-
-### Need updated Table Rules
-
-- field bet wins double on 2, triple on 12
-- enforce multiples in odds bets
-- specify commision amounts for buy/lay
-- specify commision collected on wager or on winning
-- more
 
 ### Add Roll History Format A,B,C,D to multi-configuration
 - Modify Roll History to grab Format from multi-configuration
@@ -76,6 +70,8 @@ track that amount independently.
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
+(Done) Implemented comprehensive Table Rules facility
+(Done) Minimum bets are wrong.
 (Done) Added World bet.
 (Done) Fix evaluation() processing and various bugs
 (Done) Fix Place bets being removed from table after a win
