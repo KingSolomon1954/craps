@@ -19,9 +19,6 @@ using namespace Craps;
 
 //----------------------------------------------------------------
 
-
-//----------------------------------------------------------------
-
 BetAmountLimits
 CrapsTable::getBetAmountLimits(BetName betName,
                               unsigned pivot,

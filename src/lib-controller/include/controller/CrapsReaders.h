@@ -296,5 +296,3 @@ Used mainly by the CUI and GUI to populate dynamic menus as needed.
 } // namespace Ctrl
 
 //----------------------------------------------------------------
-
-

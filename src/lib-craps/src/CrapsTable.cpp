@@ -5,8 +5,6 @@
 //----------------------------------------------------------------
 
 #include <craps/CrapsTable.h>
-#include <algorithm>
-#include <cstdint>
 #include <craps/Player.h>
 #include <controller/GameEvents.h>
 #include <controller/Globals.h>
@@ -14,7 +12,9 @@
 #include <gen/FileUtils.h>
 #include <gen/Logger.h>
 #include <fmt/format.h>
+#include <algorithm>
 #include <cassert>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>

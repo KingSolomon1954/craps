@@ -13,18 +13,18 @@
 #include <controller/AutoFill.h>
 #include <controller/LastFill.h>
 #include <controller/CrapsReaders.h>
+#include <craps/EnumBetName.h>
 #include <craps/PlayerStats.h>
 #include <craps/TableStats.h>
 #include <craps/BetStats.h>
+#include <fmt/format.h>
 #include <gen/Logger.h>
 #include <ncurses.h>
-#include <limits>
 #include <array>
-#include <string_view>
-#include <stdexcept>
-#include <iomanip>
+#include <limits>
 #include <map>
-#include <sstream>
+#include <stdexcept>
+#include <string_view>
 
 using namespace Cui;
 
@@ -100,13 +100,11 @@ money(Gen::Money amount)
 std::string
 expectedMoney(double amount)
 {
-    const auto cents = static_cast<long long>(amount * 100.0 + 0.5);
-    const auto dollars = static_cast<Gen::Money>(cents / 100);
+    const auto cents     = static_cast<long long>(amount * 100.0 + 0.5);
+    const auto dollars   = static_cast<Gen::Money>(cents / 100);
     const auto remainder = static_cast<unsigned>(cents % 100);
-    std::ostringstream out;
-    out << money(dollars) << '.' << std::setw(2) << std::setfill('0')
-        << remainder;
-    return out.str();
+
+    return fmt::format("{}.{:02}", money(dollars), remainder);
 }
 
 //----------------------------------------------------------------
@@ -122,16 +120,15 @@ signedMoney(Gen::Money wins, Gen::Money losses)
 
 //----------------------------------------------------------------
 
-std::string
-percent(unsigned wins, unsigned losses)
+std::string percent(unsigned wins, unsigned losses)
 {
-    const unsigned total = wins + losses;
-    if (total == 0)
+    const double total =
+        static_cast<double>(wins) + static_cast<double>(losses);
+
+    if (total == 0.0)
         return "--.-%";
-    std::ostringstream out;
-    out << std::fixed << std::setprecision(1)
-        << (100.0 * static_cast<double>(wins) / total) << '%';
-    return out.str();
+
+    return fmt::format("{:.1f}%", 100.0 * wins / total);
 }
 
 //----------------------------------------------------------------
@@ -173,9 +170,9 @@ findBetStat(const std::map<std::string, Craps::BetStat>& stats,
 bool
 isRollOutcomeBet(BetName name)
 {
-    return name == BetName::Field || name == BetName::AnyCraps ||
-           name == BetName::AnySeven || name == BetName::CandE ||
-           name == BetName::Horn || name == BetName::World;
+    return name == BetName::Field    || name == BetName::AnyCraps ||
+           name == BetName::AnySeven || name == BetName::CandE    ||
+           name == BetName::Horn     || name == BetName::World;
 }
 
 //----------------------------------------------------------------
@@ -581,6 +578,32 @@ DialogBetAmount::setLocation(WindowPosition pos)
 // Fixed 24 x 59 layout. The reference and statistics areas are
 // deliberately separate from the interactive amount-entry area.
 //
+//    0123456789 123456789 123456789 123456789 123456789 12345678
+// 0  ┌─────────────────────────────────────────────────────────┐
+// 1  │ DontPass bet Odds on the 10                    Pays 1:2 │
+// 2  ├─────────────────────────────────────────────────────────┤
+// 3  │ Use multiple of 2, min $10 max $125 current $25         │
+// 4  │                                                         │
+// 5  │ Enter amount: 25                                        │
+// 6  │                                                         │
+// 7  │ [enter] Submit Bet                                      │
+// 8  │ [a] Save as AutoFill                                    │
+// 9  │ [q] Save as Quick Bet                                   │
+// 10 │ [?] Help                                                │
+// 11 │ [. or esc] Back                                         │
+// 12 ├─────────────────────────────────────────────────────────┤
+// 13 │ Pays 1:2 True Odds 1:2 House Edge 0%                    │
+// 14 │ Loses on 4 or 10 respectively. Wins on 7                │
+// 15 │ $10 bet -> $5 profit; $15 total returned                │
+// 16 │ Bet stays on table until a 7 or 4/10 is rolled          │
+// 17 │ Can only be bet after comeout roll                      │
+// 18 │ Off on comeout roll by default (configurable)           │
+// 19 ├─────────────────────────────────────────────────────────┤
+// 20 │ Total Amount: $0       Net: +$0         Expected: -$0.00│
+// 21 │ Counts:     0 0W,0L    Win rate:  --.-% Expected:  49.3%│
+// 22 │ Simulated:  0 0W,0L    Win rate:  --.-% Expected:  49.3%│
+// 23 └─────────────────────────────────────────────────────────┘
+//
 void
 DialogBetAmount::draw()
 {
@@ -588,13 +611,9 @@ DialogBetAmount::draw()
     drawHintMultiples();
     drawReference();
     drawStatistics();
-    // Draw the input last: later mvwaddstr() calls otherwise leave the
-    // ncurses cursor at the end of the statistics area.
-    drawInput();
+    drawInput();  // Last, so cursor appears after input area
     CuiUtils::transfer(pWin_);
 }
-
-//----------------------------------------------------------------
 
 //----------------------------------------------------------------
 //
@@ -680,6 +699,7 @@ DialogBetAmount::drawReference()
         mvwaddstr(pWin_, 13 + static_cast<int>(i), 2,
                   padLine(std::string(lines[i])).c_str());
 }
+
 //----------------------------------------------------------------
 
 void
@@ -725,12 +745,10 @@ DialogBetAmount::drawStatistics()
     const BetProfile profile = profileFor(cb.getBetName(), cb.getPivot());
     std::string expected = "--";
     std::string expectedPct = "--.-%";
+
     if (profile.winPct >= 0.0)
-    {
-        std::ostringstream out;
-        out << std::fixed << std::setprecision(1) << profile.winPct << '%';
-        expectedPct = out.str();
-    }
+        expectedPct = fmt::format("{:.1f}%", profile.winPct);
+
     // BetStats records the contract and odds portions under the same
     // expanded bet name. Use the selected bet's profile for an estimate on
     // the recorded total; this is an approximation when the total includes
@@ -747,33 +765,33 @@ DialogBetAmount::drawStatistics()
 
     // Explicit field widths keep the labels aligned between all three rows.
     // The statistics area has 56 usable columns starting at column 2.
-    std::ostringstream line1;
-    line1 << std::left << std::setw(14) << "Total Amount:"
-          << std::setw(8) << money(playerTotal)
-          << ' ' << "Net:" << ' '
-          << std::setw(8) << signedMoney(playerWinAmount, playerLoseAmount)
-          << std::string(4, ' ') << "Expected:" << ' '
-          << std::setw(6) << expected;
-    mvwaddstr(pWin_, 20, 2, padLine(line1.str()).c_str());
+    const std::string line1 = fmt::format(
+        "{:<14}{:<8} Net: {:<8}    Expected: {:<6}",
+        "Total Amount:",
+        money(playerTotal),
+        signedMoney(playerWinAmount, playerLoseAmount),
+        expected);
+    mvwaddstr(pWin_, 20, 2, padLine(line1).c_str());
 
     auto statsLine = [&](std::string_view label, unsigned count,
                          const Craps::BetStat& wins, const Craps::BetStat& losses)
     {
-        std::ostringstream out;
-        out << std::left << std::setw(10) << label
-            << std::right << std::setw(3) << count << ' '
-            << std::left << std::setw(8) << (std::to_string(wins.count) + "W," +
-                                             std::to_string(losses.count) + "L")
-            << ' ' << "Win rate:" << ' '
-            << std::right << std::setw(6) << percent(wins.count, losses.count)
-            << ' ' << "Expected:" << ' '
-            << std::setw(6) << expectedPct;
-        return padLine(out.str());
+        const std::string winLoss = fmt::format("{}W,{}L", wins.count, losses.count);
+        const std::string out = fmt::format(
+            "{:<10}{:>3} {:<8} Win rate: {:>6} Expected: {:>6}",
+            label,
+            count,
+            winLoss,
+            percent(wins.count, losses.count),
+            expectedPct);
+        return padLine(out);
     };
-    mvwaddstr(pWin_, 21, 2, statsLine("Counts:", playerCount,
-                                      playerWins, playerLosses).c_str());
-    mvwaddstr(pWin_, 22, 2, statsLine("Simulated:", simulatedCount,
-                                      simulatedWins, simulatedLosses).c_str());
+
+    mvwaddstr(pWin_, 21, 2,
+              statsLine("Counts:", playerCount, playerWins, playerLosses).c_str());
+    mvwaddstr(pWin_, 22, 2,
+              statsLine("Simulated:", simulatedCount,
+                        simulatedWins, simulatedLosses).c_str());
 }
 
 //----------------------------------------------------------------
@@ -821,12 +839,12 @@ DialogBetAmount::handleKey(int ch)
     {
     case '\r':
     case '\n':
-    case KEY_ENTER: doEnter();      return true;
-    case 'a' : doAutoFill();        return true;
-    case 'q' : doQuickBet();        return true;
-    case '?' : doHelp();            return true;
+    case KEY_ENTER: doEnter(); return true;
+    case 'a' : doAutoFill();   return true;
+    case 'q' : doQuickBet();   return true;
+    case '?' : doHelp();       return true;
     case '.' :
-    case 27  : back();              return true;
+    case 27  : back();         return true;
     default:
         if (lineInput_.handleKey(ch))
         {

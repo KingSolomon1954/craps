@@ -30,8 +30,6 @@
 - specify commision collected on wager or on winning
 - more
 
-### Add world bet
-
 ### Add Roll History Format A,B,C,D to multi-configuration
 - Modify Roll History to grab Format from multi-configuration
 
@@ -78,6 +76,7 @@ track that amount independently.
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
+(Done) Added World bet.
 (Done) Fix evaluation() processing and various bugs
 (Done) Fix Place bets being removed from table after a win
 (Done) Early illegal bet test - jump to error immediatly

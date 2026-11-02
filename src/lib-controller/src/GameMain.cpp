@@ -14,10 +14,7 @@
 #include <cui/CuiMain.h>
 #include <gen/BuildInfo.h>
 #include <gen/Logger.h>
-#include <gen/Debug.h>
 #include <cassert>
-#include <iostream>
-#include <rang.hpp>
 
 using namespace Ctrl;
 

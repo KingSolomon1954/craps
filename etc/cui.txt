@@ -1184,66 +1184,34 @@ configure or cancel QuickBets and AutoFills.
   configured quick bet) might mean make a Place Bet on the 6 for
   100. QuickBets bypasses the chain of menus needed to make a bet.
 
-Some examples:
-
-┌─────────────────────────────┐
-│ Place Bet on 6              │
-├─────────────────────────────┤
-│ Pays 7:6 use multiples of 6 │
-│                             │
-│ Enter amount: 100           │
-│                             │
-│ [enter] Submit Bet          │
-│ [a] Save as AutoFill        │
-│ [q] Save as Quick Bet       │
-│ [?] Help                    │
-│ [. or esc] Back             │
-└─────────────────────────────┘
-
-┌─────────────────────────────┐
-│ Dont Come Odds on the 10    │
-├─────────────────────────────┤
-│ Pays 2:1 use multiples of 1 │
-│                             │
-│ Enter amount: 100           │
-│                             │
-│ [enter] Submit Bet          │
-│ [a] Save as AutoFill        │
-│ [q] Save as Quick Bet       │
-│ [?] Help                    │
-│ [. or esc] Back             │
-└─────────────────────────────┘
-
-Consider this for an embellished Dialog
-
-┌───────────────────────────────────────────────────────────┐
-│ Place Bet on the 6                                        │
-├───────────────────────────────────────────────────────────┤
-│ Pays 7:6 use multiples of 6                               │
-│                                                           │
-│ Enter amount: 100                                         │
-│                                                           │
-│ [enter] Submit Bet                                        │
-│ [a] Save as AutoFill                                      │
-│ [q] Save as Quick Bet                                     │
-│ [?] Help                                                  │
-│ [. or esc] Back                                           │
-│                                                           │
-├───────────────────────────────────────────────────────────┤
-│ Pays 7:6  Loses on 7. Wins on 6                           │
-│ True Odds 6:5 House Edge 1.52%                            │
-│ $12 bet -> $14 profit; $26 total returned                 │
-│ Bet stays on table until a 7 or 6 is rolled               │
-│ Can be bet anytime, can be removed anytime                │
-│ Off on Come out roll by default (configurable)            │
-├───────────────────────────────────────────────────────────┤
-│ Total: $320               Net: +$x  Expected: -$y         │
-│ Counts: 4 1W,3L           Win rate: xx.x% Expected: yy.y% │
-│ Simulated: 30 10W,20L     Win rate: 40.0% Expected: 45.5% │
-└───────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│ DontPass bet Odds on the 10                    Pays 1:2 │
+├─────────────────────────────────────────────────────────┤
+│ Use multiple of 2, min $10 max $125 current $25         │
+│                                                         │
+│ Enter amount: 25                                        │
+│                                                         │
+│ [enter] Submit Bet                                      │
+│ [a] Save as AutoFill                                    │
+│ [q] Save as Quick Bet                                   │
+│ [?] Help                                                │
+│ [. or esc] Back                                         │
+├─────────────────────────────────────────────────────────┤
+│ Pays 1:2 True Odds 1:2 House Edge 0%                    │
+│ Loses on 4 or 10 respectively. Wins on 7                │
+│ $10 bet -> $5 profit; $15 total returned                │
+│ Bet stays on table until a 7 or 4/10 is rolled          │
+│ Can only be bet after comeout roll                      │
+│ Off on comeout roll by default (configurable)           │
+├─────────────────────────────────────────────────────────┤
+│ Total Amount: $0       Net: +$0         Expected: -$0.00│
+│ Counts:     0 0W,0L    Win rate:  --.-% Expected:  49.3%│
+│ Simulated:  0 0W,0L    Win rate:  --.-% Expected:  49.3%│
+└─────────────────────────────────────────────────────────┘
 
 If the player selects the [h] Help prompt then
-a DialogMessage is opened showing something like this:
+a DialogMessage or Window Panel is opened explaining
+in detail the menu choices and other helpful info.
 
 ┌───────────────────────────────────────────────────────────┐
 │ Info: Place Bet 6 or 8                                    │

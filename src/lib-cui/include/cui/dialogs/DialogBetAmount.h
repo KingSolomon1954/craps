@@ -9,7 +9,6 @@
 #include <cui/bases/DialogBase.h>
 #include <cui/core/LineInput.h>
 #include <gen/MoneyUtils.h>
-#include <craps/EnumBetName.h>
 #include <array>
 #include <string>
 #include <string_view>
@@ -46,7 +45,6 @@ public:
     
 private:
     WindowPosition winPos_{};
-    // "DontCome bet Odds on the 10"  (27)
     static constexpr WindowSize winSize_ = {24, 59};  // rows, cols, fixed size
 
     static constexpr std::array<std::string_view, 5> Prompts
