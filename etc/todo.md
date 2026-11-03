@@ -16,8 +16,6 @@
 
 ### QuickBets saved to config
 
-### LastBets saved to config
-
 ### Need unit test for initial bank money
 
 ### Need unit test for undo bet capability
@@ -78,6 +76,7 @@ track that amount independently.
 (Done) Early illegal bet test - jump to error immediatly
 (Done) Place, Buy, Lay  bet odds hints
 (Done) Add LastFill feature
+(Done) LastFills (LastBets) saved to and loaded from the user Player's file
 (Done) Add payout hint to DialogBetAmount
 (Done) Fix window width of MenuOddsBet
 (Done) Fix multiple odds bets for same bet and number MenuOddsBet

@@ -8,29 +8,29 @@ Bank:
   refillThreshold: 15000
   refillAmount: 20000
   bankStats:
-    numDeposits: 0
-    amtDeposited: 0
-    numWithdrawals: 0
-    amtWithdrawn: 0
+    numDeposits: 9
+    amtDeposited: 345
+    numWithdrawals: 23
+    amtWithdrawn: 545
     numRefills: 0
     amtRefilled: 0
-    maxAmtDepositedSession: 0
-    maxAmtWithdrawnSession: 0
-    maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
-    maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
+    maxAmtDepositedSession: 280
+    maxAmtWithdrawnSession: 285
+    maxAmtDepositedSessionDate: 2026-11-03T21:57:27.114048818
+    maxAmtWithdrawnSessionDate: 2026-11-03T21:57:27.114048818
 BetStats:
-  totNumBetsAllBets: 0
-  totNumWinsAllBets: 0
-  totNumLoseAllBets: 0
-  totNumKeepAllBets: 0
-  totAmtAllBets: 0
-  totAmtWinsAllBets: 0
-  totAmtLoseAllBets: 0
-  totAmtKeepAllBets: 0
-  maxAmtBetOneBet: 0
-  maxAmtWinOneBet: 0
-  maxAmtLoseOneBet: 0
-  maxAmtKeepOneBet: 0
+  totNumBetsAllBets: 15
+  totNumWinsAllBets: 7
+  totNumLoseAllBets: 8
+  totNumKeepAllBets: 26
+  totAmtAllBets: 365
+  totAmtWinsAllBets: 85
+  totAmtLoseAllBets: 285
+  totAmtKeepAllBets: 1960
+  maxAmtBetOneBet: 25
+  maxAmtWinOneBet: 25
+  maxAmtLoseOneBet: 100
+  maxAmtKeepOneBet: 100
   betTypeStats:
     wins:
       AnyCraps:
@@ -79,10 +79,10 @@ BetStats:
         amount: 0
         amountBet: 0
       Come:
-        count: 0
-        totDistance: 0
-        amount: 0
-        amountBet: 0
+        count: 1
+        totDistance: 1
+        amount: 10
+        amountBet: 10
       Come10:
         count: 0
         totDistance: 0
@@ -94,10 +94,10 @@ BetStats:
         amount: 0
         amountBet: 0
       Come5:
-        count: 0
-        totDistance: 0
-        amount: 0
-        amountBet: 0
+        count: 1
+        totDistance: 2
+        amount: 10
+        amountBet: 10
       Come6:
         count: 0
         totDistance: 0
@@ -188,6 +188,21 @@ BetStats:
         totDistance: 0
         amount: 0
         amountBet: 0
+      Field10:
+        count: 1
+        totDistance: 1
+        amount: 10
+        amountBet: 10
+      Field11:
+        count: 1
+        totDistance: 1
+        amount: 10
+        amountBet: 10
+      Field9:
+        count: 1
+        totDistance: 1
+        amount: 10
+        amountBet: 10
       Hard10:
         count: 0
         totDistance: 0
@@ -244,10 +259,10 @@ BetStats:
         amount: 0
         amountBet: 0
       PassLine:
-        count: 0
-        totDistance: 0
-        amount: 0
-        amountBet: 0
+        count: 1
+        totDistance: 1
+        amount: 10
+        amountBet: 10
       PassLine10:
         count: 0
         totDistance: 0
@@ -259,10 +274,10 @@ BetStats:
         amount: 0
         amountBet: 0
       PassLine5:
-        count: 0
-        totDistance: 0
-        amount: 0
-        amountBet: 0
+        count: 1
+        totDistance: 2
+        amount: 25
+        amountBet: 20
       PassLine6:
         count: 0
         totDistance: 0
@@ -304,6 +319,11 @@ BetStats:
         amount: 0
         amountBet: 0
       Place9:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      World:
         count: 0
         totDistance: 0
         amount: 0
@@ -405,10 +425,10 @@ BetStats:
         amount: 0
         amountBet: 0
       DontCome5:
-        count: 0
-        totDistance: 0
-        amount: 0
-        amountBet: 0
+        count: 1
+        totDistance: 2
+        amount: 25
+        amountBet: 25
       DontCome6:
         count: 0
         totDistance: 0
@@ -420,10 +440,10 @@ BetStats:
         amount: 0
         amountBet: 0
       DontCome9:
-        count: 0
-        totDistance: 0
-        amount: 0
-        amountBet: 0
+        count: 1
+        totDistance: 8
+        amount: 100
+        amountBet: 100
       DontPass:
         count: 0
         totDistance: 0
@@ -440,10 +460,10 @@ BetStats:
         amount: 0
         amountBet: 0
       DontPass5:
-        count: 0
-        totDistance: 0
-        amount: 0
-        amountBet: 0
+        count: 1
+        totDistance: 11
+        amount: 100
+        amountBet: 100
       DontPass6:
         count: 0
         totDistance: 0
@@ -464,6 +484,16 @@ BetStats:
         totDistance: 0
         amount: 0
         amountBet: 0
+      Field5:
+        count: 3
+        totDistance: 3
+        amount: 30
+        amountBet: 30
+      Field7:
+        count: 1
+        totDistance: 1
+        amount: 10
+        amountBet: 10
       Hard10:
         count: 0
         totDistance: 0
@@ -550,10 +580,10 @@ BetStats:
         amount: 0
         amountBet: 0
       PassLine9:
-        count: 0
-        totDistance: 0
-        amount: 0
-        amountBet: 0
+        count: 1
+        totDistance: 2
+        amount: 20
+        amountBet: 20
       Place10:
         count: 0
         totDistance: 0
@@ -584,47 +614,40 @@ BetStats:
         totDistance: 0
         amount: 0
         amountBet: 0
+      World:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
   numBetsOneRoll:
-    total: 0
-    max: 0
+    total: 41
+    max: 41
   numBetsWinOneRoll:
-    total: 0
-    max: 0
+    total: 7
+    max: 7
   numBetsLoseOneRoll:
-    total: 0
-    max: 0
+    total: 8
+    max: 8
   numBetsKeepOneRoll:
-    total: 0
-    max: 0
+    total: 26
+    max: 26
   amtBetsOneRoll:
     total: 0
-    max: 0
+    max: 2325
   amtBetsWinOneRoll:
-    total: 0
-    max: 0
+    total: 85
+    max: 85
   amtBetsLoseOneRoll:
-    total: 0
-    max: 0
+    total: 285
+    max: 285
   amtBetsKeepOneRoll:
-    total: 0
-    max: 0
+    total: 1960
+    max: 1960
 SessionStats:
-  numSessionsAlltime: 224
+  numSessionsAlltime: 226
   firstSessionDate: 2025-06-25T14:30:00.000000000
   longestSessionAlltime: 0d 04:17:54
   history:
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:07:20.104453598
-      duration: 0d 00:02:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:09:24.503301879
-      duration: 0d 00:00:02
     - numBets: 0
       amtIntake: 0
       amtPayout: 0
@@ -637,279 +660,61 @@ SessionStats:
       numPlayers: 1
       date: 2026-09-13T06:09:46.223856577
       duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
+    - numBets: 7
+      amtIntake: 280
+      amtPayout: 260
       numPlayers: 1
-      date: 2026-09-13T06:09:48.783803248
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
+      date: 2026-11-03T21:51:02.243695629
+      duration: 0d 00:03:19
+    - numBets: 8
+      amtIntake: 65
+      amtPayout: 285
       numPlayers: 1
-      date: 2026-09-13T06:09:52.633255570
-      duration: 0d 00:00:18
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:10:13.018349602
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:10:15.577546750
-      duration: 0d 00:00:06
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:03.128385352
-      duration: 0d 00:00:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:09.361738869
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:11.562304579
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:14.546119398
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:17.625085442
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:20.320654032
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:22.656949446
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:25.104589531
-      duration: 0d 00:00:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:27.640780601
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:31.024436484
-      duration: 0d 00:00:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:34:36.688307109
-      duration: 0d 00:01:50
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:36:29.212383819
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:36:32.764255033
-      duration: 0d 00:00:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-13T06:42:36.965927280
-      duration: 0d 04:09:01
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-18T00:03:07.961482159
-      duration: 0d 00:00:35
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-18T00:05:56.771829139
-      duration: 0d 00:01:40
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-18T00:07:42.165027412
-      duration: 0d 00:01:39
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-18T00:16:30.505130641
-      duration: 0d 00:02:59
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-18T00:19:39.073871524
-      duration: 0d 00:06:56
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-18T00:26:38.552654540
-      duration: 0d 00:02:57
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-18T00:29:40.506309844
-      duration: 0d 00:14:27
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-23T14:30:40.880663403
-      duration: 0d 00:24:28
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-23T14:55:10.459784688
-      duration: 0d 00:11:51
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-23T15:07:04.419395617
-      duration: 0d 00:00:53
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-23T15:08:07.106122471
-      duration: 0d 00:03:32
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-23T15:11:42.324463371
-      duration: 0d 01:56:49
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-23T17:08:34.950810918
-      duration: 0d 00:41:38
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T02:27:14.614410782
-      duration: 0d 00:13:16
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T02:40:33.643069458
-      duration: 0d 01:40:08
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:20:44.487853900
-      duration: 0d 00:00:40
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:21:33.402121040
-      duration: 0d 00:09:09
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:31:38.986319298
-      duration: 0d 00:01:51
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:33:33.021491286
-      duration: 0d 00:04:40
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:38:16.263857261
-      duration: 0d 00:02:19
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:40:37.656640443
-      duration: 0d 00:00:53
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:41:32.378104618
-      duration: 0d 00:03:02
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:44:36.244401659
-      duration: 0d 00:12:04
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-09-24T04:56:41.835732232
-      duration: 0d 00:14:46
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-10-03T16:21:04.166531172
-      duration: 0d 00:00:19
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-10-03T16:21:24.948601155
-      duration: 0d 00:00:18
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-10-03T16:21:47.431980468
-      duration: 0d 00:01:07
-    - numBets: 0
-      amtIntake: 0
-      amtPayout: 0
-      numPlayers: 1
-      date: 2026-10-03T16:25:44.457174367
-      duration: 0d 00:04:24
+      date: 2026-11-03T21:54:26.375880615
+      duration: 0d 00:03:00
+BetPreferences:
+  LastFills:
+    - betName: PassLine
+      pivot: 0
+      isOddsBet: false
+      amount: 10
+    - betName: Field
+      pivot: 0
+      isOddsBet: false
+      amount: 10
+    - betName: PassLine
+      pivot: 9
+      isOddsBet: true
+      amount: 10
+    - betName: Come
+      pivot: 0
+      isOddsBet: false
+      amount: 10
+    - betName: DontPass
+      pivot: 0
+      isOddsBet: false
+      amount: 25
+    - betName: DontPass
+      pivot: 10
+      isOddsBet: true
+      amount: 100
+    - betName: DontCome
+      pivot: 0
+      isOddsBet: false
+      amount: 25
+    - betName: DontCome
+      pivot: 8
+      isOddsBet: true
+      amount: 30
+    - betName: PassLine
+      pivot: 5
+      isOddsBet: true
+      amount: 10
+    - betName: DontPass
+      pivot: 5
+      isOddsBet: true
+      amount: 75
+    - betName: DontCome
+      pivot: 9
+      isOddsBet: true
+      amount: 75

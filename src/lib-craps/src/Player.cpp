@@ -133,6 +133,10 @@ Player::toYAML() const
     node["fullDescription"]  = fullDescription_;
     node["Bank"]             = wallet_.toYAML();
     alltimeStats_.toYAML(node);
+    if (!betPrefs_.IsNull())
+    {
+        node["BetPreferences"] = YAML::Clone(betPrefs_);
+    }
     return node;
 }
 
@@ -157,6 +161,39 @@ Player::fromYAML(const YAML::Node& node)
 
     wallet_.fromYAML(node["Bank"]);
     alltimeStats_.fromYAML(node);
+
+    // Optional section. Older player files don't have it.
+    const YAML::Node prefs = node["BetPreferences"];
+    betPrefs_ = (prefs.IsDefined() && !prefs.IsNull())
+              ? YAML::Clone(prefs)
+              : YAML::Node();
+}
+
+//----------------------------------------------------------------
+//
+// Returns a copy of the bet preferences section. A copy, because
+// YAML::Node has reference semantics and callers must not be able to
+// change our data behind our back.
+//
+YAML::Node
+Player::getBetPreferences() const
+{
+    if (betPrefs_.IsNull())
+    {
+        return YAML::Node();
+    }
+    return YAML::Clone(betPrefs_);
+}
+
+//----------------------------------------------------------------
+//
+// Replaces the bet preferences section. Written to the player file
+// the next time saveFile() runs (e.g. from shutdown()).
+//
+void
+Player::setBetPreferences(const YAML::Node& node)
+{
+    betPrefs_ = node.IsNull() ? YAML::Node() : YAML::Clone(node);
 }
 
 //----------------------------------------------------------------

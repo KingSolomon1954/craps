@@ -109,6 +109,12 @@ public:
     void fromYAML(const YAML::Node& node);
     /// @}
 
+    /// @name Bet preferences
+    /// @{
+    YAML::Node getBetPreferences() const;
+    void       setBetPreferences(const YAML::Node& node);
+    /// @}
+
 private:
     // order matters
     PlayerId          playerId_;
@@ -123,6 +129,7 @@ private:
     CrapsTable*       pTable_ = nullptr;
     PlayerStats       currentStats_;
     PlayerStats       alltimeStats_;
+    YAML::Node        betPrefs_;   // "BetPreferences" section, opaque here
     mutable LastRollStats lastRollStats_;
 
     // Default bank constants for player
@@ -180,6 +187,11 @@ Player Responsibilities:
 @li Exports toYAML() and reads fromYAML()
 @li Maintains one file per player
 @li All player files located in the players directory
+@li Carries the player's "BetPreferences" YAML section (LastFills,
+    and later AutoFills and QuickBets) without interpreting it. The
+    controller owns the meaning of that section; Player only reads it
+    from the file, hands it out, accepts a replacement, and writes it
+    back with the rest of the player's data.
 
 */
 

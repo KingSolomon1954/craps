@@ -32,6 +32,10 @@ public:
 
     /// @name Modifiers
     /// @{
+    void saveBetPrefs    (Craps::Player& player) const;
+    void loadBetPrefs    (const Craps::Player& player) const;
+    void saveUserBetPrefs() const;
+    void loadUserBetPrefs() const;
     /// @}
 
     /// @name Observers
@@ -76,6 +80,23 @@ PlayerManager Responsibilities:
 @li Choose active player
 
 @li Use Player::serialize() and Player::deserialize() for actual data
+
+@par Bet preferences
+
+The user's bet preferences (currently LastFill) live in the controller's
+singletons while the game runs, but belong to a Player's file. The
+Player keeps them as an opaque "BetPreferences" YAML section.
+
+@li saveBetPrefs()  - copies the singletons into a Player (in memory)
+@li loadBetPrefs()  - fills the singletons from a Player
+@li saveUserBetPrefs(), loadUserBetPrefs() - same, for the user's player
+
+Startup calls loadUserBetPrefs() once the players are loaded. Quit calls
+saveUserBetPrefs() just before the table shuts down, since that is what
+makes each Player write its file. When the user switches players at
+runtime: saveBetPrefs(oldPlayer), change the user, then
+loadBetPrefs(newPlayer). The old player's file gets written along with
+all the others at quit, like the rest of that player's data.
 
 */
 

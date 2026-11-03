@@ -15,6 +15,8 @@
 #include <zeus/expected.hpp>
 #include <iostream>
 #include <memory>
+#include <string>
+#include <yaml-cpp/yaml.h>
 
 using namespace Craps;
 
@@ -45,6 +47,90 @@ struct PlayerFixture
         delete t;
     }
 };
+
+//----------------------------------------------------------------
+
+TEST_CASE("Player:betPreferences")
+{
+    PlayerConfig config;           // empty path; nothing is saved here
+    const PlayerId id = "uuid1";
+
+    SUBCASE("absent section reads as null and is not written")
+    {
+        std::unique_ptr<Player> p(
+            Player::fromString(getPlayerYamlStringUtest(), id, config));
+        CHECK(p->getBetPreferences().IsNull());
+
+        const YAML::Node out = p->toYAML();
+        CHECK_FALSE(out["BetPreferences"].IsDefined());
+    }
+
+    SUBCASE("section is read and written back untouched")
+    {
+        const std::string yaml = getPlayerYamlStringUtest() +
+            "BetPreferences:\n"
+            "  LastFills:\n"
+            "    - betName: PassLine\n"
+            "      pivot: 0\n"
+            "      isOddsBet: false\n"
+            "      amount: 5000\n"
+            "  SomethingNew: keep me\n";
+
+        std::unique_ptr<Player> p(Player::fromString(yaml, id, config));
+
+        const YAML::Node prefs = p->getBetPreferences();
+        REQUIRE(prefs.IsMap());
+        REQUIRE(prefs["LastFills"].IsSequence());
+        CHECK(prefs["LastFills"].size() == 1);
+
+        const YAML::Node out = p->toYAML();
+        REQUIRE(out["BetPreferences"].IsMap());
+        CHECK(out["BetPreferences"]["LastFills"][0]["betName"]
+                  .as<std::string>() == "PassLine");
+        CHECK(out["BetPreferences"]["LastFills"][0]["amount"]
+                  .as<long long>() == 5000);
+        // A key this code doesn't know about is not lost.
+        CHECK(out["BetPreferences"]["SomethingNew"]
+                  .as<std::string>() == "keep me");
+    }
+
+    SUBCASE("set replaces the section; get and set hand out copies")
+    {
+        std::unique_ptr<Player> p(
+            Player::fromString(getPlayerYamlStringUtest(), id, config));
+
+        YAML::Node prefs;
+        prefs["LastFills"] = YAML::Node(YAML::NodeType::Sequence);
+        p->setBetPreferences(prefs);
+
+        prefs["Other"] = 1;                    // caller edits its own node
+        const YAML::Node cur1 = p->getBetPreferences();
+        CHECK_FALSE(cur1["Other"].IsDefined());
+
+        YAML::Node got = p->getBetPreferences();
+        got["Other"] = 2;                      // caller edits the copy
+        const YAML::Node cur2 = p->getBetPreferences();
+        CHECK_FALSE(cur2["Other"].IsDefined());
+
+        const YAML::Node out = p->toYAML();
+        CHECK(out["BetPreferences"]["LastFills"].IsSequence());
+    }
+
+    SUBCASE("setting a null node removes the section")
+    {
+        std::unique_ptr<Player> p(
+            Player::fromString(getPlayerYamlStringUtest(), id, config));
+
+        YAML::Node prefs;
+        prefs["LastFills"] = YAML::Node(YAML::NodeType::Sequence);
+        p->setBetPreferences(prefs);
+        p->setBetPreferences(YAML::Node());
+
+        CHECK(p->getBetPreferences().IsNull());
+        const YAML::Node out = p->toYAML();
+        CHECK_FALSE(out["BetPreferences"].IsDefined());
+    }
+}
 
 //----------------------------------------------------------------
 

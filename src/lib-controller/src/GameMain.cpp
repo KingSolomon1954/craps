@@ -205,6 +205,12 @@ GameMain::shutdownView()
 void
 GameMain::explicitShutdown()
 {
+    // Before table shutdown; that's what makes each player write its file.
+    if (Gbl::pPlayerMgr != nullptr)
+    {
+        Gbl::pPlayerMgr->saveUserBetPrefs();
+    }
+
     Gbl::pTable->shutdown();
     shutdownView();
     // Gbl::pEventHandler->shutdown();  // N/A

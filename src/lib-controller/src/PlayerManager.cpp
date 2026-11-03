@@ -11,10 +11,12 @@
 #include <iostream>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
+#include <controller/LastFill.h>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
+#include <yaml-cpp/yaml.h>
 
 using namespace Ctrl;
 
@@ -28,6 +30,7 @@ PlayerManager::PlayerManager()
     manifest_.loadFromFile();  // Load players manifest
     loadStartingPlayers();     // Throws
     addPlayersToTable();       // Throws
+    loadUserBetPrefs();        // User's LastFills, etc.
 }
 
 //----------------------------------------------------------------
@@ -112,6 +115,64 @@ PlayerManager::addPlayersToTable()
 
     // Tell the table which user starts off as shooter.
     Gbl::pTable->setShooter(*getUserPlayer());
+}
+
+//----------------------------------------------------------------
+//
+// Copies the controller's bet preferences into the player, in memory.
+// The player writes them to its file in saveFile(), which happens at
+// player shutdown. Keys in the section that we don't own are kept.
+//
+void
+PlayerManager::saveBetPrefs(Craps::Player& player) const
+{
+    YAML::Node prefs = player.getBetPreferences();  // a copy
+    if (!prefs.IsMap())
+    {
+        prefs = YAML::Node(YAML::NodeType::Map);    // missing or junk
+    }
+    prefs["LastFills"] = LastFill::instance().toYAML();
+    player.setBetPreferences(prefs);
+}
+
+//----------------------------------------------------------------
+//
+// Replaces the controller's bet preferences with the player's.
+//
+void
+PlayerManager::loadBetPrefs(const Craps::Player& player) const
+{
+    const YAML::Node prefs = player.getBetPreferences();
+    if (prefs.IsMap())
+    {
+        LastFill::instance().fromYAML(prefs["LastFills"]);
+    }
+    else
+    {
+        LastFill::instance().clear();  // player has none
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerManager::saveUserBetPrefs() const
+{
+    if (Craps::Player* p = getUserPlayer())
+    {
+        saveBetPrefs(*p);
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerManager::loadUserBetPrefs() const
+{
+    if (Craps::Player* p = getUserPlayer())
+    {
+        loadBetPrefs(*p);
+    }
 }
 
 //----------------------------------------------------------------
