@@ -34,50 +34,6 @@ namespace
 {
 constexpr int ContentWidth = 56;
 
-using Hints = std::array<std::string_view, 4>;
-
-constexpr Hints DefaultHints{
-    "Pays 1:1                  ",
-    "Pays 1:1                  ",
-    "Pays 1:1                  ",
-    "Pays 1:1                  "
-};
-
-constexpr Hints PassComeHints{
-    "Pays 2:1 use multiple of 1",
-    "Pays 3:2 use multiple of 2",
-    "Pays 6:5 use multiple of 5",
-    "Pays 1:1                  "
-};
-
-constexpr Hints DontPassComeHints{
-    "Pays 1:2 use multiple of 2",
-    "Pays 2:3 use multiple of 3",
-    "Pays 5:6 use multiple of 6",
-    "Pays 1:1                  "
-};
-
-constexpr Hints PlaceHints{
-    "Pays 9:5 use multiple of 5",
-    "Pays 7:5 use multiple of 5",
-    "Pays 7:6 use multiple of 6",
-    "Pays 1:1                  "
-};
-
-constexpr Hints BuyHints{
-    "Pays 2:1 use multiple of 1",
-    "Pays 3:2 use multiple of 2",
-    "Pays 6:5 use multiple of 6",
-    "Pays 1:1                  "
-};
-
-constexpr Hints LayHints{
-    "Pays 1:2 use multiple of 2",
-    "Pays 2:3 use multiple of 3",
-    "Pays 5:6 use multiple of 6",
-    "Pays 1:1                  "
-};
-
 std::string
 padLine(std::string text)
 {
@@ -85,6 +41,43 @@ padLine(std::string text)
         text.resize(ContentWidth);
     text.resize(ContentWidth, ' ');
     return text;
+}
+
+//----------------------------------------------------------------
+
+std::string
+payoutLabel(std::string_view referenceLine)
+{
+    if (!referenceLine.starts_with("Pays "))
+        return {};
+
+    std::size_t end = referenceLine.size();
+    for (const std::string_view marker :
+         {" True Odds", ", True Odds", ". House Edge", " House Edge"})
+    {
+        const auto pos = referenceLine.find(marker);
+        if (pos != std::string_view::npos)
+            end = std::min(end, pos);
+    }
+    return std::string(referenceLine.substr(0, end));
+}
+
+//----------------------------------------------------------------
+
+std::string
+referencePayoutDetails(std::string_view referenceLine)
+{
+    const std::string label = payoutLabel(referenceLine);
+    if (label.empty())
+        return std::string(referenceLine);
+
+    const auto pos = referenceLine.find(label);
+    std::string details(referenceLine.substr(pos + label.size()));
+    const auto first = details.find_first_not_of(" .,:");
+    if (first == std::string::npos)
+        return {};
+    details.erase(0, first);
+    return details;
 }
 
 //----------------------------------------------------------------
@@ -608,7 +601,7 @@ void
 DialogBetAmount::draw()
 {
     drawTitle();
-    drawHintMultiples();
+    drawAmountLimits();
     drawReference();
     drawStatistics();
     drawInput();  // Last, so cursor appears after input area
@@ -646,43 +639,31 @@ DialogBetAmount::drawBorders()
 //----------------------------------------------------------------
 
 void
-DialogBetAmount::drawHintMultiples()
+DialogBetAmount::drawAmountLimits()
 {
     const auto& cb = CarrierBet::instance();
+    Craps::PlayerId playerId;
+    Craps::BetAmountLimits limits;
+    Gen::ErrorPass ep;
 
-    // Group points with identical payout rules.
-    enum class PointGroup { FourTen, FiveNine, SixEight, Other };
-
-    PointGroup pointGroup = PointGroup::Other;
-    switch (cb.getPivot())
+    const auto rc = Ctrl::CrapsReaders::getUserPlayer(playerId, ep);
+    if (rc != Gen::ReturnCode::Success ||
+        Ctrl::CrapsReaders::readBetAmountLimits(
+            playerId, cb.getBetName(), cb.getPivot(), cb.isOddsBet(),
+            cb.getContractAmount(), limits, ep) != Gen::ReturnCode::Success)
     {
-    case 4:
-    case 10: pointGroup = PointGroup::FourTen; break;
-    case 5:
-    case 9:  pointGroup = PointGroup::FiveNine; break;
-    case 6:
-    case 8:  pointGroup = PointGroup::SixEight; break;
+        mvwaddstr(pWin_, 3, 2,
+                  padLine("Unable to retrieve bet amount limits").c_str());
+        return;
     }
 
-    const auto index      = static_cast<std::size_t>(pointGroup);
-    std::string_view hint = DefaultHints[index];
-    const auto betName    = cb.getBetName();
-
-    if (cb.isOddsBet())
-    {
-        if (betName == BetName::PassLine || betName == BetName::Come)
-            hint = PassComeHints[index];
-        else if (betName == BetName::DontPass || betName == BetName::DontCome)
-            hint = DontPassComeHints[index];
-    }
-    else if (betName == BetName::Place)
-        hint = PlaceHints[index];
-    else if (betName == BetName::Buy)
-        hint = BuyHints[index];
-    else if (betName == BetName::Lay)
-        hint = LayHints[index];
-
-    mvwaddstr(pWin_, 3, 2, padLine(std::string(hint)).c_str());
+    const std::string line = fmt::format(
+        "Use multiple of {}, min {} max {} current {}",
+        limits.increment,
+        money(limits.minimum),
+        money(limits.maximum),
+        money(limits.currentAmount));
+    mvwaddstr(pWin_, 3, 2, padLine(line).c_str());
 }
 
 //----------------------------------------------------------------
@@ -693,11 +674,16 @@ DialogBetAmount::drawReference()
     const auto& cb = CarrierBet::instance();
     const RefArray& lines = referenceFor(cb.getBetName(), cb.getPivot(), cb.isOddsBet());
 
-    // The reference area is a fixed six-row fragment. Keep this loop simple
-    // so each bet's wording is defined entirely by its RefArray above.
+    // The payout is shown in the title row. Keep its odds/house-edge details
+    // in the reference area, along with the remaining bet-specific guidance.
     for (std::size_t i = 0; i < lines.size(); ++i)
+    {
+        const std::string line = i == 0
+            ? referencePayoutDetails(lines[i])
+            : std::string(lines[i]);
         mvwaddstr(pWin_, 13 + static_cast<int>(i), 2,
-                  padLine(std::string(lines[i])).c_str());
+                  padLine(line).c_str());
+    }
 }
 
 //----------------------------------------------------------------
@@ -812,8 +798,24 @@ DialogBetAmount::drawPrompts()
 void
 DialogBetAmount::drawTitle()
 {
-    const std::string title = CarrierBet::instance().getTitleBetAmount();
-    const std::string s = prepTitle(title);
+    const auto& cb = CarrierBet::instance();
+    const std::string title = cb.getTitleBetAmount();
+    const RefArray& lines = referenceFor(cb.getBetName(), cb.getPivot(), cb.isOddsBet());
+    std::string payout = payoutLabel(lines.front());
+    // Keep the aggregate World payout compact enough to leave its title intact.
+    if (cb.getBetName() == BetName::World)
+        payout = "Pays 30:1 (2/12), 15:1 (3/11), 4:1 (7)";
+
+    constexpr std::size_t TitleWidth = winSize_.cols - 4;
+    const std::size_t payoutWidth =
+        payout.size() < TitleWidth ? payout.size() : TitleWidth;
+    const std::size_t titleWidth = payout.empty()
+        ? TitleWidth
+        : TitleWidth - payoutWidth - 1;
+
+    std::string s = title.substr(0, titleWidth);
+    s.resize(TitleWidth - payoutWidth, ' ');
+    s += payout.substr(0, payoutWidth);
     mvwaddstr(pWin_, 1, 2, s.c_str());
 }
 

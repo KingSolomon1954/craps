@@ -72,7 +72,7 @@ private:
     // Drawing
     void drawStaticContent();
     void drawBorders();
-    void drawHintMultiples();
+    void drawAmountLimits();
     void drawReference();
     void drawStatistics();
     void drawPrompts();
