@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: PlayerFile.cpp
+// File: YamlFile.cpp
 //
 //----------------------------------------------------------------
 
-#include <controller/PlayerFile.h>
+#include <controller/YamlFile.h>
 #include <gen/FileUtils.h>
 #include <gen/Logger.h>
 #include <fstream>
@@ -14,16 +14,9 @@
 
 using namespace Ctrl;
 
-namespace {
-
-constexpr const char* KeyPlayer = "Player";
-constexpr const char* KeyPrefs  = "Prefs";
-
-} // namespace
-
 //----------------------------------------------------------------
 
-PlayerFile::PlayerFile(std::filesystem::path path)
+YamlFile::YamlFile(std::filesystem::path path)
     : path_(std::move(path))
 {
 }
@@ -31,12 +24,12 @@ PlayerFile::PlayerFile(std::filesystem::path path)
 //----------------------------------------------------------------
 //
 // Reads the file and keeps its whole document. Throws if the file
-// is missing, is not valid YAML, or has no "Player" section.
+// is missing, is not valid YAML, or lacks the required section.
 //
 void
-PlayerFile::load()
+YamlFile::load(const std::string& requiredSection)
 {
-    const std::string fname("PlayerFile::load(): \"" + path_.string() + "\"; ");
+    const std::string fname("YamlFile::load(const std::string& requiredSection): \"" + path_.string() + "\"; ");
 
     YAML::Node root;
     try
@@ -53,10 +46,10 @@ PlayerFile::load()
     {
         throw std::runtime_error(fname + "file is not a YAML map");
     }
-    if (!root[KeyPlayer].IsMap())
+    if (!root[requiredSection].IsMap())
     {
         throw std::runtime_error(fname + "missing section: \"" +
-                                 std::string(KeyPlayer) + "\"");
+                                 requiredSection + "\"");
     }
     root_ = root;
 }
@@ -67,9 +60,9 @@ PlayerFile::load()
 // directory is atomic on Linux.
 //
 void
-PlayerFile::save() const
+YamlFile::save() const
 {
-    const std::string fname("PlayerFile::save(): \"" + path_.string() + "\"; ");
+    const std::string fname("YamlFile::save(): \"" + path_.string() + "\"; ");
 
     if (path_.empty())
     {
@@ -80,7 +73,7 @@ PlayerFile::save() const
     fs::path tmp = path_;
     tmp += ".tmp";
 
-    LOG_DEBUG("PlayerFile::save(" + path_.string() + ")");
+    LOG_DEBUG("YamlFile::save(" + path_.string() + ")");
 
     {
         std::ofstream fout(tmp, std::ios::trunc);
@@ -113,41 +106,24 @@ PlayerFile::save() const
 //----------------------------------------------------------------
 
 void
-PlayerFile::setPlayerNode(const YAML::Node& node)
+YamlFile::setSection(const std::string& key, const YAML::Node& node)
 {
-    root_[KeyPlayer] = YAML::Clone(node);
-}
-
-//----------------------------------------------------------------
-
-void
-PlayerFile::setPrefsNode(const YAML::Node& node)
-{
-    root_[KeyPrefs] = YAML::Clone(node);
+    root_[key] = YAML::Clone(node);
 }
 
 //----------------------------------------------------------------
 
 YAML::Node
-PlayerFile::getPlayerNode() const
+YamlFile::getSection(const std::string& key) const
 {
-    const YAML::Node n = root_[KeyPlayer];
-    return n.IsDefined() ? YAML::Clone(n) : YAML::Node();
-}
-
-//----------------------------------------------------------------
-
-YAML::Node
-PlayerFile::getPrefsNode() const
-{
-    const YAML::Node n = root_[KeyPrefs];
+    const YAML::Node n = root_[key];
     return n.IsDefined() ? YAML::Clone(n) : YAML::Node();
 }
 
 //----------------------------------------------------------------
 
 const std::filesystem::path&
-PlayerFile::getPath() const
+YamlFile::getPath() const
 {
     return path_;
 }

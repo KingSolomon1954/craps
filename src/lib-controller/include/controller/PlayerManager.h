@@ -10,9 +10,9 @@
 #include <filesystem>
 #include <utility>
 #include <vector>
-#include <controller/PlayerFile.h>
 #include <controller/PlayerManifest.h>
 #include <controller/PlayerPrefs.h>
+#include <controller/YamlFile.h>
 #include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
@@ -36,13 +36,13 @@ public:
 
     /// @name Modifiers
     /// @{
+    void shutdown();
     PlayerPrefs& userPrefs();
     PlayerPrefs* getPrefs(const Craps::PlayerId& playerId);
     /// @}
 
     /// @name Observers
     /// @{
-    Gen::ReturnCode saveAll(Gen::ErrorPass& ep)       const;
     const PlayerPrefs& userPrefs()                    const;
     const PlayerManifest::PlayerList& getPlayerList() const;
     const Players& getPlayers()                       const;
@@ -61,7 +61,7 @@ private:
             : player(p), file(std::move(path)) {}
 
         Craps::Player* player;
-        PlayerFile     file;
+        YamlFile       file;
         PlayerPrefs    prefs;
     };
 
@@ -70,6 +70,7 @@ private:
     std::vector<std::unique_ptr<Entry>> entries_;
 
     Entry* findEntry(const Craps::Player* player) const;
+    void   saveAll() const;
 
     Craps::Player* loadPlayer(const std::string& fileName);
     void loadStartingPlayers();  // throws
@@ -92,7 +93,7 @@ PlayerManager Responsibilities:
 
 @li Maintain list of player IDs
 
-@li Own each loaded player's file (PlayerFile) and controller-level
+@li Own each loaded player's file (YamlFile) and controller-level
 preferences (PlayerPrefs), and decide when they are read and written
 
 @li Create new player
@@ -106,14 +107,18 @@ from YAML. PlayerManager owns the rest:
 
 @li loadPlayer() reads the player's file once, builds the Player from its
 "Player" section and the PlayerPrefs from its "Prefs" section.
-@li saveAll() takes a fresh snapshot of every Player and every
-PlayerPrefs and writes each file. Call it once at quit, after the table
-has shut the players down, since Player::shutdown() is what merges the
-session into the stats.
+@li shutdown() takes a fresh snapshot of every Player and every
+PlayerPrefs and writes each file. Failures are logged with LOG_ERROR;
+one player failing does not stop the others. Call it once at quit, and
+only after TableManager::shutdown(). The table is what shuts the
+players down, and Player::shutdown() is what merges the session into
+the stats. Saving before that would write the stats without this
+session. Player::shutdown() is not repeatable, so PlayerManager does
+not call it again itself.
 @li userPrefs() is the preferences of whoever is the user player right
 now. Switching users changes which PlayerPrefs this returns; there is
 nothing to save or reload at the switch. Every loaded player's
-preferences are written by saveAll() along with the rest of the player.
+preferences are written by shutdown() along with the rest of the player.
 @li getPrefs() is the same for any player, by id.
 
 */

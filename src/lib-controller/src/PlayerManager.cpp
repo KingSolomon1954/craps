@@ -19,6 +19,14 @@
 
 using namespace Ctrl;
 
+namespace {
+
+// Top-level sections of a player file
+constexpr const char* KeyPlayer = "Player";
+constexpr const char* KeyPrefs  = "Prefs";
+
+} // namespace
+
 /*-----------------------------------------------------------*//**
 
 Constructor
@@ -85,17 +93,17 @@ PlayerManager::loadPlayer(const std::string& fileName)
     auto player = std::make_unique<Craps::Player>(playerId);
     auto entry  = std::make_unique<Entry>(player.get(),
                                           formPlayerPath(fileName));
-    entry->file.load();                                        // throws
+    entry->file.load(KeyPlayer);                               // throws
     try
     {
-        player->fromYAML(entry->file.getPlayerNode());         // throws
+        player->fromYAML(entry->file.getSection(KeyPlayer));   // throws
     }
     catch (const std::runtime_error& e)
     {
         throw std::runtime_error("PlayerManager::loadPlayer(): \"" +
             entry->file.getPath().string() + "\"; " + e.what());
     }
-    entry->prefs.fromYAML(entry->file.getPrefsNode());         // forgiving
+    entry->prefs.fromYAML(entry->file.getSection(KeyPrefs));   // forgiving
 
     entries_.push_back(std::move(entry));
     return player.release();
@@ -193,36 +201,37 @@ PlayerManager::findEntry(const Craps::Player* player) const
 
 //----------------------------------------------------------------
 //
-// Writes every player's file from a fresh snapshot of the player and
-// its preferences. One player failing does not stop the others. If any
-// fail, returns Fail with a description of each.
+// Called once at quit, after TableManager::shutdown() has shut the
+// players down. Saves every player.
 //
-Gen::ReturnCode
-PlayerManager::saveAll(Gen::ErrorPass& ep) const
+void
+PlayerManager::shutdown()
 {
-    std::string failures;
+    saveAll();
+}
 
+//----------------------------------------------------------------
+//
+// Writes every player's file from a fresh snapshot of the player and
+// its preferences. One player failing does not stop the others.
+// Failures are logged.
+//
+void
+PlayerManager::saveAll() const
+{
     for (auto& e : entries_)
     {
         try
         {
-            e->file.setPlayerNode(e->player->toYAML());
-            e->file.setPrefsNode (e->prefs.toYAML());
+            e->file.setSection(KeyPlayer, e->player->toYAML());
+            e->file.setSection(KeyPrefs,  e->prefs.toYAML());
             e->file.save();                                   // throws
         }
         catch (const std::exception& ex)
         {
             LOG_ERROR(std::string("PlayerManager::saveAll(): ") + ex.what());
-            failures += std::string(failures.empty() ? "" : "; ") + ex.what();
         }
     }
-
-    if (!failures.empty())
-    {
-        ep.setDescription("PlayerManager::saveAll(): " + failures);
-        return Gen::ReturnCode::Fail;
-    }
-    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

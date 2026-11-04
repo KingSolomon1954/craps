@@ -8,9 +8,9 @@ add_executable(controller-ut
     utest-controller-main.cpp
     ConfigManagerTest.cpp
     LastFillTest.cpp
-    PlayerFileTest.cpp
     PlayerPrefsTest.cpp
     TableManifestTest.cpp
+    YamlFileTest.cpp
 )
 
 target_link_libraries(controller-ut

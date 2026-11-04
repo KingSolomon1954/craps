@@ -1,10 +1,10 @@
 //----------------------------------------------------------------
 //
-// File: PlayerFileTest.cpp
+// File: YamlFileTest.cpp
 //
 //----------------------------------------------------------------
 
-#include <controller/PlayerFile.h>
+#include <controller/YamlFile.h>
 #include <doctest/doctest.h>
 #include <unistd.h>
 #include <filesystem>
@@ -12,7 +12,7 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 
-using Ctrl::PlayerFile;
+using Ctrl::YamlFile;
 namespace fs = std::filesystem;
 
 namespace {
@@ -48,10 +48,10 @@ writeText(const fs::path& p, const std::string& text)
 bool
 loadFailsNamingFile(const fs::path& p)
 {
-    PlayerFile f(p);
+    YamlFile f(p);
     try
     {
-        f.load();
+        f.load("Player");
     }
     catch (const std::runtime_error& e)
     {
@@ -65,7 +65,7 @@ loadFailsNamingFile(const fs::path& p)
 
 //----------------------------------------------------------------
 
-TEST_CASE("PlayerFile:save then load")
+TEST_CASE("YamlFile:save then load")
 {
     TempDir t;
 
@@ -75,46 +75,46 @@ TEST_CASE("PlayerFile:save then load")
     YAML::Node prefs;
     prefs["LastFills"] = YAML::Node(YAML::NodeType::Sequence);
 
-    PlayerFile out(t.path("a.yaml"));
-    out.setPlayerNode(player);
-    out.setPrefsNode(prefs);
+    YamlFile out(t.path("a.yaml"));
+    out.setSection("Player", player);
+    out.setSection("Prefs", prefs);
     out.save();
 
     CHECK(fs::exists(t.path("a.yaml")));
     CHECK_FALSE(fs::exists(t.path("a.yaml.tmp")));   // temp file is gone
 
-    PlayerFile in(t.path("a.yaml"));
-    in.load();
-    CHECK(in.getPlayerNode()["playerName"].as<std::string>() == "Nathan");
-    CHECK(in.getPrefsNode().IsMap());
-    CHECK(in.getPrefsNode()["LastFills"].IsSequence());
+    YamlFile in(t.path("a.yaml"));
+    in.load("Player");
+    CHECK(in.getSection("Player")["playerName"].as<std::string>() == "Nathan");
+    CHECK(in.getSection("Prefs").IsMap());
+    CHECK(in.getSection("Prefs")["LastFills"].IsSequence());
 }
 
 //----------------------------------------------------------------
 
-TEST_CASE("PlayerFile:save twice overwrites")
+TEST_CASE("YamlFile:save twice overwrites")
 {
     TempDir t;
 
-    PlayerFile f(t.path("a.yaml"));
+    YamlFile f(t.path("a.yaml"));
     YAML::Node player;
     player["n"] = 1;
-    f.setPlayerNode(player);
+    f.setSection("Player", player);
     f.save();
 
     player["n"] = 2;
-    f.setPlayerNode(player);
+    f.setSection("Player", player);
     f.save();
 
-    PlayerFile in(t.path("a.yaml"));
-    in.load();
-    CHECK(in.getPlayerNode()["n"].as<int>() == 2);
+    YamlFile in(t.path("a.yaml"));
+    in.load("Player");
+    CHECK(in.getSection("Player")["n"].as<int>() == 2);
     CHECK_FALSE(fs::exists(t.path("a.yaml.tmp")));
 }
 
 //----------------------------------------------------------------
 
-TEST_CASE("PlayerFile:sections are replaced, other sections are kept")
+TEST_CASE("YamlFile:sections are replaced, other sections are kept")
 {
     TempDir t;
     writeText(t.path("a.yaml"),
@@ -124,13 +124,13 @@ TEST_CASE("PlayerFile:sections are replaced, other sections are kept")
         "Other:\n"
         "  keep: me\n");
 
-    PlayerFile f(t.path("a.yaml"));
-    f.load();
+    YamlFile f(t.path("a.yaml"));
+    f.load("Player");
 
     YAML::Node player;
     player["playerId"]   = "uuid1";
     player["playerName"] = "New";
-    f.setPlayerNode(player);
+    f.setSection("Player", player);
     f.save();
 
     const YAML::Node n = YAML::LoadFile(t.path("a.yaml").string());
@@ -141,41 +141,57 @@ TEST_CASE("PlayerFile:sections are replaced, other sections are kept")
 
 //----------------------------------------------------------------
 
-TEST_CASE("PlayerFile:Prefs section is optional")
+TEST_CASE("YamlFile:sections other than the required one are optional")
 {
     TempDir t;
     writeText(t.path("a.yaml"),
         "Player:\n"
         "  playerId: uuid1\n");
 
-    PlayerFile f(t.path("a.yaml"));
-    f.load();
-    CHECK(f.getPlayerNode().IsMap());
-    CHECK(f.getPrefsNode().IsNull());
+    YamlFile f(t.path("a.yaml"));
+    f.load("Player");
+    CHECK(f.getSection("Player").IsMap());
+    CHECK(f.getSection("Prefs").IsNull());
 }
 
 //----------------------------------------------------------------
 
-TEST_CASE("PlayerFile:getters and setters hand out copies")
+TEST_CASE("YamlFile:required section is whatever the caller names")
 {
     TempDir t;
-    PlayerFile f(t.path("a.yaml"));
+    writeText(t.path("table.yaml"),
+        "Table:\n"
+        "  tableId: Table-1\n");
+
+    YamlFile f(t.path("table.yaml"));
+    CHECK_THROWS_AS(f.load("Player"), std::runtime_error);   // not there
+    f.load("Table");
+    CHECK(f.getSection("Table")["tableId"].as<std::string>() == "Table-1");
+    CHECK(f.getSection("Player").IsNull());                  // missing -> null
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("YamlFile:getters and setters hand out copies")
+{
+    TempDir t;
+    YamlFile f(t.path("a.yaml"));
 
     YAML::Node player;
     player["a"] = 1;
-    f.setPlayerNode(player);
+    f.setSection("Player", player);
 
     player["a"] = 2;                                    // caller edits its own
-    CHECK(f.getPlayerNode()["a"].as<int>() == 1);
+    CHECK(f.getSection("Player")["a"].as<int>() == 1);
 
-    YAML::Node got = f.getPlayerNode();
+    YAML::Node got = f.getSection("Player");
     got["a"] = 3;                                       // caller edits the copy
-    CHECK(f.getPlayerNode()["a"].as<int>() == 1);
+    CHECK(f.getSection("Player")["a"].as<int>() == 1);
 }
 
 //----------------------------------------------------------------
 
-TEST_CASE("PlayerFile:load failures throw and name the file")
+TEST_CASE("YamlFile:load failures throw and name the file")
 {
     TempDir t;
 
@@ -211,7 +227,7 @@ TEST_CASE("PlayerFile:load failures throw and name the file")
 
 //----------------------------------------------------------------
 
-TEST_CASE("PlayerFile:save failures throw")
+TEST_CASE("YamlFile:save failures throw")
 {
     TempDir t;
     YAML::Node player;
@@ -219,15 +235,15 @@ TEST_CASE("PlayerFile:save failures throw")
 
     SUBCASE("no path")
     {
-        PlayerFile f{fs::path()};
-        f.setPlayerNode(player);
+        YamlFile f{fs::path()};
+        f.setSection("Player", player);
         CHECK_THROWS_AS(f.save(), std::runtime_error);
     }
 
     SUBCASE("directory does not exist")
     {
-        PlayerFile f(t.path("nodir/a.yaml"));
-        f.setPlayerNode(player);
+        YamlFile f(t.path("nodir/a.yaml"));
+        f.setSection("Player", player);
         CHECK_THROWS_AS(f.save(), std::runtime_error);
         CHECK_FALSE(fs::exists(t.path("nodir")));
     }

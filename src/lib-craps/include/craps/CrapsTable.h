@@ -42,8 +42,6 @@ public:
     static CrapsTable* fromString(std::string        yaml,
                                   const TableId&     tableId,
                                   const TableConfig& config);
-    static CrapsTable* fromFile  (const TableId&     tableId,
-                                  const TableConfig& config);
     /// @}
 
     /// @name Modifiers
@@ -105,6 +103,14 @@ public:
     bool                    havePlayer(const Player* pPlayer)            const;
     bool                    isBetAllowed(BetName name, std::string& str) const;
     const SessionHistory::Sessions& getSessionHistory()                  const;
+    /// @}
+
+    /// @name YAML conversion
+    /// The table's own state. Knows nothing about files; TableManager
+    /// owns the file and decides when to read and write it.
+    /// @{
+    YAML::Node toYAML() const;
+    void fromYAML(const YAML::Node& node);   // throws
     /// @}
 
     // Unit test access points
@@ -218,12 +224,8 @@ private:
     void sendEventBetEvaluationFailed(const CrapsBet& bet,
                                  const std::string& diag) const;
 
-    // File operations
-    void saveFile() const;
-    void loadFile();
-    YAML::Node toYAML() const;
+    // YAML conversion of the rules, used by toYAML() and fromYAML()
     YAML::Node rulesToYAML() const;
-    void fromYAML(const YAML::Node& node);
     void rulesFromYAML(const YAML::Node& node);
 
     // Validity checks with diagnostics, in CrapsTablePart2.cpp

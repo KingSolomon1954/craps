@@ -35,7 +35,6 @@ struct PlayerFixture
         TableConfig tableConfig;
         tableConfig.maxSessions = 50;
         tableConfig.maxRecentRolls = 25;
-        tableConfig.tablePath = "tmp/dontcare.yaml";
 
         t = new CrapsTable("Table-1", tableConfig);
         REQUIRE(t != nullptr);

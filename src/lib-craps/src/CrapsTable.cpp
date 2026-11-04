@@ -9,7 +9,6 @@
 #include <controller/GameEvents.h>
 #include <controller/Globals.h>
 #include <gen/EventManager.h>
-#include <gen/FileUtils.h>
 #include <gen/Logger.h>
 #include <fmt/format.h>
 #include <algorithm>
@@ -17,18 +16,18 @@
 #include <cstdint>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 
 using namespace Craps;
 
 /*-----------------------------------------------------------*//**
 
-Private Constructor.
+Constructor.
 
 */
 CrapsTable::CrapsTable(const TableId&     tableId,
                        const TableConfig& config)
-
     : tableId_(tableId)
     , config_(config)
     , houseBank_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
@@ -40,6 +39,7 @@ CrapsTable::CrapsTable(const TableId&     tableId,
 
 Construct Table from in-memory YAML string.
 
+The string is the table's own state, the same thing toYAML() produces.
 Throws upon error.
 
 */
@@ -48,62 +48,10 @@ CrapsTable::fromString(std::string        yaml,
                        const TableId&     tableId,
                        const TableConfig& config)
 {
-    CrapsTable* ct = new CrapsTable(tableId, config);
+    std::unique_ptr<CrapsTable> ct(new CrapsTable(tableId, config));
     YAML::Node root = YAML::Load(yaml);
-    ct->fromYAML(root);
-    return ct;
-}
-
-/*-----------------------------------------------------------*//**
-
-Construct Craps table from file.
-
-Throws upon error.
-
-*/
-CrapsTable*
-CrapsTable::fromFile(const TableId& tableId,
-                     const TableConfig& config)
-{
-    CrapsTable* ct = new CrapsTable(tableId, config);
-    ct->loadFile();
-    return ct;
-}
-
-//-----------------------------------------------------------------
-
-void
-CrapsTable::saveFile() const
-{
-    if (config_.tablePath.empty())
-    {
-        LOG_DEBUG("CrapsTable::saveFile() skipping; tablePath is empty");
-        return;
-    }
-
-    LOG_DEBUG("CrapsTable::saveFile(" + config_.tablePath.string()  + ")");
-    std::ofstream fout(config_.tablePath);
-    fout << toYAML();
-}
-
-//-----------------------------------------------------------------
-
-void
-CrapsTable::loadFile()
-{
-    try
-    {
-        std::ifstream fin =
-            Gen::FileUtils::openOrThrow(config_.tablePath);  // throws
-        YAML::Node root = YAML::Load(fin);
-        fromYAML(root);                                      // throws
-    }
-    catch (const std::runtime_error& e)
-    {
-        std::string diag("CrapsTable::loadFile(): \"" +
-                         config_.tablePath.string() + "\"; ");
-        throw std::runtime_error(diag + e.what());
-    }
+    ct->fromYAML(root);                   // throws
+    return ct.release();
 }
 
 //-----------------------------------------------------------------
@@ -217,7 +165,9 @@ CrapsTable::rulesToYAML() const
 
 //----------------------------------------------------------------
 //
-// Save to files, disable timers, etc
+// Ends this table: records today's session and merges stats. Writes
+// nothing to disk. The caller persists toYAML() afterward (see
+// TableManager::shutdown()).
 //
 // Called when user decides to switch tables, so this one ends.
 // Called when exiting program.
@@ -234,16 +184,15 @@ CrapsTable::close()
         houseBank_.getAmtDeposited(),
         houseBank_.getAmtWithdrawn());
 
-    // Merge alltime stats with today's session, then save.
+    // Merge alltime stats with today's session.
     alltimeStats_.merge(currentStats_);
     houseBank_.mergeStats();
-    saveFile();
 }
 
 //----------------------------------------------------------------
 //
-//  Clears out players and bets, save to files,
-//  disable timers, etc
+//  Clears out players and bets, disable timers, etc.
+//  Writes nothing to disk.
 //
 void
 CrapsTable::shutdown()
@@ -257,7 +206,7 @@ CrapsTable::shutdown()
     }
 
     assert(getNumBetsOnTable() == 0);  // boo boo problem
-    close();  // merges stats, creates session entry, saves files
+    close();  // merges stats, creates session entry
 }
 
 //----------------------------------------------------------------

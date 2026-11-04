@@ -101,7 +101,7 @@ Player::fromYAML(const YAML::Node& node)
 //
 //  Ends the player's session: leaves the table, records today's session
 //  and merges stats. Writes nothing to disk. The caller persists
-//  toYAML() afterward (see PlayerManager::saveAll()).
+//  toYAML() afterward (see PlayerManager::shutdown()).
 //
 void
 Player::shutdown()

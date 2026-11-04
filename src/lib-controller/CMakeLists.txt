@@ -20,7 +20,6 @@ add_library(controller STATIC
     src/GameEvents.cpp
     src/GameMain.cpp
     src/Globals.cpp
-    src/PlayerFile.cpp
     src/PlayerManager.cpp
     src/PlayerManifest.cpp
     src/PlayerPrefs.cpp
@@ -31,6 +30,7 @@ add_library(controller STATIC
     src/TableManifest.cpp
     src/UndoBet.cpp
     src/UndoManager.cpp
+    src/YamlFile.cpp
 )
 
 target_include_directories(controller

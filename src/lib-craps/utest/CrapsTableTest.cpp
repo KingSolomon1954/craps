@@ -43,11 +43,8 @@ struct CrapsTableFixture
         
         config.maxSessions = 50;
         config.maxRecentRolls = 25;
-        config.tablePath = "/work/craps/assets/tables/las-vegas-strip.yaml";
-        // Unit tests won't overwrite YAML file. CrapsTable dtor
-        // does not trigger save to file. Would have to call 
-        // prepareToShutdown() or close() to save YAML file.
-        // Therefore one TableConfig can be used in all unit tests.
+        // CrapsTable never touches files, so one TableConfig can be
+        // used in all unit tests.
     }
 
    ~CrapsTableFixture()
@@ -284,24 +281,22 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
         CHECK(t->getNumPlayers() == 0);
     }
 
-    SUBCASE("fromFile:exists")
+    SUBCASE("fromString:mismatched tableId")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromFile("Table-1", config));
-        REQUIRE(t != nullptr);
-        CHECK(t->getPoint() == 0);
-        CHECK(t->getCurrentRoll().value() == 12);
-        CHECK(t->isComeOutRoll());
-        CHECK(t->isBettingOpen());
-        CHECK(t->getCurrentShooter() == nullptr);
-        CHECK(t->getNumPlayers() == 0);
+        // YAML says Table-1; asking for another id must be refused.
+        std::string yaml = getTableYamlStringUtest();
+        CHECK_THROWS_AS(CrapsTable::fromString(yaml, "Table-2", config),
+                        std::runtime_error);
     }
 
-    SUBCASE("fromFile:missing")
+    SUBCASE("fromString:toYAML keeps identity")
     {
-        // Clobber path. Use bad tableId/path so file won't be found.
-        CrapsTableFixture::config.tablePath = "missing/FakeTable-1";
-        CHECK_THROWS_AS(CrapsTable::fromFile("FakeTable-1", config),
-                        std::runtime_error);
+        std::string yaml = getTableYamlStringUtest();
+        std::unique_ptr<CrapsTable> t(CrapsTable::fromString(yaml, "Table-1", config));
+        const YAML::Node out = t->toYAML();
+        CHECK(out["tableId"].as<std::string>() == "Table-1");
+        CHECK(out["Bank"].IsDefined());
+        CHECK(out["Rules"].IsDefined());
     }
 }
 
