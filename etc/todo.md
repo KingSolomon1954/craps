@@ -12,9 +12,15 @@
 
 ### Save Config to yaml file
 
+### Same file-ownership refactor for CrapsTable and TableManager
+- Table file I/O moves from CrapsTable to TableManager, as done for
+- Player/PlayerManager (see PlayerFile)
+
 ### AutoFills saved to config
+- Add AutoFill as a member of PlayerPrefs, like LastFill
 
 ### QuickBets saved to config
+- Add QuickBet as a member of PlayerPrefs, like LastFill
 
 ### Need unit test for initial bank money
 
@@ -77,6 +83,8 @@ track that amount independently.
 (Done) Place, Buy, Lay  bet odds hints
 (Done) Add LastFill feature
 (Done) LastFills (LastBets) saved to and loaded from the user Player's file
+(Done) Player file I/O moved from Craps::Player to PlayerManager (PlayerFile)
+(Done) LastFill is per player (PlayerPrefs), no longer a singleton
 (Done) Add payout hint to DialogBetAmount
 (Done) Fix window width of MenuOddsBet
 (Done) Fix multiple odds bets for same bet and number MenuOddsBet

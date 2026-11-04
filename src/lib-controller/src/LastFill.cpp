@@ -5,25 +5,13 @@
 //----------------------------------------------------------------
 
 #include <controller/LastFill.h>
-#include <controller/GameEvents.h>
-#include <controller/PlayerManager.h>
 #include <craps/CrapsTypes.h>
-#include <craps/Player.h>
 #include <gen/Logger.h>
 #include <algorithm>
 #include <exception>
 #include <string>
 
 using namespace Ctrl;
-
-//----------------------------------------------------------------
-
-LastFill&
-LastFill::instance()
-{
-    static LastFill lf;
-    return lf;
-}
 
 //----------------------------------------------------------------
 
@@ -139,11 +127,6 @@ LastFill::fromYAML(const YAML::Node& node)
             e.isOddsBet = n["isOddsBet"].as<bool>();
             e.amount    = n["amount"].as<Gen::Money>();
 
-            if (e.amount < Gen::Money(0))
-            {
-                LOG_WARN(fname + "skipping entry with negative amount");
-                continue;
-            }
             setLastFill(e);   // also collapses duplicate entries
         }
         catch (const std::exception& ex)

@@ -35,7 +35,8 @@ private:
     void onReqAutoFill (const Ctrl::ReqAutoFill& ev)      const;
     void onReqQuickBet (const Ctrl::ReqQuickBet& ev)      const;
     void onReqTerminate(const Ctrl::ReqTerminate& ev)     const;
-    void setLastFill(const Craps::CrapsBet& bet, bool isOddsBet) const;
+    void setLastFill(const Craps::PlayerId& playerId,
+                     const Craps::CrapsBet& bet, bool isOddsBet) const;
 };
 
 /*-----------------------------------------------------------*//**

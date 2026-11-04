@@ -30,7 +30,6 @@ public:
     /// @{
     LastFill() = default;
    ~LastFill() = default;
-    static LastFill& instance();
     /// @}
     
     /// @name Modifiers
@@ -72,26 +71,18 @@ The LastFill class in controller has these responsibilities:
 @li deleteLastFill() - shift entries if necessary, no empty slots
 @li clear() - forgets all entries, e.g. before loading another player's
 
-@par Persistence
+@par Ownership and persistence
+
+Not a singleton. Each player has one, held in PlayerPrefs, which
+PlayerManager owns. The View and EventHandler reach the right one
+through PlayerManager.
 
 toYAML() and fromYAML() convert between the entries and a YAML
-sequence. The class does not touch files itself; PlayerManager stores
-the sequence under "LastFills" in the user Player's "BetPreferences"
-section and the Player writes it to its file. Example:
-
-@code
-BetPreferences:
-  LastFills:
-    - betName: PassLine
-      pivot: 0
-      isOddsBet: false
-      amount: 5000
-@endcode
-
-amount is Gen::Money's own YAML form. fromYAML() replaces the current
-contents and is forgiving: a missing or malformed section, or an
-individual bad entry, is logged and skipped so a hand-edited player
-file can never stop the game from starting.
+sequence. The class does not touch files; PlayerPrefs puts the sequence
+under "LastFills" in the player file's "Prefs" section. fromYAML()
+replaces the current contents and is forgiving: a missing or malformed
+sequence, or an individual bad entry, is logged and skipped so a
+hand-edited player file can never stop the game from starting.
 
 */
 

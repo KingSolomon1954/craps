@@ -26,7 +26,6 @@ std::string getPlayerYamlStringUtest();
 
 struct PlayerFixture
 {
-    PlayerConfig config { "/work/craps/assets/players/Player-1.yaml" };
     PlayerId p1Id { "uuid1" };
     PlayerId p2Id { "uuid2" };
     CrapsTable* t;
@@ -50,96 +49,12 @@ struct PlayerFixture
 
 //----------------------------------------------------------------
 
-TEST_CASE("Player:betPreferences")
-{
-    PlayerConfig config;           // empty path; nothing is saved here
-    const PlayerId id = "uuid1";
-
-    SUBCASE("absent section reads as null and is not written")
-    {
-        std::unique_ptr<Player> p(
-            Player::fromString(getPlayerYamlStringUtest(), id, config));
-        CHECK(p->getBetPreferences().IsNull());
-
-        const YAML::Node out = p->toYAML();
-        CHECK_FALSE(out["BetPreferences"].IsDefined());
-    }
-
-    SUBCASE("section is read and written back untouched")
-    {
-        const std::string yaml = getPlayerYamlStringUtest() +
-            "BetPreferences:\n"
-            "  LastFills:\n"
-            "    - betName: PassLine\n"
-            "      pivot: 0\n"
-            "      isOddsBet: false\n"
-            "      amount: 5000\n"
-            "  SomethingNew: keep me\n";
-
-        std::unique_ptr<Player> p(Player::fromString(yaml, id, config));
-
-        const YAML::Node prefs = p->getBetPreferences();
-        REQUIRE(prefs.IsMap());
-        REQUIRE(prefs["LastFills"].IsSequence());
-        CHECK(prefs["LastFills"].size() == 1);
-
-        const YAML::Node out = p->toYAML();
-        REQUIRE(out["BetPreferences"].IsMap());
-        CHECK(out["BetPreferences"]["LastFills"][0]["betName"]
-                  .as<std::string>() == "PassLine");
-        CHECK(out["BetPreferences"]["LastFills"][0]["amount"]
-                  .as<long long>() == 5000);
-        // A key this code doesn't know about is not lost.
-        CHECK(out["BetPreferences"]["SomethingNew"]
-                  .as<std::string>() == "keep me");
-    }
-
-    SUBCASE("set replaces the section; get and set hand out copies")
-    {
-        std::unique_ptr<Player> p(
-            Player::fromString(getPlayerYamlStringUtest(), id, config));
-
-        YAML::Node prefs;
-        prefs["LastFills"] = YAML::Node(YAML::NodeType::Sequence);
-        p->setBetPreferences(prefs);
-
-        prefs["Other"] = 1;                    // caller edits its own node
-        const YAML::Node cur1 = p->getBetPreferences();
-        CHECK_FALSE(cur1["Other"].IsDefined());
-
-        YAML::Node got = p->getBetPreferences();
-        got["Other"] = 2;                      // caller edits the copy
-        const YAML::Node cur2 = p->getBetPreferences();
-        CHECK_FALSE(cur2["Other"].IsDefined());
-
-        const YAML::Node out = p->toYAML();
-        CHECK(out["BetPreferences"]["LastFills"].IsSequence());
-    }
-
-    SUBCASE("setting a null node removes the section")
-    {
-        std::unique_ptr<Player> p(
-            Player::fromString(getPlayerYamlStringUtest(), id, config));
-
-        YAML::Node prefs;
-        prefs["LastFills"] = YAML::Node(YAML::NodeType::Sequence);
-        p->setBetPreferences(prefs);
-        p->setBetPreferences(YAML::Node());
-
-        CHECK(p->getBetPreferences().IsNull());
-        const YAML::Node out = p->toYAML();
-        CHECK_FALSE(out["BetPreferences"].IsDefined());
-    }
-}
-
-//----------------------------------------------------------------
-
 TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
 {
     SUBCASE("via createplayer()")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
-        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id));
         CHECK(p1->getName() == "uuid1");
         CHECK(p2->getName() == "uuid2");
     }
@@ -147,32 +62,26 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
     SUBCASE("via fromString()")
     {
         std::string yaml = getPlayerYamlStringUtest();
-        std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id, config));
+        std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id));
         CHECK(p1->getPlayerId() == "uuid1");
         CHECK(p1->getBalance() == 30000);
         // TODO check more fields to matching YAML
     }
     
-    SUBCASE("via fromFile()")
+    SUBCASE("fromString:mismatched playerId")
     {
-        PlayerConfig pc { "/work/craps/assets/players/nathan.yaml" };
-
-        // Good load
-        std::string nathanUuid("550e8400-e29b-41d4-a716-446655440000");
-        std::unique_ptr<Player> p1(Player::fromFile(nathanUuid, pc));
-        CHECK(p1->getPlayerId() == nathanUuid);
-        CHECK(p1->getName() == "Nathan");
-        CHECK(p1->getBalance() == 30000);
-
-        // Mismatched player ID
-        CHECK_THROWS_AS(Player::fromFile(p2Id, pc), std::runtime_error);
+        // YAML says uuid1; asking for uuid2 must be refused.
+        std::string yaml = getPlayerYamlStringUtest();
+        CHECK_THROWS_AS(Player::fromString(yaml, p2Id), std::runtime_error);
     }
 
-    SUBCASE("fromFile:missing")
+    SUBCASE("fromString:toYAML keeps identity")
     {
-        // Clobber path. Use bad playerId/path so file won't be found.
-        PlayerFixture::config.playerPath = "missing/FakePlayer-1";
-        CHECK_THROWS_AS(Player::fromFile(p1Id, config), std::runtime_error);
+        std::string yaml = getPlayerYamlStringUtest();
+        std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id));
+        const YAML::Node out = p1->toYAML();
+        CHECK(out["playerId"].as<std::string>() == "uuid1");
+        CHECK(out["Bank"].IsDefined());
     }
 }
 
@@ -183,7 +92,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
     SUBCASE("joinTable")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         REQUIRE(p1 != nullptr);
 
         // Join table success
@@ -195,7 +104,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
     
     SUBCASE("leaveTable")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         REQUIRE(p1 != nullptr);
 
         // Leave table without ever joining
@@ -250,7 +159,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
 {
     SUBCASE("badBets")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
 
         // Must join table first
         auto result = p1->makeBet(BetName::Place, 100, 6); CHECK(!result);
@@ -271,7 +180,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         
     SUBCASE("goodBets")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result2 = p1->joinTable(*t); REQUIRE(result2);
 
         Gen::Money bal = p1->getBalance();
@@ -286,7 +195,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
 
     SUBCASE("removeBet")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
 
         Gen::Money bal = p1->getBalance();
@@ -338,7 +247,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
 {
     SUBCASE("goodBet")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         REQUIRE(t->isComeOutRoll());
         Gen::Money bal = p1->getBalance();
@@ -356,8 +265,8 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
     
     SUBCASE("badBets")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
-        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id));
 
         // nullptr
         auto result1 = p1->setOddsAmount(nullptr, 100); CHECK(!result1);
@@ -397,7 +306,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
         
     SUBCASE("changeAmount")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         REQUIRE(t->isComeOutRoll());
         Gen::Money bal = p1->getBalance();
@@ -437,7 +346,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 {
     SUBCASE("processWin")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
         auto result2 = p1->makeBet(BetName::Place, 120, 6); REQUIRE(result2);
@@ -470,7 +379,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 
     SUBCASE("processLose")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
         auto result2 = p1->makeBet(BetName::Place, 120, 6); REQUIRE(result2);
@@ -501,7 +410,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 
     SUBCASE("processKeep")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
         auto result2 = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
@@ -517,7 +426,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
     {
         // Buy bet subtracts commission from win
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
         auto result2 = p1->makeBet(BetName::Buy, 100, 4); REQUIRE(result2);
@@ -531,7 +440,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 
         // Come bet hits its number on the come-out roll with odds off.
         // Use a separate player because the Buy wager above remains active.
-        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config));
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id));
         result1 = p2->joinTable(*t); REQUIRE(result1);
         bal = p2->getBalance();
         t->testSetState(6, 5, 5);  // establish a point so odds can be set

@@ -9,7 +9,6 @@
 #include <craps/DecisionRecord.h>
 #include <controller/GameEvents.h>
 #include <gen/EventManager.h>
-#include <gen/FileUtils.h>
 #include <gen/Logger.h>
 #include <gen/Uuid.h>
 #include <fmt/format.h>
@@ -21,11 +20,8 @@ using namespace Craps;
 //
 // Constructor.
 //
-Player::Player(
-    const PlayerId&     playerId,
-    const PlayerConfig& config)
+Player::Player(const PlayerId& playerId)
     : playerId_(playerId)
-    , config_(config)
     , wallet_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
 }
@@ -35,88 +31,30 @@ Player::Player(
 // Will create a fresh PlayerId
 //
 Player*
-Player::createPlayer(const std::string&  playerName,
-                     const PlayerConfig& config)
+Player::createPlayer(const std::string& playerName)
 {
-    Player* p = new Player(Gen::generateUuid(), config);
+    Player* p = new Player(Gen::generateUuid());
     p->setName(playerName);
     return p;
 }
 
 /*-----------------------------------------------------------*//**
 
-Construct Player from in-memory YAML node.
+Construct Player from in-memory YAML text.
 
+The text is the Player's own state, the same thing toYAML() produces.
 Throws upon error.
 
 Static function.
 */
 Player*
-Player::fromString(const std::string&  yaml,
-                   const PlayerId&     playerId,
-                   const PlayerConfig& config)
+Player::fromString(const std::string& yaml,
+                   const PlayerId&    playerId)
 {
-    Player* p = new Player(playerId, config);
+    std::unique_ptr<Player> p(new Player(playerId));
     YAML::Node root = YAML::Load(yaml);
-    p->fromYAML(root);
-    return p;
-}
-
-/*-----------------------------------------------------------*//**
-
-Construct Player from YAML file.
-
-Throws upon error.
-
-Static function.
-*/
-Player*
-Player::fromFile(const PlayerId& playerId,
-                 const PlayerConfig& config)
-{
-    Player* p = new Player(playerId, config);
-    p->loadFile();
-    return p;
-}
-
-//----------------------------------------------------------------
-//
-// Save Player to file
-//
-void
-Player::saveFile() const
-{
-    if (config_.playerPath.empty())
-    {
-        LOG_DEBUG("Player::saveFile() skipping; playerPath is empty");
-        return;
-    }
-
-    LOG_DEBUG("Player::saveFile(" + config_.playerPath.string()  + ")");
-    std::ofstream fout(config_.playerPath);
-    fout << toYAML();
-}
-
-//----------------------------------------------------------------
-//
-// Load Player from file
-//
-void
-Player::loadFile()
-{
-    try
-    {
-        std::ifstream fin =
-            Gen::FileUtils::openOrThrow(config_.playerPath);  // throws
-        YAML::Node root = YAML::Load(fin);
-        fromYAML(root);                                       // throws
-    }
-    catch (const std::runtime_error& e)
-    {
-        std::string diag("Player::loadFile(): \"" +
-                         config_.playerPath.string() + "\"; ");
-        throw std::runtime_error(diag + e.what());
-    }
+    p->fromYAML(root);                    // throws
+    return p.release();
 }
 
 //----------------------------------------------------------------
@@ -133,10 +71,6 @@ Player::toYAML() const
     node["fullDescription"]  = fullDescription_;
     node["Bank"]             = wallet_.toYAML();
     alltimeStats_.toYAML(node);
-    if (!betPrefs_.IsNull())
-    {
-        node["BetPreferences"] = YAML::Clone(betPrefs_);
-    }
     return node;
 }
 
@@ -161,44 +95,13 @@ Player::fromYAML(const YAML::Node& node)
 
     wallet_.fromYAML(node["Bank"]);
     alltimeStats_.fromYAML(node);
-
-    // Optional section. Older player files don't have it.
-    const YAML::Node prefs = node["BetPreferences"];
-    betPrefs_ = (prefs.IsDefined() && !prefs.IsNull())
-              ? YAML::Clone(prefs)
-              : YAML::Node();
 }
 
 //----------------------------------------------------------------
 //
-// Returns a copy of the bet preferences section. A copy, because
-// YAML::Node has reference semantics and callers must not be able to
-// change our data behind our back.
-//
-YAML::Node
-Player::getBetPreferences() const
-{
-    if (betPrefs_.IsNull())
-    {
-        return YAML::Node();
-    }
-    return YAML::Clone(betPrefs_);
-}
-
-//----------------------------------------------------------------
-//
-// Replaces the bet preferences section. Written to the player file
-// the next time saveFile() runs (e.g. from shutdown()).
-//
-void
-Player::setBetPreferences(const YAML::Node& node)
-{
-    betPrefs_ = node.IsNull() ? YAML::Node() : YAML::Clone(node);
-}
-
-//----------------------------------------------------------------
-//
-//  Save to files, disable timers, etc
+//  Ends the player's session: leaves the table, records today's session
+//  and merges stats. Writes nothing to disk. The caller persists
+//  toYAML() afterward (see PlayerManager::saveAll()).
 //
 void
 Player::shutdown()
@@ -212,10 +115,9 @@ Player::shutdown()
         wallet_.getAmtDeposited(),
         wallet_.getAmtWithdrawn());
 
-    // Merge alltime stats with today's session, then save.
+    // Merge alltime stats with today's session.
     alltimeStats_.merge(currentStats_);
     wallet_.mergeStats();
-    saveFile();
 }
 
 //----------------------------------------------------------------

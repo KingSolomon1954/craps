@@ -30,14 +30,12 @@ using namespace Craps;
 
 struct CrapsBetPart1Fixture
 {
-    PlayerConfig config { "playerFilesDirectory" };
-
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     
     CrapsBetPart1Fixture()
-        : p1(Player::createPlayer("Player1", config))
-        , p2(Player::createPlayer("Player2", config))
+        : p1(Player::createPlayer("Player1"))
+        , p2(Player::createPlayer("Player2"))
     {
     }
 

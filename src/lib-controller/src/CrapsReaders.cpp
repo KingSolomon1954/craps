@@ -979,7 +979,8 @@ CrapsReaders::getLastFill(
     LastFill::LastFillEntry& lfe,
     Gen::ErrorPass& ep)
 {
-    if (LastFill::instance().getLastFill(lfe) == Gen::ReturnCode::Fail)
+    if (Gbl::pPlayerMgr->userPrefs().lastFill().getLastFill(lfe)
+        == Gen::ReturnCode::Fail)
     {
         ep.setDescription("No such last fill entry exists.");
         return Gen::ReturnCode::Fail;

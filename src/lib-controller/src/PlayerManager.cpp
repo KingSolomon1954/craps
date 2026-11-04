@@ -11,7 +11,6 @@
 #include <iostream>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
-#include <controller/LastFill.h>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
 #include <gen/ErrorPass.h>
@@ -30,7 +29,6 @@ PlayerManager::PlayerManager()
     manifest_.loadFromFile();  // Load players manifest
     loadStartingPlayers();     // Throws
     addPlayersToTable();       // Throws
-    loadUserBetPrefs();        // User's LastFills, etc.
 }
 
 //----------------------------------------------------------------
@@ -84,9 +82,23 @@ PlayerManager::loadPlayer(const std::string& fileName)
         throw std::runtime_error(diag);
     }
 
-    Craps::PlayerConfig config;
-    config.playerPath = PlayerManager::formPlayerPath(fileName);
-    return Craps::Player::fromFile(playerId, config);
+    auto player = std::make_unique<Craps::Player>(playerId);
+    auto entry  = std::make_unique<Entry>(player.get(),
+                                          formPlayerPath(fileName));
+    entry->file.load();                                        // throws
+    try
+    {
+        player->fromYAML(entry->file.getPlayerNode());         // throws
+    }
+    catch (const std::runtime_error& e)
+    {
+        throw std::runtime_error("PlayerManager::loadPlayer(): \"" +
+            entry->file.getPath().string() + "\"; " + e.what());
+    }
+    entry->prefs.fromYAML(entry->file.getPrefsNode());         // forgiving
+
+    entries_.push_back(std::move(entry));
+    return player.release();
 }
 
 //----------------------------------------------------------------
@@ -119,60 +131,98 @@ PlayerManager::addPlayersToTable()
 
 //----------------------------------------------------------------
 //
-// Copies the controller's bet preferences into the player, in memory.
-// The player writes them to its file in saveFile(), which happens at
-// player shutdown. Keys in the section that we don't own are kept.
+// Returns the preferences of whoever is the user player right now.
 //
-void
-PlayerManager::saveBetPrefs(Craps::Player& player) const
+PlayerPrefs&
+PlayerManager::userPrefs()
 {
-    YAML::Node prefs = player.getBetPreferences();  // a copy
-    if (!prefs.IsMap())
+    Entry* e = findEntry(getUserPlayer());
+    if (e == nullptr)
     {
-        prefs = YAML::Node(YAML::NodeType::Map);    // missing or junk
+        throw std::logic_error("PlayerManager::userPrefs(): "
+                               "there is no user player");
     }
-    prefs["LastFills"] = LastFill::instance().toYAML();
-    player.setBetPreferences(prefs);
-}
-
-//----------------------------------------------------------------
-//
-// Replaces the controller's bet preferences with the player's.
-//
-void
-PlayerManager::loadBetPrefs(const Craps::Player& player) const
-{
-    const YAML::Node prefs = player.getBetPreferences();
-    if (prefs.IsMap())
-    {
-        LastFill::instance().fromYAML(prefs["LastFills"]);
-    }
-    else
-    {
-        LastFill::instance().clear();  // player has none
-    }
+    return e->prefs;
 }
 
 //----------------------------------------------------------------
 
-void
-PlayerManager::saveUserBetPrefs() const
+const PlayerPrefs&
+PlayerManager::userPrefs() const
 {
-    if (Craps::Player* p = getUserPlayer())
+    Entry* e = findEntry(getUserPlayer());
+    if (e == nullptr)
     {
-        saveBetPrefs(*p);
+        throw std::logic_error("PlayerManager::userPrefs(): "
+                               "there is no user player");
     }
+    return e->prefs;
+}
+
+//----------------------------------------------------------------
+//
+// Returns nullptr if there is no such player.
+//
+PlayerPrefs*
+PlayerManager::getPrefs(const Craps::PlayerId& playerId)
+{
+    for (auto& e : entries_)
+    {
+        if (e->player->getPlayerId() == playerId)
+        {
+            return &e->prefs;
+        }
+    }
+    return nullptr;
 }
 
 //----------------------------------------------------------------
 
-void
-PlayerManager::loadUserBetPrefs() const
+PlayerManager::Entry*
+PlayerManager::findEntry(const Craps::Player* player) const
 {
-    if (Craps::Player* p = getUserPlayer())
+    for (auto& e : entries_)
     {
-        loadBetPrefs(*p);
+        if (e->player == player)
+        {
+            return e.get();
+        }
     }
+    return nullptr;
+}
+
+//----------------------------------------------------------------
+//
+// Writes every player's file from a fresh snapshot of the player and
+// its preferences. One player failing does not stop the others. If any
+// fail, returns Fail with a description of each.
+//
+Gen::ReturnCode
+PlayerManager::saveAll(Gen::ErrorPass& ep) const
+{
+    std::string failures;
+
+    for (auto& e : entries_)
+    {
+        try
+        {
+            e->file.setPlayerNode(e->player->toYAML());
+            e->file.setPrefsNode (e->prefs.toYAML());
+            e->file.save();                                   // throws
+        }
+        catch (const std::exception& ex)
+        {
+            LOG_ERROR(std::string("PlayerManager::saveAll(): ") + ex.what());
+            failures += std::string(failures.empty() ? "" : "; ") + ex.what();
+        }
+    }
+
+    if (!failures.empty())
+    {
+        ep.setDescription("PlayerManager::saveAll(): " + failures);
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

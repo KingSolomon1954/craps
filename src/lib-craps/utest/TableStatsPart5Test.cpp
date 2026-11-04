@@ -24,9 +24,8 @@ struct TableStatsPart5Fixture
     
     TableStatsPart5Fixture()
     {
-        PlayerConfig config { "playerFilesDirectory" };
-        p1 = Player::createPlayer("Player1", config);
-        p2 = Player::createPlayer("Player2", config);
+        p1 = Player::createPlayer("Player1");
+        p2 = Player::createPlayer("Player2");
     }
 
    ~TableStatsPart5Fixture()

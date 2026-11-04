@@ -8,7 +8,11 @@
 
 #include <memory>
 #include <filesystem>
+#include <utility>
+#include <vector>
+#include <controller/PlayerFile.h>
 #include <controller/PlayerManifest.h>
+#include <controller/PlayerPrefs.h>
 #include <craps/CrapsTypes.h>
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
@@ -32,14 +36,14 @@ public:
 
     /// @name Modifiers
     /// @{
-    void saveBetPrefs    (Craps::Player& player) const;
-    void loadBetPrefs    (const Craps::Player& player) const;
-    void saveUserBetPrefs() const;
-    void loadUserBetPrefs() const;
+    PlayerPrefs& userPrefs();
+    PlayerPrefs* getPrefs(const Craps::PlayerId& playerId);
     /// @}
 
     /// @name Observers
     /// @{
+    Gen::ReturnCode saveAll(Gen::ErrorPass& ep)       const;
+    const PlayerPrefs& userPrefs()                    const;
     const PlayerManifest::PlayerList& getPlayerList() const;
     const Players& getPlayers()                       const;
     Craps::Player* getUserPlayer()                    const;
@@ -49,8 +53,23 @@ public:
     /// @}
 
 private:
+    // Everything kept for one loaded player. The Player itself is owned
+    // by players_, not by the Entry.
+    struct Entry
+    {
+        Entry(Craps::Player* p, std::filesystem::path path)
+            : player(p), file(std::move(path)) {}
+
+        Craps::Player* player;
+        PlayerFile     file;
+        PlayerPrefs    prefs;
+    };
+
     mutable PlayerManifest manifest_;
     Players players_;
+    std::vector<std::unique_ptr<Entry>> entries_;
+
+    Entry* findEntry(const Craps::Player* player) const;
 
     Craps::Player* loadPlayer(const std::string& fileName);
     void loadStartingPlayers();  // throws
@@ -73,30 +92,29 @@ PlayerManager Responsibilities:
 
 @li Maintain list of player IDs
 
-@li Load/save players from disk
+@li Own each loaded player's file (PlayerFile) and controller-level
+preferences (PlayerPrefs), and decide when they are read and written
 
 @li Create new player
 
 @li Choose active player
 
-@li Use Player::serialize() and Player::deserialize() for actual data
+@par Player files
 
-@par Bet preferences
+Craps::Player knows nothing about files. It only converts itself to and
+from YAML. PlayerManager owns the rest:
 
-The user's bet preferences (currently LastFill) live in the controller's
-singletons while the game runs, but belong to a Player's file. The
-Player keeps them as an opaque "BetPreferences" YAML section.
-
-@li saveBetPrefs()  - copies the singletons into a Player (in memory)
-@li loadBetPrefs()  - fills the singletons from a Player
-@li saveUserBetPrefs(), loadUserBetPrefs() - same, for the user's player
-
-Startup calls loadUserBetPrefs() once the players are loaded. Quit calls
-saveUserBetPrefs() just before the table shuts down, since that is what
-makes each Player write its file. When the user switches players at
-runtime: saveBetPrefs(oldPlayer), change the user, then
-loadBetPrefs(newPlayer). The old player's file gets written along with
-all the others at quit, like the rest of that player's data.
+@li loadPlayer() reads the player's file once, builds the Player from its
+"Player" section and the PlayerPrefs from its "Prefs" section.
+@li saveAll() takes a fresh snapshot of every Player and every
+PlayerPrefs and writes each file. Call it once at quit, after the table
+has shut the players down, since Player::shutdown() is what merges the
+session into the stats.
+@li userPrefs() is the preferences of whoever is the user player right
+now. Switching users changes which PlayerPrefs this returns; there is
+nothing to save or reload at the switch. Every loaded player's
+preferences are written by saveAll() along with the rest of the player.
+@li getPrefs() is the same for any player, by id.
 
 */
 

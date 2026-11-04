@@ -20,8 +20,10 @@ add_library(controller STATIC
     src/GameEvents.cpp
     src/GameMain.cpp
     src/Globals.cpp
+    src/PlayerFile.cpp
     src/PlayerManager.cpp
     src/PlayerManifest.cpp
+    src/PlayerPrefs.cpp
     src/Properties.cpp
     src/LastFill.cpp
     src/QuickBet.cpp

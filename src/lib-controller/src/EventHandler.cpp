@@ -102,7 +102,7 @@ EventHandler::onReqMakeBet(const Ctrl::ReqMakeBet& ev) const
             rsp.accepted = true;
             rsp.betId = betPtr->betId();
             
-            setLastFill(*betPtr, false); // Set/replace last fill
+            setLastFill(ev.playerId, *betPtr, false); // Set/replace last fill
         }
     }
 
@@ -150,7 +150,7 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
             else
             {
                 rsp.accepted = true;
-                setLastFill(*betPtr, true); // Set/replace last fill
+                setLastFill(ev.playerId, *betPtr, true); // Set/replace last fill
             }
         }
     }
@@ -160,14 +160,23 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
 //----------------------------------------------------------------
 
 void
-EventHandler::setLastFill(const Craps::CrapsBet& bet, bool isOddsBet) const
+EventHandler::setLastFill(const Craps::PlayerId& playerId,
+                          const Craps::CrapsBet& bet, bool isOddsBet) const
 {
+    // Remembered per player, so a bet by one player never changes
+    // what another player sees as their last fill.
+    PlayerPrefs* prefs = Gbl::pPlayerMgr->getPrefs(playerId);
+    if (prefs == nullptr)
+    {
+        return;
+    }
+
     LastFill::LastFillEntry lfe;
     lfe.betName   = bet.betName();
     lfe.pivot     = bet.pivot();
     lfe.isOddsBet = isOddsBet;
     lfe.amount    = (isOddsBet ? bet.oddsAmount() : bet.contractAmount());
-    LastFill::instance().setLastFill(lfe);
+    prefs->lastFill().setLastFill(lfe);
 }
 
 //----------------------------------------------------------------

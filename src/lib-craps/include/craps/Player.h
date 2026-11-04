@@ -11,7 +11,6 @@
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/LastRollStats.h>
-#include <craps/PlayerConfig.h>
 #include <craps/PlayerStats.h>
 #include <gen/ReturnCode.h>
 #include <gen/ErrorPass.h>
@@ -42,19 +41,14 @@ public:
 
     /// @name Lifecycle
     /// @{
-    Player(const PlayerId&     playerId, // Existing playerId,
-           const PlayerConfig& config);  // name will come from file
-
+    explicit Player(const PlayerId& playerId); // Existing playerId, rest
+                                               // comes from fromYAML()
    ~Player() = default;
     void shutdown();
 
-    static Player* createPlayer(const std::string&  playerName,  // Creates a
-                                const PlayerConfig& config);     // fresh PlayerId
-    static Player* fromString  (const std::string&  yaml,
-                                const PlayerId&     playerId,
-                                const PlayerConfig& config);
-    static Player* fromFile    (const PlayerId&     playerId,
-                                const PlayerConfig& config);
+    static Player* createPlayer(const std::string& playerName); // Fresh PlayerId
+    static Player* fromString  (const std::string& yaml,
+                                const PlayerId&    playerId);
     /// @}
 
     /// @name Modifiers
@@ -101,24 +95,15 @@ public:
     bool                 haveAnyOddsCapableBet()                  const;
     const SessionHistory::Sessions& getSessionHistory()           const;
 
-    /// @name File operations
+    /// @name YAML conversion
     /// @{
-    void saveFile() const;
-    void loadFile();
     YAML::Node toYAML() const;
-    void fromYAML(const YAML::Node& node);
-    /// @}
-
-    /// @name Bet preferences
-    /// @{
-    YAML::Node getBetPreferences() const;
-    void       setBetPreferences(const YAML::Node& node);
+    void fromYAML(const YAML::Node& node);   // throws
     /// @}
 
 private:
     // order matters
     PlayerId          playerId_;
-    PlayerConfig      config_;
     Bank              wallet_;     // overriden by yaml
 
     // order doesn't matter
@@ -129,7 +114,6 @@ private:
     CrapsTable*       pTable_ = nullptr;
     PlayerStats       currentStats_;
     PlayerStats       alltimeStats_;
-    YAML::Node        betPrefs_;   // "BetPreferences" section, opaque here
     mutable LastRollStats lastRollStats_;
 
     // Default bank constants for player
@@ -183,15 +167,13 @@ Player Responsibilities:
 
 @li Maintains player's money
 @li Tracks player's bets
-@li Know how to read/write its own data
-@li Exports toYAML() and reads fromYAML()
-@li Maintains one file per player
-@li All player files located in the players directory
-@li Carries the player's "BetPreferences" YAML section (LastFills,
-    and later AutoFills and QuickBets) without interpreting it. The
-    controller owns the meaning of that section; Player only reads it
-    from the file, hands it out, accepts a replacement, and writes it
-    back with the rest of the player's data.
+@li Exports its own state with toYAML() and restores it with fromYAML()
+@li Knows nothing about files, paths or where that YAML is stored.
+    Lib-controller's PlayerManager owns each player's file and decides
+    when to read and write it.
+@li shutdown() ends the player's session (leaves the table, records the
+    session summary, merges stats). It writes nothing to disk. Call
+    toYAML() and persist it after shutdown().
 
 */
 

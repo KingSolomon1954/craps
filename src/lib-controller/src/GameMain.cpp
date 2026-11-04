@@ -15,6 +15,7 @@
 #include <gen/BuildInfo.h>
 #include <gen/Logger.h>
 #include <cassert>
+#include <iostream>
 
 using namespace Ctrl;
 
@@ -205,14 +206,24 @@ GameMain::shutdownView()
 void
 GameMain::explicitShutdown()
 {
-    // Before table shutdown; that's what makes each player write its file.
+    // Players are shut down by the table first. That merges this session
+    // into each player's stats. Only then are the players saved.
+    Gbl::pTable->shutdown();
+
+    Gen::ErrorPass saveEp;
+    Gen::ReturnCode saved = Gen::ReturnCode::Success;
     if (Gbl::pPlayerMgr != nullptr)
     {
-        Gbl::pPlayerMgr->saveUserBetPrefs();
+        saved = Gbl::pPlayerMgr->saveAll(saveEp);
     }
 
-    Gbl::pTable->shutdown();
     shutdownView();
+
+    // View is down so the console is ours again.
+    if (saved == Gen::ReturnCode::Fail)
+    {
+        std::cerr << "ERROR: " << saveEp.description() << std::endl;
+    }
     // Gbl::pEventHandler->shutdown();  // N/A
     // Gbl::pPlayerMgr   ->shutdown();  // N/A
     // Gbl::pTableMgr    ->shutdown();  // N/A

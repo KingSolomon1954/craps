@@ -33,14 +33,13 @@ struct CrapsTableFixture
 
     CrapsTableFixture()
     {
-        PlayerConfig playerConfig { "playerFilesDirectory" };
-        p1 = Player::createPlayer("Player1", playerConfig);
-        p2 = Player::createPlayer("Player2", playerConfig);
-        p3 = Player::createPlayer("Player3", playerConfig);
-        p4 = Player::createPlayer("Player4", playerConfig);
-        p5 = Player::createPlayer("Player5", playerConfig);
-        p6 = Player::createPlayer("Player6", playerConfig);
-        p7 = Player::createPlayer("Player7", playerConfig);
+        p1 = Player::createPlayer("Player1");
+        p2 = Player::createPlayer("Player2");
+        p3 = Player::createPlayer("Player3");
+        p4 = Player::createPlayer("Player4");
+        p5 = Player::createPlayer("Player5");
+        p6 = Player::createPlayer("Player6");
+        p7 = Player::createPlayer("Player7");
         
         config.maxSessions = 50;
         config.maxRecentRolls = 25;
