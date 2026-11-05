@@ -247,3 +247,9 @@ track that amount independently.
 (Done) Eliminate GameControllerIntfc in favor of Events and EventLoop\
 (Done) Implement minimal game loop\
 (Done) Add getBool() to MultiLayerManager
+
+
+### Table Switching
+
+- TableManager::switchCrapsTable() needs to call EP_SET()
+  for proper error handling
