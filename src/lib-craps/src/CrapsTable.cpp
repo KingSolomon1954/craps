@@ -12,6 +12,7 @@
 #include <gen/Logger.h>
 #include <fmt/format.h>
 #include <algorithm>
+#include <iterator>
 #include <cassert>
 #include <cstdint>
 #include <fstream>
@@ -265,13 +266,114 @@ CrapsTable::removePlayer(Player& player)
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
+    // If the shooter is leaving, the dice go to the next player at the
+    // table, or to nobody if this was the last player.
+    Player* newShooter = pCurrentShooter_;
+    if (pCurrentShooter_ == &player)
+    {
+        auto it = std::find(players_.begin(), players_.end(), &player);
+        ++it;
+        if (it == players_.end())
+            it = players_.begin();
+        newShooter = (*it != &player) ? *it : nullptr;
+    }
+
     removePlayerBets(&player);   // Bet money given to the house bank.
     removePlayerByPtr(&player);
+
+    if (newShooter != pCurrentShooter_)
+    {
+        pCurrentShooter_ = newShooter;
+        if (newShooter != nullptr)
+        {
+            Ctrl::UslNewShooter ev;
+            ev.playerId = newShooter->getPlayerId();
+            Gen::EventManager::instance().publish(ev);
+        }
+    }
 
     sendEventPlayerLeftTable(player);
     sendEventTableBetsChanged();
     sendEventTableBalanceChanged();
     
+    return {};
+}
+
+/*-----------------------------------------------------------*//**
+
+Replaces one player at the table with another.
+
+The leaving player's session ends (Player::endSession()) and any bets
+are pulled from the table and returned to him. The joining player takes
+the leaving player's seat, so the order of players at the table does not
+change, and takes over the dice if the leaving player was the shooter.
+
+Nothing changes unless the replacement can go ahead: the leaving player
+must be at the table and the joining player must not be.
+
+@param[in] leaving
+    the player at the table who goes away
+@param[in] joining
+    the player not at the table who takes his place
+
+@return
+    Success, otherwise fail and ep has the reason.
+*/
+zeus::expected<void, Gen::ErrorPass>
+CrapsTable::replacePlayer(Player& leaving, Player& joining)
+{
+    Gen::ErrorPass ep;
+    if (!havePlayer(&leaving))
+    {
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError,
+               Es::Indeterminate, "Unable to replace player: " +
+               leaving.getName() + ". Player is not at this table.");
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+    if (fifHavePlayer(joining, ep))   // Includes replacing a player with himself
+    {
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
+    const auto   seat       = std::distance(
+        players_.begin(),
+        std::find(players_.begin(), players_.end(), &leaving));
+    const bool   wasShooter = (pCurrentShooter_ == &leaving);
+
+    // The dice go to the joining player, not to whoever is next.
+    if (wasShooter)
+    {
+        pCurrentShooter_ = nullptr;
+    }
+
+    leaving.endSession();   // Leaves the table, returns bets
+
+    auto result = joining.joinTable(*this);
+    if (!result)
+    {
+        // Should not happen, since a seat has just been freed. Put the
+        // leaving player back so the table is as good as it was.
+        LOG_ERROR("CrapsTable::replacePlayer(): joining player failed to "
+                  "join; restoring leaving player");
+        (void) leaving.joinTable(*this);
+        if (wasShooter && havePlayer(&leaving))
+        {
+            pCurrentShooter_ = &leaving;
+        }
+        return zeus::unexpected<Gen::ErrorPass>(std::move(result).error());
+    }
+
+    // joinTable() adds at the end. Move him into the vacated seat.
+    players_.splice(std::next(players_.begin(), seat),
+                    players_, std::prev(players_.end()));
+
+    if (wasShooter)
+    {
+        pCurrentShooter_ = &joining;
+        Ctrl::UslNewShooter ev;
+        ev.playerId = joining.getPlayerId();
+        Gen::EventManager::instance().publish(ev);
+    }
     return {};
 }
 

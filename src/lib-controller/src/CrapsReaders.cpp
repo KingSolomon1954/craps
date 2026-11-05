@@ -754,7 +754,14 @@ CrapsReaders::readTableCurrentShooter(
         ep.prepend(diagPrefix("tableCurrentShooter", "retrieve current shooter"));
         return Gen::ReturnCode::Fail;
     }
-    playerId = pTable->getCurrentShooter()->getPlayerId();
+    Craps::Player* pShooter = pTable->getCurrentShooter();
+    if (pShooter == nullptr)
+    {
+        ep.setDescription("There is no current shooter.");
+        ep.prepend(diagPrefix("tableCurrentShooter", "retrieve current shooter"));
+        return Gen::ReturnCode::Fail;
+    }
+    playerId = pShooter->getPlayerId();
     return Gen::ReturnCode::Success;
 }
 

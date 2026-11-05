@@ -37,6 +37,7 @@ enum class EventType
     ReqChangeBet,              // not yet implemented
     ReqAutoFill,
     ReqQuickBet,
+    ReqSwitchPlayer,
     ReqTerminate,
 
     // Responses
@@ -44,6 +45,7 @@ enum class EventType
     RspOddsBet,
     RspRemoveBet,              // not yet implemented
     RspChangeBet,              // not yet implemented
+    RspSwitchPlayer,
 
     // Unsolicited
     UslBettingClosed,
@@ -65,6 +67,7 @@ enum class EventType
     UslBetChanged,
     UslAutoFillChanged,
     UslQuickBetChanged,
+    UslUserPlayerSwitched,
     
     UslTableBetsChanged,
     UslTableSessionStatsChanged,
@@ -491,6 +494,48 @@ struct RspMakeBet : public GameEvent
 
     RspMakeBet()
         : GameEvent{EventSource::Controller, EventType::RspMakeBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// The person wants to play as a different player.
+struct ReqSwitchPlayer : public GameEvent
+{
+    Craps::PlayerId playerId;   ///< The player to become the user player
+
+    ReqSwitchPlayer()
+        : GameEvent{EventSource::View, EventType::ReqSwitchPlayer}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqSwitchPlayer. If not switched, the user player is
+/// unchanged and still at the table, and error says why.
+struct RspSwitchPlayer : public GameEvent
+{
+    bool            switched = false;
+    Craps::PlayerId fromPlayerId;   ///< The user player when asked
+    Craps::PlayerId toPlayerId;     ///< The player asked for
+    Gen::ErrorPass  error;
+
+    RspSwitchPlayer()
+        : GameEvent{EventSource::Controller, EventType::RspSwitchPlayer}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// The user player changed. Sent after RspSwitchPlayer, only when the
+/// switch happened. Everything the View shows about the user is stale.
+struct UslUserPlayerSwitched : public GameEvent
+{
+    Craps::PlayerId fromPlayerId;
+    Craps::PlayerId toPlayerId;
+
+    UslUserPlayerSwitched()
+        : GameEvent{EventSource::Controller, EventType::UslUserPlayerSwitched}
     {}
 };
 

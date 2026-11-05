@@ -45,6 +45,7 @@ public:
                                                // comes from fromYAML()
    ~Player() = default;
     void shutdown();
+    void endSession();
 
     static Player* createPlayer(const std::string& playerName); // Fresh PlayerId
     static Player* fromString  (const std::string& yaml,
@@ -102,6 +103,7 @@ public:
     /// @}
 
 private:
+    void beginNewSession();
     // order matters
     PlayerId          playerId_;
     Bank              wallet_;     // overriden by yaml
@@ -112,6 +114,8 @@ private:
     std::string       fullDescription_;
     std::list<BetPtr> bets_;
     CrapsTable*       pTable_ = nullptr;
+    bool              sessionEnded_ = false; // endSession() ran; the next
+                                             // joinTable() starts a new one
     PlayerStats       currentStats_;
     PlayerStats       alltimeStats_;
     mutable LastRollStats lastRollStats_;
@@ -171,9 +175,12 @@ Player Responsibilities:
 @li Knows nothing about files, paths or where that YAML is stored.
     Lib-controller's PlayerManager owns each player's file and decides
     when to read and write it.
-@li shutdown() ends the player's session (leaves the table, records the
-    session summary, merges stats). It writes nothing to disk. Call
-    toYAML() and persist it after shutdown().
+@li endSession() ends the player's session: leaves the table, records the
+    session summary, merges stats. It writes nothing to disk. Call
+    toYAML() and persist it afterward. The player can then join a table
+    again, which starts a fresh session (new stats, new session clock,
+    the balance carries over). shutdown() is endSession() at program
+    quit.
 
 */
 

@@ -49,6 +49,8 @@ public:
     // Players
     zeus::expected<void, Gen::ErrorPass> addPlayer   (Player& player);
     zeus::expected<void, Gen::ErrorPass> removePlayer(Player& player);
+    zeus::expected<void, Gen::ErrorPass> replacePlayer(Player& leaving,
+                                                       Player& joining);
     void setShooter(Player& pPlayer);
 
     // Bets

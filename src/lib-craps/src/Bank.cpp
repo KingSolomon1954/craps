@@ -120,6 +120,26 @@ Bank::resetStats()
 }
 
 //-----------------------------------------------------------------
+//
+// Starts a new session. Whatever the balance is now becomes the
+// session's starting balance, and everything counted for the previous
+// session is cleared. The balance itself does not change. Call after
+// mergeStats(), or the previous session's stats are lost.
+//
+void
+Bank::beginNewSession()
+{
+    sessionStartBalance_ = getBalance();
+    amtDeposited_        = 0;
+    amtWithdrawn_        = 0;
+    amtRefilled_         = 0;
+    numDeposits_         = 0;
+    numWithdrawals_      = 0;
+    numRefills_          = 0;
+    currentStats_.reset();
+}
+
+//-----------------------------------------------------------------
 
 const BankStats&
 Bank::getCurrentStats() const

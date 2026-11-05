@@ -55,6 +55,12 @@ EventHandler::EventHandler()
             this->onReqQuickBet(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::ReqSwitchPlayer>(
+        [this](const Ctrl::ReqSwitchPlayer& ev)
+        {
+            this->onReqSwitchPlayer(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::ReqTerminate>(
         [this](const Ctrl::ReqTerminate& ev)
         {
@@ -256,6 +262,48 @@ EventHandler::onReqQuickBet(const Ctrl::ReqQuickBet& ev) const
         "\n      amount: " + std::to_string(ev.amount));
 
     // No response event
+}
+
+//----------------------------------------------------------------
+//
+// Makes the requested player the user player. Always answers with
+// RspSwitchPlayer. Only when the switch happened, follows with
+// UslUserPlayerSwitched.
+//
+void
+EventHandler::onReqSwitchPlayer(const Ctrl::ReqSwitchPlayer& ev) const
+{
+    const std::string fname("EventHandler::onReqSwitchPlayer(): ");
+    LOG_TRACE("Entered " + fname);
+
+    Ctrl::RspSwitchPlayer rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.toPlayerId    = ev.playerId;
+    if (Craps::Player* pUser = Gbl::pPlayerMgr->getUserPlayer())
+    {
+        rsp.fromPlayerId = pUser->getPlayerId();
+    }
+
+    Gen::ErrorPass ep;
+    if (Gbl::pPlayerMgr->switchPlayer(ev.playerId, ep) == Gen::ReturnCode::Success)
+    {
+        rsp.switched = true;
+    }
+    else
+    {
+        ep.prepend(fname);
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        rsp.error = std::move(ep);
+    }
+    Gen::EventManager::instance().publish(rsp);
+
+    if (rsp.switched)
+    {
+        Ctrl::UslUserPlayerSwitched usl;
+        usl.fromPlayerId = rsp.fromPlayerId;
+        usl.toPlayerId   = rsp.toPlayerId;
+        Gen::EventManager::instance().publish(usl);
+    }
 }
 
 //----------------------------------------------------------------

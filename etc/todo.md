@@ -10,6 +10,19 @@
 - Add a warning like: “You have active bets. Are you sure
 - you want to quit and abandon them?”
 
+### Switch player: View (CUI and GUI)
+- Menu to pick a player from PlayerManager::getPlayerList(), leaving out
+- players already at the table (buddies)
+- Confirm first if the user has bets on the table. Switching takes them
+- off the table and returns the money
+- Send ReqSwitchPlayer. Handle RspSwitchPlayer (error text if not
+- switched) and UslUserPlayerSwitched (refresh everything about the user)
+
+### Remember the user player across sessions
+- ConfigManager is read-only, so the user player chosen at runtime is
+- lost at quit. Persist it (small session file?) and honor
+- startWithLastPlayers at startup
+
 ### Save Config to yaml file
 
 ### Need unit test for initial bank money
@@ -77,6 +90,7 @@ track that amount independently.
 (Done) Table file I/O moved from Craps::CrapsTable to TableManager (YamlFile)
 (Done) LastFill is per player (PlayerPrefs), no longer a singleton
 (Done) AutoFills and QuickBets saved to and loaded from the player's file (PlayerPrefs)
+(Done) Switch player in controller and model (ReqSwitchPlayer, RspSwitchPlayer, UslUserPlayerSwitched)
 (Done) Add payout hint to DialogBetAmount
 (Done) Fix window width of MenuOddsBet
 (Done) Fix multiple odds bets for same bet and number MenuOddsBet

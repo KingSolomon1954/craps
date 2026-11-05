@@ -99,12 +99,27 @@ Player::fromYAML(const YAML::Node& node)
 
 //----------------------------------------------------------------
 //
-//  Ends the player's session: leaves the table, records today's session
-//  and merges stats. Writes nothing to disk. The caller persists
-//  toYAML() afterward (see PlayerManager::shutdown()).
+//  Program is quitting. Same as ending the session.
 //
 void
 Player::shutdown()
+{
+    endSession();
+}
+
+//----------------------------------------------------------------
+//
+//  Ends the player's session: leaves the table, records the session
+//  and merges stats. Writes nothing to disk. The caller persists
+//  toYAML() afterward (see PlayerManager::shutdown() and
+//  PlayerManager::switchPlayer()).
+//
+//  Used when the program quits and when the user switches to another
+//  player. A player who switched out can join a table again later,
+//  see beginNewSession().
+//
+void
+Player::endSession()
 {
     (void) leaveTable();
 
@@ -118,6 +133,23 @@ Player::shutdown()
     // Merge alltime stats with today's session.
     alltimeStats_.merge(currentStats_);
     wallet_.mergeStats();
+
+    sessionEnded_ = true;
+}
+
+//----------------------------------------------------------------
+//
+//  Called when a player who has ended a session joins a table again.
+//  Everything counted for the old session was merged into the alltime
+//  stats, so start counting afresh. The balance carries over.
+//
+void
+Player::beginNewSession()
+{
+    currentStats_.reset();
+    wallet_.beginNewSession();
+    alltimeStats_.sessionHistory.beginNextSession();
+    sessionEnded_ = false;
 }
 
 //----------------------------------------------------------------
@@ -135,6 +167,10 @@ Player::joinTable(CrapsTable& table)
     }
 
     pTable_ = &table;
+    if (sessionEnded_)
+    {
+        beginNewSession();
+    }
     return {};
 }
 
@@ -191,6 +227,7 @@ Player::leaveTable()
         return zeus::unexpected<Gen::ErrorPass>(std::move(result).error());
     }
 
+    pTable_ = nullptr;  // No longer at a table; bets are refused until we join
     return {};
 }
 
