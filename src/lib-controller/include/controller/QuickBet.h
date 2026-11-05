@@ -9,6 +9,7 @@
 #include <vector>
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>
+#include <yaml-cpp/yaml.h>
 
 namespace Ctrl {
 
@@ -26,8 +27,8 @@ public:
     
     /// @name Lifecycle
     /// @{
+    QuickBet() = default;
    ~QuickBet() = default;
-    static QuickBet& instance();
     /// @}
     
     /// @name Modifiers
@@ -36,16 +37,17 @@ public:
     void setQuickBet   (const QuickBetEntry& qbe);
     void deleteQuickBet(const QuickBetEntry& qbe);
     void deleteQuickBet(size_t index);
+    void clear();
+    void fromYAML(const YAML::Node& node);
     /// @}
 
     /// @name Observers
     /// @{
     const QuickBets& getQuickBets();
+    YAML::Node toYAML() const;
     /// @}
     
 private:
-    QuickBet() = default;
-    
     QuickBets bets_;
 };
 
@@ -63,6 +65,20 @@ The QuickBet class in controller has these responsibilities:
 @li setQuickBet() - replaces a quick bet if the entry already exists, zero is valid amount
 @li getQuickBets() - returns the read-only vector of quick bet entries
 @li deleteQuickBet() - delete an entry, shift entries if necessary, no empty slots
+@li clear() - forgets all entries
+
+@par Ownership and persistence
+
+Not a singleton, and it publishes no events; it is plain data. Each
+player has one, held in PlayerPrefs, which PlayerManager owns.
+EventHandler changes the user's QuickBet and publishes UslQuickBetChanged.
+
+The order of the entries matters, since quick bets are applied and
+deleted by index. toYAML() and fromYAML() keep it. They convert between
+the entries and a YAML sequence (see BetEntryYaml.h). PlayerPrefs puts
+it under "QuickBets" in the player file's "Prefs" section. fromYAML()
+replaces the current contents and never throws; bad entries are logged
+and skipped.
 
 */
 

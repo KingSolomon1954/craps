@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <controller/LastFill.h>
+#include <controller/BetEntryYaml.h>
 #include <craps/CrapsTypes.h>
 #include <gen/Logger.h>
 #include <algorithm>
@@ -79,61 +80,22 @@ LastFill::clear()
 YAML::Node
 LastFill::toYAML() const
 {
-    YAML::Node seq(YAML::NodeType::Sequence);
-    for (const auto& e : fills_)
-    {
-        YAML::Node n;
-        n["betName"]   = EnumBetName::toString(e.betName);
-        n["pivot"]     = e.pivot;
-        n["isOddsBet"] = e.isOddsBet;
-        n["amount"]    = e.amount;
-        seq.push_back(n);
-    }
-    return seq;
+    return betEntriesToYAML(fills_);
 }
 
 //----------------------------------------------------------------
 //
 // Replaces current entries with those in the YAML sequence. Never
 // throws. Anything unusable is logged and skipped, leaving whatever
-// good entries remain.
+// good entries remain. A missing section is normal, e.g. a player who
+// never bet.
 //
 void
 LastFill::fromYAML(const YAML::Node& node)
 {
-    const std::string fname("LastFill::fromYAML(): ");
-
     fills_.clear();
-
-    // Missing section is normal, e.g. a player who never bet, or a
-    // player file written before this feature existed.
-    if (!node.IsDefined() || node.IsNull())
-    {
-        return;
-    }
-    if (!node.IsSequence())
-    {
-        LOG_WARN(fname + "LastFills is not a sequence; ignoring it");
-        return;
-    }
-
-    for (const auto& n : node)
-    {
-        try
-        {
-            LastFillEntry e;
-            e.betName   = EnumBetName::fromString(n["betName"].as<std::string>());
-            e.pivot     = n["pivot"].as<size_t>();
-            e.isOddsBet = n["isOddsBet"].as<bool>();
-            e.amount    = n["amount"].as<Gen::Money>();
-
-            setLastFill(e);   // also collapses duplicate entries
-        }
-        catch (const std::exception& ex)
-        {
-            LOG_WARN(fname + "skipping bad entry: " + ex.what());
-        }
-    }
+    betEntriesFromYAML<LastFillEntry>(node, "LastFill::fromYAML(): ",
+        [this](const LastFillEntry& e) { setLastFill(e); });  // collapses dups
 }
 
 //----------------------------------------------------------------

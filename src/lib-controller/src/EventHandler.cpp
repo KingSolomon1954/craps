@@ -204,7 +204,22 @@ EventHandler::onReqAutoFill(const Ctrl::ReqAutoFill& ev) const
         ev.isOddsBet,
         ev.amount
     };
-    AutoFill::instance().setAutoFill(afe);
+    Gbl::pPlayerMgr->userPrefs().autoFill().setAutoFill(afe);
+
+    Ctrl::UslAutoFillChanged changed;
+    changed.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
+    changed.betName   = ev.betName;
+    changed.pivot     = ev.pivot;
+    changed.isOddsBet = ev.isOddsBet;
+    changed.amount    = ev.amount;
+    Gen::EventManager::instance().publish(changed);
+
+    LOG_INFO(std::string("AutoFill Configured") +
+        "\n    playerId: " + changed.playerId                    +
+        "\n     betName: " + EnumBetName::toString(ev.betName)    +
+        "\n       pivot: " + std::to_string(ev.pivot)             +
+        "\n   isOddsBet: " + (ev.isOddsBet ? "true" : "false")    +
+        "\n      amount: " + std::to_string(ev.amount));
 
     // No response event
 }
@@ -223,7 +238,22 @@ EventHandler::onReqQuickBet(const Ctrl::ReqQuickBet& ev) const
         ev.isOddsBet,
         ev.amount
     };
-    QuickBet::instance().setQuickBet(qbe);
+    Gbl::pPlayerMgr->userPrefs().quickBet().setQuickBet(qbe);
+
+    Ctrl::UslQuickBetChanged changed;
+    changed.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
+    changed.betName   = ev.betName;
+    changed.pivot     = ev.pivot;
+    changed.isOddsBet = ev.isOddsBet;
+    changed.amount    = ev.amount;
+    Gen::EventManager::instance().publish(changed);
+
+    LOG_INFO(std::string("QuickBet Configured") +
+        "\n    playerId: " + changed.playerId                    +
+        "\n     betName: " + EnumBetName::toString(ev.betName)    +
+        "\n       pivot: " + std::to_string(ev.pivot)             +
+        "\n   isOddsBet: " + (ev.isOddsBet ? "true" : "false")    +
+        "\n      amount: " + std::to_string(ev.amount));
 
     // No response event
 }

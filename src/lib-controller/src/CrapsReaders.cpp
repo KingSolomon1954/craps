@@ -999,7 +999,8 @@ CrapsReaders::getAutoFill(
     AutoFill::AutoFillEntry& afe,
     Gen::ErrorPass& ep)
 {
-    if (AutoFill::instance().getAutoFill(afe) == Gen::ReturnCode::Fail)
+    if (Gbl::pPlayerMgr->userPrefs().autoFill().getAutoFill(afe)
+        == Gen::ReturnCode::Fail)
     {
         ep.setDescription("No such auto fill entry exists.");
         return Gen::ReturnCode::Fail;
@@ -1014,16 +1015,7 @@ CrapsReaders::getAutoFills(
     AutoFill::AutoFills& autoFills,  // return arg
     Gen::ErrorPass& ep)
 {
-    AutoFill::AutoFills controllerFills =
-        AutoFill::instance().getAutoFills();
-
-    for (size_t i = 0; i < controllerFills.size(); i++)
-    {
-        autoFills[i].betName   = controllerFills[i].betName;
-        autoFills[i].pivot     = controllerFills[i].pivot;
-        autoFills[i].isOddsBet = controllerFills[i].isOddsBet;
-        autoFills[i].amount    = controllerFills[i].amount;
-    }
+    autoFills = Gbl::pPlayerMgr->userPrefs().autoFill().getAutoFills();
     return Gen::ReturnCode::Success;
 }
 
@@ -1033,24 +1025,14 @@ CrapsReaders::getAutoFills(
 //
 //----------------------------------------------------------------
 
-#if 0
 Gen::ReturnCode
 CrapsReaders::getQuickBets(
-    std::vector<QuickBetEntry>& quickBets,  // return arg
+    QuickBet::QuickBets& quickBets,  // return arg
     Gen::ErrorPass& ep)
 {
-    QuickBet::Bets controllerBets = QuickBet::instance()->getQuickBets();
-
-    for (size_t i = 0; i < controllerBets.size(); i++)
-    {
-        quickBets[i].betName = controllerBets[i].betName;
-        quickBets[i].pivot   = controllerBets[i].pivot;
-        quickBets[i].oddsBet = controllerBets[i].isOddsBet;
-        quickBets[i].amount  = controllerBets[i].amount;
-    }
+    quickBets = Gbl::pPlayerMgr->userPrefs().quickBet().getQuickBets();
     return Gen::ReturnCode::Success;
 }
-#endif
 
 //----------------------------------------------------------------
 //
