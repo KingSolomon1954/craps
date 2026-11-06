@@ -92,7 +92,7 @@ struct TableRules
         unsigned basisPoints = 500;       // 500 = 5%
         CommissionBasis basis = CommissionBasis::OnWin;
         CommissionCollection collection = CommissionCollection::OnWinningDecision;
-        Gen::Money minimum = 0;
+        Gen::Money minimum = 1;
         Gen::Money roundingUnit = 1;
         PayoutRounding rounding = PayoutRounding::Down;
     };

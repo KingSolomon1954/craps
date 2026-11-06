@@ -304,7 +304,7 @@ static constexpr RefArray Lay4or10{
 static constexpr RefArray Lay5or9{
     "Pays 2:3 True Odds 2:3 House Edge 2.00%",
     "Wins on 7. Loses on 5 or 9 respectively",
-    "$10 bet -> $6 profit; $16 total returned",
+    "$9 bet -> $6 profit; $15 total returned",
     "Bet stays on table until a 7 or 5/9 is rolled",
     "Can be bet anytime, ok to remove anytime",
     "Off on comeout roll by default (configurable)"
@@ -312,7 +312,7 @@ static constexpr RefArray Lay5or9{
 static constexpr RefArray Lay6or8{
     "Pays 5:6 True Odds 5:6 House Edge 2.27%",
     "Wins on 7. Loses on 6 or 8 respectively",
-    "$10 bet -> $8 profit; $18 total returned",
+    "$12 bet -> $10 profit; $22 total returned",
     "Bet stays on table until a 7 or 6/8 is rolled",
     "Can be bet anytime, ok to remove anytime",
     "Off on comeout roll by default (configurable)"
@@ -384,7 +384,7 @@ static constexpr RefArray DontOddsBet4or10{
 static constexpr RefArray DontOddsBet5or9{
     "Pays 2:3 True Odds 2:3 House Edge 0%",
     "Loses on 5 or 9 respectively. Wins on 7",
-    "$10 bet -> $6 profit; $16 total returned",
+    "$9 bet -> $6 profit; $15 total returned",
     "Bet stays on table until a 7 or 5/9 is rolled",
     "Can only be bet after comeout roll",
     "Off on comeout roll by default (configurable)"
@@ -392,7 +392,7 @@ static constexpr RefArray DontOddsBet5or9{
 static constexpr RefArray DontOddsBet6or8{
     "Pays 5:6 True Odds 5:6 House Edge 0%",
     "Loses on 6 or 8 respectively. Wins on 7",
-    "$10 bet -> $5 profit; $15 total returned",
+    "$12 bet -> $10 profit; $22 total returned",
     "Bet stays on table until a 7 or 6/8 is rolled",
     "Can only be bet after comeout roll",
     "Off on comeout roll by default (configurable)"

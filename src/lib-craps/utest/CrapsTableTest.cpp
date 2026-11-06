@@ -2356,3 +2356,36 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet amount validation")
 }
 
 //----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:payout-compatible wager limits")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    YAML::Node rules = yaml["Rules"]["advanced"];
+
+    rules["buyCommission"]["minimum"] = 1;
+    rules["layCommission"]["minimum"] = 1;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+
+    const auto passOdds = table->getBetAmountLimits(BetName::PassLine, 6, true, 10);
+    CHECK(passOdds.minimum == 5);
+    CHECK(passOdds.increment == 5);
+
+    const auto dontOdds = table->getBetAmountLimits(BetName::DontPass, 6, true, 10);
+    CHECK(dontOdds.minimum == 6);
+    CHECK(dontOdds.increment == 6);
+
+    const auto place = table->getBetAmountLimits(BetName::Place, 6, false, 0);
+    CHECK(place.minimum == 12);
+    CHECK(place.increment == 6);
+
+    const auto buy = table->getBetAmountLimits(BetName::Buy, 6, false, 0);
+    CHECK(buy.minimum == 20);
+    CHECK(buy.increment == 5);
+
+    const auto lay = table->getBetAmountLimits(BetName::Lay, 6, false, 0);
+    CHECK(lay.minimum == 24);
+    CHECK(lay.increment == 6);
+}

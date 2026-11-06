@@ -9,6 +9,7 @@
 #include <craps/CrapsTable.h>
 #include <algorithm>
 #include <cstdint>
+#include <numeric>
 #include <limits>
 #include <craps/Player.h>
 #include <cassert>
@@ -31,15 +32,42 @@ CrapsTable::getBetAmountLimits(BetName betName,
         return static_cast<Gen::Money>(std::min<std::uint64_t>(
             value, std::numeric_limits<Gen::Money>::max()));
     };
+    const auto ceilDivide = [](std::uint64_t numerator, std::uint64_t denominator)
+    {
+        return (numerator + denominator - 1) / denominator;
+    };
+    const auto payoutIncrement = [](const OddsTables::OddsEntry& payout)
+    {
+        return static_cast<Gen::Money>(
+            payout.denominator / std::gcd(payout.numerator, payout.denominator));
+    };
+    const auto roundUp = [](Gen::Money amount, Gen::Money increment)
+    {
+        const Gen::Money remainder = amount % increment;
+        return remainder == 0 ? amount : amount + increment - remainder;
+    };
+    const auto roundDown = [](Gen::Money amount, Gen::Money increment)
+    {
+        return amount - (amount % increment);
+    };
 
     if (oddsBet)
     {
-        limits.increment = rules_.odds.wagerIncrement;
-        limits.minimum = limits.increment;
         if (contractAmount == 0 ||
             (pivot != 4 && pivot != 5 && pivot != 6 &&
              pivot != 8 && pivot != 9 && pivot != 10))
+        {
+            limits.increment = rules_.odds.wagerIncrement;
+            limits.minimum = limits.increment;
             return limits;
+        }
+
+        const auto& payout =
+            (betName == BetName::DontPass || betName == BetName::DontCome)
+                ? OddsTables::oddsDont[pivot] : OddsTables::oddsPass[pivot];
+        limits.increment = std::lcm(
+            rules_.odds.wagerIncrement, payoutIncrement(payout));
+        limits.minimum = limits.increment;
 
         const unsigned multiplier =
             rules_.odds.style == TableRules::OddsLimitStyle::FlatMultiplier
@@ -52,9 +80,6 @@ CrapsTable::getBetAmountLimits(BetName betName,
 
         if (rules_.odds.maximumPotentialWin > 0)
         {
-            const auto& payout =
-                (betName == BetName::DontPass || betName == BetName::DontCome)
-                    ? OddsTables::oddsDont[pivot] : OddsTables::oddsPass[pivot];
             if (payout.numerator == 0)
                 limits.maximum = 0;
             else
@@ -67,8 +92,7 @@ CrapsTable::getBetAmountLimits(BetName betName,
                 limits.maximum = std::min(limits.maximum, maxByWin);
             }
         }
-        // The permitted amount must also satisfy the configured wager increment.
-        limits.maximum -= limits.maximum % limits.increment;
+        limits.maximum = roundDown(limits.maximum, limits.increment);
         return limits;
     }
 
@@ -76,6 +100,48 @@ CrapsTable::getBetAmountLimits(BetName betName,
     limits.minimum = wager.minimum;
     limits.maximum = wager.maximum;
     limits.increment = wager.increment;
+
+    if (betName == BetName::Place || betName == BetName::Buy ||
+        betName == BetName::Lay)
+    {
+        if (pivot != 4 && pivot != 5 && pivot != 6 &&
+            pivot != 8 && pivot != 9 && pivot != 10)
+            return limits;
+
+        const auto& payout = betName == BetName::Place
+            ? OddsTables::oddsPlace[pivot]
+            : (betName == BetName::Buy
+                ? OddsTables::oddsPass[pivot] : OddsTables::oddsDont[pivot]);
+        limits.increment = std::lcm(wager.increment, payoutIncrement(payout));
+
+        // Place, Buy, and Lay wagers must meet at least the table's line-bet
+        // minimum, then be rounded up to a payout-compatible increment.
+        limits.minimum = std::max(
+            wager.minimum, rules_.wagerLimit(BetName::PassLine).minimum);
+
+        if (betName == BetName::Buy || betName == BetName::Lay)
+        {
+            const auto& commission = betName == BetName::Buy
+                ? rules_.buyCommission : rules_.layCommission;
+            if (commission.minimum > 0 && commission.basisPoints > 0)
+            {
+                const std::uint64_t requiredBasis = ceilDivide(
+                    static_cast<std::uint64_t>(commission.minimum) * 10000,
+                    commission.basisPoints);
+                const std::uint64_t requiredWager =
+                    commission.basis == TableRules::CommissionBasis::OnWager
+                        ? requiredBasis
+                        : ceilDivide(requiredBasis * payout.denominator,
+                                     payout.numerator);
+                limits.minimum = std::max(
+                    limits.minimum, toMoney(requiredWager));
+            }
+        }
+
+        limits.minimum = roundUp(limits.minimum, limits.increment);
+        limits.maximum = roundDown(limits.maximum, limits.increment);
+        return limits;
+    }
 
     unsigned components = 0;
     switch (betName)
@@ -105,9 +171,8 @@ CrapsTable::getBetAmountLimits(BetName betName,
             limits.maximum = std::min(limits.maximum, maxByWin);
         }
     }
-    limits.maximum -= limits.maximum % limits.increment;
-    if (limits.minimum % limits.increment != 0)
-        limits.minimum += limits.increment - (limits.minimum % limits.increment);
+    limits.maximum = roundDown(limits.maximum, limits.increment);
+    limits.minimum = roundUp(limits.minimum, limits.increment);
     return limits;
 }
 
