@@ -27,6 +27,12 @@
 - lost at quit. Persist it (small session file?) and honor
 - startWithLastPlayers at startup
 
+### Fix RollStats
+
+Place (simulated) bets should be considered off on comeout
+rolls. Currently they are counted as a loss/win on comeout rolls - when
+7 is rolled (lose) or number is rolled (win).
+
 ### Save Config to yaml file
 
 ### Need unit test for initial bank money
