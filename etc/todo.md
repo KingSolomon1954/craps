@@ -17,11 +17,6 @@
 - Send ReqSwitchPlayer. Handle RspSwitchPlayer (error text if not
 - switched) and UslUserPlayerSwitched (refresh everything about the user)
 
-### Table Switching
-
-- TableManager::switchCrapsTable() needs to call EP_SET()
-  for proper error handling
-
 ### Remember the user player across sessions
 - ConfigManager is read-only, so the user player chosen at runtime is
 - lost at quit. Persist it (small session file?) and honor
@@ -47,6 +42,11 @@
 ### Implement the many MenuConfiguration options
 
 ### Need to inhibit various actions during animation roll
+
+### Switching CrapsTables
+
+Give user the option of carrying forward buddy players.
+Logic needs to move buddy players along with switch.
 
 ### Track contract-only amounts separately in BetStats
 
@@ -83,7 +83,8 @@ track that amount independently.
 
 ## Done
 
-(Done) Implemented comprehensive Table Rules facility
+(Done) Us EP_SET during table switching
+(Done) Implemented comprehensive Table Rules policies
 (Done) Minimum bets are wrong.
 (Done) Added World bet.
 (Done) Fix evaluation() processing and various bugs
