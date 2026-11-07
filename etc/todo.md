@@ -1,4 +1,3 @@
-
 ## TODO
 
 ### Write script to copy files/assets to install locations
@@ -17,6 +16,11 @@
 - off the table and returns the money
 - Send ReqSwitchPlayer. Handle RspSwitchPlayer (error text if not
 - switched) and UslUserPlayerSwitched (refresh everything about the user)
+
+### Table Switching
+
+- TableManager::switchCrapsTable() needs to call EP_SET()
+  for proper error handling
 
 ### Remember the user player across sessions
 - ConfigManager is read-only, so the user player chosen at runtime is
@@ -76,6 +80,8 @@ track that amount independently.
 ### Allow same bet to add to existing bet 
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
+
+## Done
 
 (Done) Implemented comprehensive Table Rules facility
 (Done) Minimum bets are wrong.
@@ -262,8 +268,3 @@ track that amount independently.
 (Done) Implement minimal game loop\
 (Done) Add getBool() to MultiLayerManager
 
-
-### Table Switching
-
-- TableManager::switchCrapsTable() needs to call EP_SET()
-  for proper error handling
