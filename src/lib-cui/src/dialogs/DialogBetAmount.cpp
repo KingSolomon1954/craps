@@ -168,161 +168,6 @@ isRollOutcomeBet(BetName name)
            name == BetName::Horn     || name == BetName::World;
 }
 
-struct SimulatedBetCounts
-{
-    unsigned wins   = 0;
-    unsigned losses = 0;
-};
-
-//----------------------------------------------------------------
-
-SimulatedBetCounts
-simulatedBetCounts(const Craps::RollStats& stats,
-                   BetName betName,
-                   unsigned pivot)
-{
-    SimulatedBetCounts result;
-
-    const auto addPointCounts = [&](const Craps::PointCounts& counts)
-    {
-        result.wins   += counts.wins.count();
-        result.losses += counts.lose.count();
-    };
-
-    const auto addAllPointCounts =
-        [&](const std::array<Craps::PointCounts, 11>& counts)
-    {
-        for (unsigned point : {4U, 5U, 6U, 8U, 9U, 10U})
-            addPointCounts(counts[point]);
-    };
-
-    const auto countByNumber = [&](auto isWin)
-    {
-        for (unsigned number = 2; number <= 12; ++number)
-        {
-            const unsigned count = stats.numberCounts[number].count();
-
-            if (isWin(number))
-                result.wins += count;
-            else
-                result.losses += count;
-        }
-    };
-
-    switch (betName)
-    {
-    case BetName::PassLine:
-        if (pivot != 0)
-        {
-            if (pivot < stats.passPntCnts.size())
-                addPointCounts(stats.passPntCnts[pivot]);
-        }
-        else
-        {
-            result.wins   += stats.passWinsComeOut.count();
-            result.losses += stats.passLoseComeOut.count();
-            addAllPointCounts(stats.passPntCnts);
-        }
-        break;
-
-    case BetName::DontPass:
-        if (pivot != 0)
-        {
-            if (pivot < stats.dontPassPntCnts.size())
-                addPointCounts(stats.dontPassPntCnts[pivot]);
-        }
-        else
-        {
-            result.wins   += stats.dontPassWinsComeOut.count();
-            result.losses += stats.dontPassLoseComeOut.count();
-            addAllPointCounts(stats.dontPassPntCnts);
-        }
-        break;
-
-    case BetName::Come:
-        if (pivot != 0)
-        {
-            if (pivot < stats.comePntCnts.size())
-                addPointCounts(stats.comePntCnts[pivot]);
-        }
-        else
-        {
-            result.wins   += stats.comeWinsComeOut.count();
-            result.losses += stats.comeLoseComeOut.count();
-            addAllPointCounts(stats.comePntCnts);
-        }
-        break;
-
-    case BetName::DontCome:
-        if (pivot != 0)
-        {
-            if (pivot < stats.dontComePntCnts.size())
-                addPointCounts(stats.dontComePntCnts[pivot]);
-        }
-        else
-        {
-            result.wins   += stats.dontComeWinsComeOut.count();
-            result.losses += stats.dontComeLoseComeOut.count();
-            addAllPointCounts(stats.dontComePntCnts);
-        }
-        break;
-
-    case BetName::Place:
-    case BetName::Buy:
-    case BetName::Lay:
-        if (pivot >= 2 && pivot <= 12 && pivot != 7)
-        {
-            result.wins   = stats.numberCounts[pivot].count();
-            result.losses = stats.numberCounts[7].count();
-        }
-        break;
-
-    case BetName::Hardway:
-        if (pivot < stats.hardwayCounts.size())
-            addPointCounts(stats.hardwayCounts[pivot]);
-        break;
-
-    case BetName::Field:
-        result.wins   = stats.fieldBetWins.count();
-        result.losses = stats.fieldBetLose.count();
-        break;
-
-    case BetName::AnyCraps:
-        countByNumber([](unsigned n)
-        {
-            return n == 2 || n == 3 || n == 12;
-        });
-        break;
-
-    case BetName::AnySeven:
-        countByNumber([](unsigned n)
-        {
-            return n == 7;
-        });
-        break;
-
-    case BetName::CandE:
-    case BetName::Horn:
-        countByNumber([](unsigned n)
-        {
-            return n == 2 || n == 3 || n == 11 || n == 12;
-        });
-        break;
-
-    case BetName::World:
-        countByNumber([](unsigned n)
-        {
-            return n == 2 || n == 3 || n == 7 || n == 11 || n == 12;
-        });
-        break;
-
-    default:
-        break;
-    }
-
-    return result;
-}
-
 //----------------------------------------------------------------
 
 struct BetProfile
@@ -861,32 +706,29 @@ DialogBetAmount::drawStatistics()
         Ctrl::CrapsReaders::getActiveCrapsTable(tableId, ep) == Gen::ReturnCode::Success &&
         Ctrl::CrapsReaders::readTableCurrentStats(tableId, tableStats, ep) == Gen::ReturnCode::Success;
 
-    Craps::BetStat playerWins, playerLosses;
-    SimulatedBetCounts simulated;
-
+    Craps::BetStat playerWins, playerLosses, simulatedWins, simulatedLosses;
     const std::string key = betStatsKey(cb.getBetName(), cb.getPivot());
     const bool aggregateByPrefix =
         cb.getPivot() == 0 && isRollOutcomeBet(cb.getBetName());
-
     if (havePlayer)
     {
         const auto& stats = playerStats.betStats.betTypeStats;
         playerWins = findBetStat(stats.wins, key, aggregateByPrefix);
         playerLosses = findBetStat(stats.lose, key, aggregateByPrefix);
     }
-
     if (haveTable)
     {
-        simulated = simulatedBetCounts(
-            tableStats.rollStats, cb.getBetName(), cb.getPivot());
+        const auto& stats = tableStats.betStats.betTypeStats;
+        simulatedWins = findBetStat(stats.wins, key, aggregateByPrefix);
+        simulatedLosses = findBetStat(stats.lose, key, aggregateByPrefix);
     }
 
-    const unsigned playerCount        = playerWins.count + playerLosses.count;
-    const unsigned simulatedCount     = simulated.wins + simulated.losses;
-    const Gen::Money playerTotal      = playerWins.amountBet + playerLosses.amountBet;
-    const Gen::Money playerWinAmount  = playerWins.amount;
+    const unsigned playerCount = playerWins.count + playerLosses.count;
+    const unsigned simulatedCount = simulatedWins.count + simulatedLosses.count;
+    const Gen::Money playerTotal = playerWins.amountBet + playerLosses.amountBet;
+    const Gen::Money playerWinAmount = playerWins.amount;
     const Gen::Money playerLoseAmount = playerLosses.amount;
-    const BetProfile profile          = profileFor(cb.getBetName(), cb.getPivot());
+    const BetProfile profile = profileFor(cb.getBetName(), cb.getPivot());
     std::string expected = "--";
     std::string expectedPct = "--.-%";
 
@@ -918,26 +760,24 @@ DialogBetAmount::drawStatistics()
     mvwaddstr(pWin_, 20, 2, padLine(line1).c_str());
 
     auto statsLine = [&](std::string_view label, unsigned count,
-                         unsigned wins, unsigned losses)
+                         const Craps::BetStat& wins, const Craps::BetStat& losses)
     {
-        const std::string winLoss = fmt::format("{}W,{}L", wins, losses);
+        const std::string winLoss = fmt::format("{}W,{}L", wins.count, losses.count);
         const std::string out = fmt::format(
             "{:<10}{:>3} {:<8} Win rate: {:>6} Expected: {:>6}",
             label,
             count,
             winLoss,
-            percent(wins, losses),
+            percent(wins.count, losses.count),
             expectedPct);
         return padLine(out);
     };
 
     mvwaddstr(pWin_, 21, 2,
-              statsLine("Counts:", playerCount,
-                        playerWins.count, playerLosses.count).c_str());
-
+              statsLine("Counts:", playerCount, playerWins, playerLosses).c_str());
     mvwaddstr(pWin_, 22, 2,
               statsLine("Simulated:", simulatedCount,
-                        simulated.wins, simulated.losses).c_str());
+                        simulatedWins, simulatedLosses).c_str());
 }
 
 //----------------------------------------------------------------

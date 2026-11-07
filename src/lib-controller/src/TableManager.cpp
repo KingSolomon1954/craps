@@ -179,10 +179,7 @@ TableManager::switchCrapsTable(
     }
     catch (const std::runtime_error& e)
     {
-        EP_SET(ep, Gen::ErrorPass::ErrorName::CaughtException,
-                   Gen::ErrorPass::ErrorType::ProcessingError,
-                   Gen::ErrorPass::Severity::Indeterminate,
-               "TableManager::switchCrapsTable(): ");
+        ep.setDescription("TableManager::switchCrapsTable(): ");
         ep.append(e.what());
         return Gen::ReturnCode::Fail;
     }
