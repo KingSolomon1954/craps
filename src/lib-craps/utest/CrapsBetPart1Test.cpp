@@ -1,4 +1,3 @@
-
 //----------------------------------------------------------------
 //
 // File: CrapsBetPart1Test.cpp
@@ -31,14 +30,12 @@ using namespace Craps;
 
 struct CrapsBetPart1Fixture
 {
-    PlayerConfig config { "playerFilesDirectory" };
-
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     
     CrapsBetPart1Fixture()
-        : p1(Player::createPlayer("Player1", config))
-        , p2(Player::createPlayer("Player2", config))
+        : p1(Player::createPlayer("Player1"))
+        , p2(Player::createPlayer("Player2"))
     {
     }
 
@@ -110,6 +107,10 @@ TEST_CASE_FIXTURE(CrapsBetPart1Fixture, "CrapsBet:Constructor")
     SUBCASE("Bad Args")
     {
         CHECK_THROWS_AS(CrapsBet b(p1, BetName::Invalid, 100),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(p1, BetName::Count, 100),
+                                   std::invalid_argument);
+        CHECK_THROWS_AS(CrapsBet b(nullptr, BetName::Field, 100),
                                    std::invalid_argument);
         CHECK_THROWS_AS(CrapsBet b(p1, BetName::PassLine, 0),
                                    std::invalid_argument);

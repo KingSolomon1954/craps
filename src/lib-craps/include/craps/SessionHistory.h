@@ -44,6 +44,7 @@ public:
     size_t                   getMaxSessions()           const;
 
     void setMaxSessions(size_t maxSessions);
+    void beginNextSession();
     void addSessionSummary(
         unsigned numPlayers,
         unsigned numBets,

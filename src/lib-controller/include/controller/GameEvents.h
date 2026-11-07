@@ -37,6 +37,7 @@ enum class EventType
     ReqChangeBet,              // not yet implemented
     ReqAutoFill,
     ReqQuickBet,
+    ReqSwitchPlayer,
     ReqTerminate,
 
     // Responses
@@ -44,6 +45,7 @@ enum class EventType
     RspOddsBet,
     RspRemoveBet,              // not yet implemented
     RspChangeBet,              // not yet implemented
+    RspSwitchPlayer,
 
     // Unsolicited
     UslBettingClosed,
@@ -60,10 +62,12 @@ enum class EventType
 
     UslBetMade,
     UslBetResolved,
-    UslBetRemoved,             // not yet implemented
+    UslBetEvaluationFailed,
+    UslBetRemoved,
     UslBetChanged,
     UslAutoFillChanged,
     UslQuickBetChanged,
+    UslUserPlayerSwitched,
     
     UslTableBetsChanged,
     UslTableSessionStatsChanged,
@@ -253,6 +257,33 @@ struct UslBetMade : public GameEvent
 
 //----------------------------------------------------------------
 
+struct UslBetEvaluationFailed : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId;
+    BetName         betName = BetName::Invalid;
+    std::string     description;
+
+    UslBetEvaluationFailed()
+        : GameEvent{EventSource::Model, EventType::UslBetEvaluationFailed}
+    {}
+};
+
+//----------------------------------------------------------------
+
+struct UslBetRemoved : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId;
+    BetName         betName = BetName::Invalid;
+
+    UslBetRemoved()
+        : GameEvent{EventSource::Model, EventType::UslBetRemoved}
+    {}
+};
+
+//----------------------------------------------------------------
+
 struct UslBetChanged : public GameEvent
 {
     Craps::PlayerId playerId;
@@ -271,11 +302,13 @@ struct UslBetChanged : public GameEvent
 
 struct UslBetResolved : public GameEvent
 {
-    Craps::PlayerId playerId;                      ///< Player ID
-    BetName         betName    = BetName::Invalid; ///< Bet Name
-    Craps::BetId    betId      = 0;                ///< Bet ID
-    Gen::Money      amountWin  = 0;                ///< Amount won
-    Gen::Money      amountLose = 0;                ///< Amount lost
+    Craps::PlayerId playerId;                          ///< Player ID
+    BetName         betName        = BetName::Invalid; ///< Bet Name
+    Craps::BetId    betId          = 0;                ///< Bet ID
+    Gen::Money      amountWin      = 0;                ///< Amount won
+    Gen::Money      amountLose     = 0;                ///< Amount lost
+    Gen::Money      returnToPlayer = 0;                ///< Due to "Off"
+    Gen::Money      commission     = 0;                ///< Deducted Buy/Lay
 
     UslBetResolved()
         : GameEvent{EventSource::Model, EventType::UslBetResolved}
@@ -461,6 +494,48 @@ struct RspMakeBet : public GameEvent
 
     RspMakeBet()
         : GameEvent{EventSource::Controller, EventType::RspMakeBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// The person wants to play as a different player.
+struct ReqSwitchPlayer : public GameEvent
+{
+    Craps::PlayerId playerId;   ///< The player to become the user player
+
+    ReqSwitchPlayer()
+        : GameEvent{EventSource::View, EventType::ReqSwitchPlayer}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqSwitchPlayer. If not switched, the user player is
+/// unchanged and still at the table, and error says why.
+struct RspSwitchPlayer : public GameEvent
+{
+    bool            switched = false;
+    Craps::PlayerId fromPlayerId;   ///< The user player when asked
+    Craps::PlayerId toPlayerId;     ///< The player asked for
+    Gen::ErrorPass  error;
+
+    RspSwitchPlayer()
+        : GameEvent{EventSource::Controller, EventType::RspSwitchPlayer}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// The user player changed. Sent after RspSwitchPlayer, only when the
+/// switch happened. Everything the View shows about the user is stale.
+struct UslUserPlayerSwitched : public GameEvent
+{
+    Craps::PlayerId fromPlayerId;
+    Craps::PlayerId toPlayerId;
+
+    UslUserPlayerSwitched()
+        : GameEvent{EventSource::Controller, EventType::UslUserPlayerSwitched}
     {}
 };
 

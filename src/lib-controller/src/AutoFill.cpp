@@ -5,25 +5,10 @@
 //----------------------------------------------------------------
 
 #include <controller/AutoFill.h>
-#include <controller/GameEvents.h>
-#include <controller/Globals.h>
-#include <controller/PlayerManager.h>
-#include <craps/CrapsTypes.h>
-#include <craps/Player.h>
-#include <gen/EventManager.h>
-#include <gen/Logger.h>
-#include <cassert>
+#include <controller/BetEntryYaml.h>
+#include <algorithm>
 
 using namespace Ctrl;
-
-//----------------------------------------------------------------
-
-AutoFill&
-AutoFill::instance()
-{
-    static AutoFill af;
-    return af;
-}
 
 //----------------------------------------------------------------
 
@@ -53,15 +38,6 @@ AutoFill::setAutoFill(const AutoFillEntry& afe)
     {
         fills_.push_back(afe);    // No match: add new entry
     }
-
-    Ctrl::UslAutoFillChanged ev;
-    ev.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
-    ev.betName   = afe.betName;
-    ev.pivot     = afe.pivot;
-    ev.isOddsBet = afe.isOddsBet;
-    ev.amount    = afe.amount;
-
-    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------
@@ -83,6 +59,37 @@ const AutoFill::AutoFills&
 AutoFill::getAutoFills()
 {
     return fills_;
+}
+
+//----------------------------------------------------------------
+
+void
+AutoFill::clear()
+{
+    fills_.clear();
+}
+
+//----------------------------------------------------------------
+//
+// Entries as a YAML sequence, in order.
+//
+YAML::Node
+AutoFill::toYAML() const
+{
+    return betEntriesToYAML(fills_);
+}
+
+//----------------------------------------------------------------
+//
+// Replaces current entries with those in the YAML sequence. Never
+// throws. Anything unusable is logged and skipped.
+//
+void
+AutoFill::fromYAML(const YAML::Node& node)
+{
+    fills_.clear();
+    betEntriesFromYAML<AutoFillEntry>(node, "AutoFill::fromYAML(): ",
+        [this](const AutoFillEntry& e) { setAutoFill(e); });  // collapses dups
 }
 
 //----------------------------------------------------------------

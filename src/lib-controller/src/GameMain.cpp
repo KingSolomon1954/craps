@@ -10,14 +10,10 @@
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
 #include <controller/TableManager.h>
-#include <craps/CrapsTable.h>
 #include <cui/CuiMain.h>
 #include <gen/BuildInfo.h>
 #include <gen/Logger.h>
-#include <gen/Debug.h>
 #include <cassert>
-#include <iostream>
-#include <rang.hpp>
 
 using namespace Ctrl;
 
@@ -208,11 +204,18 @@ GameMain::shutdownView()
 void
 GameMain::explicitShutdown()
 {
-    Gbl::pTable->shutdown();
+    // View goes first. This stops the View thread, so nothing reads the
+    // model while it shuts down, and gives the console back. Events the
+    // model publishes from here on are dropped by the View.
     shutdownView();
+
+    // Order matters. The table shuts its players down, merging this
+    // session into their stats, and saves itself. Only then can
+    // PlayerManager save the players.
+    Gbl::pTableMgr ->shutdown();
+    Gbl::pPlayerMgr->shutdown();
+
     // Gbl::pEventHandler->shutdown();  // N/A
-    // Gbl::pPlayerMgr   ->shutdown();  // N/A
-    // Gbl::pTableMgr    ->shutdown();  // N/A
     // Gbl::pConfigMgr   ->shutdown();  // N/A
     // Gbl::pBuildInfo   ->shutdown();  // N/A
 }

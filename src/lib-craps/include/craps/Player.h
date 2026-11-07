@@ -11,7 +11,6 @@
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/LastRollStats.h>
-#include <craps/PlayerConfig.h>
 #include <craps/PlayerStats.h>
 #include <gen/ReturnCode.h>
 #include <gen/ErrorPass.h>
@@ -42,19 +41,15 @@ public:
 
     /// @name Lifecycle
     /// @{
-    Player(const PlayerId&     playerId, // Existing playerId,
-           const PlayerConfig& config);  // name will come from file
-
+    explicit Player(const PlayerId& playerId); // Existing playerId, rest
+                                               // comes from fromYAML()
    ~Player() = default;
     void shutdown();
+    void endSession();
 
-    static Player* createPlayer(const std::string&  playerName,  // Creates a
-                                const PlayerConfig& config);     // fresh PlayerId
-    static Player* fromString  (const std::string&  yaml,
-                                const PlayerId&     playerId,
-                                const PlayerConfig& config);
-    static Player* fromFile    (const PlayerId&     playerId,
-                                const PlayerConfig& config);
+    static Player* createPlayer(const std::string& playerName); // Fresh PlayerId
+    static Player* fromString  (const std::string& yaml,
+                                const PlayerId&    playerId);
     /// @}
 
     /// @name Modifiers
@@ -101,18 +96,16 @@ public:
     bool                 haveAnyOddsCapableBet()                  const;
     const SessionHistory::Sessions& getSessionHistory()           const;
 
-    /// @name File operations
+    /// @name YAML conversion
     /// @{
-    void saveFile() const;
-    void loadFile();
     YAML::Node toYAML() const;
-    void fromYAML(const YAML::Node& node);
+    void fromYAML(const YAML::Node& node);   // throws
     /// @}
 
 private:
+    void beginNewSession();
     // order matters
     PlayerId          playerId_;
-    PlayerConfig      config_;
     Bank              wallet_;     // overriden by yaml
 
     // order doesn't matter
@@ -121,6 +114,8 @@ private:
     std::string       fullDescription_;
     std::list<BetPtr> bets_;
     CrapsTable*       pTable_ = nullptr;
+    bool              sessionEnded_ = false; // endSession() ran; the next
+                                             // joinTable() starts a new one
     PlayerStats       currentStats_;
     PlayerStats       alltimeStats_;
     mutable LastRollStats lastRollStats_;
@@ -138,6 +133,9 @@ private:
     BetPtr findBetById(const BetId& betId) const;
     bool removeBetByPtr(BetPtr& pBet);
     void setName(const std::string& playerName);
+    void sendEventBetResolved(BetName betName,
+                              BetId betId,
+                              const DecisionRecord& dr) const;
     void sendEventBetResolved(BetName         betName,
                               BetId           betId,
                               Gen::Money      amountWin,
@@ -152,7 +150,9 @@ private:
     std::string diagPrefix(size_t idx)                          const;
     bool fifNoTable(Gen::ErrorPass& ep)                         const;
     bool fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep)         const;
-    bool fifInsufficientFunds(BetPtr pBet,  Gen::Money amount,
+    bool fifInsufficientFunds(BetPtr pBet,
+                              Gen::Money newAmount,
+                              Gen::Money oldAmount,
                               Gen::ErrorPass& ep)               const;
     bool fifBadAddBet (BetPtr pBet, Gen::ErrorPass& ep)         const;
 
@@ -171,10 +171,16 @@ Player Responsibilities:
 
 @li Maintains player's money
 @li Tracks player's bets
-@li Know how to read/write its own data
-@li Exports toYAML() and reads fromYAML()
-@li Maintains one file per player
-@li All player files located in the players directory
+@li Exports its own state with toYAML() and restores it with fromYAML()
+@li Knows nothing about files, paths or where that YAML is stored.
+    Lib-controller's PlayerManager owns each player's file and decides
+    when to read and write it.
+@li endSession() ends the player's session: leaves the table, records the
+    session summary, merges stats. It writes nothing to disk. Call
+    toYAML() and persist it afterward. The player can then join a table
+    again, which starts a fresh session (new stats, new session clock,
+    the balance carries over). shutdown() is endSession() at program
+    quit.
 
 */
 

@@ -99,7 +99,7 @@ MenuBetting::fillWindow()
     mvwaddstr(pWin_, 14, 2, "[a] Any Craps");
     mvwaddstr(pWin_, 15, 2, "[7] Any 7");
     mvwaddstr(pWin_, 16, 2, "[n] Horn Bet");
-    mvwaddstr(pWin_, 17, 2, "[w] World Bet (todo)");
+    mvwaddstr(pWin_, 17, 2, "[w] World Bet");
     mvwaddstr(pWin_, 18, 2, "[g] Bet Flags");
     mvwaddstr(pWin_, 19, 2, "[q] Quick Bet");
     mvwaddstr(pWin_, 20, 2, "[x] Remove Bets");
@@ -178,7 +178,7 @@ MenuBetting::handleKey(int ch)
     case 'a': doBets(BetName::AnyCraps); break;
     case '7': doBets(BetName::AnySeven); break;
     case 'n': doBets(BetName::Horn);     break;
-//  case 'w': doBets(BetName::World);    break;
+    case 'w': doBets(BetName::World);    break;
     case 'o': doOddsBets();              break;
     case 'g': doBetFlags();              break;
     case 'x': doRemoveBets();            break;
@@ -209,7 +209,7 @@ MenuBetting::doBets(BetName betName)
     case BetName::CandE:
     case BetName::AnyCraps:
     case BetName::AnySeven:
-    // case BetName::World:
+    case BetName::World:
     case BetName::Horn:      doGetAmount(); break;
     case BetName::Place:
     case BetName::Buy:
@@ -241,9 +241,38 @@ void
 MenuBetting::doGetAmount()
 {
     LOG_TRACE("MenuBetting::doGetAmount() " + EnumBetName::toString(betName_));
+
+    if (!badBet())
+    {
+        populateCarrier();
+        activateDialogBetAmount();
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Check early for a legal bet so plapyer can avoid filling out a chain
+// of menus only to be rejected at the final DialogBetAmount.
+//
+bool
+MenuBetting::badBet() const
+{
+    std::string diag;
+    bool isBetAllowed = false;
     
-    populateCarrier();
-    activateDialogBetAmount();
+    (void) Ctrl::CrapsReaders::readBetIsAllowed(betName_, isBetAllowed, diag);
+    if (!isBetAllowed)
+    {
+        DialogMessage::MessageText m;
+        m.label = DialogMessage::MessageLabel::Info;
+        m.brief = "Bet is not permitted at this time";
+        m.detail = diag;
+
+        DialogMessage::instance().configure(m);
+        SurfaceManager::instance().pushSurface(&DialogMessage::instance());
+        return true;
+    }
+    return false;
 }
 
 //----------------------------------------------------------------
@@ -351,7 +380,7 @@ MenuBetting::activateMenuOddsBet()
 //----------------------------------------------------------------
 
 bool
-MenuBetting::hasQualifyingOddsBets()
+MenuBetting::hasQualifyingOddsBets() const
 {
     Gen::ErrorPass  ep;
     Craps::PlayerId pid;

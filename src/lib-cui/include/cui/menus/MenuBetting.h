@@ -54,9 +54,11 @@ private:
     void doRollDice();
     void populateCarrier();
     void activateDialogBetAmount();
+    void activateDialogMessage();
     void activateMenuPivot();
     void activateMenuOddsBet();
-    bool hasQualifyingOddsBets();
+    bool badBet()                const;
+    bool hasQualifyingOddsBets() const;
     void back();
 };
 

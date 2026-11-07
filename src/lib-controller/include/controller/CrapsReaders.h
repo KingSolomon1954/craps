@@ -13,9 +13,11 @@
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
 #include <controller/AutoFill.h>
+#include <controller/LastFill.h>
 #include <controller/QuickBet.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
+#include <craps/TableRules.h>
 #include <craps/SessionHistory.h>
 #include <gen/ErrorPass.h>
 #include <gen/MoneyUtils.h>
@@ -93,6 +95,10 @@ public:
     static const PlayerManifest::PlayerList& readPlayerList();
     
     // Bet related
+    static Gen::ReturnCode readBetIsAllowed(
+        const BetName& betName,
+        bool& isBetAllowed,
+        std::string& str);
     static Gen::ReturnCode readBetIsRemovable(
         const Craps::BetId& betid,
         bool& isRemovable,
@@ -116,6 +122,14 @@ public:
     static Gen::ReturnCode readBetOddsAmount(
         const Craps::BetId& betId,
         Gen::Money& oddsAmount,
+        Gen::ErrorPass& ep);
+    static Gen::ReturnCode readBetAmountLimits(
+        const Craps::PlayerId& playerId,
+        BetName betName,
+        unsigned pivot,
+        bool oddsBet,
+        Gen::Money contractAmount,
+        Craps::BetAmountLimits& limits,
         Gen::ErrorPass& ep);
     static Gen::ReturnCode readBetOffComeOutRoll(
         const Craps::BetId& betId,
@@ -149,6 +163,7 @@ public:
     };
     
     static TableMinMaxRules readTableMinMaxRules();
+    static Craps::TableRules readTableRules();
     static Gen::Money readHouseBalance();
     static Gen::ReturnCode readTableNumPlayers(
         const Craps::TableId& tableId,
@@ -240,7 +255,11 @@ public:
     static std::string getUserPlayerName();
     static const Craps::PlayerId& getUserPlayerId();
     
-    // Auto Fill
+    // Last Fill
+    static Gen::ReturnCode getLastFill(
+        LastFill::LastFillEntry& entry,
+        Gen::ErrorPass& ep);
+
     static Gen::ReturnCode getAutoFill(
         AutoFill::AutoFillEntry& entry,
         Gen::ErrorPass& ep);
@@ -277,5 +296,3 @@ Used mainly by the CUI and GUI to populate dynamic menus as needed.
 } // namespace Ctrl
 
 //----------------------------------------------------------------
-
-

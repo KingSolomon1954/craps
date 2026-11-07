@@ -5,23 +5,10 @@
 //----------------------------------------------------------------
 
 #include <controller/QuickBet.h>
-#include <controller/GameEvents.h>
-#include <controller/Globals.h>
-#include <controller/PlayerManager.h>
-#include <craps/CrapsTypes.h>
-#include <craps/Player.h>
-#include <gen/EventManager.h>
-#include <cassert>
+#include <controller/BetEntryYaml.h>
+#include <algorithm>
 
 using namespace Ctrl;
-
-//----------------------------------------------------------------
-
-QuickBet& QuickBet::instance()
-{
-    static QuickBet qb;
-    return qb;
-}
 
 //----------------------------------------------------------------
 
@@ -90,15 +77,6 @@ QuickBet::setQuickBet(const QuickBetEntry& qbe)
     {
         bets_.push_back(qbe);    // No match: add new entry
     }
-
-    Ctrl::UslQuickBetChanged ev;
-    ev.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
-    ev.betName   = qbe.betName;
-    ev.pivot     = qbe.pivot;
-    ev.isOddsBet = qbe.isOddsBet;
-    ev.amount    = qbe.amount;
-
-    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------
@@ -137,6 +115,38 @@ const QuickBet::QuickBets&
 QuickBet::getQuickBets()
 {
     return bets_;
+}
+
+//----------------------------------------------------------------
+
+void
+QuickBet::clear()
+{
+    bets_.clear();
+}
+
+//----------------------------------------------------------------
+//
+// Entries as a YAML sequence, in order. Order matters; quick bets
+// are applied and deleted by index.
+//
+YAML::Node
+QuickBet::toYAML() const
+{
+    return betEntriesToYAML(bets_);
+}
+
+//----------------------------------------------------------------
+//
+// Replaces current entries with those in the YAML sequence. Never
+// throws. Anything unusable is logged and skipped.
+//
+void
+QuickBet::fromYAML(const YAML::Node& node)
+{
+    bets_.clear();
+    betEntriesFromYAML<QuickBetEntry>(node, "QuickBet::fromYAML(): ",
+        [this](const QuickBetEntry& e) { setQuickBet(e); });  // collapses dups
 }
 
 //----------------------------------------------------------------

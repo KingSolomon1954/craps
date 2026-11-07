@@ -9,7 +9,6 @@
 #include <cui/bases/DialogBase.h>
 #include <cui/core/LineInput.h>
 #include <gen/MoneyUtils.h>
-#include <craps/EnumBetName.h>
 #include <array>
 #include <string>
 #include <string_view>
@@ -46,13 +45,10 @@ public:
     
 private:
     WindowPosition winPos_{};
-    // "DontCome bet Odds on the 10"  (27)
-    static constexpr WindowSize winSize_ = {13, 31};  // rows, cols, Fixed size
+    static constexpr WindowSize winSize_ = {24, 59};  // rows, cols, fixed size
 
-    static constexpr std::array<std::string_view, 7> Prompts
+    static constexpr std::array<std::string_view, 5> Prompts
     {
-        "Enter amount:",
-        "",
         "[enter] Submit Bet",
         "[a] Save as AutoFill",
         "[q] Save as Quick Bet",
@@ -60,9 +56,10 @@ private:
         "[. or esc] Back"
     };
 
-    // Input field layout and editing state
+
+    // Input field layout and editing
     static constexpr int inputRow_ = 5;
-    static constexpr int inputCol_ = 2 + Prompts[0].size() + 1;
+    static constexpr int inputCol_ = 2 + std::string_view("Enter amount:").size() + 1;
     static constexpr int numInputBlanks_ = winSize_.cols - inputCol_ - 1;
     static constexpr int inputCharsMax_ = 8;
     Gen::Money inputAmount_ = 0;
@@ -75,12 +72,16 @@ private:
     // Drawing
     void drawStaticContent();
     void drawBorders();
-    void drawHintMultiples();
+    void drawAmountLimits();
+    void drawReference();
+    void drawStatistics();
     void drawPrompts();
     void drawTitle();
     void drawInput();
     std::string prepTitle(const std::string& title);
     Gen::Money getPrefillAmount() const;
+    Gen::Money getAutoFill() const;
+    Gen::Money getLastFill() const;
 
     // Input processing
     void prepLineInput();

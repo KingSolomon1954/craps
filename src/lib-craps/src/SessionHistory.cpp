@@ -81,10 +81,24 @@ SessionHistory::getSessions() const
 
 //-----------------------------------------------------------------
 //
+// Starts the next session within the same run, e.g. a player who
+// switched out and later switched back in. The current session is
+// counted in toYAML(), so the count moves up by one here, and the
+// session clock restarts.
+//
+void
+SessionHistory::beginNextSession()
+{
+    ++numSessionsAlltime_;
+    curSessionStartTime_ = Gen::Timepoint();   // now
+}
+
+//-----------------------------------------------------------------
+//
 // Creates and writes new entry for current session.
 //
 // Call this before saving to file as program is known to be exiting.
-// 
+//
 void
 SessionHistory::addSessionSummary(
     unsigned numPlayers,

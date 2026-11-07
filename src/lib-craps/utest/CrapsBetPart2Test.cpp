@@ -21,6 +21,7 @@
 #include <craps/Dice.h>
 #include <craps/EnumBetName.h>
 #include <craps/Player.h>
+#include <craps/TableRules.h>
 
 using namespace Craps;
 
@@ -28,14 +29,12 @@ using namespace Craps;
 
 struct CrapsBetPart2Fixture
 {
-    PlayerConfig config { "playerFilesDirectory" };
-
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     
     CrapsBetPart2Fixture()
-        : p1(Player::createPlayer("Player1", config))
-        , p2(Player::createPlayer("Player2", config))
+        : p1(Player::createPlayer("Player1"))
+        , p2(Player::createPlayer("Player2"))
     {
     }
 
@@ -915,7 +914,7 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Lay")
 {
     SUBCASE("decisions")
     {
-        Gen::ErrorPass ep;
+//        Gen::ErrorPass ep;
         DecisionRecord dr;
         Dice dice;
 
@@ -1046,7 +1045,6 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture,"CrapsBet:evaluate:Hardway")
 {
     SUBCASE("decisions")
     {
-        Gen::ErrorPass ep;
         DecisionRecord dr;
         Dice dice;
 
@@ -1208,7 +1206,9 @@ void field1(Player* p1, unsigned point, unsigned d1, unsigned d2)
     CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
-    if (dice.value() == 2 || dice.value() == 12)
+    if (dice.value() == 12)
+        CHECK(dr.win == 300);
+    else if (dice.value() == 2)
         CHECK(dr.win == 200);
     else
         CHECK(dr.win == 100);
@@ -1525,3 +1525,181 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Horn")
 }
 
 //----------------------------------------------------------------
+
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:resolved wager lifetime")
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice;
+
+    // A resolved win does not end a Place/Buy/Lay/Hardway wager.
+    dice.set(2, 2);
+    CrapsBet place(p1, BetName::Place, 100, 4);
+    REQUIRE(place.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+
+    CrapsBet buy(p1, BetName::Buy, 100, 4);
+    REQUIRE(buy.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+
+    CrapsBet hardway(p1, BetName::Hardway, 100, 4);
+    REQUIRE(hardway.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+
+    dice.set(3, 4); // seven wins the Lay 4 wager
+    CrapsBet lay(p1, BetName::Lay, 100, 4);
+    REQUIRE(lay.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+
+    // A terminal loss ends a Place wager.
+    CrapsBet losingPlace(p1, BetName::Place, 100, 4);
+    REQUIRE(losingPlace.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.lose > 0);
+    CHECK(dr.removeBet);
+}
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:Hardway on/off")
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice;
+    dice.set(2, 2); // hard 4
+
+    CrapsBet hardway(p1, BetName::Hardway, 100, 4);
+
+    hardway.setHardwayOff();
+    REQUIRE(hardway.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK_FALSE(dr.decision);
+    CHECK(dr.win == 0);
+    CHECK(dr.lose == 0);
+
+    hardway.setHardwayOn();
+    REQUIRE(hardway.testEvaluate(4, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win > 0);
+    CHECK_FALSE(dr.removeBet);
+}
+
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:World")
+{
+    struct Case { unsigned d1; unsigned d2; unsigned payout; };
+    const Case wins[] = {
+        {1, 1, 26}, {1, 2, 11}, {5, 6, 11}, {6, 6, 26}, {3, 4, 0}
+    };
+    for (const auto& c : wins)
+    {
+        Gen::ErrorPass ep;
+        DecisionRecord dr;
+        Dice dice; dice.set(c.d1, c.d2);
+        CrapsBet b(p1, BetName::World, 5);
+        CHECK(b.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision);
+        CHECK(dr.win == c.payout);
+        CHECK(dr.lose == 0);
+        CHECK(dr.pivotAssigned == false);
+    }
+
+    const unsigned losingTotals[][2] = {
+        {1, 3}, {1, 4}, {1, 5}, {3, 5}, {4, 5}, {5, 5}
+    };
+    for (const auto& roll : losingTotals)
+    {
+        Gen::ErrorPass ep;
+        DecisionRecord dr;
+        Dice dice; dice.set(roll[0], roll[1]);
+        CrapsBet b(p1, BetName::World, 5);
+        CHECK(b.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.decision);
+        CHECK(dr.win == 0);
+        CHECK(dr.lose == 5);
+    }
+
+    // Invalid amounts are rejected defensively even when evaluating a bet
+    // without passing through CrapsTable's normal amount validation.
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice; dice.set(3, 4);
+    CrapsBet invalidBet(p1, BetName::World, 6);
+    CHECK(invalidBet.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Fail);
+    CHECK(ep.description().find("multiple of 5") != std::string::npos);
+}
+
+//----------------------------------------------------------------
+
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Field uses TableRules")
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice;
+    dice.set(1, 1); // Field 2
+
+    CrapsBet bet(p1, BetName::Field, 101);
+    TableRules rules;
+    rules.fieldPayouts[2] = {3, 2};
+    rules.payoutUnit = 5;
+    rules.payoutRounding = TableRules::PayoutRounding::Down;
+
+    CHECK(bet.testEvaluate(0, dice, rules, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision);
+    CHECK(dr.win == 150); // 101 * 3 / 2 = 151, rounded down to 5-unit
+}
+
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:TableRules:odds rounding and commissions")
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+    Dice dice;
+    TableRules rules;
+
+    SUBCASE("Odds payout rounds down to configured unit")
+    {
+        CrapsBet bet(p1, BetName::PassLine, 100, 6);
+        bet.testSetOddsAmount(12);
+        rules.odds.rounding = TableRules::PayoutRounding::Down;
+        rules.odds.payoutUnit = 5;
+        dice.set(3, 3); // 6 wins; $12 odds at 6:5 yields $14, rounded down to $10
+        CHECK(bet.testEvaluate(6, dice, rules, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.win == 110);
+    }
+
+    SUBCASE("Buy commission can be configured on wager")
+    {
+        CrapsBet bet(p1, BetName::Buy, 1000, 4);
+        rules.buyCommission.basis = TableRules::CommissionBasis::OnWager;
+        rules.buyCommission.basisPoints = 1000; // 10%
+        rules.buyCommission.minimum = 0;
+        dice.set(2, 2); // 4 wins Buy 4; gross profit is $2,000
+        CHECK(bet.testEvaluate(4, dice, rules, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.commission == 100);
+        CHECK(dr.win == 1900);
+    }
+
+    SUBCASE("Lay commission can be configured on win")
+    {
+        CrapsBet bet(p1, BetName::Lay, 1000, 4);
+        rules.layCommission.basis = TableRules::CommissionBasis::OnWin;
+        rules.layCommission.basisPoints = 1000; // 10%
+        rules.layCommission.minimum = 75;
+        dice.set(3, 4); // 7 wins Lay 4; gross profit is $500
+        CHECK(bet.testEvaluate(4, dice, rules, dr, ep) == Gen::ReturnCode::Success);
+        CHECK(dr.commission == 75);
+        CHECK(dr.win == 425);
+    }
+}

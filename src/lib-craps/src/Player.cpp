@@ -9,13 +9,10 @@
 #include <craps/DecisionRecord.h>
 #include <controller/GameEvents.h>
 #include <gen/EventManager.h>
-#include <gen/FileUtils.h>
 #include <gen/Logger.h>
 #include <gen/Uuid.h>
+#include <fmt/format.h>
 #include <cassert>
-#include <fstream>
-#include <iostream>
-#include <sstream>
 
 using namespace Craps;
 
@@ -23,11 +20,8 @@ using namespace Craps;
 //
 // Constructor.
 //
-Player::Player(
-    const PlayerId&     playerId,
-    const PlayerConfig& config)
+Player::Player(const PlayerId& playerId)
     : playerId_(playerId)
-    , config_(config)
     , wallet_(InitialStartingBankBalance_, RefillThreshold_, RefillAmount_)
 {
 }
@@ -37,88 +31,30 @@ Player::Player(
 // Will create a fresh PlayerId
 //
 Player*
-Player::createPlayer(const std::string&  playerName,
-                     const PlayerConfig& config)
+Player::createPlayer(const std::string& playerName)
 {
-    Player* p = new Player(Gen::generateUuid(), config);
+    Player* p = new Player(Gen::generateUuid());
     p->setName(playerName);
     return p;
 }
 
 /*-----------------------------------------------------------*//**
 
-Construct Player from in-memory YAML node.
+Construct Player from in-memory YAML text.
 
+The text is the Player's own state, the same thing toYAML() produces.
 Throws upon error.
 
 Static function.
 */
 Player*
-Player::fromString(const std::string&  yaml,
-                   const PlayerId&     playerId,
-                   const PlayerConfig& config)
+Player::fromString(const std::string& yaml,
+                   const PlayerId&    playerId)
 {
-    Player* p = new Player(playerId, config);
+    std::unique_ptr<Player> p(new Player(playerId));
     YAML::Node root = YAML::Load(yaml);
-    p->fromYAML(root);
-    return p;
-}
-
-/*-----------------------------------------------------------*//**
-
-Construct Player from YAML file.
-
-Throws upon error.
-
-Static function.
-*/
-Player*
-Player::fromFile(const PlayerId& playerId,
-                 const PlayerConfig& config)
-{
-    Player* p = new Player(playerId, config);
-    p->loadFile();
-    return p;
-}
-
-//----------------------------------------------------------------
-//
-// Save Player to file
-//
-void
-Player::saveFile() const
-{
-    if (config_.playerPath.empty())
-    {
-        LOG_DEBUG("Player::saveFile() skipping; playerPath is empty");
-        return;
-    }
-
-    LOG_DEBUG("Player::saveFile(" + config_.playerPath.string()  + ")");
-    std::ofstream fout(config_.playerPath);
-    fout << toYAML();
-}
-
-//----------------------------------------------------------------
-//
-// Load Player from file
-//
-void
-Player::loadFile()
-{
-    try
-    {
-        std::ifstream fin =
-            Gen::FileUtils::openOrThrow(config_.playerPath);  // throws
-        YAML::Node root = YAML::Load(fin);
-        fromYAML(root);                                       // throws
-    }
-    catch (const std::runtime_error& e)
-    {
-        std::string diag("Player::loadFile(): \"" +
-                         config_.playerPath.string() + "\"; ");
-        throw std::runtime_error(diag + e.what());
-    }
+    p->fromYAML(root);                    // throws
+    return p.release();
 }
 
 //----------------------------------------------------------------
@@ -163,10 +99,27 @@ Player::fromYAML(const YAML::Node& node)
 
 //----------------------------------------------------------------
 //
-//  Save to files, disable timers, etc
+//  Program is quitting. Same as ending the session.
 //
 void
 Player::shutdown()
+{
+    endSession();
+}
+
+//----------------------------------------------------------------
+//
+//  Ends the player's session: leaves the table, records the session
+//  and merges stats. Writes nothing to disk. The caller persists
+//  toYAML() afterward (see PlayerManager::shutdown() and
+//  PlayerManager::switchPlayer()).
+//
+//  Used when the program quits and when the user switches to another
+//  player. A player who switched out can join a table again later,
+//  see beginNewSession().
+//
+void
+Player::endSession()
 {
     (void) leaveTable();
 
@@ -177,10 +130,26 @@ Player::shutdown()
         wallet_.getAmtDeposited(),
         wallet_.getAmtWithdrawn());
 
-    // Merge alltime stats with today's session, then save.
+    // Merge alltime stats with today's session.
     alltimeStats_.merge(currentStats_);
     wallet_.mergeStats();
-    saveFile();
+
+    sessionEnded_ = true;
+}
+
+//----------------------------------------------------------------
+//
+//  Called when a player who has ended a session joins a table again.
+//  Everything counted for the old session was merged into the alltime
+//  stats, so start counting afresh. The balance carries over.
+//
+void
+Player::beginNewSession()
+{
+    currentStats_.reset();
+    wallet_.beginNewSession();
+    alltimeStats_.sessionHistory.beginNextSession();
+    sessionEnded_ = false;
 }
 
 //----------------------------------------------------------------
@@ -191,12 +160,17 @@ Player::joinTable(CrapsTable& table)
     auto result = table.addPlayer(*this);
     if (!result)
     {
-        result.error().prepend("Failed to join table. ");
+        result.error().prepend("Player " + playerName_ +
+                               " Unable to join table. ");
         return zeus::unexpected<Gen::ErrorPass>(
             std::move(result).error());
     }
 
     pTable_ = &table;
+    if (sessionEnded_)
+    {
+        beginNewSession();
+    }
     return {};
 }
 
@@ -237,8 +211,12 @@ Player::leaveTable()
     for (auto it = bets_.begin(); it != bets_.end(); ) // no increment here
     {
         auto pBet = *it;
+        const Gen::Money placementFee = pBet->hasDecision()
+            ? 0 : pBet->placementCommission();
         pTable_->removeBetForce(pBet);
-        wallet_.deposit(pBet->contractAmount() + pBet->oddsAmount());
+        if (placementFee > 0)
+            pTable_->refundPlacementCommission(*pBet);
+        wallet_.deposit(pBet->contractAmount() + pBet->oddsAmount() + placementFee);
         it = bets_.erase(it); // returns next valid iterator
     }
 
@@ -249,6 +227,7 @@ Player::leaveTable()
         return zeus::unexpected<Gen::ErrorPass>(std::move(result).error());
     }
 
+    pTable_ = nullptr;  // No longer at a table; bets are refused until we join
     return {};
 }
 
@@ -278,33 +257,57 @@ Makes a bet on the table.
 zeus::expected<BetPtr, Gen::ErrorPass>
 Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 {
+    const std::string fname("Player::makeBet");
+    LOG_TRACE(fname + "(" + playerName_ + "): making contract bet");
+    
     Gen::ErrorPass ep;
     std::string s = "Unable to make bet(" +
                     std::to_string(contractAmount) +
                     ") for player: " + playerName_ + ". ";
 
     if (fifNoTable(ep)  ||
-        fifInsufficientFunds(nullptr, contractAmount, ep))
+        fifInsufficientFunds(nullptr, contractAmount, 0, ep))
     {
         ep.prepend(s);
+        LOG_ERROR(fname + "() Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
     auto pBet = makeShared(betName, contractAmount, pivot, ep);
-    if (pBet == nullptr || fifBadAddBet(pBet, ep))
+    if (pBet == nullptr)
     {
         ep.prepend(s);
-        // ep.setErrorName() is set in lower functions
         ep.setErrorType("Betting Error");
         ep.setSeverity(Es::Indeterminate);
+        LOG_ERROR(fname + "() Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
-    wallet_.withdraw(contractAmount);
+    const Gen::Money placementFee = pTable_->placementCommission(*pBet, pBet->contractAmount());
+    if (placementFee > 0 &&
+        fifInsufficientFunds(nullptr, contractAmount + placementFee, 0, ep))
+    {
+        ep.prepend(s);
+        LOG_ERROR(fname + "() Error" + ep.fullDesc());
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+    if (fifBadAddBet(pBet, ep))
+    {
+        ep.prepend(s);
+        ep.setErrorType("Betting Error");
+        ep.setSeverity(Es::Indeterminate);
+        LOG_ERROR(fname + "() Error" + ep.fullDesc());
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
+    wallet_.withdraw(contractAmount + placementFee);
+    if (placementFee > 0)
+        pTable_->collectPlacementCommission(*pBet, placementFee);
     bets_.push_back(pBet);
 
     sendEventPlayerBalanceChanged();
     sendEventPlayerBetsChanged();
+    pBet->logBet(fname + "() Accepted");
     
     return pBet;
 }
@@ -324,11 +327,34 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 Gen::ReturnCode
 Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
 {
-    wallet_.withdraw(pBet->contractAmount() + pBet->oddsAmount());
+    if (pBet == nullptr)
+    {
+        EP_SET(ep, En::NullPointerError, Et::ProcessingError,
+               Es::Indeterminate, "Player::restoreBet(): pBet is nullptr.");
+        return Gen::ReturnCode::Fail;
+    }
+    if (pTable_ == nullptr)
+    {
+        EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,
+               Es::Indeterminate, "Player::restoreBet(): player has not joined a table.");
+        return Gen::ReturnCode::Fail;
+    }
+    const bool feeAlreadyCollected = pBet->placementCommission() > 0;
+    const Gen::Money placementFee = feeAlreadyCollected
+        ? pBet->placementCommission()
+        : (pBet->hasDecision() ? 0 : pTable_->placementCommission(*pBet, pBet->contractAmount()));
+    if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
+    {
+        return Gen::ReturnCode::Fail;
+    }
+    wallet_.withdraw(pBet->contractAmount() + pBet->oddsAmount() +
+                     (feeAlreadyCollected ? 0 : placementFee));
+    if (!feeAlreadyCollected && placementFee > 0)
+        pTable_->collectPlacementCommission(*pBet, placementFee);
     bets_.push_back(pBet);
-    (void) pTable_->addBet(pBet, ep);
-    
+
     sendEventPlayerBetsChanged();
+    sendEventPlayerBalanceChanged();
     return Gen::ReturnCode::Success;
 }
 
@@ -343,6 +369,12 @@ Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
 void
 Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState)
 {
+    if (pBet == nullptr)
+    {
+        LOG_ERROR("Player::restoreAmounts(): pBet is nullptr.");
+        return;
+    }
+
     auto applyDelta = [this](int delta)
     {
         if (delta > 0)
@@ -362,6 +394,16 @@ Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState)
 
     int deltaOdds = pBet->oddsAmount() - prevState.oddsAmount();
     applyDelta(deltaOdds);
+
+    const Gen::Money currentFee = pBet->placementCommission();
+    const Gen::Money previousFee = prevState.placementCommission();
+    applyDelta(static_cast<int>(currentFee) - static_cast<int>(previousFee));
+    if (currentFee != previousFee && pTable_)
+    {
+        pTable_->refundPlacementCommission(*pBet);
+        if (previousFee > 0)
+            pTable_->collectPlacementCommission(*pBet, previousFee);
+    }
 
     sendEventPlayerBalanceChanged();
 }
@@ -419,38 +461,41 @@ conditions are true:
 @li fif prefix means "fault if"
 */
 zeus::expected<void, Gen::ErrorPass>
-Player::setOddsAmount(BetPtr pBet, Gen::Money oddsAmount)
+Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
 {
+    const std::string fname("Player::setOddsAmount()");
+    Gen::ErrorPass ep;
+    
     // fif prefix means "fault if"
 
-    Gen::ErrorPass ep;
     if (fifMissingBet(pBet, ep)                     ||
         fifNoTable(ep)                              ||
-        fifInsufficientFunds(pBet, oddsAmount, ep))
+        fifInsufficientFunds(pBet, newAmount, pBet->oddsAmount(), ep))
     {
-        ep.prepend("Unable to set odds(" + std::to_string(oddsAmount) +
+        ep.prepend("Unable to set odds(" + std::to_string(newAmount) +
             ") for player: " + playerName_ + ". ");
+        LOG_ERROR(fname + " Error " + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
     
     Gen::Money saveOddsAmount = pBet->oddsAmount();
     
-// std::cout << "wallet_.deposit = " << pBet->oddsAmount() << std::endl;
     wallet_.deposit(pBet->oddsAmount());  // give back old amount, if any
-// std::cout << "wallet_.withdraw = " << oddsAmount << std::endl;
-    wallet_.withdraw(oddsAmount);         // take out new amount
+    wallet_.withdraw(newAmount);          // take out new amount
     
-    auto rc = pTable_->setOddsAmount(pBet, oddsAmount, ep);
+    auto rc = pTable_->setOddsAmount(pBet, newAmount, ep);
     if (rc == Gen::ReturnCode::Fail)         // Bet was rejected
     {                                        // Restore prev amount
-        wallet_.deposit(oddsAmount);
+        wallet_.deposit(newAmount);
         wallet_.withdraw(saveOddsAmount);
         ep.prepend(diagPrefix(2));
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
 
     sendEventPlayerBetsChanged();
     sendEventPlayerBalanceChanged();
+    pBet->logBet(fname + " Accepted");
 
     return {};
 }
@@ -476,7 +521,6 @@ Changes the contract amount of a bet on the table.
 
 @internal
 @li fif prefix means "fault if"
-@li Sca suffix means "set contract amount"
 @li 2 is the index to select the right diagPrefix
 */
 zeus::expected<void, Gen::ErrorPass>
@@ -484,12 +528,49 @@ Player::setContractAmount(
     BetPtr pBet,
     Gen::Money newAmount)
 {
-    // TODO
-    // Figure out if adding/subtracting
-    // Check sufficient funds in wallet
-    // call pTable_->setContractAmount()
-    // if success adjust wallet, change contractAmount_, send event
-    // if fail leave wallet alone, keep existing contractAmount_
+    const std::string fname("Player::setContractAmount()");
+    Gen::ErrorPass ep;
+    
+    // fif prefix means "fault if"
+
+    const Gen::Money oldPlacementFee = pBet ? pBet->placementCommission() : 0;
+    const Gen::Money newPlacementFee =
+        (pBet && pTable_) ? pTable_->placementCommission(*pBet, newAmount) : 0;
+    if (fifMissingBet(pBet, ep)                   ||
+        fifNoTable(ep)                            ||
+        fifInsufficientFunds(pBet, newAmount + newPlacementFee,
+                             pBet->contractAmount() + oldPlacementFee, ep))
+    {
+        ep.prepend("Unable to set contract amount(" + std::to_string(newAmount) +
+            ") for player: " + playerName_ + ". ");
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+    
+    Gen::Money saveContractAmount = pBet->contractAmount();
+    
+    wallet_.deposit(saveContractAmount + oldPlacementFee);
+    wallet_.withdraw(newAmount + newPlacementFee);
+    
+    auto rc = pTable_->setContractAmount(pBet, newAmount, ep);
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        wallet_.deposit(newAmount + newPlacementFee);
+        wallet_.withdraw(saveContractAmount + oldPlacementFee);
+        ep.prepend(diagPrefix(2));
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
+    }
+
+    if (oldPlacementFee != newPlacementFee)
+    {
+        pTable_->refundPlacementCommission(*pBet);
+        if (newPlacementFee > 0)
+            pTable_->collectPlacementCommission(*pBet, newPlacementFee);
+    }
+    sendEventPlayerBetsChanged();
+    sendEventPlayerBalanceChanged();
+    pBet->logBet(fname + " Accepted");
 
     return {};
 }
@@ -518,8 +599,13 @@ Called by CrapsTable to dish out a winning bet to a Player.
 void
 Player::processWin(const DecisionRecord& dr)
 {
-    assert(dr.pBet != nullptr);
-    assert(dr.win > 0);
+    if (dr.pBet == nullptr ||
+        (dr.win <= 0 &&
+         !(dr.pBet->betName() == BetName::World && dr.decision && dr.lose == 0)))
+    {
+        LOG_ERROR("Player::processWin(): invalid DecisionRecord (null bet or non-positive win).");
+        return;
+    }
 
     // Confirm we actually own the bet in dr.pBet (raw pointer)
     // Obtain shared_ptr to our bet
@@ -533,18 +619,48 @@ Player::processWin(const DecisionRecord& dr)
     }
 
     wallet_.deposit(dr.returnToPlayer);
-    wallet_.deposit(dr.win + pBet->contractAmount() + pBet->oddsAmount());
-
-    // std::cout << playerName_ << ": processWin(" << pBet->betName() <<
-    //     ") won:" << dr.win << " balance:" << wallet_.getBalance() << "\n";
+    if (dr.removeBet)
+    {
+        // A terminal win returns the original stakes as well as the profit.
+        // When returnToPlayer already refunds the odds stake (odds are off
+        // during a come-out roll), do not return that same stake a second time.
+        const Gen::Money oddsReturnedSeparately =
+            (dr.returnToPlayer != 0 &&
+             dr.returnToPlayer == pBet->oddsAmount())
+                ? pBet->oddsAmount()
+                : 0;
+        wallet_.deposit(dr.win + pBet->contractAmount() +
+                        pBet->oddsAmount() - oddsReturnedSeparately);
+    }
+    else
+    {
+        // The wager remains active, so its original stake stays on the table.
+        wallet_.deposit(dr.win);
+    }
 
     currentStats_.recordWin(*(dr.pBet), dr.win);
-    lastRollStats_.amountWin += dr.win;
+    if (pBet->betName() == BetName::World && dr.decision && dr.lose == 0)
+    {
+        // The aggregate World bet's net profit hides the component cashflows.
+        // Keep Last Roll comparable with the house: record the winning
+        // component's gross profit and the four losing component stakes.
+        const Gen::Money component = pBet->contractAmount() / 5;
+        const Gen::Money losingComponents =
+            pBet->contractAmount() - component;
+        lastRollStats_.amountWin += dr.win + losingComponents;
+        lastRollStats_.amountLose += losingComponents;
+    }
+    else
+    {
+        lastRollStats_.amountWin += dr.win;
+    }
     lastRollStats_.numBetsWin++;
 
-    sendEventBetResolved(pBet->betName(), pBet->betId(), dr.win, dr.lose);
-
-    (void) removeBetByPtr(pBet);
+    sendEventBetResolved(pBet->betName(), pBet->betId(), dr);
+    if (dr.removeBet)
+    {
+        (void) removeBetByPtr(pBet);
+    }
 }
 
 /*-----------------------------------------------------------*//**
@@ -557,8 +673,11 @@ Called by CrapsTable to dish out a losing bet to a Player.
 void
 Player::processLose(const DecisionRecord& dr)
 {
-    assert(dr.pBet != nullptr);
-    assert(dr.lose > 0);
+    if (dr.pBet == nullptr || dr.lose <= 0)
+    {
+        LOG_ERROR("Player::processLose(): invalid DecisionRecord (null bet or non-positive loss).");
+        return;
+    }
 
     // Confirm we actually own the bet in dr.pBet (raw pointer)
     // Obtain shared_ptr to our bet
@@ -576,15 +695,11 @@ Player::processLose(const DecisionRecord& dr)
     //
     wallet_.deposit(dr.returnToPlayer);
 
-//    std::cout << playerName_ << ": processLose(" << pBet->betName() <<
-//        ") lost:" << dr.lose << " balance:" << wallet_.getBalance() << "\n";
-
     currentStats_.recordLose(*(dr.pBet), dr.lose);
     lastRollStats_.amountLose += dr.lose;
     lastRollStats_.numBetsLose++;
 
-    sendEventBetResolved(pBet->betName(), pBet->betId(), dr.win, dr.lose);
-    
+    sendEventBetResolved(pBet->betName(), pBet->betId(), dr);
     (void) removeBetByPtr(pBet);  // Done with this bet
 }
 
@@ -599,7 +714,11 @@ dice resulted in no decision for the assocated bet.
 void
 Player::processKeep(const DecisionRecord& dr)
 {
-    assert(dr.pBet != nullptr);
+    if (dr.pBet == nullptr)
+    {
+        LOG_ERROR("Player::processKeep(): invalid DecisionRecord (null bet).");
+        return;
+    }
 
     // Confirm we actually own the bet in dr.pBet (raw pointer)
     // Obtain shared_ptr to our bet
@@ -611,10 +730,6 @@ Player::processKeep(const DecisionRecord& dr)
         assert(false);
         return;
     }
-
-//    std::cout << playerName_ << ": processKeep(" << pBet->betName() <<
-//        ") lost:" << dr.lose << " won:" << dr.win
-//        << " balance:" << wallet_.getBalance() << "\n";
 
     assert(dr.lose == 0); assert(dr.win == 0);
     currentStats_.recordKeep(*(dr.pBet));
@@ -634,81 +749,17 @@ change on screen.
 void
 Player::disburseDone()
 {
-    if (lastRollStats_.amountWin > 0 || lastRollStats_.amountLose > 0)
+    // A settled bet can have zero net money movement. World is an example:
+    // on a 7, its winning component's profit offsets the four losing
+    // components. Still publish the changed bet/statistics state so the CUI
+    // does not remain stale until another roll with non-zero money movement.
+    if (lastRollStats_.numBetsWin > 0 || lastRollStats_.numBetsLose > 0)
     {
         sendEventPlayerBetsChanged();
         sendEventPlayerSessionStatsChanged();
         sendEventPlayerBalanceChanged();
     }
     sendEventPlayerLastRollStatsChanged();
-}
-
-//----------------------------------------------------------------
-
-void
-Player::sendEventBetResolved(BetName         betName,
-                             BetId           betId,
-                             Gen::Money      amountWin,
-                             Gen::Money      amountLose) const
-{
-    Ctrl::UslBetResolved ev;
-    ev.playerId   = playerId_,
-    ev.betName    = betName,
-    ev.betId      = betId,
-    ev.amountWin  = amountWin;
-    ev.amountLose = amountLose;
-
-    Gen::EventManager::instance().publish(ev);
-}
-
-//----------------------------------------------------------------
-
-void
-Player::sendEventPlayerBetsChanged() const
-{
-    Ctrl::UslPlayerBetsChanged ev;
-    ev.playerId       = playerId_;
-    ev.numBetsOnTable = getNumBetsOnTable();
-    ev.amountOnTable  = getAmountOnTable();
-
-    Gen::EventManager::instance().publish(ev);
-}
-
-//----------------------------------------------------------------
-
-void
-Player::sendEventPlayerSessionStatsChanged() const
-{
-    Ctrl::UslPlayerSessionStatsChanged ev;
-    ev.playerId    = playerId_;
-    ev.numBetsWon  = currentStats_.betStats.totNumWinsAllBets;
-    ev.numBetsLost = currentStats_.betStats.totNumLoseAllBets;
-
-    Gen::EventManager::instance().publish(ev);
-}
-
-//----------------------------------------------------------------
-
-void        
-Player::sendEventPlayerLastRollStatsChanged() const
-{
-    Ctrl::UslPlayerLastRollStatsChanged lrs{};
-    lrs.playerId = playerId_;
-    lrs.stats    = lastRollStats_;
-    Gen::EventManager::instance().publish(lrs);
-}
-
-//----------------------------------------------------------------
-
-void
-Player::sendEventPlayerBalanceChanged() const
-{
-    Ctrl::UslPlayerBalanceChanged ev;
-    ev.playerId   = playerId_;
-    ev.balance    = getBalance();    // how much left in wallet
-    ev.netBalance = getSessionNet(); // profilt/loss session start
-
-    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------
@@ -858,10 +909,9 @@ Player::removeBet(const BetId& betId)
         });
     if (it == bets_.end())
     {
-        std::string s = "Unable to remove "
-                        "bet; Player " + playerName_       +
-                        " does not have a bet with betId:" +
-                        std::to_string(betId) + ").";
+        std::string s = fmt::format("Unable to remove bet; Player {} "
+                                    "does not have a bet with betId:{}.",
+                                    playerName_,  betId);
         EP_SET(ep, En::NotFoundError, Et::ProcessingError, Es::Indeterminate, s);
         return zeus::unexpected(std::move(ep));
     }
@@ -874,7 +924,11 @@ Player::removeBet(const BetId& betId)
         return zeus::unexpected(std::move(ep));
     }
 
-    wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount());
+    const Gen::Money placementFee = (*it)->hasDecision()
+        ? 0 : (*it)->placementCommission();
+    if (placementFee > 0)
+        pTable_->refundPlacementCommission(*(*it));
+    wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount() + placementFee);
     bets_.erase(it, bets_.end());  // remove from our list of bets
 
     sendEventPlayerBetsChanged();
@@ -1037,8 +1091,7 @@ Player::diagBadBetId(const std::string& funcName, BetId betId) const
         "Player::" + funcName + "cant match "
         "decision record betId against any betId held "
         "in player betList. Bad betId:" + std::to_string(betId);
-    // TODO: error manager
-    std::cerr << diag << std::endl;
+    LOG_ERROR(diag); 
 }
 
 //----------------------------------------------------------------
@@ -1061,6 +1114,75 @@ Player::diagPrefix(size_t idx) const
 
 //----------------------------------------------------------------
 
+void
+Player::sendEventBetResolved(BetName betName,
+                             BetId betId,
+                             const DecisionRecord& dr) const
+{
+    Ctrl::UslBetResolved ev;
+    ev.playerId       = playerId_,
+    ev.betName        = betName,
+    ev.betId          = betId,
+    ev.amountWin      = dr.win;
+    ev.amountLose     = dr.lose;
+    ev.returnToPlayer = dr.returnToPlayer;
+    ev.commission      = dr.commission;
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+Player::sendEventPlayerBetsChanged() const
+{
+    Ctrl::UslPlayerBetsChanged ev;
+    ev.playerId       = playerId_;
+    ev.numBetsOnTable = getNumBetsOnTable();
+    ev.amountOnTable  = getAmountOnTable();
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+Player::sendEventPlayerSessionStatsChanged() const
+{
+    Ctrl::UslPlayerSessionStatsChanged ev;
+    ev.playerId    = playerId_;
+    ev.numBetsWon  = currentStats_.betStats.totNumWinsAllBets;
+    ev.numBetsLost = currentStats_.betStats.totNumLoseAllBets;
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void        
+Player::sendEventPlayerLastRollStatsChanged() const
+{
+    Ctrl::UslPlayerLastRollStatsChanged lrs{};
+    lrs.playerId = playerId_;
+    lrs.stats    = lastRollStats_;
+    Gen::EventManager::instance().publish(lrs);
+}
+
+//----------------------------------------------------------------
+
+void
+Player::sendEventPlayerBalanceChanged() const
+{
+    Ctrl::UslPlayerBalanceChanged ev;
+    ev.playerId   = playerId_;
+    ev.balance    = getBalance();    // how much left in wallet
+    ev.netBalance = getSessionNet(); // profilt/loss session start
+
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
 bool
 Player::fifNoTable(Gen::ErrorPass& ep) const
 {
@@ -1078,7 +1200,8 @@ Player::fifNoTable(Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 bool
-Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
+Player::fifInsufficientFunds(BetPtr pBet, Gen::Money newAmount,
+                             Gen::Money oldAmount,
                              Gen::ErrorPass& ep) const
 {
     // fault if insufficient funds and sets ep error diag
@@ -1089,11 +1212,11 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
     int diff = 0;
     if (pBet == nullptr)
     {
-        diff = amount;
+        diff = newAmount;
     }
     else
     {
-        diff = amount - pBet->oddsAmount();
+        diff = newAmount - oldAmount;
     }
 
     if (diff <= 0)
@@ -1103,11 +1226,11 @@ Player::fifInsufficientFunds(BetPtr pBet, Gen::Money amount,
 
     if (diff > wallet_.getBalance())
     {
-        std::string s = "Player " + playerName_ +
-            " has insufficient funds to make a " +
-            Gen::MoneyUtils::toString(amount)    +
-            " bet; current balance:"             +
-            Gen::MoneyUtils::toString(getBalance()) + ".";
+        std::string s = fmt::format(
+            "Player {} has insufficient funds to make a {} bet; "
+            "current balance:{}.", playerName_,
+            Gen::MoneyUtils::toString(newAmount),
+            Gen::MoneyUtils::toString(getBalance()));
         EP_SET(ep, En::UnderflowError, Et::ProcessingError,
                Es::Indeterminate, s);
         return true;
@@ -1149,19 +1272,19 @@ Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
     {
         if (pBet->player().getPlayerId() == playerId_)
         {
-            // bet was created outside of makeBet()
-            std::string s = diagPrefix(2) +
-                "Player " + playerName_ + " does not have this bet in "
-                "its bet list; Programmer error; Must use Player::makeBet() "
-                "to make a bet; " + pBet->diagBetId() + ".";
+            // Bet was somehow created outside of makeBet()
+            std::string s = fmt::format(
+                "{} Player:{} does not have this bet in their bet list; "
+                "Programmer error; Must use Player::makeBet() to make "
+                "a bet; {}.", diagPrefix(2), playerName_, pBet->diagBetId());
             EP_SET(ep, En::LogicError, Et::ProcessingError,
                    Es::Indeterminate, s);
             return true;
         }
-        std::string s = diagPrefix(2) +
-            "Player " + playerName_ + " does not own this bet; " +
-            pBet->diagBetId() + "; Owned by Player:" +
-            pBet->player().getName() + ".";
+        std::string s = fmt::format(
+            "{} Player:{} does not own this bet {}; Owned by Player:{}.",
+            diagPrefix(2), playerName_,
+            pBet->diagBetId(), pBet->player().getName());
         EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,
                Es::Indeterminate, s);
         return true;
@@ -1170,55 +1293,3 @@ Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
 }
 
 //----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-#if 0
-std::string
-Player::serialize() const
-{
-    return uuid_ + "," + name_ + "," + std::to_string(wallet_.getBalance());
-}
-#endif
-
-//----------------------------------------------------------------
-
-#if 0
-Player
-Player::deserialize(const std::string& line)
-{
-    std::istringstream ss(line);
-    std::string uuidStr, nameStr, balanceStr;
-    std::getline(ss, uuidStr, ',');
-    std::getline(ss, nameStr, ',');
-    std::getline(ss, balanceStr);
-    return Player(uuidStr, nameStr, std::stol(balanceStr));
-}
-#endif
-
-//----------------------------------------------------------------
-
-#if 0
-bool
-Player::removeBetById(unsigned betId)
-{
-    auto it = std::remove_if(bets_.begin(), bets_.end(),
-                   [betId](const BetIntfcPtr& b)
-                   {
-                       return b->betId() == betId;
-                   });
-    if (it != bets_.end())
-    {
-        bets_.erase(it, bets_.end());
-        return true;
-    }
-    return false;
-}
-#endif

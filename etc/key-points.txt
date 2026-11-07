@@ -1,0 +1,197 @@
+This is a single player Craps game, with up to 5 addtional
+fake "buddy" players.
+
+A player can select the table he wants to play on from a choice of
+tables delivered with the game. Table switching can take place during
+runtime. Maybe in the future, tables can be created/edited with the game
+UI. Craps tables have their own table rules to mimic different rules
+at various casinos around the world.
+
+A player can select the buddy players he wants to join the table
+from a choice of buddies delivered with the game. Maybe in the future,
+buddies can be created/edited with the game UI.
+
+A player can create a new Player and switch to a different players
+at runtime.
+
+When the player quits the game, the session is saved. When the player
+starts another session, it picks up where the last session left off.
+There is no "save now" option or disabling of the save operation.
+
+When the game starts, the default player is the player of the last
+session. It is up to the player to runtime switch to a different player
+or create a new one if they want. A fresh game install uses the default
+player packaged with the game.
+
+Development is C++17
+
+Using ncurses for CUI. Haven't yet selected GUI library.
+
+Development uses Podman containers for compiler tools and documentation
+tools. Containers are assembled using Makefile commands available in the
+tools folder. For the build container, the strategy and logic keeps
+the container around after a build. It does not exit.
+
+Containers access source code directly on the host computer using
+container workspaces. No code is copied into containers. Build artifacts
+are written directly to the host "_build" tree.
+
+Using various external libraries. Using Conan library as a consumer.
+
+Using CMake for compilation only. A top level Makefile system
+drives the overall build.
+
+There is a single "_build" folder at the top of the work tree. It
+branches into a debug and production tree. Debug and production builds
+are supported simultaneously without reconfiguring CMake or Conan.
+Top level Makefile offers commands for "make debug", "make prod", and
+"make both".
+
+Doctest is used for unit-tests.
+
+The program design conforms to a somewhat relaxed MVC architecture.
+
+The View interface consists of:
+
+* Events via the one and only EventManager instance.
+
+* GameEvents are used by the Model - for publishing only, Controller -
+  for publishing and subscribing, and View - for publishing and
+  subscribing.
+
+* CrapsReaders interface, allowing the View to directly obtain
+  model information for timely population of dynamic menus and to
+  avoid heavyweight code duplication.
+
+Using shared GameEvents and the CrapsReader interface is what is meant
+by "relaxed" MVC design.
+
+The program makes use of multiple threads. All threads are static -
+initialized once and remain for the life of the program.
+
+There is no formal database, just a number of persistent files, all
+YAML.
+
+There is no networking.
+
+First phase is to implement a console user interface (CUI) version of
+Royal Craps. This is used primarily to prove out the model and UI
+interactions.
+
+Future development will implement a 2D GUI with audio and animation.
+
+The game supports command line options to select CUI or GUI (when
+available).
+
+This is currently being developed to run on only Linux platforms,
+although I might reconsider that in the future.
+
+Here's the CUI screen the player works with. There's an All Players View
+and a One Player View. The player can toggle between these.
+
+All Players View
+────────────────
+
+Table layout has three sections for bets. Each section has a list of bets
+along with an indication of which player has made that bet. Within each
+section, there are 6 columns of o's, one for each player (up to 6 players)
+indicating if a player has made a bet.  o's in each column are color
+coded to agree with assigned color of a player.  o's do not appear in a
+column unless there's a bet for it on the table.  For passline, come,
+dontpass, and dontcome bets, if the player has also made an odds bet,
+then instead of an "o", a bullet or filled in "o"is shown. Notice a
+header row over the columns; has the first initial of the player's name,
+(in this example 5 players Nathan, Arthur, Paige, Lenny, Winnifred),
+also color coded over their column.
+
+    0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
+0   ┌──────────┬───────────┬──────────────────┬──────────────────────────┬─────────────────────────────┐
+1   │ Point 10 │ Roll  273 │ Las Vegas Strip  │min $5 max $2000 odds 10x │      Shooter: Nathan        │
+2   ├──────────┴───────────┴──────────────────┴──────────────────────────┤      🎲 Rolling... 🎲       │
+3   │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
+4   ├────────────────────────┬──────────────────────┬────────────────────┤                             │
+5   │                        │                      │                    │                             │
+6   │            N A P L W   │          N A P L W   │        N A P L W   │                             │
+7   │ PassLine   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Place4   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Buy4   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+8   │ Come       ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Place5   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Buy5   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+9   │ Come4      ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Place6   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Buy6   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+10  │ Come5      ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Place8   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Buy8   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+11  │ Come6      ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Place9   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Buy9   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+12  │ Come8      ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Place10  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Buy10  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+13  │ Come9      ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Hard4    ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Lay4   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+14  │ Come10     ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Hard6    ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Lay5   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+15  │ DontPass   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Hard8    ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Lay6   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+16  │ DontCome   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Hard10   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Lay8   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+17  │ DontCome4  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ C&E      ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Lay9   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+18  │ DontCome5  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Field    ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │ Lay10  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+19  │ DontCome6  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                      │ AnyC   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+20  │ DontCome8  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                      │ Any7   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+21  │ DontCome9  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                      │ Horn   ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+22  │ DontCome10 ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                      │ World  ⋅ ⋅ ⋅ ⋅ ⋅ ⋅ │                             │
+23  │                        │                      │                    │                             │
+24  ├────────────────────────┴──────────────────────┴────────────────────┼─────────────────────────────┤
+25  │ Nathan wins PassLine bet, +$200                                    │ House Net: +$2,050          │
+26  │ Come out roll                                                      │ NumBets: 128 (68W, 60L)     │
+27  │ Shooter rolls a 6(3,3), point is 6                                 │ Pct: 53.1% win, 46.8% lose  │
+28  │ Arthur bets $20 on Hard 4 and 10                                   │ Last: +$100 300W,200L       │
+29  │ Nathan bets $50 PassLine odds                                      │ On table: 12 bets, $1,520   │
+30  │ Arthur places $50 come bet                                         ├─────────────────────────────┤
+31  │ Arthur places $10 Field bet                                        │ Nathan (shooter)            │
+32  │ Winnifred placed $100 field bet                                    │ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
+33  │ Lenny places $500 DontCome                                         │ Bal: $2,000 Net: +$1,044    │
+34  │ Nathan places $200 come bet                                        │ NumBets: 55 (21W, 34L)      │
+35  │ Paige places $10 on Field                                          │ Pct: 38.1% win, 61.8% lose  │
+36  │ Another message                                                    │ Last: 180W,100L,+$80        │
+37  │ Another message                                                    │ On table: 3 bets, $320      │
+38  ├────────────────────────────────────────────────────────────────────┴─────────────────────────────┤
+39  │ [C] CONTROL        [B] BETTING       [V] VIEW       [S] STATS      |      [H] Help      [Q] Quit │
+40  └──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+One Player View
+───────────────
+
+    0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
+0   ┌──────────┬───────────┬──────────────────┬──────────────────────────┬─────────────────────────────┐
+1   │ Point 10 │ Roll  273 │ Las Vegas Strip  │min $5 max $2000 odds 10x │      Shooter: Nathan        │
+2   ├──────────┴───────────┴──────────────────┴──────────────────────────┤     🎲 Rolling... 🎲        │
+3   │ 4(3,1) 7(5,2) 6(3,3) 12(6,6) 11(5,6) 8(5,3) 9(5,4) 7(5,2) 7(3,4)   │                             │
+4   ├──────────────────┬─────────┬─────────┬─────────┬─────────┬─────────┤                             │
+5   │ Nathan:     4    │    5    │     6   │    8    │    9    │    10   │                             │
+6   │ Place    1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+7   │ Come     1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+8   │ Odds     1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+9   │ DontCome 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+10  │ Odds     1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+11  │ Buy      1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+12  │ Lay      1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │ 1000000 │                             │
+13  │ Hardways 1000000 │         │ 1000000 │ 1000000 │         │ 1000000 │                             │
+14  ├──────────────────┴─────────┴─────────┴─────────┴─────────┴─────────┤                             │
+15  │                                Field                               │                             │
+16  │                        2  3  4  9  10  11  12                      │                             │
+17  │                               1000000                              │                             │
+18  ├────────────────────────────────────────────────────────────────────┤                             │
+19  │ AnyCraps 1000000            C&E 1000000              Horn  1000000 │                             │
+20  │ Any7     1000000                                     World 1000000 │                             │
+21  ├───────────────────────────────────┬────────────────────────────────┤                             │
+22  │ Come     10000000                 │ DontCome 1000000               │                             │
+23  │ PassLine 10000000  Odds 10000000  │ DontPass 1000000  Odds 1000000 │                             │
+24  ├───────────────────────────────────┴────────────────────────────────┼─────────────────────────────┤
+25  │ Nathan wins PassLine bet, +$200                                    │ House Net: +$2,050          │
+26  │ Shooter rolls a 6, point is set                                    │ NumBets: 128 (68W, 60L)     │
+27  │ Arthur bets $20 on Hard 4 and 10                                   │ Pct: 53.1% win, 46.8% lose  │
+28  │ Nathan bets $50 PassLine odds                                      │ Last: -$100,300W,200L       │
+29  │ Arthur places $50 come bet                                         │ On table: 12 bets, $1,520   │
+30  │ Arthur places $10 Field bet                                        ├─────────────────────────────┤
+31  │ Winnifred placed $100 field bet                                    │ Nathan (shooter)            │
+32  │ Lenny places $500 DontCome                                         │ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ │
+33  │ Nathan places $200 come bet                                        │ Bal: $2,000 Net: +$1,044)   │
+34  │ Paige places $10 on Field                                          │ NumBets: 55 (21W, 34L)      │
+35  │ Another message row                                                │ Pct: 38.1% win, 61.8% lose  │
+36  │ Another message                                                    │ Last Roll: +$80,180W,100L   │
+37  │ Another message                                                    │ On table: 3 bets, $320      │
+38  ├────────────────────────────────────────────────────────────────────┴─────────────────────────────┤
+39  │ [C] CONTROL     [B] BETTING     [V] VIEW: Nathan    [S] STATS      |      [H] Help      [Q] Quit │
+40  └──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+

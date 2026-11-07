@@ -22,12 +22,15 @@ add_library(controller STATIC
     src/Globals.cpp
     src/PlayerManager.cpp
     src/PlayerManifest.cpp
+    src/PlayerPrefs.cpp
     src/Properties.cpp
+    src/LastFill.cpp
     src/QuickBet.cpp
     src/TableManager.cpp
     src/TableManifest.cpp
     src/UndoBet.cpp
     src/UndoManager.cpp
+    src/YamlFile.cpp
 )
 
 target_include_directories(controller

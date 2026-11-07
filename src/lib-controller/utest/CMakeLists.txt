@@ -7,7 +7,12 @@
 add_executable(controller-ut
     utest-controller-main.cpp
     ConfigManagerTest.cpp
+    AutoFillTest.cpp
+    LastFillTest.cpp
+    PlayerPrefsTest.cpp
+    QuickBetTest.cpp
     TableManifestTest.cpp
+    YamlFileTest.cpp
 )
 
 target_link_libraries(controller-ut

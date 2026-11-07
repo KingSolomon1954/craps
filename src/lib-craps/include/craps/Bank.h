@@ -30,6 +30,7 @@ public:
     bool withdraw(Gen::Money amount);
     void mergeStats();
     void resetStats();
+    void beginNewSession();
     Bank& operator=(const Bank&) = default;  // assignment
     Bank& operator=(Bank&&)      = default;  // move
     /// @}

@@ -1,4 +1,3 @@
-
 ## TODO
 
 ### Write script to copy files/assets to install locations
@@ -10,6 +9,19 @@
 - Add a warning like: “You have active bets. Are you sure
 - you want to quit and abandon them?”
 
+### Switch player: View (CUI and GUI)
+- Menu to pick a player from PlayerManager::getPlayerList(), leaving out
+- players already at the table (buddies)
+- Confirm first if the user has bets on the table. Switching takes them
+- off the table and returns the money
+- Send ReqSwitchPlayer. Handle RspSwitchPlayer (error text if not
+- switched) and UslUserPlayerSwitched (refresh everything about the user)
+
+### Remember the user player across sessions
+- ConfigManager is read-only, so the user player chosen at runtime is
+- lost at quit. Persist it (small session file?) and honor
+- startWithLastPlayers at startup
+
 ### Save Config to yaml file
 
 ### Need unit test for initial bank money
@@ -17,12 +29,6 @@
 ### Need unit test for undo bet capability
 
 ### Need unit test ConfigManagerTest
-
-### Minimum bets are wrong.
-- Allow $1 bets for proposition bets, hardways,
-- fix min field bet
-
-### Add world bet
 
 ### Add Roll History Format A,B,C,D to multi-configuration
 - Modify Roll History to grab Format from multi-configuration
@@ -37,7 +43,31 @@
 
 ### Need to inhibit various actions during animation roll
 
+### Switching CrapsTables
+
+Give user the option of carrying forward buddy players.
+Logic needs to move buddy players along with switch.
+
+### Track contract-only amounts separately in BetStats
+
+BetStats records contract and odds amounts under the same bet-type
+key. The displayed expectation therefore uses the selected bet profile's
+house edge against the combined recorded amount. That is an estimate,
+not an exact expected loss, because the statistics don't retain the
+contract-only amount separately. A future model-level refinement could
+track that amount independently.
+
 ### Implement QuickBet::applyQuickBet for new CUI design
+
+### Implement MenuQuickBet
+
+### Implement doQuickBet in MenuBetting
+
+### Implement UndoLastBet in MenuBetting
+
+### Implement RemoveBets in MenuBetting
+
+### Implement doBetFlags in MenuBetting
 
 ### Implement WindowPlayerArea - show bets on screen
 
@@ -45,11 +75,34 @@
 
 ### Implement ReqMakeBet, to include UndoManager
 
+### Want DialogBetAmount to show Max Bet, current bet, off-on-comeout
+
+### Allow same bet to add to existing bet 
+
+### Want illegal bets to be unselectable in menus (grayed-out)
+
+## Done
+
+(Done) Us EP_SET during table switching
+(Done) Implemented comprehensive Table Rules policies
+(Done) Minimum bets are wrong.
+(Done) Added World bet.
+(Done) Fix evaluation() processing and various bugs
+(Done) Fix Place bets being removed from table after a win
+(Done) Early illegal bet test - jump to error immediatly
+(Done) Place, Buy, Lay  bet odds hints
+(Done) Add LastFill feature
+(Done) LastFills (LastBets) saved to and loaded from the user Player's file
+(Done) Player file I/O moved from Craps::Player to PlayerManager (YamlFile)
+(Done) Table file I/O moved from Craps::CrapsTable to TableManager (YamlFile)
+(Done) LastFill is per player (PlayerPrefs), no longer a singleton
+(Done) AutoFills and QuickBets saved to and loaded from the player's file (PlayerPrefs)
+(Done) Switch player in controller and model (ReqSwitchPlayer, RspSwitchPlayer, UslUserPlayerSwitched)
 (Done) Add payout hint to DialogBetAmount
 (Done) Fix window width of MenuOddsBet
 (Done) Fix multiple odds bets for same bet and number MenuOddsBet
 (Done) Setting an Odds bet shows as two bets on the table and player brief
-(Done) Fixed MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?
+(Done) Fix MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?
 (Done) Debug & fix WindowPlayerBrief
 (Done) Added new events to populate WindowPlayerBrief
 (Done) Debug & fix WindowHouseBrief
@@ -215,3 +268,4 @@
 (Done) Eliminate GameControllerIntfc in favor of Events and EventLoop\
 (Done) Implement minimal game loop\
 (Done) Add getBool() to MultiLayerManager
+

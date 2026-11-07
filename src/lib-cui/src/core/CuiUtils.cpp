@@ -332,6 +332,8 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
 
         case BetName::Horn: return CuiBetName::Horn;
 
+        case BetName::World: return CuiBetName::World;
+
         default: assert(false && "Unhandled BetName");
     }
 }

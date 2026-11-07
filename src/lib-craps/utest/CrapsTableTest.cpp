@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
 #include <zeus/expected.hpp>
@@ -32,22 +33,18 @@ struct CrapsTableFixture
 
     CrapsTableFixture()
     {
-        PlayerConfig playerConfig { "playerFilesDirectory" };
-        p1 = Player::createPlayer("Player1", playerConfig);
-        p2 = Player::createPlayer("Player2", playerConfig);
-        p3 = Player::createPlayer("Player3", playerConfig);
-        p4 = Player::createPlayer("Player4", playerConfig);
-        p5 = Player::createPlayer("Player5", playerConfig);
-        p6 = Player::createPlayer("Player6", playerConfig);
-        p7 = Player::createPlayer("Player7", playerConfig);
+        p1 = Player::createPlayer("Player1");
+        p2 = Player::createPlayer("Player2");
+        p3 = Player::createPlayer("Player3");
+        p4 = Player::createPlayer("Player4");
+        p5 = Player::createPlayer("Player5");
+        p6 = Player::createPlayer("Player6");
+        p7 = Player::createPlayer("Player7");
         
         config.maxSessions = 50;
         config.maxRecentRolls = 25;
-        config.tablePath = "/work/craps/assets/tables/las-vegas-strip.yaml";
-        // Unit tests won't overwrite YAML file. CrapsTable dtor
-        // does not trigger save to file. Would have to call 
-        // prepareToShutdown() or close() to save YAML file.
-        // Therefore one TableConfig can be used in all unit tests.
+        // CrapsTable never touches files, so one TableConfig can be
+        // used in all unit tests.
     }
 
    ~CrapsTableFixture()
@@ -63,6 +60,200 @@ struct CrapsTableFixture
 };
 
 //----------------------------------------------------------------
+
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:reject null bet pointers")
+{
+    CrapsTable t("Table-1", config);
+    BetPtr noBet;
+    Gen::ErrorPass epAdd;
+    Gen::ErrorPass epRemove;
+    Gen::ErrorPass epContract;
+    Gen::ErrorPass epOdds;
+
+    CHECK(t.addBet(noBet, epAdd) == Gen::ReturnCode::Fail);
+    CHECK_FALSE(epAdd.description().empty());
+
+    CHECK(t.removeBet(noBet, epRemove) == Gen::ReturnCode::Fail);
+    CHECK_FALSE(epRemove.description().empty());
+
+    CHECK(t.setContractAmount(noBet, 10, epContract) == Gen::ReturnCode::Fail);
+    CHECK_FALSE(epContract.description().empty());
+
+    CHECK(t.setOddsAmount(noBet, 10, epOdds) == Gen::ReturnCode::Fail);
+    CHECK_FALSE(epOdds.description().empty());
+
+    CHECK_FALSE(t.isBetRemovable(noBet));
+    t.removeBetForce(noBet); // Must log and return without dereferencing.
+}
+
+//----------------------------------------------------------------
+
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collected and refunded on cancellation")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["buyCommission"]["collection"] = "onPlacement";
+    rules["buyCommission"]["basis"] = "onWager";
+    rules["buyCommission"]["basisPoints"] = 500;
+    rules["buyCommission"]["minimum"] = 0;
+    rules["buyCommission"]["roundingUnit"] = 1;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+    REQUIRE(p1->joinTable(*table));
+
+    const Gen::Money playerBefore = p1->getBalance();
+    const int houseBefore = table->getBalance();
+    auto result = p1->makeBet(BetName::Buy, 100, 4);
+    REQUIRE(result);
+    CHECK(p1->getBalance() == playerBefore - 105);
+    CHECK(table->getBalance() == houseBefore + 5);
+    CHECK(result.value()->placementCommission() == 5);
+
+    REQUIRE(p1->removeBet(result.value()->betId()));
+    CHECK(p1->getBalance() == playerBefore);
+    CHECK(table->getBalance() == houseBefore);
+    CHECK(result.value()->placementCommission() == 0);
+
+    Gen::ErrorPass ep;
+    CHECK(p1->restoreBet(result.value(), ep) == Gen::ReturnCode::Success);
+    CHECK(p1->getBalance() == playerBefore - 105);
+    CHECK(table->getBalance() == houseBefore + 5);
+    REQUIRE(p1->removeBet(result.value()->betId()));
+    CHECK(p1->getBalance() == playerBefore);
+    CHECK(table->getBalance() == houseBefore);
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not charged or refunded twice after a win")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["buyCommission"]["collection"] = "onPlacement";
+    rules["buyCommission"]["basis"] = "onWager";
+    rules["buyCommission"]["basisPoints"] = 500;
+    rules["buyCommission"]["minimum"] = 0;
+    rules["buyCommission"]["roundingUnit"] = 1;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+    REQUIRE(p1->joinTable(*table));
+
+    const Gen::Money playerBefore = p1->getBalance();
+    auto result = p1->makeBet(BetName::Buy, 100, 4);
+    REQUIRE(result);
+    CHECK(p1->getBalance() == playerBefore - 105);
+
+    table->testSetState(4, 2, 2);
+    table->testRollDice(2, 2); // Buy 4 wins and remains active.
+    CHECK(result.value()->hasDecision());
+    CHECK(result.value()->placementCommission() == 5);
+    CHECK(p1->getBalance() == playerBefore + 95);
+
+    const int houseAfterWin = table->getBalance();
+    REQUIRE(p1->removeBet(result.value()->betId()));
+    CHECK(p1->getBalance() == playerBefore + 195);
+    CHECK(result.value()->placementCommission() == 5);
+    CHECK(table->getBalance() == houseAfterWin);
+
+    Gen::ErrorPass ep;
+    CHECK(p1->restoreBet(result.value(), ep) == Gen::ReturnCode::Success);
+    CHECK(p1->getBalance() == playerBefore + 95);
+    CHECK(table->getBalance() == houseAfterWin);
+}
+
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: bet amount limits reflect table rules")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["odds"]["maximumWager"] = 37;
+    rules["odds"]["wagerIncrement"] = 5;
+    rules["aggregates"]["World"]["maximumComponentWager"] = 3;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+
+    const auto world = table->getBetAmountLimits(BetName::World, 0, false, 0);
+    CHECK(world.minimum == 5);
+    CHECK(world.maximum == 15);
+    CHECK(world.increment == 5);
+
+    const auto odds = table->getBetAmountLimits(BetName::PassLine, 4, true, 10);
+    CHECK(odds.minimum == 5);
+    CHECK(odds.maximum == 35);
+    CHECK(odds.increment == 5);
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limit is enforced")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["aggregates"] = YAML::Node(YAML::NodeType::Map);
+    rules["aggregates"]["CandE"]["maximumComponentWager"] = 3;
+    rules["aggregates"]["World"]["maximumComponentWager"] = 3;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+    REQUIRE(p1->joinTable(*table));
+
+    auto tooLarge = p1->makeBet(BetName::CandE, 8, 0);
+    CHECK_FALSE(tooLarge);
+    auto allowed = p1->makeBet(BetName::CandE, 6, 0);
+    CHECK(allowed);
+
+    auto worldTooLarge = p1->makeBet(BetName::World, 20, 0);
+    CHECK_FALSE(worldTooLarge);
+    auto worldAllowed = p1->makeBet(BetName::World, 15, 0);
+    CHECK(worldAllowed);
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate potential win limit is enforced")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
+    YAML::Node rules = yaml["Rules"]["advanced"];
+    rules["aggregates"] = YAML::Node(YAML::NodeType::Map);
+    rules["aggregates"]["Horn"]["basis"] = "potentialWin";
+    rules["aggregates"]["Horn"]["maximumPotentialWin"] = 200;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+    REQUIRE(p1->joinTable(*table));
+
+    auto tooLarge = p1->makeBet(BetName::Horn, 40, 0); // max win = 300
+    CHECK_FALSE(tooLarge);
+    auto allowed = p1->makeBet(BetName::Horn, 20, 0); // max win = 150
+    CHECK(allowed);
+}
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propagated")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    REQUIRE(p1->makeBet(BetName::Field, 10, 0));
+
+    // Point 3 is invalid. The roll must not be partially settled or advance
+    // the point; an UslBetEvaluationFailed event is published for the bet.
+    t.testSetState(3, 1, 2);
+    t.testRollDice(1, 1);
+    CHECK(t.isBettingOpen());
+    CHECK(t.getPoint() == 3);
+    CHECK(p1->getNumBetsOnTable() == 1);
+    CHECK(t.getNumBetsOnTable() == 1);
+}
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 {
@@ -90,24 +281,22 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
         CHECK(t->getNumPlayers() == 0);
     }
 
-    SUBCASE("fromFile:exists")
+    SUBCASE("fromString:mismatched tableId")
     {
-        std::unique_ptr<CrapsTable> t(CrapsTable::fromFile("Table-1", config));
-        REQUIRE(t != nullptr);
-        CHECK(t->getPoint() == 0);
-        CHECK(t->getCurrentRoll().value() == 12);
-        CHECK(t->isComeOutRoll());
-        CHECK(t->isBettingOpen());
-        CHECK(t->getCurrentShooter() == nullptr);
-        CHECK(t->getNumPlayers() == 0);
+        // YAML says Table-1; asking for another id must be refused.
+        std::string yaml = getTableYamlStringUtest();
+        CHECK_THROWS_AS(CrapsTable::fromString(yaml, "Table-2", config),
+                        std::runtime_error);
     }
 
-    SUBCASE("fromFile:missing")
+    SUBCASE("fromString:toYAML keeps identity")
     {
-        // Clobber path. Use bad tableId/path so file won't be found.
-        CrapsTableFixture::config.tablePath = "missing/FakeTable-1";
-        CHECK_THROWS_AS(CrapsTable::fromFile("FakeTable-1", config),
-                        std::runtime_error);
+        std::string yaml = getTableYamlStringUtest();
+        std::unique_ptr<CrapsTable> t(CrapsTable::fromString(yaml, "Table-1", config));
+        const YAML::Node out = t->toYAML();
+        CHECK(out["tableId"].as<std::string>() == "Table-1");
+        CHECK(out["Bank"].IsDefined());
+        CHECK(out["Rules"].IsDefined());
     }
 }
 
@@ -506,6 +695,10 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         CHECK(t->setContractAmount(b1, 15, ep) == Gen::ReturnCode::Success);
         CHECK(b1->contractAmount() == 15);
 
+        // Validate the requested amount, not the old amount already on table.
+        CHECK(t->setContractAmount(b1, 2001, ep) == Gen::ReturnCode::Fail);
+        CHECK(b1->contractAmount() == 15);
+
         // Change contract bet to zero
         CHECK(t->setContractAmount(b1, 0, ep) == Gen::ReturnCode::Fail);
         CHECK(b1->contractAmount() == 15);
@@ -630,7 +823,6 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
     SUBCASE("firstRoll")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        Gen::ErrorPass ep;
         
         // First roll, no players, it's a come out roll.
         CHECK(t->isComeOutRoll());
@@ -859,10 +1051,9 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
         Gen::Money balance = p1->getBalance();
 
         autoBetLoop(rolls, *t, *p1);
-        CHECK(t->getAmountOnTable() ==  0);
-        CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(t->getNumBetsOnTable() == 0);
-        CHECK(p1->getBalance() == balance + 30 + 18);
+        CHECK(t->getAmountOnTable() ==  10);
+        CHECK(t->getNumBetsOnTable() == 1);
+        CHECK(p1->getBalance() == balance + 20 + 18);
     }
 
     SUBCASE("ascendingRoll")
@@ -993,6 +1184,8 @@ Rules:
   maxCandEBet: 2000
   minHornBet: 4
   maxHornBet: 2000
+  minWorldBet: 5
+  maxWorldBet: 2000
 Bank:
   originalStartBalance: 3000000
   sessionStartBalance: 3000000
@@ -1963,3 +2156,236 @@ SessionStats:
 }
 
 //----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Buy win accounting and lifetime")
+{
+    CrapsTable t("Table-1", config);
+    auto joined = p1->joinTable(t);
+    REQUIRE(joined);
+
+    // Keep point 6 established while the Buy 4 wins, so the following
+    // seven is a seven-out rather than a come-out roll.
+    t.testSetState(6, 2, 2);
+    const auto startingBalance = p1->getBalance();
+    auto betResult = p1->makeBet(BetName::Buy, 100, 4);
+    REQUIRE(betResult);
+
+    const auto bankBefore = t.getBankCurrentStats();
+    const auto depositedBefore = bankBefore.amtDeposited;
+    const auto withdrawnBefore = bankBefore.amtWithdrawn;
+
+    // A 2:1 gross profit of $200 less $5 commission pays $195.
+    t.testRollDice(2, 2);
+    CHECK(p1->getBalance() == startingBalance + 95);
+    CHECK(p1->getNumBetsOnTable() == 1);
+    CHECK(t.getNumBetsOnTable() == 1);
+    CHECK(t.getAmountOnTable() == 100);
+
+    auto bankAfterWin = t.getBankCurrentStats();
+    CHECK(bankAfterWin.amtWithdrawn - withdrawnBefore == 200);
+    CHECK(bankAfterWin.amtDeposited - depositedBefore == 5);
+
+    // A later seven ends the still-active Buy wager.
+    const auto balanceAfterWin = p1->getBalance();
+    t.testRollDice(3, 4);
+    CHECK(p1->getBalance() == balanceAfterWin);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getAmountOnTable() == 0);
+
+    const auto bankAfterLoss = t.getBankCurrentStats();
+    CHECK(bankAfterLoss.amtWithdrawn - withdrawnBefore == 200);
+    CHECK(bankAfterLoss.amtDeposited - depositedBefore == 105);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Come odds refunded once on come-out win")
+{
+    CrapsTable t("Table-1", config);
+    auto joined = p1->joinTable(t);
+    REQUIRE(joined);
+
+    // Create an existing Come 4 bet with odds while a point is established.
+    t.testSetState(4, 2, 2);
+    const auto startingBalance = p1->getBalance();
+    auto betResult = p1->makeBet(BetName::Come, 100, 0);
+    REQUIRE(betResult);
+    auto bet = betResult.value();
+    bet->testSetPivot(4);
+    auto oddsResult = p1->setOddsAmount(bet, 200);
+    REQUIRE(oddsResult);
+
+    // On the come-out roll, the contract wins but the odds are off and must
+    // be returned. The odds stake must not also be returned a second time.
+    t.testSetState(0, 2, 2);
+    t.testRollDice(2, 2);
+
+    CHECK(p1->getBalance() == startingBalance + 100);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getAmountOnTable() == 0);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Lay commission accounting and lifetime")
+{
+    CrapsTable t("Table-1", config);
+    auto joined = p1->joinTable(t);
+    REQUIRE(joined);
+
+    t.testSetState(4, 3, 4);
+    const auto startingBalance = p1->getBalance();
+    auto betResult = p1->makeBet(BetName::Lay, 100, 4);
+    REQUIRE(betResult);
+
+    const auto bankBefore = t.getBankCurrentStats();
+    const auto depositedBefore = bankBefore.amtDeposited;
+    const auto withdrawnBefore = bankBefore.amtWithdrawn;
+
+    // Lay 4 wins $50 gross, with $2 commission (5% of gross winnings).
+    t.testRollDice(3, 4);
+    CHECK(p1->getBalance() == startingBalance - 52);
+    CHECK(p1->getNumBetsOnTable() == 1);
+    CHECK(t.getNumBetsOnTable() == 1);
+    CHECK(t.getAmountOnTable() == 100);
+
+    const auto bankAfterWin = t.getBankCurrentStats();
+    CHECK(bankAfterWin.amtWithdrawn - withdrawnBefore == 50);
+    CHECK(bankAfterWin.amtDeposited - depositedBefore == 2);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:DontCome odds refunded once on come-out win")
+{
+    CrapsTable t("Table-1", config);
+    auto joined = p1->joinTable(t);
+    REQUIRE(joined);
+
+    // Create an existing Don't Come 4 bet with odds while a point is known.
+    t.testSetState(4, 3, 1);
+    const auto startingBalance = p1->getBalance();
+    auto betResult = p1->makeBet(BetName::DontCome, 100, 0);
+    REQUIRE(betResult);
+    auto bet = betResult.value();
+    bet->testSetPivot(4);
+    auto oddsResult = p1->setOddsAmount(bet, 200);
+    REQUIRE(oddsResult);
+
+    // Seven on the come-out roll wins Don't Come; off odds are refunded once.
+    t.testSetState(0, 3, 4);
+    t.testRollDice(3, 4);
+
+    CHECK(p1->getBalance() == startingBalance + 100);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getAmountOnTable() == 0);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet settlement and statistics")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    const auto startingBalance = p1->getBalance();
+    const auto bankBefore = t.getBankCurrentStats();
+    const auto depositedBefore = bankBefore.amtDeposited;
+    const auto withdrawnBefore = bankBefore.amtWithdrawn;
+
+    // On 7, the $1 winning component earns $4 and the other $4 lose:
+    // net player profit is zero, but the bet is classified as a win.
+    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    t.testRollDice(3, 4);
+    CHECK(p1->getBalance() == startingBalance);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(p1->getLastRollStats().amountWin == 4);
+    CHECK(p1->getLastRollStats().amountLose == 4);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").count == 1);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").amount == 0);
+    auto bankAfterWin = t.getBankCurrentStats();
+    CHECK(bankAfterWin.amtDeposited - depositedBefore == 4);
+    CHECK(bankAfterWin.amtWithdrawn - withdrawnBefore == 4);
+
+    // On 2, the $1 component wins $30 and the other $4 lose, for $26 net.
+    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    t.testRollDice(1, 1);
+    CHECK(p1->getBalance() == startingBalance + 26);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").count == 2);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").amount == 26);
+    auto bankAfterBigWin = t.getBankCurrentStats();
+    CHECK(bankAfterBigWin.amtDeposited - depositedBefore == 8);
+    CHECK(bankAfterBigWin.amtWithdrawn - withdrawnBefore == 34);
+
+    // A non-winning total loses the entire five-component wager.
+    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    t.testRollDice(1, 3); // 4
+    CHECK(p1->getBalance() == startingBalance + 21);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(t.getCurrentStats().betStats.betTypeStats.lose.at("World").count == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet amount validation")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    Gen::ErrorPass ep;
+    auto b1 = std::make_shared<CrapsBet>(p1, BetName::World, 5);
+    CHECK(t.addBet(b1, ep) == Gen::ReturnCode::Success);
+
+    // Remove the valid wager before testing invalid values.
+    ep.clear();
+    CHECK(t.removeBet(b1, ep) == Gen::ReturnCode::Success);
+
+    auto b2 = std::make_shared<CrapsBet>(p1, BetName::World, 6);
+    ep.clear();
+    CHECK(t.addBet(b2, ep) == Gen::ReturnCode::Fail);
+    CHECK(ep.description().find("multiple of 5") != std::string::npos);
+
+    auto b3 = std::make_shared<CrapsBet>(p1, BetName::World, 4);
+    ep.clear();
+    CHECK(t.addBet(b3, ep) == Gen::ReturnCode::Fail);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:payout-compatible wager limits")
+{
+    YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
+    YAML::Node rules = yaml["Rules"]["advanced"];
+
+    rules["buyCommission"]["minimum"] = 1;
+    rules["layCommission"]["minimum"] = 1;
+
+    std::unique_ptr<CrapsTable> table(
+        CrapsTable::fromString(YAML::Dump(yaml), "Table-1", config));
+    REQUIRE(table != nullptr);
+
+    const auto passOdds = table->getBetAmountLimits(BetName::PassLine, 6, true, 10);
+    CHECK(passOdds.minimum == 5);
+    CHECK(passOdds.increment == 5);
+
+    const auto dontOdds = table->getBetAmountLimits(BetName::DontPass, 6, true, 10);
+    CHECK(dontOdds.minimum == 6);
+    CHECK(dontOdds.increment == 6);
+
+    const auto place = table->getBetAmountLimits(BetName::Place, 6, false, 0);
+    CHECK(place.minimum == 12);
+    CHECK(place.increment == 6);
+
+    const auto buy = table->getBetAmountLimits(BetName::Buy, 6, false, 0);
+    CHECK(buy.minimum == 20);
+    CHECK(buy.increment == 5);
+
+    const auto lay = table->getBetAmountLimits(BetName::Lay, 6, false, 0);
+    CHECK(lay.minimum == 24);
+    CHECK(lay.increment == 6);
+}

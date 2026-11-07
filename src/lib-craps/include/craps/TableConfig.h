@@ -6,15 +6,12 @@
 
 #pragma once
 
-#include <filesystem>
-
 namespace Craps {
 
 struct TableConfig
 {
     size_t maxSessions = 0;
     size_t maxRecentRolls = 0;
-    std::filesystem::path tablePath;
 };
 
 /*-----------------------------------------------------------*//**

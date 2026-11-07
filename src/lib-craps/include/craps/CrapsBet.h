@@ -13,6 +13,7 @@
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/OddsTables.h>
+#include <craps/TableRules.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ReturnCode.h>
 #include <gen/Timepoint.h>
@@ -49,20 +50,22 @@ public:
 
     /// @name Observers
     /// @{
-    Player&        player()         const;
-    BetId          betId()          const;
-    BetName        betName()        const;
-    unsigned       pivot()          const;
-    unsigned       contractAmount() const;
-    unsigned       oddsAmount()     const;
-    bool           offComeOutRoll() const;
-    bool           hardwayWorking() const;
-    unsigned       distance()       const;
-    Gen::Timepoint whenCreated()    const;
-    Gen::Timepoint whenDecided()    const;
-    std::string    diagBetId()      const;  // "bet(betId:33, betName:DontCome(4))"
-    
+    Player&        player()          const;
+    BetId          betId()           const;
+    BetName        betName()         const;
+    unsigned       pivot()           const;
+    unsigned       contractAmount()  const;
+    unsigned       oddsAmount()      const;
+    Gen::Money     placementCommission() const; // Commission already collected on placement
+    bool           hasDecision() const;           // A roll has resolved this bet at least once
+    bool           offComeOutRoll()  const;
+    bool           hardwayWorking()  const;
+    unsigned       distance()        const;
+    Gen::Timepoint whenCreated()     const;
+    Gen::Timepoint whenDecided()     const;
+    std::string    diagBetId()       const;  // "bet(betId:33, betName:DontCome(4))"
     bool operator==(const CrapsBet&) const;
+    void           logBet(std::string_view intro) const;
     /// @}
 
 private:
@@ -75,6 +78,8 @@ private:
 
     // Order doesn't matter
     Gen::Money oddsAmount_     = 0;
+    Gen::Money placementCommission_ = 0; // retained after a winning Buy/Lay decision
+    bool hasDecision_ = false;
     bool offComeOutRoll_       = true;
     unsigned distance_         = 0;  // num rolls until decision
     Gen::Timepoint whenCreated_;
@@ -96,6 +101,9 @@ private:
 
     Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
                              DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evaluate(unsigned point, const Dice& dice,
+                             const TableRules& rules,
+                             DecisionRecord& dr, Gen::ErrorPass& ep);
     void checkBetName();
     void checkContractAmount();
     void checkLinePivot();
@@ -104,31 +112,31 @@ private:
     void checkSideBets();
     bool validArgsEval(unsigned point, Gen::ErrorPass& ep) const;
     Gen::ReturnCode evalPassLine(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalCome(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalDontPass(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalDontCome(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalPlace(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalLay(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalBuy(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalHardway(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalField(
-        unsigned point, const Dice& dice,
+        unsigned point, const Dice& dice, const TableRules& rules,
         DecisionRecord& dr, Gen::ErrorPass& ep);
     Gen::ReturnCode evalAnyCraps(
         unsigned point, const Dice& dice,
@@ -142,22 +150,33 @@ private:
     Gen::ReturnCode evalHorn(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalWorld(
+        unsigned point, const Dice& dice,
+        DecisionRecord& dr, Gen::ErrorPass& ep);
     void diagEvalEntered(unsigned point, const Dice& dice) const;
     Gen::ReturnCode diagEvalProcError(Gen::ErrorPass& ep) const;
-    unsigned calculateOddsPayout(unsigned amount,
-                                 unsigned numerator,
-                                 unsigned denominator) const;
+    Gen::Money calculateOddsPayout(Gen::Money amount,
+                                   unsigned numerator,
+                                   unsigned denominator,
+                                   TableRules::PayoutRounding rounding,
+                                   Gen::Money payoutUnit) const;
+    Gen::Money calculateCommission(Gen::Money grossWin,
+                                   Gen::Money wager,
+                                   const TableRules::Commission& rules) const;
     void calcWinPointBet(unsigned diceVal,
                          DecisionRecord& dr,
                          bool returnOdds,
-                         const OddsTables::OddsEntry table[]) const;
+                         const OddsTables::OddsEntry table[],
+                         const TableRules& rules) const;
     void calcLossPointBet(DecisionRecord& dr, bool returnOdds) const;
     void setContractAmountInternal(Gen::Money amount); // called by CrapsTable
     void setOddsAmountInternal    (Gen::Money amount); // called by CrapsTable
+    void setPlacementCommissionInternal(Gen::Money amount); // called by CrapsTable/Player
     void setPivotInternal         (unsigned pivot);    // called by CrapsTable
     void setDistanceInternal      (unsigned distance); // called by unit test
 
     friend class CrapsTable;
+    friend class Player;
     friend class TableStats;
 
     // Unit test access points
@@ -174,6 +193,10 @@ public:
     Gen::ReturnCode testEvaluate(unsigned point, const Dice& dice,
                                  DecisionRecord& dr, Gen::ErrorPass& ep)
     { return evaluate(point, dice, dr, ep); }
+    Gen::ReturnCode testEvaluate(unsigned point, const Dice& dice,
+                                 const TableRules& rules, DecisionRecord& dr,
+                                 Gen::ErrorPass& ep)
+    { return evaluate(point, dice, rules, dr, ep); }
 #endif
     
 };  // class CrapsBet

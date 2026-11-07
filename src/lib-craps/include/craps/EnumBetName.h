@@ -32,6 +32,7 @@ enum class BetName
     AnySeven,    ///< Any Seven bet
     CandE,       ///< Craps & Eleven bet
     Horn,        ///< Horn bet
+    World,       ///< World bet
     Count,       ///< Always last, tells how many bet names exist
     Invalid      ///< Always last, used for conversion errors
 };
@@ -45,7 +46,7 @@ namespace EnumBetName
     std::string listAsString();
 
     /** Initialized array of enums for iterating. */
-    constexpr const std::array<BetName, 13> enumerators
+    constexpr const std::array<BetName, 14> enumerators
     {
         BetName::PassLine,   ///< Pass line bet
         BetName::Come,       ///< Come bet
@@ -59,7 +60,8 @@ namespace EnumBetName
         BetName::AnyCraps,   ///< Any Craps bet
         BetName::AnySeven,   ///< Any Seven bet
         BetName::CandE,      ///< Craps & Eleven bet
-        BetName::Horn        ///< Horn bet
+        BetName::Horn,       ///< Horn bet
+        BetName::World       ///< World bet
         // BetName::count    // Purposely leave out
         // BetName::Invalid  // Purposely leave out
     };

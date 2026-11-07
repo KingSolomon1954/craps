@@ -290,10 +290,22 @@ CrapsReaders::readPlayerList()
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsReaders::readBetIsAllowed(
+    const BetName& betName,
+    bool& isBetAllowed,
+    std::string& str)
+{
+    isBetAllowed = Gbl::pTable->isBetAllowed(betName, str);
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsReaders::readBetIsRemovable(
     const Craps::BetId& betId,
     bool& isRemovable,
-    Gen::ErrorPass& ep)    
+    Gen::ErrorPass& ep)
 {
     auto pBet = Gbl::pTable->getBet(betId, ep);
     if (pBet == nullptr)
@@ -392,6 +404,55 @@ CrapsReaders::readBetOddsAmount(
         return Gen::ReturnCode::Fail;
     }
     oddsAmount = pBet->oddsAmount();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsReaders::readBetAmountLimits(
+    const Craps::PlayerId& playerId,
+    BetName betName,
+    unsigned pivot,
+    bool oddsBet,
+    Gen::Money contractAmount,
+    Craps::BetAmountLimits& limits,
+    Gen::ErrorPass& ep)
+{
+    auto pPlayer = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (pPlayer == nullptr)
+    {
+        ep.prepend(diagPrefix("betAmountLimits", "retrieve player"));
+        return Gen::ReturnCode::Fail;
+    }
+
+    // A player's matching contract bet supplies both the current amount and,
+    // for odds, the contract amount used to calculate the odds ceiling.
+    const auto betId = pPlayer->getBet(betName, pivot, ep);
+    Craps::BetPtr pBet;
+    if (betId != 0)
+    {
+        pBet = pPlayer->getBet(betId, ep);
+        if (pBet == nullptr)
+        {
+            ep.prepend(diagPrefix("betAmountLimits", "retrieve existing bet"));
+            return Gen::ReturnCode::Fail;
+        }
+        limits.currentAmount = oddsBet ? pBet->oddsAmount() : pBet->contractAmount();
+        if (oddsBet && contractAmount == 0)
+            contractAmount = pBet->contractAmount();
+    }
+    else
+        limits.currentAmount = 0;
+
+    limits.minimum = 0;
+    limits.maximum = 0;
+    limits.increment = 1;
+    const auto modelLimits = Gbl::pTable->getBetAmountLimits(
+        betName, pivot, oddsBet, contractAmount);
+    limits.minimum = modelLimits.minimum;
+    limits.maximum = modelLimits.maximum;
+    limits.increment = modelLimits.increment;
     return Gen::ReturnCode::Success;
 }
 
@@ -519,6 +580,20 @@ CrapsReaders::readTableMinMaxRules()
                            .maxLineBet = pTable->getMaxLineBet(),
                            .maxOdds    = pTable->getMaxOdds()};
     return rules;
+}
+
+//----------------------------------------------------------------
+
+Craps::TableRules
+CrapsReaders::readTableRules()
+{
+    Craps::TableId tid;
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::getActiveCrapsTable(tid, ep);
+
+    auto pTable = Gbl::pTableMgr->getTable(tid, ep);
+    assert(pTable);
+    return pTable->getTableRules();
 }
 
 //----------------------------------------------------------------
@@ -679,7 +754,14 @@ CrapsReaders::readTableCurrentShooter(
         ep.prepend(diagPrefix("tableCurrentShooter", "retrieve current shooter"));
         return Gen::ReturnCode::Fail;
     }
-    playerId = pTable->getCurrentShooter()->getPlayerId();
+    Craps::Player* pShooter = pTable->getCurrentShooter();
+    if (pShooter == nullptr)
+    {
+        ep.setDescription("There is no current shooter.");
+        ep.prepend(diagPrefix("tableCurrentShooter", "retrieve current shooter"));
+        return Gen::ReturnCode::Fail;
+    }
+    playerId = pShooter->getPlayerId();
     return Gen::ReturnCode::Success;
 }
 
@@ -895,6 +977,26 @@ CrapsReaders::readTableList()
 
 //----------------------------------------------------------------
 //
+// Last Fill
+//
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsReaders::getLastFill(
+    LastFill::LastFillEntry& lfe,
+    Gen::ErrorPass& ep)
+{
+    if (Gbl::pPlayerMgr->userPrefs().lastFill().getLastFill(lfe)
+        == Gen::ReturnCode::Fail)
+    {
+        ep.setDescription("No such last fill entry exists.");
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+//
 // Auto Fills
 //
 //----------------------------------------------------------------
@@ -904,7 +1006,8 @@ CrapsReaders::getAutoFill(
     AutoFill::AutoFillEntry& afe,
     Gen::ErrorPass& ep)
 {
-    if (AutoFill::instance().getAutoFill(afe) == Gen::ReturnCode::Fail)
+    if (Gbl::pPlayerMgr->userPrefs().autoFill().getAutoFill(afe)
+        == Gen::ReturnCode::Fail)
     {
         ep.setDescription("No such auto fill entry exists.");
         return Gen::ReturnCode::Fail;
@@ -919,16 +1022,7 @@ CrapsReaders::getAutoFills(
     AutoFill::AutoFills& autoFills,  // return arg
     Gen::ErrorPass& ep)
 {
-    AutoFill::AutoFills controllerFills =
-        AutoFill::instance().getAutoFills();
-
-    for (size_t i = 0; i < controllerFills.size(); i++)
-    {
-        autoFills[i].betName   = controllerFills[i].betName;
-        autoFills[i].pivot     = controllerFills[i].pivot;
-        autoFills[i].isOddsBet = controllerFills[i].isOddsBet;
-        autoFills[i].amount    = controllerFills[i].amount;
-    }
+    autoFills = Gbl::pPlayerMgr->userPrefs().autoFill().getAutoFills();
     return Gen::ReturnCode::Success;
 }
 
@@ -938,24 +1032,14 @@ CrapsReaders::getAutoFills(
 //
 //----------------------------------------------------------------
 
-#if 0
 Gen::ReturnCode
 CrapsReaders::getQuickBets(
-    std::vector<QuickBetEntry>& quickBets,  // return arg
+    QuickBet::QuickBets& quickBets,  // return arg
     Gen::ErrorPass& ep)
 {
-    QuickBet::Bets controllerBets = QuickBet::instance()->getQuickBets();
-
-    for (size_t i = 0; i < controllerBets.size(); i++)
-    {
-        quickBets[i].betName = controllerBets[i].betName;
-        quickBets[i].pivot   = controllerBets[i].pivot;
-        quickBets[i].oddsBet = controllerBets[i].isOddsBet;
-        quickBets[i].amount  = controllerBets[i].amount;
-    }
+    quickBets = Gbl::pPlayerMgr->userPrefs().quickBet().getQuickBets();
     return Gen::ReturnCode::Success;
 }
-#endif
 
 //----------------------------------------------------------------
 //

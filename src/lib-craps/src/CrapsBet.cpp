@@ -5,6 +5,9 @@
 //----------------------------------------------------------------
 
 #include <craps/CrapsBet.h>
+#include <craps/TableRules.h>
+#include <algorithm>
+#include <cstdint>
 
 #include <cassert>
 #include <iostream>
@@ -13,7 +16,9 @@
 #include <craps/DecisionRecord.h>
 #include <craps/Player.h>
 #include <craps/Dice.h>
+#include <gen/Debug.h>
 #include <gen/ErrorPass.h>
+#include <gen/Logger.h>
 #include <gen/MoneyUtils.h>
 #include <gen/StringUtils.h>
 
@@ -53,13 +58,14 @@ CrapsTable, allowing the application better freedom of design.
     The amount of the bet. Throws if this is zero.
     For C&E bets, min bet is 2 must be a multiple of 2.
     For Horn bets, min bet is 4 must be a multiple of 4.
+    For World bets, min bet is 5 must be a multiple of 5.
 
 @param[in] pivot
     The number this bet is focused on. For example a Place bet must set
     the pivot to 4,5,6,8,9 or 10 otherwise a std::invalid_argument
     exception is thrown.
 
-    For Field, AnyCraps, AnySeven, C&E and Horn bets, the pivot is
+    For Field, AnyCraps, AnySeven, C&E, Horn and World bets, the pivot is
     unused and internally set to 0.
 
     For PassLine/Come/DontPass/DontCome bets, the caller sets the pivot
@@ -92,9 +98,12 @@ CrapsBet::CrapsBet(
     , pivot_  (pivot)
     , contractAmount_(contractAmount)
 {
-    assert(pPlayer != nullptr);
     try
     {
+        if (pPlayer_ == nullptr)
+        {
+            throw std::invalid_argument("Bad \"pPlayer\": cannot be nullptr.");
+        }
         checkBetName();         // throws
         checkContractAmount();  // throws
         checkLinePivot();       // throws
@@ -114,9 +123,13 @@ CrapsBet::CrapsBet(
 void
 CrapsBet::checkBetName()
 {
-    if (betName_ == BetName::Invalid)
+    const auto it = std::find(EnumBetName::enumerators.begin(),
+                              EnumBetName::enumerators.end(), betName_);
+    if (it == EnumBetName::enumerators.end())
     {
-        throw std::invalid_argument("Bad \"betName\": cannot be \"BetName::Invalid\".");
+        throw std::invalid_argument(
+            "Bad \"betName\": must be a valid craps bet name; "
+            "BetName::Count, BetName::Invalid, and unknown values are not valid bets.");
     }
 }
 
@@ -196,7 +209,8 @@ CrapsBet::checkSideBets()
         betName_ == BetName::AnyCraps ||
         betName_ == BetName::AnySeven ||
         betName_ == BetName::CandE    ||
-        betName_ == BetName::Horn)
+        betName_ == BetName::Horn     ||
+        betName_ == BetName::World)
     {
         pivot_ = 0;  // Quietly force it to 0.
     }
@@ -212,6 +226,8 @@ CrapsBet::operator==(const CrapsBet& other) const
            pivot_          == other.pivot_          &&
            contractAmount_ == other.contractAmount_ &&
            oddsAmount_     == other.oddsAmount_     &&
+           placementCommission_ == other.placementCommission_ &&
+           hasDecision_ == other.hasDecision_ &&
            offComeOutRoll_ == other.offComeOutRoll_ &&
            distance_       == other.distance_       &&
            whenCreated_    == other.whenCreated_    &&
@@ -248,6 +264,14 @@ void
 CrapsBet::setOddsAmountInternal(Gen::Money newAmount)
 {
     oddsAmount_ = newAmount;
+}
+
+//----------------------------------------------------------------
+
+void
+CrapsBet::setPlacementCommissionInternal(Gen::Money amount)
+{
+    placementCommission_ = amount;
 }
 
 /*-----------------------------------------------------------*//**
@@ -304,37 +328,28 @@ Payout strategy:
 @param [in] dice
     the dice roll to evaluate
 
-@param [inout] dr
+@param [out] dr
     The DecisionRecord contains the results of the evaluation.
     If successful then dr has valid contents, otherwise
     dr should be ignored and ep has description of the error.
 
-@param [inout] ep
-    If evaluation fails, then ep describes the error.
-
-*/
-
-/*-----------------------------------------------------------*//**
-
-Evaluates all bets to determine win/lose.
-
-@param [in] point
-    The point
-@param [in] dice
-    The dice roll
-@param [out] dr
-    Results returned in the given DecisionRecord
 @param [out] ep
-    Holds error description if an error is encountered
-@return
-    ReturnCode::Success and dr is filled out, otherwise
-    ReturnCode::Fail, dr is undefined and ep holds reason why
+    If evaluation fails, then ep describes the error.
 */
 Gen::ReturnCode
 CrapsBet::evaluate(unsigned point, const Dice& dice,
                    DecisionRecord& dr, Gen::ErrorPass& ep)
 {
-//  diagEvalEntered(point, dice);  // TODO use debug conditional
+    static const TableRules defaultRules{};
+    return evaluate(point, dice, defaultRules, dr, ep);
+}
+
+Gen::ReturnCode
+CrapsBet::evaluate(unsigned point, const Dice& dice,
+                   const TableRules& rules,
+                   DecisionRecord& dr, Gen::ErrorPass& ep)
+{
+    D(diagEvalEntered(point, dice);)
     if (!validArgsEval(point, ep))
     {
         return diagEvalProcError(ep);
@@ -344,19 +359,20 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     Gen::ReturnCode rc = Gen::ReturnCode::Fail;
     switch (betName_)
     {
-        case BetName::PassLine: rc = evalPassLine(point, dice, dr, ep); break;
-        case BetName::Come    : rc = evalCome    (point, dice, dr, ep); break;
-        case BetName::DontPass: rc = evalDontPass(point, dice, dr, ep); break;
-        case BetName::DontCome: rc = evalDontCome(point, dice, dr, ep); break;
-        case BetName::Place   : rc = evalPlace   (point, dice, dr, ep); break;
-        case BetName::Buy     : rc = evalBuy     (point, dice, dr, ep); break;
-        case BetName::Lay     : rc = evalLay     (point, dice, dr, ep); break;
+        case BetName::PassLine: rc = evalPassLine(point, dice, rules, dr, ep); break;
+        case BetName::Come    : rc = evalCome    (point, dice, rules, dr, ep); break;
+        case BetName::DontPass: rc = evalDontPass(point, dice, rules, dr, ep); break;
+        case BetName::DontCome: rc = evalDontCome(point, dice, rules, dr, ep); break;
+        case BetName::Place   : rc = evalPlace   (point, dice, rules, dr, ep); break;
+        case BetName::Buy     : rc = evalBuy     (point, dice, rules, dr, ep); break;
+        case BetName::Lay     : rc = evalLay     (point, dice, rules, dr, ep); break;
         case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
-        case BetName::Field   : rc = evalField   (point, dice, dr, ep); break;
+        case BetName::Field   : rc = evalField   (point, dice, rules, dr, ep); break;
         case BetName::AnyCraps: rc = evalAnyCraps(point, dice, dr, ep); break;
         case BetName::AnySeven: rc = evalAnySeven(point, dice, dr, ep); break;
         case BetName::CandE   : rc = evalCandE   (point, dice, dr, ep); break;
         case BetName::Horn    : rc = evalHorn    (point, dice, dr, ep); break;
+        case BetName::World   : rc = evalWorld   (point, dice, dr, ep); break;
         case BetName::Count   : // fall through
         case BetName::Invalid : return Gen::ReturnCode::Fail;           break;
     }
@@ -365,9 +381,23 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         return diagEvalProcError(ep);
     }
     distance_++;
+    dr.removeBet = dr.decision;
     if (dr.decision)
     {
+        hasDecision_ = true;
         whenDecided_.setToNow();
+
+        // These wagers pay a winning outcome but remain active until they
+        // lose or the player removes them. Their original stake therefore
+        // remains on the table after a win.
+        if (dr.win > 0 &&
+            (betName_ == BetName::Place ||
+             betName_ == BetName::Buy   ||
+             betName_ == BetName::Lay   ||
+             betName_ == BetName::Hardway))
+        {
+            dr.removeBet = false;
+        }
     }
     return Gen::ReturnCode::Success;
 }
@@ -377,10 +407,8 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
 void
 CrapsBet::diagEvalEntered(unsigned point, const Dice& dice) const
 {
-    std::cout << "CrapsBet::evaluate(point:" << point
-              << " dice:" << dice.value() << " ("
-              << dice.d1() << ","
-              << dice.d2() << "))" << std::endl;
+    LOG_TRACE("CrapsBet::evaluate(point:" + std::to_string(point) +
+              " " + dice.toString());
 }
 
 //----------------------------------------------------------------
@@ -389,8 +417,7 @@ Gen::ReturnCode
 CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 {
     std::string s("CrapsBet::evaluate(): Error evaluating betId:");
-    s += std::to_string(betId_) + " betName:" + EnumBetName::toString(betName_) + ". ";
-    ep.prepend(s);
+    ep.prepend(s + diagBetId() + ". ");
     return Gen::ReturnCode::Fail;
 }
 
@@ -399,15 +426,12 @@ CrapsBet::diagEvalProcError(Gen::ErrorPass& ep) const
 std::string
 CrapsBet::diagBetId() const
 {
-    std::string s = "bet(betId:" + std::to_string(betId_) +
-        ", betName:" + EnumBetName::toString(betName_);
-
+    std::string s = "bet(betName:" + EnumBetName::toString(betName_);
     if (pivot_ != 0)
     {
         s += "(" + std::to_string(pivot_) + ")";
     }
-
-    s += ")";
+    s += " betId:" + std::to_string(betId_) + ")";
     return s;
 }
 
@@ -428,27 +452,48 @@ CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
 //
 // Payout Logic. Suitable for both positive and inverted odds.
 //
-unsigned
+Gen::Money
 CrapsBet::calculateOddsPayout(
-    unsigned amount,
+    Gen::Money amount,
     unsigned numerator,
-    unsigned denominator) const
+    unsigned denominator,
+    TableRules::PayoutRounding rounding,
+    Gen::Money payoutUnit) const
 {
-    // Las Vegas style, rounds down, (100/3) == 33
-    return (amount * numerator) / denominator;
-
-#if 0
-    // This rounds up (100/3) == 34
-    if (amount < denominator)
+    if (denominator == 0) return 0;
+    const auto gross = static_cast<std::uint64_t>(amount) * numerator;
+    Gen::Money payout = static_cast<Gen::Money>(gross / denominator);
+    if (rounding == TableRules::PayoutRounding::Down &&
+        payoutUnit > 1)
     {
-        return amount;  // Pay 1:1 if under payout unit
+        payout = (payout / payoutUnit) * payoutUnit;
     }
+    return payout;
+}
 
-    unsigned fullUnits = amount / denominator;
-    unsigned remainder = amount % denominator;
+//----------------------------------------------------------------
 
-    return fullUnits * numerator + remainder;
-#endif    
+Gen::Money
+CrapsBet::calculateCommission(
+    Gen::Money grossWin,
+    Gen::Money wager,
+    const TableRules::Commission& rules) const
+{
+    if (rules.collection == TableRules::CommissionCollection::OnPlacement)
+        return 0; // Already collected when the bet was accepted.
+
+    const Gen::Money basis = rules.basis == TableRules::CommissionBasis::OnWager
+        ? wager : grossWin;
+    const auto raw = static_cast<std::uint64_t>(basis) * rules.basisPoints;
+    Gen::Money commission = static_cast<Gen::Money>(raw / 10000);
+    if (rules.rounding == TableRules::PayoutRounding::Down &&
+        rules.roundingUnit > 1)
+    {
+        commission = (commission / rules.roundingUnit) * rules.roundingUnit;
+    }
+    if (basis > 0 && commission < rules.minimum)
+        commission = rules.minimum;
+    return commission;
 }
 
 //----------------------------------------------------------------
@@ -465,7 +510,8 @@ CrapsBet::calcWinPointBet(
     unsigned pivot,
     DecisionRecord& dr,
     bool returnOdds,
-    const OddsTables::OddsEntry table[]) const
+    const OddsTables::OddsEntry table[],
+    const TableRules& rules) const
 {
     dr.win = contractAmount_;
 
@@ -474,13 +520,13 @@ CrapsBet::calcWinPointBet(
     if (offComeOutRoll_ && returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
-        return;
+        return;  // Skip odds payout calculation
     }
 
     const auto& odds = table[pivot];
     unsigned oddsPayout = calculateOddsPayout(oddsAmount_,
                                               odds.numerator,
-                                              odds.denominator);
+                                              odds.denominator, rules.odds.rounding, rules.odds.payoutUnit);
     dr.win += oddsPayout;
 }
 
@@ -507,6 +553,7 @@ Gen::ReturnCode
 CrapsBet::evalPassLine(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -554,7 +601,7 @@ CrapsBet::evalPassLine(
     }
 
     const bool returnOdds = false;
-    if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass);
+    if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass, rules);
     if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
@@ -566,6 +613,7 @@ Gen::ReturnCode
 CrapsBet::evalCome(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -636,7 +684,7 @@ CrapsBet::evalCome(
         }
     }
 
-    if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass);
+    if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass, rules);
     if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
@@ -648,6 +696,7 @@ Gen::ReturnCode
 CrapsBet::evalDontPass(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -703,7 +752,7 @@ CrapsBet::evalDontPass(
     }
 
     const bool returnOdds = false;
-    if (dcn == Win) calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
+    if (dcn == Win) calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont, rules);
     if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
@@ -715,6 +764,7 @@ Gen::ReturnCode
 CrapsBet::evalDontCome(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -789,7 +839,7 @@ CrapsBet::evalDontCome(
         }
     }
 
-    if (dcn == Win)  calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont);
+    if (dcn == Win)  calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont, rules);
     if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
     return Gen::ReturnCode::Success;
@@ -801,6 +851,7 @@ Gen::ReturnCode
 CrapsBet::evalPlace(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -829,7 +880,7 @@ CrapsBet::evalPlace(
         const auto& odds = OddsTables::oddsPlace[pivot_];
         dr.win = calculateOddsPayout(contractAmount_,
                                      odds.numerator,
-                                     odds.denominator);
+                                     odds.denominator, rules.payoutRounding, rules.payoutUnit);
     }
     
     if (dcn == Lose)
@@ -846,6 +897,7 @@ Gen::ReturnCode
 CrapsBet::evalLay(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -874,8 +926,9 @@ CrapsBet::evalLay(
         const auto& odds = OddsTables::oddsDont[pivot_];
         dr.win = calculateOddsPayout(contractAmount_,
                                      odds.numerator,
-                                     odds.denominator);
-        dr.commission = static_cast<unsigned>(dr.win * (5.0f / 100.0f));
+                                     odds.denominator, rules.odds.rounding, rules.odds.payoutUnit);
+        dr.commission = calculateCommission(dr.win, contractAmount_,
+                                            rules.layCommission);
         dr.win -= dr.commission;
     }
     if (dcn == Lose)
@@ -892,6 +945,7 @@ Gen::ReturnCode
 CrapsBet::evalBuy(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -920,8 +974,9 @@ CrapsBet::evalBuy(
         const auto& odds = OddsTables::oddsPass[pivot_];
         dr.win = calculateOddsPayout(contractAmount_,
                                      odds.numerator,
-                                     odds.denominator);
-        dr.commission = static_cast<unsigned>(contractAmount_ * (5.0f / 100.0f));
+                                     odds.denominator, rules.odds.rounding, rules.odds.payoutUnit);
+        dr.commission = calculateCommission(dr.win, contractAmount_,
+                                            rules.buyCommission);
         dr.win -= dr.commission;
     }
     if (dcn == Lose)
@@ -938,6 +993,7 @@ Gen::ReturnCode
 CrapsBet::evalField(
     unsigned point,
     const Dice& dice,
+    const TableRules& rules,
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
@@ -961,8 +1017,19 @@ CrapsBet::evalField(
 
     if (dcn == Win)
     {
-        dr.win = contractAmount_;
-        if (d == 2 || d == 12) dr.win += contractAmount_;  // pays double
+        const auto& odds = rules.fieldPayouts[d];
+        if (odds.numerator == 0)
+        {
+            ep.setDescription("No Field payout is configured for dice total " +
+                              std::to_string(d) + ".");
+            return Gen::ReturnCode::Fail;
+        }
+        const Gen::Money rawPayout =
+            (contractAmount_ * odds.numerator) / odds.denominator;
+        if (rules.payoutRounding == TableRules::PayoutRounding::Down)
+            dr.win = (rawPayout / rules.payoutUnit) * rules.payoutUnit;
+        else
+            dr.win = rawPayout;
     }
     if (dcn == Lose)
     {
@@ -1118,6 +1185,46 @@ CrapsBet::evalHorn(
     return Gen::ReturnCode::Success;
 }
 
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalWorld(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)
+{
+    (void) point;  // World is a one-roll proposition bet.
+
+    // Table validation normally guarantees this. Keep evaluation safe when
+    // called directly by tests or another model client with an invalid wager.
+    if (contractAmount_ < 5 || contractAmount_ % 5 != 0)
+    {
+        ep.setDescription("World bet amount must be a multiple of 5 and at least 5.");
+        return Gen::ReturnCode::Fail;
+    }
+
+    const auto& odds = OddsTables::oddsWorld[dice.value()];
+    if (odds.numerator != 0)
+    {
+        // The total wager is five equal components: 2, 3, 7, 11 and 12.
+        // The winning component pays its stated profit, while the other four
+        // component stakes are lost. dr.win is the net profit for the whole
+        // World wager. A 7 is therefore a break-even outcome (4 - 4 = 0).
+        const Gen::Money component = contractAmount_ / 5;
+        const Gen::Money componentProfit =
+            component * odds.numerator / odds.denominator;
+        const Gen::Money losingComponents = contractAmount_ - component;
+        dr.win = componentProfit - losingComponents;
+    }
+    else
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = true;
+    return Gen::ReturnCode::Success;
+}
+
 /*-----------------------------------------------------------*//**
 
 Returns the player associated with this bet.
@@ -1204,6 +1311,22 @@ CrapsBet::oddsAmount() const
     return oddsAmount_;
 }
 
+//----------------------------------------------------------------
+
+Gen::Money
+CrapsBet::placementCommission() const
+{
+    return placementCommission_;
+}
+
+//----------------------------------------------------------------
+
+bool
+CrapsBet::hasDecision() const
+{
+    return hasDecision_;
+}
+
 /*-----------------------------------------------------------*//**
 
 Returns whether the bet is "working/on" or "not-working/off" on a
@@ -1270,7 +1393,7 @@ void
 CrapsBet::setHardwayOn()
 {
     if (betName_ != BetName::Hardway) return;
-    offComeOutRoll_ = true;
+    offComeOutRoll_ = false;
 }
 
 /*-----------------------------------------------------------*//**
@@ -1285,7 +1408,7 @@ void
 CrapsBet::setHardwayOff()
 {
     if (betName_ != BetName::Hardway) return;
-    offComeOutRoll_ = false;
+    offComeOutRoll_ = true;
 }
 
 /*-----------------------------------------------------------*//**
@@ -1332,6 +1455,16 @@ CrapsBet::whenDecided() const
 
 //----------------------------------------------------------------
 
+void
+CrapsBet::logBet(std::string_view intro) const
+{
+    std::stringstream s;
+    s << "\n" << intro << "\n" << *this;
+    LOG_INFO(s.str());
+}
+
+//----------------------------------------------------------------
+
 std::ostream&
 operator<< (std::ostream& out, const CrapsBet& b)
 {
@@ -1361,7 +1494,9 @@ operator<< (std::ostream& out, const DecisionRecord& dr)
     " pivotAssigned: " << dr.pivotAssigned            << std::endl <<
     "           win: " << dr.win                      << std::endl <<
     "          lose: " << dr.lose                     << std::endl <<
-    "returnToPlayer: " << dr.returnToPlayer           << std::endl;
+    "returnToPlayer: " << dr.returnToPlayer           << std::endl <<
+    "    commission: " << dr.commission               << std::endl <<
+    "     removeBet: " << dr.removeBet                << std::endl;
     return out;
 }
 

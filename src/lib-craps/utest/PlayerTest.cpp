@@ -15,6 +15,8 @@
 #include <zeus/expected.hpp>
 #include <iostream>
 #include <memory>
+#include <string>
+#include <yaml-cpp/yaml.h>
 
 using namespace Craps;
 
@@ -24,7 +26,6 @@ std::string getPlayerYamlStringUtest();
 
 struct PlayerFixture
 {
-    PlayerConfig config { "/work/craps/assets/players/Player-1.yaml" };
     PlayerId p1Id { "uuid1" };
     PlayerId p2Id { "uuid2" };
     CrapsTable* t;
@@ -34,7 +35,6 @@ struct PlayerFixture
         TableConfig tableConfig;
         tableConfig.maxSessions = 50;
         tableConfig.maxRecentRolls = 25;
-        tableConfig.tablePath = "tmp/dontcare.yaml";
 
         t = new CrapsTable("Table-1", tableConfig);
         REQUIRE(t != nullptr);
@@ -52,8 +52,8 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
 {
     SUBCASE("via createplayer()")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
-        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id));
         CHECK(p1->getName() == "uuid1");
         CHECK(p2->getName() == "uuid2");
     }
@@ -61,32 +61,26 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:ctor")
     SUBCASE("via fromString()")
     {
         std::string yaml = getPlayerYamlStringUtest();
-        std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id, config));
+        std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id));
         CHECK(p1->getPlayerId() == "uuid1");
         CHECK(p1->getBalance() == 30000);
         // TODO check more fields to matching YAML
     }
     
-    SUBCASE("via fromFile()")
+    SUBCASE("fromString:mismatched playerId")
     {
-        PlayerConfig pc { "/work/craps/assets/players/nathan.yaml" };
-
-        // Good load
-        std::string nathanUuid("550e8400-e29b-41d4-a716-446655440000");
-        std::unique_ptr<Player> p1(Player::fromFile(nathanUuid, pc));
-        CHECK(p1->getPlayerId() == nathanUuid);
-        CHECK(p1->getName() == "Nathan");
-        CHECK(p1->getBalance() == 30000);
-
-        // Mismatched player ID
-        CHECK_THROWS_AS(Player::fromFile(p2Id, pc), std::runtime_error);
+        // YAML says uuid1; asking for uuid2 must be refused.
+        std::string yaml = getPlayerYamlStringUtest();
+        CHECK_THROWS_AS(Player::fromString(yaml, p2Id), std::runtime_error);
     }
 
-    SUBCASE("fromFile:missing")
+    SUBCASE("fromString:toYAML keeps identity")
     {
-        // Clobber path. Use bad playerId/path so file won't be found.
-        PlayerFixture::config.playerPath = "missing/FakePlayer-1";
-        CHECK_THROWS_AS(Player::fromFile(p1Id, config), std::runtime_error);
+        std::string yaml = getPlayerYamlStringUtest();
+        std::unique_ptr<Player> p1(Player::fromString(yaml, p1Id));
+        const YAML::Node out = p1->toYAML();
+        CHECK(out["playerId"].as<std::string>() == "uuid1");
+        CHECK(out["Bank"].IsDefined());
     }
 }
 
@@ -97,7 +91,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
     SUBCASE("joinTable")
     {
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         REQUIRE(p1 != nullptr);
 
         // Join table success
@@ -109,7 +103,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
     
     SUBCASE("leaveTable")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         REQUIRE(p1 != nullptr);
 
         // Leave table without ever joining
@@ -140,7 +134,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
         result = p1->joinTable(*t); CHECK(result);
         REQUIRE(t->getNumBetsOnTable() == 0);
         REQUIRE(p1->getNumBetsOnTable() == 0);
-        t->testSetState(0, 5, 5);  // point 0, d1=5, d2=5
+        t->testSetState(4, 5, 5);  // establish a point so odds can be set  // point 0, d1=5, d2=5
         
         // Put down a pass line bet, coming out
         result2 = p1->makeBet(BetName::PassLine, 100, 0);
@@ -158,13 +152,190 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
     }
 }
 
+TEST_CASE_FIXTURE(PlayerFixture, "Player:after leaving the table")
+{
+    std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+
+    auto joined = p1->joinTable(*t); REQUIRE(joined);
+    auto bet = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(bet);
+
+    auto left = p1->leaveTable(); REQUIRE(left);
+
+    // Not at a table any more, so no betting, until joining again
+    bet = p1->makeBet(BetName::PassLine, 100, 0); CHECK(!bet);
+
+    joined = p1->joinTable(*t); REQUIRE(joined);
+    bet = p1->makeBet(BetName::PassLine, 100, 0); CHECK(bet);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(PlayerFixture, "Player:endSession then join starts a new session")
+{
+    std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+    auto joined = p1->joinTable(*t); REQUIRE(joined);
+
+    // The session being played is counted when the player is saved.
+    auto numSessions = [&]()
+    {
+        const YAML::Node out = p1->toYAML();
+        return out["SessionStats"]["numSessionsAlltime"].as<int>();
+    };
+    const int        n0   = numSessions();
+    const Gen::Money bal  = p1->getBalance();
+    const size_t     hist = p1->getSessionHistory().size();
+
+    p1->endSession();
+    CHECK_FALSE(t->havePlayer(p1.get()));              // Left the table
+    CHECK(p1->getSessionHistory().size() == hist + 1); // Session recorded
+    CHECK(numSessions() == n0);                        // Nothing new yet
+    CHECK(p1->getBalance() == bal);
+
+    joined = p1->joinTable(*t); REQUIRE(joined);
+    CHECK(numSessions() == n0 + 1);                    // Second session
+    CHECK(p1->getBalance() == bal);                    // Balance carries over
+    CHECK(p1->getSessionNet() == 0);                   // Fresh session
+
+    p1->endSession();
+    CHECK(p1->getSessionHistory().size() == hist + 2);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(PlayerFixture, "CrapsTable:shooter leaves the table")
+{
+    std::unique_ptr<Player> a(Player::createPlayer("a"));
+    std::unique_ptr<Player> b(Player::createPlayer("b"));
+    std::unique_ptr<Player> c(Player::createPlayer("c"));
+    REQUIRE(a->joinTable(*t));
+    REQUIRE(b->joinTable(*t));
+    REQUIRE(c->joinTable(*t));
+
+    SUBCASE("someone else leaves, shooter is unchanged")
+    {
+        t->setShooter(*a);
+        REQUIRE(b->leaveTable());
+        CHECK(t->getCurrentShooter() == a.get());
+    }
+
+    SUBCASE("shooter leaves, dice go to the next player, then wrap around")
+    {
+        t->setShooter(*b);
+        REQUIRE(b->leaveTable());
+        CHECK(t->getCurrentShooter() == c.get());
+        REQUIRE(c->leaveTable());
+        CHECK(t->getCurrentShooter() == a.get());
+        REQUIRE(a->leaveTable());
+        CHECK(t->getCurrentShooter() == nullptr);       // nobody left
+    }
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(PlayerFixture, "CrapsTable:replacePlayer")
+{
+    std::unique_ptr<Player> a(Player::createPlayer("a"));
+    std::unique_ptr<Player> b(Player::createPlayer("b"));
+    std::unique_ptr<Player> c(Player::createPlayer("c"));
+    std::unique_ptr<Player> d(Player::createPlayer("d"));   // not at table
+    std::unique_ptr<Player> e(Player::createPlayer("e"));   // not at table
+    REQUIRE(a->joinTable(*t));
+    REQUIRE(b->joinTable(*t));
+    REQUIRE(c->joinTable(*t));
+    t->setShooter(*a);
+
+    const std::vector<Player*> before { a.get(), b.get(), c.get() };
+
+    SUBCASE("new player takes the seat")
+    {
+        auto r = t->replacePlayer(*b, *d); REQUIRE(r);
+        CHECK_FALSE(t->havePlayer(b.get()));
+        CHECK(t->havePlayer(d.get()));
+        CHECK(t->getNumPlayers() == 3);
+        const std::vector<Player*> expect { a.get(), d.get(), c.get() };
+        CHECK(t->getPlayers() == expect);               // Same seat
+        CHECK(t->getCurrentShooter() == a.get());       // Unaffected
+    }
+
+    SUBCASE("shooter leaves, dice go to the new player")
+    {
+        t->setShooter(*b);
+        auto r = t->replacePlayer(*b, *d); REQUIRE(r);
+        CHECK(t->getCurrentShooter() == d.get());
+    }
+
+    SUBCASE("leaving player's bets come off the table and go back to him")
+    {
+        const Gen::Money bal = b->getBalance();
+        auto bet = b->makeBet(BetName::Place, 100, 6); REQUIRE(bet);
+        REQUIRE(b->getNumBetsOnTable() == 1);
+        auto r = t->replacePlayer(*b, *d); REQUIRE(r);
+        CHECK(b->getNumBetsOnTable() == 0);
+        CHECK(b->getBalance() == bal);
+    }
+
+    SUBCASE("leaving player's session ends")
+    {
+        const size_t hist = b->getSessionHistory().size();
+        auto r = t->replacePlayer(*b, *d); REQUIRE(r);
+        CHECK(b->getSessionHistory().size() == hist + 1);
+    }
+
+    SUBCASE("full table")
+    {
+        std::vector<std::unique_ptr<Player>> more;
+        while (t->getNumPlayers() < 6)
+        {
+            more.emplace_back(Player::createPlayer("x"));
+            REQUIRE(more.back()->joinTable(*t));
+        }
+        // Table is full, so a plain join fails but a swap works.
+        auto j = d->joinTable(*t); CHECK(!j);
+        auto r = t->replacePlayer(*b, *d); CHECK(r);
+        CHECK(t->getNumPlayers() == 6);
+        CHECK(t->havePlayer(d.get()));
+    }
+
+    SUBCASE("player to leave is not at the table, nothing changes")
+    {
+        auto r = t->replacePlayer(*d, *e); CHECK(!r);
+        CHECK_FALSE(t->havePlayer(e.get()));
+        CHECK(t->getPlayers() == before);
+    }
+
+    SUBCASE("player to join is already at the table, nothing changes")
+    {
+        t->setShooter(*b);
+        auto r = t->replacePlayer(*b, *c); CHECK(!r);
+        CHECK(t->getPlayers() == before);
+        CHECK(t->getCurrentShooter() == b.get());
+    }
+
+    SUBCASE("replacing a player with himself, nothing changes")
+    {
+        auto r = t->replacePlayer(*b, *b); CHECK(!r);
+        CHECK(t->getPlayers() == before);
+    }
+
+    SUBCASE("a replaced player can come back later")
+    {
+        REQUIRE(t->replacePlayer(*b, *d));
+        auto r = t->replacePlayer(*d, *b); REQUIRE(r);
+        CHECK(t->havePlayer(b.get()));
+        CHECK_FALSE(t->havePlayer(d.get()));
+        CHECK(t->getPlayers() == before);
+    }
+}
+
+//----------------------------------------------------------------
+
 //----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
 {
     SUBCASE("badBets")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
 
         // Must join table first
         auto result = p1->makeBet(BetName::Place, 100, 6); CHECK(!result);
@@ -185,7 +356,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         
     SUBCASE("goodBets")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result2 = p1->joinTable(*t); REQUIRE(result2);
 
         Gen::Money bal = p1->getBalance();
@@ -200,7 +371,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
 
     SUBCASE("removeBet")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
 
         Gen::Money bal = p1->getBalance();
@@ -252,7 +423,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
 {
     SUBCASE("goodBet")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         REQUIRE(t->isComeOutRoll());
         Gen::Money bal = p1->getBalance();
@@ -270,8 +441,8 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
     
     SUBCASE("badBets")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
-        std::unique_ptr<Player> p2(Player::createPlayer(p2Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id));
 
         // nullptr
         auto result1 = p1->setOddsAmount(nullptr, 100); CHECK(!result1);
@@ -311,7 +482,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
         
     SUBCASE("changeAmount")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         REQUIRE(t->isComeOutRoll());
         Gen::Money bal = p1->getBalance();
@@ -351,7 +522,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 {
     SUBCASE("processWin")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
         auto result2 = p1->makeBet(BetName::Place, 120, 6); REQUIRE(result2);
@@ -359,9 +530,11 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         REQUIRE(p1->getNumBetsOnTable() == 1);
         p1->bettingClosed();
         DecisionRecord r1{b1.get(), true, false, 140, 0, 0, 0};
+        r1.removeBet = false;  // A winning Place wager remains active.
         p1->processWin(r1);
-        CHECK(p1->getBalance() == bal + 140);
-        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getBalance() == bal + 20);  // wager remains on table
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(t->getNumBetsOnTable() == 1);
 
         // check player stats
         auto stats = p1->getCurrentStats();
@@ -382,7 +555,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 
     SUBCASE("processLose")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
         auto result2 = p1->makeBet(BetName::Place, 120, 6); REQUIRE(result2);
@@ -413,7 +586,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 
     SUBCASE("processKeep")
     {
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
         auto result2 = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
@@ -429,29 +602,35 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
     {
         // Buy bet subtracts commission from win
         Gen::ErrorPass ep;
-        std::unique_ptr<Player> p1(Player::createPlayer(p1Id, config));
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
         auto result2 = p1->makeBet(BetName::Buy, 100, 4); REQUIRE(result2);
         auto b1 = result2.value();
         REQUIRE(p1->getNumBetsOnTable() == 1);
         DecisionRecord r1{b1.get(), true, false, 195, 0, 0, 5};
+        r1.removeBet = false;  // Buy wagers also remain active after a win.
         p1->processWin(r1);
-        CHECK(p1->getBalance() == bal + 195);
-        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getBalance() == bal + 95);  // $100 wager remains on table
+        CHECK(p1->getNumBetsOnTable() == 1);
 
-        // Come bets return odds money, make point then roll 7
-        bal = p1->getBalance();
-        t->testSetState(4, 5, 5);  // point 0, d1=5, d2=5
-        result2 = p1->makeBet(BetName::Come, 100, 0); REQUIRE(result2);
+        // Come bet hits its number on the come-out roll with odds off.
+        // Use a separate player because the Buy wager above remains active.
+        std::unique_ptr<Player> p2(Player::createPlayer(p2Id));
+        result1 = p2->joinTable(*t); REQUIRE(result1);
+        bal = p2->getBalance();
+        t->testSetState(6, 5, 5);  // establish a point so odds can be set
+        result2 = p2->makeBet(BetName::Come, 100, 0); REQUIRE(result2);
         auto b2 = result2.value();
-        REQUIRE(p1->getNumBetsOnTable() == 1);
-        b2->testSetPivot(10);  // avoid dice roll, setup bet to have a point
-        result1 = p1->setOddsAmount(b2, 200); REQUIRE(result1);
+        REQUIRE(p2->getNumBetsOnTable() == 1);
+        b2->testSetPivot(10);  // simulate an existing Come 10 bet
+        result1 = p2->setOddsAmount(b2, 200); REQUIRE(result1);
         DecisionRecord r2{b2.get(), true, false, 100, 0, 200, 0};
-        p1->processWin(r2);
-        CHECK(p1->getBalance() == bal + 100 + 200);
-        CHECK(p1->getNumBetsOnTable() == 0);
+        p2->processWin(r2);
+        // The odds stake is represented by returnToPlayer, so settlement
+        // must not also return it as part of the ordinary stake refund.
+        CHECK(p2->getBalance() == bal + 100);
+        CHECK(p2->getNumBetsOnTable() == 0);
     }
 }
 

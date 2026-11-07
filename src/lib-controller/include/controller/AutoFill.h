@@ -10,6 +10,7 @@
 #include <craps/EnumBetName.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ReturnCode.h>
+#include <yaml-cpp/yaml.h>
 
 namespace Ctrl {
 
@@ -29,19 +30,21 @@ public:
     /// @{
     AutoFill() = default;
    ~AutoFill() = default;
-    static AutoFill& instance();
     /// @}
     
     /// @name Modifiers
     /// @{
     void setAutoFill   (const AutoFillEntry& afe);
     void deleteAutoFill(const AutoFillEntry& afe);
+    void clear();
+    void fromYAML(const YAML::Node& node);
     /// @}
 
     /// @name Observers
     /// @{
     Gen::ReturnCode getAutoFill(AutoFillEntry& afe);
     const AutoFills& getAutoFills();
+    YAML::Node toYAML() const;
     /// @}
     
 private:
@@ -65,6 +68,18 @@ The AutoFill class in controller has these responsibilities:
 @li setAutoFill() - replaces amount if the entry already exists, zero is valid amount
 @li getAutoFills() - returns the read-only vector of auto fill entries
 @li deleteAutoFill() - shift entries if necessary, no empty slots
+@li clear() - forgets all entries
+
+@par Ownership and persistence
+
+Not a singleton, and it publishes no events; it is plain data. Each
+player has one, held in PlayerPrefs, which PlayerManager owns.
+EventHandler changes the user's AutoFill and publishes UslAutoFillChanged.
+
+toYAML() and fromYAML() convert between the entries and a YAML
+sequence, in order (see BetEntryYaml.h). PlayerPrefs puts it under
+"AutoFills" in the player file's "Prefs" section. fromYAML() replaces the
+current contents and never throws; bad entries are logged and skipped.
 
 */
 

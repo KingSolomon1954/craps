@@ -209,6 +209,15 @@ WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
         ev.betId,
         ev.amountWin,
         ev.amountLose);
+    // TODO    
+    // WindowMessageArea::instance().onBetResolved(
+    //     ev.playerId,
+    //     ev.betName,
+    //     ev.betId,
+    //     ev.amountWin,
+    //     ev.amountLose,
+    //     ev.returnedToPlayer,
+    //     ev.commission);
 }
 
 //----------------------------------------------------------------
