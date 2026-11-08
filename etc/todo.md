@@ -15,6 +15,12 @@
 - maybe a dialog box should prompt the user if to carry forward buddies
 - maybe should be a user prefence how to behave
 
+### Repeated bet changes the existing bet: View
+- RspMakeBet now has changed and previousAmount. Tell the player when a
+- bet made again changed the amount of the one already on the table
+- (e.g. Pass Line $10 -> $20), and consider showing the current amount
+- in the bet amount dialog
+
 ### Switch player: View (CUI and GUI)
 - Menu to pick a player from PlayerManager::getPlayerList(), leaving out
 - players already at the table (buddies)
@@ -106,6 +112,7 @@ track that amount independently.
 (Done) LastFill is per player (PlayerPrefs), no longer a singleton
 (Done) AutoFills and QuickBets saved to and loaded from the player's file (PlayerPrefs)
 (Done) Switch player in controller and model (ReqSwitchPlayer, RspSwitchPlayer, UslUserPlayerSwitched)
+(Done) A repeated bet changes the existing bet instead of making a second one (Player::makeOrChangeBet)
 (Done) Add payout hint to DialogBetAmount
 (Done) Fix window width of MenuOddsBet
 (Done) Fix multiple odds bets for same bet and number MenuOddsBet

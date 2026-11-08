@@ -90,25 +90,29 @@ EventHandler::onReqMakeBet(const Ctrl::ReqMakeBet& ev) const
     {
         assert(false && "pPlayer is null");
         ep.prepend(fname);
-        rsp.error = std::move(ep);
         LOG_ERROR(fname + " Error" + ep.fullDesc());
+        rsp.error = std::move(ep);
     }
     else
     {
-        auto result = pPlayer->makeBet(ev.betName,
-                                       ev.contractAmount,
-                                       ev.pivot);
+        // The same bet again changes the amount of the one already on the
+        // table; it does not make a second bet. See Player::makeOrChangeBet().
+        auto result = pPlayer->makeOrChangeBet(ev.betName,
+                                               ev.contractAmount,
+                                               ev.pivot);
         if (!result)
         {
             rsp.error = std::move(result).error();
         }
         else
         {
-            auto betPtr = std::move(result).value();
-            rsp.accepted = true;
-            rsp.betId = betPtr->betId();
-            
-            setLastFill(ev.playerId, *betPtr, false); // Set/replace last fill
+            auto placed = std::move(result).value();
+            rsp.accepted       = true;
+            rsp.betId          = placed.bet->betId();
+            rsp.changed        = placed.changed;
+            rsp.previousAmount = placed.previousAmount;
+
+            setLastFill(ev.playerId, *placed.bet, false); // Set/replace last fill
         }
     }
 

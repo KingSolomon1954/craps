@@ -485,11 +485,17 @@ struct ReqMakeBet : public GameEvent
 
 //----------------------------------------------------------------
 
+/// Answer to ReqMakeBet. A player has one bet per spot, so asking for a
+/// bet the player already has changes that bet's amount instead of
+/// making a second one. Then changed is true, previousAmount is what it
+/// was, and betId is the existing bet.
 struct RspMakeBet : public GameEvent
 {
     bool            accepted = false;
     Craps::PlayerId playerId;
     Craps::BetId    betId = 0;
+    bool            changed = false;
+    Gen::Money      previousAmount = 0;
     Gen::ErrorPass  error;
 
     RspMakeBet()

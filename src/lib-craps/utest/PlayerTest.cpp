@@ -329,6 +329,133 @@ TEST_CASE_FIXTURE(PlayerFixture, "CrapsTable:replacePlayer")
 
 //----------------------------------------------------------------
 
+TEST_CASE_FIXTURE(PlayerFixture, "Player:findBet")
+{
+    std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+    CHECK(p1->findBet(BetName::PassLine, 0) == nullptr);     // no bets at all
+    auto joined = p1->joinTable(*t); REQUIRE(joined);
+
+    auto pass   = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(pass);
+    auto place6 = p1->makeBet(BetName::Place,    100, 6); REQUIRE(place6);
+    auto field  = p1->makeBet(BetName::Field,    100, 0); REQUIRE(field);
+
+    CHECK(p1->findBet(BetName::PassLine, 0) == pass.value());
+    CHECK(p1->findBet(BetName::Place,    6) == place6.value());
+    CHECK(p1->findBet(BetName::Place,    8) == nullptr);     // another number
+    CHECK(p1->findBet(BetName::DontPass, 0) == nullptr);
+    CHECK(p1->findBet(BetName::Field,    5) == field.value()); // no pivot
+
+    // Once there is a point, a PassLine bet's pivot is the point. Asking
+    // with the point or without is the same bet.
+    t->testRollDice(5, 5);                                   // point is 10
+    CHECK(p1->findBet(BetName::PassLine, 0)  == pass.value());
+    CHECK(p1->findBet(BetName::PassLine, 10) == pass.value());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(PlayerFixture, "Player:makeOrChangeBet")
+{
+    std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+    auto joined = p1->joinTable(*t); REQUIRE(joined);
+    const Gen::Money bal = p1->getBalance();
+
+    SUBCASE("first time makes the bet")
+    {
+        auto r = p1->makeOrChangeBet(BetName::PassLine, 100, 0); REQUIRE(r);
+        CHECK_FALSE(r.value().changed);
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(p1->getBalance() == bal - 100);
+    }
+
+    SUBCASE("same bet again changes the amount, it is not a second bet")
+    {
+        auto first = p1->makeOrChangeBet(BetName::PassLine, 100, 0); REQUIRE(first);
+        auto up    = p1->makeOrChangeBet(BetName::PassLine, 300, 0); REQUIRE(up);
+        CHECK(up.value().changed);
+        CHECK(up.value().previousAmount == 100);
+        CHECK(up.value().bet == first.value().bet);          // same bet
+        CHECK(first.value().bet->contractAmount() == 300);
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(p1->getBalance() == bal - 300);                // not 400
+
+        // Down again; fine before the point. Repeating is the same result.
+        auto down = p1->makeOrChangeBet(BetName::PassLine, 200, 0); REQUIRE(down);
+        CHECK(down.value().previousAmount == 300);
+        auto same = p1->makeOrChangeBet(BetName::PassLine, 200, 0); REQUIRE(same);
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(p1->getBalance() == bal - 200);
+    }
+
+    SUBCASE("same amount is a successful no-op")
+    {
+        auto first = p1->makeOrChangeBet(BetName::PassLine, 100, 0); REQUIRE(first);
+        auto again = p1->makeOrChangeBet(BetName::PassLine, 100, 0); REQUIRE(again);
+        CHECK(again.value().changed);
+        CHECK(again.value().previousAmount == 100);
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(p1->getBalance() == bal - 100);
+    }
+
+    SUBCASE("different spots are different bets")
+    {
+        auto a = p1->makeOrChangeBet(BetName::PassLine, 100, 0); REQUIRE(a);
+        auto b = p1->makeOrChangeBet(BetName::Place,    100, 6); REQUIRE(b);
+        auto c = p1->makeOrChangeBet(BetName::Place,    100, 8); REQUIRE(c);
+        CHECK_FALSE(b.value().changed);
+        CHECK_FALSE(c.value().changed);
+        CHECK(p1->getNumBetsOnTable() == 3);
+    }
+
+    SUBCASE("a change that cannot be made leaves the bet alone")
+    {
+        auto first = p1->makeOrChangeBet(BetName::PassLine, 100, 0); REQUIRE(first);
+
+        auto tooMuch = p1->makeOrChangeBet(BetName::PassLine, bal + 1000, 0);
+        CHECK(!tooMuch);
+
+        // Zero is not a way to take a bet down
+        auto zero = p1->makeOrChangeBet(BetName::PassLine, 0, 0);
+        CHECK(!zero);
+
+        CHECK(first.value().bet->contractAmount() == 100);
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(p1->getBalance() == bal - 100);
+    }
+
+    SUBCASE("after the point, PassLine can be increased but not reduced")
+    {
+        auto first = p1->makeOrChangeBet(BetName::PassLine, 200, 0); REQUIRE(first);
+        t->testRollDice(5, 5);                               // point is 10
+
+        auto up = p1->makeOrChangeBet(BetName::PassLine, 300, 0); REQUIRE(up);
+        CHECK(up.value().changed);
+        CHECK(first.value().bet->contractAmount() == 300);
+
+        auto down = p1->makeOrChangeBet(BetName::PassLine, 100, 0);
+        CHECK(!down);
+        CHECK(first.value().bet->contractAmount() == 300);
+        CHECK(p1->getNumBetsOnTable() == 1);
+    }
+
+    SUBCASE("after the point, DontPass can be reduced but not increased")
+    {
+        auto first = p1->makeOrChangeBet(BetName::DontPass, 200, 0); REQUIRE(first);
+        t->testRollDice(5, 5);                               // point is 10
+
+        auto up = p1->makeOrChangeBet(BetName::DontPass, 300, 0);
+        CHECK(!up);
+        CHECK(first.value().bet->contractAmount() == 200);
+
+        auto down = p1->makeOrChangeBet(BetName::DontPass, 100, 0); REQUIRE(down);
+        CHECK(down.value().changed);
+        CHECK(first.value().bet->contractAmount() == 100);
+        CHECK(p1->getNumBetsOnTable() == 1);
+    }
+}
+
+//----------------------------------------------------------------
+
 //----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")

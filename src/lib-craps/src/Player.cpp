@@ -502,6 +502,67 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
 
 /*-----------------------------------------------------------*//**
 
+Makes a bet, or if the player already has that bet, changes its amount.
+
+A player has at most one bet on a given spot, as at a real table where
+the chips stack up. Asking for the same bet again is a request to make
+it the given amount, not to add a second bet. Nothing is added to the
+existing amount; repeating a request gives the same result.
+
+@li findBet() decides whether it is the same bet.
+@li Not there: same as makeBet().
+@li There: same as setContractAmount(), including its rules, such as no
+    reducing a PassLine bet and no increasing a DontPass bet after the
+    point, and the table limits applied to the new amount.
+@li Already that amount: nothing to do, still a success.
+
+@param[in] betName
+    The bet
+@param[in] contractAmount
+    The amount the bet is to be, not an amount to add
+@param[in] pivot
+    As for makeBet()
+
+@return
+    The bet, whether it was changed, and its previous amount if so.
+    Otherwise Fail and ep has the reason.
+*/
+zeus::expected<Player::BetPlaced, Gen::ErrorPass>
+Player::makeOrChangeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
+{
+    BetPtr existing = findBet(betName, pivot);
+    if (existing == nullptr)
+    {
+        auto made = makeBet(betName, contractAmount, pivot);
+        if (!made)
+        {
+            return zeus::unexpected<Gen::ErrorPass>(std::move(made).error());
+        }
+        BetPlaced placed;
+        placed.bet = std::move(made).value();
+        return placed;
+    }
+
+    BetPlaced placed;
+    placed.bet            = existing;
+    placed.changed        = true;
+    placed.previousAmount = existing->contractAmount();
+
+    if (contractAmount != placed.previousAmount)
+    {
+        auto result = setContractAmount(existing, contractAmount);
+        if (!result)
+        {
+            result.error().prepend("You already have this bet, so its amount "
+                                   "would be changed. ");
+            return zeus::unexpected<Gen::ErrorPass>(std::move(result).error());
+        }
+    }
+    return placed;
+}
+
+/*-----------------------------------------------------------*//**
+
 Changes the contract amount of a bet on the table.
 
 @li The bet must already exist on the table.
@@ -773,6 +834,53 @@ Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
     ep.setDescription("Player::getBet(): player " + playerName_ +
                       " has no such betId " + std::to_string(betId) + ".");
     return nullptr;
+}
+
+//----------------------------------------------------------------
+//
+// Finds the player's bet on the same spot as (betName, pivot), or
+// returns nullptr. The caller's pivot is treated the way a new bet
+// would be, so "same spot" means what it means at the table:
+//
+// @li Field, AnyCraps, AnySeven, C&E, Horn and World have no pivot.
+//     CrapsBet forces it to 0 (CrapsBet::checkSideBets()).
+// @li PassLine and DontPass bets take the point as their pivot once
+//     there is one, whether placed before or after it was established
+//     (CrapsTable::betAllowed(), CrapsBet).
+//
+BetPtr
+Player::findBet(BetName betName, unsigned pivot) const
+{
+    switch (betName)
+    {
+    case BetName::Field:
+    case BetName::AnyCraps:
+    case BetName::AnySeven:
+    case BetName::CandE:
+    case BetName::Horn:
+    case BetName::World:
+        pivot = 0;
+        break;
+
+    case BetName::PassLine:
+    case BetName::DontPass:
+        if (pTable_ != nullptr && pTable_->getPoint() != 0)
+        {
+            pivot = pTable_->getPoint();
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    auto it = std::find_if(bets_.begin(), bets_.end(),
+                   [betName, pivot](const BetPtr& b)
+                   {
+                       return b->betName() == betName &&
+                              b->pivot()   == pivot;
+                   });
+    return (it != bets_.end()) ? *it : nullptr;
 }
 
 //----------------------------------------------------------------

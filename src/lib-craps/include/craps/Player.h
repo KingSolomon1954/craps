@@ -52,9 +52,19 @@ public:
                                 const PlayerId&    playerId);
     /// @}
 
+    /// What makeOrChangeBet() did
+    struct BetPlaced
+    {
+        BetPtr     bet;                    ///< The bet now on the table
+        bool       changed = false;        ///< true if it was already there
+        Gen::Money previousAmount = 0;     ///< Contract amount before, if changed
+    };
+
     /// @name Modifiers
     /// @{
     zeus::expected<BetPtr, Gen::ErrorPass> makeBet(
+        BetName betName, Gen::Money contractAmount, unsigned pivot);
+    zeus::expected<BetPlaced, Gen::ErrorPass> makeOrChangeBet(
         BetName betName, Gen::Money contractAmount, unsigned pivot);
     zeus::expected<void, Gen::ErrorPass> joinTable(CrapsTable& table);
     zeus::expected<void, Gen::ErrorPass> leaveTable();
@@ -84,6 +94,7 @@ public:
     int                  getSessionNet()                          const;
     BetPtr               getBet(const BetId& betId, Gen::ErrorPass& ep) const;
     Craps::BetId         getBet(BetName betName, size_t pivot, Gen::ErrorPass& ep) const;
+    BetPtr               findBet(BetName betName, unsigned pivot) const;
     Bets                 getBets()                                const;
     Bets                 getOddsBets()                            const;
 
@@ -171,6 +182,10 @@ Player Responsibilities:
 
 @li Maintains player's money
 @li Tracks player's bets
+@li A player has at most one bet per spot, as at a real table where the
+    chips stack up. makeOrChangeBet() makes a bet, or if the player
+    already has that bet changes its amount to the amount given.
+    makeBet() always makes a new bet.
 @li Exports its own state with toYAML() and restores it with fromYAML()
 @li Knows nothing about files, paths or where that YAML is stored.
     Lib-controller's PlayerManager owns each player's file and decides
