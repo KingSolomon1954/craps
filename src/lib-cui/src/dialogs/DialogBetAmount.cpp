@@ -846,40 +846,26 @@ DialogBetAmount::drawReference()
 void
 DialogBetAmount::drawStatistics()
 {
-    const auto& cb = CarrierBet::instance();
     Craps::PlayerStats playerStats;
+    CuiUtils::getUserPlayerStats(playerStats);
+    const auto& stats = playerStats.betStats.betTypeStats;
+
     Craps::TableStats tableStats;
-    Craps::PlayerId playerId;
-    Craps::TableId tableId;
-    Gen::ErrorPass ep;
+    CuiUtils::getActiveTableStats(tableStats);
 
-    const bool havePlayer =
-        Ctrl::CrapsReaders::getUserPlayer(playerId, ep) == Gen::ReturnCode::Success &&
-        Ctrl::CrapsReaders::readPlayerCurrentStats(playerId, playerStats, ep) == Gen::ReturnCode::Success;
-    ep.clear();
-    const bool haveTable =
-        Ctrl::CrapsReaders::getActiveCrapsTable(tableId, ep) == Gen::ReturnCode::Success &&
-        Ctrl::CrapsReaders::readTableCurrentStats(tableId, tableStats, ep) == Gen::ReturnCode::Success;
-
-    Craps::BetStat playerWins, playerLosses;
-    SimulatedBetCounts simulated;
-
+    const auto& cb = CarrierBet::instance();  // shorthand
     const std::string key = betStatsKey(cb.getBetName(), cb.getPivot());
-    const bool aggregateByPrefix =
-        cb.getPivot() == 0 && isRollOutcomeBet(cb.getBetName());
+    const bool aggregateByPrefix = cb.getPivot() == 0 &&
+                                   isRollOutcomeBet(cb.getBetName());
 
-    if (havePlayer)
-    {
-        const auto& stats = playerStats.betStats.betTypeStats;
-        playerWins = findBetStat(stats.wins, key, aggregateByPrefix);
-        playerLosses = findBetStat(stats.lose, key, aggregateByPrefix);
-    }
-
-    if (haveTable)
-    {
-        simulated = simulatedBetCounts(
-            tableStats.rollStats, cb.getBetName(), cb.getPivot());
-    }
+    Craps::BetStat     playerWins;
+    Craps::BetStat     playerLosses;
+    SimulatedBetCounts simulated;
+    
+    playerWins   = findBetStat(stats.wins, key, aggregateByPrefix);
+    playerLosses = findBetStat(stats.lose, key, aggregateByPrefix);
+    simulated    = simulatedBetCounts(tableStats.rollStats,
+                                      cb.getBetName(), cb.getPivot());
 
     const unsigned playerCount        = playerWins.count + playerLosses.count;
     const unsigned simulatedCount     = simulated.wins + simulated.losses;

@@ -9,6 +9,12 @@
 - Add a warning like: “You have active bets. Are you sure
 - you want to quit and abandon them?”
 
+### Switch table:
+
+- needs to carry forward buddy players to the newly switched to table
+- maybe a dialog box should prompt the user if to carry forward buddies
+- maybe should be a user prefence how to behave
+
 ### Switch player: View (CUI and GUI)
 - Menu to pick a player from PlayerManager::getPlayerList(), leaving out
 - players already at the table (buddies)
@@ -16,11 +22,6 @@
 - off the table and returns the money
 - Send ReqSwitchPlayer. Handle RspSwitchPlayer (error text if not
 - switched) and UslUserPlayerSwitched (refresh everything about the user)
-
-### Table Switching
-
-- TableManager::switchCrapsTable() needs to call EP_SET()
-  for proper error handling
 
 ### Remember the user player across sessions
 - ConfigManager is read-only, so the user player chosen at runtime is
@@ -81,7 +82,7 @@ track that amount independently.
 
 ### Implement ReqMakeBet, to include UndoManager
 
-### Want DialogBetAmount to show Max Bet, current bet, off-on-comeout
+### Want DialogBetAmount to show current bet & whether off-on-comeout
 
 ### Allow same bet to add to existing bet 
 
@@ -89,12 +90,14 @@ track that amount independently.
 
 ## Done
 
+(Done) DialogBetAmount shows min, max bet, and proper multiples for odds
+(Done) TableManager::switchCrapsTable() needs to call EP_SET()
 (Done) Implemented comprehensive Table Rules facility
 (Done) Minimum bets are wrong.
 (Done) Added World bet.
 (Done) Fix evaluation() processing and various bugs
 (Done) Fix Place bets being removed from table after a win
-(Done) Early illegal bet test - jump to error immediatly
+(Done) Early illegal bet test - jump to error immediately
 (Done) Place, Buy, Lay  bet odds hints
 (Done) Add LastFill feature
 (Done) LastFills (LastBets) saved to and loaded from the user Player's file

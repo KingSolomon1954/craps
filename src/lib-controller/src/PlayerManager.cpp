@@ -458,8 +458,10 @@ PlayerManager::getPlayer(const Craps::PlayerId& playerId,
             return p;
         }
     }
-    ep.setDescription("PlayerManager::getPLayer(): no such playerId; \"" +
-                      playerId + "\"");
+    EP_SET(ep, Gen::ErrorPass::ErrorName::NotFoundError,
+           Gen::ErrorPass::ErrorType::ProcessingError,
+           Gen::ErrorPass::Severity::Indeterminate,
+           "PlayerManager::getPLayer(): no such playerId; \"" + playerId + "\"");
     return nullptr;
 }
 
