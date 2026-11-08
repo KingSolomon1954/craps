@@ -36,9 +36,8 @@
 
 ### Fix RollStats
 
-Place (simulated) bets should be considered off on comeout
-rolls. Currently they are counted as a loss/win on comeout rolls - when
-7 is rolled (lose) or number is rolled (win).
+- Place bets (simulated) should be considered off on comeout rolls.
+- Currently they are counted as a loss/win on comeout rolls.
 
 ### Save Config to yaml file
 
@@ -89,8 +88,6 @@ track that amount independently.
 ### Implement ReqMakeBet, to include UndoManager
 
 ### Want DialogBetAmount to show current bet & whether off-on-comeout
-
-### Allow same bet to add to existing bet 
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 

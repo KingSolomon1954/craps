@@ -5,6 +5,8 @@
 //----------------------------------------------------------------
 
 #include <controller/GameEvents.h>
+#include <atomic>
+#include <memory>
 
 using namespace Ctrl;
 

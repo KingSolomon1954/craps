@@ -117,10 +117,10 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
         // Leave table, with outstanding bets
         result = p1->joinTable(*t); REQUIRE(result);
         Gen::Money bal = p1->getBalance();
-        auto result2 = p1->makeBet(BetName::Place,    100, 6); REQUIRE(result2);
-        result2 =      p1->makeBet(BetName::Place,    100, 8); REQUIRE(result2);
-        result2 =      p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
-        result2 =      p1->makeBet(BetName::Hardway,  100, 4); REQUIRE(result2);
+        auto result2 = p1->testMakeBet(BetName::Place,    100, 6); REQUIRE(result2);
+        result2 =      p1->testMakeBet(BetName::Place,    100, 8); REQUIRE(result2);
+        result2 =      p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
+        result2 =      p1->testMakeBet(BetName::Hardway,  100, 4); REQUIRE(result2);
         REQUIRE(p1->getNumBetsOnTable() == 4);
         REQUIRE(p1->getAmountOnTable() == 400);
         REQUIRE(p1->getBalance() == bal - 400);
@@ -137,7 +137,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:joinTable")
         t->testSetState(4, 5, 5);  // establish a point so odds can be set  // point 0, d1=5, d2=5
         
         // Put down a pass line bet, coming out
-        result2 = p1->makeBet(BetName::PassLine, 100, 0);
+        result2 = p1->testMakeBet(BetName::PassLine, 100, 0);
         BetPtr pBet = result2.value();
         REQUIRE(pBet != nullptr);
         
@@ -157,15 +157,15 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:after leaving the table")
     std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
 
     auto joined = p1->joinTable(*t); REQUIRE(joined);
-    auto bet = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(bet);
+    auto bet = p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(bet);
 
     auto left = p1->leaveTable(); REQUIRE(left);
 
     // Not at a table any more, so no betting, until joining again
-    bet = p1->makeBet(BetName::PassLine, 100, 0); CHECK(!bet);
+    bet = p1->testMakeBet(BetName::PassLine, 100, 0); CHECK(!bet);
 
     joined = p1->joinTable(*t); REQUIRE(joined);
-    bet = p1->makeBet(BetName::PassLine, 100, 0); CHECK(bet);
+    bet = p1->testMakeBet(BetName::PassLine, 100, 0); CHECK(bet);
 }
 
 //----------------------------------------------------------------
@@ -267,7 +267,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "CrapsTable:replacePlayer")
     SUBCASE("leaving player's bets come off the table and go back to him")
     {
         const Gen::Money bal = b->getBalance();
-        auto bet = b->makeBet(BetName::Place, 100, 6); REQUIRE(bet);
+        auto bet = b->testMakeBet(BetName::Place, 100, 6); REQUIRE(bet);
         REQUIRE(b->getNumBetsOnTable() == 1);
         auto r = t->replacePlayer(*b, *d); REQUIRE(r);
         CHECK(b->getNumBetsOnTable() == 0);
@@ -335,9 +335,9 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:findBet")
     CHECK(p1->findBet(BetName::PassLine, 0) == nullptr);     // no bets at all
     auto joined = p1->joinTable(*t); REQUIRE(joined);
 
-    auto pass   = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(pass);
-    auto place6 = p1->makeBet(BetName::Place,    100, 6); REQUIRE(place6);
-    auto field  = p1->makeBet(BetName::Field,    100, 0); REQUIRE(field);
+    auto pass   = p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(pass);
+    auto place6 = p1->testMakeBet(BetName::Place,    100, 6); REQUIRE(place6);
+    auto field  = p1->testMakeBet(BetName::Field,    100, 0); REQUIRE(field);
 
     CHECK(p1->findBet(BetName::PassLine, 0) == pass.value());
     CHECK(p1->findBet(BetName::Place,    6) == place6.value());
@@ -465,20 +465,20 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
 
         // Must join table first
-        auto result = p1->makeBet(BetName::Place, 100, 6); CHECK(!result);
+        auto result = p1->testMakeBet(BetName::Place, 100, 6); CHECK(!result);
 
         // Join table
         auto result2 = p1->joinTable(*t); REQUIRE(result2);
 
         // Insufficient funds
         Gen::Money bal = p1->getBalance();
-        result = p1->makeBet(BetName::Place, bal + 100, 6); CHECK(!result);
+        result = p1->testMakeBet(BetName::Place, bal + 100, 6); CHECK(!result);
 
         // Bad bet, missing pivot for a place bet
-        result = p1->makeBet(BetName::Place, 100, 0); CHECK(!result);
+        result = p1->testMakeBet(BetName::Place, 100, 0); CHECK(!result);
 
         // Bad bet, zero dollar bet
-        result = p1->makeBet(BetName::Place, 0, 6); CHECK(!result);
+        result = p1->testMakeBet(BetName::Place, 0, 6); CHECK(!result);
     }
         
     SUBCASE("goodBets")
@@ -487,10 +487,10 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         auto result2 = p1->joinTable(*t); REQUIRE(result2);
 
         Gen::Money bal = p1->getBalance();
-        auto result = p1->makeBet(BetName::Place,    100, 6); CHECK(result);
-             result = p1->makeBet(BetName::Place,    100, 8); CHECK(result);
-             result = p1->makeBet(BetName::PassLine, 100, 0); CHECK(result);
-             result = p1->makeBet(BetName::Hardway,  100, 4); CHECK(result);
+        auto result = p1->testMakeBet(BetName::Place,    100, 6); CHECK(result);
+             result = p1->testMakeBet(BetName::Place,    100, 8); CHECK(result);
+             result = p1->testMakeBet(BetName::PassLine, 100, 0); CHECK(result);
+             result = p1->testMakeBet(BetName::Hardway,  100, 4); CHECK(result);
         CHECK(p1->getNumBetsOnTable() == 4);
         CHECK(p1->getAmountOnTable() == 400);
         CHECK(p1->getBalance() == bal - 400);
@@ -502,7 +502,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
 
         Gen::Money bal = p1->getBalance();
-        auto result2 = p1->makeBet(BetName::Place, 100, 6); REQUIRE(result2);
+        auto result2 = p1->testMakeBet(BetName::Place, 100, 6); REQUIRE(result2);
         BetPtr pBet = result2.value();
         REQUIRE(pBet != nullptr);
         REQUIRE(p1->getNumBetsOnTable() == 1);
@@ -520,7 +520,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         // Force table state to be point rolls
         t->testSetState(4, 5, 5);  // point 4, d1=5, d2=5
         // Put down a pass line bet after point already established
-        result2 = p1->makeBet(BetName::PassLine, 100, 4); REQUIRE(result2);
+        result2 = p1->testMakeBet(BetName::PassLine, 100, 4); REQUIRE(result2);
         BetPtr pBet2 = result2.value();
         REQUIRE(pBet2 != nullptr);
         // OK to remove, has not yet participated in a roll
@@ -533,7 +533,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         t->testSetState(0, 5, 5);  // point 0, d1=5, d2=5
         // Put down a pass line bet, coming out
 
-        result2 = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
+        result2 = p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
         BetPtr pBet3 = result2.value();
         REQUIRE(pBet3 != nullptr);
         t->testRollDice(5,5); // roll a 10, point is 10 
@@ -555,7 +555,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
         REQUIRE(t->isComeOutRoll());
         Gen::Money bal = p1->getBalance();
 
-        auto result2 = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
+        auto result2 = p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
         auto pBet = result2.value();
         REQUIRE(pBet != nullptr);
         REQUIRE(pBet->oddsAmount() == 0);
@@ -587,14 +587,14 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
         // Bad bet type for setOdds
         result1 = p1->joinTable(*t); REQUIRE(result1);
         REQUIRE(p1->getNumBetsOnTable() == 0);
-        auto result2 = p1->makeBet(BetName::Place, 100, 6); REQUIRE(result2);
+        auto result2 = p1->testMakeBet(BetName::Place, 100, 6); REQUIRE(result2);
         auto pBet3 = result2.value();
         REQUIRE(pBet3 != nullptr);
         result1 = p1->setOddsAmount(pBet3, 100); CHECK(!result1);
         
         // Insufficient funds
         REQUIRE(t->isComeOutRoll());
-        result2 = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
+        result2 = p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
         auto pBet4 = result2.value();
         REQUIRE(pBet4 != nullptr);
         t->testRollDice(5,5); // roll a 10, point is now 10 
@@ -615,7 +615,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
         Gen::Money bal = p1->getBalance();
 
         // Establish a good passline bet with $200 odds.
-        auto result2 = p1->makeBet(BetName::PassLine, 100, 0);
+        auto result2 = p1->testMakeBet(BetName::PassLine, 100, 0);
         auto pBet = result2.value();
         REQUIRE(pBet != nullptr);
         REQUIRE(pBet->oddsAmount() == 0);
@@ -652,7 +652,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
-        auto result2 = p1->makeBet(BetName::Place, 120, 6); REQUIRE(result2);
+        auto result2 = p1->testMakeBet(BetName::Place, 120, 6); REQUIRE(result2);
         auto b1 = result2.value();
         REQUIRE(p1->getNumBetsOnTable() == 1);
         p1->bettingClosed();
@@ -685,7 +685,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
-        auto result2 = p1->makeBet(BetName::Place, 120, 6); REQUIRE(result2);
+        auto result2 = p1->testMakeBet(BetName::Place, 120, 6); REQUIRE(result2);
         auto b1 = result2.value();
         REQUIRE(p1->getNumBetsOnTable() == 1);
         p1->bettingClosed();
@@ -716,7 +716,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
-        auto result2 = p1->makeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
+        auto result2 = p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(result2);
         auto b1 = result2.value();
         REQUIRE(p1->getNumBetsOnTable() == 1);
         DecisionRecord r1{b1.get(), false, true, 0, 0, 0, 0};
@@ -732,7 +732,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
         auto result1 = p1->joinTable(*t); REQUIRE(result1);
         Gen::Money bal = p1->getBalance();
-        auto result2 = p1->makeBet(BetName::Buy, 100, 4); REQUIRE(result2);
+        auto result2 = p1->testMakeBet(BetName::Buy, 100, 4); REQUIRE(result2);
         auto b1 = result2.value();
         REQUIRE(p1->getNumBetsOnTable() == 1);
         DecisionRecord r1{b1.get(), true, false, 195, 0, 0, 5};
@@ -747,7 +747,7 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
         result1 = p2->joinTable(*t); REQUIRE(result1);
         bal = p2->getBalance();
         t->testSetState(6, 5, 5);  // establish a point so odds can be set
-        result2 = p2->makeBet(BetName::Come, 100, 0); REQUIRE(result2);
+        result2 = p2->testMakeBet(BetName::Come, 100, 0); REQUIRE(result2);
         auto b2 = result2.value();
         REQUIRE(p2->getNumBetsOnTable() == 1);
         b2->testSetPivot(10);  // simulate an existing Come 10 bet

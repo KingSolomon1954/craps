@@ -110,7 +110,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collec
 
     const Gen::Money playerBefore = p1->getBalance();
     const int houseBefore = table->getBalance();
-    auto result = p1->makeBet(BetName::Buy, 100, 4);
+    auto result = p1->testMakeBet(BetName::Buy, 100, 4);
     REQUIRE(result);
     CHECK(p1->getBalance() == playerBefore - 105);
     CHECK(table->getBalance() == houseBefore + 5);
@@ -147,7 +147,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not ch
     REQUIRE(p1->joinTable(*table));
 
     const Gen::Money playerBefore = p1->getBalance();
-    auto result = p1->makeBet(BetName::Buy, 100, 4);
+    auto result = p1->testMakeBet(BetName::Buy, 100, 4);
     REQUIRE(result);
     CHECK(p1->getBalance() == playerBefore - 105);
 
@@ -208,14 +208,14 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limi
     REQUIRE(table != nullptr);
     REQUIRE(p1->joinTable(*table));
 
-    auto tooLarge = p1->makeBet(BetName::CandE, 8, 0);
+    auto tooLarge = p1->testMakeBet(BetName::CandE, 8, 0);
     CHECK_FALSE(tooLarge);
-    auto allowed = p1->makeBet(BetName::CandE, 6, 0);
+    auto allowed = p1->testMakeBet(BetName::CandE, 6, 0);
     CHECK(allowed);
 
-    auto worldTooLarge = p1->makeBet(BetName::World, 20, 0);
+    auto worldTooLarge = p1->testMakeBet(BetName::World, 20, 0);
     CHECK_FALSE(worldTooLarge);
-    auto worldAllowed = p1->makeBet(BetName::World, 15, 0);
+    auto worldAllowed = p1->testMakeBet(BetName::World, 15, 0);
     CHECK(worldAllowed);
 }
 
@@ -233,9 +233,9 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate potential win limit 
     REQUIRE(table != nullptr);
     REQUIRE(p1->joinTable(*table));
 
-    auto tooLarge = p1->makeBet(BetName::Horn, 40, 0); // max win = 300
+    auto tooLarge = p1->testMakeBet(BetName::Horn, 40, 0); // max win = 300
     CHECK_FALSE(tooLarge);
-    auto allowed = p1->makeBet(BetName::Horn, 20, 0); // max win = 150
+    auto allowed = p1->testMakeBet(BetName::Horn, 20, 0); // max win = 150
     CHECK(allowed);
 }
 
@@ -243,7 +243,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propa
 {
     CrapsTable t("Table-1", config);
     REQUIRE(p1->joinTable(t));
-    REQUIRE(p1->makeBet(BetName::Field, 10, 0));
+    REQUIRE(p1->testMakeBet(BetName::Field, 10, 0));
 
     // Point 3 is invalid. The roll must not be partially settled or advance
     // the point; an UslBetEvaluationFailed event is published for the bet.
@@ -839,8 +839,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         Gen::Money janeBalance = p2->getBalance();
 
         // come out roll, roll a 7, pass line win, dont pass lose
-        auto johnBet1 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet1 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet1 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet1 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet1.has_value());
         REQUIRE(janeBet1.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
@@ -868,8 +868,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 11, pass line win, dont pass lose
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet2 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet2 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet2 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet2 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet2.has_value());
         REQUIRE(janeBet2.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
@@ -891,8 +891,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 2, pass line lose, dont pass win
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet3 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet3 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet3 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet3 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet3.has_value());
         REQUIRE(janeBet3.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
@@ -914,8 +914,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 3, pass line lose, dont pass win
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet4 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet4 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet4 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet4 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet4.has_value());
         REQUIRE(janeBet4.has_value());
         std::cout << "John makes PassLine bet\n";
@@ -935,8 +935,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 12, pass line lose, dont pass push
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet5 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet5 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet5 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet5 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet5.has_value());
         REQUIRE(janeBet5.has_value());
         std::cout << "John makes PassLine bet\n";
@@ -961,8 +961,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 4, pass line keep, dont pass keep
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet6 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet6 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet6 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet6 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet6.has_value());
         REQUIRE(janeBet6.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
@@ -1017,7 +1017,7 @@ void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
         }
         if (r.action == Action::MakeBet)
         {
-            auto result = player.makeBet(r.betName, r.amount, r.pivot);
+            auto result = player.testMakeBet(r.betName, r.amount, r.pivot);
             REQUIRE(result);
             lastBet = result.value();
         }
@@ -2167,7 +2167,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Buy win accounting and lifetime
     // seven is a seven-out rather than a come-out roll.
     t.testSetState(6, 2, 2);
     const auto startingBalance = p1->getBalance();
-    auto betResult = p1->makeBet(BetName::Buy, 100, 4);
+    auto betResult = p1->testMakeBet(BetName::Buy, 100, 4);
     REQUIRE(betResult);
 
     const auto bankBefore = t.getBankCurrentStats();
@@ -2209,7 +2209,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Come odds refunded once on come
     // Create an existing Come 4 bet with odds while a point is established.
     t.testSetState(4, 2, 2);
     const auto startingBalance = p1->getBalance();
-    auto betResult = p1->makeBet(BetName::Come, 100, 0);
+    auto betResult = p1->testMakeBet(BetName::Come, 100, 0);
     REQUIRE(betResult);
     auto bet = betResult.value();
     bet->testSetPivot(4);
@@ -2237,7 +2237,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Lay commission accounting and l
 
     t.testSetState(4, 3, 4);
     const auto startingBalance = p1->getBalance();
-    auto betResult = p1->makeBet(BetName::Lay, 100, 4);
+    auto betResult = p1->testMakeBet(BetName::Lay, 100, 4);
     REQUIRE(betResult);
 
     const auto bankBefore = t.getBankCurrentStats();
@@ -2267,7 +2267,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:DontCome odds refunded once on 
     // Create an existing Don't Come 4 bet with odds while a point is known.
     t.testSetState(4, 3, 1);
     const auto startingBalance = p1->getBalance();
-    auto betResult = p1->makeBet(BetName::DontCome, 100, 0);
+    auto betResult = p1->testMakeBet(BetName::DontCome, 100, 0);
     REQUIRE(betResult);
     auto bet = betResult.value();
     bet->testSetPivot(4);
@@ -2297,7 +2297,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet settlement and statis
 
     // On 7, the $1 winning component earns $4 and the other $4 lose:
     // net player profit is zero, but the bet is classified as a win.
-    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    REQUIRE(p1->testMakeBet(BetName::World, 5, 0));
     t.testRollDice(3, 4);
     CHECK(p1->getBalance() == startingBalance);
     CHECK(p1->getNumBetsOnTable() == 0);
@@ -2311,7 +2311,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet settlement and statis
     CHECK(bankAfterWin.amtWithdrawn - withdrawnBefore == 4);
 
     // On 2, the $1 component wins $30 and the other $4 lose, for $26 net.
-    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    REQUIRE(p1->testMakeBet(BetName::World, 5, 0));
     t.testRollDice(1, 1);
     CHECK(p1->getBalance() == startingBalance + 26);
     CHECK(p1->getNumBetsOnTable() == 0);
@@ -2323,7 +2323,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet settlement and statis
     CHECK(bankAfterBigWin.amtWithdrawn - withdrawnBefore == 34);
 
     // A non-winning total loses the entire five-component wager.
-    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    REQUIRE(p1->testMakeBet(BetName::World, 5, 0));
     t.testRollDice(1, 3); // 4
     CHECK(p1->getBalance() == startingBalance + 21);
     CHECK(p1->getNumBetsOnTable() == 0);

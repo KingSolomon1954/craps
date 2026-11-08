@@ -259,7 +259,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 {
     const std::string fname("Player::makeBet");
     LOG_TRACE(fname + "(" + playerName_ + "): making contract bet");
-    
+
     Gen::ErrorPass ep;
     std::string s = "Unable to make bet(" +
                     std::to_string(contractAmount) +
@@ -308,7 +308,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
     sendEventPlayerBalanceChanged();
     sendEventPlayerBetsChanged();
     pBet->logBet(fname + "() Accepted");
-    
+
     return pBet;
 }
 
@@ -465,7 +465,7 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
 {
     const std::string fname("Player::setOddsAmount()");
     Gen::ErrorPass ep;
-    
+
     // fif prefix means "fault if"
 
     if (fifMissingBet(pBet, ep)                     ||
@@ -477,12 +477,12 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
         LOG_ERROR(fname + " Error " + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-    
+
     Gen::Money saveOddsAmount = pBet->oddsAmount();
-    
+
     wallet_.deposit(pBet->oddsAmount());  // give back old amount, if any
     wallet_.withdraw(newAmount);          // take out new amount
-    
+
     auto rc = pTable_->setOddsAmount(pBet, newAmount, ep);
     if (rc == Gen::ReturnCode::Fail)         // Bet was rejected
     {                                        // Restore prev amount
@@ -591,7 +591,7 @@ Player::setContractAmount(
 {
     const std::string fname("Player::setContractAmount()");
     Gen::ErrorPass ep;
-    
+
     // fif prefix means "fault if"
 
     const Gen::Money oldPlacementFee = pBet ? pBet->placementCommission() : 0;
@@ -607,12 +607,12 @@ Player::setContractAmount(
         LOG_ERROR(fname + " Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-    
+
     Gen::Money saveContractAmount = pBet->contractAmount();
-    
+
     wallet_.deposit(saveContractAmount + oldPlacementFee);
     wallet_.withdraw(newAmount + newPlacementFee);
-    
+
     auto rc = pTable_->setContractAmount(pBet, newAmount, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
@@ -1199,7 +1199,7 @@ Player::diagBadBetId(const std::string& funcName, BetId betId) const
         "Player::" + funcName + "cant match "
         "decision record betId against any betId held "
         "in player betList. Bad betId:" + std::to_string(betId);
-    LOG_ERROR(diag); 
+    LOG_ERROR(diag);
 }
 
 //----------------------------------------------------------------
@@ -1267,7 +1267,7 @@ Player::sendEventPlayerSessionStatsChanged() const
 
 //----------------------------------------------------------------
 
-void        
+void
 Player::sendEventPlayerLastRollStatsChanged() const
 {
     Ctrl::UslPlayerLastRollStatsChanged lrs{};
@@ -1375,15 +1375,15 @@ Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
                Es::Indeterminate, diagPrefix(2) + "BetPtr is null.");
         return true;
     }
-    
+
     if (findBetById(pBet->betId()) == nullptr)
     {
         if (pBet->player().getPlayerId() == playerId_)
         {
-            // Bet was somehow created outside of makeBet()
+            // Bet was somehow created outside of makeOrChangeBet()
             std::string s = fmt::format(
                 "{} Player:{} does not have this bet in their bet list; "
-                "Programmer error; Must use Player::makeBet() to make "
+                "Programmer error; Must use Player::makeOrChangeBet() to make "
                 "a bet; {}.", diagPrefix(2), playerName_, pBet->diagBetId());
             EP_SET(ep, En::LogicError, Et::ProcessingError,
                    Es::Indeterminate, s);

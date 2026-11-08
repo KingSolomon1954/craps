@@ -10,10 +10,7 @@
 #include <craps/LastRollStats.h>
 #include <gen/MoneyUtils.h>
 #include <gen/ErrorPass.h>
-#include <atomic>
 #include <string>
-#include <chrono>
-#include <memory>
 
 namespace Ctrl {
 
@@ -34,7 +31,6 @@ enum class EventType
     ReqMakeBet,
     ReqOddsBet,
     ReqRemoveBet,              // not yet implemented
-    ReqChangeBet,              // not yet implemented
     ReqAutoFill,
     ReqQuickBet,
     ReqSwitchPlayer,
@@ -68,12 +64,12 @@ enum class EventType
     UslAutoFillChanged,
     UslQuickBetChanged,
     UslUserPlayerSwitched,
-    
+
     UslTableBetsChanged,
     UslTableSessionStatsChanged,
     UslTableLastRollStatsChanged,
     UslTableBalanceChanged,
-    
+
     UslPlayerBetsChanged,
     UslPlayerSessionStatsChanged,
     UslPlayerLastRollStatsChanged,
@@ -319,12 +315,12 @@ struct UslBetResolved : public GameEvent
 
 struct UslAutoFillChanged : public GameEvent
 {
-    Craps::PlayerId playerId;                        ///< Player ID  
-    BetName         betName   = BetName::Invalid;    ///< Bet Name   
-    unsigned        pivot     = 0;                   ///< Bet ID     
+    Craps::PlayerId playerId;                        ///< Player ID
+    BetName         betName   = BetName::Invalid;    ///< Bet Name
+    unsigned        pivot     = 0;                   ///< Bet ID
     bool            isOddsBet = false;               ///< Amount is for odds
     Gen::Money      amount    = 0;                   ///< Amount
-            
+
     UslAutoFillChanged()
         : GameEvent{EventSource::Model, EventType::UslAutoFillChanged}
     {}
@@ -334,12 +330,12 @@ struct UslAutoFillChanged : public GameEvent
 
 struct UslQuickBetChanged : public GameEvent
 {
-    Craps::PlayerId playerId;                        ///< Player ID  
-    BetName         betName   = BetName::Invalid;    ///< Bet Name   
-    unsigned        pivot     = 0;                   ///< Bet ID     
+    Craps::PlayerId playerId;                        ///< Player ID
+    BetName         betName   = BetName::Invalid;    ///< Bet Name
+    unsigned        pivot     = 0;                   ///< Bet ID
     bool            isOddsBet = false;               ///< Amount is for odds
     Gen::Money      amount    = 0;                   ///< Amount
-            
+
     UslQuickBetChanged()
         : GameEvent{EventSource::Model, EventType::UslQuickBetChanged}
     {}
@@ -585,8 +581,8 @@ struct ReqRollDice : public GameEvent
 
 struct ReqAutoFill : public GameEvent              // No response to this
 {
-    BetName         betName   = BetName::Invalid;  ///< Bet Name   
-    unsigned        pivot     = 0;                 ///< Bet ID     
+    BetName         betName   = BetName::Invalid;  ///< Bet Name
+    unsigned        pivot     = 0;                 ///< Bet ID
     bool            isOddsBet = false;             ///< Amount is for odds
     Gen::Money      amount    = 0;                 ///< Amount
 
@@ -599,8 +595,8 @@ struct ReqAutoFill : public GameEvent              // No response to this
 
 struct ReqQuickBet : public GameEvent              // No response to this
 {
-    BetName         betName   = BetName::Invalid;  ///< Bet Name   
-    unsigned        pivot     = 0;                 ///< Bet ID     
+    BetName         betName   = BetName::Invalid;  ///< Bet Name
+    unsigned        pivot     = 0;                 ///< Bet ID
     bool            isOddsBet = false;             ///< Amount is for odds
     Gen::Money      amount    = 0;                 ///< Amount
 
