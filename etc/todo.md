@@ -93,6 +93,7 @@ track that amount independently.
 
 ## Done
 
+(Done) BetStats - improve YAML layout with better organization and hierarchy
 (Done) DialogBetAmount shows min, max bet, and proper multiples for odds
 (Done) TableManager::switchCrapsTable() needs to call EP_SET()
 (Done) Implemented comprehensive Table Rules facility

@@ -130,6 +130,8 @@ std::string
 betStatsKey(BetName betName, unsigned pivot)
 {
     std::string key = EnumBetName::toString(betName);
+    if (key == "CandE")
+        key = "C&E";
     if (pivot != 0)
         key += std::to_string(pivot);
     return key;
@@ -138,23 +140,28 @@ betStatsKey(BetName betName, unsigned pivot)
 //----------------------------------------------------------------
 
 Craps::BetStat
-findBetStat(const std::map<std::string, Craps::BetStat>& stats,
+findBetStat(const std::map<std::string, Craps::BetOutcomeStats>& stats,
             const std::string& key,
-            bool aggregateByPrefix)
+            bool aggregateByPrefix,
+            bool wins)
 {
     Craps::BetStat result;
+    const auto selected = [wins](const Craps::BetOutcomeStats& outcome)
+        -> const Craps::BetStat&
+    {
+        return wins ? outcome.wins : outcome.losses;
+    };
+
     if (!aggregateByPrefix)
     {
         if (const auto it = stats.find(key); it != stats.end())
-            result = it->second;
+            result = selected(it->second);
         return result;
     }
 
-    for (const auto& [name, stat] : stats)
-    {
+    for (const auto& [name, outcome] : stats)
         if (name.starts_with(key))
-            result.merge(stat);
-    }
+            result.merge(selected(outcome));
     return result;
 }
 
@@ -848,7 +855,7 @@ DialogBetAmount::drawStatistics()
 {
     Craps::PlayerStats playerStats;
     CuiUtils::getUserPlayerStats(playerStats);
-    const auto& stats = playerStats.betStats.betTypeStats;
+    const auto& stats = playerStats.betStats.byBet;
 
     Craps::TableStats tableStats;
     CuiUtils::getActiveTableStats(tableStats);
@@ -862,8 +869,8 @@ DialogBetAmount::drawStatistics()
     Craps::BetStat     playerLosses;
     SimulatedBetCounts simulated;
     
-    playerWins   = findBetStat(stats.wins, key, aggregateByPrefix);
-    playerLosses = findBetStat(stats.lose, key, aggregateByPrefix);
+    playerWins   = findBetStat(stats, key, aggregateByPrefix, true);
+    playerLosses = findBetStat(stats, key, aggregateByPrefix, false);
     simulated    = simulatedBetCounts(tableStats.rollStats,
                                       cb.getBetName(), cb.getPivot());
 

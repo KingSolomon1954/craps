@@ -788,55 +788,60 @@ Bank:
     maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
     maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
 BetStats:
-  totNumBetsAllBets: 0
-  totNumWinsAllBets: 0
-  totNumLoseAllBets: 0
-  totNumKeepAllBets: 0
-  totAmtAllBets: 0
-  totAmtWinsAllBets: 0
-  totAmtLoseAllBets: 0
-  totAmtKeepAllBets: 0
-  maxAmtBetOneBet: 0
-  maxAmtWinOneBet: 0
-  maxAmtLoseOneBet: 0
-  maxAmtKeepOneBet: 0
-  numBetsOneRoll:
-    total: 0
-    max: 0
-  numBetsWinOneRoll:
-    total: 0
-    max: 0
-  numBetsLoseOneRoll:
-    total: 0
-    max: 0
-  numBetsKeepOneRoll:
-    total: 0
-    max: 0
-  amtBetsOneRoll:
-    total: 0
-    max: 0
-  amtBetsWinOneRoll:
-    total: 0
-    max: 0
-  amtBetsLoseOneRoll:
-    total: 0
-    max: 0
-  amtBetsKeepOneRoll:
-    total: 0
-    max: 0
-  betTypeStats:
+  overall:
+    bets:
+      count: 0
+      wins: 0
+      losses: 0
+      kept: 0
+    amounts:
+      bet: 0
+      won: 0
+      lost: 0
+      kept: 0
+    maximums:
+      bet: 0
+      win: 0
+      loss: 0
+      kept: 0
+  byBet:
+    AnyCraps:
       wins:
-        AnyCraps:
-            count: 0
-            totDistance: 0
-            amount: 0
-            amountBet: 0
-      lose:
-        AnyCraps:
-            count: 0
-            totDistance: 0
-            amount: 0
-            amountBet: 0
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+  perRoll:
+    bets:
+      total: 0
+      max: 0
+    wins:
+      total: 0
+      max: 0
+    losses:
+      total: 0
+      max: 0
+    kept:
+      total: 0
+      max: 0
+    amounts:
+      bet:
+        total: 0
+        max: 0
+      won:
+        total: 0
+        max: 0
+      lost:
+        total: 0
+        max: 0
+      kept:
+        total: 0
+        max: 0
 SessionStats:
   numSessionsAlltime: 25
   firstSessionDate: 2025-06-25T14:30:00.000000000

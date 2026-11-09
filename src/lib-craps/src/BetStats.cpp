@@ -20,10 +20,10 @@ BetStats::recordWin(const CrapsBet& bet, Gen::Money amtWin)
     recordCommon(amtBet);
 
     std::string betName = expandBetName(bet);
-    betTypeStats.wins[betName].count++;
-    betTypeStats.wins[betName].amountBet   += amtBet;
-    betTypeStats.wins[betName].amount      += amtWin;
-    betTypeStats.wins[betName].totDistance += bet.distance();
+    byBet[betName].wins.count++;
+    byBet[betName].wins.amountBet   += amtBet;
+    byBet[betName].wins.amount      += amtWin;
+    byBet[betName].wins.totDistance += bet.distance();
 
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;
@@ -55,10 +55,10 @@ BetStats::recordLose(const CrapsBet& bet, Gen::Money amtLose)
     recordCommon(amtBet);
 
     std::string betName = expandBetName(bet);
-    betTypeStats.lose[betName].count++;
-    betTypeStats.lose[betName].amountBet   += amtBet;
-    betTypeStats.lose[betName].amount      += amtLose;
-    betTypeStats.lose[betName].totDistance += bet.distance();
+    byBet[betName].losses.count++;
+    byBet[betName].losses.amountBet   += amtBet;
+    byBet[betName].losses.amount      += amtLose;
+    byBet[betName].losses.totDistance += bet.distance();
 
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;
@@ -191,167 +191,74 @@ BetStat::fromYAML(const YAML::Node& node)
 
 //-----------------------------------------------------------------
 
-BetTypeStats::BetTypeStats()
+namespace
 {
-    // Populate win/lose maps with all bets. Don't want any empty slots.
-    // All these stats are therefore accessible any time, not empty.
-    // Avoids many "if" checks later.
+void
+initializeBetMap(std::map<std::string, BetOutcomeStats>& byBet)
+{
+    for (const auto& name : {
+        "PassLine", "Come", "DontPass", "DontCome",
+        "Place", "Lay", "Buy",
+        "Hardway4", "Hardway6", "Hardway8", "Hardway10",
+        "Field", "AnyCraps", "AnySeven", "C&E", "Horn", "World"
+    })
+        byBet.try_emplace(name);
 
-    wins["PassLine"];      lose["PassLine"];
-    wins["PassLine4"];     lose["PassLine4"];
-    wins["PassLine5"];     lose["PassLine5"];
-    wins["PassLine6"];     lose["PassLine6"];
-    wins["PassLine8"];     lose["PassLine8"];
-    wins["PassLine9"];     lose["PassLine9"];
-    wins["PassLine10"];    lose["PassLine10"];
-    wins["DontPass"];      lose["DontPass"];
-    wins["DontPass4"];     lose["DontPass4"];
-    wins["DontPass5"];     lose["DontPass5"];
-    wins["DontPass6"];     lose["DontPass6"];
-    wins["DontPass8"];     lose["DontPass8"];
-    wins["DontPass9"];     lose["DontPass9"];
-    wins["DontPass10"];    lose["DontPass10"];
-    wins["Come"];          lose["Come"];
-    wins["Come4"];         lose["Come4"];
-    wins["Come5"];         lose["Come5"];
-    wins["Come6"];         lose["Come6"];
-    wins["Come8"];         lose["Come8"];
-    wins["Come9"];         lose["Come9"];
-    wins["Come10"];        lose["Come10"];
-    wins["DontCome"];      lose["DontCome"];
-    wins["DontCome4"];     lose["DontCome4"];
-    wins["DontCome4"];     lose["DontCome4"];
-    wins["DontCome5"];     lose["DontCome5"];
-    wins["DontCome6"];     lose["DontCome6"];
-    wins["DontCome8"];     lose["DontCome8"];
-    wins["DontCome9"];     lose["DontCome9"];
-    wins["DontCome10"];    lose["DontCome10"];
-    wins["Place4"];        lose["Place4"];
-    wins["Place5"];        lose["Place5"];
-    wins["Place6"];        lose["Place6"];
-    wins["Place8"];        lose["Place8"];
-    wins["Place9"];        lose["Place9"];
-    wins["Place10"];       lose["Place10"];
-    wins["Lay4"];          lose["Lay4"];
-    wins["Lay5"];          lose["Lay5"];
-    wins["Lay6"];          lose["Lay6"];
-    wins["Lay8"];          lose["Lay8"];
-    wins["Lay9"];          lose["Lay9"];
-    wins["Lay10"];         lose["Lay10"];
-    wins["Buy4"];          lose["Buy4"];
-    wins["Buy5"];          lose["Buy5"];
-    wins["Buy6"];          lose["Buy6"];
-    wins["Buy8"];          lose["Buy8"];
-    wins["Buy9"];          lose["Buy9"];
-    wins["Buy10"];         lose["Buy10"];
-    wins["Hard4"];         lose["Hard4"];
-    wins["Hard6"];         lose["Hard6"];
-    wins["Hard8"];         lose["Hard8"];
-    wins["Hard10"];        lose["Hard10"];
-    wins["Field"];         lose["Field"];
-    wins["AnyCraps"];      lose["AnyCraps"];
-    wins["AnySeven"];      lose["AnySeven"];
-    wins["CandE"];         lose["CandE"];
-    wins["Horn"];          lose["Horn"];
-    wins["World"];         lose["World"];
+    for (const auto& base : {
+        "PassLine", "Come", "DontPass", "DontCome",
+        "Place", "Lay", "Buy"
+    })
+        for (const unsigned point : {4, 5, 6, 8, 9, 10})
+            byBet.try_emplace(std::string(base) + std::to_string(point));
+
+    for (unsigned number = 2; number <= 12; ++number)
+        byBet.try_emplace("Field" + std::to_string(number));
+}
+} // namespace
+
+//-----------------------------------------------------------------
+
+BetStats::BetStats()
+{
+    initializeBetMap(byBet);
 }
 
 //-----------------------------------------------------------------
 
 void
-BetTypeStats::reset()
+BetOutcomeStats::reset()
 {
-    for (auto& t : wins)
-    {
-        t.second.reset();
-    }
-
-    for (auto& t : lose)
-    {
-        t.second.reset();
-    }
+    wins.reset();
+    losses.reset();
 }
 
 //-----------------------------------------------------------------
 
 void
-BetTypeStats::merge(const BetTypeStats& bts)
+BetOutcomeStats::merge(const BetOutcomeStats& other)
 {
-    for (const auto& [key, stat] : bts.wins)
-    {
-        wins[key].merge(stat);  // Will default construct if key not found
-    }
-
-    for (const auto& [key, stat] : bts.lose)
-    {
-        lose[key].merge(stat);  // Will default construct if key not found
-    }
+    wins.merge(other.wins);
+    losses.merge(other.losses);
 }
 
 //-----------------------------------------------------------------
 
 YAML::Node
-BetTypeStats::toYAML() const
+BetOutcomeStats::toYAML() const
 {
     YAML::Node node;
-
-    YAML::Node winNode;
-    for (const auto& [key, stat] : wins)
-    {
-        winNode[key] = stat.toYAML();
-    }
-    node["wins"] = winNode;
-
-    YAML::Node loseNode;
-    for (const auto& [key, stat] : lose)
-    {
-        loseNode[key] = stat.toYAML();
-    }
-    node["lose"] = loseNode;
-
+    node["wins"] = wins.toYAML();
+    node["losses"] = losses.toYAML();
     return node;
 }
 
 //-----------------------------------------------------------------
 
 void
-BetTypeStats::fromYAML(const YAML::Node& node)
+BetOutcomeStats::fromYAML(const YAML::Node& node)
 {
-    // Clear any existing data
-    wins.clear();
-    lose.clear();
-
-    const YAML::Node& winsNode = node["wins"];
-    for (auto it = winsNode.begin(); it != winsNode.end(); ++it)
-    {
-        std::string key = it->first.as<std::string>();
-        BetStat stat;
-        stat.fromYAML(it->second);
-        wins[key] = stat;
-    }
-
-    const YAML::Node& loseNode = node["lose"];
-    for (auto it = loseNode.begin(); it != loseNode.end(); ++it)
-    {
-        std::string key = it->first.as<std::string>();
-        BetStat stat;
-        stat.fromYAML(it->second);
-        lose[key] = stat;
-    }
-
-    // Older saved statistics files do not yet contain newer bet types.
-    // Preserve compatibility and keep every supported bet name addressable.
-    const BetTypeStats defaults;
-    for (const auto& [key, stat] : defaults.wins)
-    {
-        (void) stat;
-        wins.try_emplace(key);
-    }
-    for (const auto& [key, stat] : defaults.lose)
-    {
-        (void) stat;
-        lose.try_emplace(key);
-    }
+    wins.fromYAML(node["wins"]);
+    losses.fromYAML(node["losses"]);
 }
 
 //-----------------------------------------------------------------
@@ -369,7 +276,7 @@ NumBets::reset()
 void
 NumBets::merge(const NumBets& session)
 {
-    max   += session.max;
+    max   = std::max(max, session.max);
     total += session.total;
 }
 
@@ -409,7 +316,7 @@ AmtBets::reset()
 void
 AmtBets::merge(const AmtBets& session)
 {
-    max   += session.max;
+    max   = std::max(max, session.max);
     total += session.total;
 }
 
@@ -429,8 +336,8 @@ AmtBets::toYAML() const
 void
 AmtBets::fromYAML(const YAML::Node& node)
 {
-    max   = node["max"].as<unsigned>();
-    total = node["total"].as<unsigned>();
+    max     = node["max"].as<Gen::Money>();
+    total   = node["total"].as<Gen::Money>();
     current = 0;
 }
 
@@ -448,6 +355,8 @@ std::string
 BetStats::expandBetName(const CrapsBet& bet) const
 {
     std::string betName = EnumBetName::toString(bet.betName());
+    if (betName == "CandE")
+        betName = "C&E";
     if (bet.pivot() != 0)
     {
         betName += std::to_string(bet.pivot());
@@ -472,7 +381,11 @@ BetStats::reset()
     maxAmtWinOneBet   = 0;
     maxAmtLoseOneBet  = 0;
     maxAmtKeepOneBet  = 0;
-    betTypeStats.reset();
+    for (auto& [name, stats] : byBet)
+    {
+        (void) name;
+        stats.reset();
+    }
     numBetsOneRoll.reset();
     numBetsWinOneRoll.reset();
     numBetsLoseOneRoll.reset();
@@ -499,9 +412,10 @@ BetStats::merge(const BetStats& session)
     maxAmtBetOneBet   = std::max(maxAmtBetOneBet,  session.maxAmtBetOneBet);
     maxAmtWinOneBet   = std::max(maxAmtWinOneBet,  session.maxAmtWinOneBet);
     maxAmtLoseOneBet  = std::max(maxAmtLoseOneBet, session.maxAmtLoseOneBet);
-    maxAmtKeepOneBet  = std::max(maxAmtLoseOneBet, session.maxAmtKeepOneBet);
+    maxAmtKeepOneBet  = std::max(maxAmtKeepOneBet, session.maxAmtKeepOneBet);
 
-    betTypeStats.merge(session.betTypeStats);
+    for (const auto& [name, stats] : session.byBet)
+        byBet[name].merge(stats);
 
     numBetsOneRoll.merge    (session.numBetsOneRoll);
     numBetsWinOneRoll.merge (session.numBetsWinOneRoll);
@@ -519,31 +433,47 @@ YAML::Node
 BetStats::toYAML() const
 {
     YAML::Node node;
+    YAML::Node overall;
+    YAML::Node bets;
+    bets["count"] = totNumBetsAllBets;
+    bets["wins"] = totNumWinsAllBets;
+    bets["losses"] = totNumLoseAllBets;
+    bets["kept"] = totNumKeepAllBets;
+    overall["bets"] = bets;
 
-    node["totNumBetsAllBets"]  = totNumBetsAllBets;
-    node["totNumWinsAllBets"]  = totNumWinsAllBets;
-    node["totNumLoseAllBets"]  = totNumLoseAllBets;
-    node["totNumKeepAllBets"]  = totNumKeepAllBets;
-    node["totAmtAllBets"]      = totAmtAllBets;
-    node["totAmtWinsAllBets"]  = totAmtWinsAllBets;
-    node["totAmtLoseAllBets"]  = totAmtLoseAllBets;
-    node["totAmtKeepAllBets"]  = totAmtKeepAllBets;
-    node["maxAmtBetOneBet"]    = maxAmtBetOneBet;
-    node["maxAmtBetOneBet"]    = maxAmtWinOneBet;
-    node["maxAmtWinOneBet"]    = maxAmtWinOneBet;
-    node["maxAmtLoseOneBet"]   = maxAmtLoseOneBet;
-    node["maxAmtKeepOneBet"]   = maxAmtKeepOneBet;
+    YAML::Node amounts;
+    amounts["bet"] = totAmtAllBets;
+    amounts["won"] = totAmtWinsAllBets;
+    amounts["lost"] = totAmtLoseAllBets;
+    amounts["kept"] = totAmtKeepAllBets;
+    overall["amounts"] = amounts;
 
-    node["betTypeStats"]       = betTypeStats.toYAML();
+    YAML::Node maximums;
+    maximums["bet"] = maxAmtBetOneBet;
+    maximums["win"] = maxAmtWinOneBet;
+    maximums["loss"] = maxAmtLoseOneBet;
+    maximums["kept"] = maxAmtKeepOneBet;
+    overall["maximums"] = maximums;
+    node["overall"] = overall;
 
-    node["numBetsOneRoll"]     = numBetsOneRoll.toYAML();
-    node["numBetsWinOneRoll"]  = numBetsWinOneRoll.toYAML();
-    node["numBetsLoseOneRoll"] = numBetsLoseOneRoll.toYAML();
-    node["numBetsKeepOneRoll"] = numBetsKeepOneRoll.toYAML();
-    node["amtBetsOneRoll"]     = amtBetsOneRoll.toYAML();
-    node["amtBetsWinOneRoll"]  = amtBetsWinOneRoll.toYAML();
-    node["amtBetsLoseOneRoll"] = amtBetsLoseOneRoll.toYAML();
-    node["amtBetsKeepOneRoll"] = amtBetsKeepOneRoll.toYAML();
+    YAML::Node byBetNode;
+    for (const auto& [name, stats] : byBet)
+        byBetNode[name] = stats.toYAML();
+    node["byBet"] = byBetNode;
+
+    YAML::Node perRoll;
+    perRoll["bets"] = numBetsOneRoll.toYAML();
+    perRoll["wins"] = numBetsWinOneRoll.toYAML();
+    perRoll["losses"] = numBetsLoseOneRoll.toYAML();
+    perRoll["kept"] = numBetsKeepOneRoll.toYAML();
+
+    YAML::Node rollAmounts;
+    rollAmounts["bet"] = amtBetsOneRoll.toYAML();
+    rollAmounts["won"] = amtBetsWinOneRoll.toYAML();
+    rollAmounts["lost"] = amtBetsLoseOneRoll.toYAML();
+    rollAmounts["kept"] = amtBetsKeepOneRoll.toYAML();
+    perRoll["amounts"] = rollAmounts;
+    node["perRoll"] = perRoll;
     return node;
 }
 
@@ -552,29 +482,45 @@ BetStats::toYAML() const
 void
 BetStats::fromYAML(const YAML::Node& node)
 {
-    totNumBetsAllBets = node["totNumBetsAllBets"].as<unsigned>();
-    totNumWinsAllBets = node["totNumWinsAllBets"].as<unsigned>();
-    totNumLoseAllBets = node["totNumLoseAllBets"].as<unsigned>();
-    totNumKeepAllBets = node["totNumKeepAllBets"].as<unsigned>();
-    totAmtAllBets     = node["totAmtAllBets"].as<Gen::Money>();
-    totAmtWinsAllBets = node["totAmtWinsAllBets"].as<Gen::Money>();
-    totAmtLoseAllBets = node["totAmtLoseAllBets"].as<Gen::Money>();
-    totAmtKeepAllBets = node["totAmtKeepAllBets"].as<Gen::Money>();
-    maxAmtBetOneBet   = node["maxAmtBetOneBet"].as<Gen::Money>();
-    maxAmtWinOneBet   = node["maxAmtWinOneBet"].as<Gen::Money>();
-    maxAmtLoseOneBet  = node["maxAmtLoseOneBet"].as<Gen::Money>();
-    maxAmtKeepOneBet  = node["maxAmtKeepOneBet"].as<Gen::Money>();
+    const YAML::Node overall = node["overall"];
+    const YAML::Node bets = overall["bets"];
+    totNumBetsAllBets = bets["count"].as<unsigned>();
+    totNumWinsAllBets = bets["wins"].as<unsigned>();
+    totNumLoseAllBets = bets["losses"].as<unsigned>();
+    totNumKeepAllBets = bets["kept"].as<unsigned>();
 
-    betTypeStats.fromYAML(node["betTypeStats"]);
+    const YAML::Node amounts = overall["amounts"];
+    totAmtAllBets = amounts["bet"].as<Gen::Money>();
+    totAmtWinsAllBets = amounts["won"].as<Gen::Money>();
+    totAmtLoseAllBets = amounts["lost"].as<Gen::Money>();
+    totAmtKeepAllBets = amounts["kept"].as<Gen::Money>();
 
-    numBetsOneRoll.fromYAML    (node["numBetsOneRoll"]);
-    numBetsWinOneRoll.fromYAML (node["numBetsWinOneRoll"]);
-    numBetsLoseOneRoll.fromYAML(node["numBetsLoseOneRoll"]);
-    numBetsKeepOneRoll.fromYAML(node["numBetsKeepOneRoll"]);
-    amtBetsOneRoll.fromYAML    (node["amtBetsOneRoll"]);
-    amtBetsWinOneRoll.fromYAML (node["amtBetsWinOneRoll"]);
-    amtBetsLoseOneRoll.fromYAML(node["amtBetsLoseOneRoll"]);
-    amtBetsKeepOneRoll.fromYAML(node["amtBetsKeepOneRoll"]);
+    const YAML::Node maximums = overall["maximums"];
+    maxAmtBetOneBet = maximums["bet"].as<Gen::Money>();
+    maxAmtWinOneBet = maximums["win"].as<Gen::Money>();
+    maxAmtLoseOneBet = maximums["loss"].as<Gen::Money>();
+    maxAmtKeepOneBet = maximums["kept"].as<Gen::Money>();
+
+    initializeBetMap(byBet);
+    const YAML::Node byBetNode = node["byBet"];
+    for (auto it = byBetNode.begin(); it != byBetNode.end(); ++it)
+    {
+        const std::string name = it->first.as<std::string>();
+        byBet[name].fromYAML(it->second);
+    }
+
+    const YAML::Node perRoll = node["perRoll"];
+    numBetsOneRoll.fromYAML(perRoll["bets"]);
+    numBetsWinOneRoll.fromYAML(perRoll["wins"]);
+    numBetsLoseOneRoll.fromYAML(perRoll["losses"]);
+    numBetsKeepOneRoll.fromYAML(perRoll["kept"]);
+
+    const YAML::Node rollAmounts = perRoll["amounts"];
+    amtBetsOneRoll.fromYAML(rollAmounts["bet"]);
+    amtBetsWinOneRoll.fromYAML(rollAmounts["won"]);
+    amtBetsLoseOneRoll.fromYAML(rollAmounts["lost"]);
+    amtBetsKeepOneRoll.fromYAML(rollAmounts["kept"]);
 }
 
 //-----------------------------------------------------------------
+

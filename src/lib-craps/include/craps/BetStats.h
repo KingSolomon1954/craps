@@ -28,16 +28,15 @@ struct BetStat
     bool operator==(const BetStat&) const = default;  // Only generates ==
 };
 
-struct BetTypeStats
+struct BetOutcomeStats
 {
-    BetTypeStats();
-    std::map<std::string, BetStat> wins;
-    std::map<std::string, BetStat> lose;
+    BetStat wins;
+    BetStat losses;
     void reset();
-    void merge(const BetTypeStats& bts);
+    void merge(const BetOutcomeStats& other);
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
-    bool operator==(const BetTypeStats&) const = default;  // Only generates ==
+    bool operator==(const BetOutcomeStats&) const = default;
 };
 
 struct NumBets
@@ -69,7 +68,8 @@ struct AmtBets
 class BetStats
 {
 public:
-    BetTypeStats betTypeStats;
+    BetStats();
+    std::map<std::string, BetOutcomeStats> byBet;
 
     unsigned totNumBetsAllBets = 0;
     unsigned totNumWinsAllBets = 0;

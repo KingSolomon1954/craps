@@ -128,11 +128,28 @@ TEST_CASE("TableStats:counter")
     AmtBets ab1, ab2;
     CHECK(ab1 == ab2);
 
-    BetTypeStats bt1, bt2;
-    CHECK(bt1 == bt2);
+    BetOutcomeStats bo1, bo2;
+    CHECK(bo1 == bo2);
 
     BetStats bss1, bss2;
     CHECK(bss1 == bss2);
+
+    BetStats yamlStats;
+    yamlStats.totNumBetsAllBets = 3;
+    yamlStats.totNumWinsAllBets = 2;
+    yamlStats.totNumLoseAllBets = 1;
+    yamlStats.totAmtAllBets = 500;
+    yamlStats.byBet["AnySeven"].wins.count = 1;
+    yamlStats.byBet["AnySeven"].losses.count = 2;
+    const YAML::Node betYaml = yamlStats.toYAML();
+    CHECK(betYaml["overall"]["bets"]["count"].as<unsigned>() == 3);
+    CHECK(betYaml["overall"]["bets"]["wins"].as<unsigned>() == 2);
+    CHECK(betYaml["byBet"]["AnySeven"]["wins"]["count"].as<unsigned>() == 1);
+    CHECK(betYaml["byBet"]["AnySeven"]["losses"]["count"].as<unsigned>() == 2);
+    CHECK_FALSE(betYaml["betTypeStats"].IsDefined());
+    BetStats restored;
+    restored.fromYAML(betYaml);
+    CHECK(restored == yamlStats);
 
     RollStats rs1, rs2;
     CHECK(rs1 == rs2);
