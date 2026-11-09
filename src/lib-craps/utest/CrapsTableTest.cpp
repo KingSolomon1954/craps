@@ -22,7 +22,7 @@ std::string getTableYamlStringUtest();
 struct CrapsTableFixture
 {
     Craps::TableConfig  config;
-    
+
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     Player* p3 = nullptr;
@@ -40,7 +40,7 @@ struct CrapsTableFixture
         p5 = Player::createPlayer("Player5");
         p6 = Player::createPlayer("Player6");
         p7 = Player::createPlayer("Player7");
-        
+
         config.maxSessions = 50;
         config.maxRecentRolls = 25;
         // CrapsTable never touches files, so one TableConfig can be
@@ -58,9 +58,6 @@ struct CrapsTableFixture
         delete p7;
     }
 };
-
-//----------------------------------------------------------------
-
 
 //----------------------------------------------------------------
 
@@ -130,6 +127,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collec
     CHECK(table->getBalance() == houseBefore);
 }
 
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not charged or refunded twice after a win")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
@@ -169,6 +168,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not ch
     CHECK(table->getBalance() == houseAfterWin);
 }
 
+//----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: bet amount limits reflect table rules")
 {
@@ -193,6 +193,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: bet amount limits reflect tabl
     CHECK(odds.maximum == 35);
     CHECK(odds.increment == 5);
 }
+
+//----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limit is enforced")
 {
@@ -219,6 +221,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limi
     CHECK(worldAllowed);
 }
 
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate potential win limit is enforced")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
@@ -239,6 +243,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate potential win limit 
     CHECK(allowed);
 }
 
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propagated")
 {
     CrapsTable t("Table-1", config);
@@ -254,6 +260,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propa
     CHECK(p1->getNumBetsOnTable() == 1);
     CHECK(t.getNumBetsOnTable() == 1);
 }
+
+//----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 {
@@ -311,14 +319,14 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
 
         auto result = t->addPlayer(*p1); CHECK(result);
         CHECK(t->getNumPlayers() == 1);
-        
+
         // Add same player again - error
         result = t->addPlayer(*p1); CHECK(!result);
 
         // Add different player
         result = t->addPlayer(*p2); CHECK(result);
         CHECK(t->getNumPlayers() == 2);
-        
+
         // Add a bunch
         result = t->addPlayer(*p3); CHECK(result);
         result = t->addPlayer(*p4); CHECK(result);
@@ -387,7 +395,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
     SUBCASE("playerList")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         REQUIRE(t->getNumPlayers() == 0);
 
         // Get player list, get back an empty vector
@@ -399,7 +407,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
         auto result = t->addPlayer(*p1); REQUIRE(result);
         result = t->addPlayer(*p2); REQUIRE(result);
         result = t->addPlayer(*p3); REQUIRE(result);
-        
+
         // Get back non-empty vector
         v = t->getPlayers();
         CHECK(v.size() == 3);
@@ -414,7 +422,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 {
     Gen::ErrorPass ep;
-    
+
     SUBCASE("general")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
@@ -452,7 +460,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
         // Test positive haveBet, use a previous bet
         CHECK(t->haveBet(b4->betId()));
-        
+
         // Test negative haveBet, use a new bet
         auto b5 = std::make_shared<CrapsBet>(p1, BetName::PassLine, 10, 0);
         REQUIRE(b5 != nullptr);
@@ -462,7 +470,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("betTiming")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         auto result = t->addPlayer(*p1); REQUIRE(result);
              result = t->addPlayer(*p2); REQUIRE(result);
         REQUIRE(t->isComeOutRoll());
@@ -471,37 +479,37 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Place, 10, 10);
         REQUIRE(b1 != nullptr);
         CHECK(t->addBet(b1, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Buy bet, legal on come out roll
         auto b2 = std::make_shared<CrapsBet>(p1, BetName::Buy, 10, 10);
         REQUIRE(b2 != nullptr);
         CHECK(t->addBet(b2, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Lay bet, legal on come out roll
         auto b3 = std::make_shared<CrapsBet>(p1, BetName::Buy, 10, 10);
         REQUIRE(b3 != nullptr);
         CHECK(t->addBet(b3, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Field bet, legal on come out roll
         auto b4 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
         REQUIRE(b4 != nullptr);
         CHECK(t->addBet(b4, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Hardway bet, legal on come out roll
         auto b5 = std::make_shared<CrapsBet>(p1, BetName::Hardway, 10, 4);
         REQUIRE(b5 != nullptr);
         CHECK(t->addBet(b5, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Horn bet, legal on come out roll
         auto b6 = std::make_shared<CrapsBet>(p1, BetName::Horn, 12, 0);
         REQUIRE(b6 != nullptr);
         CHECK(t->addBet(b6, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a C&E bet, legal on come out roll
         auto b7 = std::make_shared<CrapsBet>(p1, BetName::CandE, 10, 0);
         REQUIRE(b7 != nullptr);
         CHECK(t->addBet(b7, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Come/DontCome bet but wrong time for it
         auto b8 = std::make_shared<CrapsBet>(p1, BetName::Come,     10, 0);
         auto b9 = std::make_shared<CrapsBet>(p1, BetName::DontCome, 10, 0);
@@ -535,44 +543,44 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         auto b13 = std::make_shared<CrapsBet>(p2, BetName::Place, 10, 10);
         REQUIRE(b13 != nullptr);
         CHECK(t->addBet(b13, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Buy bet, legal on point roll
         auto b14 = std::make_shared<CrapsBet>(p2, BetName::Buy, 10, 10);
         REQUIRE(b14 != nullptr);
         CHECK(t->addBet(b14, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Lay bet, legal on point roll
         auto b15 = std::make_shared<CrapsBet>(p2, BetName::Buy, 10, 10);
         REQUIRE(b15 != nullptr);
         CHECK(t->addBet(b15, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Field bet, legal on point roll
         auto b16 = std::make_shared<CrapsBet>(p2, BetName::Field, 10, 0);
         REQUIRE(b16 != nullptr);
         CHECK(t->addBet(b16, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Hardway bet, legal on point roll
         auto b17 = std::make_shared<CrapsBet>(p2, BetName::Hardway, 10, 4);
         REQUIRE(b17 != nullptr);
         CHECK(t->addBet(b17, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Horn bet, legal on point roll
         auto b18 = std::make_shared<CrapsBet>(p2, BetName::Horn, 12, 0);
         REQUIRE(b18 != nullptr);
         CHECK(t->addBet(b18, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a C&E bet, legal on point roll
         auto b19 = std::make_shared<CrapsBet>(p2, BetName::CandE, 10, 0);
         REQUIRE(b19 != nullptr);
         CHECK(t->addBet(b19, ep) == Gen::ReturnCode::Success);
-        
+
         // std::cout << ep.diag << std::endl;
     }
 
     SUBCASE("minMaxLimits")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         auto result = t->addPlayer(*p1); REQUIRE(result);
              result = t->addPlayer(*p2); REQUIRE(result);
         REQUIRE(t->isComeOutRoll());
@@ -582,7 +590,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
                                         t->getMinLineBet() - 1, 0);
         REQUIRE(b1 != nullptr);
         CHECK(t->addBet(b1, ep) == Gen::ReturnCode::Fail);
-        
+
         // LineBet too big
         auto b2 = std::make_shared<CrapsBet>(p1, BetName::PassLine,
                                         t->getMaxLineBet() + 1, 0);
@@ -609,7 +617,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         REQUIRE(b6 != nullptr);
         CHECK(t->addBet(b6, ep) == Gen::ReturnCode::Success);
 
-        // TODO Horn max bet 
+        // TODO Horn max bet
         // auto b7 = std::make_shared<CrapsBet>(p2, BetName::Horn,
         //                                 t->getMaxHorn() + 1, 0);
         // REQUIRE(b7 != nullptr);
@@ -630,12 +638,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         REQUIRE(b10 != nullptr);
         CHECK(t->addBet(b10, ep) == Gen::ReturnCode::Fail);
 
-        // TODO C&E max bet 
+        // TODO C&E max bet
         // auto b11 = std::make_shared<CrapsBet>(p2, BetName::CandE,
         //                                 t->getMaxCandE() + 1, 0);
         // REQUIRE(b11 != nullptr);
         // CHECK(t->addBet(b11, ep) == Gen::ReturnCode::Fail);
-        
+
         // std::cout << ep.diag << std::endl;
     }
 
@@ -650,7 +658,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
         REQUIRE(t->addBet(b1, ep) == Gen::ReturnCode::Success);
         CHECK(t->setOddsAmount(b1, 10, ep) == Gen::ReturnCode::Fail);
-        
+
         // Can't set odds if bet is not on the table
         auto b2 = std::make_shared<CrapsBet>(p1, BetName::PassLine, 10, 0);
         REQUIRE(b2 != nullptr);
@@ -663,7 +671,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
         // Establish a point
         t->testSetState(4,6,6);  // point 4, d1, d2
-        
+
         // OK now to set min odds, $0 is allowed
         b2->testSetPivot(4);  // not rolling dice, so setup bet properly
         CHECK(t->setOddsAmount(b2, 0, ep) == Gen::ReturnCode::Success);
@@ -681,7 +689,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("modifyBets")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         auto result = t->addPlayer(*p1); REQUIRE(result);
 
         // Change contract bet after on table, no point yet.
@@ -823,7 +831,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
     SUBCASE("firstRoll")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         // First roll, no players, it's a come out roll.
         CHECK(t->isComeOutRoll());
         t->testRollDice(6,6);       // roll a 12, success is no crash
@@ -931,7 +939,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(p1->getAmountOnTable() == 0);
         CHECK(p2->getAmountOnTable() == 0);
         CHECK(t->isComeOutRoll());
-        
+
         // come out roll, roll a 12, pass line lose, dont pass push
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
@@ -1008,7 +1016,7 @@ using AutoRolls = std::vector<AutoBet>;
 void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
 {
     Craps::BetPtr lastBet;
-    
+
     for (const auto& r : rolls)
     {
         if (r.action == Action::RollDice)
@@ -1036,7 +1044,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
     std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
 
     auto result = p1->joinTable(*t); REQUIRE(result);
-    
+
     SUBCASE("shortRoll")
     {
         AutoRolls rolls =
@@ -1064,7 +1072,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
             AutoBet{Action::RollDice, 1, 1, BetName::Invalid,  0,  0}, // lose 10
             AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
             AutoBet{Action::RollDice, 1, 2, BetName::Invalid,  0,  0}, // lose 10
-            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, // 
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, //
             AutoBet{Action::RollDice, 2, 2, BetName::Invalid,  0,  0}, // point 4
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
@@ -1075,7 +1083,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
             AutoBet{Action::RollDice, 3, 4, BetName::Invalid,  0,  0}, // 7 out lose 80, deposit 20
-            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, 
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
             AutoBet{Action::RollDice, 4, 4, BetName::Invalid,  0,  0}, // point 8
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
@@ -1097,12 +1105,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
         CHECK(t->getNumBetsOnTable() == 3);
         CHECK(p1->getBalance() == balance - 80 + 10 - 60 + 10 - 10);
     }
-    
+
     SUBCASE("superLong")
     {
         AutoRolls rolls =  // 6,8,8,7 repeat 100,000 times
         {
-            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, 
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
             AutoBet{Action::RollDice, 3, 3, BetName::Invalid,  0,  0}, // point 6
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds 6
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come bet
@@ -2613,3 +2621,5 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:payout-compatible wager limits"
     CHECK(lay.minimum == 24);
     CHECK(lay.increment == 6);
 }
+
+//----------------------------------------------------------------

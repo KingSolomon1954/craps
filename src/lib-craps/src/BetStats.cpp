@@ -346,7 +346,7 @@ AmtBets::fromYAML(const YAML::Node& node)
 // Helper function to expand bet names with their pivot.
 //
 // Returns a bet name expanded with its pivot, if any, like this:
-// 
+//
 //   PassLine --> PassLine6
 //   Come     --> Come8
 //   Hardway  --> Hardway4
@@ -523,4 +523,3 @@ BetStats::fromYAML(const YAML::Node& node)
 }
 
 //-----------------------------------------------------------------
-
