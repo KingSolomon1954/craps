@@ -712,6 +712,8 @@ CrapsTable::rollDice()
 {
     declareBettingClosed();
     throwDice();
+    bumpRecentRolls(dice_);
+    currentStats_.recordDiceRoll(point_, dice_);
     if (!resolveBets())
     {
         // Do not advance the point or dispense partial results. The failure
@@ -720,8 +722,6 @@ CrapsTable::rollDice()
         return;
     }
     advanceState();            // Updates point, updates shooter
-    bumpRecentRolls(dice_);
-    currentStats_.recordDiceRoll(point_, dice_);
     lastRollStats_.rollCount = getNumRolls();
     declareBettingOpen();
 }

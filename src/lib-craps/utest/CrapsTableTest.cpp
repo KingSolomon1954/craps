@@ -263,6 +263,40 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propa
 
 //----------------------------------------------------------------
 
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:roll stats use the point when the dice were thrown")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    t.setShooter(*p1);
+
+    // 7 11 6 7 5 5 2, in the order thrown
+    t.testRollDice(3, 4);   // 7   come out, win
+    t.testRollDice(5, 6);   // 11  come out, win
+    t.testRollDice(3, 3);   // 6   point established
+    t.testRollDice(3, 4);   // 7   seven out
+    t.testRollDice(2, 3);   // 5   point established
+    t.testRollDice(2, 3);   // 5   point made
+    t.testRollDice(1, 1);   // 2   come out, craps
+
+    const RollStats& rs = t.getCurrentStats().rollStats;
+
+    // Pass line: 3 wins (two come out, one point made),
+    //            2 losses (one come out, one seven out)
+    CHECK(rs.passWinsComeOut.count()        == 2);
+    CHECK(rs.passLoseComeOut.count()        == 1);
+    CHECK(rs.passPntCnts[5].wins.count()    == 1);
+    CHECK(rs.passPntCnts[5].lose.count()    == 0);
+    CHECK(rs.passPntCnts[6].wins.count()    == 0);
+    CHECK(rs.passPntCnts[6].lose.count()    == 1);
+
+    CHECK(rs.sevenOuts.count()              == 1);
+    CHECK(rs.numPointsEstablished           == 2);
+    CHECK(rs.comeOutRolls.count()           == 5);
+    CHECK(rs.pointRolls.count()             == 2);
+}
+
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 {
     SUBCASE("normalCtor")

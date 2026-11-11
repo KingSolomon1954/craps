@@ -9,12 +9,6 @@
 - Add a warning like: “You have active bets. Are you sure
 - you want to quit and abandon them?”
 
-### Switch table:
-
-- needs to carry forward buddy players to the newly switched to table
-- maybe a dialog box should prompt the user if to carry forward buddies
-- maybe should be a user prefence how to behave
-
 ### Repeated bet changes the existing bet: View
 - RspMakeBet now has changed and previousAmount. Tell the player when a
 - bet made again changed the amount of the one already on the table
@@ -29,17 +23,27 @@
 - Send ReqSwitchPlayer. Handle RspSwitchPlayer (error text if not
 - switched) and UslUserPlayerSwitched (refresh everything about the user)
 
+### Write player.YAML files only if "dirty"
+
+### Switch table:
+
+- needs to carry forward buddy players to the newly switched to table
+- maybe a dialog box should prompt the user to carry forward buddies
+- maybe should be a user prefence how to behave
+
+### Save Config to yaml file
+
+- This will also fix the next issue, remembering user player
+
 ### Remember the user player across sessions
 - ConfigManager is read-only, so the user player chosen at runtime is
 - lost at quit. Persist it (small session file?) and honor
 - startWithLastPlayers at startup
 
-### Fix RollStats
+### Fix RollStats Off on Comeout Rolls
 
 - Place bets (simulated) should be considered off on comeout rolls.
 - Currently they are counted as a loss/win on comeout rolls.
-
-### Save Config to yaml file
 
 ### Need unit test for initial bank money
 
