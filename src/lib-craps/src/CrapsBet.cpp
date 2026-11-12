@@ -528,7 +528,8 @@ CrapsBet::calcWinPointBet(
     unsigned oddsPayout = calculateOddsPayout(oddsAmount_,
                                               odds.numerator,
                                               odds.denominator, rules.odds.rounding, rules.odds.payoutUnit);
-    dr.win += oddsPayout;
+    dr.win     += oddsPayout;
+    dr.oddsWin  = oddsPayout;
 }
 
 //----------------------------------------------------------------
@@ -544,7 +545,8 @@ CrapsBet::calcLossPointBet(DecisionRecord& dr, bool returnOdds) const
     }
     else
     {
-        dr.lose += oddsAmount_;
+        dr.lose     += oddsAmount_;
+        dr.oddsLose  = oddsAmount_;
     }
 }
 
@@ -1143,13 +1145,19 @@ CrapsBet::evalCandE(
 {
     (void) ep; (void) point;  // unused, quiet the compiler
 
+    // The wager is two equal halves: C (craps) pays 7:1 on 2, 3 or 12 and
+    // E (eleven) pays 15:1 on 11. When one half wins the other half loses,
+    // so win is the net profit and componentLoss is the losing half.
+    const Gen::Money half = contractAmount_ / 2;
     if (dice.value() == 11)
     {
-        dr.win = (contractAmount_ / 2) * 15;
+        dr.componentLoss = half;
+        dr.win = half * 15 - dr.componentLoss;
     }
     else if (crapsNums_.contains(dice.value()))
     {
-        dr.win = (contractAmount_ / 2) * 7;
+        dr.componentLoss = half;
+        dr.win = half * 7 - dr.componentLoss;
     }
     else
     {
@@ -1170,13 +1178,20 @@ CrapsBet::evalHorn(
 {
     (void) ep; (void) point;  // unused, quiet the compiler
 
+    // The wager is four equal units, one each on 2, 3, 11 and 12. The
+    // winning unit pays 30:1 (2, 12) or 15:1 (3, 11) and the other three
+    // units lose, so win is the net profit and componentLoss is the
+    // three losing units.
+    const Gen::Money unit = contractAmount_ / 4;
     if (dice.value() == 2 || dice.value() == 12)
     {
-        dr.win = (contractAmount_ / 4) * 30;
+        dr.componentLoss = unit * 3;
+        dr.win = unit * 30 - dr.componentLoss;
     }
     else if (dice.value() == 3 || dice.value() == 11)
     {
-        dr.win = (contractAmount_ / 4) * 15;
+        dr.componentLoss = unit * 3;
+        dr.win = unit * 15 - dr.componentLoss;
     }
     else
     {
@@ -1217,6 +1232,7 @@ CrapsBet::evalWorld(
             component * odds.numerator / odds.denominator;
         const Gen::Money losingComponents = contractAmount_ - component;
         dr.win = componentProfit - losingComponents;
+        dr.componentLoss = losingComponents;
     }
     else
     {

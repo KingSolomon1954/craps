@@ -16,6 +16,7 @@
 #include <gen/ErrorPass.h>
 #include <gen/ReturnCode.h>
 #include <memory>
+#include <yaml-cpp/yaml.h>
 
 using namespace Craps;
 
@@ -172,6 +173,8 @@ TEST_CASE("RollStats:simulatedCounts")
     rs.numberCounts[7].bump();
     rs.numberCounts[11].bump();
     rs.numberCounts[2].bump();
+    rs.pointNumberCounts[7].bump();   // Place/Buy/Lay only see point rolls
+    rs.pointNumberCounts[7].bump();
 
     CHECK(rs.simulatedCounts(BetName::AnySeven).wins   == 2);
     CHECK(rs.simulatedCounts(BetName::AnySeven).losses == 2);
@@ -179,4 +182,136 @@ TEST_CASE("RollStats:simulatedCounts")
     CHECK(rs.simulatedCounts(BetName::AnyCraps).losses == 3);
     CHECK(rs.simulatedCounts(BetName::Place, 6).wins   == 0);
     CHECK(rs.simulatedCounts(BetName::Place, 6).losses == 2);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(BetStatsFixture, "BetStats:odds recorded separately from contract")
+{
+    BetStats bs;
+
+    // PassLine 10 with 20 odds on the 6 (6:5 pays 24)
+    CrapsBet b(p1.get(), BetName::PassLine, 10);
+    Dice dice;
+    dice.set(3, 3);
+    DecisionRecord dr;
+    REQUIRE(b.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
+    b.testSetOddsAmount(20);
+    REQUIRE(b.testEvaluate(6, dice, dr, ep) == Gen::ReturnCode::Success);
+    REQUIRE(dr.decision);
+    CHECK(dr.oddsWin > 0);
+    CHECK(dr.win == 10 + dr.oddsWin);
+    bs.recordWin(dr);
+
+    const auto w = bs.tallyPoint(BetName::PassLine, 6).wins;
+    CHECK(w.count      == 1);
+    CHECK(w.amountBet  == 30);
+    CHECK(w.oddsBet    == 20);
+    CHECK(w.oddsAmount == dr.oddsWin);
+    CHECK(w.amount     == dr.win);
+
+    // Odds that lose
+    CrapsBet l(p1.get(), BetName::PassLine, 10);
+    dice.set(4, 4);
+    REQUIRE(l.testEvaluate(0, dice, dr, ep) == Gen::ReturnCode::Success);
+    l.testSetOddsAmount(20);
+    dice.set(3, 4);
+    REQUIRE(l.testEvaluate(8, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.lose     == 30);
+    CHECK(dr.oddsLose == 20);
+    bs.recordLose(dr);
+    const auto lo = bs.tallyPoint(BetName::PassLine, 8).losses;
+    CHECK(lo.amountBet  == 30);
+    CHECK(lo.oddsBet    == 20);
+    CHECK(lo.oddsAmount == 20);
+    CHECK(bs.tally(BetName::PassLine).wins.oddsBet   == 20);
+    CHECK(bs.tally(BetName::PassLine).losses.oddsBet == 20);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("BetStats:BetStat odds fields yaml")
+{
+    BetStat s;
+    s.count = 2; s.amountBet = 50; s.oddsBet = 20; s.oddsAmount = 24;
+    BetStat t;
+    t.fromYAML(s.toYAML());
+    CHECK(t == s);
+
+    // Older files without the odds fields still load
+    BetStat old;
+    old.fromYAML(YAML::Load("count: 3\ntotDistance: 4\namount: 5\namountBet: 6\n"));
+    CHECK(old.count      == 3);
+    CHECK(old.amountBet  == 6);
+    CHECK(old.oddsBet    == 0);
+    CHECK(old.oddsAmount == 0);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(BetStatsFixture, "BetStats:hardway losses by cause")
+{
+    BetStats bs;
+
+    CrapsBet w(p1.get(), BetName::Hardway, 10, 6);
+    evalAndRecord(bs, w, 6, 3, 3);                       // Hard 6 wins
+    CrapsBet e1(p1.get(), BetName::Hardway, 10, 6);
+    evalAndRecord(bs, e1, 6, 2, 4);                      // Easy 6 loses
+    CrapsBet e2(p1.get(), BetName::Hardway, 10, 6);
+    evalAndRecord(bs, e2, 6, 1, 5);                      // Easy 6 loses
+    CrapsBet s1(p1.get(), BetName::Hardway, 10, 6);
+    evalAndRecord(bs, s1, 6, 3, 4);                      // Seven loses
+    CrapsBet o(p1.get(), BetName::Hardway, 10, 8);
+    evalAndRecord(bs, o, 6, 3, 4);                       // Seven loses the 8
+
+    CHECK(bs.tallyPoint(BetName::Hardway, 6).wins.count   == 1);
+    CHECK(bs.tallyPoint(BetName::Hardway, 6).losses.count == 3);
+    CHECK(bs.tallyHardwayLosses(6).easy.count  == 2);
+    CHECK(bs.tallyHardwayLosses(6).seven.count == 1);
+    CHECK(bs.tallyHardwayLosses(8).easy.count  == 0);
+    CHECK(bs.tallyHardwayLosses(8).seven.count == 1);
+    CHECK(bs.tallyHardwayLosses(6).easy.amount == 20);
+
+    // The cause entries are extra, totals are not double counted
+    CHECK(bs.totNumLoseAllBets == 4);
+    CHECK(bs.totNumWinsAllBets == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("BetStats:classifyRoll")
+{
+    using R = RollOutcome;
+    CHECK(BetStats::classifyRoll(BetName::World, 7)    == R::BreakEven);
+    CHECK(BetStats::classifyRoll(BetName::World, 2)    == R::PartialWin);
+    CHECK(BetStats::classifyRoll(BetName::World, 6)    == R::EntireLoss);
+    CHECK(BetStats::classifyRoll(BetName::Horn, 11)    == R::PartialWin);
+    CHECK(BetStats::classifyRoll(BetName::Horn, 7)     == R::EntireLoss);
+    CHECK(BetStats::classifyRoll(BetName::CandE, 3)    == R::PartialWin);
+    CHECK(BetStats::classifyRoll(BetName::CandE, 9)    == R::EntireLoss);
+    CHECK(BetStats::classifyRoll(BetName::AnySeven, 7) == R::CleanWin);
+    CHECK(BetStats::classifyRoll(BetName::AnyCraps, 11)== R::EntireLoss);
+    CHECK(BetStats::classifyRoll(BetName::Field, 9)    == R::CleanWin);
+    CHECK(BetStats::classifyRoll(BetName::Field, 6)    == R::EntireLoss);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(BetStatsFixture, "BetStats:tallyRollOutcome")
+{
+    BetStats bs;
+    CrapsBet h1(p1.get(), BetName::Horn, 20);
+    evalAndRecord(bs, h1, 0, 1, 1);                      // 2 partial win
+    CrapsBet h2(p1.get(), BetName::Horn, 20);
+    evalAndRecord(bs, h2, 0, 5, 6);                      // 11 partial win
+    CrapsBet h3(p1.get(), BetName::Horn, 20);
+    evalAndRecord(bs, h3, 0, 3, 3);                      // 6 entire loss
+    CrapsBet h4(p1.get(), BetName::Horn, 20);
+    evalAndRecord(bs, h4, 0, 3, 4);                      // 7 entire loss
+
+    CHECK(bs.tallyRollOutcome(BetName::Horn, RollOutcome::PartialWin).wins.count   == 2);
+    CHECK(bs.tallyRollOutcome(BetName::Horn, RollOutcome::PartialWin).losses.count == 0);
+    CHECK(bs.tallyRollOutcome(BetName::Horn, RollOutcome::EntireLoss).losses.count == 2);
+    CHECK(bs.tallyRollOutcome(BetName::Horn, RollOutcome::EntireLoss).wins.count   == 0);
+    CHECK(bs.tallyRollOutcome(BetName::PassLine, RollOutcome::CleanWin).wins.count == 0);
 }

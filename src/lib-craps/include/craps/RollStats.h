@@ -52,6 +52,13 @@ struct WinLossCounts
     unsigned losses = 0;
 };
 
+// Simulated hardway losses split by cause.
+struct HardwayLossCounts
+{
+    unsigned easy  = 0;   // Number rolled the easy way
+    unsigned seven = 0;   // Seven rolled
+};
+
 //----------------------------------------------------------------
 
 class RollStats
@@ -64,6 +71,10 @@ public:
     std::array<PointCounts, 11> dontPassPntCnts{};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> dontComePntCnts{};  // Index 4,5,6,8,9,10 used
     std::array<PointCounts, 11> hardwayCounts  {};  // Index 4,6,8,10 used
+    std::array<Counter,     11> hardwayEasy    {};  // Index 4,6,8,10 used
+    std::array<Counter,     11> hardwaySeven   {};  // Index 4,6,8,10 used
+    std::array<Counter,     13> pointNumberCounts {};  // Rolls made while a
+                                                       // point was on, 2-12
 
     unsigned numRolls             = 0;
     unsigned numPointsEstablished = 0;
@@ -88,6 +99,7 @@ public:
     Counter twelvesOnComeOutRoll;
     Counter crapsOnComeOutRoll;
     WinLossCounts simulatedCounts(BetName name, unsigned pivot = 0) const;
+    HardwayLossCounts simulatedHardwayLosses(unsigned pivot) const;
     void reset();
     void merge(const RollStats& session);
     YAML::Node toYAML() const;

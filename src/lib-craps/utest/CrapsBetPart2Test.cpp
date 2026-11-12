@@ -1397,9 +1397,11 @@ void cAndE1(Player* p1, unsigned point, unsigned d1, unsigned d2)
     CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
-    if (dice.value() == 11) CHECK(dr.win == 750);
+    // Net of the losing half: 50 * 15 - 50, or 50 * 7 - 50
+    if (dice.value() == 11) CHECK(dr.win == 700);
     if (dice.value() == 2 || dice.value() == 3 || dice.value() == 12)
-        CHECK(dr.win == 350);
+        CHECK(dr.win == 300);
+    CHECK(dr.componentLoss == 50);
     CHECK(dr.lose == 0);
     CHECK(dr.returnToPlayer == 0);
     CHECK(b.distance() == 1);
@@ -1467,8 +1469,10 @@ void horn1(Player* p1, unsigned point, unsigned d1, unsigned d2)
     CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
-    if (dice.value() == 2 || dice.value() == 12) CHECK(dr.win == 750);
-    if (dice.value() == 3 || dice.value() == 11) CHECK(dr.win == 375);
+    // Net of the three losing units: 25 * 30 - 75, or 25 * 15 - 75
+    if (dice.value() == 2 || dice.value() == 12) CHECK(dr.win == 675);
+    if (dice.value() == 3 || dice.value() == 11) CHECK(dr.win == 300);
+    CHECK(dr.componentLoss == 75);
     CHECK(dr.lose == 0);
     CHECK(dr.returnToPlayer == 0);
     CHECK(b.distance() == 1);

@@ -680,15 +680,14 @@ DialogBetAmount::drawStatistics()
     if (profile.winPct >= 0.0)
         expectedPct = fmt::format("{:.1f}%", profile.winPct);
 
-    // BetStats records the contract and odds portions under the same
-    // expanded bet name. Use the selected bet's profile for an estimate on
-    // the recorded total; this is an approximation when the total includes
-    // fair-odds supplements, because the current stats do not retain the
-    // contract-only amount separately.
+    // The house edge applies to the contract portion only; odds bets are
+    // fair. Use the recorded contract-only amount for the expected result.
+    const Gen::Money contractTotal =
+        playerTotal - playerWins.oddsBet - playerLosses.oddsBet;
     if (profile.houseEdgePct >= 0.0)
     {
         const double loss =
-            static_cast<double>(playerTotal) * profile.houseEdgePct / 100.0;
+            static_cast<double>(contractTotal) * profile.houseEdgePct / 100.0;
         expected = profile.houseEdgePct == 0.0
             ? expectedMoney(loss)
             : "-" + expectedMoney(loss);

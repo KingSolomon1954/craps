@@ -2599,6 +2599,53 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet settlement and statis
 
 //----------------------------------------------------------------
 
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Horn and C&E settle net of losing components")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    const auto startingBalance = p1->getBalance();
+    const auto bankBefore = t.getBankCurrentStats();
+    const auto depositedBefore = bankBefore.amtDeposited;
+    const auto withdrawnBefore = bankBefore.amtWithdrawn;
+
+    // Horn 12: unit is 3. A 2 pays 30:1 on one unit (90) and the other
+    // three units (9) lose, so the player nets 81.
+    REQUIRE(p1->testMakeBet(BetName::Horn, 12, 0));
+    t.testRollDice(1, 1);
+    CHECK(p1->getBalance() == startingBalance + 81);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(p1->getLastRollStats().amountWin == 90);
+    CHECK(p1->getLastRollStats().amountLose == 9);
+    auto bank1 = t.getBankCurrentStats();
+    CHECK(bank1.amtDeposited - depositedBefore == 9);
+    CHECK(bank1.amtWithdrawn - withdrawnBefore == 90);
+    CHECK(t.getCurrentStats().betStats.byBet.at("Horn").wins.count == 1);
+    CHECK(t.getCurrentStats().betStats.byBet.at("Horn").wins.amount == 81);
+    CHECK(t.getCurrentStats().betStats.byBet.at("Horn").losses.count == 0);
+
+    // C&E 10: halves of 5. An 11 pays 15:1 on E (75) and C (5) loses,
+    // so the player nets 70.
+    REQUIRE(p1->testMakeBet(BetName::CandE, 10, 0));
+    t.testRollDice(5, 6);
+    CHECK(p1->getBalance() == startingBalance + 81 + 70);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    auto bank2 = t.getBankCurrentStats();
+    CHECK(bank2.amtDeposited - depositedBefore == 9 + 5);
+    CHECK(bank2.amtWithdrawn - withdrawnBefore == 90 + 75);
+    CHECK(t.getCurrentStats().betStats.byBet.at("C&E").wins.amount == 70);
+
+    // A non-winning total loses the entire wager, no component payout.
+    REQUIRE(p1->testMakeBet(BetName::Horn, 12, 0));
+    t.testRollDice(1, 3); // 4
+    CHECK(p1->getBalance() == startingBalance + 81 + 70 - 12);
+    CHECK(t.getCurrentStats().betStats.byBet.at("Horn").losses.count == 1);
+    CHECK(t.getCurrentStats().betStats.tallyRoll(BetName::Horn, 4).losses.count == 1);
+}
+
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet amount validation")
 {
     CrapsTable t("Table-1", config);

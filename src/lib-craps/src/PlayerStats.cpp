@@ -33,6 +33,29 @@ PlayerStats::recordLose(const CrapsBet& bet, Gen::Money amtLose, unsigned roll)
 
 /*-----------------------------------------------------------*//**
 
+Record a winning bet from its decision record. Preferred over the
+overload above since it also records roll, odds and component details.
+
+*/
+void
+PlayerStats::recordWin(const DecisionRecord& dr)
+{
+    betStats.recordWin(dr);
+}
+
+/*-----------------------------------------------------------*//**
+
+Record a losing bet from its decision record.
+
+*/
+void
+PlayerStats::recordLose(const DecisionRecord& dr)
+{
+    betStats.recordLose(dr);
+}
+
+/*-----------------------------------------------------------*//**
+
 Record a keeping bet.
 
 No need to count keeps. They will eventually win or lose.

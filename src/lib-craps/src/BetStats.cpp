@@ -42,11 +42,22 @@ rollEntryName(BetName name, unsigned roll)
 }
 
 // Extra per number entry to record, or empty when none is needed.
+//
+// Hardway losses are split by what ended the bet: Hardway6@6 is an easy
+// 6, Hardway6@7 is a seven. Hardway wins need no extra entry.
 std::string
-rollBetName(const CrapsBet& bet, unsigned roll)
+rollBetName(const CrapsBet& bet, unsigned roll, bool win)
 {
-    if (roll < 2 || roll > 12 || !isRollBet(bet.betName()) ||
-        bet.betName() == BetName::Field)
+    if (roll < 2 || roll > 12)
+        return {};
+    if (bet.betName() == BetName::Hardway)
+    {
+        if (win || bet.pivot() == 0)
+            return {};
+        return statsName(bet.betName()) + std::to_string(bet.pivot()) +
+               "@" + std::to_string(roll);
+    }
+    if (!isRollBet(bet.betName()) || bet.betName() == BetName::Field)
         return {};
     return rollEntryName(bet.betName(), roll);
 }
@@ -60,39 +71,18 @@ Record a winning bet.
 void
 BetStats::recordWin(const CrapsBet& bet, Gen::Money amtWin, unsigned roll)
 {
-    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
-    recordCommon(amtBet);
+    recordOutcome(true, bet, amtWin, roll, 0);
+}
 
-    std::string betName = expandBetName(bet);
-    byBet[betName].wins.count++;
-    byBet[betName].wins.amountBet   += amtBet;
-    byBet[betName].wins.amount      += amtWin;
-    byBet[betName].wins.totDistance += bet.distance();
-    if (const std::string rollKey = rollBetName(bet, roll); !rollKey.empty())
-    {
-        auto& w = byBet[rollKey].wins;
-        w.count++;
-        w.amountBet   += amtBet;
-        w.amount      += amtWin;
-        w.totDistance += bet.distance();
-    }
+/*-----------------------------------------------------------*//**
 
-    totNumBetsAllBets++;
-    totAmtAllBets += amtBet;
+Record a winning bet using its decision record.
 
-    totNumWinsAllBets++;
-    numBetsWinOneRoll.total++;
-
-    totAmtWinsAllBets += amtWin;
-    amtBetsWinOneRoll.total += amtWin;
-
-    numBetsWinOneRoll.current++;
-
-    amtBetsWinOneRoll.current += amtWin;
-
-    maxAmtWinOneBet       = std::max(amtWin, maxAmtWinOneBet);
-    amtBetsWinOneRoll.max = std::max(amtBetsWinOneRoll.current, amtBetsWinOneRoll.max);
-    numBetsWinOneRoll.max = std::max(numBetsWinOneRoll.current, numBetsWinOneRoll.max);
+*/
+void
+BetStats::recordWin(const DecisionRecord& dr)
+{
+    recordOutcome(true, *(dr.pBet), dr.win, dr.roll, dr.oddsWin);
 }
 
 /*-----------------------------------------------------------*//**
@@ -103,39 +93,78 @@ Record a losing bet.
 void
 BetStats::recordLose(const CrapsBet& bet, Gen::Money amtLose, unsigned roll)
 {
-    unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
+    recordOutcome(false, bet, amtLose, roll, 0);
+}
+
+/*-----------------------------------------------------------*//**
+
+Record a losing bet using its decision record.
+
+*/
+void
+BetStats::recordLose(const DecisionRecord& dr)
+{
+    recordOutcome(false, *(dr.pBet), dr.lose, dr.roll, dr.oddsLose);
+}
+
+/*-----------------------------------------------------------*//**
+
+Common work for recording a win or a loss.
+
+@param[in] oddsAmt
+    The part of amount that came from the odds portion of the bet.
+
+*/
+void
+BetStats::recordOutcome(bool win, const CrapsBet& bet, Gen::Money amount,
+                        unsigned roll, Gen::Money oddsAmt)
+{
+    const Gen::Money amtBet  = bet.contractAmount() + bet.oddsAmount();
+    const Gen::Money oddsBet = bet.oddsAmount();
     recordCommon(amtBet);
 
-    std::string betName = expandBetName(bet);
-    byBet[betName].losses.count++;
-    byBet[betName].losses.amountBet   += amtBet;
-    byBet[betName].losses.amount      += amtLose;
-    byBet[betName].losses.totDistance += bet.distance();
-    if (const std::string rollKey = rollBetName(bet, roll); !rollKey.empty())
+    const auto add = [&](const std::string& key)
     {
-        auto& l = byBet[rollKey].losses;
-        l.count++;
-        l.amountBet   += amtBet;
-        l.amount      += amtLose;
-        l.totDistance += bet.distance();
-    }
+        BetStat& s = win ? byBet[key].wins : byBet[key].losses;
+        s.count++;
+        s.amountBet   += amtBet;
+        s.amount      += amount;
+        s.oddsBet     += oddsBet;
+        s.oddsAmount  += oddsAmt;
+        s.totDistance += bet.distance();
+    };
+    add(expandBetName(bet));
+    if (const std::string rollKey = rollBetName(bet, roll, win);
+        !rollKey.empty())
+        add(rollKey);
 
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;
 
-    totNumLoseAllBets++;
-    numBetsLoseOneRoll.total++;
-
-    totAmtLoseAllBets += amtLose;
-    amtBetsLoseOneRoll.total += amtLose;
-
-    numBetsLoseOneRoll.current++;
-
-    amtBetsLoseOneRoll.current += amtLose;
-
-    maxAmtLoseOneBet       = std::max(amtLose, maxAmtLoseOneBet);
-    amtBetsLoseOneRoll.max = std::max(amtBetsLoseOneRoll.current, amtBetsLoseOneRoll.max);
-    numBetsLoseOneRoll.max = std::max(numBetsLoseOneRoll.current, numBetsLoseOneRoll.max);
+    if (win)
+    {
+        totNumWinsAllBets++;
+        numBetsWinOneRoll.total++;
+        totAmtWinsAllBets += amount;
+        amtBetsWinOneRoll.total += amount;
+        numBetsWinOneRoll.current++;
+        amtBetsWinOneRoll.current += amount;
+        maxAmtWinOneBet       = std::max(amount, maxAmtWinOneBet);
+        amtBetsWinOneRoll.max = std::max(amtBetsWinOneRoll.current, amtBetsWinOneRoll.max);
+        numBetsWinOneRoll.max = std::max(numBetsWinOneRoll.current, numBetsWinOneRoll.max);
+    }
+    else
+    {
+        totNumLoseAllBets++;
+        numBetsLoseOneRoll.total++;
+        totAmtLoseAllBets += amount;
+        amtBetsLoseOneRoll.total += amount;
+        numBetsLoseOneRoll.current++;
+        amtBetsLoseOneRoll.current += amount;
+        maxAmtLoseOneBet       = std::max(amount, maxAmtLoseOneBet);
+        amtBetsLoseOneRoll.max = std::max(amtBetsLoseOneRoll.current, amtBetsLoseOneRoll.max);
+        numBetsLoseOneRoll.max = std::max(numBetsLoseOneRoll.current, numBetsLoseOneRoll.max);
+    }
 }
 
 /*-----------------------------------------------------------*//**
@@ -212,6 +241,8 @@ BetStat::reset()
     totDistance = 0;
     amount      = 0;
     amountBet   = 0;
+    oddsBet     = 0;
+    oddsAmount  = 0;
 }
 
 //-----------------------------------------------------------------
@@ -223,6 +254,8 @@ BetStat::merge(const BetStat& session)
     totDistance += session.totDistance;
     amount      += session.amount;
     amountBet   += session.amountBet;
+    oddsBet     += session.oddsBet;
+    oddsAmount  += session.oddsAmount;
 }
 
 //-----------------------------------------------------------------
@@ -235,6 +268,8 @@ BetStat::toYAML() const
     node["totDistance"] = totDistance;
     node["amount"]      = amount;
     node["amountBet"]   = amountBet;
+    node["oddsBet"]     = oddsBet;
+    node["oddsAmount"]  = oddsAmount;
     return node;
 }
 
@@ -247,6 +282,9 @@ BetStat::fromYAML(const YAML::Node& node)
     totDistance = node["totDistance"].as<unsigned>();
     amount      = node["amount"].as<Gen::Money>();
     amountBet   = node["amountBet"].as<Gen::Money>();
+    // Added later, older files may not have them.
+    oddsBet     = node["oddsBet"]    ? node["oddsBet"].as<Gen::Money>()    : 0;
+    oddsAmount  = node["oddsAmount"] ? node["oddsAmount"].as<Gen::Money>() : 0;
 }
 
 //-----------------------------------------------------------------
@@ -499,6 +537,79 @@ BetStats::tallyRoll(BetName name, unsigned roll) const
         it != byBet.end())
         return it->second;
     return {};
+}
+
+//-----------------------------------------------------------------
+//
+// Hardway losses for one hardway number, split by easy roll of that
+// number versus a seven.
+//
+HardwayLosses
+BetStats::tallyHardwayLosses(unsigned point) const
+{
+    HardwayLosses result;
+    const std::string base =
+        statsName(BetName::Hardway) + std::to_string(point) + "@";
+    if (const auto it = byBet.find(base + std::to_string(point));
+        it != byBet.end())
+        result.easy = it->second.losses;
+    if (const auto it = byBet.find(base + "7"); it != byBet.end())
+        result.seven = it->second.losses;
+    return result;
+}
+
+//-----------------------------------------------------------------
+//
+// How a roll dependent bet fares on a particular number. Derived from
+// the bet's payout structure, so it is the same for every player/table.
+//
+RollOutcome
+BetStats::classifyRoll(BetName name, unsigned roll)
+{
+    switch (name)
+    {
+    case BetName::Horn:
+        return (roll == 2 || roll == 3 || roll == 11 || roll == 12)
+            ? RollOutcome::PartialWin : RollOutcome::EntireLoss;
+    case BetName::CandE:
+        return (roll == 2 || roll == 3 || roll == 11 || roll == 12)
+            ? RollOutcome::PartialWin : RollOutcome::EntireLoss;
+    case BetName::World:
+        if (roll == 7)
+            return RollOutcome::BreakEven;
+        return (roll == 2 || roll == 3 || roll == 11 || roll == 12)
+            ? RollOutcome::PartialWin : RollOutcome::EntireLoss;
+    case BetName::AnyCraps:
+        return (roll == 2 || roll == 3 || roll == 12)
+            ? RollOutcome::CleanWin : RollOutcome::EntireLoss;
+    case BetName::AnySeven:
+        return roll == 7 ? RollOutcome::CleanWin : RollOutcome::EntireLoss;
+    case BetName::Field:
+        return (roll >= 5 && roll <= 8)
+            ? RollOutcome::EntireLoss : RollOutcome::CleanWin;
+    default:
+        break;
+    }
+    return RollOutcome::CleanWin;
+}
+
+//-----------------------------------------------------------------
+//
+// Sum of all numbers for which the bet had the given kind of outcome,
+// e.g. Horn EntireLoss: the Horn bets lost because none of 2,3,11,12
+// was rolled. PartialWin bets that lost nothing else still appear
+// under wins.
+//
+BetOutcomeStats
+BetStats::tallyRollOutcome(BetName name, RollOutcome kind) const
+{
+    BetOutcomeStats result;
+    if (!isRollBet(name))
+        return result;
+    for (unsigned roll = 2; roll <= 12; ++roll)
+        if (classifyRoll(name, roll) == kind)
+            result.merge(tallyRoll(name, roll));
+    return result;
 }
 
 //-----------------------------------------------------------------

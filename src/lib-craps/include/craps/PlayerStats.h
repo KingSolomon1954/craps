@@ -27,6 +27,8 @@ public:
     /// @{
     void recordWin (const CrapsBet& bet, Gen::Money amtWin, unsigned roll = 0);
     void recordLose(const CrapsBet& bet, Gen::Money amtLose, unsigned roll = 0);
+    void recordWin (const DecisionRecord& dr);
+    void recordLose(const DecisionRecord& dr);
     void recordKeep(const CrapsBet& bet);
     void merge     (const PlayerStats& session);
     void reset();

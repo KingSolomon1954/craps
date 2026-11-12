@@ -26,6 +26,7 @@ TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 
     disarmSomeCounts (point, roll);
     countDiceNumbers (roll);
+    countPointNumbers(point, roll);
     countComeOutRolls(point);
     countPointRolls  (point, roll);
     countShooterRolls(point, roll);
@@ -62,6 +63,23 @@ TableStats::countDiceNumbers(unsigned roll)
         {
             rollStats.numberCounts[i].disarm();
         }
+    }
+}
+
+//-----------------------------------------------------------------
+//
+// Count rolls made while a point is on. Bets that are off on the
+// come out roll (Place, Buy, Lay) can only be decided by these.
+//
+void
+TableStats::countPointNumbers(unsigned point, unsigned roll)
+{
+    for (unsigned i = 2; i < 13; i++)
+    {
+        if (point != 0 && i == roll)
+            rollStats.pointNumberCounts[i].bump();
+        else
+            rollStats.pointNumberCounts[i].disarm();
     }
 }
 
@@ -138,7 +156,9 @@ TableStats::countFieldBetLose(unsigned roll)
 void
 TableStats::countHardwayWins(unsigned point, unsigned d1, unsigned d2)
 {
-    if (point == 0) return;  // Assume no hardways bet on come out rolls
+    // Hardways are assumed to work on come out rolls (default for now,
+    // eventually a TableRules setting), so point is not consulted.
+    (void) point;
 
     const unsigned roll = d1 + d2;
     if (d1 == d2 && CrapsBet::hardwayNums_.contains(roll))
@@ -152,20 +172,24 @@ TableStats::countHardwayWins(unsigned point, unsigned d1, unsigned d2)
 void
 TableStats::countHardwayLose(unsigned point, unsigned d1, unsigned d2)
 {
-    if (point == 0) return;  // Assume no hardways bet on come out rolls
+    (void) point;  // Hardways assumed to work on come out rolls too
 
     const unsigned roll = d1 + d2;
     if (roll == 7)
     {
-        bumpHardwayLose(4);
-        bumpHardwayLose(6);
-        bumpHardwayLose(8);
-        bumpHardwayLose(10);
+        for (unsigned number : {4U, 6U, 8U, 10U})
+        {
+            bumpHardwayLose(number);
+            rollStats.hardwaySeven[number].bump();
+            rollStats.hardwayEasy[number].disarm();
+        }
     }
 
     if (d1 != d2 && CrapsBet::hardwayNums_.contains(roll))
     {
         bumpHardwayLose(roll);
+        rollStats.hardwayEasy[roll].bump();
+        rollStats.hardwaySeven[roll].disarm();
     }
 }
 
@@ -484,6 +508,29 @@ void
 TableStats::recordLose(const CrapsBet& bet, Gen::Money amtLose, unsigned roll)
 {
     betStats.recordLose(bet, amtLose, roll);
+}
+
+/*-----------------------------------------------------------*//**
+
+Record a winning bet from its decision record. Preferred over the
+overload above since it also records roll, odds and component details.
+
+*/
+void
+TableStats::recordWin(const DecisionRecord& dr)
+{
+    betStats.recordWin(dr);
+}
+
+/*-----------------------------------------------------------*//**
+
+Record a losing bet from its decision record.
+
+*/
+void
+TableStats::recordLose(const DecisionRecord& dr)
+{
+    betStats.recordLose(dr);
 }
 
 /*-----------------------------------------------------------*//**

@@ -662,7 +662,7 @@ Player::processWin(const DecisionRecord& dr)
 {
     if (dr.pBet == nullptr ||
         (dr.win <= 0 &&
-         !(dr.pBet->betName() == BetName::World && dr.decision && dr.lose == 0)))
+         !(dr.decision && dr.lose == 0 && dr.componentLoss > 0)))
     {
         LOG_ERROR("Player::processWin(): invalid DecisionRecord (null bet or non-positive win).");
         return;
@@ -699,17 +699,15 @@ Player::processWin(const DecisionRecord& dr)
         wallet_.deposit(dr.win);
     }
 
-    currentStats_.recordWin(*(dr.pBet), dr.win, dr.roll);
-    if (pBet->betName() == BetName::World && dr.decision && dr.lose == 0)
+    currentStats_.recordWin(dr);
+    if (dr.decision && dr.lose == 0 && dr.componentLoss > 0)
     {
-        // The aggregate World bet's net profit hides the component cashflows.
-        // Keep Last Roll comparable with the house: record the winning
-        // component's gross profit and the four losing component stakes.
-        const Gen::Money component = pBet->contractAmount() / 5;
-        const Gen::Money losingComponents =
-            pBet->contractAmount() - component;
-        lastRollStats_.amountWin += dr.win + losingComponents;
-        lastRollStats_.amountLose += losingComponents;
+        // An aggregate bet's (C&E, Horn, World) net profit hides the
+        // component cashflows. Keep Last Roll comparable with the house:
+        // record the winning component's gross profit and the losing
+        // component stakes.
+        lastRollStats_.amountWin += dr.win + dr.componentLoss;
+        lastRollStats_.amountLose += dr.componentLoss;
     }
     else
     {
@@ -756,7 +754,7 @@ Player::processLose(const DecisionRecord& dr)
     //
     wallet_.deposit(dr.returnToPlayer);
 
-    currentStats_.recordLose(*(dr.pBet), dr.lose, dr.roll);
+    currentStats_.recordLose(dr);
     lastRollStats_.amountLose += dr.lose;
     lastRollStats_.numBetsLose++;
 

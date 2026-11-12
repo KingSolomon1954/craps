@@ -919,17 +919,16 @@ CrapsTable::disburseHouseResults()
 
     for (const auto& r : drl_)
     {
-        // World is one aggregate wager in the model, but its five components
-        // settle separately. The player-side win is the net profit after the
-        // four losing components; the bank must still record those component
-        // losses and pay the winning component's gross profit. This also
-        // handles a 7, where the net profit is zero but $4 is won and paid.
-        if (r.pBet != nullptr && r.pBet->betName() == BetName::World &&
-            r.decision && r.lose == 0)
+        // C&E, Horn and World are one aggregate wager in the model, but
+        // their components settle separately. The player-side win is the net
+        // profit after the losing components; the bank must still record
+        // those component losses and pay the winning component's gross
+        // profit. This also handles a World 7, where the net profit is zero
+        // but $4 is won and paid.
+        if (r.pBet != nullptr && r.decision && r.lose == 0 &&
+            r.componentLoss > 0)
         {
-            const Gen::Money component = r.pBet->contractAmount() / 5;
-            const Gen::Money losingComponents =
-                r.pBet->contractAmount() - component;
+            const Gen::Money losingComponents = r.componentLoss;
             const Gen::Money grossComponentProfit = r.win + losingComponents;
             if (losingComponents > 0)
             {
@@ -983,11 +982,11 @@ CrapsTable::disbursePlayerWins()
     for (const auto& r : drl_)
     {
         if (r.win > 0 ||
-            (r.pBet != nullptr && r.pBet->betName() == BetName::World &&
-             r.decision && r.lose == 0))
+            (r.pBet != nullptr && r.decision && r.lose == 0 &&
+             r.componentLoss > 0))
         {
             r.pBet->player().processWin(r);
-            currentStats_.recordWin(*(r.pBet), r.win, r.roll);
+            currentStats_.recordWin(r);
         }
     }
 }
@@ -1002,7 +1001,7 @@ CrapsTable::disbursePlayerLoses()
         if (r.lose > 0)
         {
             r.pBet->player().processLose(r);
-            currentStats_.recordLose(*(r.pBet), r.lose, r.roll);
+            currentStats_.recordLose(r);
         }
     }
 }
