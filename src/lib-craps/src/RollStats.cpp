@@ -414,22 +414,14 @@ RollStats::pointCountsFromYAML (const YAML::Node& node)
 
     if (node["hardwayCounts"]) loadPointCounts(node["hardwayCounts"], hardwayCounts);
 
-    // Added later, older files may not have these.
     for (unsigned pt : {4, 6, 8, 10})
     {
         const std::string key = std::to_string(pt);
-        if (node["hardwayEasyCounts"] && node["hardwayEasyCounts"][key])
-            hardwayEasy[pt].fromYAML(node["hardwayEasyCounts"][key]);
-        if (node["hardwaySevenCounts"] && node["hardwaySevenCounts"][key])
-            hardwaySeven[pt].fromYAML(node["hardwaySevenCounts"][key]);
+        hardwayEasy[pt].fromYAML(node["hardwayEasyCounts"][key]);
+        hardwaySeven[pt].fromYAML(node["hardwaySevenCounts"][key]);
     }
-    if (node["pointNumberCounts"])
-        for (unsigned i = 2; i <= 12; ++i)
-        {
-            const std::string key = std::to_string(i);
-            if (node["pointNumberCounts"][key])
-                pointNumberCounts[i].fromYAML(node["pointNumberCounts"][key]);
-        }
+    for (unsigned i = 2; i <= 12; ++i)
+        pointNumberCounts[i].fromYAML(node["pointNumberCounts"][std::to_string(i)]);
 }
 
 //-----------------------------------------------------------------

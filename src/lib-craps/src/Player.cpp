@@ -648,6 +648,7 @@ void
 Player::bettingClosed()
 {
     lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
+    currentStats_.betStats.resetRollCounts();  // Start of a new roll
 }
 
 /*-----------------------------------------------------------*//**

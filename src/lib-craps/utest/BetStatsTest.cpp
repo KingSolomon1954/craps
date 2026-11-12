@@ -237,14 +237,6 @@ TEST_CASE("BetStats:BetStat odds fields yaml")
     BetStat t;
     t.fromYAML(s.toYAML());
     CHECK(t == s);
-
-    // Older files without the odds fields still load
-    BetStat old;
-    old.fromYAML(YAML::Load("count: 3\ntotDistance: 4\namount: 5\namountBet: 6\n"));
-    CHECK(old.count      == 3);
-    CHECK(old.amountBet  == 6);
-    CHECK(old.oddsBet    == 0);
-    CHECK(old.oddsAmount == 0);
 }
 
 //----------------------------------------------------------------
@@ -314,4 +306,65 @@ TEST_CASE_FIXTURE(BetStatsFixture, "BetStats:tallyRollOutcome")
     CHECK(bs.tallyRollOutcome(BetName::Horn, RollOutcome::EntireLoss).losses.count == 2);
     CHECK(bs.tallyRollOutcome(BetName::Horn, RollOutcome::EntireLoss).wins.count   == 0);
     CHECK(bs.tallyRollOutcome(BetName::PassLine, RollOutcome::CleanWin).wins.count == 0);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(BetStatsFixture, "BetStats:per roll counters")
+{
+    BetStats bs;
+
+    // Roll 1: two bets kept
+    CrapsBet k1(p1.get(), BetName::PassLine, 10);
+    CrapsBet k2(p1.get(), BetName::Come, 20);
+    bs.recordKeep(k1);
+    bs.recordKeep(k2);
+    CHECK(bs.numBetsOneRoll.total     == 2);
+    CHECK(bs.numBetsOneRoll.max       == 2);
+    CHECK(bs.amtBetsOneRoll.total     == 30);
+    CHECK(bs.amtBetsOneRoll.max       == 30);
+    CHECK(bs.numBetsKeepOneRoll.total == 2);
+    CHECK(bs.amtBetsKeepOneRoll.total == 30);
+
+    // Roll 2: one bet decided
+    bs.resetRollCounts();
+    CrapsBet w(p1.get(), BetName::AnySeven, 5);
+    bs.recordWin(w, 20, 7);
+    CHECK(bs.numBetsOneRoll.total     == 3);    // Bets evaluated, all rolls
+    CHECK(bs.numBetsOneRoll.max       == 2);    // Most in a single roll
+    CHECK(bs.amtBetsOneRoll.total     == 35);
+    CHECK(bs.amtBetsOneRoll.max       == 30);
+    CHECK(bs.numBetsWinOneRoll.total  == 1);
+    CHECK(bs.numBetsWinOneRoll.max    == 1);
+    CHECK(bs.amtBetsWinOneRoll.total  == 20);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("BetStats:rollActivity yaml names and round trip")
+{
+    BetStats a;
+    a.numBetsOneRoll.total      = 52;
+    a.numBetsOneRoll.max        = 5;
+    a.numBetsWinOneRoll.total   = 9;
+    a.amtBetsOneRoll.total      = 665;
+    a.amtBetsOneRoll.max        = 90;
+    a.amtBetsLoseOneRoll.total  = 225;
+
+    const YAML::Node node = a.toYAML();
+    const YAML::Node ra   = node["rollActivity"];
+    CHECK(ra["betsEvaluated"]["allRolls"].as<unsigned>()    == 52);
+    CHECK(ra["betsEvaluated"]["busiestRoll"].as<unsigned>() == 5);
+    CHECK(ra["betsWon"]["allRolls"].as<unsigned>()          == 9);
+    CHECK(ra["amounts"]["evaluated"]["allRolls"].as<unsigned>()    == 665);
+    CHECK(ra["amounts"]["evaluated"]["busiestRoll"].as<unsigned>() == 90);
+    CHECK(ra["amounts"]["lost"]["allRolls"].as<unsigned>()  == 225);
+    CHECK_FALSE(node["perRoll"].IsDefined());
+
+    BetStats b;
+    b.fromYAML(node);
+    CHECK(b.numBetsOneRoll.total  == 52);
+    CHECK(b.numBetsOneRoll.max    == 5);
+    CHECK(b.amtBetsOneRoll.max    == 90);
+    CHECK(b.amtBetsLoseOneRoll.total == 225);
 }

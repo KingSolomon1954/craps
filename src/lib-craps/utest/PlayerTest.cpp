@@ -811,37 +811,41 @@ BetStats:
         totDistance: 0
         amount: 0
         amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
       losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-  perRoll:
-    bets:
-      total: 0
-      max: 0
-    wins:
-      total: 0
-      max: 0
-    losses:
-      total: 0
-      max: 0
-    kept:
-      total: 0
-      max: 0
+        oddsBet: 0
+        oddsAmount: 0
+  rollActivity:
+    betsEvaluated:
+      allRolls: 0
+      busiestRoll: 0
+    betsWon:
+      allRolls: 0
+      busiestRoll: 0
+    betsLost:
+      allRolls: 0
+      busiestRoll: 0
+    betsKept:
+      allRolls: 0
+      busiestRoll: 0
     amounts:
-      bet:
-        total: 0
-        max: 0
+      evaluated:
+        allRolls: 0
+        busiestRoll: 0
       won:
-        total: 0
-        max: 0
+        allRolls: 0
+        busiestRoll: 0
       lost:
-        total: 0
-        max: 0
+        allRolls: 0
+        busiestRoll: 0
       kept:
-        total: 0
-        max: 0
+        allRolls: 0
+        busiestRoll: 0
 SessionStats:
   numSessionsAlltime: 25
   firstSessionDate: 2025-06-25T14:30:00.000000000

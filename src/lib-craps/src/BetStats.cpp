@@ -207,6 +207,7 @@ BetStats::recordCommon(Gen::Money amtBet)
 {
     numBetsOneRoll.total++;
     numBetsOneRoll.current++;
+    amtBetsOneRoll.total   += amtBet;
     amtBetsOneRoll.current += amtBet;
     maxAmtBetOneBet    = std::max(amtBet, maxAmtBetOneBet);
     amtBetsOneRoll.max = std::max(amtBetsOneRoll.current, amtBetsOneRoll.max);
@@ -282,9 +283,8 @@ BetStat::fromYAML(const YAML::Node& node)
     totDistance = node["totDistance"].as<unsigned>();
     amount      = node["amount"].as<Gen::Money>();
     amountBet   = node["amountBet"].as<Gen::Money>();
-    // Added later, older files may not have them.
-    oddsBet     = node["oddsBet"]    ? node["oddsBet"].as<Gen::Money>()    : 0;
-    oddsAmount  = node["oddsAmount"] ? node["oddsAmount"].as<Gen::Money>() : 0;
+    oddsBet     = node["oddsBet"].as<Gen::Money>();
+    oddsAmount  = node["oddsAmount"].as<Gen::Money>();
 }
 
 //-----------------------------------------------------------------
@@ -384,8 +384,8 @@ YAML::Node
 NumBets::toYAML() const
 {
     YAML::Node node;
-    node["total"] = total;
-    node["max"]   = max;
+    node["allRolls"] = total;
+    node["busiestRoll"] = max;
     return node;
 }
 
@@ -394,8 +394,8 @@ NumBets::toYAML() const
 void
 NumBets::fromYAML(const YAML::Node& node)
 {
-    max   = node["max"].as<unsigned>();
-    total = node["total"].as<unsigned>();
+    max   = node["busiestRoll"].as<unsigned>();
+    total = node["allRolls"].as<unsigned>();
     current = 0;
 }
 
@@ -424,8 +424,8 @@ YAML::Node
 AmtBets::toYAML() const
 {
     YAML::Node node;
-    node["total"] = total;
-    node["max"]   = max;
+    node["allRolls"] = total;
+    node["busiestRoll"] = max;
     return node;
 }
 
@@ -434,8 +434,8 @@ AmtBets::toYAML() const
 void
 AmtBets::fromYAML(const YAML::Node& node)
 {
-    max     = node["max"].as<Gen::Money>();
-    total   = node["total"].as<Gen::Money>();
+    max     = node["busiestRoll"].as<Gen::Money>();
+    total   = node["allRolls"].as<Gen::Money>();
     current = 0;
 }
 
@@ -730,18 +730,18 @@ BetStats::toYAML() const
     node["byBet"] = byBetNode;
 
     YAML::Node perRoll;
-    perRoll["bets"] = numBetsOneRoll.toYAML();
-    perRoll["wins"] = numBetsWinOneRoll.toYAML();
-    perRoll["losses"] = numBetsLoseOneRoll.toYAML();
-    perRoll["kept"] = numBetsKeepOneRoll.toYAML();
+    perRoll["betsEvaluated"] = numBetsOneRoll.toYAML();
+    perRoll["betsWon"] = numBetsWinOneRoll.toYAML();
+    perRoll["betsLost"] = numBetsLoseOneRoll.toYAML();
+    perRoll["betsKept"] = numBetsKeepOneRoll.toYAML();
 
     YAML::Node rollAmounts;
-    rollAmounts["bet"] = amtBetsOneRoll.toYAML();
+    rollAmounts["evaluated"] = amtBetsOneRoll.toYAML();
     rollAmounts["won"] = amtBetsWinOneRoll.toYAML();
     rollAmounts["lost"] = amtBetsLoseOneRoll.toYAML();
     rollAmounts["kept"] = amtBetsKeepOneRoll.toYAML();
     perRoll["amounts"] = rollAmounts;
-    node["perRoll"] = perRoll;
+    node["rollActivity"] = perRoll;
     return node;
 }
 
@@ -777,14 +777,14 @@ BetStats::fromYAML(const YAML::Node& node)
         byBet[name].fromYAML(it->second);
     }
 
-    const YAML::Node perRoll = node["perRoll"];
-    numBetsOneRoll.fromYAML(perRoll["bets"]);
-    numBetsWinOneRoll.fromYAML(perRoll["wins"]);
-    numBetsLoseOneRoll.fromYAML(perRoll["losses"]);
-    numBetsKeepOneRoll.fromYAML(perRoll["kept"]);
+    const YAML::Node perRoll = node["rollActivity"];
+    numBetsOneRoll.fromYAML(perRoll["betsEvaluated"]);
+    numBetsWinOneRoll.fromYAML(perRoll["betsWon"]);
+    numBetsLoseOneRoll.fromYAML(perRoll["betsLost"]);
+    numBetsKeepOneRoll.fromYAML(perRoll["betsKept"]);
 
     const YAML::Node rollAmounts = perRoll["amounts"];
-    amtBetsOneRoll.fromYAML(rollAmounts["bet"]);
+    amtBetsOneRoll.fromYAML(rollAmounts["evaluated"]);
     amtBetsWinOneRoll.fromYAML(rollAmounts["won"]);
     amtBetsLoseOneRoll.fromYAML(rollAmounts["lost"]);
     amtBetsKeepOneRoll.fromYAML(rollAmounts["kept"]);
