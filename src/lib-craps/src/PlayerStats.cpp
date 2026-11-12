@@ -15,9 +15,9 @@ Record a winning bet.
 
 */
 void
-PlayerStats::recordWin(const CrapsBet& bet, Gen::Money amtWin)
+PlayerStats::recordWin(const CrapsBet& bet, Gen::Money amtWin, unsigned roll)
 {
-    betStats.recordWin(bet, amtWin);
+    betStats.recordWin(bet, amtWin, roll);
 }
 
 /*-----------------------------------------------------------*//**
@@ -26,9 +26,9 @@ Record a losing bet.
 
 */
 void
-PlayerStats::recordLose(const CrapsBet& bet, Gen::Money amtLose)
+PlayerStats::recordLose(const CrapsBet& bet, Gen::Money amtLose, unsigned roll)
 {
-    betStats.recordLose(bet, amtLose);
+    betStats.recordLose(bet, amtLose, roll);
 }
 
 /*-----------------------------------------------------------*//**

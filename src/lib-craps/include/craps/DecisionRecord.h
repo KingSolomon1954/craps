@@ -26,6 +26,8 @@ struct DecisionRecord
     bool removeBet            = true;  // An outcome may be resolved
                                        // while the wager remains active 
                                        // (e.g. a winning Place bet).
+    unsigned roll             = 0;     // Dice total that produced this
+                                       // outcome (set by CrapsBet::evaluate).
 
     bool operator==(const DecisionRecord& other) const
     {
@@ -36,7 +38,8 @@ struct DecisionRecord
                lose           == other.lose           &&
                returnToPlayer == other.returnToPlayer &&
                commission     == other.commission     &&
-               removeBet      == other.removeBet;
+               removeBet      == other.removeBet      &&
+               roll           == other.roll;
     }
     void reset()
     {
@@ -48,6 +51,7 @@ struct DecisionRecord
         returnToPlayer = 0;
         commission     = 0;
         removeBet      = true;
+        roll           = 0;
     }
 };
 
@@ -83,6 +87,10 @@ the caller:
     Indicates whether the wager should be removed from the player and table
     after this outcome is settled. A winning Place, Buy, Lay, or Hardway bet
     can resolve a win while remaining active.
+
+@var DecisionRecord::roll
+    The dice total of the roll that was evaluated. Statistics use it to
+    classify roll dependent bets (e.g. Field wins/losses by number).
 
 @var DecisionRecord::pivotAssigned
     Indicates whether a pivot for this bet has been freshly

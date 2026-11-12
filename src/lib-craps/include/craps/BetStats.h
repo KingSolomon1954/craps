@@ -64,6 +64,17 @@ struct AmtBets
 };
 
 //----------------------------------------------------------------
+//
+// Selects which recorded outcomes BetStats::tally() adds together.
+//
+//   ComeOut : decisions reached on a come out roll (stored with no pivot)
+//   Points  : decisions reached after a point/pivot was established
+//             (PassLine4..10, Come4..10, ...)
+//   All     : ComeOut + Points
+//
+enum class BetScope { ComeOut, Points, All };
+
+//----------------------------------------------------------------
 
 class BetStats
 {
@@ -96,12 +107,19 @@ public:
     AmtBets amtBetsLoseOneRoll;
     AmtBets amtBetsKeepOneRoll;
 
-    void recordWin (const CrapsBet& bet, Gen::Money amtWin);
-    void recordLose(const CrapsBet& bet, Gen::Money amtLose);
+    void recordWin (const CrapsBet& bet, Gen::Money amtWin,  unsigned roll = 0);
+    void recordLose(const CrapsBet& bet, Gen::Money amtLose, unsigned roll = 0);
     void recordKeep(const CrapsBet& bet);
     void recordCommon(Gen::Money amtBet);
     void resetRollCounts();
     std::string expandBetName(const CrapsBet& bet) const;
+
+    // Read-time aggregation of byBet. See BetScope.
+    BetOutcomeStats tally(BetName name, BetScope scope = BetScope::All) const;
+    BetOutcomeStats tallyPoint(BetName name, unsigned point) const;
+    BetOutcomeStats tallyRoll (BetName name, unsigned roll)  const;
+    BetOutcomeStats tallyDoSide  (BetScope scope = BetScope::All) const;
+    BetOutcomeStats tallyDontSide(BetScope scope = BetScope::All) const;
     void reset();
     void merge(const BetStats& session);
     YAML::Node toYAML() const;

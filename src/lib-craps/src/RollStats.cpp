@@ -430,3 +430,154 @@ RollStats::singleCountsFromYAML(const YAML::Node& node)
 }
 
 //-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+//
+// How often each bet type would have won or lost given the rolls seen,
+// regardless of whether anyone bet. pivot == 0 means all points combined.
+//
+WinLossCounts
+RollStats::simulatedCounts(BetName betName, unsigned pivot) const
+{
+    const RollStats& stats = *this;
+    WinLossCounts result;
+
+    const auto addPointCounts = [&](const PointCounts& counts)
+    {
+        result.wins   += counts.wins.count();
+        result.losses += counts.lose.count();
+    };
+
+    const auto addAllPointCounts =
+        [&](const std::array<PointCounts, 11>& counts)
+    {
+        for (unsigned point : {4U, 5U, 6U, 8U, 9U, 10U})
+            addPointCounts(counts[point]);
+    };
+
+    const auto countByNumber = [&](auto isWin)
+    {
+        for (unsigned number = 2; number <= 12; ++number)
+        {
+            const unsigned count = stats.numberCounts[number].count();
+
+            if (isWin(number))
+                result.wins += count;
+            else
+                result.losses += count;
+        }
+    };
+
+    switch (betName)
+    {
+    case BetName::PassLine:
+        if (pivot != 0)
+        {
+            if (pivot < stats.passPntCnts.size())
+                addPointCounts(stats.passPntCnts[pivot]);
+        }
+        else
+        {
+            result.wins   += stats.passWinsComeOut.count();
+            result.losses += stats.passLoseComeOut.count();
+            addAllPointCounts(stats.passPntCnts);
+        }
+        break;
+
+    case BetName::DontPass:
+        if (pivot != 0)
+        {
+            if (pivot < stats.dontPassPntCnts.size())
+                addPointCounts(stats.dontPassPntCnts[pivot]);
+        }
+        else
+        {
+            result.wins   += stats.dontPassWinsComeOut.count();
+            result.losses += stats.dontPassLoseComeOut.count();
+            addAllPointCounts(stats.dontPassPntCnts);
+        }
+        break;
+
+    case BetName::Come:
+        if (pivot != 0)
+        {
+            if (pivot < stats.comePntCnts.size())
+                addPointCounts(stats.comePntCnts[pivot]);
+        }
+        else
+        {
+            result.wins   += stats.comeWinsComeOut.count();
+            result.losses += stats.comeLoseComeOut.count();
+            addAllPointCounts(stats.comePntCnts);
+        }
+        break;
+
+    case BetName::DontCome:
+        if (pivot != 0)
+        {
+            if (pivot < stats.dontComePntCnts.size())
+                addPointCounts(stats.dontComePntCnts[pivot]);
+        }
+        else
+        {
+            result.wins   += stats.dontComeWinsComeOut.count();
+            result.losses += stats.dontComeLoseComeOut.count();
+            addAllPointCounts(stats.dontComePntCnts);
+        }
+        break;
+
+    case BetName::Place:
+    case BetName::Buy:
+    case BetName::Lay:
+        if (pivot >= 2 && pivot <= 12 && pivot != 7)
+        {
+            result.wins   = stats.numberCounts[pivot].count();
+            result.losses = stats.numberCounts[7].count();
+        }
+        break;
+
+    case BetName::Hardway:
+        if (pivot < stats.hardwayCounts.size())
+            addPointCounts(stats.hardwayCounts[pivot]);
+        break;
+
+    case BetName::Field:
+        result.wins   = stats.fieldBetWins.count();
+        result.losses = stats.fieldBetLose.count();
+        break;
+
+    case BetName::AnyCraps:
+        countByNumber([](unsigned n)
+        {
+            return n == 2 || n == 3 || n == 12;
+        });
+        break;
+
+    case BetName::AnySeven:
+        countByNumber([](unsigned n)
+        {
+            return n == 7;
+        });
+        break;
+
+    case BetName::CandE:
+    case BetName::Horn:
+        countByNumber([](unsigned n)
+        {
+            return n == 2 || n == 3 || n == 11 || n == 12;
+        });
+        break;
+
+    case BetName::World:
+        countByNumber([](unsigned n)
+        {
+            return n == 2 || n == 3 || n == 7 || n == 11 || n == 12;
+        });
+        break;
+
+    default:
+        break;
+    }
+
+    return result;
+}

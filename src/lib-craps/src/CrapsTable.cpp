@@ -987,7 +987,7 @@ CrapsTable::disbursePlayerWins()
              r.decision && r.lose == 0))
         {
             r.pBet->player().processWin(r);
-            currentStats_.recordWin(*(r.pBet), r.win);
+            currentStats_.recordWin(*(r.pBet), r.win, r.roll);
         }
     }
 }
@@ -1002,7 +1002,7 @@ CrapsTable::disbursePlayerLoses()
         if (r.lose > 0)
         {
             r.pBet->player().processLose(r);
-            currentStats_.recordLose(*(r.pBet), r.lose);
+            currentStats_.recordLose(*(r.pBet), r.lose, r.roll);
         }
     }
 }

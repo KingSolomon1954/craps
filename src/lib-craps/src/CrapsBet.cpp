@@ -356,6 +356,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
     }
 
     dr = {this, false, false, 0,0,0,0};   // Prepare decision record
+    dr.roll = dice.value();
     Gen::ReturnCode rc = Gen::ReturnCode::Fail;
     switch (betName_)
     {

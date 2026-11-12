@@ -699,7 +699,7 @@ Player::processWin(const DecisionRecord& dr)
         wallet_.deposit(dr.win);
     }
 
-    currentStats_.recordWin(*(dr.pBet), dr.win);
+    currentStats_.recordWin(*(dr.pBet), dr.win, dr.roll);
     if (pBet->betName() == BetName::World && dr.decision && dr.lose == 0)
     {
         // The aggregate World bet's net profit hides the component cashflows.
@@ -756,7 +756,7 @@ Player::processLose(const DecisionRecord& dr)
     //
     wallet_.deposit(dr.returnToPlayer);
 
-    currentStats_.recordLose(*(dr.pBet), dr.lose);
+    currentStats_.recordLose(*(dr.pBet), dr.lose, dr.roll);
     lastRollStats_.amountLose += dr.lose;
     lastRollStats_.numBetsLose++;
 

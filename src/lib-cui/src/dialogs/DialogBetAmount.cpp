@@ -126,212 +126,6 @@ std::string percent(unsigned wins, unsigned losses)
 
 //----------------------------------------------------------------
 
-std::string
-betStatsKey(BetName betName, unsigned pivot)
-{
-    std::string key = EnumBetName::toString(betName);
-    if (key == "CandE")
-        key = "C&E";
-    if (pivot != 0)
-        key += std::to_string(pivot);
-    return key;
-}
-
-//----------------------------------------------------------------
-
-Craps::BetStat
-findBetStat(const std::map<std::string, Craps::BetOutcomeStats>& stats,
-            const std::string& key,
-            bool aggregateByPrefix,
-            bool wins)
-{
-    Craps::BetStat result;
-    const auto selected = [wins](const Craps::BetOutcomeStats& outcome)
-        -> const Craps::BetStat&
-    {
-        return wins ? outcome.wins : outcome.losses;
-    };
-
-    if (!aggregateByPrefix)
-    {
-        if (const auto it = stats.find(key); it != stats.end())
-            result = selected(it->second);
-        return result;
-    }
-
-    for (const auto& [name, outcome] : stats)
-        if (name.starts_with(key))
-            result.merge(selected(outcome));
-    return result;
-}
-
-//----------------------------------------------------------------
-
-bool
-isRollOutcomeBet(BetName name)
-{
-    return name == BetName::Field    || name == BetName::AnyCraps ||
-           name == BetName::AnySeven || name == BetName::CandE    ||
-           name == BetName::Horn     || name == BetName::World;
-}
-
-struct SimulatedBetCounts
-{
-    unsigned wins   = 0;
-    unsigned losses = 0;
-};
-
-//----------------------------------------------------------------
-
-SimulatedBetCounts
-simulatedBetCounts(const Craps::RollStats& stats,
-                   BetName betName,
-                   unsigned pivot)
-{
-    SimulatedBetCounts result;
-
-    const auto addPointCounts = [&](const Craps::PointCounts& counts)
-    {
-        result.wins   += counts.wins.count();
-        result.losses += counts.lose.count();
-    };
-
-    const auto addAllPointCounts =
-        [&](const std::array<Craps::PointCounts, 11>& counts)
-    {
-        for (unsigned point : {4U, 5U, 6U, 8U, 9U, 10U})
-            addPointCounts(counts[point]);
-    };
-
-    const auto countByNumber = [&](auto isWin)
-    {
-        for (unsigned number = 2; number <= 12; ++number)
-        {
-            const unsigned count = stats.numberCounts[number].count();
-
-            if (isWin(number))
-                result.wins += count;
-            else
-                result.losses += count;
-        }
-    };
-
-    switch (betName)
-    {
-    case BetName::PassLine:
-        if (pivot != 0)
-        {
-            if (pivot < stats.passPntCnts.size())
-                addPointCounts(stats.passPntCnts[pivot]);
-        }
-        else
-        {
-            result.wins   += stats.passWinsComeOut.count();
-            result.losses += stats.passLoseComeOut.count();
-            addAllPointCounts(stats.passPntCnts);
-        }
-        break;
-
-    case BetName::DontPass:
-        if (pivot != 0)
-        {
-            if (pivot < stats.dontPassPntCnts.size())
-                addPointCounts(stats.dontPassPntCnts[pivot]);
-        }
-        else
-        {
-            result.wins   += stats.dontPassWinsComeOut.count();
-            result.losses += stats.dontPassLoseComeOut.count();
-            addAllPointCounts(stats.dontPassPntCnts);
-        }
-        break;
-
-    case BetName::Come:
-        if (pivot != 0)
-        {
-            if (pivot < stats.comePntCnts.size())
-                addPointCounts(stats.comePntCnts[pivot]);
-        }
-        else
-        {
-            result.wins   += stats.comeWinsComeOut.count();
-            result.losses += stats.comeLoseComeOut.count();
-            addAllPointCounts(stats.comePntCnts);
-        }
-        break;
-
-    case BetName::DontCome:
-        if (pivot != 0)
-        {
-            if (pivot < stats.dontComePntCnts.size())
-                addPointCounts(stats.dontComePntCnts[pivot]);
-        }
-        else
-        {
-            result.wins   += stats.dontComeWinsComeOut.count();
-            result.losses += stats.dontComeLoseComeOut.count();
-            addAllPointCounts(stats.dontComePntCnts);
-        }
-        break;
-
-    case BetName::Place:
-    case BetName::Buy:
-    case BetName::Lay:
-        if (pivot >= 2 && pivot <= 12 && pivot != 7)
-        {
-            result.wins   = stats.numberCounts[pivot].count();
-            result.losses = stats.numberCounts[7].count();
-        }
-        break;
-
-    case BetName::Hardway:
-        if (pivot < stats.hardwayCounts.size())
-            addPointCounts(stats.hardwayCounts[pivot]);
-        break;
-
-    case BetName::Field:
-        result.wins   = stats.fieldBetWins.count();
-        result.losses = stats.fieldBetLose.count();
-        break;
-
-    case BetName::AnyCraps:
-        countByNumber([](unsigned n)
-        {
-            return n == 2 || n == 3 || n == 12;
-        });
-        break;
-
-    case BetName::AnySeven:
-        countByNumber([](unsigned n)
-        {
-            return n == 7;
-        });
-        break;
-
-    case BetName::CandE:
-    case BetName::Horn:
-        countByNumber([](unsigned n)
-        {
-            return n == 2 || n == 3 || n == 11 || n == 12;
-        });
-        break;
-
-    case BetName::World:
-        countByNumber([](unsigned n)
-        {
-            return n == 2 || n == 3 || n == 7 || n == 11 || n == 12;
-        });
-        break;
-
-    default:
-        break;
-    }
-
-    return result;
-}
-
-//----------------------------------------------------------------
-
 struct BetProfile
 {
     double houseEdgePct = -1.0;
@@ -855,24 +649,24 @@ DialogBetAmount::drawStatistics()
 {
     Craps::PlayerStats playerStats;
     CuiUtils::getUserPlayerStats(playerStats);
-    const auto& stats = playerStats.betStats.byBet;
+    const auto& betStats = playerStats.betStats;
 
     Craps::TableStats tableStats;
     CuiUtils::getActiveTableStats(tableStats);
 
     const auto& cb = CarrierBet::instance();  // shorthand
-    const std::string key = betStatsKey(cb.getBetName(), cb.getPivot());
-    const bool aggregateByPrefix = cb.getPivot() == 0 &&
-                                   isRollOutcomeBet(cb.getBetName());
 
-    Craps::BetStat     playerWins;
-    Craps::BetStat     playerLosses;
-    SimulatedBetCounts simulated;
-    
-    playerWins   = findBetStat(stats, key, aggregateByPrefix, true);
-    playerLosses = findBetStat(stats, key, aggregateByPrefix, false);
-    simulated    = simulatedBetCounts(tableStats.rollStats,
-                                      cb.getBetName(), cb.getPivot());
+    // A bet with a pivot (PassLine6, Come8, Place5, ...) shows just that
+    // point. Otherwise show every decision for the bet: come out decisions
+    // plus all point decisions, or the overall total for one roll bets.
+    const Craps::BetOutcomeStats outcome = cb.getPivot() != 0
+        ? betStats.tallyPoint(cb.getBetName(), cb.getPivot())
+        : betStats.tally(cb.getBetName(), Craps::BetScope::All);
+
+    const Craps::BetStat& playerWins   = outcome.wins;
+    const Craps::BetStat& playerLosses = outcome.losses;
+    const Craps::WinLossCounts simulated =
+        tableStats.rollStats.simulatedCounts(cb.getBetName(), cb.getPivot());
 
     const unsigned playerCount        = playerWins.count + playerLosses.count;
     const unsigned simulatedCount     = simulated.wins + simulated.losses;

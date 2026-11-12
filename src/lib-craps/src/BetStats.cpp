@@ -8,13 +8,57 @@
 
 using namespace Craps;
 
+namespace
+{
+std::string
+statsName(BetName name)
+{
+    std::string s = EnumBetName::toString(name);
+    return s == "CandE" ? "C&E" : s;
+}
+
+bool
+isRollBet(BetName name)
+{
+    return name == BetName::Field    || name == BetName::AnyCraps ||
+           name == BetName::AnySeven || name == BetName::CandE    ||
+           name == BetName::Horn     || name == BetName::World;
+}
+
+constexpr unsigned PointNumbers[] = {4, 5, 6, 8, 9, 10};
+
+// Entry name for a roll dependent bet when a given number was rolled.
+//
+// Field already records per number: CrapsBet::evalField sets the pivot to
+// the number rolled, so expandBetName() yields Field2 .. Field12.
+// The other one roll bets keep a pivot of 0 and an overall entry
+// (e.g. "Horn"), so they get an additional entry named Horn@11.
+// The '@' keeps these from looking like point entries (Horn4, Horn10).
+std::string
+rollEntryName(BetName name, unsigned roll)
+{
+    return statsName(name) + (name == BetName::Field ? "" : "@") +
+           std::to_string(roll);
+}
+
+// Extra per number entry to record, or empty when none is needed.
+std::string
+rollBetName(const CrapsBet& bet, unsigned roll)
+{
+    if (roll < 2 || roll > 12 || !isRollBet(bet.betName()) ||
+        bet.betName() == BetName::Field)
+        return {};
+    return rollEntryName(bet.betName(), roll);
+}
+} // namespace
+
 /*-----------------------------------------------------------*//**
 
 Record a winning bet.
 
 */
 void
-BetStats::recordWin(const CrapsBet& bet, Gen::Money amtWin)
+BetStats::recordWin(const CrapsBet& bet, Gen::Money amtWin, unsigned roll)
 {
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
@@ -24,6 +68,14 @@ BetStats::recordWin(const CrapsBet& bet, Gen::Money amtWin)
     byBet[betName].wins.amountBet   += amtBet;
     byBet[betName].wins.amount      += amtWin;
     byBet[betName].wins.totDistance += bet.distance();
+    if (const std::string rollKey = rollBetName(bet, roll); !rollKey.empty())
+    {
+        auto& w = byBet[rollKey].wins;
+        w.count++;
+        w.amountBet   += amtBet;
+        w.amount      += amtWin;
+        w.totDistance += bet.distance();
+    }
 
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;
@@ -49,7 +101,7 @@ Record a losing bet.
 
 */
 void
-BetStats::recordLose(const CrapsBet& bet, Gen::Money amtLose)
+BetStats::recordLose(const CrapsBet& bet, Gen::Money amtLose, unsigned roll)
 {
     unsigned amtBet = bet.contractAmount() + bet.oddsAmount();
     recordCommon(amtBet);
@@ -59,6 +111,14 @@ BetStats::recordLose(const CrapsBet& bet, Gen::Money amtLose)
     byBet[betName].losses.amountBet   += amtBet;
     byBet[betName].losses.amount      += amtLose;
     byBet[betName].losses.totDistance += bet.distance();
+    if (const std::string rollKey = rollBetName(bet, roll); !rollKey.empty())
+    {
+        auto& l = byBet[rollKey].losses;
+        l.count++;
+        l.amountBet   += amtBet;
+        l.amount      += amtLose;
+        l.totDistance += bet.distance();
+    }
 
     totNumBetsAllBets++;
     totAmtAllBets += amtBet;
@@ -354,14 +414,111 @@ AmtBets::fromYAML(const YAML::Node& node)
 std::string
 BetStats::expandBetName(const CrapsBet& bet) const
 {
-    std::string betName = EnumBetName::toString(bet.betName());
-    if (betName == "CandE")
-        betName = "C&E";
+    std::string betName = statsName(bet.betName());
     if (bet.pivot() != 0)
     {
         betName += std::to_string(bet.pivot());
     }
     return betName;
+}
+
+//-----------------------------------------------------------------
+//
+// Sum recorded outcomes for one bet name.
+//
+//   ComeOut -> the entry with no pivot ("PassLine")
+//   Points  -> entries with a pivot ("PassLine4" ... "PassLine10")
+//   All     -> both
+//
+// Roll dependent bets (Field, Horn, ...) have only the no-pivot entry,
+// which is their overall total; use tallyRoll() for a single number.
+//
+BetOutcomeStats
+BetStats::tally(BetName name, BetScope scope) const
+{
+    BetOutcomeStats result;
+    const std::string base = statsName(name);
+
+    if (name == BetName::Field)
+    {
+        // Field is recorded per number rolled (Field2 .. Field12). Scope
+        // has no meaning for it, always return the total.
+        if (const auto it = byBet.find(base); it != byBet.end())
+            result.merge(it->second);
+        for (unsigned roll = 2; roll <= 12; ++roll)
+            if (const auto it = byBet.find(base + std::to_string(roll));
+                it != byBet.end())
+                result.merge(it->second);
+        return result;
+    }
+
+    if (isRollBet(name))
+    {
+        // Other one roll bets only have the overall entry.
+        if (const auto it = byBet.find(base); it != byBet.end())
+            result.merge(it->second);
+        return result;
+    }
+
+    if (scope != BetScope::Points)
+        if (const auto it = byBet.find(base); it != byBet.end())
+            result.merge(it->second);
+
+    if (scope != BetScope::ComeOut)
+        for (const unsigned point : PointNumbers)
+            if (const auto it = byBet.find(base + std::to_string(point));
+                it != byBet.end())
+                result.merge(it->second);
+    return result;
+}
+
+//-----------------------------------------------------------------
+//
+// Outcomes for a bet with the given point/pivot, e.g. PassLine6.
+//
+BetOutcomeStats
+BetStats::tallyPoint(BetName name, unsigned point) const
+{
+    if (const auto it = byBet.find(statsName(name) + std::to_string(point));
+        it != byBet.end())
+        return it->second;
+    return {};
+}
+
+//-----------------------------------------------------------------
+//
+// Outcomes of a roll dependent bet when a particular number was rolled,
+// e.g. Field wins on 2 or Field losses on 7.
+//
+BetOutcomeStats
+BetStats::tallyRoll(BetName name, unsigned roll) const
+{
+    if (!isRollBet(name))
+        return {};
+    if (const auto it = byBet.find(rollEntryName(name, roll));
+        it != byBet.end())
+        return it->second;
+    return {};
+}
+
+//-----------------------------------------------------------------
+
+BetOutcomeStats
+BetStats::tallyDoSide(BetScope scope) const
+{
+    BetOutcomeStats result = tally(BetName::PassLine, scope);
+    result.merge(tally(BetName::Come, scope));
+    return result;
+}
+
+//-----------------------------------------------------------------
+
+BetOutcomeStats
+BetStats::tallyDontSide(BetScope scope) const
+{
+    BetOutcomeStats result = tally(BetName::DontPass, scope);
+    result.merge(tally(BetName::DontCome, scope));
+    return result;
 }
 
 //-----------------------------------------------------------------

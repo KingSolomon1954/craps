@@ -8,6 +8,7 @@
 
 #include <array>
 #include <map>
+#include <craps/EnumBetName.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Craps {
@@ -40,6 +41,15 @@ struct PointCounts
     YAML::Node toYAML() const;
     void fromYAML(const YAML::Node& node);
     bool operator==(const PointCounts&) const = default;  // Only generates ==
+};
+
+//----------------------------------------------------------------
+
+// Number of times a bet type would have won/lost given the rolls seen.
+struct WinLossCounts
+{
+    unsigned wins   = 0;
+    unsigned losses = 0;
 };
 
 //----------------------------------------------------------------
@@ -77,6 +87,7 @@ public:
     Counter elevensOnComeOutRoll;
     Counter twelvesOnComeOutRoll;
     Counter crapsOnComeOutRoll;
+    WinLossCounts simulatedCounts(BetName name, unsigned pivot = 0) const;
     void reset();
     void merge(const RollStats& session);
     YAML::Node toYAML() const;
