@@ -9,10 +9,10 @@ Player:
     refillThreshold: 15000
     refillAmount: 20000
     bankStats:
-      numDeposits: 17
-      amtDeposited: 305
-      numWithdrawals: 69
-      amtWithdrawn: 588
+      numDeposits: 20
+      amtDeposited: 365
+      numWithdrawals: 86
+      amtWithdrawn: 673
       numRefills: 0
       amtRefilled: 0
       maxAmtDepositedSession: 210
@@ -22,14 +22,14 @@ Player:
   BetStats:
     overall:
       bets:
-        count: 47
-        wins: 12
-        losses: 35
+        count: 64
+        wins: 15
+        losses: 49
         kept: 59
       amounts:
-        bet: 553
-        won: 154
-        lost: 437
+        bet: 638
+        won: 199
+        lost: 507
         kept: 895
       maximums:
         bet: 20
@@ -37,6 +37,156 @@ Player:
         loss: 20
         kept: 20
     byBet:
+      Any711:
+        wins:
+          count: 3
+          totDistance: 3
+          amount: 45
+          amountBet: 15
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 14
+          totDistance: 14
+          amount: 70
+          amountBet: 70
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@10:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 2
+          totDistance: 2
+          amount: 10
+          amountBet: 10
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@11:
+        wins:
+          count: 1
+          totDistance: 1
+          amount: 15
+          amountBet: 5
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@2:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 1
+          totDistance: 1
+          amount: 5
+          amountBet: 5
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@3:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 1
+          totDistance: 1
+          amount: 5
+          amountBet: 5
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@4:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 2
+          totDistance: 2
+          amount: 10
+          amountBet: 10
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@5:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 1
+          totDistance: 1
+          amount: 5
+          amountBet: 5
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@6:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 5
+          totDistance: 5
+          amount: 25
+          amountBet: 25
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@7:
+        wins:
+          count: 2
+          totDistance: 2
+          amount: 30
+          amountBet: 10
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@8:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 2
+          totDistance: 2
+          amount: 10
+          amountBet: 10
+          oddsBet: 0
+          oddsAmount: 0
       AnyCraps:
         wins:
           count: 1
@@ -1284,32 +1434,32 @@ Player:
           oddsAmount: 0
     rollActivity:
       betsEvaluated:
-        allRolls: 106
+        allRolls: 123
         busiestRoll: 6
       betsWon:
-        allRolls: 12
+        allRolls: 15
         busiestRoll: 1
       betsLost:
-        allRolls: 35
+        allRolls: 49
         busiestRoll: 5
       betsKept:
         allRolls: 59
         busiestRoll: 5
       amounts:
         evaluated:
-          allRolls: 1448
+          allRolls: 1533
           busiestRoll: 100
         won:
-          allRolls: 154
+          allRolls: 199
           busiestRoll: 35
         lost:
-          allRolls: 437
+          allRolls: 507
           busiestRoll: 90
         kept:
           allRolls: 895
           busiestRoll: 80
   SessionStats:
-    numSessionsAlltime: 11
+    numSessionsAlltime: 12
     firstSessionDate: 2025-06-25T14:30:00.000000000
     longestSessionAlltime: 0d 04:17:54
     history:
@@ -1379,6 +1529,12 @@ Player:
         numPlayers: 1
         date: 2026-11-13T00:09:05.275613424
         duration: 0d 00:00:02
+      - numBets: 17
+        amtIntake: 60
+        amtPayout: 85
+        numPlayers: 1
+        date: 2026-11-13T11:00:35.264831593
+        duration: 0d 00:06:34
 Prefs:
   LastFills:
     - betName: PassLine
@@ -1526,6 +1682,10 @@ Prefs:
       isOddsBet: false
       amount: 5
     - betName: World
+      pivot: 0
+      isOddsBet: false
+      amount: 5
+    - betName: Any711
       pivot: 0
       isOddsBet: false
       amount: 5

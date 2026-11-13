@@ -31,7 +31,7 @@ public:
         Buy4,      Buy5,      Buy6,      Buy8,      Buy9,      Buy10,
         Lay4,      Lay5,      Lay6,      Lay8,      Lay9,      Lay10,
         Hard4,     Hard6,     Hard8,     Hard10,    Field,
-        AnyCraps,  CandE,     Horn,      Any7,      World,
+        AnyCraps,  CandE,     Horn,      Any7,      Any711,    World,
         Come,      DontCome,
         PassLine,  PassLineOdds,
         DontPass,  DontPassOdds

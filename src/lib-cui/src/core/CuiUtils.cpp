@@ -331,6 +331,8 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
 
         case BetName::AnySeven: return CuiBetName::Any7;
 
+        case BetName::Any711: return CuiBetName::Any711;
+
         case BetName::Horn: return CuiBetName::Horn;
 
         case BetName::World: return CuiBetName::World;

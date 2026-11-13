@@ -3098,3 +3098,24 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:payout-compatible wager limits"
 }
 
 //----------------------------------------------------------------
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Any711 pays 3 to 1 on 7 and 11")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::Any711, 5, 0));
+    t.testRollDice(3, 4);                       // 7: wins
+    REQUIRE(p1->testMakeBet(BetName::Any711, 5, 0));
+    t.testRollDice(5, 6);                       // 11: wins
+    REQUIRE(p1->testMakeBet(BetName::Any711, 5, 0));
+    t.testRollDice(1, 3);                       // 4: loses
+
+    const auto& bs = p1->getCurrentStats().betStats;
+    CHECK(bs.tally(BetName::Any711).wins.count   == 2);
+    CHECK(bs.tally(BetName::Any711).wins.amount  == 30);
+    CHECK(bs.tally(BetName::Any711).losses.count == 1);
+    CHECK(bs.tally(BetName::Any711).losses.amount == 5);
+}

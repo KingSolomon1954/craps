@@ -567,6 +567,13 @@ RollStats::simulatedCounts(BetName betName, unsigned pivot) const
         });
         break;
 
+    case BetName::Any711:
+        countByNumber([](unsigned n)
+        {
+            return NaturalNums.contains(n);
+        });
+        break;
+
     case BetName::CandE:
     case BetName::Horn:
         countByNumber([](unsigned n)

@@ -75,7 +75,7 @@ private:
         int col;
     };
 
-    std::array<BetLabel, 44> labels_{
+    std::array<BetLabel, 45> labels_{
         "PassLine",    2, 1,
         "Come",        3, 1,
         "Come4",       4, 1,
@@ -103,8 +103,11 @@ private:
         "Hard6",       9, 26,
         "Hard8",      10, 26,
         "Hard10",     11, 26,
-        "C&E",        12, 26,
-        "Field",      13, 26,
+        "Field",      12, 26,
+        "C&E",        13, 26,
+        "AnyC",       14, 26,
+        "Any7",       15, 26,
+        "Any711",     16, 26,
             
         "Buy4",        2, 49,
         "Buy5",        3, 49,
@@ -118,10 +121,8 @@ private:
         "Lay8",       11, 49,
         "Lay9",       12, 49,
         "Lay10",      13, 49,
-        "AnyC",       14, 49,
-        "Any7",       15, 49,
-        "Horn",       16, 49,
-        "World",      17, 49
+        "Horn",       14, 49,
+        "World",      15, 49
     };
 
     enum class BetState
@@ -188,7 +189,7 @@ private:
         }};
     }
     
-    std::array<Bet, 44> bets_
+    std::array<Bet, 45> bets_
     {{
         { CuiUtils::CuiBetName::PassLine,    2, detailSection1() },
         { CuiUtils::CuiBetName::Come,        3, detailSection1() },
@@ -217,8 +218,11 @@ private:
         { CuiUtils::CuiBetName::Hard6,       9, detailSection2() },
         { CuiUtils::CuiBetName::Hard8,      10, detailSection2() },
         { CuiUtils::CuiBetName::Hard10,     11, detailSection2() },
-        { CuiUtils::CuiBetName::CandE,      12, detailSection2() },
-        { CuiUtils::CuiBetName::Field,      13, detailSection2() },
+        { CuiUtils::CuiBetName::Field,      12, detailSection2() },
+        { CuiUtils::CuiBetName::CandE,      13, detailSection2() },
+        { CuiUtils::CuiBetName::AnyCraps,   14, detailSection2() },
+        { CuiUtils::CuiBetName::Any7,       15, detailSection2() },
+        { CuiUtils::CuiBetName::Any711,     16, detailSection2() },
 
         { CuiUtils::CuiBetName::Buy4,        2, detailSection3() },
         { CuiUtils::CuiBetName::Buy5,        3, detailSection3() },
@@ -232,10 +236,8 @@ private:
         { CuiUtils::CuiBetName::Lay8,       11, detailSection3() },
         { CuiUtils::CuiBetName::Lay9,       12, detailSection3() },
         { CuiUtils::CuiBetName::Lay10,      13, detailSection3() },
-        { CuiUtils::CuiBetName::AnyCraps,   14, detailSection3() },
-        { CuiUtils::CuiBetName::Any7,       15, detailSection3() },
-        { CuiUtils::CuiBetName::Horn,       16, detailSection3() },
-        { CuiUtils::CuiBetName::World,      17, detailSection3() }
+        { CuiUtils::CuiBetName::Horn,       14, detailSection3() },
+        { CuiUtils::CuiBetName::World,      15, detailSection3() }
     }};
 
     struct OldBet

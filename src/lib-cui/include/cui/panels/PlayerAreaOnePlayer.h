@@ -102,7 +102,7 @@ private:
         int col;
     };
 
-    std::array<BetLabel, 27> labels_{
+    std::array<BetLabel, 28> labels_{
         "4",         0, 13,
         "5",         0, 23,
         "6",         0, 33,
@@ -119,10 +119,11 @@ private:
         "Hardways",  8, 1,
         "Field",    10, 32,
         "2  3  4  9  10  11  12", 11, 24,
-        "AnyCraps", 14, 1,
-        "C&E",      14, 29,
+        "C&E",      14, 1,
+        "Any7",     14, 29,
         "Horn",     14, 54,
-        "Any7",     15, 1,
+        "AnyCraps", 15, 1,
+        "Any711",   15, 29,
         "World",    15, 54,
         "Come",     17, 1,
         "DontCome", 17, 37,
@@ -141,7 +142,7 @@ private:
         Gen::Money amount = 0;
     };
 
-    std::array<Bet, 58> bets_{
+    std::array<Bet, 59> bets_{
         0, CuiUtils::CuiBetName::Place4,        1, 10, 0,
         0, CuiUtils::CuiBetName::Place5,        1, 20, 0,
         0, CuiUtils::CuiBetName::Place6,        1, 30, 0,
@@ -189,10 +190,11 @@ private:
         0, CuiUtils::CuiBetName::Hard8,         8, 40, 0,
         0, CuiUtils::CuiBetName::Hard10,        8, 60, 0,
         0, CuiUtils::CuiBetName::Field,        12, 31, 0,
-        0, CuiUtils::CuiBetName::AnyCraps,     14, 10, 0,
-        0, CuiUtils::CuiBetName::CandE,        14, 33, 0,
+        0, CuiUtils::CuiBetName::CandE,        14, 10, 0,
+        0, CuiUtils::CuiBetName::Any7,         14, 36, 0,
         0, CuiUtils::CuiBetName::Horn,         14, 60, 0,
-        0, CuiUtils::CuiBetName::Any7,         15, 10, 0,
+        0, CuiUtils::CuiBetName::AnyCraps,     15, 10, 0,
+        0, CuiUtils::CuiBetName::Any711,       15, 36, 0,
         0, CuiUtils::CuiBetName::World,        15, 60, 0,
         0, CuiUtils::CuiBetName::Come,         17, 10, 0,
         0, CuiUtils::CuiBetName::DontCome,     17, 46, 0,

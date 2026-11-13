@@ -37,6 +37,21 @@ Player:
         loss: 0
         kept: 0
     byBet:
+      Any711:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
       AnyCraps:
         wins:
           count: 0
@@ -1114,7 +1129,7 @@ Player:
           allRolls: 0
           busiestRoll: 0
   SessionStats:
-    numSessionsAlltime: 14
+    numSessionsAlltime: 15
     firstSessionDate: 2026-09-13T06:34:03.246000351
     longestSessionAlltime: 0d 00:26:44
     history:
@@ -1202,6 +1217,12 @@ Player:
         numPlayers: 1
         date: 2026-11-13T00:09:05.372874802
         duration: 0d 00:00:02
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-13T11:00:35.365228929
+        duration: 0d 00:06:34
 Prefs:
   LastFills:
     []

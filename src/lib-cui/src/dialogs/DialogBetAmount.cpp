@@ -189,6 +189,8 @@ profileFor(BetName name, unsigned pivot)
         p = {11.1111, 11.1111, 0, 0, "Loses on all other rolls", "Wins on 2, 3, 12"};
     else if (name == BetName::AnySeven)
         p = {16.6667, 16.6667, 0, 0, "Loses on all other rolls", "Wins on 7"};
+    else if (name == BetName::Any711)
+        p = {11.1111, 22.2222, 0, 0, "Loses on all other rolls", "Wins on 7 or 11"};
     else if (name == BetName::CandE)
         p = {2.7778, 16.6667, 0, 0, "Loses on all other rolls", "Wins on craps or 11"};
     else if (name == BetName::Horn)
@@ -394,6 +396,14 @@ static constexpr RefArray AnySeven{
     "Bet resolves on the next roll",
     "Can be bet before any roll"
 };
+static constexpr RefArray Any711{
+    "Pays 3:1. House Edge depends on table payout",
+    "Wins on 7 or 11",
+    "Loses on every other roll",
+    "$1 bet -> $3 profit; $4 total returned",
+    "Bet resolves on the next roll",
+    "Can be bet before any roll"
+};
 static constexpr RefArray CandE{
     "Craps & Eleven pays depend on table rules",
     "Wins on craps (2,3,12) or 11",
@@ -444,6 +454,7 @@ referenceFor(BetName name, unsigned pivot, bool oddsBet)
     case BetName::Field:    return Field;
     case BetName::AnyCraps: return AnyCraps;
     case BetName::AnySeven: return AnySeven;
+    case BetName::Any711:   return Any711;
     case BetName::CandE:    return CandE;
     case BetName::Horn:     return Horn;
     case BetName::World:    return World;

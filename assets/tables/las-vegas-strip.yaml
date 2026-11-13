@@ -49,6 +49,10 @@ Table:
         minimum: 5
         maximum: 1000
         increment: 1
+      Any711:
+        minimum: 5
+        maximum: 1000
+        increment: 1
       "C&E":
         minimum: 2
         maximum: 2000
@@ -158,10 +162,10 @@ Table:
     refillThreshold: 1500000
     refillAmount: 2000000
     bankStats:
-      numDeposits: 35
-      amtDeposited: 437
-      numWithdrawals: 12
-      amtWithdrawn: 154
+      numDeposits: 49
+      amtDeposited: 507
+      numWithdrawals: 15
+      amtWithdrawn: 199
       numRefills: 0
       amtRefilled: 0
       maxAmtDepositedSession: 380
@@ -171,14 +175,14 @@ Table:
   BetStats:
     overall:
       bets:
-        count: 47
-        wins: 12
-        losses: 35
+        count: 64
+        wins: 15
+        losses: 49
         kept: 59
       amounts:
-        bet: 553
-        won: 154
-        lost: 437
+        bet: 638
+        won: 199
+        lost: 507
         kept: 895
       maximums:
         bet: 20
@@ -186,6 +190,156 @@ Table:
         loss: 20
         kept: 20
     byBet:
+      Any711:
+        wins:
+          count: 3
+          totDistance: 3
+          amount: 45
+          amountBet: 15
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 14
+          totDistance: 14
+          amount: 70
+          amountBet: 70
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@10:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 2
+          totDistance: 2
+          amount: 10
+          amountBet: 10
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@11:
+        wins:
+          count: 1
+          totDistance: 1
+          amount: 15
+          amountBet: 5
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@2:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 1
+          totDistance: 1
+          amount: 5
+          amountBet: 5
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@3:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 1
+          totDistance: 1
+          amount: 5
+          amountBet: 5
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@4:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 2
+          totDistance: 2
+          amount: 10
+          amountBet: 10
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@5:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 1
+          totDistance: 1
+          amount: 5
+          amountBet: 5
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@6:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 5
+          totDistance: 5
+          amount: 25
+          amountBet: 25
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@7:
+        wins:
+          count: 2
+          totDistance: 2
+          amount: 30
+          amountBet: 10
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+      Any711@8:
+        wins:
+          count: 0
+          totDistance: 0
+          amount: 0
+          amountBet: 0
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
+          count: 2
+          totDistance: 2
+          amount: 10
+          amountBet: 10
+          oddsBet: 0
+          oddsAmount: 0
       AnyCraps:
         wins:
           count: 1
@@ -1433,26 +1587,26 @@ Table:
           oddsAmount: 0
     rollActivity:
       betsEvaluated:
-        allRolls: 106
+        allRolls: 123
         busiestRoll: 6
       betsWon:
-        allRolls: 12
+        allRolls: 15
         busiestRoll: 1
       betsLost:
-        allRolls: 35
+        allRolls: 49
         busiestRoll: 5
       betsKept:
         allRolls: 59
         busiestRoll: 5
       amounts:
         evaluated:
-          allRolls: 1448
+          allRolls: 1533
           busiestRoll: 100
         won:
-          allRolls: 154
+          allRolls: 199
           busiestRoll: 35
         lost:
-          allRolls: 437
+          allRolls: 507
           busiestRoll: 90
         kept:
           allRolls: 895
@@ -1460,34 +1614,34 @@ Table:
   RollStats:
     numberCounts:
       2:
-        count: 1
+        count: 2
         maxRepeats: 0
       3:
-        count: 2
+        count: 3
         maxRepeats: 0
       4:
-        count: 4
-        maxRepeats: 0
+        count: 6
+        maxRepeats: 1
       5:
-        count: 2
+        count: 3
         maxRepeats: 0
       6:
-        count: 5
+        count: 10
         maxRepeats: 1
       7:
-        count: 8
+        count: 10
         maxRepeats: 2
       8:
-        count: 3
+        count: 5
         maxRepeats: 0
       9:
         count: 4
         maxRepeats: 0
       10:
-        count: 5
+        count: 7
         maxRepeats: 0
       11:
-        count: 1
+        count: 2
         maxRepeats: 0
       12:
         count: 0
@@ -1497,19 +1651,19 @@ Table:
         count: 2
         maxRepeats: 0
       5:
-        count: 1
+        count: 2
         maxRepeats: 0
       6:
-        count: 1
+        count: 2
         maxRepeats: 0
       8:
-        count: 2
+        count: 3
         maxRepeats: 0
       9:
         count: 1
         maxRepeats: 0
       10:
-        count: 3
+        count: 4
         maxRepeats: 0
     passPntCnts:
       4:
@@ -1524,18 +1678,18 @@ Table:
           count: 0
           maxRepeats: 0
         lose:
-          count: 0
+          count: 1
           maxRepeats: 0
       6:
         wins:
-          count: 1
+          count: 2
           maxRepeats: 0
         lose:
           count: 0
           maxRepeats: 0
       8:
         wins:
-          count: 0
+          count: 1
           maxRepeats: 0
         lose:
           count: 2
@@ -1552,7 +1706,7 @@ Table:
           count: 0
           maxRepeats: 0
         lose:
-          count: 2
+          count: 3
           maxRepeats: 1
     dontPassPntCnts:
       4:
@@ -1564,7 +1718,7 @@ Table:
           maxRepeats: 0
       5:
         wins:
-          count: 0
+          count: 1
           maxRepeats: 0
         lose:
           count: 0
@@ -1574,14 +1728,14 @@ Table:
           count: 0
           maxRepeats: 0
         lose:
-          count: 1
+          count: 2
           maxRepeats: 0
       8:
         wins:
           count: 2
           maxRepeats: 0
         lose:
-          count: 0
+          count: 1
           maxRepeats: 0
       9:
         wins:
@@ -1592,7 +1746,7 @@ Table:
           maxRepeats: 0
       10:
         wins:
-          count: 2
+          count: 3
           maxRepeats: 1
         lose:
           count: 0
@@ -1600,10 +1754,10 @@ Table:
     comePntCnts:
       4:
         wins:
-          count: 1
+          count: 2
           maxRepeats: 0
         lose:
-          count: 1
+          count: 2
           maxRepeats: 0
       5:
         wins:
@@ -1614,10 +1768,10 @@ Table:
           maxRepeats: 0
       6:
         wins:
-          count: 4
+          count: 7
           maxRepeats: 1
         lose:
-          count: 4
+          count: 5
           maxRepeats: 0
       8:
         wins:
@@ -1643,10 +1797,10 @@ Table:
     dontComePntCnts:
       4:
         wins:
-          count: 1
+          count: 2
           maxRepeats: 0
         lose:
-          count: 1
+          count: 2
           maxRepeats: 0
       5:
         wins:
@@ -1657,10 +1811,10 @@ Table:
           maxRepeats: 0
       6:
         wins:
-          count: 4
+          count: 5
           maxRepeats: 0
         lose:
-          count: 4
+          count: 7
           maxRepeats: 1
       8:
         wins:
@@ -1689,82 +1843,82 @@ Table:
           count: 2
           maxRepeats: 0
         lose:
-          count: 10
+          count: 14
           maxRepeats: 5
       6:
         wins:
           count: 1
           maxRepeats: 0
         lose:
-          count: 12
+          count: 19
           maxRepeats: 8
       8:
         wins:
           count: 0
           maxRepeats: 0
         lose:
-          count: 11
+          count: 15
           maxRepeats: 8
       10:
         wins:
-          count: 1
+          count: 2
           maxRepeats: 0
         lose:
-          count: 12
+          count: 15
           maxRepeats: 8
     hardwayEasyCounts:
       4:
-        count: 2
-        maxRepeats: 0
-      6:
         count: 4
         maxRepeats: 1
+      6:
+        count: 9
+        maxRepeats: 2
       8:
-        count: 3
-        maxRepeats: 0
+        count: 5
+        maxRepeats: 1
       10:
-        count: 4
+        count: 5
         maxRepeats: 0
     hardwaySevenCounts:
       4:
-        count: 8
+        count: 10
         maxRepeats: 5
       6:
-        count: 8
+        count: 10
         maxRepeats: 4
       8:
-        count: 8
+        count: 10
         maxRepeats: 4
       10:
-        count: 8
+        count: 10
         maxRepeats: 2
     pointNumberCounts:
       2:
         count: 1
         maxRepeats: 0
       3:
-        count: 2
+        count: 3
         maxRepeats: 0
       4:
-        count: 2
-        maxRepeats: 0
+        count: 4
+        maxRepeats: 1
       5:
         count: 1
         maxRepeats: 0
       6:
-        count: 4
-        maxRepeats: 0
+        count: 8
+        maxRepeats: 1
       7:
-        count: 6
+        count: 8
         maxRepeats: 0
       8:
-        count: 1
+        count: 2
         maxRepeats: 0
       9:
         count: 3
         maxRepeats: 0
       10:
-        count: 2
+        count: 3
         maxRepeats: 0
       11:
         count: 1
@@ -1772,52 +1926,52 @@ Table:
       12:
         count: 0
         maxRepeats: 0
-    numRolls: 35
-    numPointsEstablished: 18
+    numRolls: 52
+    numPointsEstablished: 22
     comeOutRolls:
-      count: 12
+      count: 18
       maxRepeats: 2
     pointRolls:
-      count: 23
+      count: 34
       maxRepeats: 6
     passWinsComeOut:
-      count: 2
+      count: 3
       maxRepeats: 1
     passLoseComeOut:
-      count: 0
+      count: 1
       maxRepeats: 0
     comeWinsComeOut:
-      count: 7
+      count: 9
       maxRepeats: 3
     comeLoseComeOut:
-      count: 3
+      count: 4
       maxRepeats: 1
     dontPassWinsComeOut:
-      count: 0
+      count: 1
       maxRepeats: 0
     dontPassLoseComeOut:
-      count: 2
-      maxRepeats: 1
-    dontComeWinsComeOut:
       count: 3
       maxRepeats: 1
+    dontComeWinsComeOut:
+      count: 4
+      maxRepeats: 1
     dontComeLoseComeOut:
-      count: 7
+      count: 9
       maxRepeats: 3
     fieldBetWins:
-      count: 17
+      count: 24
       maxRepeats: 2
     fieldBetLose:
-      count: 18
+      count: 28
       maxRepeats: 5
     sevenOuts:
-      count: 6
+      count: 8
       maxRepeats: 2
     shooterCounts:
-      count: 4
+      count: 10
       maxRepeats: 7
     twosOnComeOutRoll:
-      count: 0
+      count: 1
       maxRepeats: 0
     threesOnComeOutRoll:
       count: 0
@@ -1826,16 +1980,16 @@ Table:
       count: 2
       maxRepeats: 1
     elevensOnComeOutRoll:
-      count: 0
+      count: 1
       maxRepeats: 0
     twelvesOnComeOutRoll:
       count: 0
       maxRepeats: 0
     crapsOnComeOutRoll:
-      count: 0
+      count: 1
       maxRepeats: 0
   SessionStats:
-    numSessionsAlltime: 12
+    numSessionsAlltime: 13
     firstSessionDate: 2026-09-13T06:34:17.562100548
     longestSessionAlltime: 0d 00:26:45
     history:
@@ -1911,3 +2065,9 @@ Table:
         numPlayers: 0
         date: 2026-11-13T00:09:05.254920971
         duration: 0d 00:00:02
+      - numBets: 17
+        amtIntake: 70
+        amtPayout: 45
+        numPlayers: 0
+        date: 2026-11-13T11:00:35.242719210
+        duration: 0d 00:06:34

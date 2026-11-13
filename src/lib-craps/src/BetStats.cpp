@@ -21,8 +21,9 @@ bool
 isRollBet(BetName name)
 {
     return name == BetName::Field    || name == BetName::AnyCraps ||
-           name == BetName::AnySeven || name == BetName::CandE    ||
-           name == BetName::Horn     || name == BetName::World;
+           name == BetName::AnySeven || name == BetName::Any711   ||
+           name == BetName::CandE    || name == BetName::Horn      ||
+           name == BetName::World;
 }
 
 
@@ -297,7 +298,7 @@ initializeBetMap(std::map<std::string, BetOutcomeStats>& byBet)
         "PassLine", "Come", "DontPass", "DontCome",
         "Place", "Lay", "Buy",
         "Hardway4", "Hardway6", "Hardway8", "Hardway10",
-        "Field", "AnyCraps", "AnySeven", "C&E", "Horn", "World"
+        "Field", "AnyCraps", "AnySeven", "Any711", "C&E", "Horn", "World"
     })
         byBet.try_emplace(name);
 
@@ -583,6 +584,9 @@ BetStats::classifyRoll(BetName name, unsigned roll)
             ? RollOutcome::CleanWin : RollOutcome::EntireLoss;
     case BetName::AnySeven:
         return roll == 7 ? RollOutcome::CleanWin : RollOutcome::EntireLoss;
+    case BetName::Any711:
+        return NaturalNums.contains(roll)
+            ? RollOutcome::CleanWin : RollOutcome::EntireLoss;
     case BetName::Field:
         return (roll >= 5 && roll <= 8)
             ? RollOutcome::EntireLoss : RollOutcome::CleanWin;

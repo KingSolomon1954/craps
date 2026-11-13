@@ -60,7 +60,7 @@ CrapsTable, allowing the application better freedom of design.
     the pivot to 4,5,6,8,9 or 10 otherwise a std::invalid_argument
     exception is thrown.
 
-    For Field, AnyCraps, AnySeven, C&E, Horn and World bets, the pivot is
+    For Field, AnyCraps, AnySeven, Any711, C&E, Horn and World bets, the pivot is
     unused and internally set to 0.
 
     For PassLine/Come/DontPass/DontCome bets, the caller sets the pivot
@@ -203,6 +203,7 @@ CrapsBet::checkSideBets()
     if (betName_ == BetName::Field    ||
         betName_ == BetName::AnyCraps ||
         betName_ == BetName::AnySeven ||
+        betName_ == BetName::Any711   ||
         betName_ == BetName::CandE    ||
         betName_ == BetName::Horn     ||
         betName_ == BetName::World)
@@ -366,6 +367,7 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         case BetName::Field   : rc = evalField   (point, dice, rules, dr, ep); break;
         case BetName::AnyCraps: rc = evalAnyCraps(point, dice, dr, ep); break;
         case BetName::AnySeven: rc = evalAnySeven(point, dice, dr, ep); break;
+        case BetName::Any711  : rc = evalAny711  (point, dice, dr, ep); break;
         case BetName::CandE   : rc = evalCandE   (point, dice, dr, ep); break;
         case BetName::Horn    : rc = evalHorn    (point, dice, dr, ep); break;
         case BetName::World   : rc = evalWorld   (point, dice, dr, ep); break;
@@ -1120,6 +1122,30 @@ CrapsBet::evalAnySeven(
     if (dice.value() == 7)
     {
         dr.win = contractAmount_ * 4;
+    }
+    else
+    {
+        dr.lose = contractAmount_;
+    }
+    dr.decision = true;
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+CrapsBet::evalAny711(
+    unsigned point,
+    const Dice& dice,
+    DecisionRecord& dr,
+    Gen::ErrorPass& ep)
+{
+    (void) ep; (void) point;  // unused, quiet the compiler
+
+    // Non-standard "naturals" bet: one roll, pays 3:1 on a 7 or 11.
+    if (NaturalNums.contains(dice.value()))
+    {
+        dr.win = contractAmount_ * 3;
     }
     else
     {

@@ -841,7 +841,7 @@ Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
 // returns nullptr. The caller's pivot is treated the way a new bet
 // would be, so "same spot" means what it means at the table:
 //
-// @li Field, AnyCraps, AnySeven, C&E, Horn and World have no pivot.
+// @li Field, AnyCraps, AnySeven, Any711, C&E, Horn and World have no pivot.
 //     CrapsBet forces it to 0 (CrapsBet::checkSideBets()).
 // @li PassLine and DontPass bets take the point as their pivot once
 //     there is one, whether placed before or after it was established
@@ -855,6 +855,7 @@ Player::findBet(BetName betName, unsigned pivot) const
     case BetName::Field:
     case BetName::AnyCraps:
     case BetName::AnySeven:
+    case BetName::Any711:
     case BetName::CandE:
     case BetName::Horn:
     case BetName::World:

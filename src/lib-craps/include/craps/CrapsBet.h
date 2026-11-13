@@ -136,6 +136,11 @@ private:
     Gen::ReturnCode evalAnyCraps(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalAny711(
+        unsigned point,
+        const Dice& dice,
+        DecisionRecord& dr,
+        Gen::ErrorPass& ep);
     Gen::ReturnCode evalAnySeven(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);

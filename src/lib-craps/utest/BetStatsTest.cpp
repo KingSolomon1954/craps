@@ -153,6 +153,27 @@ TEST_CASE_FIXTURE(BetStatsFixture, "BetStats:any seven recorded overall and by n
 
 //----------------------------------------------------------------
 
+TEST_CASE_FIXTURE(BetStatsFixture, "BetStats:any 711 recorded overall and by number")
+{
+    BetStats bs;
+    CrapsBet s1(p1.get(), BetName::Any711, 5);
+    evalAndRecord(bs, s1, 0, 3, 4);                      // 7 wins
+    CrapsBet s2(p1.get(), BetName::Any711, 5);
+    evalAndRecord(bs, s2, 0, 5, 6);                      // 11 wins
+    CrapsBet s3(p1.get(), BetName::Any711, 5);
+    evalAndRecord(bs, s3, 0, 3, 3);                      // 6 loses
+
+    CHECK(bs.tally(BetName::Any711).wins.count           == 2);
+    CHECK(bs.tally(BetName::Any711).wins.amount          == 30);  // 3:1
+    CHECK(bs.tally(BetName::Any711).losses.count         == 1);
+    CHECK(bs.tallyRoll(BetName::Any711, 7).wins.count    == 1);
+    CHECK(bs.tallyRoll(BetName::Any711, 11).wins.count   == 1);
+    CHECK(bs.tallyRoll(BetName::Any711, 6).losses.count  == 1);
+    CHECK(bs.tallyRoll(BetName::Any711, 6).wins.count    == 0);
+}
+
+//----------------------------------------------------------------
+
 TEST_CASE("BetStats:roll dependent entries survive merge")
 {
     BetStats a, b;
@@ -282,6 +303,9 @@ TEST_CASE("BetStats:classifyRoll")
     CHECK(BetStats::classifyRoll(BetName::CandE, 3)    == R::PartialWin);
     CHECK(BetStats::classifyRoll(BetName::CandE, 9)    == R::EntireLoss);
     CHECK(BetStats::classifyRoll(BetName::AnySeven, 7) == R::CleanWin);
+    CHECK(BetStats::classifyRoll(BetName::Any711, 7)   == R::CleanWin);
+    CHECK(BetStats::classifyRoll(BetName::Any711, 11)  == R::CleanWin);
+    CHECK(BetStats::classifyRoll(BetName::Any711, 6)   == R::EntireLoss);
     CHECK(BetStats::classifyRoll(BetName::AnyCraps, 11)== R::EntireLoss);
     CHECK(BetStats::classifyRoll(BetName::Field, 9)    == R::CleanWin);
     CHECK(BetStats::classifyRoll(BetName::Field, 6)    == R::EntireLoss);
