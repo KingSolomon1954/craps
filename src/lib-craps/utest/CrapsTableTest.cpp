@@ -92,8 +92,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:reject null bet pointers")
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collected and refunded on cancellation")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["buyCommission"]["collection"] = "onPlacement";
     rules["buyCommission"]["basis"] = "onWager";
     rules["buyCommission"]["basisPoints"] = 500;
@@ -132,8 +131,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collec
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not charged or refunded twice after a win")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["buyCommission"]["collection"] = "onPlacement";
     rules["buyCommission"]["basis"] = "onWager";
     rules["buyCommission"]["basisPoints"] = 500;
@@ -173,8 +171,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not ch
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: bet amount limits reflect table rules")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["odds"]["maximumWager"] = 37;
     rules["odds"]["wagerIncrement"] = 5;
     rules["aggregates"]["World"]["maximumComponentWager"] = 3;
@@ -199,8 +196,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: bet amount limits reflect tabl
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limit is enforced")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["aggregates"] = YAML::Node(YAML::NodeType::Map);
     rules["aggregates"]["CandE"]["maximumComponentWager"] = 3;
     rules["aggregates"]["World"]["maximumComponentWager"] = 3;
@@ -226,8 +222,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limi
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate potential win limit is enforced")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["aggregates"] = YAML::Node(YAML::NodeType::Map);
     rules["aggregates"]["Horn"]["basis"] = "potentialWin";
     rules["aggregates"]["Horn"]["maximumPotentialWin"] = 200;
@@ -1215,19 +1210,54 @@ tableName: Las Vegas Strip
 shortDescription: A typical table with 5x odds, min $10, max $2,000.
 fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
 Rules:
-  maxOdds: 5
-  minLineBet: 10
-  maxLineBet: 2000
-  minPlaceBet: 5
-  maxPlaceBet: 2000
-  minFieldBet: 1
-  maxFieldBet: 2000
-  minCandEBet: 2
-  maxCandEBet: 2000
-  minHornBet: 4
-  maxHornBet: 2000
-  minWorldBet: 5
-  maxWorldBet: 2000
+  odds:
+    style: flatMultiplier
+    flatMultiplier: 5
+  wagers:
+    "PassLine":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "Come":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "DontPass":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "DontCome":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "Buy":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "Lay":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "Place":
+      minimum: 5
+      maximum: 2000
+      increment: 1
+    "Field":
+      minimum: 1
+      maximum: 2000
+      increment: 1
+    "C&E":
+      minimum: 2
+      maximum: 2000
+      increment: 2
+    "Horn":
+      minimum: 4
+      maximum: 2000
+      increment: 4
+    "World":
+      minimum: 5
+      maximum: 2000
+      increment: 5
 Bank:
   originalStartBalance: 3000000
   sessionStartBalance: 3000000
@@ -3037,7 +3067,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet amount validation")
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:payout-compatible wager limits")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
 
     rules["buyCommission"]["minimum"] = 1;
     rules["layCommission"]["minimum"] = 1;

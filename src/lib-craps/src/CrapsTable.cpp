@@ -99,39 +99,9 @@ CrapsTable::fromYAML(const YAML::Node& node)
 void
 CrapsTable::rulesFromYAML(const YAML::Node& node)
 {
-    // Read the legacy flat keys for existing table files.  The in-memory
-    // representation is now TableRules; the expanded nested YAML format is
-    // introduced separately so old user configurations remain loadable.
-    auto readLimit = [&](BetName name, const char* minKey, const char* maxKey,
-                         Gen::Money defaultMin, Gen::Money defaultMax,
-                         Gen::Money defaultIncrement)
-    {
-        auto& limit = rules_.wagerLimit(name);
-        limit.minimum = node[minKey] ? node[minKey].as<Gen::Money>() : defaultMin;
-        limit.maximum = node[maxKey] ? node[maxKey].as<Gen::Money>() : defaultMax;
-        limit.increment = defaultIncrement;
-    };
-
-    rules_.odds.flatMultiplier = node["maxOdds"] ? node["maxOdds"].as<unsigned>() : 5;
-    rules_.odds.style = TableRules::OddsLimitStyle::FlatMultiplier;
-    readLimit(BetName::PassLine, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::Come, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::DontPass, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::DontCome, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::Buy, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::Lay, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::Place, "minPlaceBet", "maxPlaceBet", 5, 1000, 1);
-    readLimit(BetName::Field, "minFieldBet", "maxFieldBet", 1, 1000, 1);
-    readLimit(BetName::CandE, "minCandEBet", "maxCandEBet", 2, 1000, 2);
-    readLimit(BetName::Horn, "minHornBet", "maxHornBet", 4, 1000, 4);
-    readLimit(BetName::World, "minWorldBet", "maxWorldBet", 5, 1000, 5);
-
-    // New nested rules override legacy defaults when present. Legacy files
-    // remain readable and retain their historical settings.
-    if (node["advanced"])
-        rules_.fromYAML(node["advanced"]);
-    else
-        rules_.validate();
+    // TableRules::fromYAML() throws if the section is missing, and
+    // validates what it read.
+    rules_.fromYAML(node);
 }
 
 //----------------------------------------------------------------
@@ -139,29 +109,7 @@ CrapsTable::rulesFromYAML(const YAML::Node& node)
 YAML::Node
 CrapsTable::rulesToYAML() const
 {
-    // Preserve the established file format during this migration step.
-    YAML::Node node;
-    node["maxOdds"] = rules_.odds.flatMultiplier;
-    const auto& line = rules_.wagerLimit(BetName::PassLine);
-    const auto& place = rules_.wagerLimit(BetName::Place);
-    const auto& field = rules_.wagerLimit(BetName::Field);
-    const auto& cande = rules_.wagerLimit(BetName::CandE);
-    const auto& horn = rules_.wagerLimit(BetName::Horn);
-    const auto& world = rules_.wagerLimit(BetName::World);
-    node["minLineBet"] = line.minimum;
-    node["maxLineBet"] = line.maximum;
-    node["minPlaceBet"] = place.minimum;
-    node["maxPlaceBet"] = place.maximum;
-    node["minFieldBet"] = field.minimum;
-    node["maxFieldBet"] = field.maximum;
-    node["minCandEBet"] = cande.minimum;
-    node["maxCandEBet"] = cande.maximum;
-    node["minHornBet"] = horn.minimum;
-    node["maxHornBet"] = horn.maximum;
-    node["minWorldBet"] = world.minimum;
-    node["maxWorldBet"] = world.maximum;
-    node["advanced"] = rules_.toYAML();
-    return node;
+    return rules_.toYAML();
 }
 
 //----------------------------------------------------------------

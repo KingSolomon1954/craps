@@ -1309,7 +1309,7 @@ Player:
           allRolls: 895
           busiestRoll: 80
   SessionStats:
-    numSessionsAlltime: 7
+    numSessionsAlltime: 11
     firstSessionDate: 2025-06-25T14:30:00.000000000
     longestSessionAlltime: 0d 04:17:54
     history:
@@ -1355,6 +1355,30 @@ Player:
         numPlayers: 1
         date: 2026-11-12T23:33:03.299118769
         duration: 0d 00:26:45
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-13T00:03:05.158863923
+        duration: 0d 00:00:03
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-13T00:03:09.640364061
+        duration: 0d 00:00:02
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-13T00:09:00.634866732
+        duration: 0d 00:00:03
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-13T00:09:05.275613424
+        duration: 0d 00:00:02
 Prefs:
   LastFills:
     - betName: PassLine
