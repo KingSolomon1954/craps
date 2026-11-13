@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <craps/RollStats.h>
+#include <craps/CrapsTypes.h>
 
 using namespace Craps;
 
@@ -555,7 +556,7 @@ RollStats::simulatedCounts(BetName betName, unsigned pivot) const
     case BetName::AnyCraps:
         countByNumber([](unsigned n)
         {
-            return n == 2 || n == 3 || n == 12;
+            return CrapsNums.contains(n);
         });
         break;
 
@@ -570,14 +571,14 @@ RollStats::simulatedCounts(BetName betName, unsigned pivot) const
     case BetName::Horn:
         countByNumber([](unsigned n)
         {
-            return n == 2 || n == 3 || n == 11 || n == 12;
+            return BookEnds.contains(n);
         });
         break;
 
     case BetName::World:
         countByNumber([](unsigned n)
         {
-            return n == 2 || n == 3 || n == 7 || n == 11 || n == 12;
+            return WorldNums.contains(n);
         });
         break;
 

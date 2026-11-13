@@ -26,11 +26,6 @@ using namespace Craps;
 
 unsigned CrapsBet::idCounter_ = 0;
 
-const std::unordered_set<unsigned> CrapsBet::pointNums_   = {4, 5, 6, 8, 9, 10};
-const std::unordered_set<unsigned> CrapsBet::fieldNums_   = {2, 3, 4, 9, 10, 11, 12};
-const std::unordered_set<unsigned> CrapsBet::crapsNums_   = {2, 3, 12};
-const std::unordered_set<unsigned> CrapsBet::bookEnds_    = {2, 3, 11, 12};
-const std::unordered_set<unsigned> CrapsBet::hardwayNums_ = {4, 6, 8, 10};
 
 /*-----------------------------------------------------------*//**
 
@@ -154,7 +149,7 @@ CrapsBet::checkLinePivot()
         betName_ == BetName::DontPass ||
         betName_ == BetName::DontCome)
     {
-        if (!pointNums_.contains(pivot_) && pivot_ != 0)
+        if (!PointNums.contains(pivot_) && pivot_ != 0)
         {
             std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
                 " for PassLine|Come|DontPass|Dontcome bet; "
@@ -173,7 +168,7 @@ CrapsBet::checkPlacePivot()
         betName_ == BetName::Lay   ||
         betName_ == BetName::Buy)
     {
-        if (!pointNums_.contains(pivot_))
+        if (!PointNums.contains(pivot_))
         {
             std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
                 " for a Place, Buy, or Lay bet; "
@@ -191,7 +186,7 @@ CrapsBet::checkHardwayPivot()
     if (betName_ == BetName::Hardway)
     {
         offComeOutRoll_ = false;  // For hardways, default is  always working
-        if (!hardwayNums_.contains(pivot_))
+        if (!HardwayNums.contains(pivot_))
         {
             std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
                 " for a Hardway bet; pivot must be one of 4,6,8,10";
@@ -441,7 +436,7 @@ CrapsBet::diagBetId() const
 bool
 CrapsBet::validArgsEval(unsigned point, Gen::ErrorPass& ep) const
 {
-    if (pointNums_.contains(point) || point == 0)
+    if (PointNums.contains(point) || point == 0)
     {
         return true;
     }
@@ -566,11 +561,11 @@ CrapsBet::evalPassLine(
 
     if (point == 0)
     {
-        if (d == 7 || d == 11)
+        if (NaturalNums.contains(d))
         {
             dcn = Win;
         }
-        else if (crapsNums_.contains(d))
+        else if (CrapsNums.contains(d))
         {
             dcn = Lose;
         }
@@ -643,7 +638,7 @@ CrapsBet::evalCome(
             dcn = Lose;
             returnOdds = true;
         }
-        else if (bookEnds_.contains(d))
+        else if (BookEnds.contains(d))
         {
             dcn = Keep;
         }
@@ -658,11 +653,11 @@ CrapsBet::evalCome(
     {
         if (pivot_ == 0)  // Come bet freshly placed on table.
         {
-            if (d == 7 || d == 11)
+            if (NaturalNums.contains(d))
             {
                 dcn = Win;
             }
-            else if (crapsNums_.contains(d))
+            else if (CrapsNums.contains(d))
             {
                 dcn = Lose;
             }
@@ -722,11 +717,11 @@ CrapsBet::evalDontPass(
 
     if (point == 0)  // come out roll
     {
-        if (d == 7 || d == 11)
+        if (NaturalNums.contains(d))
         {
             dcn = Lose;
         }
-        else if (d == 2 || d == 3)
+        else if (CrapsNumsBar12.contains(d))
         {
             dcn = Win;
         }
@@ -794,7 +789,7 @@ CrapsBet::evalDontCome(
             dcn = Win;
             returnOdds = true;
         }
-        else if (bookEnds_.contains(d))
+        else if (BookEnds.contains(d))
         {
             dcn = Keep;
         }
@@ -809,11 +804,11 @@ CrapsBet::evalDontCome(
     {
         if (pivot_ == 0)  // DontCome bet freshly placed on table.
         {
-            if (d == 7 || d == 11)
+            if (NaturalNums.contains(d))
             {
                 dcn = Lose;
             }
-            else if (d == 2 || d == 3)
+            else if (CrapsNumsBar12.contains(d))
             {
                 dcn = Win;
             }
@@ -1007,7 +1002,7 @@ CrapsBet::evalField(
     // For field bets, in additon to win/lose we also set the pivot.
     // Allows us to keeps stats on field bet win/lose per number.
 
-    if (d == 5 || d == 6 || d == 7 || d == 8)
+    if (FieldLoseNums.contains(d))
     {
         dcn = Lose;
         pivot_ = d;
@@ -1099,7 +1094,7 @@ CrapsBet::evalAnyCraps(
 {
     (void) ep; (void) point;  // unused, quiet the compiler
 
-    if (crapsNums_.contains(dice.value()))
+    if (CrapsNums.contains(dice.value()))
     {
         dr.win = contractAmount_ * 7;
     }
@@ -1154,7 +1149,7 @@ CrapsBet::evalCandE(
         dr.componentLoss = half;
         dr.win = half * 15 - dr.componentLoss;
     }
-    else if (crapsNums_.contains(dice.value()))
+    else if (CrapsNums.contains(dice.value()))
     {
         dr.componentLoss = half;
         dr.win = half * 7 - dr.componentLoss;
@@ -1183,12 +1178,12 @@ CrapsBet::evalHorn(
     // units lose, so win is the net profit and componentLoss is the
     // three losing units.
     const Gen::Money unit = contractAmount_ / 4;
-    if (dice.value() == 2 || dice.value() == 12)
+    if (AceTwelveNums.contains(dice.value()))
     {
         dr.componentLoss = unit * 3;
         dr.win = unit * 30 - dr.componentLoss;
     }
-    else if (dice.value() == 3 || dice.value() == 11)
+    else if (ThreeElevenNums.contains(dice.value()))
     {
         dr.componentLoss = unit * 3;
         dr.win = unit * 15 - dr.componentLoss;

@@ -25,7 +25,6 @@ isRollBet(BetName name)
            name == BetName::Horn     || name == BetName::World;
 }
 
-constexpr unsigned PointNumbers[] = {4, 5, 6, 8, 9, 10};
 
 // Entry name for a roll dependent bet when a given number was rolled.
 //
@@ -503,7 +502,7 @@ BetStats::tally(BetName name, BetScope scope) const
             result.merge(it->second);
 
     if (scope != BetScope::ComeOut)
-        for (const unsigned point : PointNumbers)
+        for (const unsigned point : PointNums)
             if (const auto it = byBet.find(base + std::to_string(point));
                 it != byBet.end())
                 result.merge(it->second);
@@ -569,18 +568,18 @@ BetStats::classifyRoll(BetName name, unsigned roll)
     switch (name)
     {
     case BetName::Horn:
-        return (roll == 2 || roll == 3 || roll == 11 || roll == 12)
+        return BookEnds.contains(roll)
             ? RollOutcome::PartialWin : RollOutcome::EntireLoss;
     case BetName::CandE:
-        return (roll == 2 || roll == 3 || roll == 11 || roll == 12)
+        return BookEnds.contains(roll)
             ? RollOutcome::PartialWin : RollOutcome::EntireLoss;
     case BetName::World:
         if (roll == 7)
             return RollOutcome::BreakEven;
-        return (roll == 2 || roll == 3 || roll == 11 || roll == 12)
+        return BookEnds.contains(roll)
             ? RollOutcome::PartialWin : RollOutcome::EntireLoss;
     case BetName::AnyCraps:
-        return (roll == 2 || roll == 3 || roll == 12)
+        return CrapsNums.contains(roll)
             ? RollOutcome::CleanWin : RollOutcome::EntireLoss;
     case BetName::AnySeven:
         return roll == 7 ? RollOutcome::CleanWin : RollOutcome::EntireLoss;

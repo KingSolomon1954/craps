@@ -134,7 +134,7 @@ TableStats::countShooterRolls(unsigned point, unsigned roll)
 void
 TableStats::countFieldBetWins(unsigned roll)
 {
-    if (CrapsBet::fieldNums_.contains(roll))
+    if (FieldNums.contains(roll))
     {
         rollStats.fieldBetWins.bump(); rollStats.fieldBetLose.disarm();
     }
@@ -145,7 +145,7 @@ TableStats::countFieldBetWins(unsigned roll)
 void
 TableStats::countFieldBetLose(unsigned roll)
 {
-    if (!CrapsBet::fieldNums_.contains(roll))
+    if (!FieldNums.contains(roll))
     {
         rollStats.fieldBetLose.bump(); rollStats.fieldBetWins.disarm();
     }
@@ -161,7 +161,7 @@ TableStats::countHardwayWins(unsigned point, unsigned d1, unsigned d2)
     (void) point;
 
     const unsigned roll = d1 + d2;
-    if (d1 == d2 && CrapsBet::hardwayNums_.contains(roll))
+    if (d1 == d2 && HardwayNums.contains(roll))
     {
         bumpHardwayWins(roll);
     }
@@ -185,7 +185,7 @@ TableStats::countHardwayLose(unsigned point, unsigned d1, unsigned d2)
         }
     }
 
-    if (d1 != d2 && CrapsBet::hardwayNums_.contains(roll))
+    if (d1 != d2 && HardwayNums.contains(roll))
     {
         bumpHardwayLose(roll);
         rollStats.hardwayEasy[roll].bump();
@@ -221,7 +221,7 @@ TableStats::disarmSomeCounts(unsigned point, unsigned roll)
     {
         rollStats.twelvesOnComeOutRoll.disarm();
     }
-    if (!CrapsBet::crapsNums_.contains(roll))
+    if (!CrapsNums.contains(roll))
     {
         rollStats.crapsOnComeOutRoll.disarm();
     }

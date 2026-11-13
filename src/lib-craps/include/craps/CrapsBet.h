@@ -86,11 +86,6 @@ private:
     Gen::Timepoint whenDecided_;
     
     static unsigned idCounter_;
-    static const std::unordered_set<unsigned> pointNums_;
-    static const std::unordered_set<unsigned> fieldNums_;
-    static const std::unordered_set<unsigned> crapsNums_;
-    static const std::unordered_set<unsigned> bookEnds_;
-    static const std::unordered_set<unsigned> hardwayNums_;
 
     enum Decision
     {

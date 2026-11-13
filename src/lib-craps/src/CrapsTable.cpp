@@ -717,7 +717,7 @@ CrapsTable::advanceState()
 {
     if (point_ == 0) // come out roll
     {
-        if (CrapsBet::pointNums_.contains(dice_.value()))
+        if (PointNums.contains(dice_.value()))
         {
             point_ = dice_.value();
             Ctrl::UslPointEstablished ev; ev.point = point_;

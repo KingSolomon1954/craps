@@ -13,6 +13,7 @@
 #include <controller/AutoFill.h>
 #include <controller/LastFill.h>
 #include <controller/CrapsReaders.h>
+#include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/PlayerStats.h>
 #include <craps/TableStats.h>
@@ -177,9 +178,9 @@ profileFor(BetName name, unsigned pivot)
         p = {1.3636, 49.2929, 1, 1, "Loses on point", "Wins on 7"};
     else if (name == BetName::Hardway)
     {
-        if (pivot == 4 || pivot == 10)
+        if (Craps::FourTenNums.contains(pivot))
             p = {11.1111, 11.1111, 7, 1, "Loses on 7 or easy way", "Wins on hard way"};
-        else if (pivot == 6 || pivot == 8)
+        else if (Craps::SixEightNums.contains(pivot))
             p = {9.0909, 16.6667, 9, 1, "Loses on 7 or easy way", "Wins on hard way"};
     }
     else if (name == BetName::Field)
@@ -421,8 +422,8 @@ static constexpr RefArray World{
 const RefArray&
 referenceFor(BetName name, unsigned pivot, bool oddsBet)
 {
-    const bool point410 = pivot == 4 || pivot == 10;
-    const bool point59  = pivot == 5 || pivot == 9;
+    const bool point410 = Craps::FourTenNums.contains(pivot);
+    const bool point59  = Craps::FiveNineNums.contains(pivot);
     if (oddsBet)
     {
         if (name == BetName::DontPass || name == BetName::DontCome)
