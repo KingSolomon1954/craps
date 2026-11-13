@@ -107,3 +107,24 @@ TEST_CASE("RollStats:field lose yaml is not the field wins")
     CHECK(node["fieldBetWins"]["count"].as<unsigned>() == 2);
     CHECK(node["fieldBetLose"]["count"].as<unsigned>() == 1);
 }
+
+//----------------------------------------------------------------
+
+TEST_CASE("RollStats:fromYAML requires every key")
+{
+    // No tolerance for files in an older format during development.
+    RollStats a;
+    YAML::Node good = a.toYAML();
+    RollStats ok;
+    CHECK_NOTHROW(ok.fromYAML(good));
+
+    YAML::Node missingCounter = a.toYAML();
+    missingCounter["numberCounts"].remove("7");
+    RollStats b;
+    CHECK_THROWS(b.fromYAML(missingCounter));
+
+    YAML::Node missingGroup = a.toYAML();
+    missingGroup.remove("hardwayEasyCounts");
+    RollStats c;
+    CHECK_THROWS(c.fromYAML(missingGroup));
+}

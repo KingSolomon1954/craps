@@ -80,8 +80,8 @@ Counter::toYAML() const
 void
 Counter::fromYAML(const YAML::Node& node)
 {
-    if (node["count"])      count_     = node["count"].as<unsigned>();
-    if (node["maxRepeats"]) maxRepeats = node["maxRepeats"].as<unsigned>();
+    count_     = node["count"].as<unsigned>();
+    maxRepeats = node["maxRepeats"].as<unsigned>();
     curRepeats = 0;
     pivot = 0;
     armed = false;
@@ -349,31 +349,17 @@ void
 RollStats::numberCountsFromYAML(const YAML::Node& node)
 {
     // Deserialize numberCounts[2-12]
-    if (node["numberCounts"])
+    const YAML::Node numberNode = node["numberCounts"];
+    for (unsigned i = 2; i <= 12; ++i)
     {
-        const YAML::Node& numberNode = node["numberCounts"];
-        for (unsigned i = 2; i <= 12; ++i)
-        {
-            std::string key = std::to_string(i);
-            if (numberNode[key])
-            {
-                numberCounts[i].fromYAML(numberNode[key]);
-            }
-        }
+        numberCounts[i].fromYAML(numberNode[std::to_string(i)]);
     }
 
     // Deserialize anyEstPntCnts[4,5,6,8,9,10]
-    if (node["anyEstPntCnts"])
+    const YAML::Node estNode = node["anyEstPntCnts"];
+    for (unsigned i : {4, 5, 6, 8, 9, 10})
     {
-        const YAML::Node& estNode = node["anyEstPntCnts"];
-        for (unsigned i : {4, 5, 6, 8, 9, 10})
-        {
-            std::string key = std::to_string(i);
-            if (estNode[key])
-            {
-                anyEstPntCnts[i].fromYAML(estNode[key]);
-            }
-        }
+        anyEstPntCnts[i].fromYAML(estNode[std::to_string(i)]);
     }
 }
 
@@ -383,36 +369,23 @@ void
 RollStats::pointCountsFromYAML (const YAML::Node& node)
 {
     // Helper lambda to load YAML into an array
-    auto loadPointCounts = [&](const YAML::Node& groupNode, std::array<PointCounts, 11>& arr)
+    auto loadCounts = [&](const YAML::Node& groupNode,
+                          std::array<PointCounts, 11>& arr,
+                          const std::vector<unsigned>& points)
     {
-        const std::vector<unsigned> points = {4, 5, 6, 8, 9, 10};
         for (unsigned pt : points)
         {
-            std::string key = std::to_string(pt);
-            if (groupNode[key])
-            {
-                arr[pt].fromYAML(groupNode[key]);
-            }
+            arr[pt].fromYAML(groupNode[std::to_string(pt)]);
         }
     };
 
-    loadPointCounts(node["passPntCnts"],     passPntCnts);
-    loadPointCounts(node["dontPassPntCnts"], dontPassPntCnts);
-    loadPointCounts(node["comePntCnts"],     comePntCnts);
-    loadPointCounts(node["dontComePntCnts"], dontComePntCnts);
-
-    // Similar for hardways
-    auto loadHardwayCounts = [&](const YAML::Node& groupNode, std::array<PointCounts, 11>& arr)
-    {
-        const std::vector<unsigned> points = {4, 6, 8, 10};
-        for (unsigned pt : points)
-        {
-            std::string key = std::to_string(pt);
-            arr[pt].fromYAML(groupNode[key]);
-        }
-    };
-
-    if (node["hardwayCounts"]) loadPointCounts(node["hardwayCounts"], hardwayCounts);
+    const std::vector<unsigned> points   = {4, 5, 6, 8, 9, 10};
+    const std::vector<unsigned> hardways = {4, 6, 8, 10};
+    loadCounts(node["passPntCnts"],     passPntCnts,     points);
+    loadCounts(node["dontPassPntCnts"], dontPassPntCnts, points);
+    loadCounts(node["comePntCnts"],     comePntCnts,     points);
+    loadCounts(node["dontComePntCnts"], dontComePntCnts, points);
+    loadCounts(node["hardwayCounts"],   hardwayCounts,   hardways);
 
     for (unsigned pt : {4, 6, 8, 10})
     {

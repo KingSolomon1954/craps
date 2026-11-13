@@ -4,19 +4,6 @@ Table:
   shortDescription: A typical table with 5x odds, min $10, max $2,000.
   fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
   Rules:
-    maxOdds: 5
-    minLineBet: 10
-    maxLineBet: 2000
-    minPlaceBet: 5
-    maxPlaceBet: 2000
-    minFieldBet: 1
-    maxFieldBet: 2000
-    minCandEBet: 2
-    maxCandEBet: 2000
-    minHornBet: 4
-    maxHornBet: 2000
-    minWorldBet: 5
-    maxWorldBet: 1000
     advanced:
       wagers:
         PassLine:
@@ -168,14 +155,14 @@ Table:
           maximumComponentWager: 0
   Bank:
     originalStartBalance: 3000000
-    sessionStartBalance: 3000293
+    sessionStartBalance: 3000283
     refillThreshold: 1500000
     refillAmount: 2000000
     bankStats:
       numDeposits: 35
       amtDeposited: 437
-      numWithdrawals: 11
-      amtWithdrawn: 144
+      numWithdrawals: 12
+      amtWithdrawn: 154
       numRefills: 0
       amtRefilled: 0
       maxAmtDepositedSession: 380
@@ -185,15 +172,15 @@ Table:
   BetStats:
     overall:
       bets:
-        count: 46
-        wins: 11
+        count: 47
+        wins: 12
         losses: 35
-        kept: 57
+        kept: 59
       amounts:
-        bet: 543
-        won: 144
+        bet: 553
+        won: 154
         lost: 437
-        kept: 865
+        kept: 895
       maximums:
         bet: 20
         win: 35
@@ -907,10 +894,10 @@ Table:
           oddsAmount: 0
       Field4:
         wins:
-          count: 0
-          totDistance: 0
-          amount: 0
-          amountBet: 0
+          count: 1
+          totDistance: 1
+          amount: 10
+          amountBet: 10
           oddsBet: 0
           oddsAmount: 0
         losses:
@@ -1447,29 +1434,29 @@ Table:
           oddsAmount: 0
     rollActivity:
       betsEvaluated:
-        allRolls: 103
+        allRolls: 106
         busiestRoll: 6
       betsWon:
-        allRolls: 11
+        allRolls: 12
         busiestRoll: 1
       betsLost:
         allRolls: 35
         busiestRoll: 5
       betsKept:
-        allRolls: 57
+        allRolls: 59
         busiestRoll: 5
       amounts:
         evaluated:
-          allRolls: 1408
+          allRolls: 1448
           busiestRoll: 100
         won:
-          allRolls: 144
+          allRolls: 154
           busiestRoll: 35
         lost:
           allRolls: 437
           busiestRoll: 90
         kept:
-          allRolls: 865
+          allRolls: 895
           busiestRoll: 80
   RollStats:
     numberCounts:
@@ -1480,7 +1467,7 @@ Table:
         count: 2
         maxRepeats: 0
       4:
-        count: 3
+        count: 4
         maxRepeats: 0
       5:
         count: 2
@@ -1498,7 +1485,7 @@ Table:
         count: 4
         maxRepeats: 0
       10:
-        count: 4
+        count: 5
         maxRepeats: 0
       11:
         count: 1
@@ -1523,7 +1510,7 @@ Table:
         count: 1
         maxRepeats: 0
       10:
-        count: 2
+        count: 3
         maxRepeats: 0
     passPntCnts:
       4:
@@ -1703,7 +1690,7 @@ Table:
           count: 2
           maxRepeats: 0
         lose:
-          count: 9
+          count: 10
           maxRepeats: 5
       6:
         wins:
@@ -1724,11 +1711,11 @@ Table:
           count: 1
           maxRepeats: 0
         lose:
-          count: 11
+          count: 12
           maxRepeats: 8
     hardwayEasyCounts:
       4:
-        count: 1
+        count: 2
         maxRepeats: 0
       6:
         count: 4
@@ -1737,7 +1724,7 @@ Table:
         count: 3
         maxRepeats: 0
       10:
-        count: 3
+        count: 4
         maxRepeats: 0
     hardwaySevenCounts:
       4:
@@ -1760,7 +1747,7 @@ Table:
         count: 2
         maxRepeats: 0
       4:
-        count: 1
+        count: 2
         maxRepeats: 0
       5:
         count: 1
@@ -1786,13 +1773,13 @@ Table:
       12:
         count: 0
         maxRepeats: 0
-    numRolls: 33
-    numPointsEstablished: 17
+    numRolls: 35
+    numPointsEstablished: 18
     comeOutRolls:
-      count: 11
+      count: 12
       maxRepeats: 2
     pointRolls:
-      count: 22
+      count: 23
       maxRepeats: 6
     passWinsComeOut:
       count: 2
@@ -1819,7 +1806,7 @@ Table:
       count: 7
       maxRepeats: 3
     fieldBetWins:
-      count: 15
+      count: 17
       maxRepeats: 2
     fieldBetLose:
       count: 18
@@ -1828,7 +1815,7 @@ Table:
       count: 6
       maxRepeats: 2
     shooterCounts:
-      count: 2
+      count: 4
       maxRepeats: 7
     twosOnComeOutRoll:
       count: 0
@@ -1849,9 +1836,9 @@ Table:
       count: 0
       maxRepeats: 0
   SessionStats:
-    numSessionsAlltime: 6
+    numSessionsAlltime: 8
     firstSessionDate: 2026-09-13T06:34:17.562100548
-    longestSessionAlltime: 0d 00:17:47
+    longestSessionAlltime: 0d 00:26:45
     history:
       - numBets: 0
         amtIntake: 0
@@ -1889,3 +1876,15 @@ Table:
         numPlayers: 0
         date: 2026-11-12T23:09:31.828131827
         duration: 0d 00:01:16
+      - numBets: 1
+        amtIntake: 0
+        amtPayout: 10
+        numPlayers: 0
+        date: 2026-11-12T23:32:10.975241573
+        duration: 0d 00:00:44
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 0
+        date: 2026-11-12T23:33:03.280527489
+        duration: 0d 00:26:45

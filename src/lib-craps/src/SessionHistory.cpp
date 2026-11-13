@@ -141,10 +141,10 @@ SessionHistory::Summary::fromYAML(const YAML::Node& node)
 {
     date        = Gen::Timepoint(node["date"].as<std::string>());
     duration    = Gen::Timepoint::parseDurationWithDays(node["duration"].as<std::string>());
-    numBets     = node["numBets"].as<unsigned>(0);
-    numPlayers  = node["numPlayers"].as<unsigned>(0);
-    amtIntake   = node["amtIntake"].as<Gen::Money>(0);
-    amtPayout   = node["amtPayout"].as<Gen::Money>(0);
+    numBets     = node["numBets"].as<unsigned>();
+    numPlayers  = node["numPlayers"].as<unsigned>();
+    amtIntake   = node["amtIntake"].as<Gen::Money>();
+    amtPayout   = node["amtPayout"].as<Gen::Money>();
 }
 
 //-----------------------------------------------------------------
@@ -154,7 +154,7 @@ SessionHistory::fromYAML(const YAML::Node& node)
 {
     sessions_.clear();
 
-    numSessionsAlltime_     = node["numSessionsAlltime"].as<unsigned>(0);
+    numSessionsAlltime_     = node["numSessionsAlltime"].as<unsigned>();
     firstSessionDate_       = Gen::Timepoint(node["firstSessionDate"].as<std::string>());
     longestSessionAlltime_  = Gen::Timepoint::parseDurationWithDays(node["longestSessionAlltime"].as<std::string>());
 

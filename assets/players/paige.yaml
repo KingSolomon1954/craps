@@ -1114,9 +1114,9 @@ Player:
           allRolls: 0
           busiestRoll: 0
   SessionStats:
-    numSessionsAlltime: 8
+    numSessionsAlltime: 10
     firstSessionDate: 2026-09-13T06:34:03.246000351
-    longestSessionAlltime: 0d 00:17:47
+    longestSessionAlltime: 0d 00:26:44
     history:
       - numBets: 0
         amtIntake: 0
@@ -1166,6 +1166,18 @@ Player:
         numPlayers: 1
         date: 2026-11-12T23:09:31.940548352
         duration: 0d 00:01:16
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-12T23:32:11.081883653
+        duration: 0d 00:00:44
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-12T23:33:03.389760185
+        duration: 0d 00:26:44
 Prefs:
   LastFills:
     []

@@ -9,10 +9,10 @@ Player:
     refillThreshold: 15000
     refillAmount: 20000
     bankStats:
-      numDeposits: 15
-      amtDeposited: 265
-      numWithdrawals: 66
-      amtWithdrawn: 558
+      numDeposits: 17
+      amtDeposited: 305
+      numWithdrawals: 69
+      amtWithdrawn: 588
       numRefills: 0
       amtRefilled: 0
       maxAmtDepositedSession: 210
@@ -22,15 +22,15 @@ Player:
   BetStats:
     overall:
       bets:
-        count: 46
-        wins: 11
+        count: 47
+        wins: 12
         losses: 35
-        kept: 57
+        kept: 59
       amounts:
-        bet: 543
-        won: 144
+        bet: 553
+        won: 154
         lost: 437
-        kept: 865
+        kept: 895
       maximums:
         bet: 20
         win: 35
@@ -744,10 +744,10 @@ Player:
           oddsAmount: 0
       Field4:
         wins:
-          count: 0
-          totDistance: 0
-          amount: 0
-          amountBet: 0
+          count: 1
+          totDistance: 1
+          amount: 10
+          amountBet: 10
           oddsBet: 0
           oddsAmount: 0
         losses:
@@ -1284,32 +1284,32 @@ Player:
           oddsAmount: 0
     rollActivity:
       betsEvaluated:
-        allRolls: 103
+        allRolls: 106
         busiestRoll: 6
       betsWon:
-        allRolls: 11
+        allRolls: 12
         busiestRoll: 1
       betsLost:
         allRolls: 35
         busiestRoll: 5
       betsKept:
-        allRolls: 57
+        allRolls: 59
         busiestRoll: 5
       amounts:
         evaluated:
-          allRolls: 1408
+          allRolls: 1448
           busiestRoll: 100
         won:
-          allRolls: 144
+          allRolls: 154
           busiestRoll: 35
         lost:
           allRolls: 437
           busiestRoll: 90
         kept:
-          allRolls: 865
+          allRolls: 895
           busiestRoll: 80
   SessionStats:
-    numSessionsAlltime: 5
+    numSessionsAlltime: 7
     firstSessionDate: 2025-06-25T14:30:00.000000000
     longestSessionAlltime: 0d 04:17:54
     history:
@@ -1343,6 +1343,18 @@ Player:
         numPlayers: 1
         date: 2026-11-12T23:09:31.845933412
         duration: 0d 00:01:16
+      - numBets: 1
+        amtIntake: 40
+        amtPayout: 30
+        numPlayers: 1
+        date: 2026-11-12T23:32:10.992984042
+        duration: 0d 00:00:44
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-12T23:33:03.299118769
+        duration: 0d 00:26:45
 Prefs:
   LastFills:
     - betName: PassLine
