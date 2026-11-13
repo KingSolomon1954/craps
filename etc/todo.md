@@ -40,11 +40,6 @@
 - lost at quit. Persist it (small session file?) and honor
 - startWithLastPlayers at startup
 
-### Fix RollStats Off on Comeout Rolls
-
-- Place bets (simulated) should be considered off on comeout rolls.
-- Currently they are counted as a loss/win on comeout rolls.
-
 ### Need unit test for initial bank money
 
 ### Need unit test for undo bet capability
@@ -91,12 +86,17 @@ track that amount independently.
 
 ### Implement ReqMakeBet, to include UndoManager
 
-### Want DialogBetAmount to show current bet & whether off-on-comeout
+### Want DialogBetAmount to show whether off-on-comeout
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
 ## Done
 
+(Done) Place bets off on comeout for simulated roles
+(Done) Added new bet Any711
+(Done) Change bet is inferred by makeBet().
+(Done) One bet per spot - prevent multiple same bets same time
+(Done) BetStats - track contract amount and odds amount separately
 (Done) BetStats - improve YAML layout with better organization and hierarchy
 (Done) DialogBetAmount shows min, max bet, and proper multiples for odds
 (Done) TableManager::switchCrapsTable() needs to call EP_SET()
