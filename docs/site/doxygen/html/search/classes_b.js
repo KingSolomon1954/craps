@@ -1,15 +1,7 @@
 var searchData=
 [
-  ['panelbase_0',['PanelBase',['../classCui_1_1PanelBase.html',1,'Cui']]],
-  ['placeholder_1',['Placeholder',['../classGui_1_1Placeholder.html',1,'Gui']]],
-  ['player_2',['Player',['../classCraps_1_1Player.html',1,'Craps']]],
-  ['playerareaallplayers_3',['PlayerAreaAllPlayers',['../classCui_1_1PlayerAreaAllPlayers.html',1,'Cui']]],
-  ['playerareaoneplayer_4',['PlayerAreaOnePlayer',['../classCui_1_1PlayerAreaOnePlayer.html',1,'Cui']]],
-  ['playerconfig_5',['PlayerConfig',['../structCraps_1_1PlayerConfig.html',1,'Craps']]],
-  ['playerdescription_6',['PlayerDescription',['../structCtrl_1_1PlayerManifest_1_1PlayerDescription.html',1,'Ctrl::PlayerManifest']]],
-  ['playermanager_7',['PlayerManager',['../classCtrl_1_1PlayerManager.html',1,'Ctrl']]],
-  ['playermanifest_8',['PlayerManifest',['../classCtrl_1_1PlayerManifest.html',1,'Ctrl']]],
-  ['playerstats_9',['PlayerStats',['../classCraps_1_1PlayerStats.html',1,'Craps']]],
-  ['pointcounts_10',['PointCounts',['../structCraps_1_1PointCounts.html',1,'Craps']]],
-  ['properties_11',['Properties',['../classCtrl_1_1Properties.html',1,'Ctrl']]]
+  ['oddsentry_0',['OddsEntry',['../structCraps_1_1OddsTables_1_1OddsEntry.html',1,'Craps::OddsTables']]],
+  ['oddslimit_1',['OddsLimit',['../structCraps_1_1TableRules_1_1OddsLimit.html',1,'Craps::TableRules']]],
+  ['oddstables_2',['OddsTables',['../classCraps_1_1OddsTables.html',1,'Craps']]],
+  ['operationmanager_3',['OperationManager',['../classCui_1_1OperationManager.html',1,'Cui']]]
 ];

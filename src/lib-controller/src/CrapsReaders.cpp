@@ -1072,8 +1072,11 @@ CrapsReaders::getUserPlayer(
     auto* p = Gbl::pPlayerMgr->getUserPlayer();
     if (p == nullptr)
     {
-        ep.setDescription("CrapsReaders::getUserPlayer(): "
-                          "nullptr for user/player. Coding error.");
+        EP_SET(ep, Gen::ErrorPass::ErrorName::NotFoundError,
+                   Gen::ErrorPass::ErrorType::ProgrammingError,
+                   Gen::ErrorPass::Severity::Critical,
+                  "CrapsReaders::getUserPlayer(): "
+                  "nullptr for UserPlayer. Coding error.");
         return Gen::ReturnCode::Fail;
     }
     playerId = p->getPlayerId();

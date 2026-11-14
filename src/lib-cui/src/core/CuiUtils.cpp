@@ -7,6 +7,7 @@
 #include <cui/core/CuiUtils.h>
 #include <cui/managers/ColorManager.h>
 #include <gen/ErrorPass.h>
+#include <gen/Logger.h>
 #include <cassert>
 #include <cwchar>
 
@@ -330,11 +331,47 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
 
         case BetName::AnySeven: return CuiBetName::Any7;
 
+        case BetName::Any711: return CuiBetName::Any711;
+
         case BetName::Horn: return CuiBetName::Horn;
 
         case BetName::World: return CuiBetName::World;
 
         default: assert(false && "Unhandled BetName");
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+CuiUtils::getUserPlayerStats(Craps::PlayerStats& playerStats)
+{
+    Gen::ErrorPass ep;
+    auto rc = Ctrl::CrapsReaders::readPlayerCurrentStats(
+            userPlayerId(), playerStats, ep); // userPlayerId() throws
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        ep.setErrorType(Gen::ErrorPass::ErrorType::ProgrammingError);
+        EP_TRACE(ep);
+        LOG_ERROR(ep.fullDesc());
+        assert(rc == Gen::ReturnCode::Success && "Missing player stats");
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+CuiUtils::getActiveTableStats(Craps::TableStats& tableStats)
+{
+    Gen::ErrorPass ep;
+    auto rc = Ctrl::CrapsReaders::readTableCurrentStats(
+            activeTableId(), tableStats, ep);  // activeTable() throws
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        ep.setErrorType(Gen::ErrorPass::ErrorType::ProgrammingError);
+        EP_TRACE(ep);
+        LOG_ERROR(ep.fullDesc());
+        assert(rc == Gen::ReturnCode::Success && "Missing table stats");
     }
 }
 

@@ -128,11 +128,28 @@ TEST_CASE("TableStats:counter")
     AmtBets ab1, ab2;
     CHECK(ab1 == ab2);
 
-    BetTypeStats bt1, bt2;
-    CHECK(bt1 == bt2);
+    BetOutcomeStats bo1, bo2;
+    CHECK(bo1 == bo2);
 
     BetStats bss1, bss2;
     CHECK(bss1 == bss2);
+
+    BetStats yamlStats;
+    yamlStats.totNumBetsAllBets = 3;
+    yamlStats.totNumWinsAllBets = 2;
+    yamlStats.totNumLoseAllBets = 1;
+    yamlStats.totAmtAllBets = 500;
+    yamlStats.byBet["AnySeven"].wins.count = 1;
+    yamlStats.byBet["AnySeven"].losses.count = 2;
+    const YAML::Node betYaml = yamlStats.toYAML();
+    CHECK(betYaml["overall"]["bets"]["count"].as<unsigned>() == 3);
+    CHECK(betYaml["overall"]["bets"]["wins"].as<unsigned>() == 2);
+    CHECK(betYaml["byBet"]["AnySeven"]["wins"]["count"].as<unsigned>() == 1);
+    CHECK(betYaml["byBet"]["AnySeven"]["losses"]["count"].as<unsigned>() == 2);
+    CHECK_FALSE(betYaml["betTypeStats"].IsDefined());
+    BetStats restored;
+    restored.fromYAML(betYaml);
+    CHECK(restored == yamlStats);
 
     RollStats rs1, rs2;
     CHECK(rs1 == rs2);
@@ -359,18 +376,18 @@ TEST_CASE("TableStats:diceroll:allsevens")
     CHECK(ts.rollStats.hardwayCounts[10].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].lose.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[4].lose.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.armed      == false);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.armed      == true);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[6].lose.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.armed      == false);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.armed      == true);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[8].lose.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.armed      == false);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.count()   == 0);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.armed      == true);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.count()   == 1);
     CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.armed     == false);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.armed     == true);
 
     CHECK(ts.rollStats.fieldBetWins.count()   == 0);
     CHECK(ts.rollStats.fieldBetWins.repeats() == 0);
@@ -615,18 +632,18 @@ TEST_CASE("TableStats:diceroll:allsevens")
     CHECK(ts.rollStats.hardwayCounts[10].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].lose.count()    == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.armed      == false);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.count()    == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.armed      == false);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.count()    == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.armed      == false);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.count()   == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.armed     == false);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.count()    == 2);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats()  == 1);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.armed      == true);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.count()    == 2);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats()  == 1);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.armed      == true);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.count()    == 2);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats()  == 1);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.armed      == true);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.count()   == 2);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.armed     == true);
 
     CHECK(ts.rollStats.fieldBetWins.count()   == 0);
     CHECK(ts.rollStats.fieldBetWins.repeats() == 0);
@@ -1074,7 +1091,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 4);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
@@ -1156,7 +1173,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 4);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
@@ -1242,7 +1259,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 4);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
@@ -1328,7 +1345,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 4);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
@@ -1336,14 +1353,14 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.hardwayCounts[8].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 2);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 2);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 2);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 1);
 
     // Made the point 4, roll an dice = 4
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4
@@ -1425,7 +1442,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 4);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
@@ -1433,14 +1450,14 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.hardwayCounts[8].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 2);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 2);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 1);
 
     // Come out roll, roll an dice = 12
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12
@@ -1519,7 +1536,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 5);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
@@ -1527,14 +1544,14 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.hardwayCounts[8].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 2);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 2);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 1);
 
     // Come out roll, roll an dice = 7 lose come bets, win dont come bets
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12,7
@@ -1625,7 +1642,7 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 5);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
@@ -1633,14 +1650,14 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.hardwayCounts[8].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 4);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 2);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 4);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 2);
 
     // Establish point, roll an dice = 6
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12,7,6
@@ -1734,22 +1751,22 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 5);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[8].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[8].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 0);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 4);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 2);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 4);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 1);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 3);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 2);
 
     // Point 6, roll an dice = 7 seven out pass dice
     // seq: 2,2,3,11,12,7,7,4,8,3,8,4,12,7,6,7
@@ -1843,22 +1860,22 @@ TEST_CASE("TableStats:diceroll:one")
     CHECK(ts.rollStats.twelvesOnComeOutRoll.repeats() == 0);
     CHECK(ts.rollStats.crapsOnComeOutRoll.count() == 5);
     CHECK(ts.rollStats.crapsOnComeOutRoll.repeats() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 0);
+    CHECK(ts.rollStats.hardwayCounts[6].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[8].wins.count() == 1);
     CHECK(ts.rollStats.hardwayCounts[8].wins.repeats() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.count() == 0);
     CHECK(ts.rollStats.hardwayCounts[10].wins.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 2);
-    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 1);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 0);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 2);
-    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 1);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 1);
-    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.count() == 5);
+    CHECK(ts.rollStats.hardwayCounts[4].lose.repeats() == 2);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.count() == 4);
+    CHECK(ts.rollStats.hardwayCounts[6].lose.repeats() == 2);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.count() == 5);
+    CHECK(ts.rollStats.hardwayCounts[8].lose.repeats() == 2);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.count() == 4);
+    CHECK(ts.rollStats.hardwayCounts[10].lose.repeats() == 3);
 }
 
 //----------------------------------------------------------------

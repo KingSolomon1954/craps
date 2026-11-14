@@ -1,11 +1,13 @@
 <map id="src/lib&#45;gen/include/gen/StringUtils.h" name="src/lib&#45;gen/include/gen/StringUtils.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="366,5,507,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="465,5,606,45"/>
 <area shape="rect" id="Node000002" href="$CrapsBet_8cpp.html" title=" " alt="" coords="5,101,220,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="354,51,157,103,155,98,352,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="452,46,170,103,169,98,451,41"/>
 <area shape="rect" id="Node000003" href="$EnumBetName_8cpp.html" title=" " alt="" coords="245,93,431,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="406,56,362,95,358,91,403,52"/>
-<area shape="rect" id="Node000004" href="$DialogAckError_8cpp.html" title=" " alt="" coords="456,93,615,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="470,52,515,91,512,95,467,56"/>
-<area shape="rect" id="Node000005" href="$StringUtils_8cpp.html" title=" " alt="" coords="639,101,851,126"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="518,46,704,98,703,103,517,52"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="481,53,382,96,380,91,479,48"/>
+<area shape="rect" id="Node000004" href="$DialogError_8cpp.html" title=" " alt="" coords="456,93,615,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="538,59,538,93,533,93,533,59"/>
+<area shape="rect" id="Node000005" href="$DialogMessage_8cpp.html" title=" " alt="" coords="639,93,797,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="589,49,679,91,677,96,587,54"/>
+<area shape="rect" id="Node000006" href="$StringUtils_8cpp.html" title=" " alt="" coords="821,101,1033,126"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="620,42,876,98,874,103,619,48"/>
 </map>

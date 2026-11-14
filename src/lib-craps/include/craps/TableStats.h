@@ -27,8 +27,10 @@ public:
 
     /// @name Modifiers
     /// @{
-    void recordWin     (const CrapsBet& bet, Gen::Money amtWin);
-    void recordLose    (const CrapsBet& bet, Gen::Money amtLose);
+    void recordWin     (const CrapsBet& bet, Gen::Money amtWin, unsigned roll = 0);
+    void recordLose    (const CrapsBet& bet, Gen::Money amtLose, unsigned roll = 0);
+    void recordWin     (const DecisionRecord& dr);
+    void recordLose    (const DecisionRecord& dr);
     void recordKeep    (const CrapsBet& bet);
     void recordDiceRoll(unsigned point, const Dice& curRoll);
     void merge         (const TableStats& session);
@@ -51,6 +53,8 @@ public:
 
 private:
     void countDiceNumbers     (unsigned roll);
+    void countRepeaters       (unsigned point, unsigned roll);
+    void countPointNumbers    (unsigned point, unsigned roll);
     void countAllPoints       (unsigned roll);
     void countComeOutRolls    (unsigned point);
     void countPointRolls      (unsigned point, unsigned roll);

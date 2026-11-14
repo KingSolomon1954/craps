@@ -86,11 +86,6 @@ private:
     Gen::Timepoint whenDecided_;
     
     static unsigned idCounter_;
-    static const std::unordered_set<unsigned> pointNums_;
-    static const std::unordered_set<unsigned> fieldNums_;
-    static const std::unordered_set<unsigned> crapsNums_;
-    static const std::unordered_set<unsigned> bookEnds_;
-    static const std::unordered_set<unsigned> hardwayNums_;
 
     enum Decision
     {
@@ -141,6 +136,11 @@ private:
     Gen::ReturnCode evalAnyCraps(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);
+    Gen::ReturnCode evalAny711(
+        unsigned point,
+        const Dice& dice,
+        DecisionRecord& dr,
+        Gen::ErrorPass& ep);
     Gen::ReturnCode evalAnySeven(
         unsigned point, const Dice& dice,
         DecisionRecord& dr, Gen::ErrorPass& ep);

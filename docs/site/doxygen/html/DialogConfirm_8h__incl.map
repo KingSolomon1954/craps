@@ -1,9 +1,11 @@
 <map id="src/lib&#45;cui/include/cui/dialogs/DialogConfirm.h" name="src/lib&#45;cui/include/cui/dialogs/DialogConfirm.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="180,5,385,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="244,5,449,45"/>
 <area shape="rect" id="Node000002" href="$DialogBase_8h.html" title=" " alt="" coords="135,93,308,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="270,47,241,84,237,81,266,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="318,48,253,88,250,84,315,43"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="309,240,368,265"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="298,44,311,67,323,92,332,128,337,165,341,226,336,227,332,165,326,129,317,94,307,69,294,47"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="349,46,342,226,337,226,343,45"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="385,93,482,119"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="369,44,412,82,408,86,366,48"/>
 <area shape="rect" id="Node000003" href="$SurfaceBase_8h.html" title=" " alt="" coords="129,167,309,192"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="224,119,222,153,217,153,218,119"/>
 <area shape="rect" id="Node000004" href="$CuiStructs_8h.html" title=" " alt="" coords="5,240,160,265"/>

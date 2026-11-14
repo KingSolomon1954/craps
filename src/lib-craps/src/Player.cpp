@@ -259,7 +259,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 {
     const std::string fname("Player::makeBet");
     LOG_TRACE(fname + "(" + playerName_ + "): making contract bet");
-    
+
     Gen::ErrorPass ep;
     std::string s = "Unable to make bet(" +
                     std::to_string(contractAmount) +
@@ -308,7 +308,7 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
     sendEventPlayerBalanceChanged();
     sendEventPlayerBetsChanged();
     pBet->logBet(fname + "() Accepted");
-    
+
     return pBet;
 }
 
@@ -465,7 +465,7 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
 {
     const std::string fname("Player::setOddsAmount()");
     Gen::ErrorPass ep;
-    
+
     // fif prefix means "fault if"
 
     if (fifMissingBet(pBet, ep)                     ||
@@ -477,12 +477,12 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
         LOG_ERROR(fname + " Error " + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-    
+
     Gen::Money saveOddsAmount = pBet->oddsAmount();
-    
+
     wallet_.deposit(pBet->oddsAmount());  // give back old amount, if any
     wallet_.withdraw(newAmount);          // take out new amount
-    
+
     auto rc = pTable_->setOddsAmount(pBet, newAmount, ep);
     if (rc == Gen::ReturnCode::Fail)         // Bet was rejected
     {                                        // Restore prev amount
@@ -498,6 +498,67 @@ Player::setOddsAmount(BetPtr pBet, Gen::Money newAmount)
     pBet->logBet(fname + " Accepted");
 
     return {};
+}
+
+/*-----------------------------------------------------------*//**
+
+Makes a bet, or if the player already has that bet, changes its amount.
+
+A player has at most one bet on a given spot, as at a real table where
+the chips stack up. Asking for the same bet again is a request to make
+it the given amount, not to add a second bet. Nothing is added to the
+existing amount; repeating a request gives the same result.
+
+@li findBet() decides whether it is the same bet.
+@li Not there: same as makeBet().
+@li There: same as setContractAmount(), including its rules, such as no
+    reducing a PassLine bet and no increasing a DontPass bet after the
+    point, and the table limits applied to the new amount.
+@li Already that amount: nothing to do, still a success.
+
+@param[in] betName
+    The bet
+@param[in] contractAmount
+    The amount the bet is to be, not an amount to add
+@param[in] pivot
+    As for makeBet()
+
+@return
+    The bet, whether it was changed, and its previous amount if so.
+    Otherwise Fail and ep has the reason.
+*/
+zeus::expected<Player::BetPlaced, Gen::ErrorPass>
+Player::makeOrChangeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
+{
+    BetPtr existing = findBet(betName, pivot);
+    if (existing == nullptr)
+    {
+        auto made = makeBet(betName, contractAmount, pivot);
+        if (!made)
+        {
+            return zeus::unexpected<Gen::ErrorPass>(std::move(made).error());
+        }
+        BetPlaced placed;
+        placed.bet = std::move(made).value();
+        return placed;
+    }
+
+    BetPlaced placed;
+    placed.bet            = existing;
+    placed.changed        = true;
+    placed.previousAmount = existing->contractAmount();
+
+    if (contractAmount != placed.previousAmount)
+    {
+        auto result = setContractAmount(existing, contractAmount);
+        if (!result)
+        {
+            result.error().prepend("You already have this bet, so its amount "
+                                   "would be changed. ");
+            return zeus::unexpected<Gen::ErrorPass>(std::move(result).error());
+        }
+    }
+    return placed;
 }
 
 /*-----------------------------------------------------------*//**
@@ -530,7 +591,7 @@ Player::setContractAmount(
 {
     const std::string fname("Player::setContractAmount()");
     Gen::ErrorPass ep;
-    
+
     // fif prefix means "fault if"
 
     const Gen::Money oldPlacementFee = pBet ? pBet->placementCommission() : 0;
@@ -546,12 +607,12 @@ Player::setContractAmount(
         LOG_ERROR(fname + " Error" + ep.fullDesc());
         return zeus::unexpected<Gen::ErrorPass>(std::move(ep));
     }
-    
+
     Gen::Money saveContractAmount = pBet->contractAmount();
-    
+
     wallet_.deposit(saveContractAmount + oldPlacementFee);
     wallet_.withdraw(newAmount + newPlacementFee);
-    
+
     auto rc = pTable_->setContractAmount(pBet, newAmount, ep);
     if (rc == Gen::ReturnCode::Fail)
     {
@@ -587,6 +648,109 @@ void
 Player::bettingClosed()
 {
     lastRollStats_.prep(getAmountOnTable(), getNumBetsOnTable());
+    currentStats_.betStats.resetRollCounts();  // Start of a new roll
+}
+
+/*-----------------------------------------------------------*//**
+
+Record what this player took part in for the Repeaters statistics.
+
+Called by CrapsTable for every player on every roll, before results are
+dispensed, so the bets are still on the table. point is the point as it
+was when the dice were thrown and drl holds this roll's decisions for
+all players.
+
+A hit of a point number counts when the player had a live bet on it:
+
+@li Pass line or Come bet whose number is rolled, including the roll
+    that establishes the number. One hit per roll, even when several
+    of the player's bets are on the number.
+@li Place or Buy bet that wins on the number.
+
+A seven ends the run for Pass line and Come numbers. A seven out ends
+the run for Place and Buy numbers; a come out seven does not, since
+those bets are off. See closeSpotRepeaters().
+
+*/
+void
+Player::recordRepeaters(unsigned point, unsigned roll,
+                        const std::list<DecisionRecord>& drl)
+{
+    if (roll == 7)
+    {
+        currentStats_.pointRepeaters.endRun();
+        closeSpotRepeaters(currentStats_.placeRepeaters, BetName::Place, point, drl);
+        closeSpotRepeaters(currentStats_.buyRepeaters,   BetName::Buy,   point, drl);
+        return;
+    }
+
+    if (!PointNums.contains(roll))
+        return;
+
+    bool pointHit = false;
+    bool placeHit = false;
+    bool buyHit   = false;
+    for (const auto& r : drl)
+    {
+        if (r.pBet == nullptr || &r.pBet->player() != this)
+            continue;
+        if (r.pBet->pivot() != roll)
+            continue;
+
+        const bool won = r.decision && r.lose == 0;
+        switch (r.pBet->betName())
+        {
+        case BetName::PassLine:
+        case BetName::Come:  pointHit = true;         break;
+        case BetName::Place: placeHit = placeHit || won; break;
+        case BetName::Buy:   buyHit   = buyHit   || won; break;
+        default:                                      break;
+        }
+    }
+
+    if (pointHit) currentStats_.pointRepeaters.hit(roll);
+    if (placeHit) currentStats_.placeRepeaters.hit(roll);
+    if (buyHit)   currentStats_.buyRepeaters.hit(roll);
+}
+
+/*-----------------------------------------------------------*//**
+
+Ends Place or Buy runs on a seven.
+
+On a seven out, every number the player holds a bet on ends its run,
+including with zero hits (a bet that lost without ever winning). A
+number with hits but no bet any more ends too, with the hits it has.
+
+On a come out seven those bets are normally off and nothing ends. If
+the table rules left one working and it lost, only that number ends.
+
+*/
+void
+Player::closeSpotRepeaters(Repeaters& reps, BetName name, unsigned point,
+                           const std::list<DecisionRecord>& drl) const
+{
+    if (point != 0)
+    {
+        DiceNums zeros;
+        for (const auto& b : bets_)
+        {
+            if (b->betName() == name && reps.tracks(b->pivot()) &&
+                reps.running(b->pivot()) == 0)
+                zeros.insert(b->pivot());
+        }
+        reps.closeRun(zeros, true);
+        reps.endRun();
+        return;
+    }
+
+    DiceNums lost;
+    for (const auto& r : drl)
+    {
+        if (r.pBet != nullptr && &r.pBet->player() == this &&
+            r.pBet->betName() == name && r.lose > 0)
+            lost.insert(r.pBet->pivot());
+    }
+    reps.closeRun(lost, true);
 }
 
 /*-----------------------------------------------------------*//**
@@ -601,7 +765,7 @@ Player::processWin(const DecisionRecord& dr)
 {
     if (dr.pBet == nullptr ||
         (dr.win <= 0 &&
-         !(dr.pBet->betName() == BetName::World && dr.decision && dr.lose == 0)))
+         !(dr.decision && dr.lose == 0 && dr.componentLoss > 0)))
     {
         LOG_ERROR("Player::processWin(): invalid DecisionRecord (null bet or non-positive win).");
         return;
@@ -638,17 +802,15 @@ Player::processWin(const DecisionRecord& dr)
         wallet_.deposit(dr.win);
     }
 
-    currentStats_.recordWin(*(dr.pBet), dr.win);
-    if (pBet->betName() == BetName::World && dr.decision && dr.lose == 0)
+    currentStats_.recordWin(dr);
+    if (dr.decision && dr.lose == 0 && dr.componentLoss > 0)
     {
-        // The aggregate World bet's net profit hides the component cashflows.
-        // Keep Last Roll comparable with the house: record the winning
-        // component's gross profit and the four losing component stakes.
-        const Gen::Money component = pBet->contractAmount() / 5;
-        const Gen::Money losingComponents =
-            pBet->contractAmount() - component;
-        lastRollStats_.amountWin += dr.win + losingComponents;
-        lastRollStats_.amountLose += losingComponents;
+        // An aggregate bet's (C&E, Horn, World) net profit hides the
+        // component cashflows. Keep Last Roll comparable with the house:
+        // record the winning component's gross profit and the losing
+        // component stakes.
+        lastRollStats_.amountWin += dr.win + dr.componentLoss;
+        lastRollStats_.amountLose += dr.componentLoss;
     }
     else
     {
@@ -695,7 +857,7 @@ Player::processLose(const DecisionRecord& dr)
     //
     wallet_.deposit(dr.returnToPlayer);
 
-    currentStats_.recordLose(*(dr.pBet), dr.lose);
+    currentStats_.recordLose(dr);
     lastRollStats_.amountLose += dr.lose;
     lastRollStats_.numBetsLose++;
 
@@ -773,6 +935,54 @@ Player::getBet(const BetId& betId, Gen::ErrorPass& ep) const
     ep.setDescription("Player::getBet(): player " + playerName_ +
                       " has no such betId " + std::to_string(betId) + ".");
     return nullptr;
+}
+
+//----------------------------------------------------------------
+//
+// Finds the player's bet on the same spot as (betName, pivot), or
+// returns nullptr. The caller's pivot is treated the way a new bet
+// would be, so "same spot" means what it means at the table:
+//
+// @li Field, AnyCraps, AnySeven, Any711, C&E, Horn and World have no pivot.
+//     CrapsBet forces it to 0 (CrapsBet::checkSideBets()).
+// @li PassLine and DontPass bets take the point as their pivot once
+//     there is one, whether placed before or after it was established
+//     (CrapsTable::betAllowed(), CrapsBet).
+//
+BetPtr
+Player::findBet(BetName betName, unsigned pivot) const
+{
+    switch (betName)
+    {
+    case BetName::Field:
+    case BetName::AnyCraps:
+    case BetName::AnySeven:
+    case BetName::Any711:
+    case BetName::CandE:
+    case BetName::Horn:
+    case BetName::World:
+        pivot = 0;
+        break;
+
+    case BetName::PassLine:
+    case BetName::DontPass:
+        if (pTable_ != nullptr && pTable_->getPoint() != 0)
+        {
+            pivot = pTable_->getPoint();
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    auto it = std::find_if(bets_.begin(), bets_.end(),
+                   [betName, pivot](const BetPtr& b)
+                   {
+                       return b->betName() == betName &&
+                              b->pivot()   == pivot;
+                   });
+    return (it != bets_.end()) ? *it : nullptr;
 }
 
 //----------------------------------------------------------------
@@ -1091,7 +1301,7 @@ Player::diagBadBetId(const std::string& funcName, BetId betId) const
         "Player::" + funcName + "cant match "
         "decision record betId against any betId held "
         "in player betList. Bad betId:" + std::to_string(betId);
-    LOG_ERROR(diag); 
+    LOG_ERROR(diag);
 }
 
 //----------------------------------------------------------------
@@ -1159,7 +1369,7 @@ Player::sendEventPlayerSessionStatsChanged() const
 
 //----------------------------------------------------------------
 
-void        
+void
 Player::sendEventPlayerLastRollStatsChanged() const
 {
     Ctrl::UslPlayerLastRollStatsChanged lrs{};
@@ -1267,15 +1477,15 @@ Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass& ep) const
                Es::Indeterminate, diagPrefix(2) + "BetPtr is null.");
         return true;
     }
-    
+
     if (findBetById(pBet->betId()) == nullptr)
     {
         if (pBet->player().getPlayerId() == playerId_)
         {
-            // Bet was somehow created outside of makeBet()
+            // Bet was somehow created outside of makeOrChangeBet()
             std::string s = fmt::format(
                 "{} Player:{} does not have this bet in their bet list; "
-                "Programmer error; Must use Player::makeBet() to make "
+                "Programmer error; Must use Player::makeOrChangeBet() to make "
                 "a bet; {}.", diagPrefix(2), playerName_, pBet->diagBetId());
             EP_SET(ep, En::LogicError, Et::ProcessingError,
                    Es::Indeterminate, s);

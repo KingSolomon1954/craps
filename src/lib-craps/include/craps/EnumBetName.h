@@ -30,6 +30,7 @@ enum class BetName
     Field,       ///< Field bet
     AnyCraps,    ///< Any Craps bet
     AnySeven,    ///< Any Seven bet
+    Any711,      ///< Any 7 or 11 bet (naturals)
     CandE,       ///< Craps & Eleven bet
     Horn,        ///< Horn bet
     World,       ///< World bet
@@ -46,7 +47,7 @@ namespace EnumBetName
     std::string listAsString();
 
     /** Initialized array of enums for iterating. */
-    constexpr const std::array<BetName, 14> enumerators
+    constexpr const std::array<BetName, 15> enumerators
     {
         BetName::PassLine,   ///< Pass line bet
         BetName::Come,       ///< Come bet
@@ -59,6 +60,7 @@ namespace EnumBetName
         BetName::Field,      ///< Field bet
         BetName::AnyCraps,   ///< Any Craps bet
         BetName::AnySeven,   ///< Any Seven bet
+        BetName::Any711,     ///< Any 7 or 11 bet (naturals)
         BetName::CandE,      ///< Craps & Eleven bet
         BetName::Horn,       ///< Horn bet
         BetName::World       ///< World bet

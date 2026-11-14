@@ -114,6 +114,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1593116b8df53c2023c2b1c4a4e64d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac711b9eabcb741e0237e49922f3d68ee" id="r_ac711b9eabcb741e0237e49922f3d68ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac711b9eabcb741e0237e49922f3d68ee">onBetMade</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> betId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> contractAmount, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> oddsAmount, unsigned pivot)</td></tr>
 <tr class="separator:ac711b9eabcb741e0237e49922f3d68ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66ede029faa11baa87a6f4e57003959e" id="r_a66ede029faa11baa87a6f4e57003959e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66ede029faa11baa87a6f4e57003959e">onBetChanged</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> betId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> contractAmount, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> oddsAmount, unsigned pivot)</td></tr>
+<tr class="separator:a66ede029faa11baa87a6f4e57003959e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb72a7e10bd1863e45b2694e29be1621" id="r_aeb72a7e10bd1863e45b2694e29be1621"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb72a7e10bd1863e45b2694e29be1621">onBetResolved</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> betId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amountWin, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amountLose)</td></tr>
 <tr class="separator:aeb72a7e10bd1863e45b2694e29be1621"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bfc69987f490820d3379ff8534ce2a8" id="r_a6bfc69987f490820d3379ff8534ce2a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bfc69987f490820d3379ff8534ce2a8">onPlayerJoinedTable</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId)</td></tr>
@@ -214,6 +216,47 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">WINDOW *</td>          <td class="paramname"><span class="paramname"><em>pWin</em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a66ede029faa11baa87a6f4e57003959e" name="a66ede029faa11baa87a6f4e57003959e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66ede029faa11baa87a6f4e57003959e">&#9670;&#160;</a></span>onBetChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlayerAreaAllPlayers::onBetChanged </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a></td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a></td>          <td class="paramname"><span class="paramname"><em>betName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>contractAmount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>oddsAmount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -338,7 +381,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

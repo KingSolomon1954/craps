@@ -31,7 +31,7 @@ public:
         Buy4,      Buy5,      Buy6,      Buy8,      Buy9,      Buy10,
         Lay4,      Lay5,      Lay6,      Lay8,      Lay9,      Lay10,
         Hard4,     Hard6,     Hard8,     Hard10,    Field,
-        AnyCraps,  CandE,     Horn,      Any7,      World,
+        AnyCraps,  CandE,     Horn,      Any7,      Any711,    World,
         Come,      DontCome,
         PassLine,  PassLineOdds,
         DontPass,  DontPassOdds
@@ -39,18 +39,20 @@ public:
 
     /// @name CUI Utilities
     /// @{
-    static void transfer(WINDOW* pWin);
-    static WINDOW* makeCenteredWindow(WINDOW* pWin, int h, int w);
-    static WindowRect centerRect(WINDOW* pWin, WindowSize size);
-    static WindowRect getWindowRect(WINDOW* pWin);
-    static int wstringWidth(const std::wstring& msg);
-    static std::string playerName(const Craps::PlayerId& id);
-    static short playerColorPair (const Craps::PlayerId& id);
+    static void             transfer(WINDOW* pWin);
+    static WINDOW*          makeCenteredWindow(WINDOW* pWin, int h, int w);
+    static WindowRect       centerRect(WINDOW* pWin, WindowSize size);
+    static WindowRect       getWindowRect(WINDOW* pWin);
+    static int              wstringWidth(const std::wstring& msg);
+    static std::string      playerName(const Craps::PlayerId& id);
+    static short            playerColorPair (const Craps::PlayerId& id);
     static Craps::PlayerIds orderedPlayerIds();
-    static Craps::PlayerId userPlayerId();
-    static Craps::TableId activeTableId();
+    static Craps::PlayerId  userPlayerId();
+    static Craps::TableId   activeTableId();
     static Craps::PlayerIds playersAtTable(Craps::TableId tid);
-    static CuiBetName betToCuiBetName(BetName betName, unsigned pivot);
+    static CuiBetName       betToCuiBetName(BetName betName, unsigned pivot);
+    static void             getUserPlayerStats(Craps::PlayerStats& playerStats);
+    static void             getActiveTableStats(Craps::TableStats& tableStats);
     /// @}
 };
 

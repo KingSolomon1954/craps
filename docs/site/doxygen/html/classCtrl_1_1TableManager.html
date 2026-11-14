@@ -115,6 +115,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abddb7609da669f54c0d5bdc4da0c2ba5" id="r_abddb7609da669f54c0d5bdc4da0c2ba5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abddb7609da669f54c0d5bdc4da0c2ba5">~TableManager</a> ()</td></tr>
 <tr class="separator:abddb7609da669f54c0d5bdc4da0c2ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
+<tr class="memitem:ab41ed8619d701d58e2b4ba9013d01f32" id="r_ab41ed8619d701d58e2b4ba9013d01f32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab41ed8619d701d58e2b4ba9013d01f32">shutdown</a> ()</td></tr>
+<tr class="separator:ab41ed8619d701d58e2b4ba9013d01f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e770f372ce2a5f12a5edba4daba937c" id="r_a0e770f372ce2a5f12a5edba4daba937c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e770f372ce2a5f12a5edba4daba937c">switchCrapsTable</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;toTableId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a0e770f372ce2a5f12a5edba4daba937c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Observers</div></td></tr>
@@ -125,6 +127,13 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Management across multiple <a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> Tables. </p>
+<dl class="section user"><dt>Table files</dt><dd></dd></dl>
+<p><a class="el" href="classCraps_1_1CrapsTable.html" title="Craps Table.">Craps::CrapsTable</a> knows nothing about files. It only converts itself to and from YAML. <a class="el" href="classCtrl_1_1TableManager.html" title="Management across multiple Craps Tables.">TableManager</a> owns the rest, the same way <a class="el" href="classCtrl_1_1PlayerManager.html" title="Managers players.">PlayerManager</a> does for players:</p>
+<ul>
+<li>loadCrapsTable() reads the table's file once, keeps it as a <a class="el" href="classCtrl_1_1YamlFile.html" title="One YAML file, held as a document made of named sections.">YamlFile</a> and builds the CrapsTable from its "Table" section. </li>
+<li><a class="el" href="#ab41ed8619d701d58e2b4ba9013d01f32">shutdown()</a> shuts the current table down, which in turn shuts down all of its players and merges the session into their stats and the table's. It then takes a fresh snapshot of the table and writes its file. Failures are logged with LOG_ERROR. Call it once at quit, and before <a class="el" href="classCtrl_1_1PlayerManager.html#a96cfc316c4fcd368e2d34c881518ce73">PlayerManager::shutdown()</a>, which saves the players afterward. </li>
+<li><a class="el" href="#a0e770f372ce2a5f12a5edba4daba937c">switchCrapsTable()</a> saves the table it is leaving, after closing it. </li>
+</ul>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a94e29d86bc4a46f603d259e25720f82f" name="a94e29d86bc4a46f603d259e25720f82f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94e29d86bc4a46f603d259e25720f82f">&#9670;&#160;</a></span>Tables</h2>
@@ -214,6 +223,23 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ab41ed8619d701d58e2b4ba9013d01f32" name="ab41ed8619d701d58e2b4ba9013d01f32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab41ed8619d701d58e2b4ba9013d01f32">&#9670;&#160;</a></span>shutdown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TableManager::shutdown </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a0e770f372ce2a5f12a5edba4daba937c" name="a0e770f372ce2a5f12a5edba4daba937c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0e770f372ce2a5f12a5edba4daba937c">&#9670;&#160;</a></span>switchCrapsTable()</h2>
 
@@ -242,7 +268,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

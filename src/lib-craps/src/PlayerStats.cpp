@@ -15,9 +15,9 @@ Record a winning bet.
 
 */
 void
-PlayerStats::recordWin(const CrapsBet& bet, Gen::Money amtWin)
+PlayerStats::recordWin(const CrapsBet& bet, Gen::Money amtWin, unsigned roll)
 {
-    betStats.recordWin(bet, amtWin);
+    betStats.recordWin(bet, amtWin, roll);
 }
 
 /*-----------------------------------------------------------*//**
@@ -26,9 +26,32 @@ Record a losing bet.
 
 */
 void
-PlayerStats::recordLose(const CrapsBet& bet, Gen::Money amtLose)
+PlayerStats::recordLose(const CrapsBet& bet, Gen::Money amtLose, unsigned roll)
 {
-    betStats.recordLose(bet, amtLose);
+    betStats.recordLose(bet, amtLose, roll);
+}
+
+/*-----------------------------------------------------------*//**
+
+Record a winning bet from its decision record. Preferred over the
+overload above since it also records roll, odds and component details.
+
+*/
+void
+PlayerStats::recordWin(const DecisionRecord& dr)
+{
+    betStats.recordWin(dr);
+}
+
+/*-----------------------------------------------------------*//**
+
+Record a losing bet from its decision record.
+
+*/
+void
+PlayerStats::recordLose(const DecisionRecord& dr)
+{
+    betStats.recordLose(dr);
 }
 
 /*-----------------------------------------------------------*//**
@@ -51,6 +74,9 @@ void
 PlayerStats::reset()
 {
     betStats.reset();
+    pointRepeaters.reset();
+    placeRepeaters.reset();
+    buyRepeaters.reset();
     // No sessionHistory.clear()
 }
 
@@ -60,6 +86,9 @@ void
 PlayerStats::merge(const PlayerStats& session)
 {
     betStats.merge(session.betStats);
+    pointRepeaters.merge(session.pointRepeaters);
+    placeRepeaters.merge(session.placeRepeaters);
+    buyRepeaters.merge(session.buyRepeaters);
     // No sessionHistory.merge()
 }
 
@@ -70,6 +99,12 @@ PlayerStats::toYAML(YAML::Node& node) const
 {
     node["BetStats"]     = betStats.toYAML();
     node["SessionStats"] = sessionHistory.toYAML();
+
+    YAML::Node repeaters;
+    repeaters["pointRepeaters"] = pointRepeaters.toYAML();
+    repeaters["placeRepeaters"] = placeRepeaters.toYAML();
+    repeaters["buyRepeaters"]   = buyRepeaters.toYAML();
+    node["Repeaters"] = repeaters;
 }
 
 //-----------------------------------------------------------------
@@ -79,6 +114,11 @@ PlayerStats::fromYAML(const YAML::Node& node)
 {
     betStats.fromYAML      (node["BetStats"]);
     sessionHistory.fromYAML(node["SessionStats"]);
+
+    const YAML::Node repeaters = node["Repeaters"];
+    pointRepeaters.fromYAML(repeaters["pointRepeaters"]);
+    placeRepeaters.fromYAML(repeaters["placeRepeaters"]);
+    buyRepeaters.fromYAML  (repeaters["buyRepeaters"]);
 }
 
 //-----------------------------------------------------------------

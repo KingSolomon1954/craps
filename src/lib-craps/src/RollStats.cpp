@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <craps/RollStats.h>
+#include <craps/CrapsTypes.h>
 
 using namespace Craps;
 
@@ -80,8 +81,8 @@ Counter::toYAML() const
 void
 Counter::fromYAML(const YAML::Node& node)
 {
-    if (node["count"])      count_     = node["count"].as<unsigned>();
-    if (node["maxRepeats"]) maxRepeats = node["maxRepeats"].as<unsigned>();
+    count_     = node["count"].as<unsigned>();
+    maxRepeats = node["maxRepeats"].as<unsigned>();
     curRepeats = 0;
     pivot = 0;
     armed = false;
@@ -129,9 +130,10 @@ PointCounts::fromYAML(const YAML::Node& node)
 void
 RollStats::reset()
 {
-    for (unsigned i = 2; i < 12; i++)
+    for (unsigned i = 2; i <= 12; i++)
     {
         numberCounts[i].reset();
+        pointNumberCounts[i].reset();
     }
 
     for (unsigned i : {4, 5, 6, 8, 9, 10})
@@ -141,6 +143,8 @@ RollStats::reset()
         comePntCnts[i].reset();
         dontComePntCnts[i].reset();
         hardwayCounts[i].reset();
+        hardwayEasy[i].reset();
+        hardwaySeven[i].reset();
         anyEstPntCnts[i].reset();
     }
 
@@ -166,6 +170,8 @@ RollStats::reset()
     elevensOnComeOutRoll.reset();
     twelvesOnComeOutRoll.reset();
     crapsOnComeOutRoll.reset();
+    pointRepeaters.reset();
+    placeRepeaters.reset();
 }
 
 //-----------------------------------------------------------------
@@ -173,9 +179,10 @@ RollStats::reset()
 void
 RollStats::merge(const RollStats& session)
 {
-    for (unsigned i = 2; i < 12; i++)
+    for (unsigned i = 2; i <= 12; i++)
     {
         numberCounts[i].merge(session.numberCounts[i]);
+        pointNumberCounts[i].merge(session.pointNumberCounts[i]);
     }
 
     for (unsigned i : {4, 5, 6, 8, 9, 10})
@@ -185,6 +192,8 @@ RollStats::merge(const RollStats& session)
         comePntCnts[i].merge(session.comePntCnts[i]);
         dontComePntCnts[i].merge(session.dontComePntCnts[i]);
         hardwayCounts[i].merge(session.hardwayCounts[i]);
+        hardwayEasy[i].merge(session.hardwayEasy[i]);
+        hardwaySeven[i].merge(session.hardwaySeven[i]);
         anyEstPntCnts[i].merge(session.anyEstPntCnts[i]);
     }
     
@@ -210,6 +219,8 @@ RollStats::merge(const RollStats& session)
     elevensOnComeOutRoll.merge(session.elevensOnComeOutRoll);
     twelvesOnComeOutRoll.merge(session.twelvesOnComeOutRoll);
     crapsOnComeOutRoll.merge(session.crapsOnComeOutRoll);
+    pointRepeaters.merge(session.pointRepeaters);
+    placeRepeaters.merge(session.placeRepeaters);
 }
 
 //-----------------------------------------------------------------
@@ -221,6 +232,8 @@ RollStats::toYAML() const
     numberCountsToYAML(node);
     pointCountsToYAML (node);
     singleCountsToYAML(node);
+    node["pointRepeaters"] = pointRepeaters.toYAML();
+    node["placeRepeaters"] = placeRepeaters.toYAML();
     return node;
 }
 
@@ -287,6 +300,15 @@ RollStats::pointCountsToYAML(YAML::Node& node) const
     };
 
     fillHardwayCounts(node["hardwayCounts"], hardwayCounts);
+
+    // Hardway losses by cause, and rolls made while a point was on.
+    for (unsigned pt : {4, 6, 8, 10})
+    {
+        node["hardwayEasyCounts"][std::to_string(pt)]  = hardwayEasy[pt].toYAML();
+        node["hardwaySevenCounts"][std::to_string(pt)] = hardwaySeven[pt].toYAML();
+    }
+    for (unsigned i = 2; i <= 12; ++i)
+        node["pointNumberCounts"][std::to_string(i)] = pointNumberCounts[i].toYAML();
 }
     
 //-----------------------------------------------------------------
@@ -307,7 +329,7 @@ RollStats::singleCountsToYAML(YAML::Node& node) const
     node["dontComeWinsComeOut"]  = dontComeWinsComeOut.toYAML();
     node["dontComeLoseComeOut"]  = dontComeLoseComeOut.toYAML();
     node["fieldBetWins"]         = fieldBetWins.toYAML();
-    node["fieldBetLose"]         = fieldBetWins.toYAML();
+    node["fieldBetLose"]         = fieldBetLose.toYAML();
     node["sevenOuts"]            = sevenOuts.toYAML();
     node["shooterCounts"]        = shooterCounts.toYAML();
     node["twosOnComeOutRoll"]    = twosOnComeOutRoll.toYAML();
@@ -326,6 +348,8 @@ RollStats::fromYAML(const YAML::Node& node)
     numberCountsFromYAML(node);
     pointCountsFromYAML (node);
     singleCountsFromYAML(node);
+    pointRepeaters.fromYAML(node["pointRepeaters"]);
+    placeRepeaters.fromYAML(node["placeRepeaters"]);
 }
 
 //-----------------------------------------------------------------
@@ -334,31 +358,17 @@ void
 RollStats::numberCountsFromYAML(const YAML::Node& node)
 {
     // Deserialize numberCounts[2-12]
-    if (node["numberCounts"])
+    const YAML::Node numberNode = node["numberCounts"];
+    for (unsigned i = 2; i <= 12; ++i)
     {
-        const YAML::Node& numberNode = node["numberCounts"];
-        for (unsigned i = 2; i <= 12; ++i)
-        {
-            std::string key = std::to_string(i);
-            if (numberNode[key])
-            {
-                numberCounts[i].fromYAML(numberNode[key]);
-            }
-        }
+        numberCounts[i].fromYAML(numberNode[std::to_string(i)]);
     }
 
     // Deserialize anyEstPntCnts[4,5,6,8,9,10]
-    if (node["anyEstPntCnts"])
+    const YAML::Node estNode = node["anyEstPntCnts"];
+    for (unsigned i : {4, 5, 6, 8, 9, 10})
     {
-        const YAML::Node& estNode = node["anyEstPntCnts"];
-        for (unsigned i : {4, 5, 6, 8, 9, 10})
-        {
-            std::string key = std::to_string(i);
-            if (estNode[key])
-            {
-                anyEstPntCnts[i].fromYAML(estNode[key]);
-            }
-        }
+        anyEstPntCnts[i].fromYAML(estNode[std::to_string(i)]);
     }
 }
 
@@ -368,36 +378,32 @@ void
 RollStats::pointCountsFromYAML (const YAML::Node& node)
 {
     // Helper lambda to load YAML into an array
-    auto loadPointCounts = [&](const YAML::Node& groupNode, std::array<PointCounts, 11>& arr)
+    auto loadCounts = [&](const YAML::Node& groupNode,
+                          std::array<PointCounts, 11>& arr,
+                          const std::vector<unsigned>& points)
     {
-        const std::vector<unsigned> points = {4, 5, 6, 8, 9, 10};
         for (unsigned pt : points)
         {
-            std::string key = std::to_string(pt);
-            if (groupNode[key])
-            {
-                arr[pt].fromYAML(groupNode[key]);
-            }
+            arr[pt].fromYAML(groupNode[std::to_string(pt)]);
         }
     };
 
-    loadPointCounts(node["passPntCnts"],     passPntCnts);
-    loadPointCounts(node["dontPassPntCnts"], dontPassPntCnts);
-    loadPointCounts(node["comePntCnts"],     comePntCnts);
-    loadPointCounts(node["dontComePntCnts"], dontComePntCnts);
+    const std::vector<unsigned> points   = {4, 5, 6, 8, 9, 10};
+    const std::vector<unsigned> hardways = {4, 6, 8, 10};
+    loadCounts(node["passPntCnts"],     passPntCnts,     points);
+    loadCounts(node["dontPassPntCnts"], dontPassPntCnts, points);
+    loadCounts(node["comePntCnts"],     comePntCnts,     points);
+    loadCounts(node["dontComePntCnts"], dontComePntCnts, points);
+    loadCounts(node["hardwayCounts"],   hardwayCounts,   hardways);
 
-    // Similar for hardways
-    auto loadHardwayCounts = [&](const YAML::Node& groupNode, std::array<PointCounts, 11>& arr)
+    for (unsigned pt : {4, 6, 8, 10})
     {
-        const std::vector<unsigned> points = {4, 6, 8, 10};
-        for (unsigned pt : points)
-        {
-            std::string key = std::to_string(pt);
-            arr[pt].fromYAML(groupNode[key]);
-        }
-    };
-
-    if (node["hardwayCounts"]) loadPointCounts(node["hardwayCounts"], hardwayCounts);
+        const std::string key = std::to_string(pt);
+        hardwayEasy[pt].fromYAML(node["hardwayEasyCounts"][key]);
+        hardwaySeven[pt].fromYAML(node["hardwaySevenCounts"][key]);
+    }
+    for (unsigned i = 2; i <= 12; ++i)
+        pointNumberCounts[i].fromYAML(node["pointNumberCounts"][std::to_string(i)]);
 }
 
 //-----------------------------------------------------------------
@@ -430,3 +436,187 @@ RollStats::singleCountsFromYAML(const YAML::Node& node)
 }
 
 //-----------------------------------------------------------------
+
+//-----------------------------------------------------------------
+//
+// How often each bet type would have won or lost given the rolls seen,
+// regardless of whether anyone bet. pivot == 0 means all points combined.
+//
+WinLossCounts
+RollStats::simulatedCounts(BetName betName, unsigned pivot) const
+{
+    const RollStats& stats = *this;
+    WinLossCounts result;
+
+    const auto addPointCounts = [&](const PointCounts& counts)
+    {
+        result.wins   += counts.wins.count();
+        result.losses += counts.lose.count();
+    };
+
+    const auto addAllPointCounts =
+        [&](const std::array<PointCounts, 11>& counts)
+    {
+        for (unsigned point : {4U, 5U, 6U, 8U, 9U, 10U})
+            addPointCounts(counts[point]);
+    };
+
+    const auto countByNumber = [&](auto isWin)
+    {
+        for (unsigned number = 2; number <= 12; ++number)
+        {
+            const unsigned count = stats.numberCounts[number].count();
+
+            if (isWin(number))
+                result.wins += count;
+            else
+                result.losses += count;
+        }
+    };
+
+    switch (betName)
+    {
+    case BetName::PassLine:
+        if (pivot != 0)
+        {
+            if (pivot < stats.passPntCnts.size())
+                addPointCounts(stats.passPntCnts[pivot]);
+        }
+        else
+        {
+            result.wins   += stats.passWinsComeOut.count();
+            result.losses += stats.passLoseComeOut.count();
+            addAllPointCounts(stats.passPntCnts);
+        }
+        break;
+
+    case BetName::DontPass:
+        if (pivot != 0)
+        {
+            if (pivot < stats.dontPassPntCnts.size())
+                addPointCounts(stats.dontPassPntCnts[pivot]);
+        }
+        else
+        {
+            result.wins   += stats.dontPassWinsComeOut.count();
+            result.losses += stats.dontPassLoseComeOut.count();
+            addAllPointCounts(stats.dontPassPntCnts);
+        }
+        break;
+
+    case BetName::Come:
+        if (pivot != 0)
+        {
+            if (pivot < stats.comePntCnts.size())
+                addPointCounts(stats.comePntCnts[pivot]);
+        }
+        else
+        {
+            result.wins   += stats.comeWinsComeOut.count();
+            result.losses += stats.comeLoseComeOut.count();
+            addAllPointCounts(stats.comePntCnts);
+        }
+        break;
+
+    case BetName::DontCome:
+        if (pivot != 0)
+        {
+            if (pivot < stats.dontComePntCnts.size())
+                addPointCounts(stats.dontComePntCnts[pivot]);
+        }
+        else
+        {
+            result.wins   += stats.dontComeWinsComeOut.count();
+            result.losses += stats.dontComeLoseComeOut.count();
+            addAllPointCounts(stats.dontComePntCnts);
+        }
+        break;
+
+    // Place, Buy and Lay are off on the come out roll by default, so only
+    // rolls made while a point was on are considered.
+    case BetName::Place:
+    case BetName::Buy:
+        if (pivot >= 2 && pivot <= 12 && pivot != 7)
+        {
+            result.wins   = stats.pointNumberCounts[pivot].count();
+            result.losses = stats.pointNumberCounts[7].count();
+        }
+        break;
+
+    case BetName::Lay:   // Opposite of Buy: wins on 7, loses on the number
+        if (pivot >= 2 && pivot <= 12 && pivot != 7)
+        {
+            result.wins   = stats.pointNumberCounts[7].count();
+            result.losses = stats.pointNumberCounts[pivot].count();
+        }
+        break;
+
+    case BetName::Hardway:
+        if (pivot < stats.hardwayCounts.size())
+            addPointCounts(stats.hardwayCounts[pivot]);
+        break;
+
+    case BetName::Field:
+        result.wins   = stats.fieldBetWins.count();
+        result.losses = stats.fieldBetLose.count();
+        break;
+
+    case BetName::AnyCraps:
+        countByNumber([](unsigned n)
+        {
+            return CrapsNums.contains(n);
+        });
+        break;
+
+    case BetName::AnySeven:
+        countByNumber([](unsigned n)
+        {
+            return n == 7;
+        });
+        break;
+
+    case BetName::Any711:
+        countByNumber([](unsigned n)
+        {
+            return NaturalNums.contains(n);
+        });
+        break;
+
+    case BetName::CandE:
+    case BetName::Horn:
+        countByNumber([](unsigned n)
+        {
+            return BookEnds.contains(n);
+        });
+        break;
+
+    case BetName::World:
+        countByNumber([](unsigned n)
+        {
+            return WorldNums.contains(n);
+        });
+        break;
+
+    default:
+        break;
+    }
+
+    return result;
+}
+
+//-----------------------------------------------------------------
+//
+// Simulated hardway losses for one hardway number: easy roll of that
+// number versus a seven. Hardways are assumed to work on come out rolls.
+//
+HardwayLossCounts
+RollStats::simulatedHardwayLosses(unsigned pivot) const
+{
+    HardwayLossCounts result;
+    if (pivot < hardwayEasy.size())
+    {
+        result.easy  = hardwayEasy[pivot].count();
+        result.seven = hardwaySeven[pivot].count();
+    }
+    return result;
+}

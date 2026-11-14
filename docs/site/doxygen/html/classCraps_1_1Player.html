@@ -91,6 +91,7 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="classCraps_1_1Player-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Craps::Player Class Reference</div></div>
@@ -102,6 +103,12 @@ $(function(){ initResizable(false); });
 
 <p><code>#include &lt;<a class="el" href="Player_8h_source.html">Player.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCraps_1_1Player_1_1BetPlaced.html">BetPlaced</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">What <a class="el" href="#aef4a99274505c8b317c56f3254988c00">makeOrChangeBet()</a> did.  <a href="structCraps_1_1Player_1_1BetPlaced.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:adccc45911949f60778a803c6bf50c55f" id="r_adccc45911949f60778a803c6bf50c55f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adccc45911949f60778a803c6bf50c55f">Bets</a> = std::vector&lt;<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a>&gt;</td></tr>
@@ -110,8 +117,8 @@ Public Types</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
-<tr class="memitem:a1239f78337c01e5fd28269ef6c317658" id="r_a1239f78337c01e5fd28269ef6c317658"><td class="memItemLeft" align="right" valign="top">zeus::expected&lt; <a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a>, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1239f78337c01e5fd28269ef6c317658">makeBet</a> (<a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> contractAmount, unsigned pivot)</td></tr>
-<tr class="separator:a1239f78337c01e5fd28269ef6c317658"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef4a99274505c8b317c56f3254988c00" id="r_aef4a99274505c8b317c56f3254988c00"><td class="memItemLeft" align="right" valign="top">zeus::expected&lt; <a class="el" href="structCraps_1_1Player_1_1BetPlaced.html">BetPlaced</a>, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef4a99274505c8b317c56f3254988c00">makeOrChangeBet</a> (<a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> contractAmount, unsigned pivot)</td></tr>
+<tr class="separator:aef4a99274505c8b317c56f3254988c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37a815f45bc1549e884a89de86619438" id="r_a37a815f45bc1549e884a89de86619438"><td class="memItemLeft" align="right" valign="top">zeus::expected&lt; void, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37a815f45bc1549e884a89de86619438">joinTable</a> (<a class="el" href="classCraps_1_1CrapsTable.html">CrapsTable</a> &amp;table)</td></tr>
 <tr class="separator:a37a815f45bc1549e884a89de86619438"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acff1030ee691b00d5d69ae2a4b3e052f" id="r_acff1030ee691b00d5d69ae2a4b3e052f"><td class="memItemLeft" align="right" valign="top">zeus::expected&lt; void, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acff1030ee691b00d5d69ae2a4b3e052f">leaveTable</a> ()</td></tr>
@@ -130,6 +137,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aad480e920dbce7e92a1c6a8a78d41cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9d48219bd7f51275eb67883dd903dcd" id="r_ab9d48219bd7f51275eb67883dd903dcd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9d48219bd7f51275eb67883dd903dcd">disburseDone</a> ()</td></tr>
 <tr class="separator:ab9d48219bd7f51275eb67883dd903dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c41ef901500ccd4e961045b5780cfaf" id="r_a8c41ef901500ccd4e961045b5780cfaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c41ef901500ccd4e961045b5780cfaf">recordRepeaters</a> (unsigned point, unsigned roll, const std::list&lt; <a class="el" href="structCraps_1_1DecisionRecord.html">DecisionRecord</a> &gt; &amp;drl)</td></tr>
+<tr class="separator:a8c41ef901500ccd4e961045b5780cfaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cf79a1e3d69ce4a2e1c62463f604e99" id="r_a4cf79a1e3d69ce4a2e1c62463f604e99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cf79a1e3d69ce4a2e1c62463f604e99">processWin</a> (const <a class="el" href="structCraps_1_1DecisionRecord.html">DecisionRecord</a> &amp;dr)</td></tr>
 <tr class="separator:a4cf79a1e3d69ce4a2e1c62463f604e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2edf4e883ea39ed748cb453a52d187e9" id="r_a2edf4e883ea39ed748cb453a52d187e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2edf4e883ea39ed748cb453a52d187e9">processLose</a> (const <a class="el" href="structCraps_1_1DecisionRecord.html">DecisionRecord</a> &amp;dr)</td></tr>
@@ -155,6 +164,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a60dceb921709a8bf55c246ef515a2ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad03128045af91576577e2118b6be54ed" id="r_ad03128045af91576577e2118b6be54ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad03128045af91576577e2118b6be54ed">getBet</a> (<a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, size_t pivot, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep) const</td></tr>
 <tr class="separator:ad03128045af91576577e2118b6be54ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1e6d2a1efe7717dbd73101a179913a7" id="r_af1e6d2a1efe7717dbd73101a179913a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1e6d2a1efe7717dbd73101a179913a7">findBet</a> (<a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, unsigned pivot) const</td></tr>
+<tr class="separator:af1e6d2a1efe7717dbd73101a179913a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a107e4b66f4c3f75ca69be8ce50003510" id="r_a107e4b66f4c3f75ca69be8ce50003510"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#adccc45911949f60778a803c6bf50c55f">Bets</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a107e4b66f4c3f75ca69be8ce50003510">getBets</a> () const</td></tr>
 <tr class="separator:a107e4b66f4c3f75ca69be8ce50003510"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4011b55e711efbedeae7e123feb6743" id="r_af4011b55e711efbedeae7e123feb6743"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#adccc45911949f60778a803c6bf50c55f">Bets</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4011b55e711efbedeae7e123feb6743">getOddsBets</a> () const</td></tr>
@@ -175,29 +186,25 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4ca7d5199f8dc73a58ebc08bc9e946fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d951a6e481ebcedd282ef2eeb41aabb" id="r_a2d951a6e481ebcedd282ef2eeb41aabb"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classCraps_1_1SessionHistory.html#ae95c30374abf79a3e8df509983df9594">SessionHistory::Sessions</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d951a6e481ebcedd282ef2eeb41aabb">getSessionHistory</a> () const</td></tr>
 <tr class="separator:a2d951a6e481ebcedd282ef2eeb41aabb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">File operations</div></td></tr>
-<tr class="memitem:ae690be39eb9ca1c083c23ada8b134eeb" id="r_ae690be39eb9ca1c083c23ada8b134eeb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae690be39eb9ca1c083c23ada8b134eeb">saveFile</a> () const</td></tr>
-<tr class="separator:ae690be39eb9ca1c083c23ada8b134eeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a3918346e9af20458e40a48ed2150da" id="r_a5a3918346e9af20458e40a48ed2150da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a3918346e9af20458e40a48ed2150da">loadFile</a> ()</td></tr>
-<tr class="separator:a5a3918346e9af20458e40a48ed2150da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">YAML conversion</div></td></tr>
 <tr class="memitem:a4d831df4e1d6e5e3fff6e73bb7601bb8" id="r_a4d831df4e1d6e5e3fff6e73bb7601bb8"><td class="memItemLeft" align="right" valign="top">YAML::Node&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d831df4e1d6e5e3fff6e73bb7601bb8">toYAML</a> () const</td></tr>
 <tr class="separator:a4d831df4e1d6e5e3fff6e73bb7601bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4da711b2ca5030af477bb83b3d0013d7" id="r_a4da711b2ca5030af477bb83b3d0013d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4da711b2ca5030af477bb83b3d0013d7">fromYAML</a> (const YAML::Node &amp;node)</td></tr>
 <tr class="separator:a4da711b2ca5030af477bb83b3d0013d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Lifecycle</h2></td></tr>
-<tr class="memitem:a85ecc886cd7adcd0f375feee6349b46f" id="r_a85ecc886cd7adcd0f375feee6349b46f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85ecc886cd7adcd0f375feee6349b46f">Player</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;playerId, const <a class="el" href="structCraps_1_1PlayerConfig.html">PlayerConfig</a> &amp;config)</td></tr>
-<tr class="separator:a85ecc886cd7adcd0f375feee6349b46f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3507759c1ad0cb438d1e5d7833ec083b" id="r_a3507759c1ad0cb438d1e5d7833ec083b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3507759c1ad0cb438d1e5d7833ec083b">Player</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;playerId)</td></tr>
+<tr class="separator:a3507759c1ad0cb438d1e5d7833ec083b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06bf3a8aed3086e3ada7e22d5b12771d" id="r_a06bf3a8aed3086e3ada7e22d5b12771d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06bf3a8aed3086e3ada7e22d5b12771d">~Player</a> ()=default</td></tr>
 <tr class="separator:a06bf3a8aed3086e3ada7e22d5b12771d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57070d462aa21dbfb8dc645b2a25bf86" id="r_a57070d462aa21dbfb8dc645b2a25bf86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57070d462aa21dbfb8dc645b2a25bf86">shutdown</a> ()</td></tr>
 <tr class="separator:a57070d462aa21dbfb8dc645b2a25bf86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a69cc9dade186669b300495bbbf1a74" id="r_a8a69cc9dade186669b300495bbbf1a74"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classCraps_1_1Player.html">Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a69cc9dade186669b300495bbbf1a74">createPlayer</a> (const std::string &amp;playerName, const <a class="el" href="structCraps_1_1PlayerConfig.html">PlayerConfig</a> &amp;config)</td></tr>
-<tr class="separator:a8a69cc9dade186669b300495bbbf1a74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a668cb0a8195582c648e8b00162da4ca8" id="r_a668cb0a8195582c648e8b00162da4ca8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classCraps_1_1Player.html">Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a668cb0a8195582c648e8b00162da4ca8">fromString</a> (const std::string &amp;yaml, const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;playerId, const <a class="el" href="structCraps_1_1PlayerConfig.html">PlayerConfig</a> &amp;config)</td></tr>
-<tr class="separator:a668cb0a8195582c648e8b00162da4ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07672e3875bee6691669b8c2d2194bd6" id="r_a07672e3875bee6691669b8c2d2194bd6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classCraps_1_1Player.html">Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07672e3875bee6691669b8c2d2194bd6">fromFile</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;playerId, const <a class="el" href="structCraps_1_1PlayerConfig.html">PlayerConfig</a> &amp;config)</td></tr>
-<tr class="separator:a07672e3875bee6691669b8c2d2194bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8710f3273456b6fc17de6a7952f2e699" id="r_a8710f3273456b6fc17de6a7952f2e699"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8710f3273456b6fc17de6a7952f2e699">endSession</a> ()</td></tr>
+<tr class="separator:a8710f3273456b6fc17de6a7952f2e699"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb24bcc8eaf5175c956e6d0da48f1164" id="r_abb24bcc8eaf5175c956e6d0da48f1164"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classCraps_1_1Player.html">Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb24bcc8eaf5175c956e6d0da48f1164">createPlayer</a> (const std::string &amp;playerName)</td></tr>
+<tr class="separator:abb24bcc8eaf5175c956e6d0da48f1164"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a5f8e230afff5dc9bc5f0315cf14b44" id="r_a7a5f8e230afff5dc9bc5f0315cf14b44"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classCraps_1_1Player.html">Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a5f8e230afff5dc9bc5f0315cf14b44">fromString</a> (const std::string &amp;yaml, const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;playerId)</td></tr>
+<tr class="separator:a7a5f8e230afff5dc9bc5f0315cf14b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> player. </p>
@@ -205,10 +212,10 @@ Public Member Functions</h2></td></tr>
 <ul>
 <li>Maintains player's money </li>
 <li>Tracks player's bets </li>
-<li>Know how to read/write its own data </li>
-<li>Exports <a class="el" href="#a4d831df4e1d6e5e3fff6e73bb7601bb8">toYAML()</a> and reads <a class="el" href="#a4da711b2ca5030af477bb83b3d0013d7">fromYAML()</a> </li>
-<li>Maintains one file per player </li>
-<li>All player files located in the players directory </li>
+<li>A player has at most one bet per spot, as at a real table where the chips stack up. <a class="el" href="#aef4a99274505c8b317c56f3254988c00">makeOrChangeBet()</a> makes a bet, or if the player already has that bet changes its amount to the amount given. It is the only way to place a bet. makeBet() is private; unit tests that need a bet that is always new use testMakeBet(). </li>
+<li>Exports its own state with <a class="el" href="#a4d831df4e1d6e5e3fff6e73bb7601bb8">toYAML()</a> and restores it with <a class="el" href="#a4da711b2ca5030af477bb83b3d0013d7">fromYAML()</a> </li>
+<li>Knows nothing about files, paths or where that YAML is stored. Lib-controller's PlayerManager owns each player's file and decides when to read and write it. </li>
+<li><a class="el" href="#a8710f3273456b6fc17de6a7952f2e699">endSession()</a> ends the player's session: leaves the table, records the session summary, merges stats. It writes nothing to disk. Call <a class="el" href="#a4d831df4e1d6e5e3fff6e73bb7601bb8">toYAML()</a> and persist it afterward. The player can then join a table again, which starts a fresh session (new stats, new session clock, the balance carries over). <a class="el" href="#a57070d462aa21dbfb8dc645b2a25bf86">shutdown()</a> is <a class="el" href="#a8710f3273456b6fc17de6a7952f2e699">endSession()</a> at program quit. </li>
 </ul>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="adccc45911949f60778a803c6bf50c55f" name="adccc45911949f60778a803c6bf50c55f"></a>
@@ -226,23 +233,27 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a85ecc886cd7adcd0f375feee6349b46f" name="a85ecc886cd7adcd0f375feee6349b46f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85ecc886cd7adcd0f375feee6349b46f">&#9670;&#160;</a></span>Player()</h2>
+<a id="a3507759c1ad0cb438d1e5d7833ec083b" name="a3507759c1ad0cb438d1e5d7833ec083b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3507759c1ad0cb438d1e5d7833ec083b">&#9670;&#160;</a></span>Player()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">Player::Player </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structCraps_1_1PlayerConfig.html">PlayerConfig</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>config</em></span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -291,8 +302,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8a69cc9dade186669b300495bbbf1a74" name="a8a69cc9dade186669b300495bbbf1a74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a69cc9dade186669b300495bbbf1a74">&#9670;&#160;</a></span>createPlayer()</h2>
+<a id="abb24bcc8eaf5175c956e6d0da48f1164" name="abb24bcc8eaf5175c956e6d0da48f1164"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb24bcc8eaf5175c956e6d0da48f1164">&#9670;&#160;</a></span>createPlayer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -303,12 +314,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classCraps_1_1Player.html">Player</a> * Player::createPlayer </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>playerName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>playerName</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structCraps_1_1PlayerConfig.html">PlayerConfig</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>config</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -335,44 +342,50 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p><a class="el" href="classCraps_1_1CrapsTable.html" title="Craps Table.">CrapsTable</a> informs us directly (inline) that it is finished resolving bets. Can't use events for this since bets will have already have been removed by the time we see those events here.</p>
-<p>Close out lastRollStats (no need to do that here as it is cleared in betting closed) and publish event. Always send the event. Doesn't matter if no bets had a decision. Want last roll stats to show +$0 change on screen. </p>
+<p>Close out lastRollStats (no need to do that here as it is cleared in betting closed) and publish events. Always send the event. Doesn't matter if no bets had a decision. Want last roll stats to show +$0 change on screen. </p>
 
 </div>
 </div>
-<a id="a07672e3875bee6691669b8c2d2194bd6" name="a07672e3875bee6691669b8c2d2194bd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07672e3875bee6691669b8c2d2194bd6">&#9670;&#160;</a></span>fromFile()</h2>
+<a id="a8710f3273456b6fc17de6a7952f2e699" name="a8710f3273456b6fc17de6a7952f2e699"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8710f3273456b6fc17de6a7952f2e699">&#9670;&#160;</a></span>endSession()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCraps_1_1Player.html">Player</a> * Player::fromFile </td>
+          <td class="memname">void Player::endSession </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af1e6d2a1efe7717dbd73101a179913a7" name="af1e6d2a1efe7717dbd73101a179913a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1e6d2a1efe7717dbd73101a179913a7">&#9670;&#160;</a></span>findBet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a> Player::findBet </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a></td>          <td class="paramname"><span class="paramname"><em>betName</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structCraps_1_1PlayerConfig.html">PlayerConfig</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>config</em></span>&#160;)</td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span>&#160;) const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-<p>Construct <a class="el" href="classCraps_1_1Player.html" title="Craps player.">Player</a> from YAML file.</p>
-<p>Throws upon error.</p>
-<p>Static function. </p>
 
 </div>
 </div>
-<a id="a668cb0a8195582c648e8b00162da4ca8" name="a668cb0a8195582c648e8b00162da4ca8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a668cb0a8195582c648e8b00162da4ca8">&#9670;&#160;</a></span>fromString()</h2>
+<a id="a7a5f8e230afff5dc9bc5f0315cf14b44" name="a7a5f8e230afff5dc9bc5f0315cf14b44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a5f8e230afff5dc9bc5f0315cf14b44">&#9670;&#160;</a></span>fromString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -388,12 +401,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structCraps_1_1PlayerConfig.html">PlayerConfig</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>config</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -402,8 +410,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Construct <a class="el" href="classCraps_1_1Player.html" title="Craps player.">Player</a> from in-memory YAML node.</p>
-<p>Throws upon error.</p>
+<p>Construct <a class="el" href="classCraps_1_1Player.html" title="Craps player.">Player</a> from in-memory YAML text.</p>
+<p>The text is the <a class="el" href="classCraps_1_1Player.html" title="Craps player.">Player</a>'s own state, the same thing <a class="el" href="#a4d831df4e1d6e5e3fff6e73bb7601bb8">toYAML()</a> produces. Throws upon error.</p>
 <p>Static function. </p>
 
 </div>
@@ -789,31 +797,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5a3918346e9af20458e40a48ed2150da" name="a5a3918346e9af20458e40a48ed2150da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a3918346e9af20458e40a48ed2150da">&#9670;&#160;</a></span>loadFile()</h2>
+<a id="aef4a99274505c8b317c56f3254988c00" name="aef4a99274505c8b317c56f3254988c00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef4a99274505c8b317c56f3254988c00">&#9670;&#160;</a></span>makeOrChangeBet()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Player::loadFile </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1239f78337c01e5fd28269ef6c317658" name="a1239f78337c01e5fd28269ef6c317658"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1239f78337c01e5fd28269ef6c317658">&#9670;&#160;</a></span>makeBet()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">zeus::expected&lt; <a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a>, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &gt; Player::makeBet </td>
+          <td class="memname">zeus::expected&lt; <a class="el" href="structCraps_1_1Player_1_1BetPlaced.html">Player::BetPlaced</a>, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &gt; Player::makeOrChangeBet </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a></td>          <td class="paramname"><span class="paramname"><em>betName</em></span>, </td>
         </tr>
@@ -829,16 +820,23 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Makes a bet on the table.</p>
+<p>Makes a bet, or if the player already has that bet, changes its amount.</p>
+<p>A player has at most one bet on a given spot, as at a real table where the chips stack up. Asking for the same bet again is a request to make it the given amount, not to add a second bet. Nothing is added to the existing amount; repeating a request gives the same result.</p>
+<ul>
+<li><a class="el" href="#af1e6d2a1efe7717dbd73101a179913a7">findBet()</a> decides whether it is the same bet. </li>
+<li>Not there: same as makeBet(). </li>
+<li>There: same as <a class="el" href="#a717d3afcd0dd55ca92628d3db124e672">setContractAmount()</a>, including its rules, such as no reducing a PassLine bet and no increasing a DontPass bet after the point, and the table limits applied to the new amount. </li>
+<li>Already that amount: nothing to do, still a success.</li>
+</ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">betName</td><td>the type of bet to make</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">contractAmount</td><td>the dollar amount to bet</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">pivot</td><td>The number this bet is focused on. For example a Place bet must set the pivot to 4,5,6,8,9 or 10. For PassLine/Come/DontPass/DontCome bets, the caller sets the pivot to zero. Zero indicates the pivot number needs to be set later. See <a class="el" href="classCraps_1_1CrapsBet.html#a20d14140b961ef9c1da998f3c8f51fbf">CrapsBet::CrapsBet()</a> constructor.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">betName</td><td>The bet </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">contractAmount</td><td>The amount the bet is to be, not an amount to add </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pivot</td><td>As for makeBet()</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>If successful, the shared pointer to the <a class="el" href="classCraps_1_1CrapsBet.html" title="A bet on the Craps table.">CrapsBet</a> is returned, otherwise ErrorPass object has the reason for failure </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The bet, whether it was changed, and its previous amount if so. Otherwise Fail and ep has the reason. </dd></dl>
 
 </div>
 </div>
@@ -896,6 +894,40 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Process WIN decision</p>
 <p>Called by <a class="el" href="classCraps_1_1CrapsTable.html" title="Craps Table.">CrapsTable</a> to dish out a winning bet to a <a class="el" href="classCraps_1_1Player.html" title="Craps player.">Player</a>. </p>
+
+</div>
+</div>
+<a id="a8c41ef901500ccd4e961045b5780cfaf" name="a8c41ef901500ccd4e961045b5780cfaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c41ef901500ccd4e961045b5780cfaf">&#9670;&#160;</a></span>recordRepeaters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player::recordRepeaters </td>
+          <td>(</td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>point</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>roll</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::list&lt; <a class="el" href="structCraps_1_1DecisionRecord.html">DecisionRecord</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>drl</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Record what this player took part in for the <a class="el" href="classCraps_1_1Repeaters.html" title="Counts how many times a number repeats before a run ends.">Repeaters</a> statistics.</p>
+<p>Called by <a class="el" href="classCraps_1_1CrapsTable.html" title="Craps Table.">CrapsTable</a> for every player on every roll, before results are dispensed, so the bets are still on the table. point is the point as it was when the dice were thrown and drl holds this roll's decisions for all players.</p>
+<p>A hit of a point number counts when the player had a live bet on it:</p>
+<ul>
+<li>Pass line or Come bet whose number is rolled, including the roll that establishes the number. One hit per roll, even when several of the player's bets are on the number. </li>
+<li>Place or Buy bet that wins on the number.</li>
+</ul>
+<p>A seven ends the run for Pass line and Come numbers. A seven out ends the run for Place and Buy numbers; a come out seven does not, since those bets are off. See closeSpotRepeaters(). </p>
 
 </div>
 </div>
@@ -975,23 +1007,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae690be39eb9ca1c083c23ada8b134eeb" name="ae690be39eb9ca1c083c23ada8b134eeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae690be39eb9ca1c083c23ada8b134eeb">&#9670;&#160;</a></span>saveFile()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Player::saveFile </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a717d3afcd0dd55ca92628d3db124e672" name="a717d3afcd0dd55ca92628d3db124e672"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a717d3afcd0dd55ca92628d3db124e672">&#9670;&#160;</a></span>setContractAmount()</h2>
 
@@ -1043,7 +1058,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>oddsAmount</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>newAmount</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1108,7 +1123,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

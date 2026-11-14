@@ -104,8 +104,18 @@ $(function(){ initResizable(false); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
+<tr class="memitem:a5cef5eb8a94d25d480fa532376f59378" id="r_a5cef5eb8a94d25d480fa532376f59378"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5cef5eb8a94d25d480fa532376f59378">reqTerminate</a> ()</td></tr>
+<tr class="separator:a5cef5eb8a94d25d480fa532376f59378"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31fbbf14fd2844d6832f73a7da78c14c" id="r_a31fbbf14fd2844d6832f73a7da78c14c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31fbbf14fd2844d6832f73a7da78c14c">reqRollDice</a> ()</td></tr>
 <tr class="separator:a31fbbf14fd2844d6832f73a7da78c14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7b2e951f6fe87c5b90a389ef0597344" id="r_af7b2e951f6fe87c5b90a389ef0597344"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCtrl.html#a469de83a5b91f8ca630e556d9bcf9f46">Ctrl::CorrelationId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7b2e951f6fe87c5b90a389ef0597344">reqMakeBet</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> contractAmount, unsigned pivot)</td></tr>
+<tr class="separator:af7b2e951f6fe87c5b90a389ef0597344"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6173e5bf5da2c35523d876aee917bc2" id="r_ad6173e5bf5da2c35523d876aee917bc2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCtrl.html#a469de83a5b91f8ca630e556d9bcf9f46">Ctrl::CorrelationId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6173e5bf5da2c35523d876aee917bc2">reqOddsBet</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> betId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> oddsAmount)</td></tr>
+<tr class="separator:ad6173e5bf5da2c35523d876aee917bc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62678a9bc0139b9a80b21b28a8d78104" id="r_a62678a9bc0139b9a80b21b28a8d78104"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62678a9bc0139b9a80b21b28a8d78104">reqAutoFill</a> (<a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, unsigned pivot, bool isOddsBet, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amount)</td></tr>
+<tr class="separator:a62678a9bc0139b9a80b21b28a8d78104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a454bf97ae4e8d1a1013c609a8ce2ccee" id="r_a454bf97ae4e8d1a1013c609a8ce2ccee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a454bf97ae4e8d1a1013c609a8ce2ccee">reqQuickBet</a> (<a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, unsigned pivot, bool isOddsBet, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amount)</td></tr>
+<tr class="separator:a454bf97ae4e8d1a1013c609a8ce2ccee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Lifecycle</h2></td></tr>
 <tr class="memitem:af9637bee394e45f424de606bde70fb25" id="r_af9637bee394e45f424de606bde70fb25"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9637bee394e45f424de606bde70fb25">CuiSender</a> ()=default</td></tr>
@@ -120,7 +130,7 @@ Public Member Functions</h2></td></tr>
 <p>Responsibilities of <a class="el" href="classCui_1_1CuiSender.html" title="Publishes CUI-originated requests to the application EventManager.">CuiSender</a>:</p>
 <ul>
 <li>Publishes events to Controller EventManager </li>
-<li>OperationManager calls <a class="el" href="classCui_1_1CuiSender.html" title="Publishes CUI-originated requests to the application EventManager.">CuiSender</a> as needed to form/send events, e.g. reqMakeBet, reqRollDice, reqRemoveBet, ... </li>
+<li><a class="el" href="classCui_1_1OperationManager.html">OperationManager</a> calls <a class="el" href="classCui_1_1CuiSender.html" title="Publishes CUI-originated requests to the application EventManager.">CuiSender</a> as needed to form/send events, e.g. reqMakeBet, reqRollDice, reqRemoveBet, ... </li>
 <li>Converts operations into GameEvents. </li>
 </ul>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -200,6 +210,125 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a62678a9bc0139b9a80b21b28a8d78104" name="a62678a9bc0139b9a80b21b28a8d78104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62678a9bc0139b9a80b21b28a8d78104">&#9670;&#160;</a></span>reqAutoFill()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuiSender::reqAutoFill </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a></td>          <td class="paramname"><span class="paramname"><em>betName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>isOddsBet</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>amount</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7b2e951f6fe87c5b90a389ef0597344" name="af7b2e951f6fe87c5b90a389ef0597344"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7b2e951f6fe87c5b90a389ef0597344">&#9670;&#160;</a></span>reqMakeBet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCtrl.html#a469de83a5b91f8ca630e556d9bcf9f46">Ctrl::CorrelationId</a> CuiSender::reqMakeBet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a></td>          <td class="paramname"><span class="paramname"><em>betName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>contractAmount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6173e5bf5da2c35523d876aee917bc2" name="ad6173e5bf5da2c35523d876aee917bc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6173e5bf5da2c35523d876aee917bc2">&#9670;&#160;</a></span>reqOddsBet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCtrl.html#a469de83a5b91f8ca630e556d9bcf9f46">Ctrl::CorrelationId</a> CuiSender::reqOddsBet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a></td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>oddsAmount</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a454bf97ae4e8d1a1013c609a8ce2ccee" name="a454bf97ae4e8d1a1013c609a8ce2ccee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a454bf97ae4e8d1a1013c609a8ce2ccee">&#9670;&#160;</a></span>reqQuickBet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuiSender::reqQuickBet </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a></td>          <td class="paramname"><span class="paramname"><em>betName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>isOddsBet</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>amount</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a31fbbf14fd2844d6832f73a7da78c14c" name="a31fbbf14fd2844d6832f73a7da78c14c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a31fbbf14fd2844d6832f73a7da78c14c">&#9670;&#160;</a></span>reqRollDice()</h2>
 
@@ -217,6 +346,23 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a5cef5eb8a94d25d480fa532376f59378" name="a5cef5eb8a94d25d480fa532376f59378"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cef5eb8a94d25d480fa532376f59378">&#9670;&#160;</a></span>reqTerminate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuiSender::reqTerminate </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/lib-cui/include/cui/core/<a class="el" href="CuiSender_8h_source.html">CuiSender.h</a></li>
 <li>src/lib-cui/src/core/<a class="el" href="CuiSender_8cpp.html">CuiSender.cpp</a></li>
@@ -224,7 +370,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

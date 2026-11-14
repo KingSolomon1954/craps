@@ -99,39 +99,9 @@ CrapsTable::fromYAML(const YAML::Node& node)
 void
 CrapsTable::rulesFromYAML(const YAML::Node& node)
 {
-    // Read the legacy flat keys for existing table files.  The in-memory
-    // representation is now TableRules; the expanded nested YAML format is
-    // introduced separately so old user configurations remain loadable.
-    auto readLimit = [&](BetName name, const char* minKey, const char* maxKey,
-                         Gen::Money defaultMin, Gen::Money defaultMax,
-                         Gen::Money defaultIncrement)
-    {
-        auto& limit = rules_.wagerLimit(name);
-        limit.minimum = node[minKey] ? node[minKey].as<Gen::Money>() : defaultMin;
-        limit.maximum = node[maxKey] ? node[maxKey].as<Gen::Money>() : defaultMax;
-        limit.increment = defaultIncrement;
-    };
-
-    rules_.odds.flatMultiplier = node["maxOdds"] ? node["maxOdds"].as<unsigned>() : 5;
-    rules_.odds.style = TableRules::OddsLimitStyle::FlatMultiplier;
-    readLimit(BetName::PassLine, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::Come, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::DontPass, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::DontCome, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::Buy, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::Lay, "minLineBet", "maxLineBet", 5, 1000, 1);
-    readLimit(BetName::Place, "minPlaceBet", "maxPlaceBet", 5, 1000, 1);
-    readLimit(BetName::Field, "minFieldBet", "maxFieldBet", 1, 1000, 1);
-    readLimit(BetName::CandE, "minCandEBet", "maxCandEBet", 2, 1000, 2);
-    readLimit(BetName::Horn, "minHornBet", "maxHornBet", 4, 1000, 4);
-    readLimit(BetName::World, "minWorldBet", "maxWorldBet", 5, 1000, 5);
-
-    // New nested rules override legacy defaults when present. Legacy files
-    // remain readable and retain their historical settings.
-    if (node["advanced"])
-        rules_.fromYAML(node["advanced"]);
-    else
-        rules_.validate();
+    // TableRules::fromYAML() throws if the section is missing, and
+    // validates what it read.
+    rules_.fromYAML(node);
 }
 
 //----------------------------------------------------------------
@@ -139,29 +109,7 @@ CrapsTable::rulesFromYAML(const YAML::Node& node)
 YAML::Node
 CrapsTable::rulesToYAML() const
 {
-    // Preserve the established file format during this migration step.
-    YAML::Node node;
-    node["maxOdds"] = rules_.odds.flatMultiplier;
-    const auto& line = rules_.wagerLimit(BetName::PassLine);
-    const auto& place = rules_.wagerLimit(BetName::Place);
-    const auto& field = rules_.wagerLimit(BetName::Field);
-    const auto& cande = rules_.wagerLimit(BetName::CandE);
-    const auto& horn = rules_.wagerLimit(BetName::Horn);
-    const auto& world = rules_.wagerLimit(BetName::World);
-    node["minLineBet"] = line.minimum;
-    node["maxLineBet"] = line.maximum;
-    node["minPlaceBet"] = place.minimum;
-    node["maxPlaceBet"] = place.maximum;
-    node["minFieldBet"] = field.minimum;
-    node["maxFieldBet"] = field.maximum;
-    node["minCandEBet"] = cande.minimum;
-    node["maxCandEBet"] = cande.maximum;
-    node["minHornBet"] = horn.minimum;
-    node["maxHornBet"] = horn.maximum;
-    node["minWorldBet"] = world.minimum;
-    node["maxWorldBet"] = world.maximum;
-    node["advanced"] = rules_.toYAML();
-    return node;
+    return rules_.toYAML();
 }
 
 //----------------------------------------------------------------
@@ -712,6 +660,8 @@ CrapsTable::rollDice()
 {
     declareBettingClosed();
     throwDice();
+    bumpRecentRolls(dice_);
+    currentStats_.recordDiceRoll(point_, dice_);
     if (!resolveBets())
     {
         // Do not advance the point or dispense partial results. The failure
@@ -720,8 +670,6 @@ CrapsTable::rollDice()
         return;
     }
     advanceState();            // Updates point, updates shooter
-    bumpRecentRolls(dice_);
-    currentStats_.recordDiceRoll(point_, dice_);
     lastRollStats_.rollCount = getNumRolls();
     declareBettingOpen();
 }
@@ -769,7 +717,7 @@ CrapsTable::advanceState()
 {
     if (point_ == 0) // come out roll
     {
-        if (CrapsBet::pointNums_.contains(dice_.value()))
+        if (PointNums.contains(dice_.value()))
         {
             point_ = dice_.value();
             Ctrl::UslPointEstablished ev; ev.point = point_;
@@ -903,6 +851,12 @@ CrapsTable::evalOneBet(CrapsBet& bet)
 void
 CrapsTable::dispenseResults()
 {
+    // Before any bet is removed, tell players what they took part in.
+    for (auto p : players_)
+    {
+        p->recordRepeaters(point_, dice_.value(), drl_);
+    }
+
     disburseHouseResults();
     disbursePlayerWins();
     disbursePlayerLoses();
@@ -919,17 +873,16 @@ CrapsTable::disburseHouseResults()
 
     for (const auto& r : drl_)
     {
-        // World is one aggregate wager in the model, but its five components
-        // settle separately. The player-side win is the net profit after the
-        // four losing components; the bank must still record those component
-        // losses and pay the winning component's gross profit. This also
-        // handles a 7, where the net profit is zero but $4 is won and paid.
-        if (r.pBet != nullptr && r.pBet->betName() == BetName::World &&
-            r.decision && r.lose == 0)
+        // C&E, Horn and World are one aggregate wager in the model, but
+        // their components settle separately. The player-side win is the net
+        // profit after the losing components; the bank must still record
+        // those component losses and pay the winning component's gross
+        // profit. This also handles a World 7, where the net profit is zero
+        // but $4 is won and paid.
+        if (r.pBet != nullptr && r.decision && r.lose == 0 &&
+            r.componentLoss > 0)
         {
-            const Gen::Money component = r.pBet->contractAmount() / 5;
-            const Gen::Money losingComponents =
-                r.pBet->contractAmount() - component;
+            const Gen::Money losingComponents = r.componentLoss;
             const Gen::Money grossComponentProfit = r.win + losingComponents;
             if (losingComponents > 0)
             {
@@ -983,11 +936,11 @@ CrapsTable::disbursePlayerWins()
     for (const auto& r : drl_)
     {
         if (r.win > 0 ||
-            (r.pBet != nullptr && r.pBet->betName() == BetName::World &&
-             r.decision && r.lose == 0))
+            (r.pBet != nullptr && r.decision && r.lose == 0 &&
+             r.componentLoss > 0))
         {
             r.pBet->player().processWin(r);
-            currentStats_.recordWin(*(r.pBet), r.win);
+            currentStats_.recordWin(r);
         }
     }
 }
@@ -1002,7 +955,7 @@ CrapsTable::disbursePlayerLoses()
         if (r.lose > 0)
         {
             r.pBet->player().processLose(r);
-            currentStats_.recordLose(*(r.pBet), r.lose);
+            currentStats_.recordLose(r);
         }
     }
 }

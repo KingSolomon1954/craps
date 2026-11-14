@@ -53,15 +53,15 @@ TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:win1")
     ts.recordWin(b1, b1.contractAmount());
     ts.recordWin(b2, b2.contractAmount());
 
-    CHECK(ts.betStats.betTypeStats.wins["PassLine"].count       == 2);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine"].amountBet   == 20);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine"].amount      == 20);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine"].totDistance == 2);
+    CHECK(ts.betStats.byBet["PassLine"].wins.count       == 2);
+    CHECK(ts.betStats.byBet["PassLine"].wins.amountBet   == 20);
+    CHECK(ts.betStats.byBet["PassLine"].wins.amount      == 20);
+    CHECK(ts.betStats.byBet["PassLine"].wins.totDistance == 2);
 
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].count       == 0);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].amountBet   == 0);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].amount      == 0);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].totDistance == 0);
+    CHECK(ts.betStats.byBet["PassLine"].losses.count       == 0);
+    CHECK(ts.betStats.byBet["PassLine"].losses.amountBet   == 0);
+    CHECK(ts.betStats.byBet["PassLine"].losses.amount      == 0);
+    CHECK(ts.betStats.byBet["PassLine"].losses.totDistance == 0);
 
     CHECK(ts.betStats.totNumBetsAllBets         == 2);
     CHECK(ts.betStats.totAmtAllBets             == 20);
@@ -179,25 +179,25 @@ TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:win2")
     ts.recordWin(p2b1, p2b1.contractAmount() + p2b1.oddsAmount());
     ts.recordDiceRoll(point, dice);
 
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].count == 0);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].amountBet == 0);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].amount == 0);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].totDistance == 0);
+    CHECK(ts.betStats.byBet["PassLine"].losses.count == 0);
+    CHECK(ts.betStats.byBet["PassLine"].losses.amountBet == 0);
+    CHECK(ts.betStats.byBet["PassLine"].losses.amount == 0);
+    CHECK(ts.betStats.byBet["PassLine"].losses.totDistance == 0);
 
-    CHECK(ts.betStats.betTypeStats.wins["PassLine4"].count == 2);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine4"].amountBet == 20);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine4"].amount == 20);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine4"].totDistance == 10);
+    CHECK(ts.betStats.byBet["PassLine4"].wins.count == 2);
+    CHECK(ts.betStats.byBet["PassLine4"].wins.amountBet == 20);
+    CHECK(ts.betStats.byBet["PassLine4"].wins.amount == 20);
+    CHECK(ts.betStats.byBet["PassLine4"].wins.totDistance == 10);
 
-    CHECK(ts.betStats.betTypeStats.wins["Come5"].count == 2);
-    CHECK(ts.betStats.betTypeStats.wins["Come5"].amountBet == 20);
-    CHECK(ts.betStats.betTypeStats.wins["Come5"].amount == 20);
-    CHECK(ts.betStats.betTypeStats.wins["Come5"].totDistance == 4);
+    CHECK(ts.betStats.byBet["Come5"].wins.count == 2);
+    CHECK(ts.betStats.byBet["Come5"].wins.amountBet == 20);
+    CHECK(ts.betStats.byBet["Come5"].wins.amount == 20);
+    CHECK(ts.betStats.byBet["Come5"].wins.totDistance == 4);
 
-    CHECK(ts.betStats.betTypeStats.wins["Come6"].count == 2);
-    CHECK(ts.betStats.betTypeStats.wins["Come6"].amountBet == 20);
-    CHECK(ts.betStats.betTypeStats.wins["Come6"].amount == 20);
-    CHECK(ts.betStats.betTypeStats.wins["Come6"].totDistance == 4);
+    CHECK(ts.betStats.byBet["Come6"].wins.count == 2);
+    CHECK(ts.betStats.byBet["Come6"].wins.amountBet == 20);
+    CHECK(ts.betStats.byBet["Come6"].wins.amount == 20);
+    CHECK(ts.betStats.byBet["Come6"].wins.totDistance == 4);
 
     CHECK(ts.betStats.totNumBetsAllBets         == 8);
     CHECK(ts.betStats.totAmtAllBets             == 80);
@@ -239,15 +239,15 @@ TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:win3")
     ts.recordWin(b1, b1.contractAmount());
     ts.recordWin(b2, b2.contractAmount());
 
-    CHECK(ts.betStats.betTypeStats.wins["Field2"].count       == 1);
-    CHECK(ts.betStats.betTypeStats.wins["Field2"].amountBet   == 10);
-    CHECK(ts.betStats.betTypeStats.wins["Field2"].amount      == 10);
-    CHECK(ts.betStats.betTypeStats.wins["Field2"].totDistance == 1);
+    CHECK(ts.betStats.byBet["Field2"].wins.count       == 1);
+    CHECK(ts.betStats.byBet["Field2"].wins.amountBet   == 10);
+    CHECK(ts.betStats.byBet["Field2"].wins.amount      == 10);
+    CHECK(ts.betStats.byBet["Field2"].wins.totDistance == 1);
 
-    CHECK(ts.betStats.betTypeStats.wins["Field3"].count       == 1);
-    CHECK(ts.betStats.betTypeStats.wins["Field3"].amountBet   == 10);
-    CHECK(ts.betStats.betTypeStats.wins["Field3"].amount      == 10);
-    CHECK(ts.betStats.betTypeStats.wins["Field3"].totDistance == 1);
+    CHECK(ts.betStats.byBet["Field3"].wins.count       == 1);
+    CHECK(ts.betStats.byBet["Field3"].wins.amountBet   == 10);
+    CHECK(ts.betStats.byBet["Field3"].wins.amount      == 10);
+    CHECK(ts.betStats.byBet["Field3"].wins.totDistance == 1);
 
     CHECK(ts.betStats.totNumBetsAllBets         == 2);
     CHECK(ts.betStats.totAmtAllBets             == 20);
@@ -289,15 +289,15 @@ TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:lose1")
     ts.recordLose(b1, b1.contractAmount());
     ts.recordLose(b2, b2.contractAmount());
 
-    CHECK(ts.betStats.betTypeStats.wins["PassLine"].count       == 0);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine"].amountBet   == 0);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine"].amount      == 0);
-    CHECK(ts.betStats.betTypeStats.wins["PassLine"].totDistance == 0);
+    CHECK(ts.betStats.byBet["PassLine"].wins.count       == 0);
+    CHECK(ts.betStats.byBet["PassLine"].wins.amountBet   == 0);
+    CHECK(ts.betStats.byBet["PassLine"].wins.amount      == 0);
+    CHECK(ts.betStats.byBet["PassLine"].wins.totDistance == 0);
 
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].count       == 2);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].amountBet   == 20);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].amount      == 20);
-    CHECK(ts.betStats.betTypeStats.lose["PassLine"].totDistance == 2);
+    CHECK(ts.betStats.byBet["PassLine"].losses.count       == 2);
+    CHECK(ts.betStats.byBet["PassLine"].losses.amountBet   == 20);
+    CHECK(ts.betStats.byBet["PassLine"].losses.amount      == 20);
+    CHECK(ts.betStats.byBet["PassLine"].losses.totDistance == 2);
 
     CHECK(ts.betStats.totNumBetsAllBets          == 2);
     CHECK(ts.betStats.totAmtAllBets              == 20);
@@ -348,15 +348,15 @@ TEST_CASE_FIXTURE(TableStatsPart5Fixture, "TableStats:betstats:lose3")
     ts.recordLose(b4, b4.contractAmount());
     ts.recordDiceRoll(point, dice);
 
-    CHECK(ts.betStats.betTypeStats.lose["Field6"].count       == 2);
-    CHECK(ts.betStats.betTypeStats.lose["Field6"].amountBet   == 20);
-    CHECK(ts.betStats.betTypeStats.lose["Field6"].amount      == 20);
-    CHECK(ts.betStats.betTypeStats.lose["Field6"].totDistance == 2);
+    CHECK(ts.betStats.byBet["Field6"].losses.count       == 2);
+    CHECK(ts.betStats.byBet["Field6"].losses.amountBet   == 20);
+    CHECK(ts.betStats.byBet["Field6"].losses.amount      == 20);
+    CHECK(ts.betStats.byBet["Field6"].losses.totDistance == 2);
 
-    CHECK(ts.betStats.betTypeStats.lose["Field8"].count       == 2);
-    CHECK(ts.betStats.betTypeStats.lose["Field8"].amountBet   == 20);
-    CHECK(ts.betStats.betTypeStats.lose["Field8"].amount      == 20);
-    CHECK(ts.betStats.betTypeStats.lose["Field8"].totDistance == 2);
+    CHECK(ts.betStats.byBet["Field8"].losses.count       == 2);
+    CHECK(ts.betStats.byBet["Field8"].losses.amountBet   == 20);
+    CHECK(ts.betStats.byBet["Field8"].losses.amount      == 20);
+    CHECK(ts.betStats.byBet["Field8"].losses.totDistance == 2);
 
     CHECK(ts.betStats.totNumBetsAllBets          == 4);
     CHECK(ts.betStats.totAmtAllBets              == 40);

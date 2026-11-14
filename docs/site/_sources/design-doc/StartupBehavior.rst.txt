@@ -1,80 +1,84 @@
 Startup Behavior
 ^^^^^^^^^^^^^^^^
 
-RoyalCraps determines its startup behavior by checking whether a saved
-current game exists.
+|AppName| determines its startup behavior by checking whether an always
+present file exists. Looks for ``$HOME/.local/share/royalcraps/config.yaml``
 
 First Startup
 ~~~~~~~~~~~~~
 
-If no saved current game is found, RoyalCraps performs the following steps:
+If no ``config.yaml`` exists, |AppName| performs the
+following steps:
 
-#. Create a new player named ``Unnamed``.
-#. Set the player's bank to ``10,000``.
-#. Select the default table, ``Las Vegas Daytime``.
-#. Display :ref:`ScreenCrapsTable <ScreenCrapsTable CRC Card>`.
-
-The game is automatically saved under the name ``Unnamed`` when the game
-ends.
-
-Player Configuration During First Startup
-"""""""""""""""""""""""""""""""""""""""""
-
-During the first session, the player can use
-``Control -> Configure`` to perform the following operations.
-
-Rename Player
-    Prompts for a new player name and renames the current player.
-    The associated save file or files are renamed accordingly.
-
-New Player
-    Prompts for the name of a new player.
-
-    Before switching players, RoyalCraps saves the current player.  It
-    then creates and activates the new player with the following defaults:
-
-    * Bank: ``10,000``
-    * Table: the currently selected table
-    * Game state: reset for the new player
-
-Choose Player
-    Because no other players exist during the first session, RoyalCraps
-    displays the following message and makes no change:
-
-    ``No other players to choose from at this time.``
+#. Creates the user directory structure for the game in $HOME.
+#. Populates the directory structure with packaged default YAML files.
+   These include:
+   
+   * default ``config.yaml``.
+   * default player ``unnamed.yaml``.
+   * packaged **buddy** player YAML files.
+   * packaged table YAML files.
+     
+#. default ``config.yaml`` specifies player ``unnamed.yaml``.
+#. default ``config.yaml`` specifies table ``Las Vegas Strip``.
+#. default ``unnamed.yaml`` specifies starting bank at $10,000.
+#. |AppName| continues start up as normal
+#. Game begins with full screen :ref:`ScreenCrapsTable <ScreenCrapsTable CRC Card>`.
+#. If user-player name == ``unnamed`` then message area displays a
+   reminder to change name.
 
 Subsequent Startups
 ~~~~~~~~~~~~~~~~~~~
 
-If a saved current game exists, RoyalCraps:
+#. Reads ``$HOME/.local/share/royalcraps/config.yaml``.
+#. Loads the last player YAML.
+#. Loads last table YAML.
+#. Loads last set of buddy players.
+#. Game begins with full screen :ref:`ScreenCrapsTable <ScreenCrapsTable CRC Card>`.
+#. if player name == ``unnamed`` then message area displays a
+   reminder to change name.
 
-#. Loads the last saved game.
-#. Restores the associated player, bank, table, and game state.
-#. Displays :ref:`ScreenCrapsTable <ScreenCrapsTable CRC Card>`.
-#. Allows the player to continue from the point at which the game was
-   last saved.
+Player Configuration Options
+""""""""""""""""""""""""""""
 
-Player Configuration During Subsequent Startups
-"""""""""""""""""""""""""""""""""""""""""""""""
-
-During subsequent sessions, the player can use
-``Control -> Configure`` to perform the following operations.
-
-Choose Player
-    Displays the list of available players and prompts the player to
-    select one.
-
-    Before switching players, RoyalCraps saves the current player.  It
-    then loads the selected player's saved game, including that player's
-    table and game state.
-
-New Player
-    Prompts for the name of a new player.
-
-    The current player is saved before the new player is created.  The
-    new player is initialized with a bank of ``10,000`` and uses the
-    currently selected table with a reset game state.
+At any time, the player can select ``Control -> Configure`` to perform
+the following operations available from the ``Configure`` menu:
 
 Rename Player
-    Prompts for a new player name and renames the current player.
-    The associated save file or files are renamed accordingly.
+    Prompts for a new name and a brief player description.
+    
+    Renames the currently active player to the new name.
+    
+    The currently active player YAML file is renamed accordingly.
+    
+    Game carries on. Screens are refreshed with new name.
+
+New Player
+    Prompts for the name and a brief player description.
+    
+    Creates a new player YAML file.
+    
+    Name must be unique among the player files.
+    
+    Does *not* automatically switch to new player.
+
+    Consider option for UI to ask to switch to it immediately.
+    
+    New player starts with these defaults:
+    
+    * Bank: ``$10,000``
+    * Empty stats and session history
+
+Choose Player
+    Displays a list of available players and prompts the player to
+    select one.
+
+    Selecting the already current player is a No-op.
+
+    When switching players:
+
+    * Clears current player active bets if any.
+    * Saves the current player to YAML file.
+    * Loads the selected player's YAML file.
+    * Game continues using the currently active table.
+

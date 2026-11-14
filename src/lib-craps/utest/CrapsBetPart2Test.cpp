@@ -1387,6 +1387,43 @@ TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:AnySeven")
 
 //----------------------------------------------------------------
 
+void any711One(Player* p1, unsigned point, unsigned d1, unsigned d2,
+               bool wins)
+{
+    Gen::ErrorPass ep;
+    DecisionRecord dr;
+
+    Dice dice; dice.set(d1,d2);
+    CrapsBet b(p1, BetName::Any711, 100);
+    CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
+    CHECK(dr.decision == true);
+    CHECK(dr.pivotAssigned == false);
+    CHECK(dr.win == (wins ? 300u : 0u));        // flat 3:1
+    CHECK(dr.lose == (wins ? 0u : 100u));
+    CHECK(dr.returnToPlayer == 0);
+    CHECK(dr.componentLoss == 0);
+    CHECK(b.distance() == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsBetPart2Fixture, "CrapsBet:evaluate:Any711")
+{
+    for (unsigned point : {0u, 4u, 6u})
+    {
+        for (unsigned d1 = 1; d1 <= 6; ++d1)
+        {
+            for (unsigned d2 = 1; d2 <= 6; ++d2)
+            {
+                const unsigned total = d1 + d2;
+                any711One(p1, point, d1, d2, total == 7 || total == 11);
+            }
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
 void cAndE1(Player* p1, unsigned point, unsigned d1, unsigned d2)
 {
     Gen::ErrorPass ep;
@@ -1397,9 +1434,11 @@ void cAndE1(Player* p1, unsigned point, unsigned d1, unsigned d2)
     CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
-    if (dice.value() == 11) CHECK(dr.win == 750);
+    // Net of the losing half: 50 * 15 - 50, or 50 * 7 - 50
+    if (dice.value() == 11) CHECK(dr.win == 700);
     if (dice.value() == 2 || dice.value() == 3 || dice.value() == 12)
-        CHECK(dr.win == 350);
+        CHECK(dr.win == 300);
+    CHECK(dr.componentLoss == 50);
     CHECK(dr.lose == 0);
     CHECK(dr.returnToPlayer == 0);
     CHECK(b.distance() == 1);
@@ -1467,8 +1506,10 @@ void horn1(Player* p1, unsigned point, unsigned d1, unsigned d2)
     CHECK(b.testEvaluate(point, dice, dr, ep) == Gen::ReturnCode::Success);
     CHECK(dr.decision == true);
     CHECK(dr.pivotAssigned == false);
-    if (dice.value() == 2 || dice.value() == 12) CHECK(dr.win == 750);
-    if (dice.value() == 3 || dice.value() == 11) CHECK(dr.win == 375);
+    // Net of the three losing units: 25 * 30 - 75, or 25 * 15 - 75
+    if (dice.value() == 2 || dice.value() == 12) CHECK(dr.win == 675);
+    if (dice.value() == 3 || dice.value() == 11) CHECK(dr.win == 300);
+    CHECK(dr.componentLoss == 75);
     CHECK(dr.lose == 0);
     CHECK(dr.returnToPlayer == 0);
     CHECK(b.distance() == 1);

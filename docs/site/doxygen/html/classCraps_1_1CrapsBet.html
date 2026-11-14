@@ -129,6 +129,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4c394ad2db6dfd46545554fd8a23247b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0ed412eb2573a779f44dc68c5a3bceb" id="r_ab0ed412eb2573a779f44dc68c5a3bceb"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0ed412eb2573a779f44dc68c5a3bceb">oddsAmount</a> () const</td></tr>
 <tr class="separator:ab0ed412eb2573a779f44dc68c5a3bceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a925553c5cbf4648c61c9534306aa2a75" id="r_a925553c5cbf4648c61c9534306aa2a75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGen_1_1Money.html">Gen::Money</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a925553c5cbf4648c61c9534306aa2a75">placementCommission</a> () const</td></tr>
+<tr class="separator:a925553c5cbf4648c61c9534306aa2a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d7a8312061e45c3e9cfdf2d17464278" id="r_a8d7a8312061e45c3e9cfdf2d17464278"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d7a8312061e45c3e9cfdf2d17464278">hasDecision</a> () const</td></tr>
+<tr class="separator:a8d7a8312061e45c3e9cfdf2d17464278"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41469a4b2f093699f93f0746a8ec1335" id="r_a41469a4b2f093699f93f0746a8ec1335"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41469a4b2f093699f93f0746a8ec1335">offComeOutRoll</a> () const</td></tr>
 <tr class="separator:a41469a4b2f093699f93f0746a8ec1335"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3c3e7b5af1c0a20acdd5e24cee89b31" id="r_ab3c3e7b5af1c0a20acdd5e24cee89b31"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab3c3e7b5af1c0a20acdd5e24cee89b31">hardwayWorking</a> () const</td></tr>
@@ -143,11 +147,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad069c4c7a9eb73d62f3d6b7588c7a1fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9957f4a4430eed27eca3a2f2b15c25ef" id="r_a9957f4a4430eed27eca3a2f2b15c25ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9957f4a4430eed27eca3a2f2b15c25ef">operator==</a> (const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;) const</td></tr>
 <tr class="separator:a9957f4a4430eed27eca3a2f2b15c25ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41491fa502dd22d7035629a3ff7699fd" id="r_a41491fa502dd22d7035629a3ff7699fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41491fa502dd22d7035629a3ff7699fd">logBet</a> (std::string_view intro) const</td></tr>
+<tr class="separator:a41491fa502dd22d7035629a3ff7699fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:a1acc7c94035ae68ce93f68e5ac0b8d74" id="r_a1acc7c94035ae68ce93f68e5ac0b8d74"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1acc7c94035ae68ce93f68e5ac0b8d74">CrapsTable</a></td></tr>
 <tr class="separator:a1acc7c94035ae68ce93f68e5ac0b8d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f4241aa9ecc051c75f779af132a52ed" id="r_a7f4241aa9ecc051c75f779af132a52ed"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f4241aa9ecc051c75f779af132a52ed">Player</a></td></tr>
+<tr class="separator:a7f4241aa9ecc051c75f779af132a52ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b9fae6c72d9a9a0a9158eee4044684f" id="r_a6b9fae6c72d9a9a0a9158eee4044684f"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b9fae6c72d9a9a0a9158eee4044684f">TableStats</a></td></tr>
 <tr class="separator:a6b9fae6c72d9a9a0a9158eee4044684f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -191,12 +199,12 @@ Friends</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">pPlayer</td><td>The player making this bet.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>The name/type of the bet. Throws if this is not valid name.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">contractAmount</td><td>The amount of the bet. Throws if this is zero. For C&amp;E bets, min bet is 2 must be a multiple of 2. For Horn bets, min bet is 4 must be a multiple of 4.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">contractAmount</td><td>The amount of the bet. Throws if this is zero. For C&amp;E bets, min bet is 2 must be a multiple of 2. For Horn bets, min bet is 4 must be a multiple of 4. For World bets, min bet is 5 must be a multiple of 5.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pivot</td><td>The number this bet is focused on. For example a Place bet must set the pivot to 4,5,6,8,9 or 10 otherwise a std::invalid_argument exception is thrown.</td></tr>
   </table>
   </dd>
 </dl>
-<p>For Field, AnyCraps, AnySeven, C&amp;E and Horn bets, the pivot is unused and internally set to 0.</p>
+<p>For Field, AnyCraps, AnySeven, Any711, C&amp;E, Horn and World bets, the pivot is unused and internally set to 0.</p>
 <p>For PassLine/Come/DontPass/DontCome bets, the caller sets the pivot to zero. Zero indicates the pivot number needs to be set later. These point-based bets get their pivot number assigned during CrapsBet::evaluate(),</p>
 <p>As a special case only for PassLine bets, the caller may also explicitly set the pivot to one of 4,5,6,8,9 or10. This supports the behavior of putting down a PassLine bet after the point is already established.</p>
 <p>Note that <a class="el" href="classCraps_1_1CrapsBet.html" title="A bet on the Craps table.">CrapsBet</a> constructor knows nothing about the state of the <a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> table. It is the responsibility of the caller to ensure the bet is permissable and placed on a <a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> table at the right time.</p>
@@ -319,6 +327,40 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a8d7a8312061e45c3e9cfdf2d17464278" name="a8d7a8312061e45c3e9cfdf2d17464278"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d7a8312061e45c3e9cfdf2d17464278">&#9670;&#160;</a></span>hasDecision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CrapsBet::hasDecision </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a41491fa502dd22d7035629a3ff7699fd" name="a41491fa502dd22d7035629a3ff7699fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41491fa502dd22d7035629a3ff7699fd">&#9670;&#160;</a></span>logBet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CrapsBet::logBet </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>intro</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab0ed412eb2573a779f44dc68c5a3bceb" name="ab0ed412eb2573a779f44dc68c5a3bceb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab0ed412eb2573a779f44dc68c5a3bceb">&#9670;&#160;</a></span>oddsAmount()</h2>
 
@@ -393,6 +435,23 @@ Friends</h2></td></tr>
 <p>Returns the pivot.</p>
 <p>The pivot is the focus number for this bet. For example a Place bet will have a pivot of 4,5,6,8,9, or 10. For initial Pass/Come/DontCome/DontPass bets, the pivot is zero indicating a point number is not yet established.</p>
 <dl class="section return"><dt>Returns</dt><dd>The pivot. </dd></dl>
+
+</div>
+</div>
+<a id="a925553c5cbf4648c61c9534306aa2a75" name="a925553c5cbf4648c61c9534306aa2a75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a925553c5cbf4648c61c9534306aa2a75">&#9670;&#160;</a></span>placementCommission()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> CrapsBet::placementCommission </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -554,6 +613,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a7f4241aa9ecc051c75f779af132a52ed" name="a7f4241aa9ecc051c75f779af132a52ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f4241aa9ecc051c75f779af132a52ed">&#9670;&#160;</a></span>Player</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classCraps_1_1Player.html">Player</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6b9fae6c72d9a9a0a9158eee4044684f" name="a6b9fae6c72d9a9a0a9158eee4044684f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6b9fae6c72d9a9a0a9158eee4044684f">&#9670;&#160;</a></span>TableStats</h2>
 
@@ -583,7 +664,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

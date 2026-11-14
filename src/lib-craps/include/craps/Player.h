@@ -52,9 +52,17 @@ public:
                                 const PlayerId&    playerId);
     /// @}
 
+    /// What makeOrChangeBet() did
+    struct BetPlaced
+    {
+        BetPtr     bet;                    ///< The bet now on the table
+        bool       changed = false;        ///< true if it was already there
+        Gen::Money previousAmount = 0;     ///< Contract amount before, if changed
+    };
+
     /// @name Modifiers
     /// @{
-    zeus::expected<BetPtr, Gen::ErrorPass> makeBet(
+    zeus::expected<BetPlaced, Gen::ErrorPass> makeOrChangeBet(
         BetName betName, Gen::Money contractAmount, unsigned pivot);
     zeus::expected<void, Gen::ErrorPass> joinTable(CrapsTable& table);
     zeus::expected<void, Gen::ErrorPass> leaveTable();
@@ -68,6 +76,8 @@ public:
     void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
     void bettingClosed();
     void disburseDone();
+    void recordRepeaters(unsigned point, unsigned roll,
+                         const std::list<DecisionRecord>& drl);
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
@@ -84,6 +94,7 @@ public:
     int                  getSessionNet()                          const;
     BetPtr               getBet(const BetId& betId, Gen::ErrorPass& ep) const;
     Craps::BetId         getBet(BetName betName, size_t pivot, Gen::ErrorPass& ep) const;
+    BetPtr               findBet(BetName betName, unsigned pivot) const;
     Bets                 getBets()                                const;
     Bets                 getOddsBets()                            const;
 
@@ -104,6 +115,8 @@ public:
 
 private:
     void beginNewSession();
+    void closeSpotRepeaters(Repeaters& reps, BetName name, unsigned point,
+                            const std::list<DecisionRecord>& drl) const;
     // order matters
     PlayerId          playerId_;
     Bank              wallet_;     // overriden by yaml
@@ -126,6 +139,8 @@ private:
     static constexpr unsigned RefillAmount_               = 20000;
 
 private:
+    zeus::expected<BetPtr, Gen::ErrorPass> makeBet(
+        BetName betName, Gen::Money contractAmount, unsigned pivot);
     BetPtr makeShared(BetName betName,
                       Gen::Money contractAmount,
                       unsigned pivot,
@@ -159,6 +174,18 @@ private:
     using En = Gen::ErrorPass::ErrorName;
     using Et = Gen::ErrorPass::ErrorType;
     using Es = Gen::ErrorPass::Severity;
+
+    // Unit test access points. Functions only, never data members: the
+    // library is not compiled with UNIT_TEST, so the class layout must
+    // be the same with or without it.
+#ifdef UNIT_TEST
+public:
+    // Always makes a new bet, never changes one. Production code uses
+    // makeOrChangeBet() so that a player has one bet per spot.
+    zeus::expected<BetPtr, Gen::ErrorPass> testMakeBet(
+        BetName betName, Gen::Money contractAmount, unsigned pivot)
+    { return makeBet(betName, contractAmount, pivot); }
+#endif
 };
 
 /*-----------------------------------------------------------*//**
@@ -171,6 +198,11 @@ Player Responsibilities:
 
 @li Maintains player's money
 @li Tracks player's bets
+@li A player has at most one bet per spot, as at a real table where the
+    chips stack up. makeOrChangeBet() makes a bet, or if the player
+    already has that bet changes its amount to the amount given. It is
+    the only way to place a bet. makeBet() is private; unit tests that
+    need a bet that is always new use testMakeBet().
 @li Exports its own state with toYAML() and restores it with fromYAML()
 @li Knows nothing about files, paths or where that YAML is stored.
     Lib-controller's PlayerManager owns each player's file and decides

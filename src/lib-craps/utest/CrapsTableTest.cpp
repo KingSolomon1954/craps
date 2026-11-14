@@ -22,7 +22,7 @@ std::string getTableYamlStringUtest();
 struct CrapsTableFixture
 {
     Craps::TableConfig  config;
-    
+
     Player* p1 = nullptr;
     Player* p2 = nullptr;
     Player* p3 = nullptr;
@@ -40,7 +40,7 @@ struct CrapsTableFixture
         p5 = Player::createPlayer("Player5");
         p6 = Player::createPlayer("Player6");
         p7 = Player::createPlayer("Player7");
-        
+
         config.maxSessions = 50;
         config.maxRecentRolls = 25;
         // CrapsTable never touches files, so one TableConfig can be
@@ -58,9 +58,6 @@ struct CrapsTableFixture
         delete p7;
     }
 };
-
-//----------------------------------------------------------------
-
 
 //----------------------------------------------------------------
 
@@ -95,8 +92,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:reject null bet pointers")
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collected and refunded on cancellation")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["buyCommission"]["collection"] = "onPlacement";
     rules["buyCommission"]["basis"] = "onWager";
     rules["buyCommission"]["basisPoints"] = 500;
@@ -110,7 +106,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collec
 
     const Gen::Money playerBefore = p1->getBalance();
     const int houseBefore = table->getBalance();
-    auto result = p1->makeBet(BetName::Buy, 100, 4);
+    auto result = p1->testMakeBet(BetName::Buy, 100, 4);
     REQUIRE(result);
     CHECK(p1->getBalance() == playerBefore - 105);
     CHECK(table->getBalance() == houseBefore + 5);
@@ -130,11 +126,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is collec
     CHECK(table->getBalance() == houseBefore);
 }
 
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not charged or refunded twice after a win")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["buyCommission"]["collection"] = "onPlacement";
     rules["buyCommission"]["basis"] = "onWager";
     rules["buyCommission"]["basisPoints"] = 500;
@@ -147,7 +144,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not ch
     REQUIRE(p1->joinTable(*table));
 
     const Gen::Money playerBefore = p1->getBalance();
-    auto result = p1->makeBet(BetName::Buy, 100, 4);
+    auto result = p1->testMakeBet(BetName::Buy, 100, 4);
     REQUIRE(result);
     CHECK(p1->getBalance() == playerBefore - 105);
 
@@ -169,12 +166,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: placement commission is not ch
     CHECK(table->getBalance() == houseAfterWin);
 }
 
+//----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: bet amount limits reflect table rules")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["odds"]["maximumWager"] = 37;
     rules["odds"]["wagerIncrement"] = 5;
     rules["aggregates"]["World"]["maximumComponentWager"] = 3;
@@ -194,11 +191,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: bet amount limits reflect tabl
     CHECK(odds.increment == 5);
 }
 
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limit is enforced")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["aggregates"] = YAML::Node(YAML::NodeType::Map);
     rules["aggregates"]["CandE"]["maximumComponentWager"] = 3;
     rules["aggregates"]["World"]["maximumComponentWager"] = 3;
@@ -208,22 +206,23 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate component wager limi
     REQUIRE(table != nullptr);
     REQUIRE(p1->joinTable(*table));
 
-    auto tooLarge = p1->makeBet(BetName::CandE, 8, 0);
+    auto tooLarge = p1->testMakeBet(BetName::CandE, 8, 0);
     CHECK_FALSE(tooLarge);
-    auto allowed = p1->makeBet(BetName::CandE, 6, 0);
+    auto allowed = p1->testMakeBet(BetName::CandE, 6, 0);
     CHECK(allowed);
 
-    auto worldTooLarge = p1->makeBet(BetName::World, 20, 0);
+    auto worldTooLarge = p1->testMakeBet(BetName::World, 20, 0);
     CHECK_FALSE(worldTooLarge);
-    auto worldAllowed = p1->makeBet(BetName::World, 15, 0);
+    auto worldAllowed = p1->testMakeBet(BetName::World, 15, 0);
     CHECK(worldAllowed);
 }
+
+//----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate potential win limit is enforced")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    yaml["Rules"]["advanced"] = YAML::Node(YAML::NodeType::Map);
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
     rules["aggregates"] = YAML::Node(YAML::NodeType::Map);
     rules["aggregates"]["Horn"]["basis"] = "potentialWin";
     rules["aggregates"]["Horn"]["maximumPotentialWin"] = 200;
@@ -233,17 +232,19 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable: aggregate potential win limit 
     REQUIRE(table != nullptr);
     REQUIRE(p1->joinTable(*table));
 
-    auto tooLarge = p1->makeBet(BetName::Horn, 40, 0); // max win = 300
+    auto tooLarge = p1->testMakeBet(BetName::Horn, 40, 0); // max win = 300
     CHECK_FALSE(tooLarge);
-    auto allowed = p1->makeBet(BetName::Horn, 20, 0); // max win = 150
+    auto allowed = p1->testMakeBet(BetName::Horn, 20, 0); // max win = 150
     CHECK(allowed);
 }
+
+//----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propagated")
 {
     CrapsTable t("Table-1", config);
     REQUIRE(p1->joinTable(t));
-    REQUIRE(p1->makeBet(BetName::Field, 10, 0));
+    REQUIRE(p1->testMakeBet(BetName::Field, 10, 0));
 
     // Point 3 is invalid. The roll must not be partially settled or advance
     // the point; an UslBetEvaluationFailed event is published for the bet.
@@ -254,6 +255,42 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:bet evaluation failure is propa
     CHECK(p1->getNumBetsOnTable() == 1);
     CHECK(t.getNumBetsOnTable() == 1);
 }
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:roll stats use the point when the dice were thrown")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    t.setShooter(*p1);
+
+    // 7 11 6 7 5 5 2, in the order thrown
+    t.testRollDice(3, 4);   // 7   come out, win
+    t.testRollDice(5, 6);   // 11  come out, win
+    t.testRollDice(3, 3);   // 6   point established
+    t.testRollDice(3, 4);   // 7   seven out
+    t.testRollDice(2, 3);   // 5   point established
+    t.testRollDice(2, 3);   // 5   point made
+    t.testRollDice(1, 1);   // 2   come out, craps
+
+    const RollStats& rs = t.getCurrentStats().rollStats;
+
+    // Pass line: 3 wins (two come out, one point made),
+    //            2 losses (one come out, one seven out)
+    CHECK(rs.passWinsComeOut.count()        == 2);
+    CHECK(rs.passLoseComeOut.count()        == 1);
+    CHECK(rs.passPntCnts[5].wins.count()    == 1);
+    CHECK(rs.passPntCnts[5].lose.count()    == 0);
+    CHECK(rs.passPntCnts[6].wins.count()    == 0);
+    CHECK(rs.passPntCnts[6].lose.count()    == 1);
+
+    CHECK(rs.sevenOuts.count()              == 1);
+    CHECK(rs.numPointsEstablished           == 2);
+    CHECK(rs.comeOutRolls.count()           == 5);
+    CHECK(rs.pointRolls.count()             == 2);
+}
+
+//----------------------------------------------------------------
 
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:ctor")
 {
@@ -311,14 +348,14 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
 
         auto result = t->addPlayer(*p1); CHECK(result);
         CHECK(t->getNumPlayers() == 1);
-        
+
         // Add same player again - error
         result = t->addPlayer(*p1); CHECK(!result);
 
         // Add different player
         result = t->addPlayer(*p2); CHECK(result);
         CHECK(t->getNumPlayers() == 2);
-        
+
         // Add a bunch
         result = t->addPlayer(*p3); CHECK(result);
         result = t->addPlayer(*p4); CHECK(result);
@@ -387,7 +424,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
     SUBCASE("playerList")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         REQUIRE(t->getNumPlayers() == 0);
 
         // Get player list, get back an empty vector
@@ -399,7 +436,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
         auto result = t->addPlayer(*p1); REQUIRE(result);
         result = t->addPlayer(*p2); REQUIRE(result);
         result = t->addPlayer(*p3); REQUIRE(result);
-        
+
         // Get back non-empty vector
         v = t->getPlayers();
         CHECK(v.size() == 3);
@@ -414,7 +451,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:players")
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 {
     Gen::ErrorPass ep;
-    
+
     SUBCASE("general")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
@@ -452,7 +489,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
         // Test positive haveBet, use a previous bet
         CHECK(t->haveBet(b4->betId()));
-        
+
         // Test negative haveBet, use a new bet
         auto b5 = std::make_shared<CrapsBet>(p1, BetName::PassLine, 10, 0);
         REQUIRE(b5 != nullptr);
@@ -462,7 +499,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("betTiming")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         auto result = t->addPlayer(*p1); REQUIRE(result);
              result = t->addPlayer(*p2); REQUIRE(result);
         REQUIRE(t->isComeOutRoll());
@@ -471,37 +508,37 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Place, 10, 10);
         REQUIRE(b1 != nullptr);
         CHECK(t->addBet(b1, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Buy bet, legal on come out roll
         auto b2 = std::make_shared<CrapsBet>(p1, BetName::Buy, 10, 10);
         REQUIRE(b2 != nullptr);
         CHECK(t->addBet(b2, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Lay bet, legal on come out roll
         auto b3 = std::make_shared<CrapsBet>(p1, BetName::Buy, 10, 10);
         REQUIRE(b3 != nullptr);
         CHECK(t->addBet(b3, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Field bet, legal on come out roll
         auto b4 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
         REQUIRE(b4 != nullptr);
         CHECK(t->addBet(b4, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Hardway bet, legal on come out roll
         auto b5 = std::make_shared<CrapsBet>(p1, BetName::Hardway, 10, 4);
         REQUIRE(b5 != nullptr);
         CHECK(t->addBet(b5, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Horn bet, legal on come out roll
         auto b6 = std::make_shared<CrapsBet>(p1, BetName::Horn, 12, 0);
         REQUIRE(b6 != nullptr);
         CHECK(t->addBet(b6, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a C&E bet, legal on come out roll
         auto b7 = std::make_shared<CrapsBet>(p1, BetName::CandE, 10, 0);
         REQUIRE(b7 != nullptr);
         CHECK(t->addBet(b7, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Come/DontCome bet but wrong time for it
         auto b8 = std::make_shared<CrapsBet>(p1, BetName::Come,     10, 0);
         auto b9 = std::make_shared<CrapsBet>(p1, BetName::DontCome, 10, 0);
@@ -535,44 +572,44 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         auto b13 = std::make_shared<CrapsBet>(p2, BetName::Place, 10, 10);
         REQUIRE(b13 != nullptr);
         CHECK(t->addBet(b13, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Buy bet, legal on point roll
         auto b14 = std::make_shared<CrapsBet>(p2, BetName::Buy, 10, 10);
         REQUIRE(b14 != nullptr);
         CHECK(t->addBet(b14, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Lay bet, legal on point roll
         auto b15 = std::make_shared<CrapsBet>(p2, BetName::Buy, 10, 10);
         REQUIRE(b15 != nullptr);
         CHECK(t->addBet(b15, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Field bet, legal on point roll
         auto b16 = std::make_shared<CrapsBet>(p2, BetName::Field, 10, 0);
         REQUIRE(b16 != nullptr);
         CHECK(t->addBet(b16, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Hardway bet, legal on point roll
         auto b17 = std::make_shared<CrapsBet>(p2, BetName::Hardway, 10, 4);
         REQUIRE(b17 != nullptr);
         CHECK(t->addBet(b17, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a Horn bet, legal on point roll
         auto b18 = std::make_shared<CrapsBet>(p2, BetName::Horn, 12, 0);
         REQUIRE(b18 != nullptr);
         CHECK(t->addBet(b18, ep) == Gen::ReturnCode::Success);
-        
+
         // Make a C&E bet, legal on point roll
         auto b19 = std::make_shared<CrapsBet>(p2, BetName::CandE, 10, 0);
         REQUIRE(b19 != nullptr);
         CHECK(t->addBet(b19, ep) == Gen::ReturnCode::Success);
-        
+
         // std::cout << ep.diag << std::endl;
     }
 
     SUBCASE("minMaxLimits")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         auto result = t->addPlayer(*p1); REQUIRE(result);
              result = t->addPlayer(*p2); REQUIRE(result);
         REQUIRE(t->isComeOutRoll());
@@ -582,7 +619,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
                                         t->getMinLineBet() - 1, 0);
         REQUIRE(b1 != nullptr);
         CHECK(t->addBet(b1, ep) == Gen::ReturnCode::Fail);
-        
+
         // LineBet too big
         auto b2 = std::make_shared<CrapsBet>(p1, BetName::PassLine,
                                         t->getMaxLineBet() + 1, 0);
@@ -609,7 +646,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         REQUIRE(b6 != nullptr);
         CHECK(t->addBet(b6, ep) == Gen::ReturnCode::Success);
 
-        // TODO Horn max bet 
+        // TODO Horn max bet
         // auto b7 = std::make_shared<CrapsBet>(p2, BetName::Horn,
         //                                 t->getMaxHorn() + 1, 0);
         // REQUIRE(b7 != nullptr);
@@ -630,12 +667,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         REQUIRE(b10 != nullptr);
         CHECK(t->addBet(b10, ep) == Gen::ReturnCode::Fail);
 
-        // TODO C&E max bet 
+        // TODO C&E max bet
         // auto b11 = std::make_shared<CrapsBet>(p2, BetName::CandE,
         //                                 t->getMaxCandE() + 1, 0);
         // REQUIRE(b11 != nullptr);
         // CHECK(t->addBet(b11, ep) == Gen::ReturnCode::Fail);
-        
+
         // std::cout << ep.diag << std::endl;
     }
 
@@ -650,7 +687,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
         auto b1 = std::make_shared<CrapsBet>(p1, BetName::Field, 10, 0);
         REQUIRE(t->addBet(b1, ep) == Gen::ReturnCode::Success);
         CHECK(t->setOddsAmount(b1, 10, ep) == Gen::ReturnCode::Fail);
-        
+
         // Can't set odds if bet is not on the table
         auto b2 = std::make_shared<CrapsBet>(p1, BetName::PassLine, 10, 0);
         REQUIRE(b2 != nullptr);
@@ -663,7 +700,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
 
         // Establish a point
         t->testSetState(4,6,6);  // point 4, d1, d2
-        
+
         // OK now to set min odds, $0 is allowed
         b2->testSetPivot(4);  // not rolling dice, so setup bet properly
         CHECK(t->setOddsAmount(b2, 0, ep) == Gen::ReturnCode::Success);
@@ -681,7 +718,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:placingBets")
     SUBCASE("modifyBets")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         auto result = t->addPlayer(*p1); REQUIRE(result);
 
         // Change contract bet after on table, no point yet.
@@ -823,7 +860,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
     SUBCASE("firstRoll")
     {
         std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
-        
+
         // First roll, no players, it's a come out roll.
         CHECK(t->isComeOutRoll());
         t->testRollDice(6,6);       // roll a 12, success is no crash
@@ -839,8 +876,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         Gen::Money janeBalance = p2->getBalance();
 
         // come out roll, roll a 7, pass line win, dont pass lose
-        auto johnBet1 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet1 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet1 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet1 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet1.has_value());
         REQUIRE(janeBet1.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
@@ -868,8 +905,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 11, pass line win, dont pass lose
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet2 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet2 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet2 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet2 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet2.has_value());
         REQUIRE(janeBet2.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
@@ -891,8 +928,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 2, pass line lose, dont pass win
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet3 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet3 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet3 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet3 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet3.has_value());
         REQUIRE(janeBet3.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
@@ -914,8 +951,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 3, pass line lose, dont pass win
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet4 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet4 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet4 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet4 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet4.has_value());
         REQUIRE(janeBet4.has_value());
         std::cout << "John makes PassLine bet\n";
@@ -931,12 +968,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         CHECK(p1->getAmountOnTable() == 0);
         CHECK(p2->getAmountOnTable() == 0);
         CHECK(t->isComeOutRoll());
-        
+
         // come out roll, roll a 12, pass line lose, dont pass push
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet5 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet5 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet5 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet5 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet5.has_value());
         REQUIRE(janeBet5.has_value());
         std::cout << "John makes PassLine bet\n";
@@ -961,8 +998,8 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rollDice")
         // come out roll, roll a 4, pass line keep, dont pass keep
         johnBalance = p1->getBalance();  // reset
         janeBalance = p2->getBalance();  // reset
-        auto johnBet6 = p1->makeBet(BetName::PassLine, 10, 0);
-        auto janeBet6 = p2->makeBet(BetName::DontPass, 10, 0);
+        auto johnBet6 = p1->testMakeBet(BetName::PassLine, 10, 0);
+        auto janeBet6 = p2->testMakeBet(BetName::DontPass, 10, 0);
         REQUIRE(johnBet6.has_value());
         REQUIRE(janeBet6.has_value());
         CHECK(p1->getBalance() == (johnBalance - 10));
@@ -1008,7 +1045,7 @@ using AutoRolls = std::vector<AutoBet>;
 void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
 {
     Craps::BetPtr lastBet;
-    
+
     for (const auto& r : rolls)
     {
         if (r.action == Action::RollDice)
@@ -1017,7 +1054,7 @@ void autoBetLoop(AutoRolls& rolls, CrapsTable& t, Player& player)
         }
         if (r.action == Action::MakeBet)
         {
-            auto result = player.makeBet(r.betName, r.amount, r.pivot);
+            auto result = player.testMakeBet(r.betName, r.amount, r.pivot);
             REQUIRE(result);
             lastBet = result.value();
         }
@@ -1036,7 +1073,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
     std::unique_ptr<CrapsTable> t(new CrapsTable("Table-1", config));
 
     auto result = p1->joinTable(*t); REQUIRE(result);
-    
+
     SUBCASE("shortRoll")
     {
         AutoRolls rolls =
@@ -1064,7 +1101,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
             AutoBet{Action::RollDice, 1, 1, BetName::Invalid,  0,  0}, // lose 10
             AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
             AutoBet{Action::RollDice, 1, 2, BetName::Invalid,  0,  0}, // lose 10
-            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, // 
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, //
             AutoBet{Action::RollDice, 2, 2, BetName::Invalid,  0,  0}, // point 4
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
@@ -1075,7 +1112,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
             AutoBet{Action::RollDice, 3, 4, BetName::Invalid,  0,  0}, // 7 out lose 80, deposit 20
-            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, 
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
             AutoBet{Action::RollDice, 4, 4, BetName::Invalid,  0,  0}, // point 8
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come
@@ -1097,12 +1134,12 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:rolls")
         CHECK(t->getNumBetsOnTable() == 3);
         CHECK(p1->getBalance() == balance - 80 + 10 - 60 + 10 - 10);
     }
-    
+
     SUBCASE("superLong")
     {
         AutoRolls rolls =  // 6,8,8,7 repeat 100,000 times
         {
-            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10}, 
+            AutoBet{Action::MakeBet,  0, 0, BetName::PassLine, 0, 10},
             AutoBet{Action::RollDice, 3, 3, BetName::Invalid,  0,  0}, // point 6
             AutoBet{Action::SetOdds,  0, 0, BetName::Invalid,  0, 10}, // odds 6
             AutoBet{Action::MakeBet,  0, 0, BetName::Come,     0, 10}, // come bet
@@ -1173,19 +1210,54 @@ tableName: Las Vegas Strip
 shortDescription: A typical table with 5x odds, min $10, max $2,000.
 fullDescription: To be supplied. 5% commission on buy bets, taken only after winning.
 Rules:
-  maxOdds: 5
-  minLineBet: 10
-  maxLineBet: 2000
-  minPlaceBet: 5
-  maxPlaceBet: 2000
-  minFieldBet: 1
-  maxFieldBet: 2000
-  minCandEBet: 2
-  maxCandEBet: 2000
-  minHornBet: 4
-  maxHornBet: 2000
-  minWorldBet: 5
-  maxWorldBet: 2000
+  odds:
+    style: flatMultiplier
+    flatMultiplier: 5
+  wagers:
+    "PassLine":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "Come":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "DontPass":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "DontCome":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "Buy":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "Lay":
+      minimum: 10
+      maximum: 2000
+      increment: 1
+    "Place":
+      minimum: 5
+      maximum: 2000
+      increment: 1
+    "Field":
+      minimum: 1
+      maximum: 2000
+      increment: 1
+    "C&E":
+      minimum: 2
+      maximum: 2000
+      increment: 2
+    "Horn":
+      minimum: 4
+      maximum: 2000
+      increment: 4
+    "World":
+      minimum: 5
+      maximum: 2000
+      increment: 5
 Bank:
   originalStartBalance: 3000000
   sessionStartBalance: 3000000
@@ -1203,595 +1275,1099 @@ Bank:
     maxAmtDepositedSessionDate: 2025-06-25T14:30:00.000000000
     maxAmtWithdrawnSessionDate: 2025-06-25T14:30:00.000000000
 BetStats:
-  totNumBetsAllBets: 0
-  totNumWinsAllBets: 0
-  totNumLoseAllBets: 0
-  totNumKeepAllBets: 0
-  totAmtAllBets: 0
-  totAmtWinsAllBets: 0
-  totAmtLoseAllBets: 0
-  totAmtKeepAllBets: 0
-  maxAmtBetOneBet: 0
-  maxAmtWinOneBet: 0
-  maxAmtLoseOneBet: 0
-  maxAmtKeepOneBet: 0
-  betTypeStats:
-    wins:
-      AnyCraps:
+  overall:
+    bets:
+      count: 0
+      wins: 0
+      losses: 0
+      kept: 0
+    amounts:
+      bet: 0
+      won: 0
+      lost: 0
+      kept: 0
+    maximums:
+      bet: 0
+      win: 0
+      loss: 0
+      kept: 0
+  byBet:
+    PassLine:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      AnySeven:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy10:
+        oddsBet: 0
+        oddsAmount: 0
+    Come:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy4:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy5:
+        oddsBet: 0
+        oddsAmount: 0
+    DontPass:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy6:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy8:
+        oddsBet: 0
+        oddsAmount: 0
+    DontCome:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy9:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      CandE:
+        oddsBet: 0
+        oddsAmount: 0
+    Place:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come10:
+        oddsBet: 0
+        oddsAmount: 0
+    Lay:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come4:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come5:
+        oddsBet: 0
+        oddsAmount: 0
+    Buy:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come6:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come8:
+        oddsBet: 0
+        oddsAmount: 0
+    Hardway4:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come9:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome:
+        oddsBet: 0
+        oddsAmount: 0
+    Hardway6:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome10:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome4:
+        oddsBet: 0
+        oddsAmount: 0
+    Hardway8:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome5:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome6:
+        oddsBet: 0
+        oddsAmount: 0
+    Hardway10:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome8:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome9:
+        oddsBet: 0
+        oddsAmount: 0
+    Field:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass10:
+        oddsBet: 0
+        oddsAmount: 0
+    AnyCraps:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass4:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass5:
+        oddsBet: 0
+        oddsAmount: 0
+    AnySeven:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass6:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass8:
+        oddsBet: 0
+        oddsAmount: 0
+    C&E:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass9:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Field:
+        oddsBet: 0
+        oddsAmount: 0
+    Horn:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Hard10:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Hard4:
+        oddsBet: 0
+        oddsAmount: 0
+    World:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Hard6:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Hard8:
+        oddsBet: 0
+        oddsAmount: 0
+    PassLine4:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Horn:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay10:
+        oddsBet: 0
+        oddsAmount: 0
+    PassLine5:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay4:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay5:
+        oddsBet: 0
+        oddsAmount: 0
+    PassLine6:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay6:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay8:
+        oddsBet: 0
+        oddsAmount: 0
+    PassLine8:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay9:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine:
+        oddsBet: 0
+        oddsAmount: 0
+    PassLine9:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine10:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine4:
+        oddsBet: 0
+        oddsAmount: 0
+    PassLine10:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine5:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine6:
+        oddsBet: 0
+        oddsAmount: 0
+    Come4:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine8:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine9:
+        oddsBet: 0
+        oddsAmount: 0
+    Come5:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place10:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place4:
+        oddsBet: 0
+        oddsAmount: 0
+    Come6:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place5:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place6:
+        oddsBet: 0
+        oddsAmount: 0
+    Come8:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place8:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place9:
+        oddsBet: 0
+        oddsAmount: 0
+    Come9:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-    lose:
-      AnyCraps:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      AnySeven:
+        oddsBet: 0
+        oddsAmount: 0
+    Come10:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy10:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy4:
+        oddsBet: 0
+        oddsAmount: 0
+    DontPass4:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy5:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy6:
+        oddsBet: 0
+        oddsAmount: 0
+    DontPass5:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy8:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Buy9:
+        oddsBet: 0
+        oddsAmount: 0
+    DontPass6:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      CandE:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come:
+        oddsBet: 0
+        oddsAmount: 0
+    DontPass8:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come10:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come4:
+        oddsBet: 0
+        oddsAmount: 0
+    DontPass9:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come5:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come6:
+        oddsBet: 0
+        oddsAmount: 0
+    DontPass10:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come8:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Come9:
+        oddsBet: 0
+        oddsAmount: 0
+    DontCome4:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome10:
+        oddsBet: 0
+        oddsAmount: 0
+    DontCome5:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome4:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome5:
+        oddsBet: 0
+        oddsAmount: 0
+    DontCome6:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome6:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome8:
+        oddsBet: 0
+        oddsAmount: 0
+    DontCome8:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontCome9:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass:
+        oddsBet: 0
+        oddsAmount: 0
+    DontCome9:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass10:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass4:
+        oddsBet: 0
+        oddsAmount: 0
+    DontCome10:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass5:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass6:
+        oddsBet: 0
+        oddsAmount: 0
+    Place4:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass8:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      DontPass9:
+        oddsBet: 0
+        oddsAmount: 0
+    Place5:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Field:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Hard10:
+        oddsBet: 0
+        oddsAmount: 0
+    Place6:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Hard4:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Hard6:
+        oddsBet: 0
+        oddsAmount: 0
+    Place8:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Hard8:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Horn:
+        oddsBet: 0
+        oddsAmount: 0
+    Place9:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay10:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay4:
+        oddsBet: 0
+        oddsAmount: 0
+    Place10:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay5:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay6:
+        oddsBet: 0
+        oddsAmount: 0
+    Lay4:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay8:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Lay9:
+        oddsBet: 0
+        oddsAmount: 0
+    Lay5:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine10:
+        oddsBet: 0
+        oddsAmount: 0
+    Lay6:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine4:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine5:
+        oddsBet: 0
+        oddsAmount: 0
+    Lay8:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine6:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine8:
+        oddsBet: 0
+        oddsAmount: 0
+    Lay9:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      PassLine9:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place10:
+        oddsBet: 0
+        oddsAmount: 0
+    Lay10:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place4:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place5:
+        oddsBet: 0
+        oddsAmount: 0
+    Buy4:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place6:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place8:
+        oddsBet: 0
+        oddsAmount: 0
+    Buy5:
+      wins:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-      Place9:
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
         count: 0
         totDistance: 0
         amount: 0
         amountBet: 0
-  numBetsOneRoll:
-    total: 0
-    max: 0
-  numBetsWinOneRoll:
-    total: 0
-    max: 0
-  numBetsLoseOneRoll:
-    total: 0
-    max: 0
-  numBetsKeepOneRoll:
-    total: 0
-    max: 0
-  amtBetsOneRoll:
-    total: 0
-    max: 0
-  amtBetsWinOneRoll:
-    total: 0
-    max: 0
-  amtBetsLoseOneRoll:
-    total: 0
-    max: 0
-  amtBetsKeepOneRoll:
-    total: 0
-    max: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Buy6:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Buy8:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Buy9:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Buy10:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field2:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field3:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field4:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field5:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field6:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field7:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field8:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field9:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field10:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field11:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+    Field12:
+      wins:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+      losses:
+        count: 0
+        totDistance: 0
+        amount: 0
+        amountBet: 0
+        oddsBet: 0
+        oddsAmount: 0
+  rollActivity:
+    betsEvaluated:
+      allRolls: 0
+      busiestRoll: 0
+    betsWon:
+      allRolls: 0
+      busiestRoll: 0
+    betsLost:
+      allRolls: 0
+      busiestRoll: 0
+    betsKept:
+      allRolls: 0
+      busiestRoll: 0
+    amounts:
+      evaluated:
+        allRolls: 0
+        busiestRoll: 0
+      won:
+        allRolls: 0
+        busiestRoll: 0
+      lost:
+        allRolls: 0
+        busiestRoll: 0
+      kept:
+        allRolls: 0
+        busiestRoll: 0
 RollStats:
   numberCounts:
     2:
@@ -1819,7 +2395,7 @@ RollStats:
       count: 0
       maxRepeats: 0
     10:
-      count: 998
+      count: 0
       maxRepeats: 0
     11:
       count: 0
@@ -1902,7 +2478,7 @@ RollStats:
         count: 0
         maxRepeats: 0
       lose:
-        count: 0
+        count: 4
         maxRepeats: 0
     6:
       wins:
@@ -1973,7 +2549,7 @@ RollStats:
         count: 0
         maxRepeats: 0
       lose:
-        count: 0
+        count: 8
         maxRepeats: 0
   dontComePntCnts:
     4:
@@ -2006,17 +2582,17 @@ RollStats:
         maxRepeats: 0
     9:
       wins:
-        count: 0
+        count: 10
         maxRepeats: 0
       lose:
         count: 0
         maxRepeats: 0
     10:
       wins:
-        count: 0
+        count: 8
         maxRepeats: 0
       lose:
-        count: 0
+        count: 4
         maxRepeats: 0
   hardwayCounts:
     4:
@@ -2047,6 +2623,66 @@ RollStats:
       lose:
         count: 0
         maxRepeats: 0
+  hardwayEasyCounts:
+    4:
+      count: 0
+      maxRepeats: 0
+    6:
+      count: 0
+      maxRepeats: 0
+    8:
+      count: 0
+      maxRepeats: 0
+    10:
+      count: 0
+      maxRepeats: 0
+  hardwaySevenCounts:
+    4:
+      count: 0
+      maxRepeats: 0
+    6:
+      count: 0
+      maxRepeats: 0
+    8:
+      count: 0
+      maxRepeats: 0
+    10:
+      count: 0
+      maxRepeats: 0
+  pointNumberCounts:
+    2:
+      count: 0
+      maxRepeats: 0
+    3:
+      count: 0
+      maxRepeats: 0
+    4:
+      count: 0
+      maxRepeats: 0
+    5:
+      count: 0
+      maxRepeats: 0
+    6:
+      count: 0
+      maxRepeats: 0
+    7:
+      count: 0
+      maxRepeats: 0
+    8:
+      count: 0
+      maxRepeats: 0
+    9:
+      count: 0
+      maxRepeats: 0
+    10:
+      count: 0
+      maxRepeats: 0
+    11:
+      count: 0
+      maxRepeats: 0
+    12:
+      count: 0
+      maxRepeats: 0
   numRolls: 0
   numPointsEstablished: 0
   comeOutRolls:
@@ -2109,6 +2745,24 @@ RollStats:
   crapsOnComeOutRoll:
     count: 0
     maxRepeats: 0
+  pointRepeaters:
+    2: {}
+    3: {}
+    4: {}
+    5: {}
+    6: {}
+    8: {}
+    9: {}
+    10: {}
+    11: {}
+    12: {}
+  placeRepeaters:
+    4: {}
+    5: {}
+    6: {}
+    8: {}
+    9: {}
+    10: {}
 SessionStats:
   numSessionsAlltime: 25
   firstSessionDate: 2025-06-25T14:30:00.000000000
@@ -2167,7 +2821,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Buy win accounting and lifetime
     // seven is a seven-out rather than a come-out roll.
     t.testSetState(6, 2, 2);
     const auto startingBalance = p1->getBalance();
-    auto betResult = p1->makeBet(BetName::Buy, 100, 4);
+    auto betResult = p1->testMakeBet(BetName::Buy, 100, 4);
     REQUIRE(betResult);
 
     const auto bankBefore = t.getBankCurrentStats();
@@ -2209,7 +2863,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Come odds refunded once on come
     // Create an existing Come 4 bet with odds while a point is established.
     t.testSetState(4, 2, 2);
     const auto startingBalance = p1->getBalance();
-    auto betResult = p1->makeBet(BetName::Come, 100, 0);
+    auto betResult = p1->testMakeBet(BetName::Come, 100, 0);
     REQUIRE(betResult);
     auto bet = betResult.value();
     bet->testSetPivot(4);
@@ -2237,7 +2891,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Lay commission accounting and l
 
     t.testSetState(4, 3, 4);
     const auto startingBalance = p1->getBalance();
-    auto betResult = p1->makeBet(BetName::Lay, 100, 4);
+    auto betResult = p1->testMakeBet(BetName::Lay, 100, 4);
     REQUIRE(betResult);
 
     const auto bankBefore = t.getBankCurrentStats();
@@ -2267,7 +2921,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:DontCome odds refunded once on 
     // Create an existing Don't Come 4 bet with odds while a point is known.
     t.testSetState(4, 3, 1);
     const auto startingBalance = p1->getBalance();
-    auto betResult = p1->makeBet(BetName::DontCome, 100, 0);
+    auto betResult = p1->testMakeBet(BetName::DontCome, 100, 0);
     REQUIRE(betResult);
     auto bet = betResult.value();
     bet->testSetPivot(4);
@@ -2297,38 +2951,109 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet settlement and statis
 
     // On 7, the $1 winning component earns $4 and the other $4 lose:
     // net player profit is zero, but the bet is classified as a win.
-    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    REQUIRE(p1->testMakeBet(BetName::World, 5, 0));
     t.testRollDice(3, 4);
     CHECK(p1->getBalance() == startingBalance);
     CHECK(p1->getNumBetsOnTable() == 0);
     CHECK(t.getNumBetsOnTable() == 0);
     CHECK(p1->getLastRollStats().amountWin == 4);
     CHECK(p1->getLastRollStats().amountLose == 4);
-    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").count == 1);
-    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").amount == 0);
+    CHECK(t.getCurrentStats().betStats.byBet.at("World").wins.count == 1);
+    CHECK(t.getCurrentStats().betStats.byBet.at("World").wins.amount == 0);
     auto bankAfterWin = t.getBankCurrentStats();
     CHECK(bankAfterWin.amtDeposited - depositedBefore == 4);
     CHECK(bankAfterWin.amtWithdrawn - withdrawnBefore == 4);
 
     // On 2, the $1 component wins $30 and the other $4 lose, for $26 net.
-    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    REQUIRE(p1->testMakeBet(BetName::World, 5, 0));
     t.testRollDice(1, 1);
     CHECK(p1->getBalance() == startingBalance + 26);
     CHECK(p1->getNumBetsOnTable() == 0);
     CHECK(t.getNumBetsOnTable() == 0);
-    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").count == 2);
-    CHECK(t.getCurrentStats().betStats.betTypeStats.wins.at("World").amount == 26);
+    CHECK(t.getCurrentStats().betStats.byBet.at("World").wins.count == 2);
+    CHECK(t.getCurrentStats().betStats.byBet.at("World").wins.amount == 26);
     auto bankAfterBigWin = t.getBankCurrentStats();
     CHECK(bankAfterBigWin.amtDeposited - depositedBefore == 8);
     CHECK(bankAfterBigWin.amtWithdrawn - withdrawnBefore == 34);
 
     // A non-winning total loses the entire five-component wager.
-    REQUIRE(p1->makeBet(BetName::World, 5, 0));
+    REQUIRE(p1->testMakeBet(BetName::World, 5, 0));
     t.testRollDice(1, 3); // 4
     CHECK(p1->getBalance() == startingBalance + 21);
     CHECK(p1->getNumBetsOnTable() == 0);
     CHECK(t.getNumBetsOnTable() == 0);
-    CHECK(t.getCurrentStats().betStats.betTypeStats.lose.at("World").count == 1);
+    CHECK(t.getCurrentStats().betStats.byBet.at("World").losses.count == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Horn and C&E settle net of losing components")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    const auto startingBalance = p1->getBalance();
+    const auto bankBefore = t.getBankCurrentStats();
+    const auto depositedBefore = bankBefore.amtDeposited;
+    const auto withdrawnBefore = bankBefore.amtWithdrawn;
+
+    // Horn 12: unit is 3. A 2 pays 30:1 on one unit (90) and the other
+    // three units (9) lose, so the player nets 81.
+    REQUIRE(p1->testMakeBet(BetName::Horn, 12, 0));
+    t.testRollDice(1, 1);
+    CHECK(p1->getBalance() == startingBalance + 81);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    CHECK(p1->getLastRollStats().amountWin == 90);
+    CHECK(p1->getLastRollStats().amountLose == 9);
+    auto bank1 = t.getBankCurrentStats();
+    CHECK(bank1.amtDeposited - depositedBefore == 9);
+    CHECK(bank1.amtWithdrawn - withdrawnBefore == 90);
+    CHECK(t.getCurrentStats().betStats.byBet.at("Horn").wins.count == 1);
+    CHECK(t.getCurrentStats().betStats.byBet.at("Horn").wins.amount == 81);
+    CHECK(t.getCurrentStats().betStats.byBet.at("Horn").losses.count == 0);
+
+    // C&E 10: halves of 5. An 11 pays 15:1 on E (75) and C (5) loses,
+    // so the player nets 70.
+    REQUIRE(p1->testMakeBet(BetName::CandE, 10, 0));
+    t.testRollDice(5, 6);
+    CHECK(p1->getBalance() == startingBalance + 81 + 70);
+    CHECK(p1->getNumBetsOnTable() == 0);
+    CHECK(t.getNumBetsOnTable() == 0);
+    auto bank2 = t.getBankCurrentStats();
+    CHECK(bank2.amtDeposited - depositedBefore == 9 + 5);
+    CHECK(bank2.amtWithdrawn - withdrawnBefore == 90 + 75);
+    CHECK(t.getCurrentStats().betStats.byBet.at("C&E").wins.amount == 70);
+
+    // A non-winning total loses the entire wager, no component payout.
+    REQUIRE(p1->testMakeBet(BetName::Horn, 12, 0));
+    t.testRollDice(1, 3); // 4
+    CHECK(p1->getBalance() == startingBalance + 81 + 70 - 12);
+    CHECK(t.getCurrentStats().betStats.byBet.at("Horn").losses.count == 1);
+    CHECK(t.getCurrentStats().betStats.tallyRoll(BetName::Horn, 4).losses.count == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player per roll stats restart each roll")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::AnySeven, 5, 0));
+    t.testRollDice(1, 3);                       // 4: loses
+    REQUIRE(p1->testMakeBet(BetName::AnySeven, 5, 0));
+    t.testRollDice(1, 2);                       // 3: loses
+
+    const auto& bs = p1->getCurrentStats().betStats;
+    CHECK(bs.numBetsOneRoll.total == 2);
+    CHECK(bs.numBetsOneRoll.max   == 1);        // Never more than one a roll
+    CHECK(bs.amtBetsOneRoll.total == 10);
+    CHECK(bs.amtBetsOneRoll.max   == 5);
+
+    // Same numbers as the table, which only has this player
+    const auto& tb = t.getCurrentStats().betStats;
+    CHECK(tb.numBetsOneRoll.max   == bs.numBetsOneRoll.max);
+    CHECK(tb.amtBetsOneRoll.total == bs.amtBetsOneRoll.total);
 }
 
 //----------------------------------------------------------------
@@ -2360,7 +3085,7 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:World bet amount validation")
 TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:payout-compatible wager limits")
 {
     YAML::Node yaml = YAML::Load(getTableYamlStringUtest());
-    YAML::Node rules = yaml["Rules"]["advanced"];
+    YAML::Node rules = yaml["Rules"];
 
     rules["buyCommission"]["minimum"] = 1;
     rules["layCommission"]["minimum"] = 1;
@@ -2388,4 +3113,153 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:payout-compatible wager limits"
     const auto lay = table->getBetAmountLimits(BetName::Lay, 6, false, 0);
     CHECK(lay.minimum == 24);
     CHECK(lay.increment == 6);
+}
+
+//----------------------------------------------------------------
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Any711 pays 3 to 1 on 7 and 11")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::Any711, 5, 0));
+    t.testRollDice(3, 4);                       // 7: wins
+    REQUIRE(p1->testMakeBet(BetName::Any711, 5, 0));
+    t.testRollDice(5, 6);                       // 11: wins
+    REQUIRE(p1->testMakeBet(BetName::Any711, 5, 0));
+    t.testRollDice(1, 3);                       // 4: loses
+
+    const auto& bs = p1->getCurrentStats().betStats;
+    CHECK(bs.tally(BetName::Any711).wins.count   == 2);
+    CHECK(bs.tally(BetName::Any711).wins.amount  == 30);
+    CHECK(bs.tally(BetName::Any711).losses.count == 1);
+    CHECK(bs.tally(BetName::Any711).losses.amount == 5);
+}
+
+//----------------------------------------------------------------
+// Player Repeaters: only what the player took part in
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player point repeaters pass line")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(1, 3);                       // 4: point established, a hit
+    t.testRollDice(2, 4);                       // 6: nothing
+    t.testRollDice(1, 3);                       // 4: made, a hit
+    t.testRollDice(3, 4);                       // 7 on come out, no bets left
+
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.pointRepeaters.times(4, 2) == 1);
+    CHECK(cs.pointRepeaters.times(6, 1) == 0);  // Took no part in the 6
+    CHECK(cs.placeRepeaters.buckets(4).empty());
+    CHECK(cs.buyRepeaters.buckets(4).empty());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player point repeaters come bet traveling")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(3, 3);                       // 6: point established, a hit
+    REQUIRE(p1->testMakeBet(BetName::Come, 10, 0));
+    t.testRollDice(1, 3);                       // 4: Come travels to 4, a hit
+    REQUIRE(p1->testMakeBet(BetName::Come, 10, 0));
+    t.testRollDice(1, 3);                       // 4: old Come wins and the new
+                                                // Come travels to 4, one hit
+    t.testRollDice(3, 4);                       // Seven out
+
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.pointRepeaters.times(4, 2) == 1);
+    CHECK(cs.pointRepeaters.times(6, 1) == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player place repeaters with zero bucket")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(3, 3);                       // 6: point
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    REQUIRE(p1->testMakeBet(BetName::Place, 10, 5));
+    t.testRollDice(2, 6);                       // 8: Place 8 wins, comes down
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    t.testRollDice(3, 5);                       // 8: wins again
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    t.testRollDice(3, 4);                       // Seven out
+
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.placeRepeaters.times(8, 2) == 1);
+    CHECK(cs.placeRepeaters.times(5, 0) == 1);  // Held, never hit
+    CHECK(cs.placeRepeaters.buckets(9).empty()); // No bet on 9
+    CHECK(cs.buyRepeaters.buckets(8).empty());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player buy repeaters")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(3, 3);                       // 6: point
+    REQUIRE(p1->testMakeBet(BetName::Buy, 20, 4));
+    t.testRollDice(1, 3);                       // 4: Buy 4 wins
+    t.testRollDice(3, 4);                       // Seven out
+
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.buyRepeaters.times(4, 1) == 1);
+    CHECK(cs.placeRepeaters.buckets(4).empty());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player place run survives come out seven")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(3, 3);                       // 6: point
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    t.testRollDice(2, 6);                       // 8: Place 8 wins
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    t.testRollDice(3, 3);                       // 6: Pass line wins, point off
+    t.testRollDice(3, 4);                       // Natural; Place is off
+
+    CHECK(p1->getCurrentStats().placeRepeaters.buckets(8).empty());
+    CHECK(p1->getCurrentStats().placeRepeaters.running(8) == 1);
+
+    t.testRollDice(1, 3);                       // 4: new point
+    t.testRollDice(3, 4);                       // Seven out ends the run
+    CHECK(p1->getCurrentStats().placeRepeaters.times(8, 1) == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player with no bets records no repeaters")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    t.testRollDice(1, 3);                       // 4
+    t.testRollDice(1, 3);                       // 4
+    t.testRollDice(3, 4);                       // 7
+
+    CHECK(t.getCurrentStats().rollStats.pointRepeaters.times(4, 2) == 1);
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.pointRepeaters.buckets(4).empty());
+    CHECK(cs.placeRepeaters.buckets(4).empty());
+    CHECK(cs.buyRepeaters.buckets(4).empty());
 }

@@ -1,0 +1,7 @@
+<map id="Ctrl::UslTableLastRollStatsChanged" name="Ctrl::UslTableLastRollStatsChanged">
+<area shape="rect" id="Node000001" title=" " alt="" coords="56,93,249,133"/>
+<area shape="rect" id="Node000002" href="$structCtrl_1_1GameEvent.html" title="Base class for all Events." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,39,138,91,134,95,87,43"/>
+<area shape="rect" id="Node000003" href="$structCraps_1_1LastRollStats.html" title="Statistics regarding the previous roll." alt="" coords="159,5,311,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,43,171,95,167,91,214,39"/>
+</map>

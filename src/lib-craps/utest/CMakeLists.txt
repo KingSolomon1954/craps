@@ -7,11 +7,14 @@
 add_executable(craps-ut
     utest-lib-craps.cpp
     BankTest.cpp
+    BetStatsTest.cpp
     CrapsBetPart1Test.cpp
     CrapsBetPart2Test.cpp
     CrapsTableTest.cpp
     EnumBetNameTest.cpp
     PlayerTest.cpp
+    RepeatersTest.cpp
+    RollStatsTest.cpp
     SessionHistoryTest.cpp
     TableRulesTest.cpp
     TableStatsPart1Test.cpp

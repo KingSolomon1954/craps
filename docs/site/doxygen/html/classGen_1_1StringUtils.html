@@ -105,6 +105,12 @@ $(function(){ initResizable(false); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a9433c709c165ffa3e9c22130f9f8137b" id="r_a9433c709c165ffa3e9c22130f9f8137b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9433c709c165ffa3e9c22130f9f8137b">wrapFormattedString</a> (const std::string &amp;s, int maxWidth, std::vector&lt; std::string &gt; &amp;result)</td></tr>
+<tr class="separator:a9433c709c165ffa3e9c22130f9f8137b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dc1e4e468fccf20e4f404596a2e642e" id="r_a4dc1e4e468fccf20e4f404596a2e642e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4dc1e4e468fccf20e4f404596a2e642e">wrapFormattedStrings</a> (const std::vector&lt; std::string &gt; &amp;strings, int maxWidth, std::vector&lt; std::string &gt; &amp;result)</td></tr>
+<tr class="separator:a4dc1e4e468fccf20e4f404596a2e642e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ee7c85f05a10da9056f35eaf5cb240f" id="r_a6ee7c85f05a10da9056f35eaf5cb240f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ee7c85f05a10da9056f35eaf5cb240f">wrapLine</a> (const std::string &amp;line, size_t maxWidth, std::vector&lt; std::string &gt; &amp;result)</td></tr>
+<tr class="separator:a6ee7c85f05a10da9056f35eaf5cb240f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9642d99ea16daf12fb5745823a1653f" id="r_aa9642d99ea16daf12fb5745823a1653f"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9642d99ea16daf12fb5745823a1653f">wrapText</a> (const std::string &amp;text, int wrapWidth)</td></tr>
 <tr class="separator:aa9642d99ea16daf12fb5745823a1653f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
@@ -1387,6 +1393,149 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a9433c709c165ffa3e9c22130f9f8137b" name="a9433c709c165ffa3e9c22130f9f8137b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9433c709c165ffa3e9c22130f9f8137b">&#9670;&#160;</a></span>wrapFormattedString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void StringUtils::wrapFormattedString </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>maxWidth</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>result</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Wrap a formatted string into lines of a specified maximum width.</p>
+<p>Existing line breaks are preserved, including blank lines. CRLF, CR, and LF are recognized as line endings. Lines are trimmed of leading and trailing spaces and tabs, and long lines are wrapped at whitespace where possible. Words longer than maxWidth are hard-wrapped.</p>
+<p>Some important details:</p>
+<ul>
+<li>Empty input: Returns an empty vector. </li>
+<li>Blank lines: Preserved, including consecutive line breaks. </li>
+<li>Trailing newline: Preserves the final empty line. For example, "Hello\n" produces {"Hello", ""}. </li>
+<li>Long words: Hard-wrapped to respect the width limit. </li>
+<li>Whitespace: Leading and trailing spaces and tabs are stripped from each explicit input line; wrapping whitespace is not retained. </li>
+<li>Width: A value below 1 is treated as 1.</li>
+</ul>
+<p>One subtle point: this wraps by bytes/characters in std::string, not terminal display columns. That's appropriate for ordinary ASCII text, but UTF-8 characters and wide terminal glyphs may occupy multiple bytes or columns.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>The input string to wrap. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxWidth</td><td>Maximum number of characters per output line; values less than 1 are treated as 1. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">result</td><td>Receives the wrapped lines. Existing contents are cleared before the result is generated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4dc1e4e468fccf20e4f404596a2e642e" name="a4dc1e4e468fccf20e4f404596a2e642e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dc1e4e468fccf20e4f404596a2e642e">&#9670;&#160;</a></span>wrapFormattedStrings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void StringUtils::wrapFormattedStrings </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>strings</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>maxWidth</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>result</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Wrap a vector of possibly formatted strings into a single vector of output lines.</p>
+<p>Each input string is wrapped independently using <a class="el" href="#a9433c709c165ffa3e9c22130f9f8137b">wrapFormattedString()</a>. Explicit line breaks and blank lines within each input string are preserved. The resulting lines are appended in the same order as the input strings.</p>
+<dl class="section note"><dt>Note</dt><dd>One design detail: this treats each vector element as an independent formatted string. It does not merge adjacent elements into one paragraph, so each element's leading/trailing whitespace handling and explicit line breaks follow the behavior of <a class="el" href="#a9433c709c165ffa3e9c22130f9f8137b">wrapFormattedString()</a>.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">strings</td><td>The input strings to wrap. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxWidth</td><td>Maximum number of characters per output line; values less than 1 are treated as 1. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">result</td><td>Receives all wrapped lines, in input order. Existing contents are cleared before processing. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6ee7c85f05a10da9056f35eaf5cb240f" name="a6ee7c85f05a10da9056f35eaf5cb240f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ee7c85f05a10da9056f35eaf5cb240f">&#9670;&#160;</a></span>wrapLine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void StringUtils::wrapLine </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>line</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>maxWidth</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>result</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Wrap one explicit input line into lines no wider than maxWidth.</p>
+<p>Leading and trailing spaces and tabs are removed. Words are kept together where possible; a word longer than maxWidth is hard-wrapped.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">line</td><td>The input line, without its line terminator. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxWidth</td><td>Maximum output line width; must be at least 1. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">result</td><td>Receives the wrapped line or lines. An empty input line produces one empty output line. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aa9642d99ea16daf12fb5745823a1653f" name="aa9642d99ea16daf12fb5745823a1653f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9642d99ea16daf12fb5745823a1653f">&#9670;&#160;</a></span>wrapText()</h2>
 
@@ -1449,7 +1598,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -58,20 +58,21 @@ MenuBetting::instance()
 // 8  │ [l] Place Bet         │
 // 9  │ [h] Hardways          │
 // 10 │ [f] Field Bet         │
-// 11 │ [b] Buy Bet           │
+// 11 │ [i] Buy Bet           │
 // 12 │ [y] Lay Bet           │
 // 13 │ [e] C&E Bet           │
 // 14 │ [a] Any Craps         │
 // 15 │ [7] Any 7             │
-// 16 │ [n] Horn Bet          │
-// 17 │ [w] World Bet         │
-// 18 │ [g] Bet Flags         │
-// 19 │ [q] Quick Bet         │
-// 20 │ [x] Remove Bets       │
-// 21 │ [u] Undo Last         │
-// 22 │ [r] Roll Dice         │
-// 23 │ [. or esc] Back       │
-// 24 └───────────────────────┘
+// 16 │ [1] Any 7/11          │
+// 17 │ [n] Horn Bet          │
+// 18 │ [w] World Bet         │
+// 19 │ [g] Bet Flags         │
+// 20 │ [q] Quick Bet         │
+// 21 │ [x] Remove Bets       │
+// 22 │ [u] Undo Last         │
+// 23 │ [r] Roll Dice         │
+// 24 │ [. or esc] Back       │
+// 25 └───────────────────────┘
 //
 void
 MenuBetting::fillWindow()
@@ -98,14 +99,15 @@ MenuBetting::fillWindow()
     mvwaddstr(pWin_, 13, 2, "[e] C&E Bet");
     mvwaddstr(pWin_, 14, 2, "[a] Any Craps");
     mvwaddstr(pWin_, 15, 2, "[7] Any 7");
-    mvwaddstr(pWin_, 16, 2, "[n] Horn Bet");
-    mvwaddstr(pWin_, 17, 2, "[w] World Bet");
-    mvwaddstr(pWin_, 18, 2, "[g] Bet Flags");
-    mvwaddstr(pWin_, 19, 2, "[q] Quick Bet");
-    mvwaddstr(pWin_, 20, 2, "[x] Remove Bets");
-    mvwaddstr(pWin_, 21, 2, "[u] Undo Last");
-    mvwaddstr(pWin_, 22, 2, "[r] Roll Dice");
-    mvwaddstr(pWin_, 23, 2, "[. or esc] Back");
+    mvwaddstr(pWin_, 16, 2, "[1] Any 7/11");
+    mvwaddstr(pWin_, 17, 2, "[n] Horn Bet");
+    mvwaddstr(pWin_, 18, 2, "[w] World Bet");
+    mvwaddstr(pWin_, 19, 2, "[g] Bet Flags");
+    mvwaddstr(pWin_, 20, 2, "[q] Quick Bet");
+    mvwaddstr(pWin_, 21, 2, "[x] Remove Bets");
+    mvwaddstr(pWin_, 22, 2, "[u] Undo Last");
+    mvwaddstr(pWin_, 23, 2, "[r] Roll Dice");
+    mvwaddstr(pWin_, 24, 2, "[. or esc] Back");
 }
 
 //----------------------------------------------------------------
@@ -177,6 +179,7 @@ MenuBetting::handleKey(int ch)
     case 'e': doBets(BetName::CandE);    break;
     case 'a': doBets(BetName::AnyCraps); break;
     case '7': doBets(BetName::AnySeven); break;
+    case '1': doBets(BetName::Any711);   break;
     case 'n': doBets(BetName::Horn);     break;
     case 'w': doBets(BetName::World);    break;
     case 'o': doOddsBets();              break;
@@ -209,6 +212,7 @@ MenuBetting::doBets(BetName betName)
     case BetName::CandE:
     case BetName::AnyCraps:
     case BetName::AnySeven:
+    case BetName::Any711:
     case BetName::World:
     case BetName::Horn:      doGetAmount(); break;
     case BetName::Place:

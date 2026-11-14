@@ -131,12 +131,18 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
 <tr class="memitem:a79eca058961232a6528c131632961657" id="r_a79eca058961232a6528c131632961657"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79eca058961232a6528c131632961657">draw</a> () override</td></tr>
 <tr class="separator:a79eca058961232a6528c131632961657"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa72462d00d2eb887d2277308bb91b653" id="r_aa72462d00d2eb887d2277308bb91b653"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa72462d00d2eb887d2277308bb91b653">onPlayerBalanceChanged</a> (<a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> playerId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> balance, int netBalance)</td></tr>
-<tr class="separator:aa72462d00d2eb887d2277308bb91b653"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a530a7caf7ee367bcbd295bac29e661ca" id="r_a530a7caf7ee367bcbd295bac29e661ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a530a7caf7ee367bcbd295bac29e661ca">onResolveBetsEnd</a> ()</td></tr>
 <tr class="separator:a530a7caf7ee367bcbd295bac29e661ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5cafd394d4b0fb69ce3e05e0b484e0c" id="r_aa5cafd394d4b0fb69ce3e05e0b484e0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5cafd394d4b0fb69ce3e05e0b484e0c">onNewShooter</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId)</td></tr>
 <tr class="separator:aa5cafd394d4b0fb69ce3e05e0b484e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46535ca540ba3fb52642810856a6347a" id="r_a46535ca540ba3fb52642810856a6347a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46535ca540ba3fb52642810856a6347a">onPlayerBetsChanged</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, unsigned numBetsOnTable, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amountOnTable)</td></tr>
+<tr class="separator:a46535ca540ba3fb52642810856a6347a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6ad0bf5bcdad411e2348987791550ae" id="r_ae6ad0bf5bcdad411e2348987791550ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6ad0bf5bcdad411e2348987791550ae">onPlayerSessionStatsChanged</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, unsigned numBetsWon, unsigned numBetsLost)</td></tr>
+<tr class="separator:ae6ad0bf5bcdad411e2348987791550ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c5b876840033ab56b822efe28b91ccc" id="r_a9c5b876840033ab56b822efe28b91ccc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c5b876840033ab56b822efe28b91ccc">onPlayerLastRollStatsChanged</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, const <a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;lrs)</td></tr>
+<tr class="separator:a9c5b876840033ab56b822efe28b91ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc1be11aa5b54344ee7e2068b1fa3ea4" id="r_adc1be11aa5b54344ee7e2068b1fa3ea4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc1be11aa5b54344ee7e2068b1fa3ea4">onPlayerBalanceChanged</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> balance, int netBalance)</td></tr>
+<tr class="separator:adc1be11aa5b54344ee7e2068b1fa3ea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -240,8 +246,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa72462d00d2eb887d2277308bb91b653" name="aa72462d00d2eb887d2277308bb91b653"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa72462d00d2eb887d2277308bb91b653">&#9670;&#160;</a></span>onPlayerBalanceChanged()</h2>
+<a id="adc1be11aa5b54344ee7e2068b1fa3ea4" name="adc1be11aa5b54344ee7e2068b1fa3ea4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc1be11aa5b54344ee7e2068b1fa3ea4">&#9670;&#160;</a></span>onPlayerBalanceChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,7 +255,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void WindowPlayerBrief::onPlayerBalanceChanged </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a></td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -260,6 +266,79 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>netBalance</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a46535ca540ba3fb52642810856a6347a" name="a46535ca540ba3fb52642810856a6347a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46535ca540ba3fb52642810856a6347a">&#9670;&#160;</a></span>onPlayerBetsChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WindowPlayerBrief::onPlayerBetsChanged </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>numBetsOnTable</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>amountOnTable</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c5b876840033ab56b822efe28b91ccc" name="a9c5b876840033ab56b822efe28b91ccc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c5b876840033ab56b822efe28b91ccc">&#9670;&#160;</a></span>onPlayerLastRollStatsChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WindowPlayerBrief::onPlayerLastRollStatsChanged </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>lrs</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6ad0bf5bcdad411e2348987791550ae" name="ae6ad0bf5bcdad411e2348987791550ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6ad0bf5bcdad411e2348987791550ae">&#9670;&#160;</a></span>onPlayerSessionStatsChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WindowPlayerBrief::onPlayerSessionStatsChanged </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>numBetsWon</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>numBetsLost</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -290,7 +369,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

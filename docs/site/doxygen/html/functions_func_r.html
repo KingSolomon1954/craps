@@ -90,9 +90,11 @@ $(function(){ initResizable(false); });
 
 <h3><a id="index_r" name="index_r"></a>- r -</h3><ul>
 <li>raw()&#160;:&#160;<a class="el" href="classGen_1_1Timepoint.html#aea8fb70703013c05d596eadbb22c0f1b">Gen::Timepoint</a></li>
+<li>readBetAmountLimits()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#a1535a7aaf127b05a14759f30970dd67b">Ctrl::CrapsReaders</a></li>
 <li>readBetContractAmount()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#a0756f9ab6bc6d82502128d6aa3cb0efd">Ctrl::CrapsReaders</a></li>
 <li>readBetDistance()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#ad5a50df8c2d01b73ac77a43c6fadb8e5">Ctrl::CrapsReaders</a></li>
 <li>readBetHardwayWorking()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#ab82e130433e42b86c48114d4788034f6">Ctrl::CrapsReaders</a></li>
+<li>readBetIsAllowed()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#a1817c337eb4a6fde28f025f43bf4e744">Ctrl::CrapsReaders</a></li>
 <li>readBetIsRemovable()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#a4d021013f822db7ccc5a701692544dca">Ctrl::CrapsReaders</a></li>
 <li>readBetName()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#af5dd14edf3a7867c99409321df9e3974">Ctrl::CrapsReaders</a></li>
 <li>readBetOddsAmount()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#a25535c52069f3f7f91f8f68935219888">Ctrl::CrapsReaders</a></li>
@@ -137,27 +139,40 @@ $(function(){ initResizable(false); });
 <li>readTablePlayers()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#ac3c55ec8d557abc9760574e58c7a9281">Ctrl::CrapsReaders</a></li>
 <li>readTablePoint()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#a4a98d92c7b9da1780115c62c2d709576">Ctrl::CrapsReaders</a></li>
 <li>readTableRecentRolls()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#a0866428a67ff38f419ee87c53c3f3357">Ctrl::CrapsReaders</a></li>
+<li>readTableRules()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#ac13f10f72ea57f1ab4bd0abfa82110b2">Ctrl::CrapsReaders</a></li>
 <li>readTableSessionHistory()&#160;:&#160;<a class="el" href="classCtrl_1_1CrapsReaders.html#a1ba346d58b55c8dd865b7c0fbb377d6c">Ctrl::CrapsReaders</a></li>
 <li>recordCommon()&#160;:&#160;<a class="el" href="classCraps_1_1BetStats.html#ac63d61067eed10cf79e4448953feb0f6">Craps::BetStats</a></li>
 <li>recordDiceRoll()&#160;:&#160;<a class="el" href="classCraps_1_1TableStats.html#ae7977d401b532d9185c283210d3c05ec">Craps::TableStats</a></li>
 <li>recordKeep()&#160;:&#160;<a class="el" href="classCraps_1_1BetStats.html#a738f12a3920a0ffea96ff11d80e40e9e">Craps::BetStats</a>, <a class="el" href="classCraps_1_1PlayerStats.html#a4b73c0d914e6180a8cc86819f2598c86">Craps::PlayerStats</a>, <a class="el" href="classCraps_1_1TableStats.html#a9697cece92701c635ffdb91e92644d2c">Craps::TableStats</a></li>
-<li>recordLose()&#160;:&#160;<a class="el" href="classCraps_1_1BetStats.html#a995dc3111f8b01e4d666e37f809f59e0">Craps::BetStats</a>, <a class="el" href="classCraps_1_1PlayerStats.html#a60b3bf856cded1ee51d867c730228a5c">Craps::PlayerStats</a>, <a class="el" href="classCraps_1_1TableStats.html#a8cd00b2663ff79b0fb3872451e5cb79f">Craps::TableStats</a></li>
-<li>recordWin()&#160;:&#160;<a class="el" href="classCraps_1_1BetStats.html#a3191c56f51b69d0d738868aacdf0d7eb">Craps::BetStats</a>, <a class="el" href="classCraps_1_1PlayerStats.html#a233ae98413933b8cc53603173656cda2">Craps::PlayerStats</a>, <a class="el" href="classCraps_1_1TableStats.html#a60757e0f75673229bc982f59d35c805f">Craps::TableStats</a></li>
-<li>registerAutoFillCallback()&#160;:&#160;<a class="el" href="classCui_1_1DialogAmountEntry.html#a3d690ac2efd188e0c9ae607c5e4a27b0">Cui::DialogAmountEntry</a></li>
+<li>recordLose()&#160;:&#160;<a class="el" href="classCraps_1_1BetStats.html#a9e5098e70d7326203b493a9857ec0e4e">Craps::BetStats</a>, <a class="el" href="classCraps_1_1PlayerStats.html#af1afb734667ccfc84b357e64626e88fd">Craps::PlayerStats</a>, <a class="el" href="classCraps_1_1TableStats.html#a68455d3304db2a77217349e25a0efcd2">Craps::TableStats</a></li>
+<li>recordOutcome()&#160;:&#160;<a class="el" href="classCraps_1_1BetStats.html#a4c40969ca6b2eb197c688fb99e6d34de">Craps::BetStats</a></li>
+<li>recordRepeaters()&#160;:&#160;<a class="el" href="classCraps_1_1Player.html#a8c41ef901500ccd4e961045b5780cfaf">Craps::Player</a></li>
+<li>recordWin()&#160;:&#160;<a class="el" href="classCraps_1_1BetStats.html#ad21ba45fac526fbc7db84249f80ff24d">Craps::BetStats</a>, <a class="el" href="classCraps_1_1PlayerStats.html#a29be4a28a0f01e7e23baf1d0606e530f">Craps::PlayerStats</a>, <a class="el" href="classCraps_1_1TableStats.html#a946ea48fc09b47e2d57e1ce2c087093c">Craps::TableStats</a></li>
 <li>registerForShutdown()&#160;:&#160;<a class="el" href="classCui_1_1SurfaceManager.html#ac69964a889b188fee03e67050eb1df0e">Cui::SurfaceManager</a></li>
-<li>registerQuickBetCallback()&#160;:&#160;<a class="el" href="classCui_1_1DialogAmountEntry.html#a09d783801e50f53548f15175e003d2d2">Cui::DialogAmountEntry</a></li>
 <li>release()&#160;:&#160;<a class="el" href="classCui_1_1LocationManager.html#a25ad621115dbfe7585653a9cfc403288">Cui::LocationManager</a></li>
 <li>releaseNcursesResources()&#160;:&#160;<a class="el" href="classCui_1_1SurfaceBase.html#a7d65d46280782e62314e3fbc10c39bf4">Cui::SurfaceBase</a></li>
 <li>removeBet()&#160;:&#160;<a class="el" href="classCraps_1_1CrapsTable.html#aff92e35d35d68b739ae5fc3d2f73570f">Craps::CrapsTable</a>, <a class="el" href="classCraps_1_1Player.html#a5b4e1f2f7c147a2d6f72d01a77cb148d">Craps::Player</a></li>
 <li>removeBetForce()&#160;:&#160;<a class="el" href="classCraps_1_1CrapsTable.html#a2262d517cb3020623ce4ad2c4302f572">Craps::CrapsTable</a></li>
 <li>removePlayer()&#160;:&#160;<a class="el" href="classCraps_1_1CrapsTable.html#a249bcf71f5bf53adbeaa29edfba0246b">Craps::CrapsTable</a></li>
+<li>Repeaters()&#160;:&#160;<a class="el" href="classCraps_1_1Repeaters.html#a4cb27bd1f519e1afa231c34b8cb79ab4">Craps::Repeaters</a></li>
 <li>repeats()&#160;:&#160;<a class="el" href="structCraps_1_1Counter.html#acf666ca6db7823997d977ef11a1e5258">Craps::Counter</a></li>
 <li>replace()&#160;:&#160;<a class="el" href="classGen_1_1StringUtils.html#a4ded5f3b097a3404486875d8550fa269">Gen::StringUtils</a></li>
+<li>replacePlayer()&#160;:&#160;<a class="el" href="classCraps_1_1CrapsTable.html#a74b5408822ebfb264cfbe18834284dee">Craps::CrapsTable</a></li>
 <li>repos()&#160;:&#160;<a class="el" href="classCui_1_1SurfaceBase.html#a06972f7a567c6c71ffa50a69e7025f1c">Cui::SurfaceBase</a></li>
+<li>ReqAutoFill()&#160;:&#160;<a class="el" href="structCtrl_1_1ReqAutoFill.html#af6718f5e22f7d81b57158b5075944c46">Ctrl::ReqAutoFill</a></li>
+<li>reqAutoFill()&#160;:&#160;<a class="el" href="classCui_1_1CuiSender.html#a62678a9bc0139b9a80b21b28a8d78104">Cui::CuiSender</a></li>
+<li>ReqMakeBet()&#160;:&#160;<a class="el" href="structCtrl_1_1ReqMakeBet.html#ac1b88b6d84c6dc7640ee141b9e0004c7">Ctrl::ReqMakeBet</a></li>
+<li>reqMakeBet()&#160;:&#160;<a class="el" href="classCui_1_1CuiSender.html#af7b2e951f6fe87c5b90a389ef0597344">Cui::CuiSender</a></li>
+<li>ReqOddsBet()&#160;:&#160;<a class="el" href="structCtrl_1_1ReqOddsBet.html#ac564165b459a03ca04d0161d3b3b9205">Ctrl::ReqOddsBet</a></li>
+<li>reqOddsBet()&#160;:&#160;<a class="el" href="classCui_1_1CuiSender.html#ad6173e5bf5da2c35523d876aee917bc2">Cui::CuiSender</a></li>
+<li>ReqQuickBet()&#160;:&#160;<a class="el" href="structCtrl_1_1ReqQuickBet.html#afd27bf366827cab059295ca282f41b91">Ctrl::ReqQuickBet</a></li>
+<li>reqQuickBet()&#160;:&#160;<a class="el" href="classCui_1_1CuiSender.html#a454bf97ae4e8d1a1013c609a8ce2ccee">Cui::CuiSender</a></li>
 <li>ReqRollDice()&#160;:&#160;<a class="el" href="structCtrl_1_1ReqRollDice.html#ab63c0f5576200981ea4e0c2aae9f400d">Ctrl::ReqRollDice</a></li>
 <li>reqRollDice()&#160;:&#160;<a class="el" href="classCui_1_1CuiSender.html#a31fbbf14fd2844d6832f73a7da78c14c">Cui::CuiSender</a></li>
+<li>ReqSwitchPlayer()&#160;:&#160;<a class="el" href="structCtrl_1_1ReqSwitchPlayer.html#a2cb700f8837d0f371be848332aabd829">Ctrl::ReqSwitchPlayer</a></li>
 <li>ReqTerminate()&#160;:&#160;<a class="el" href="structCtrl_1_1ReqTerminate.html#ab440b028da1354163e02350fcb4bb4a1">Ctrl::ReqTerminate</a></li>
-<li>reset()&#160;:&#160;<a class="el" href="structCraps_1_1AmtBets.html#a1de7e031179274681704f2f5c7427d40">Craps::AmtBets</a>, <a class="el" href="classCraps_1_1BankStats.html#a5beaba4a9bbf6d4f6345b55f473b2f96">Craps::BankStats</a>, <a class="el" href="structCraps_1_1BetStat.html#ae508530c50ae92c543b107666826b4b6">Craps::BetStat</a>, <a class="el" href="classCraps_1_1BetStats.html#a4fd92fe630fb5d45393ab46f1c70ae5b">Craps::BetStats</a>, <a class="el" href="structCraps_1_1BetTypeStats.html#a629cc3e73e6995a072d5f089154156f0">Craps::BetTypeStats</a>, <a class="el" href="structCraps_1_1Counter.html#a9ff2c269c37fe615fb2aad7169940a88">Craps::Counter</a>, <a class="el" href="structCraps_1_1DecisionRecord.html#a09c14fd575dbf2c3a496dc2f920bfe1f">Craps::DecisionRecord</a>, <a class="el" href="structCraps_1_1LastRollStats.html#ac85c94f922ef7ab9624848f30233b1c3">Craps::LastRollStats</a>, <a class="el" href="structCraps_1_1NumBets.html#a8c7193b29b4cc26041d7c6d98f7675f1">Craps::NumBets</a>, <a class="el" href="classCraps_1_1PlayerStats.html#a6520dd9744fe6dc82215292c6a33c9ae">Craps::PlayerStats</a>, <a class="el" href="structCraps_1_1PointCounts.html#a896b3f4fe99f25d50805703c39d01350">Craps::PointCounts</a>, <a class="el" href="classCraps_1_1RollStats.html#a4e1a8ad2798395ec5010eed67533f10a">Craps::RollStats</a>, <a class="el" href="classCraps_1_1TableStats.html#a72a0be662eff7ca5e42bdc3c254e1003">Craps::TableStats</a></li>
+<li>reqTerminate()&#160;:&#160;<a class="el" href="classCui_1_1CuiSender.html#a5cef5eb8a94d25d480fa532376f59378">Cui::CuiSender</a></li>
+<li>reset()&#160;:&#160;<a class="el" href="structCraps_1_1AmtBets.html#a1de7e031179274681704f2f5c7427d40">Craps::AmtBets</a>, <a class="el" href="classCraps_1_1BankStats.html#a5beaba4a9bbf6d4f6345b55f473b2f96">Craps::BankStats</a>, <a class="el" href="structCraps_1_1BetOutcomeStats.html#a2577324815590acdd65f981161b45ab4">Craps::BetOutcomeStats</a>, <a class="el" href="structCraps_1_1BetStat.html#ae508530c50ae92c543b107666826b4b6">Craps::BetStat</a>, <a class="el" href="classCraps_1_1BetStats.html#a4fd92fe630fb5d45393ab46f1c70ae5b">Craps::BetStats</a>, <a class="el" href="structCraps_1_1Counter.html#a9ff2c269c37fe615fb2aad7169940a88">Craps::Counter</a>, <a class="el" href="structCraps_1_1DecisionRecord.html#a09c14fd575dbf2c3a496dc2f920bfe1f">Craps::DecisionRecord</a>, <a class="el" href="structCraps_1_1LastRollStats.html#ac85c94f922ef7ab9624848f30233b1c3">Craps::LastRollStats</a>, <a class="el" href="structCraps_1_1NumBets.html#a8c7193b29b4cc26041d7c6d98f7675f1">Craps::NumBets</a>, <a class="el" href="classCraps_1_1PlayerStats.html#a6520dd9744fe6dc82215292c6a33c9ae">Craps::PlayerStats</a>, <a class="el" href="structCraps_1_1PointCounts.html#a896b3f4fe99f25d50805703c39d01350">Craps::PointCounts</a>, <a class="el" href="classCraps_1_1Repeaters.html#a7fa9cc40e1173faadb7d45534065d932">Craps::Repeaters</a>, <a class="el" href="classCraps_1_1RollStats.html#a4e1a8ad2798395ec5010eed67533f10a">Craps::RollStats</a>, <a class="el" href="classCraps_1_1TableStats.html#a72a0be662eff7ca5e42bdc3c254e1003">Craps::TableStats</a></li>
 <li>resetRollCounts()&#160;:&#160;<a class="el" href="classCraps_1_1BetStats.html#a82d080f064f6ac0d4560119f6feed5cb">Craps::BetStats</a></li>
 <li>resetStats()&#160;:&#160;<a class="el" href="classCraps_1_1Bank.html#aae66b68037402b318184c8408a2cbd1c">Craps::Bank</a>, <a class="el" href="classCraps_1_1CrapsTable.html#a9bd8fe3754b47ef9b7699088fa6835a8">Craps::CrapsTable</a>, <a class="el" href="classCraps_1_1Player.html#ad85b7618b95a6d763db0587760fd2dd3">Craps::Player</a></li>
 <li>resize()&#160;:&#160;<a class="el" href="classCui_1_1SurfaceBase.html#ab6dd22f8b79fe881f9b275b906b5d6be">Cui::SurfaceBase</a></li>
@@ -168,11 +183,15 @@ $(function(){ initResizable(false); });
 <li>roll()&#160;:&#160;<a class="el" href="classCraps_1_1Dice.html#a33aecf673e51d0da868a1ca0b9c0b753">Craps::Dice</a></li>
 <li>rollCount()&#160;:&#160;<a class="el" href="classCraps_1_1Dice.html#a0212496b76b69ff2b31d6491b9af47af">Craps::Dice</a></li>
 <li>rollDice()&#160;:&#160;<a class="el" href="classCraps_1_1CrapsTable.html#acf4cd171f55f4e0da58d92692be931e3">Craps::CrapsTable</a></li>
+<li>RspMakeBet()&#160;:&#160;<a class="el" href="structCtrl_1_1RspMakeBet.html#a0071e2c65a4683076e37faf4c1047e54">Ctrl::RspMakeBet</a></li>
+<li>RspOddsBet()&#160;:&#160;<a class="el" href="structCtrl_1_1RspOddsBet.html#a4cce89271a0f5ac62aa4a9b1deb579fc">Ctrl::RspOddsBet</a></li>
+<li>RspSwitchPlayer()&#160;:&#160;<a class="el" href="structCtrl_1_1RspSwitchPlayer.html#aa73f389134fe44917253f27f287ef9ce">Ctrl::RspSwitchPlayer</a></li>
+<li>running()&#160;:&#160;<a class="el" href="classCraps_1_1Repeaters.html#afbd187d8f627acabe503d849cc5578b6">Craps::Repeaters</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

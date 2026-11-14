@@ -276,20 +276,20 @@ Operates a Craps Table.
 
 Responsibilities:
 
-* interacts with players, bets, dice rolls, and house bank
-* manages players and their bets
-* accepts/rejects bets from players
-* handles dice rolls and game phases
-* processes dice rolls and bets
-* gives win amounts to player
-* processes payouts and bet resolutions
-* removes wining/losing bets from table
-* gives losing amounts to table bank
-* refills table money from the casino bank
-* controls who the shooter is
-* passes dice to the shooter
-* maintain stats on table play
-* keeps track of the table state (point, current shooter, etc.)
+@li interacts with players, bets, dice rolls, and house bank
+@li manages players and their bets
+@li accepts/rejects bets from players
+@li handles dice rolls and game phases
+@li processes dice rolls and bets
+@li gives win amounts to player
+@li processes payouts and bet resolutions
+@li removes wining/losing bets from table
+@li gives losing amounts to table bank
+@li refills table money from the casino bank
+@li controls who the shooter is
+@li passes dice to the shooter
+@li maintain stats on table play
+@li keeps track of the table state (point, current shooter, etc.)
 
 */
 

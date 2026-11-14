@@ -54,8 +54,7 @@ CrapsTable::getBetAmountLimits(BetName betName,
     if (oddsBet)
     {
         if (contractAmount == 0 ||
-            (pivot != 4 && pivot != 5 && pivot != 6 &&
-             pivot != 8 && pivot != 9 && pivot != 10))
+            !PointNums.contains(pivot))
         {
             limits.increment = rules_.odds.wagerIncrement;
             limits.minimum = limits.increment;
@@ -104,8 +103,7 @@ CrapsTable::getBetAmountLimits(BetName betName,
     if (betName == BetName::Place || betName == BetName::Buy ||
         betName == BetName::Lay)
     {
-        if (pivot != 4 && pivot != 5 && pivot != 6 &&
-            pivot != 8 && pivot != 9 && pivot != 10)
+        if (!PointNums.contains(pivot))
             return limits;
 
         const auto& payout = betName == BetName::Place

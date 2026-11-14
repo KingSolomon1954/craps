@@ -13,6 +13,7 @@
 #include <controller/AutoFill.h>
 #include <controller/LastFill.h>
 #include <controller/CrapsReaders.h>
+#include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/PlayerStats.h>
 #include <craps/TableStats.h>
@@ -126,50 +127,6 @@ std::string percent(unsigned wins, unsigned losses)
 
 //----------------------------------------------------------------
 
-std::string
-betStatsKey(BetName betName, unsigned pivot)
-{
-    std::string key = EnumBetName::toString(betName);
-    if (pivot != 0)
-        key += std::to_string(pivot);
-    return key;
-}
-
-//----------------------------------------------------------------
-
-Craps::BetStat
-findBetStat(const std::map<std::string, Craps::BetStat>& stats,
-            const std::string& key,
-            bool aggregateByPrefix)
-{
-    Craps::BetStat result;
-    if (!aggregateByPrefix)
-    {
-        if (const auto it = stats.find(key); it != stats.end())
-            result = it->second;
-        return result;
-    }
-
-    for (const auto& [name, stat] : stats)
-    {
-        if (name.starts_with(key))
-            result.merge(stat);
-    }
-    return result;
-}
-
-//----------------------------------------------------------------
-
-bool
-isRollOutcomeBet(BetName name)
-{
-    return name == BetName::Field    || name == BetName::AnyCraps ||
-           name == BetName::AnySeven || name == BetName::CandE    ||
-           name == BetName::Horn     || name == BetName::World;
-}
-
-//----------------------------------------------------------------
-
 struct BetProfile
 {
     double houseEdgePct = -1.0;
@@ -221,9 +178,9 @@ profileFor(BetName name, unsigned pivot)
         p = {1.3636, 49.2929, 1, 1, "Loses on point", "Wins on 7"};
     else if (name == BetName::Hardway)
     {
-        if (pivot == 4 || pivot == 10)
+        if (Craps::FourTenNums.contains(pivot))
             p = {11.1111, 11.1111, 7, 1, "Loses on 7 or easy way", "Wins on hard way"};
-        else if (pivot == 6 || pivot == 8)
+        else if (Craps::SixEightNums.contains(pivot))
             p = {9.0909, 16.6667, 9, 1, "Loses on 7 or easy way", "Wins on hard way"};
     }
     else if (name == BetName::Field)
@@ -232,6 +189,8 @@ profileFor(BetName name, unsigned pivot)
         p = {11.1111, 11.1111, 0, 0, "Loses on all other rolls", "Wins on 2, 3, 12"};
     else if (name == BetName::AnySeven)
         p = {16.6667, 16.6667, 0, 0, "Loses on all other rolls", "Wins on 7"};
+    else if (name == BetName::Any711)
+        p = {11.1111, 22.2222, 0, 0, "Loses on all other rolls", "Wins on 7 or 11"};
     else if (name == BetName::CandE)
         p = {2.7778, 16.6667, 0, 0, "Loses on all other rolls", "Wins on craps or 11"};
     else if (name == BetName::Horn)
@@ -437,6 +396,14 @@ static constexpr RefArray AnySeven{
     "Bet resolves on the next roll",
     "Can be bet before any roll"
 };
+static constexpr RefArray Any711{
+    "Pays 3:1. House Edge depends on table payout",
+    "Wins on 7 or 11",
+    "Loses on every other roll",
+    "$1 bet -> $3 profit; $4 total returned",
+    "Bet resolves on the next roll",
+    "Can be bet before any roll"
+};
 static constexpr RefArray CandE{
     "Craps & Eleven pays depend on table rules",
     "Wins on craps (2,3,12) or 11",
@@ -465,8 +432,8 @@ static constexpr RefArray World{
 const RefArray&
 referenceFor(BetName name, unsigned pivot, bool oddsBet)
 {
-    const bool point410 = pivot == 4 || pivot == 10;
-    const bool point59  = pivot == 5 || pivot == 9;
+    const bool point410 = Craps::FourTenNums.contains(pivot);
+    const bool point59  = Craps::FiveNineNums.contains(pivot);
     if (oddsBet)
     {
         if (name == BetName::DontPass || name == BetName::DontCome)
@@ -487,6 +454,7 @@ referenceFor(BetName name, unsigned pivot, bool oddsBet)
     case BetName::Field:    return Field;
     case BetName::AnyCraps: return AnyCraps;
     case BetName::AnySeven: return AnySeven;
+    case BetName::Any711:   return Any711;
     case BetName::CandE:    return CandE;
     case BetName::Horn:     return Horn;
     case BetName::World:    return World;
@@ -691,59 +659,47 @@ DialogBetAmount::drawReference()
 void
 DialogBetAmount::drawStatistics()
 {
-    const auto& cb = CarrierBet::instance();
     Craps::PlayerStats playerStats;
+    CuiUtils::getUserPlayerStats(playerStats);
+    const auto& betStats = playerStats.betStats;
+
     Craps::TableStats tableStats;
-    Craps::PlayerId playerId;
-    Craps::TableId tableId;
-    Gen::ErrorPass ep;
+    CuiUtils::getActiveTableStats(tableStats);
 
-    const bool havePlayer =
-        Ctrl::CrapsReaders::getUserPlayer(playerId, ep) == Gen::ReturnCode::Success &&
-        Ctrl::CrapsReaders::readPlayerCurrentStats(playerId, playerStats, ep) == Gen::ReturnCode::Success;
-    ep.clear();
-    const bool haveTable =
-        Ctrl::CrapsReaders::getActiveCrapsTable(tableId, ep) == Gen::ReturnCode::Success &&
-        Ctrl::CrapsReaders::readTableCurrentStats(tableId, tableStats, ep) == Gen::ReturnCode::Success;
+    const auto& cb = CarrierBet::instance();  // shorthand
 
-    Craps::BetStat playerWins, playerLosses, simulatedWins, simulatedLosses;
-    const std::string key = betStatsKey(cb.getBetName(), cb.getPivot());
-    const bool aggregateByPrefix =
-        cb.getPivot() == 0 && isRollOutcomeBet(cb.getBetName());
-    if (havePlayer)
-    {
-        const auto& stats = playerStats.betStats.betTypeStats;
-        playerWins = findBetStat(stats.wins, key, aggregateByPrefix);
-        playerLosses = findBetStat(stats.lose, key, aggregateByPrefix);
-    }
-    if (haveTable)
-    {
-        const auto& stats = tableStats.betStats.betTypeStats;
-        simulatedWins = findBetStat(stats.wins, key, aggregateByPrefix);
-        simulatedLosses = findBetStat(stats.lose, key, aggregateByPrefix);
-    }
+    // A bet with a pivot (PassLine6, Come8, Place5, ...) shows just that
+    // point. Otherwise show every decision for the bet: come out decisions
+    // plus all point decisions, or the overall total for one roll bets.
+    const Craps::BetOutcomeStats outcome = cb.getPivot() != 0
+        ? betStats.tallyPoint(cb.getBetName(), cb.getPivot())
+        : betStats.tally(cb.getBetName(), Craps::BetScope::All);
 
-    const unsigned playerCount = playerWins.count + playerLosses.count;
-    const unsigned simulatedCount = simulatedWins.count + simulatedLosses.count;
-    const Gen::Money playerTotal = playerWins.amountBet + playerLosses.amountBet;
-    const Gen::Money playerWinAmount = playerWins.amount;
+    const Craps::BetStat& playerWins   = outcome.wins;
+    const Craps::BetStat& playerLosses = outcome.losses;
+    const Craps::WinLossCounts simulated =
+        tableStats.rollStats.simulatedCounts(cb.getBetName(), cb.getPivot());
+
+    const unsigned playerCount        = playerWins.count + playerLosses.count;
+    const unsigned simulatedCount     = simulated.wins + simulated.losses;
+    const Gen::Money playerTotal      = playerWins.amountBet + playerLosses.amountBet;
+    const Gen::Money playerWinAmount  = playerWins.amount;
     const Gen::Money playerLoseAmount = playerLosses.amount;
-    const BetProfile profile = profileFor(cb.getBetName(), cb.getPivot());
+    const BetProfile profile          = profileFor(cb.getBetName(), cb.getPivot());
     std::string expected = "--";
     std::string expectedPct = "--.-%";
 
     if (profile.winPct >= 0.0)
         expectedPct = fmt::format("{:.1f}%", profile.winPct);
 
-    // BetStats records the contract and odds portions under the same
-    // expanded bet name. Use the selected bet's profile for an estimate on
-    // the recorded total; this is an approximation when the total includes
-    // fair-odds supplements, because the current stats do not retain the
-    // contract-only amount separately.
+    // The house edge applies to the contract portion only; odds bets are
+    // fair. Use the recorded contract-only amount for the expected result.
+    const Gen::Money contractTotal =
+        playerTotal - playerWins.oddsBet - playerLosses.oddsBet;
     if (profile.houseEdgePct >= 0.0)
     {
         const double loss =
-            static_cast<double>(playerTotal) * profile.houseEdgePct / 100.0;
+            static_cast<double>(contractTotal) * profile.houseEdgePct / 100.0;
         expected = profile.houseEdgePct == 0.0
             ? expectedMoney(loss)
             : "-" + expectedMoney(loss);
@@ -760,24 +716,26 @@ DialogBetAmount::drawStatistics()
     mvwaddstr(pWin_, 20, 2, padLine(line1).c_str());
 
     auto statsLine = [&](std::string_view label, unsigned count,
-                         const Craps::BetStat& wins, const Craps::BetStat& losses)
+                         unsigned wins, unsigned losses)
     {
-        const std::string winLoss = fmt::format("{}W,{}L", wins.count, losses.count);
+        const std::string winLoss = fmt::format("{}W,{}L", wins, losses);
         const std::string out = fmt::format(
             "{:<10}{:>3} {:<8} Win rate: {:>6} Expected: {:>6}",
             label,
             count,
             winLoss,
-            percent(wins.count, losses.count),
+            percent(wins, losses),
             expectedPct);
         return padLine(out);
     };
 
     mvwaddstr(pWin_, 21, 2,
-              statsLine("Counts:", playerCount, playerWins, playerLosses).c_str());
+              statsLine("Counts:", playerCount,
+                        playerWins.count, playerLosses.count).c_str());
+
     mvwaddstr(pWin_, 22, 2,
               statsLine("Simulated:", simulatedCount,
-                        simulatedWins, simulatedLosses).c_str());
+                        simulated.wins, simulated.losses).c_str());
 }
 
 //----------------------------------------------------------------

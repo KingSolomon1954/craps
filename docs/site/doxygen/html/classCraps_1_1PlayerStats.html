@@ -107,17 +107,17 @@ Collaboration diagram for Craps::PlayerStats:</div>
 <div class="dyncontent">
 <div class="center"><img src="classCraps_1_1PlayerStats__coll__graph.png" border="0" usemap="#aCraps_1_1PlayerStats_coll__map" alt="Collaboration graph"/></div>
 <map name="aCraps_1_1PlayerStats_coll__map" id="aCraps_1_1PlayerStats_coll__map">
-<area shape="rect" title="Track statistics about rolls and dice." alt="" coords="259,225,400,251"/>
-<area shape="rect" href="classCraps_1_1BetStats.html" title=" " alt="" coords="184,137,307,163"/>
-<area shape="poly" title=" " alt="" coords="268,171,320,223,316,227,264,175"/>
-<area shape="rect" href="structCraps_1_1BetTypeStats.html" title=" " alt="" coords="5,5,157,31"/>
-<area shape="poly" title=" " alt="" coords="96,42,119,77,152,111,175,125,200,135,198,140,173,130,149,115,115,81,91,45"/>
-<area shape="rect" href="structCraps_1_1NumBets.html" title=" " alt="" coords="182,5,309,31"/>
-<area shape="poly" title=" " alt="" coords="248,44,248,137,243,137,243,44"/>
-<area shape="rect" href="structCraps_1_1AmtBets.html" title=" " alt="" coords="360,5,483,31"/>
-<area shape="poly" title=" " alt="" coords="423,45,415,81,406,100,394,116,361,127,305,140,304,135,359,122,390,111,402,97,410,80,417,44"/>
-<area shape="rect" href="classCraps_1_1SessionHistory.html" title="Capture session summaries in a history file." alt="" coords="331,137,495,163"/>
-<area shape="poly" title=" " alt="" coords="394,175,343,227,339,223,390,171"/>
+<area shape="rect" title="Track statistics about rolls and dice." alt="" coords="254,255,395,280"/>
+<area shape="rect" href="classCraps_1_1BetStats.html" title=" " alt="" coords="95,137,218,163"/>
+<area shape="poly" title=" " alt="" coords="182,169,262,228,303,252,300,257,259,233,179,173"/>
+<area shape="rect" href="structCraps_1_1NumBets.html" title=" " alt="" coords="5,5,132,31"/>
+<area shape="poly" title=" " alt="" coords="65,44,62,79,65,96,72,112,86,125,103,135,101,140,82,130,68,115,60,98,57,79,59,44"/>
+<area shape="rect" href="structCraps_1_1AmtBets.html" title=" " alt="" coords="183,5,306,31"/>
+<area shape="poly" title=" " alt="" coords="244,45,236,80,217,115,203,129,186,139,183,135,200,125,213,112,231,78,239,44"/>
+<area shape="rect" href="classCraps_1_1SessionHistory.html" title="Capture session summaries in a history file." alt="" coords="243,137,407,163"/>
+<area shape="poly" title=" " alt="" coords="327,176,327,255,322,255,322,176"/>
+<area shape="rect" href="classCraps_1_1Repeaters.html" title="Counts how many times a number repeats before a run ends." alt="" coords="431,137,565,163"/>
+<area shape="poly" title=" " alt="" coords="486,176,463,205,433,233,406,247,379,257,377,252,404,242,430,228,459,202,482,173"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -131,10 +131,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a06a9fb1172cf86383dc0ad7fc84cc647" id="r_a06a9fb1172cf86383dc0ad7fc84cc647"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06a9fb1172cf86383dc0ad7fc84cc647">PlayerStats</a> ()=default</td></tr>
 <tr class="separator:a06a9fb1172cf86383dc0ad7fc84cc647"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
-<tr class="memitem:a233ae98413933b8cc53603173656cda2" id="r_a233ae98413933b8cc53603173656cda2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a233ae98413933b8cc53603173656cda2">recordWin</a> (const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;bet, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amtWin)</td></tr>
-<tr class="separator:a233ae98413933b8cc53603173656cda2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60b3bf856cded1ee51d867c730228a5c" id="r_a60b3bf856cded1ee51d867c730228a5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60b3bf856cded1ee51d867c730228a5c">recordLose</a> (const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;bet, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amtLose)</td></tr>
-<tr class="separator:a60b3bf856cded1ee51d867c730228a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29be4a28a0f01e7e23baf1d0606e530f" id="r_a29be4a28a0f01e7e23baf1d0606e530f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29be4a28a0f01e7e23baf1d0606e530f">recordWin</a> (const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;bet, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amtWin, unsigned roll=0)</td></tr>
+<tr class="separator:a29be4a28a0f01e7e23baf1d0606e530f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1afb734667ccfc84b357e64626e88fd" id="r_af1afb734667ccfc84b357e64626e88fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1afb734667ccfc84b357e64626e88fd">recordLose</a> (const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;bet, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amtLose, unsigned roll=0)</td></tr>
+<tr class="separator:af1afb734667ccfc84b357e64626e88fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae86b6fc7b9a6dad786e1f4a30141d80f" id="r_ae86b6fc7b9a6dad786e1f4a30141d80f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae86b6fc7b9a6dad786e1f4a30141d80f">recordWin</a> (const <a class="el" href="structCraps_1_1DecisionRecord.html">DecisionRecord</a> &amp;dr)</td></tr>
+<tr class="separator:ae86b6fc7b9a6dad786e1f4a30141d80f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48ac4cc6e435e01e16f9103eccf8c7ea" id="r_a48ac4cc6e435e01e16f9103eccf8c7ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48ac4cc6e435e01e16f9103eccf8c7ea">recordLose</a> (const <a class="el" href="structCraps_1_1DecisionRecord.html">DecisionRecord</a> &amp;dr)</td></tr>
+<tr class="separator:a48ac4cc6e435e01e16f9103eccf8c7ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b73c0d914e6180a8cc86819f2598c86" id="r_a4b73c0d914e6180a8cc86819f2598c86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b73c0d914e6180a8cc86819f2598c86">recordKeep</a> (const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;bet)</td></tr>
 <tr class="separator:a4b73c0d914e6180a8cc86819f2598c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae17fdb8719099651df356d04fb3f1b3a" id="r_ae17fdb8719099651df356d04fb3f1b3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae17fdb8719099651df356d04fb3f1b3a">merge</a> (const <a class="el" href="classCraps_1_1PlayerStats.html">PlayerStats</a> &amp;session)</td></tr>
@@ -151,6 +155,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a55e07e625f7633c6b47b449080d583d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3dbe47f2e477bc007338560e90e5dcf" id="r_aa3dbe47f2e477bc007338560e90e5dcf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCraps_1_1SessionHistory.html">SessionHistory</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3dbe47f2e477bc007338560e90e5dcf">sessionHistory</a></td></tr>
 <tr class="separator:aa3dbe47f2e477bc007338560e90e5dcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef74ac89d2beeed079d6341fc46c12d8" id="r_aef74ac89d2beeed079d6341fc46c12d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef74ac89d2beeed079d6341fc46c12d8">pointRepeaters</a> {<a class="el" href="namespaceCraps.html#ad5e734f7f9340b1bf0c49873663cdc16">PointNums</a>}</td></tr>
+<tr class="separator:aef74ac89d2beeed079d6341fc46c12d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae728a7a7a1287980e8a6bce6b131259" id="r_aae728a7a7a1287980e8a6bce6b131259"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae728a7a7a1287980e8a6bce6b131259">placeRepeaters</a> {<a class="el" href="namespaceCraps.html#ad5e734f7f9340b1bf0c49873663cdc16">PointNums</a>}</td></tr>
+<tr class="separator:aae728a7a7a1287980e8a6bce6b131259"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a085e5751c8e36e1a49aa32da093ca592" id="r_a085e5751c8e36e1a49aa32da093ca592"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a085e5751c8e36e1a49aa32da093ca592">buyRepeaters</a> {<a class="el" href="namespaceCraps.html#ad5e734f7f9340b1bf0c49873663cdc16">PointNums</a>}</td></tr>
+<tr class="separator:a085e5751c8e36e1a49aa32da093ca592"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Track statistics about rolls and dice. </p>
@@ -259,8 +269,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a60b3bf856cded1ee51d867c730228a5c" name="a60b3bf856cded1ee51d867c730228a5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60b3bf856cded1ee51d867c730228a5c">&#9670;&#160;</a></span>recordLose()</h2>
+<a id="af1afb734667ccfc84b357e64626e88fd" name="af1afb734667ccfc84b357e64626e88fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1afb734667ccfc84b357e64626e88fd">&#9670;&#160;</a></span>recordLose() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -273,7 +283,12 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>amtLose</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>amtLose</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>roll</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -281,8 +296,26 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a233ae98413933b8cc53603173656cda2" name="a233ae98413933b8cc53603173656cda2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a233ae98413933b8cc53603173656cda2">&#9670;&#160;</a></span>recordWin()</h2>
+<a id="a48ac4cc6e435e01e16f9103eccf8c7ea" name="a48ac4cc6e435e01e16f9103eccf8c7ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48ac4cc6e435e01e16f9103eccf8c7ea">&#9670;&#160;</a></span>recordLose() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlayerStats::recordLose </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structCraps_1_1DecisionRecord.html">DecisionRecord</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>dr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Record a losing bet from its decision record. </p>
+
+</div>
+</div>
+<a id="a29be4a28a0f01e7e23baf1d0606e530f" name="a29be4a28a0f01e7e23baf1d0606e530f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29be4a28a0f01e7e23baf1d0606e530f">&#9670;&#160;</a></span>recordWin() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -295,11 +328,34 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>amtWin</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>amtWin</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>roll</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Record a winning bet. </p>
+
+</div>
+</div>
+<a id="ae86b6fc7b9a6dad786e1f4a30141d80f" name="ae86b6fc7b9a6dad786e1f4a30141d80f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae86b6fc7b9a6dad786e1f4a30141d80f">&#9670;&#160;</a></span>recordWin() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlayerStats::recordWin </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structCraps_1_1DecisionRecord.html">DecisionRecord</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>dr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Record a winning bet from its decision record. Preferred over the overload above since it also records roll, odds and component details. </p>
 
 </div>
 </div>
@@ -352,6 +408,48 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a085e5751c8e36e1a49aa32da093ca592" name="a085e5751c8e36e1a49aa32da093ca592"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a085e5751c8e36e1a49aa32da093ca592">&#9670;&#160;</a></span>buyRepeaters</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a> Craps::PlayerStats::buyRepeaters {<a class="el" href="namespaceCraps.html#ad5e734f7f9340b1bf0c49873663cdc16">PointNums</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aae728a7a7a1287980e8a6bce6b131259" name="aae728a7a7a1287980e8a6bce6b131259"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae728a7a7a1287980e8a6bce6b131259">&#9670;&#160;</a></span>placeRepeaters</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a> Craps::PlayerStats::placeRepeaters {<a class="el" href="namespaceCraps.html#ad5e734f7f9340b1bf0c49873663cdc16">PointNums</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef74ac89d2beeed079d6341fc46c12d8" name="aef74ac89d2beeed079d6341fc46c12d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef74ac89d2beeed079d6341fc46c12d8">&#9670;&#160;</a></span>pointRepeaters</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a> Craps::PlayerStats::pointRepeaters {<a class="el" href="namespaceCraps.html#ad5e734f7f9340b1bf0c49873663cdc16">PointNums</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa3dbe47f2e477bc007338560e90e5dcf" name="aa3dbe47f2e477bc007338560e90e5dcf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa3dbe47f2e477bc007338560e90e5dcf">&#9670;&#160;</a></span>sessionHistory</h2>
 
@@ -373,7 +471,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

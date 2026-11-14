@@ -241,9 +241,9 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.rollStats.dontComePntCnts[10].lose.repeats() == 0);
     CHECK(ts.rollStats.dontComePntCnts[10].lose.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == false);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == true);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count()    == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats()  == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.armed      == false);
@@ -521,9 +521,9 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.rollStats.dontComePntCnts[10].lose.repeats() == 0);
     CHECK(ts.rollStats.dontComePntCnts[10].lose.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == false);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == true);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count()    == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats()  == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.armed      == false);
@@ -801,9 +801,9 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.rollStats.dontComePntCnts[10].lose.repeats() == 0);
     CHECK(ts.rollStats.dontComePntCnts[10].lose.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == false);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == true);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats()  == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.armed      == true);
@@ -1081,9 +1081,9 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.rollStats.dontComePntCnts[10].lose.repeats() == 0);
     CHECK(ts.rollStats.dontComePntCnts[10].lose.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == false);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == true);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats()  == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.armed      == true);
@@ -1361,9 +1361,9 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.rollStats.dontComePntCnts[10].lose.repeats() == 0);
     CHECK(ts.rollStats.dontComePntCnts[10].lose.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == false);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == true);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats()  == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.armed      == true);
@@ -1641,9 +1641,9 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.rollStats.dontComePntCnts[10].lose.repeats() == 0);
     CHECK(ts.rollStats.dontComePntCnts[10].lose.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats()  == 0);
-    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == false);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == true);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[6].wins.repeats()  == 0);
     CHECK(ts.rollStats.hardwayCounts[6].wins.armed      == true);
@@ -1921,7 +1921,7 @@ TEST_CASE("TableStats:diceroll:two")
     CHECK(ts.rollStats.dontComePntCnts[10].lose.repeats() == 0);
     CHECK(ts.rollStats.dontComePntCnts[10].lose.armed     == false);
 
-    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 0);
+    CHECK(ts.rollStats.hardwayCounts[4].wins.count()    == 1);
     CHECK(ts.rollStats.hardwayCounts[4].wins.repeats()  == 0);
     CHECK(ts.rollStats.hardwayCounts[4].wins.armed      == false);
     CHECK(ts.rollStats.hardwayCounts[6].wins.count()    == 1);

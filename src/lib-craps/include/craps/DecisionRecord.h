@@ -26,6 +26,11 @@ struct DecisionRecord
     bool removeBet            = true;  // An outcome may be resolved
                                        // while the wager remains active 
                                        // (e.g. a winning Place bet).
+    unsigned roll             = 0;     // Dice total that produced this
+                                       // outcome (set by CrapsBet::evaluate).
+    Gen::Money oddsWin        = 0;     // Part of win paid on the odds portion
+    Gen::Money oddsLose       = 0;     // Part of lose that was the odds portion
+    Gen::Money componentLoss  = 0;     // See DecisionRecord::componentLoss
 
     bool operator==(const DecisionRecord& other) const
     {
@@ -36,7 +41,11 @@ struct DecisionRecord
                lose           == other.lose           &&
                returnToPlayer == other.returnToPlayer &&
                commission     == other.commission     &&
-               removeBet      == other.removeBet;
+               removeBet      == other.removeBet      &&
+               roll           == other.roll           &&
+               oddsWin        == other.oddsWin        &&
+               oddsLose       == other.oddsLose       &&
+               componentLoss  == other.componentLoss;
     }
     void reset()
     {
@@ -48,6 +57,10 @@ struct DecisionRecord
         returnToPlayer = 0;
         commission     = 0;
         removeBet      = true;
+        roll           = 0;
+        oddsWin        = 0;
+        oddsLose       = 0;
+        componentLoss  = 0;
     }
 };
 
@@ -83,6 +96,28 @@ the caller:
     Indicates whether the wager should be removed from the player and table
     after this outcome is settled. A winning Place, Buy, Lay, or Hardway bet
     can resolve a win while remaining active.
+
+@var DecisionRecord::roll
+    The dice total of the roll that was evaluated. Statistics use it to
+    classify roll dependent bets (e.g. Field wins/losses by number).
+
+@var DecisionRecord::oddsWin
+    The part of win that was paid on the odds portion of a point bet
+    (PassLine, Come, DontPass, DontCome). Zero otherwise.
+
+@var DecisionRecord::oddsLose
+    The part of lose that was the odds portion of a point bet.
+    Zero otherwise.
+
+@var DecisionRecord::componentLoss
+    Aggregate bets (C&E, Horn, World) are several component wagers
+    settled together. When one component wins, the others lose. In that
+    case win is the net profit (winning component profit less
+    componentLoss), and componentLoss is the stake of the losing
+    components. The house still receives the componentLoss and pays the
+    gross profit (win + componentLoss). Zero when not applicable.
+    A bet with decision true, lose zero and componentLoss non-zero is a
+    "win" even when win is zero (e.g. a World bet on 7).
 
 @var DecisionRecord::pivotAssigned
     Indicates whether a pivot for this bet has been freshly
