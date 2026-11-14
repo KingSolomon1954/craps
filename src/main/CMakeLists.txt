@@ -4,19 +4,19 @@
 #
 # --------------------------------------------------------
 
-add_executable(royalcraps
+add_executable(${APP_EXEC}
     src/main.cpp
 )
 
-target_include_directories(royalcraps
+target_include_directories(${APP_EXEC}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_compile_options(royalcraps
+target_compile_options(${APP_EXEC}
     PUBLIC ${PROJ_COMPILE_OPTIONS}
 )
 
-target_link_libraries(royalcraps
+target_link_libraries(${APP_EXEC}
     PRIVATE gen
     PRIVATE craps
     PRIVATE controller

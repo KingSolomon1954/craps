@@ -17,11 +17,13 @@ rm -rf   $testdir
 mkdir -p $testdir
 tar -xzf $2 --directory=$testdir
 
+APP_EXEC=$(grep "APP_EXEC" $1/../Makefile | awk '{ print $3}' )
+
 releaseDir=$testdir/$release
 
 [ ! -d $releaseDir ]                && exit 1
-[ ! -x $releaseDir/RoyalCraps ]     && exit 1
-[ ! -x $releaseDir/RoyalCraps-db ]  && exit 1
+[ ! -x $releaseDir/${APP_EXEC} ]    && exit 1
+[ ! -x $releaseDir/${APP_EXEC}-db ] && exit 1
 [ ! -f $releaseDir/version ]        && exit 1
 [ ! -f $releaseDir/changelog.md ]   && exit 1
 
