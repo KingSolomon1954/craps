@@ -160,95 +160,6 @@ house edge you are really facing depends on which of the two dominates.
    are looking at the table statistics, Hardway counts therefore include
    come out rolls.
 
-Repeaters
----------
-
-A **repeater** statistic answers the question serious players ask most
-often: *how many times does a number show up before a 7 ends the run?*
-
-|AppName| records this as a **histogram**. For a given number, the game
-stores how many times the number was hit before a 7, and how often each of
-those hit counts happened. For example, for the number 6 you might see:
-
-.. code-block:: text
-
-   Hits before 7    Times
-   0                 61
-   1                 52
-   2                 40
-   3                 29
-   ...
-
-.. note::
-
-   The game stores *hits*, not *repeats*. A number that appeared once before
-   the 7 has one hit and zero repeats. Players often say "it repeated twice"
-   to mean three hits. Make sure you convert when comparing against
-   other sources.
-
-Table repeaters
-~~~~~~~~~~~~~~~
-
-The table keeps two kinds, and the difference matters.
-
-**Point repeaters** cover the numbers 2, 3, 4, 5, 6, 8, 9, 10, 11 and 12.
-Any 7 ends a run, including a come out 7. All rolls count, including the
-roll that establishes the point. This is the raw "hits before a 7" for each
-number, and is the statistic that matches how most players describe a
-number's behaviour.
-
-**Place repeaters** cover only 4, 5, 6, 8, 9 and 10. Only rolls made while a
-point is on count as hits, and only a seven-out ends a run. A come out 7
-does not end a Place run because a Place bet is not working on the come out
-roll. A run of zero hits is recorded when a seven-out ends a run with
-nothing in it, so the histogram's zero entry reflects how often a Place
-bet on that number would have lost without ever being paid.
-
-.. note::
-
-   A number rolled on the come out roll to establish the point is a hit for
-   point repeaters, and is *not* a hit for place repeaters. That single
-   difference accounts for most of the gap between the two histograms for
-   the same number.
-
-Player repeaters
-~~~~~~~~~~~~~~~~
-
-Each player has their own repeaters, for the numbers 4, 5, 6, 8, 9 and 10
-only. These are **participation based**. They measure the runs that the
-player's own bets actually took part in, not every roll at the table.
-
-* **Point repeaters** count hits of a number while the player held a Pass
-  Line or Come bet on that number. The roll that establishes the point
-  counts as a hit, a number is counted at most once per roll, and any 7 ends
-  the run.
-* **Place repeaters** count hits on the player's winning Place bets.
-  A seven-out ends the run.
-* **Buy repeaters** do the same for winning Buy bets.
-
-Winning Place, Buy, Pass Line and Come bets are taken down in |AppName|
-once paid, so a player who re-places a bet after a win continues the same
-run. A run therefore spans the re-placed bets rather than restarting at
-each bet.
-
-The histogram's zero entry has a precise meaning for players. A zero is
-recorded when the player held a Place or Buy bet on a number, a seven-out
-came, and the number was never hit. It is *not* recorded for numbers the
-player was not betting. If the number was hit but the bet was not up at the
-time, the run closes with the hits it did get.
-
-.. note::
-
-   A come out 7 closes the runs only of Place and Buy bets that actually
-   lost on that 7, that is, bets the player had working. It does not close
-   runs on bets that are off.
-
-.. note::
-
-   Running tallies of unfinished runs are not saved. If you quit in the
-   middle of a run, that partial run is discarded rather than
-   being added to the histogram.
-
 Bet statistics
 --------------
 
@@ -377,6 +288,95 @@ The game also tracks activity per roll: how many bets were up, won and lost
 on a single roll, and the busiest roll seen so far. The **last roll statistics**
 describe only the most recent roll: the dollars and bets on the table
 before the roll, and the dollars and bets won and lost on it.
+
+Repeaters
+---------
+
+A **repeater** statistic answers the question serious players ask most
+often: *how many times does a number show up before a 7 ends the run?*
+
+|AppName| records this as a **histogram**. For a given number, the game
+stores how many times the number was hit before a 7, and how often each of
+those hit counts happened. For example, for the number 6 you might see:
+
+.. code-block:: text
+
+   Hits before 7    Times
+   0                 61
+   1                 52
+   2                 40
+   3                 29
+   ...
+
+.. note::
+
+   The game stores *hits*, not *repeats*. A number that appeared once before
+   the 7 has one hit and zero repeats. Players often say "it repeated twice"
+   to mean three hits. Make sure you convert when comparing against
+   other sources.
+
+Table repeaters
+~~~~~~~~~~~~~~~
+
+The table keeps two kinds, and the difference matters.
+
+**Point repeaters** cover the numbers 2, 3, 4, 5, 6, 8, 9, 10, 11 and 12.
+Any 7 ends a run, including a come out 7. All rolls count, including the
+roll that establishes the point. This is the raw "hits before a 7" for each
+number, and is the statistic that matches how most players describe a
+number's behaviour.
+
+**Place repeaters** cover only 4, 5, 6, 8, 9 and 10. Only rolls made while a
+point is on count as hits, and only a seven-out ends a run. A come out 7
+does not end a Place run because a Place bet is not working on the come out
+roll. A run of zero hits is recorded when a seven-out ends a run with
+nothing in it, so the histogram's zero entry reflects how often a Place
+bet on that number would have lost without ever being paid.
+
+.. note::
+
+   A number rolled on the come out roll to establish the point is a hit for
+   point repeaters, and is *not* a hit for place repeaters. That single
+   difference accounts for most of the gap between the two histograms for
+   the same number.
+
+Player repeaters
+~~~~~~~~~~~~~~~~
+
+Each player has their own repeaters, for the numbers 4, 5, 6, 8, 9 and 10
+only. These are **participation based**. They measure the runs that the
+player's own bets actually took part in, not every roll at the table.
+
+* **Point repeaters** count hits of a number while the player held a Pass
+  Line or Come bet on that number. The roll that establishes the point
+  counts as a hit, a number is counted at most once per roll, and any 7 ends
+  the run.
+* **Place repeaters** count hits on the player's winning Place bets.
+  A seven-out ends the run.
+* **Buy repeaters** do the same for winning Buy bets.
+
+Winning Place, Buy, Pass Line and Come bets are taken down in |AppName|
+once paid, so a player who re-places a bet after a win continues the same
+run. A run therefore spans the re-placed bets rather than restarting at
+each bet.
+
+The histogram's zero entry has a precise meaning for players. A zero is
+recorded when the player held a Place or Buy bet on a number, a seven-out
+came, and the number was never hit. It is *not* recorded for numbers the
+player was not betting. If the number was hit but the bet was not up at the
+time, the run closes with the hits it did get.
+
+.. note::
+
+   A come out 7 closes the runs only of Place and Buy bets that actually
+   lost on that 7, that is, bets the player had working. It does not close
+   runs on bets that are off.
+
+.. note::
+
+   Running tallies of unfinished runs are not saved. If you quit in the
+   middle of a run, that partial run is discarded rather than
+   being added to the histogram.
 
 Bank statistics
 ---------------

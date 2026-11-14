@@ -12,8 +12,7 @@
 ### Repeated bet changes the existing bet: View
 - RspMakeBet now has changed and previousAmount. Tell the player when a
 - bet made again changed the amount of the one already on the table
-- (e.g. Pass Line $10 -> $20), and consider showing the current amount
-- in the bet amount dialog
+- (e.g. Pass Line $10 -> $20)
 
 ### Switch player: View (CUI and GUI)
 - Menu to pick a player from PlayerManager::getPlayerList(), leaving out
