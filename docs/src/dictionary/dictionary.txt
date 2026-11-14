@@ -39,3 +39,14 @@ toctree
 UML
 Viktor
 wikipedia
+Hardway
+Hardways
+hardway
+hardways
+histogram
+repeater
+repeaters
+Repeaters
+seven-out
+seven-outs
+YAML

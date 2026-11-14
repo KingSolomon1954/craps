@@ -83,6 +83,7 @@
 
 ## Done
 
+(Done) In User Guide, add new section "Understanding Statistics"
 (Done) New stats feature - track Repeater bets
 (Done) Stats for Place, Lay, Buy, Any7, CandE, Horn
 (Done) Track contract-only amounts separately in BetStats
