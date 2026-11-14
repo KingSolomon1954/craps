@@ -9,6 +9,7 @@
 #include <array>
 #include <map>
 #include <craps/EnumBetName.h>
+#include <craps/Repeaters.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Craps {
@@ -98,6 +99,11 @@ public:
     Counter elevensOnComeOutRoll;
     Counter twelvesOnComeOutRoll;
     Counter crapsOnComeOutRoll;
+
+    // Number of hits of a number before a 7, see Repeaters.
+    Repeaters pointRepeaters{NonSevenNums};  // Any 7 ends a run
+    Repeaters placeRepeaters{PointNums};     // Point-phase hits, seven-out ends
+
     WinLossCounts simulatedCounts(BetName name, unsigned pivot = 0) const;
     HardwayLossCounts simulatedHardwayLosses(unsigned pivot) const;
     void reset();

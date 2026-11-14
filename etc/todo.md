@@ -59,15 +59,6 @@
 
 ### Need to inhibit various actions during animation roll
 
-### Track contract-only amounts separately in BetStats
-
-BetStats records contract and odds amounts under the same bet-type
-key. The displayed expectation therefore uses the selected bet profile's
-house edge against the combined recorded amount. That is an estimate,
-not an exact expected loss, because the statistics don't retain the
-contract-only amount separately. A future model-level refinement could
-track that amount independently.
-
 ### Implement QuickBet::applyQuickBet for new CUI design
 
 ### Implement MenuQuickBet
@@ -92,6 +83,9 @@ track that amount independently.
 
 ## Done
 
+(Done) New stats feature - track Repeater bets
+(Done) Stats for Place, Lay, Buy, Any7, CandE, Horn
+(Done) Track contract-only amounts separately in BetStats
 (Done) Place bets off on comeout for simulated roles
 (Done) Added new bet Any711
 (Done) Change bet is inferred by makeBet().

@@ -2745,6 +2745,24 @@ RollStats:
   crapsOnComeOutRoll:
     count: 0
     maxRepeats: 0
+  pointRepeaters:
+    2: {}
+    3: {}
+    4: {}
+    5: {}
+    6: {}
+    8: {}
+    9: {}
+    10: {}
+    11: {}
+    12: {}
+  placeRepeaters:
+    4: {}
+    5: {}
+    6: {}
+    8: {}
+    9: {}
+    10: {}
 SessionStats:
   numSessionsAlltime: 25
   firstSessionDate: 2025-06-25T14:30:00.000000000
@@ -3118,4 +3136,130 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:Any711 pays 3 to 1 on 7 and 11"
     CHECK(bs.tally(BetName::Any711).wins.amount  == 30);
     CHECK(bs.tally(BetName::Any711).losses.count == 1);
     CHECK(bs.tally(BetName::Any711).losses.amount == 5);
+}
+
+//----------------------------------------------------------------
+// Player Repeaters: only what the player took part in
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player point repeaters pass line")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(1, 3);                       // 4: point established, a hit
+    t.testRollDice(2, 4);                       // 6: nothing
+    t.testRollDice(1, 3);                       // 4: made, a hit
+    t.testRollDice(3, 4);                       // 7 on come out, no bets left
+
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.pointRepeaters.times(4, 2) == 1);
+    CHECK(cs.pointRepeaters.times(6, 1) == 0);  // Took no part in the 6
+    CHECK(cs.placeRepeaters.buckets(4).empty());
+    CHECK(cs.buyRepeaters.buckets(4).empty());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player point repeaters come bet traveling")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(3, 3);                       // 6: point established, a hit
+    REQUIRE(p1->testMakeBet(BetName::Come, 10, 0));
+    t.testRollDice(1, 3);                       // 4: Come travels to 4, a hit
+    REQUIRE(p1->testMakeBet(BetName::Come, 10, 0));
+    t.testRollDice(1, 3);                       // 4: old Come wins and the new
+                                                // Come travels to 4, one hit
+    t.testRollDice(3, 4);                       // Seven out
+
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.pointRepeaters.times(4, 2) == 1);
+    CHECK(cs.pointRepeaters.times(6, 1) == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player place repeaters with zero bucket")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(3, 3);                       // 6: point
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    REQUIRE(p1->testMakeBet(BetName::Place, 10, 5));
+    t.testRollDice(2, 6);                       // 8: Place 8 wins, comes down
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    t.testRollDice(3, 5);                       // 8: wins again
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    t.testRollDice(3, 4);                       // Seven out
+
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.placeRepeaters.times(8, 2) == 1);
+    CHECK(cs.placeRepeaters.times(5, 0) == 1);  // Held, never hit
+    CHECK(cs.placeRepeaters.buckets(9).empty()); // No bet on 9
+    CHECK(cs.buyRepeaters.buckets(8).empty());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player buy repeaters")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(3, 3);                       // 6: point
+    REQUIRE(p1->testMakeBet(BetName::Buy, 20, 4));
+    t.testRollDice(1, 3);                       // 4: Buy 4 wins
+    t.testRollDice(3, 4);                       // Seven out
+
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.buyRepeaters.times(4, 1) == 1);
+    CHECK(cs.placeRepeaters.buckets(4).empty());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player place run survives come out seven")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    REQUIRE(p1->testMakeBet(BetName::PassLine, 10, 0));
+    t.testRollDice(3, 3);                       // 6: point
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    t.testRollDice(2, 6);                       // 8: Place 8 wins
+    REQUIRE(p1->testMakeBet(BetName::Place, 12, 8));
+    t.testRollDice(3, 3);                       // 6: Pass line wins, point off
+    t.testRollDice(3, 4);                       // Natural; Place is off
+
+    CHECK(p1->getCurrentStats().placeRepeaters.buckets(8).empty());
+    CHECK(p1->getCurrentStats().placeRepeaters.running(8) == 1);
+
+    t.testRollDice(1, 3);                       // 4: new point
+    t.testRollDice(3, 4);                       // Seven out ends the run
+    CHECK(p1->getCurrentStats().placeRepeaters.times(8, 1) == 1);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player with no bets records no repeaters")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+
+    t.testRollDice(1, 3);                       // 4
+    t.testRollDice(1, 3);                       // 4
+    t.testRollDice(3, 4);                       // 7
+
+    CHECK(t.getCurrentStats().rollStats.pointRepeaters.times(4, 2) == 1);
+    const auto& cs = p1->getCurrentStats();
+    CHECK(cs.pointRepeaters.buckets(4).empty());
+    CHECK(cs.placeRepeaters.buckets(4).empty());
+    CHECK(cs.buyRepeaters.buckets(4).empty());
 }

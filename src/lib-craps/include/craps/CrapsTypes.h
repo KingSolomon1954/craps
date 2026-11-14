@@ -52,6 +52,7 @@ inline const DiceNums ThreeElevenNums  = {3, 11};        // Horn pays 15:1
 inline const DiceNums FourTenNums      = {4, 10};
 inline const DiceNums FiveNineNums     = {5, 9};
 inline const DiceNums SixEightNums     = {6, 8};
+inline const DiceNums NonSevenNums     = {2, 3, 4, 5, 6, 8, 9, 10, 11, 12};
 
 }
 

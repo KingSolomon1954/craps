@@ -13,6 +13,7 @@ add_executable(craps-ut
     CrapsTableTest.cpp
     EnumBetNameTest.cpp
     PlayerTest.cpp
+    RepeatersTest.cpp
     RollStatsTest.cpp
     SessionHistoryTest.cpp
     TableRulesTest.cpp

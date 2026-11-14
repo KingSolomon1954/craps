@@ -653,6 +653,108 @@ Player::bettingClosed()
 
 /*-----------------------------------------------------------*//**
 
+Record what this player took part in for the Repeaters statistics.
+
+Called by CrapsTable for every player on every roll, before results are
+dispensed, so the bets are still on the table. point is the point as it
+was when the dice were thrown and drl holds this roll's decisions for
+all players.
+
+A hit of a point number counts when the player had a live bet on it:
+
+@li Pass line or Come bet whose number is rolled, including the roll
+    that establishes the number. One hit per roll, even when several
+    of the player's bets are on the number.
+@li Place or Buy bet that wins on the number.
+
+A seven ends the run for Pass line and Come numbers. A seven out ends
+the run for Place and Buy numbers; a come out seven does not, since
+those bets are off. See closeSpotRepeaters().
+
+*/
+void
+Player::recordRepeaters(unsigned point, unsigned roll,
+                        const std::list<DecisionRecord>& drl)
+{
+    if (roll == 7)
+    {
+        currentStats_.pointRepeaters.endRun();
+        closeSpotRepeaters(currentStats_.placeRepeaters, BetName::Place, point, drl);
+        closeSpotRepeaters(currentStats_.buyRepeaters,   BetName::Buy,   point, drl);
+        return;
+    }
+
+    if (!PointNums.contains(roll))
+        return;
+
+    bool pointHit = false;
+    bool placeHit = false;
+    bool buyHit   = false;
+    for (const auto& r : drl)
+    {
+        if (r.pBet == nullptr || &r.pBet->player() != this)
+            continue;
+        if (r.pBet->pivot() != roll)
+            continue;
+
+        const bool won = r.decision && r.lose == 0;
+        switch (r.pBet->betName())
+        {
+        case BetName::PassLine:
+        case BetName::Come:  pointHit = true;         break;
+        case BetName::Place: placeHit = placeHit || won; break;
+        case BetName::Buy:   buyHit   = buyHit   || won; break;
+        default:                                      break;
+        }
+    }
+
+    if (pointHit) currentStats_.pointRepeaters.hit(roll);
+    if (placeHit) currentStats_.placeRepeaters.hit(roll);
+    if (buyHit)   currentStats_.buyRepeaters.hit(roll);
+}
+
+/*-----------------------------------------------------------*//**
+
+Ends Place or Buy runs on a seven.
+
+On a seven out, every number the player holds a bet on ends its run,
+including with zero hits (a bet that lost without ever winning). A
+number with hits but no bet any more ends too, with the hits it has.
+
+On a come out seven those bets are normally off and nothing ends. If
+the table rules left one working and it lost, only that number ends.
+
+*/
+void
+Player::closeSpotRepeaters(Repeaters& reps, BetName name, unsigned point,
+                           const std::list<DecisionRecord>& drl) const
+{
+    if (point != 0)
+    {
+        DiceNums zeros;
+        for (const auto& b : bets_)
+        {
+            if (b->betName() == name && reps.tracks(b->pivot()) &&
+                reps.running(b->pivot()) == 0)
+                zeros.insert(b->pivot());
+        }
+        reps.closeRun(zeros, true);
+        reps.endRun();
+        return;
+    }
+
+    DiceNums lost;
+    for (const auto& r : drl)
+    {
+        if (r.pBet != nullptr && &r.pBet->player() == this &&
+            r.pBet->betName() == name && r.lose > 0)
+            lost.insert(r.pBet->pivot());
+    }
+    reps.closeRun(lost, true);
+}
+
+/*-----------------------------------------------------------*//**
+
 Process WIN decision
 
 Called by CrapsTable to dish out a winning bet to a Player.

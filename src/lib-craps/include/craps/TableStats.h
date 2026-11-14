@@ -53,6 +53,7 @@ public:
 
 private:
     void countDiceNumbers     (unsigned roll);
+    void countRepeaters       (unsigned point, unsigned roll);
     void countPointNumbers    (unsigned point, unsigned roll);
     void countAllPoints       (unsigned roll);
     void countComeOutRolls    (unsigned point);

@@ -9,10 +9,10 @@ Player:
     refillThreshold: 15000
     refillAmount: 20000
     bankStats:
-      numDeposits: 20
-      amtDeposited: 365
-      numWithdrawals: 86
-      amtWithdrawn: 673
+      numDeposits: 28
+      amtDeposited: 525
+      numWithdrawals: 105
+      amtWithdrawn: 863
       numRefills: 0
       amtRefilled: 0
       maxAmtDepositedSession: 210
@@ -22,15 +22,15 @@ Player:
   BetStats:
     overall:
       bets:
-        count: 64
-        wins: 15
-        losses: 49
-        kept: 59
+        count: 83
+        wins: 23
+        losses: 60
+        kept: 107
       amounts:
-        bet: 638
-        won: 199
-        lost: 507
-        kept: 895
+        bet: 828
+        won: 279
+        lost: 617
+        kept: 1375
       maximums:
         bet: 20
         win: 35
@@ -489,40 +489,40 @@ Player:
           oddsAmount: 0
       Come:
         wins:
+          count: 9
+          totDistance: 9
+          amount: 90
+          amountBet: 90
+          oddsBet: 0
+          oddsAmount: 0
+        losses:
           count: 6
           totDistance: 6
           amount: 60
           amountBet: 60
           oddsBet: 0
           oddsAmount: 0
-        losses:
-          count: 3
-          totDistance: 3
-          amount: 30
-          amountBet: 30
-          oddsBet: 0
-          oddsAmount: 0
       Come10:
         wins:
-          count: 0
-          totDistance: 0
-          amount: 0
-          amountBet: 0
+          count: 1
+          totDistance: 6
+          amount: 10
+          amountBet: 10
           oddsBet: 0
           oddsAmount: 0
         losses:
-          count: 3
-          totDistance: 14
-          amount: 50
-          amountBet: 60
+          count: 4
+          totDistance: 21
+          amount: 60
+          amountBet: 70
           oddsBet: 20
           oddsAmount: 20
       Come4:
         wins:
-          count: 1
-          totDistance: 2
-          amount: 30
-          amountBet: 20
+          count: 2
+          totDistance: 7
+          amount: 40
+          amountBet: 30
           oddsBet: 0
           oddsAmount: 0
         losses:
@@ -541,33 +541,33 @@ Player:
           oddsBet: 0
           oddsAmount: 0
         losses:
-          count: 1
-          totDistance: 4
-          amount: 20
-          amountBet: 20
+          count: 2
+          totDistance: 6
+          amount: 30
+          amountBet: 30
           oddsBet: 10
           oddsAmount: 10
       Come6:
         wins:
-          count: 0
-          totDistance: 0
-          amount: 0
-          amountBet: 0
+          count: 2
+          totDistance: 5
+          amount: 20
+          amountBet: 20
           oddsBet: 0
           oddsAmount: 0
         losses:
-          count: 4
-          totDistance: 14
-          amount: 70
-          amountBet: 70
+          count: 6
+          totDistance: 21
+          amount: 90
+          amountBet: 90
           oddsBet: 30
           oddsAmount: 30
       Come8:
         wins:
-          count: 0
-          totDistance: 0
-          amount: 0
-          amountBet: 0
+          count: 1
+          totDistance: 2
+          amount: 10
+          amountBet: 10
           oddsBet: 0
           oddsAmount: 0
         losses:
@@ -1216,10 +1216,10 @@ Player:
           oddsBet: 0
           oddsAmount: 0
         losses:
-          count: 2
-          totDistance: 10
-          amount: 40
-          amountBet: 40
+          count: 3
+          totDistance: 13
+          amount: 50
+          amountBet: 50
           oddsBet: 20
           oddsAmount: 20
       PassLine4:
@@ -1276,10 +1276,10 @@ Player:
           oddsBet: 0
           oddsAmount: 0
         losses:
-          count: 2
-          totDistance: 6
-          amount: 40
-          amountBet: 40
+          count: 3
+          totDistance: 11
+          amount: 50
+          amountBet: 50
           oddsBet: 20
           oddsAmount: 20
       PassLine9:
@@ -1291,10 +1291,10 @@ Player:
           oddsBet: 0
           oddsAmount: 0
         losses:
-          count: 1
-          totDistance: 5
-          amount: 20
-          amountBet: 20
+          count: 3
+          totDistance: 24
+          amount: 40
+          amountBet: 40
           oddsBet: 10
           oddsAmount: 10
       Place:
@@ -1434,32 +1434,32 @@ Player:
           oddsAmount: 0
     rollActivity:
       betsEvaluated:
-        allRolls: 123
+        allRolls: 190
         busiestRoll: 6
       betsWon:
-        allRolls: 15
+        allRolls: 23
         busiestRoll: 1
       betsLost:
-        allRolls: 49
+        allRolls: 60
         busiestRoll: 5
       betsKept:
-        allRolls: 59
+        allRolls: 107
         busiestRoll: 5
       amounts:
         evaluated:
-          allRolls: 1533
+          allRolls: 2203
           busiestRoll: 100
         won:
-          allRolls: 199
+          allRolls: 279
           busiestRoll: 35
         lost:
-          allRolls: 507
+          allRolls: 617
           busiestRoll: 90
         kept:
-          allRolls: 895
+          allRolls: 1375
           busiestRoll: 80
   SessionStats:
-    numSessionsAlltime: 12
+    numSessionsAlltime: 13
     firstSessionDate: 2025-06-25T14:30:00.000000000
     longestSessionAlltime: 0d 04:17:54
     history:
@@ -1535,6 +1535,54 @@ Player:
         numPlayers: 1
         date: 2026-11-13T11:00:35.264831593
         duration: 0d 00:06:34
+      - numBets: 19
+        amtIntake: 160
+        amtPayout: 190
+        numPlayers: 1
+        date: 2026-11-13T23:40:14.246395367
+        duration: 0d 00:04:05
+  Repeaters:
+    pointRepeaters:
+      4:
+        2: 1
+      5:
+        1: 1
+      6:
+        2: 2
+      8:
+        1: 1
+        2: 1
+      9:
+        1: 2
+      10:
+        1: 2
+        2: 1
+    placeRepeaters:
+      4:
+        {}
+      5:
+        {}
+      6:
+        {}
+      8:
+        {}
+      9:
+        {}
+      10:
+        {}
+    buyRepeaters:
+      4:
+        {}
+      5:
+        {}
+      6:
+        {}
+      8:
+        {}
+      9:
+        {}
+      10:
+        {}
 Prefs:
   LastFills:
     - betName: PassLine

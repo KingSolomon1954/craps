@@ -1129,7 +1129,7 @@ Player:
           allRolls: 0
           busiestRoll: 0
   SessionStats:
-    numSessionsAlltime: 15
+    numSessionsAlltime: 16
     firstSessionDate: 2026-09-13T06:34:03.187130137
     longestSessionAlltime: 0d 00:26:44
     history:
@@ -1223,6 +1223,52 @@ Player:
         numPlayers: 1
         date: 2026-11-13T11:00:35.319150434
         duration: 0d 00:06:34
+      - numBets: 0
+        amtIntake: 0
+        amtPayout: 0
+        numPlayers: 1
+        date: 2026-11-13T23:40:14.306712181
+        duration: 0d 00:04:05
+  Repeaters:
+    pointRepeaters:
+      4:
+        {}
+      5:
+        {}
+      6:
+        {}
+      8:
+        {}
+      9:
+        {}
+      10:
+        {}
+    placeRepeaters:
+      4:
+        {}
+      5:
+        {}
+      6:
+        {}
+      8:
+        {}
+      9:
+        {}
+      10:
+        {}
+    buyRepeaters:
+      4:
+        {}
+      5:
+        {}
+      6:
+        {}
+      8:
+        {}
+      9:
+        {}
+      10:
+        {}
 Prefs:
   LastFills:
     []

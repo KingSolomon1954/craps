@@ -26,6 +26,7 @@ TableStats::recordDiceRoll(unsigned point, const Dice& dice)
 
     disarmSomeCounts (point, roll);
     countDiceNumbers (roll);
+    countRepeaters   (point, roll);
     countPointNumbers(point, roll);
     countComeOutRolls(point);
     countPointRolls  (point, roll);
@@ -64,6 +65,28 @@ TableStats::countDiceNumbers(unsigned roll)
             rollStats.numberCounts[i].disarm();
         }
     }
+}
+
+//-----------------------------------------------------------------
+//
+// Hits of each number before a 7. Any 7 ends a point repeater run.
+// Place only sees point-phase rolls, so only a seven-out ends its run
+// (a come-out 7 leaves Place bets alone).
+//
+void
+TableStats::countRepeaters(unsigned point, unsigned roll)
+{
+    if (roll == 7)
+    {
+        rollStats.pointRepeaters.endRun();
+        if (point != 0)
+            rollStats.placeRepeaters.endRun(true);
+        return;
+    }
+
+    rollStats.pointRepeaters.hit(roll);
+    if (point != 0)
+        rollStats.placeRepeaters.hit(roll);
 }
 
 //-----------------------------------------------------------------

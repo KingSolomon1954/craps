@@ -846,6 +846,28 @@ BetStats:
       kept:
         allRolls: 0
         busiestRoll: 0
+Repeaters:
+  pointRepeaters:
+    4: {}
+    5: {}
+    6: {}
+    8: {}
+    9: {}
+    10: {}
+  placeRepeaters:
+    4: {}
+    5: {}
+    6: {}
+    8: {}
+    9: {}
+    10: {}
+  buyRepeaters:
+    4: {}
+    5: {}
+    6: {}
+    8: {}
+    9: {}
+    10: {}
 SessionStats:
   numSessionsAlltime: 25
   firstSessionDate: 2025-06-25T14:30:00.000000000

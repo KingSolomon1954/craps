@@ -170,6 +170,8 @@ RollStats::reset()
     elevensOnComeOutRoll.reset();
     twelvesOnComeOutRoll.reset();
     crapsOnComeOutRoll.reset();
+    pointRepeaters.reset();
+    placeRepeaters.reset();
 }
 
 //-----------------------------------------------------------------
@@ -217,6 +219,8 @@ RollStats::merge(const RollStats& session)
     elevensOnComeOutRoll.merge(session.elevensOnComeOutRoll);
     twelvesOnComeOutRoll.merge(session.twelvesOnComeOutRoll);
     crapsOnComeOutRoll.merge(session.crapsOnComeOutRoll);
+    pointRepeaters.merge(session.pointRepeaters);
+    placeRepeaters.merge(session.placeRepeaters);
 }
 
 //-----------------------------------------------------------------
@@ -228,6 +232,8 @@ RollStats::toYAML() const
     numberCountsToYAML(node);
     pointCountsToYAML (node);
     singleCountsToYAML(node);
+    node["pointRepeaters"] = pointRepeaters.toYAML();
+    node["placeRepeaters"] = placeRepeaters.toYAML();
     return node;
 }
 
@@ -342,6 +348,8 @@ RollStats::fromYAML(const YAML::Node& node)
     numberCountsFromYAML(node);
     pointCountsFromYAML (node);
     singleCountsFromYAML(node);
+    pointRepeaters.fromYAML(node["pointRepeaters"]);
+    placeRepeaters.fromYAML(node["placeRepeaters"]);
 }
 
 //-----------------------------------------------------------------

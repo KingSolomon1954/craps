@@ -74,6 +74,9 @@ void
 PlayerStats::reset()
 {
     betStats.reset();
+    pointRepeaters.reset();
+    placeRepeaters.reset();
+    buyRepeaters.reset();
     // No sessionHistory.clear()
 }
 
@@ -83,6 +86,9 @@ void
 PlayerStats::merge(const PlayerStats& session)
 {
     betStats.merge(session.betStats);
+    pointRepeaters.merge(session.pointRepeaters);
+    placeRepeaters.merge(session.placeRepeaters);
+    buyRepeaters.merge(session.buyRepeaters);
     // No sessionHistory.merge()
 }
 
@@ -93,6 +99,12 @@ PlayerStats::toYAML(YAML::Node& node) const
 {
     node["BetStats"]     = betStats.toYAML();
     node["SessionStats"] = sessionHistory.toYAML();
+
+    YAML::Node repeaters;
+    repeaters["pointRepeaters"] = pointRepeaters.toYAML();
+    repeaters["placeRepeaters"] = placeRepeaters.toYAML();
+    repeaters["buyRepeaters"]   = buyRepeaters.toYAML();
+    node["Repeaters"] = repeaters;
 }
 
 //-----------------------------------------------------------------
@@ -102,6 +114,11 @@ PlayerStats::fromYAML(const YAML::Node& node)
 {
     betStats.fromYAML      (node["BetStats"]);
     sessionHistory.fromYAML(node["SessionStats"]);
+
+    const YAML::Node repeaters = node["Repeaters"];
+    pointRepeaters.fromYAML(repeaters["pointRepeaters"]);
+    placeRepeaters.fromYAML(repeaters["placeRepeaters"]);
+    buyRepeaters.fromYAML  (repeaters["buyRepeaters"]);
 }
 
 //-----------------------------------------------------------------

@@ -76,6 +76,8 @@ public:
     void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
     void bettingClosed();
     void disburseDone();
+    void recordRepeaters(unsigned point, unsigned roll,
+                         const std::list<DecisionRecord>& drl);
     void processWin (const DecisionRecord& dr);
     void processLose(const DecisionRecord& dr);
     void processKeep(const DecisionRecord& dr);
@@ -113,6 +115,8 @@ public:
 
 private:
     void beginNewSession();
+    void closeSpotRepeaters(Repeaters& reps, BetName name, unsigned point,
+                            const std::list<DecisionRecord>& drl) const;
     // order matters
     PlayerId          playerId_;
     Bank              wallet_;     // overriden by yaml

@@ -851,6 +851,12 @@ CrapsTable::evalOneBet(CrapsBet& bet)
 void
 CrapsTable::dispenseResults()
 {
+    // Before any bet is removed, tell players what they took part in.
+    for (auto p : players_)
+    {
+        p->recordRepeaters(point_, dice_.value(), drl_);
+    }
+
     disburseHouseResults();
     disbursePlayerWins();
     disbursePlayerLoses();
