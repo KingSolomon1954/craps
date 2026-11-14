@@ -168,14 +168,15 @@ Public Types</h2></td></tr>
 &#160;&#160;<a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3ea2a0965cc9f25e78a7948002a938292aa">CandE</a>
 , <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3ea5cf73e808193af68b60d465bf312e789">Horn</a>
 , <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3ea0e0784c9d3cd39c5223753d069e05a6a">Any7</a>
-, <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eaf5a7924e621e84c9280a9a27e1bcb7f6">World</a>
+, <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eab4e0be525a5132569f2ebbc3abc47c4a">Any711</a>
 , <br />
-&#160;&#160;<a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eaed7504c8ba55acd24fa06f925f69ae8c">Come</a>
+&#160;&#160;<a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eaf5a7924e621e84c9280a9a27e1bcb7f6">World</a>
+, <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eaed7504c8ba55acd24fa06f925f69ae8c">Come</a>
 , <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eab89c1fe3cd4afbbf179f3ff1d085eeee">DontCome</a>
 , <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3ea0094bd807d373137d31ff198a8e8b721">PassLine</a>
-, <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eac4fbc566917c0c18c4a3783645a8c688">PassLineOdds</a>
 , <br />
-&#160;&#160;<a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eac50f72b6d79cf5cdaf28235c0f903371">DontPass</a>
+&#160;&#160;<a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eac4fbc566917c0c18c4a3783645a8c688">PassLineOdds</a>
+, <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eac50f72b6d79cf5cdaf28235c0f903371">DontPass</a>
 , <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3eae015cc2ea42df33d4f332f697a0802fe">DontPassOdds</a>
 <br />
  }</td></tr>
@@ -208,6 +209,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a30bb1ae73791c4e2f7e4b34dca14d35b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af39198ea8522b210f6421522a079cd5b" id="r_af39198ea8522b210f6421522a079cd5b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ac3570d034fd1d230278d915fbd5ebc3e">CuiBetName</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af39198ea8522b210f6421522a079cd5b">betToCuiBetName</a> (<a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, unsigned pivot)</td></tr>
 <tr class="separator:af39198ea8522b210f6421522a079cd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dd112f83d5fd76f8a2b0a9520f2a098" id="r_a9dd112f83d5fd76f8a2b0a9520f2a098"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9dd112f83d5fd76f8a2b0a9520f2a098">getUserPlayerStats</a> (<a class="el" href="classCraps_1_1PlayerStats.html">Craps::PlayerStats</a> &amp;playerStats)</td></tr>
+<tr class="separator:a9dd112f83d5fd76f8a2b0a9520f2a098"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a408eb0fb1cac04dbdbcd215a7452b307" id="r_a408eb0fb1cac04dbdbcd215a7452b307"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a408eb0fb1cac04dbdbcd215a7452b307">getActiveTableStats</a> (<a class="el" href="classCraps_1_1TableStats.html">Craps::TableStats</a> &amp;tableStats)</td></tr>
+<tr class="separator:a408eb0fb1cac04dbdbcd215a7452b307"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Some useful static functions for working with ncurses. </p>
@@ -283,6 +288,7 @@ Static Public Member Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ac3570d034fd1d230278d915fbd5ebc3ea2a0965cc9f25e78a7948002a938292aa" name="ac3570d034fd1d230278d915fbd5ebc3ea2a0965cc9f25e78a7948002a938292aa"></a>CandE&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac3570d034fd1d230278d915fbd5ebc3ea5cf73e808193af68b60d465bf312e789" name="ac3570d034fd1d230278d915fbd5ebc3ea5cf73e808193af68b60d465bf312e789"></a>Horn&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac3570d034fd1d230278d915fbd5ebc3ea0e0784c9d3cd39c5223753d069e05a6a" name="ac3570d034fd1d230278d915fbd5ebc3ea0e0784c9d3cd39c5223753d069e05a6a"></a>Any7&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ac3570d034fd1d230278d915fbd5ebc3eab4e0be525a5132569f2ebbc3abc47c4a" name="ac3570d034fd1d230278d915fbd5ebc3eab4e0be525a5132569f2ebbc3abc47c4a"></a>Any711&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac3570d034fd1d230278d915fbd5ebc3eaf5a7924e621e84c9280a9a27e1bcb7f6" name="ac3570d034fd1d230278d915fbd5ebc3eaf5a7924e621e84c9280a9a27e1bcb7f6"></a>World&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac3570d034fd1d230278d915fbd5ebc3eaed7504c8ba55acd24fa06f925f69ae8c" name="ac3570d034fd1d230278d915fbd5ebc3eaed7504c8ba55acd24fa06f925f69ae8c"></a>Come&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac3570d034fd1d230278d915fbd5ebc3eab89c1fe3cd4afbbf179f3ff1d085eeee" name="ac3570d034fd1d230278d915fbd5ebc3eab89c1fe3cd4afbbf179f3ff1d085eeee"></a>DontCome&#160;</td><td class="fielddoc"></td></tr>
@@ -384,6 +390,56 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structCui_1_1WindowRect.html">WindowRect</a> with coordinates centered on pWin </dd></dl>
+
+</div>
+</div>
+<a id="a408eb0fb1cac04dbdbcd215a7452b307" name="a408eb0fb1cac04dbdbcd215a7452b307"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a408eb0fb1cac04dbdbcd215a7452b307">&#9670;&#160;</a></span>getActiveTableStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuiUtils::getActiveTableStats </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1TableStats.html">Craps::TableStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tableStats</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9dd112f83d5fd76f8a2b0a9520f2a098" name="a9dd112f83d5fd76f8a2b0a9520f2a098"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dd112f83d5fd76f8a2b0a9520f2a098">&#9670;&#160;</a></span>getUserPlayerStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuiUtils::getUserPlayerStats </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCraps_1_1PlayerStats.html">Craps::PlayerStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerStats</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -645,7 +701,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

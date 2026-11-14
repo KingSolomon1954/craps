@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sessions_0',['Sessions',['../classCraps_1_1SessionHistory.html#ae95c30374abf79a3e8df509983df9594',1,'Craps::SessionHistory']]]
+  ['recentrolls_0',['RecentRolls',['../namespaceCraps.html#a1ec715016943bcacc2a5da2b82f90703',1,'Craps']]]
 ];

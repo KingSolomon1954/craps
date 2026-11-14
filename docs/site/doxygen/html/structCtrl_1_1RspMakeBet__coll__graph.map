@@ -1,0 +1,7 @@
+<map id="Ctrl::RspMakeBet" name="Ctrl::RspMakeBet">
+<area shape="rect" id="Node000001" title=" " alt="" coords="76,93,211,119"/>
+<area shape="rect" id="Node000002" href="$structCtrl_1_1GameEvent.html" title="Base class for all Events." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,39,135,91,131,95,87,43"/>
+<area shape="rect" id="Node000003" href="$classGen_1_1ErrorPass.html" title="A generic error payload for value&#45;based error handling." alt="" coords="159,5,275,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="200,43,156,95,152,91,196,39"/>
+</map>

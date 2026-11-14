@@ -136,6 +136,16 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a1b28c5f2d02f69e976b4fd1e06a35c21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41504cdf4bac4fc3993b79d7f73031cc" id="r_a41504cdf4bac4fc3993b79d7f73031cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGen_1_1Money.html">Gen::Money</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41504cdf4bac4fc3993b79d7f73031cc">commission</a> = 0</td></tr>
 <tr class="separator:a41504cdf4bac4fc3993b79d7f73031cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68706c27fe80b72fd6ef48b96873bbe1" id="r_a68706c27fe80b72fd6ef48b96873bbe1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68706c27fe80b72fd6ef48b96873bbe1">removeBet</a> = true</td></tr>
+<tr class="separator:a68706c27fe80b72fd6ef48b96873bbe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fd4b82feacf0f332f64be976d74f1b3" id="r_a9fd4b82feacf0f332f64be976d74f1b3"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9fd4b82feacf0f332f64be976d74f1b3">roll</a> = 0</td></tr>
+<tr class="separator:a9fd4b82feacf0f332f64be976d74f1b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35c2a5a8e2a62f7e15e946c60b15268c" id="r_a35c2a5a8e2a62f7e15e946c60b15268c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGen_1_1Money.html">Gen::Money</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35c2a5a8e2a62f7e15e946c60b15268c">oddsWin</a> = 0</td></tr>
+<tr class="separator:a35c2a5a8e2a62f7e15e946c60b15268c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1853021ab5fc5cb05f6ba45bfc32feda" id="r_a1853021ab5fc5cb05f6ba45bfc32feda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGen_1_1Money.html">Gen::Money</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1853021ab5fc5cb05f6ba45bfc32feda">oddsLose</a> = 0</td></tr>
+<tr class="separator:a1853021ab5fc5cb05f6ba45bfc32feda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab79f93d2b7f7533fcd2ff94db39ee7c6" id="r_ab79f93d2b7f7533fcd2ff94db39ee7c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGen_1_1Money.html">Gen::Money</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab79f93d2b7f7533fcd2ff94db39ee7c6">componentLoss</a> = 0</td></tr>
+<tr class="separator:ab79f93d2b7f7533fcd2ff94db39ee7c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Results of a bet after a dice throw. </p>
@@ -204,8 +214,22 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Lay and Buy bets require a 5% commission if they win.</p>
-<p>This amount has been subtracted from the win amount. The table's banking system should deposit this amount if non-zero. </p>
+<p>Lay and Buy bets may incur commission when the winning decision is settled. This amount has been subtracted from the win amount. The table banking system deposits it if non-zero. Commission configured for collection on placement is handled by Player/CrapsTable when the wager is accepted and is therefore not represented here. </p>
+
+</div>
+</div>
+<a id="ab79f93d2b7f7533fcd2ff94db39ee7c6" name="ab79f93d2b7f7533fcd2ff94db39ee7c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab79f93d2b7f7533fcd2ff94db39ee7c6">&#9670;&#160;</a></span>componentLoss</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> Craps::DecisionRecord::componentLoss = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Aggregate bets (C&amp;E, Horn, World) are several component wagers settled together. When one component wins, the others lose. In that case win is the net profit (winning component profit less componentLoss), and componentLoss is the stake of the losing components. The house still receives the componentLoss and pays the gross profit (win + componentLoss). Zero when not applicable. A bet with decision true, lose zero and componentLoss non-zero is a "win" even when win is zero (e.g. a World bet on 7). </p>
 
 </div>
 </div>
@@ -221,7 +245,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Indicates that a decision has been reached for this bet.</p>
-<p>When true, this bet has reached a decision, and one or more of the win, lose, returnToPlayer fields in this record will have non-zero values. It is the caller's responsibility to remove the bet from the craps table.</p>
+<p>When true, this bet has a resolved outcome on this roll. One or more of the win, lose, or returnToPlayer fields may be non-zero. This does not by itself mean the wager has ended; see removeBet.</p>
 <p>When false, this bet has not reached a decision and should remain on on the <a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> table. The win, lose, retrunToPlayer fields will all be zero. The distance field (in the <a class="el" href="classCraps_1_1CrapsBet.html" title="A bet on the Craps table.">CrapsBet</a>) is incremented by one. On come out rolls (i.e, the passed in point is zero) then the <a class="el" href="classCraps_1_1CrapsBet.html" title="A bet on the Craps table.">CrapsBet</a> pivot field, if zero, will be set to the dice value for Pass/Come/DontPass/DontCome bets. </p>
 
 </div>
@@ -239,6 +263,36 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>If non-zero, then this bet has lost the given amount.</p>
 <p>The amount is the contractBet plus odds bet, if any. The caller implementation should add this amount to the table's banking system and subtract this amount from the player's wallet if not already done so. </p>
+
+</div>
+</div>
+<a id="a1853021ab5fc5cb05f6ba45bfc32feda" name="a1853021ab5fc5cb05f6ba45bfc32feda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1853021ab5fc5cb05f6ba45bfc32feda">&#9670;&#160;</a></span>oddsLose</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> Craps::DecisionRecord::oddsLose = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The part of lose that was the odds portion of a point bet. Zero otherwise. </p>
+
+</div>
+</div>
+<a id="a35c2a5a8e2a62f7e15e946c60b15268c" name="a35c2a5a8e2a62f7e15e946c60b15268c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35c2a5a8e2a62f7e15e946c60b15268c">&#9670;&#160;</a></span>oddsWin</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classGen_1_1Money.html">Gen::Money</a> Craps::DecisionRecord::oddsWin = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The part of win that was paid on the odds portion of a point bet (PassLine, Come, DontPass, DontCome). Zero otherwise. </p>
 
 </div>
 </div>
@@ -274,6 +328,21 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a68706c27fe80b72fd6ef48b96873bbe1" name="a68706c27fe80b72fd6ef48b96873bbe1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68706c27fe80b72fd6ef48b96873bbe1">&#9670;&#160;</a></span>removeBet</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Craps::DecisionRecord::removeBet = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Indicates whether the wager should be removed from the player and table after this outcome is settled. A winning Place, Buy, Lay, or Hardway bet can resolve a win while remaining active. </p>
+
+</div>
+</div>
 <a id="a1b28c5f2d02f69e976b4fd1e06a35c21" name="a1b28c5f2d02f69e976b4fd1e06a35c21"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b28c5f2d02f69e976b4fd1e06a35c21">&#9670;&#160;</a></span>returnToPlayer</h2>
 
@@ -285,8 +354,23 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>I non-zero then the given amount should be returned to the player.</p>
-<p>Note this is not a win or lose. This happens when a point-based bet wins/loses during a come out roll and setOffComeOutRoll() is true. </p>
+<p>If non-zero, the given amount should be returned to the player.</p>
+<p>This is used when odds are off during a come-out roll. It can accompany either a win or a loss. When a winning settlement also returns the original odds stake, the caller must avoid returning that stake twice. </p>
+
+</div>
+</div>
+<a id="a9fd4b82feacf0f332f64be976d74f1b3" name="a9fd4b82feacf0f332f64be976d74f1b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fd4b82feacf0f332f64be976d74f1b3">&#9670;&#160;</a></span>roll</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned Craps::DecisionRecord::roll = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The dice total of the roll that was evaluated. Statistics use it to classify roll dependent bets (e.g. Field wins/losses by number). </p>
 
 </div>
 </div>
@@ -302,7 +386,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>If non-zero, then this bet has won the given amount.</p>
-<p>The calculation includes odds winnings. The caller implementation should take this win amount and add it with the original contractAmount and oddsAmount to give back to the player. </p>
+<p>The calculation includes odds winnings and is net of any commission. If removeBet is true, the caller returns the original contract and odds stakes along with this profit. If removeBet is false, only this profit is credited because the original stake remains active on the table. </p>
 
 </div>
 </div>
@@ -312,7 +396,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

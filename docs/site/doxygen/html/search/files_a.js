@@ -9,13 +9,14 @@ var searchData=
   ['playerareaallplayers_2eh_6',['PlayerAreaAllPlayers.h',['../PlayerAreaAllPlayers_8h.html',1,'']]],
   ['playerareaoneplayer_2ecpp_7',['PlayerAreaOnePlayer.cpp',['../PlayerAreaOnePlayer_8cpp.html',1,'']]],
   ['playerareaoneplayer_2eh_8',['PlayerAreaOnePlayer.h',['../PlayerAreaOnePlayer_8h.html',1,'']]],
-  ['playerconfig_2eh_9',['PlayerConfig.h',['../PlayerConfig_8h.html',1,'']]],
-  ['playermanager_2ecpp_10',['PlayerManager.cpp',['../PlayerManager_8cpp.html',1,'']]],
-  ['playermanager_2eh_11',['PlayerManager.h',['../PlayerManager_8h.html',1,'']]],
-  ['playermanifest_2ecpp_12',['PlayerManifest.cpp',['../PlayerManifest_8cpp.html',1,'']]],
-  ['playermanifest_2eh_13',['PlayerManifest.h',['../PlayerManifest_8h.html',1,'']]],
-  ['playerstats_2ecpp_14',['PlayerStats.cpp',['../PlayerStats_8cpp.html',1,'']]],
-  ['playerstats_2eh_15',['PlayerStats.h',['../PlayerStats_8h.html',1,'']]],
-  ['properties_2ecpp_16',['Properties.cpp',['../Properties_8cpp.html',1,'']]],
-  ['properties_2eh_17',['Properties.h',['../Properties_8h.html',1,'']]]
+  ['playermanager_2ecpp_9',['PlayerManager.cpp',['../PlayerManager_8cpp.html',1,'']]],
+  ['playermanager_2eh_10',['PlayerManager.h',['../PlayerManager_8h.html',1,'']]],
+  ['playermanifest_2ecpp_11',['PlayerManifest.cpp',['../PlayerManifest_8cpp.html',1,'']]],
+  ['playermanifest_2eh_12',['PlayerManifest.h',['../PlayerManifest_8h.html',1,'']]],
+  ['playerprefs_2ecpp_13',['PlayerPrefs.cpp',['../PlayerPrefs_8cpp.html',1,'']]],
+  ['playerprefs_2eh_14',['PlayerPrefs.h',['../PlayerPrefs_8h.html',1,'']]],
+  ['playerstats_2ecpp_15',['PlayerStats.cpp',['../PlayerStats_8cpp.html',1,'']]],
+  ['playerstats_2eh_16',['PlayerStats.h',['../PlayerStats_8h.html',1,'']]],
+  ['properties_2ecpp_17',['Properties.cpp',['../Properties_8cpp.html',1,'']]],
+  ['properties_2eh_18',['Properties.h',['../Properties_8h.html',1,'']]]
 ];

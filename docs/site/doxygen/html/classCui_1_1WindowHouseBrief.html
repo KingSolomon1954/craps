@@ -133,6 +133,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab3da9739437ee2c08e4191bfdb5ea7df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9d7a28e6ee8fc8fb82317714c14939b" id="r_ac9d7a28e6ee8fc8fb82317714c14939b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9d7a28e6ee8fc8fb82317714c14939b">onResolveBetsEnd</a> ()</td></tr>
 <tr class="separator:ac9d7a28e6ee8fc8fb82317714c14939b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47befb5597e21a1fb4de2d44665a25f6" id="r_a47befb5597e21a1fb4de2d44665a25f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a47befb5597e21a1fb4de2d44665a25f6">onTableBetsChanged</a> (unsigned numBetsOnTable, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amountOnTable)</td></tr>
+<tr class="separator:a47befb5597e21a1fb4de2d44665a25f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a792437834fb66eb94f6b69f0921f7ed4" id="r_a792437834fb66eb94f6b69f0921f7ed4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a792437834fb66eb94f6b69f0921f7ed4">onTableSessionStatsChanged</a> (unsigned numBetsWon, unsigned numBetsLost)</td></tr>
+<tr class="separator:a792437834fb66eb94f6b69f0921f7ed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9129074490c388deb6c3e92710f8c3e" id="r_ab9129074490c388deb6c3e92710f8c3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9129074490c388deb6c3e92710f8c3e">onTableLastRollStatsChanged</a> (const <a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;lrs)</td></tr>
+<tr class="separator:ab9129074490c388deb6c3e92710f8c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7de89f2171b03c0e4d371e5ed19fc3ef" id="r_a7de89f2171b03c0e4d371e5ed19fc3ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7de89f2171b03c0e4d371e5ed19fc3ef">onTableBalanceChanged</a> (<a class="el" href="classGen_1_1Money.html">Gen::Money</a> balance, int netBalance)</td></tr>
 <tr class="separator:a7de89f2171b03c0e4d371e5ed19fc3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -259,6 +265,65 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a47befb5597e21a1fb4de2d44665a25f6" name="a47befb5597e21a1fb4de2d44665a25f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47befb5597e21a1fb4de2d44665a25f6">&#9670;&#160;</a></span>onTableBetsChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WindowHouseBrief::onTableBetsChanged </td>
+          <td>(</td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>numBetsOnTable</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>amountOnTable</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab9129074490c388deb6c3e92710f8c3e" name="ab9129074490c388deb6c3e92710f8c3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9129074490c388deb6c3e92710f8c3e">&#9670;&#160;</a></span>onTableLastRollStatsChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WindowHouseBrief::onTableLastRollStatsChanged </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structCraps_1_1LastRollStats.html">Craps::LastRollStats</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>lrs</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a792437834fb66eb94f6b69f0921f7ed4" name="a792437834fb66eb94f6b69f0921f7ed4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a792437834fb66eb94f6b69f0921f7ed4">&#9670;&#160;</a></span>onTableSessionStatsChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WindowHouseBrief::onTableSessionStatsChanged </td>
+          <td>(</td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>numBetsWon</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>numBetsLost</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/lib-cui/include/cui/panels/<a class="el" href="WindowHouseBrief_8h_source.html">WindowHouseBrief.h</a></li>
 <li>src/lib-cui/src/panels/<a class="el" href="WindowHouseBrief_8cpp.html">WindowHouseBrief.cpp</a></li>
@@ -266,7 +331,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

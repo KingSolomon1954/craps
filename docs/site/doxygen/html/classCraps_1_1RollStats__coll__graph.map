@@ -1,5 +1,7 @@
 <map id="Craps::RollStats" name="Craps::RollStats">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,240,131,265"/>
-<area shape="rect" id="Node000002" href="$structCraps_1_1Counter.html" title=" " alt="" coords="9,5,127,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,45,71,240,65,240,65,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="98,240,223,265"/>
+<area shape="rect" id="Node000002" href="$structCraps_1_1Counter.html" title=" " alt="" coords="5,5,124,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,44,51,81,46,125,50,172,57,194,68,214,82,228,99,238,97,242,79,232,64,218,52,196,45,173,41,125,46,80,54,43"/>
+<area shape="rect" id="Node000003" href="$classCraps_1_1Repeaters.html" title="Counts how many times a number repeats before a run ends." alt="" coords="190,5,323,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="262,45,264,81,261,126,251,174,230,218,215,232,198,242,195,238,212,228,225,214,246,172,256,126,259,81,257,45"/>
 </map>

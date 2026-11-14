@@ -148,6 +148,7 @@ Public Types</h2></td></tr>
 , <br />
 &#160;&#160;<a class="el" href="#a92d05e8dcc6565618e5dbd175578ac15a264a9d34afd2db944760d50efebae44f">EquipmentError</a>
 , <a class="el" href="#a92d05e8dcc6565618e5dbd175578ac15a97236e8a1c9b9e61fb091479ddb6e8ec">ProcessingError</a>
+, <a class="el" href="#a92d05e8dcc6565618e5dbd175578ac15a0187331b4bebfdd87630a84efc9787f8">ProgrammingError</a>
 , <a class="el" href="#a92d05e8dcc6565618e5dbd175578ac15a84f6ea4a74050287d06fdc51371b10cd">QualityOfServiceError</a>
 <br />
  }</td></tr>
@@ -294,7 +295,7 @@ Extensible with application domain error names and types.</h2>
 <div class="line">       <a class="code hl_enumvalue" href="#a92d05e8dcc6565618e5dbd175578ac15aeeb4e792b7143949945b675165da512a">ErrorPass::ErrorType::CommunicationsError</a>,</div>
 <div class="line">       <a class="code hl_enumvalue" href="#a69dd9e9c301b6e8a0aed1d961ad68e7aa278d01e5af56273bae1bb99a98b370cd">ErrorPass::Severity::Critical</a>,</div>
 <div class="line">       <span class="stringliteral">&quot;Failed socket write&quot;</span>);</div>
-<div class="ttc" id="aErrorPass_8h_html_a0e0a8ca9fc34654ba6e203a94deb3145"><div class="ttname"><a href="ErrorPass_8h.html#a0e0a8ca9fc34654ba6e203a94deb3145">EP_SET</a></div><div class="ttdeci">#define EP_SET(epObj, errName, errType, severity, errDescription)</div><div class="ttdoc">Convenience macro to populate a newly generated error passing object.</div><div class="ttdef"><b>Definition</b> ErrorPass.h:277</div></div>
+<div class="ttc" id="aErrorPass_8h_html_a0e0a8ca9fc34654ba6e203a94deb3145"><div class="ttname"><a href="ErrorPass_8h.html#a0e0a8ca9fc34654ba6e203a94deb3145">EP_SET</a></div><div class="ttdeci">#define EP_SET(epObj, errName, errType, severity, errDescription)</div><div class="ttdoc">Convenience macro to populate a newly generated error passing object.</div><div class="ttdef"><b>Definition</b> ErrorPass.h:278</div></div>
 <div class="ttc" id="aclassGen_1_1ErrorPass_html"><div class="ttname"><a href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a></div><div class="ttdoc">A generic error payload for value-based error handling.</div><div class="ttdef"><b>Definition</b> ErrorPass.h:20</div></div>
 <div class="ttc" id="aclassGen_1_1ErrorPass_html_a69dd9e9c301b6e8a0aed1d961ad68e7aa278d01e5af56273bae1bb99a98b370cd"><div class="ttname"><a href="#a69dd9e9c301b6e8a0aed1d961ad68e7aa278d01e5af56273bae1bb99a98b370cd">Gen::ErrorPass::Severity::Critical</a></div><div class="ttdeci">@ Critical</div></div>
 <div class="ttc" id="aclassGen_1_1ErrorPass_html_a92d05e8dcc6565618e5dbd175578ac15aeeb4e792b7143949945b675165da512a"><div class="ttname"><a href="#a92d05e8dcc6565618e5dbd175578ac15aeeb4e792b7143949945b675165da512a">Gen::ErrorPass::ErrorType::CommunicationsError</a></div><div class="ttdeci">@ CommunicationsError</div></div>
@@ -329,7 +330,7 @@ Extensible with application domain error names and types.</h2>
 <div class="line">    <a class="code hl_define" href="ErrorPass_8h.html#ac6bf9076311949a46652c96e73c82ef4">EP_TRACE</a>(ep); <span class="comment">// Automatically appends caller information to stackTrace vector</span></div>
 <div class="line">    <span class="keywordflow">return</span> zeus::unexpected(std::move(ep));</div>
 <div class="line">}</div>
-<div class="ttc" id="aErrorPass_8h_html_ac6bf9076311949a46652c96e73c82ef4"><div class="ttname"><a href="ErrorPass_8h.html#ac6bf9076311949a46652c96e73c82ef4">EP_TRACE</a></div><div class="ttdeci">#define EP_TRACE(epObj)</div><div class="ttdoc">Appends the current call stack context to the ErrorPass payload.</div><div class="ttdef"><b>Definition</b> ErrorPass.h:287</div></div>
+<div class="ttc" id="aErrorPass_8h_html_ac6bf9076311949a46652c96e73c82ef4"><div class="ttname"><a href="ErrorPass_8h.html#ac6bf9076311949a46652c96e73c82ef4">EP_TRACE</a></div><div class="ttdeci">#define EP_TRACE(epObj)</div><div class="ttdoc">Appends the current call stack context to the ErrorPass payload.</div><div class="ttdef"><b>Definition</b> ErrorPass.h:288</div></div>
 </div><!-- fragment --> </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a94cc1b9a40f0b9f1ef54dcef8ec267cd" name="a94cc1b9a40f0b9f1ef54dcef8ec267cd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94cc1b9a40f0b9f1ef54dcef8ec267cd">&#9670;&#160;</a></span>ErrorName</h2>
@@ -410,6 +411,7 @@ Extensible with application domain error names and types.</h2>
 <tr><td class="fieldname"><a id="a92d05e8dcc6565618e5dbd175578ac15a33a8e5365fb5abc8ee0b069dd7cc4730" name="a92d05e8dcc6565618e5dbd175578ac15a33a8e5365fb5abc8ee0b069dd7cc4730"></a>EnvironmentalError&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a92d05e8dcc6565618e5dbd175578ac15a264a9d34afd2db944760d50efebae44f" name="a92d05e8dcc6565618e5dbd175578ac15a264a9d34afd2db944760d50efebae44f"></a>EquipmentError&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a92d05e8dcc6565618e5dbd175578ac15a97236e8a1c9b9e61fb091479ddb6e8ec" name="a92d05e8dcc6565618e5dbd175578ac15a97236e8a1c9b9e61fb091479ddb6e8ec"></a>ProcessingError&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a92d05e8dcc6565618e5dbd175578ac15a0187331b4bebfdd87630a84efc9787f8" name="a92d05e8dcc6565618e5dbd175578ac15a0187331b4bebfdd87630a84efc9787f8"></a>ProgrammingError&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a92d05e8dcc6565618e5dbd175578ac15a84f6ea4a74050287d06fdc51371b10cd" name="a92d05e8dcc6565618e5dbd175578ac15a84f6ea4a74050287d06fdc51371b10cd"></a>QualityOfServiceError&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
@@ -1354,7 +1356,7 @@ Extensible with application domain error names and types.</h2>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

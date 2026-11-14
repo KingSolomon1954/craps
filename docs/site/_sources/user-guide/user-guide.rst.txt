@@ -36,6 +36,8 @@ How to Use Specific Features
 
 <create a section for each core feature, shows users how it works>
 
+.. include:: statistics.rst
+
 Frequently Asked Questions
 ==========================
 

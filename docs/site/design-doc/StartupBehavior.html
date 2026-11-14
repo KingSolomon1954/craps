@@ -82,71 +82,74 @@
              
   <section id="startup-behavior">
 <h1>Startup Behavior<a class="headerlink" href="#startup-behavior" title="Link to this heading"></a></h1>
-<p>RoyalCraps determines its startup behavior by checking whether a saved
-current game exists.</p>
+<p>Royal Craps determines its startup behavior by checking whether an always
+present file exists. Looks for <code class="docutils literal notranslate"><span class="pre">$HOME/.local/share/royalcraps/config.yaml</span></code></p>
 <section id="first-startup">
 <h2>First Startup<a class="headerlink" href="#first-startup" title="Link to this heading"></a></h2>
-<p>If no saved current game is found, RoyalCraps performs the following steps:</p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> exists, Royal Craps performs the
+following steps:</p>
 <ol class="arabic simple">
-<li><p>Create a new player named <code class="docutils literal notranslate"><span class="pre">Unnamed</span></code>.</p></li>
-<li><p>Set the player’s bank to <code class="docutils literal notranslate"><span class="pre">10,000</span></code>.</p></li>
-<li><p>Select the default table, <code class="docutils literal notranslate"><span class="pre">Las</span> <span class="pre">Vegas</span> <span class="pre">Daytime</span></code>.</p></li>
-<li><p>Display <a class="reference internal" href="design-doc.html#screencrapstable-crc-card"><span class="std std-ref">ScreenCrapsTable</span></a>.</p></li>
-</ol>
-<p>The game is automatically saved under the name <code class="docutils literal notranslate"><span class="pre">Unnamed</span></code> when the game
-ends.</p>
-<section id="player-configuration-during-first-startup">
-<h3>Player Configuration During First Startup<a class="headerlink" href="#player-configuration-during-first-startup" title="Link to this heading"></a></h3>
-<p>During the first session, the player can use
-<code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">-&gt;</span> <span class="pre">Configure</span></code> to perform the following operations.</p>
-<dl>
-<dt>Rename Player</dt><dd><p>Prompts for a new player name and renames the current player.
-The associated save file or files are renamed accordingly.</p>
-</dd>
-<dt>New Player</dt><dd><p>Prompts for the name of a new player.</p>
-<p>Before switching players, RoyalCraps saves the current player.  It
-then creates and activates the new player with the following defaults:</p>
+<li><p>Creates the user directory structure for the game in $HOME.</p></li>
+<li><p>Populates the directory structure with packaged default YAML files.
+These include:</p>
 <ul class="simple">
-<li><p>Bank: <code class="docutils literal notranslate"><span class="pre">10,000</span></code></p></li>
-<li><p>Table: the currently selected table</p></li>
-<li><p>Game state: reset for the new player</p></li>
+<li><p>default <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.</p></li>
+<li><p>default player <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code>.</p></li>
+<li><p>packaged <strong>buddy</strong> player YAML files.</p></li>
+<li><p>packaged table YAML files.</p></li>
 </ul>
-</dd>
-<dt>Choose Player</dt><dd><p>Because no other players exist during the first session, RoyalCraps
-displays the following message and makes no change:</p>
-<p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">other</span> <span class="pre">players</span> <span class="pre">to</span> <span class="pre">choose</span> <span class="pre">from</span> <span class="pre">at</span> <span class="pre">this</span> <span class="pre">time.</span></code></p>
-</dd>
-</dl>
-</section>
+</li>
+<li><p>default <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> specifies player <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code>.</p></li>
+<li><p>default <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> specifies table <code class="docutils literal notranslate"><span class="pre">Las</span> <span class="pre">Vegas</span> <span class="pre">Strip</span></code>.</p></li>
+<li><p>default <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code> specifies starting bank at $10,000.</p></li>
+<li><p>Royal Craps continues start up as normal</p></li>
+<li><p>Game begins with full screen <a class="reference internal" href="design-doc.html#screencrapstable-crc-card"><span class="std std-ref">ScreenCrapsTable</span></a>.</p></li>
+<li><p>If user-player name == <code class="docutils literal notranslate"><span class="pre">unnamed</span></code> then message area displays a
+reminder to change name.</p></li>
+</ol>
 </section>
 <section id="subsequent-startups">
 <h2>Subsequent Startups<a class="headerlink" href="#subsequent-startups" title="Link to this heading"></a></h2>
-<p>If a saved current game exists, RoyalCraps:</p>
 <ol class="arabic simple">
-<li><p>Loads the last saved game.</p></li>
-<li><p>Restores the associated player, bank, table, and game state.</p></li>
-<li><p>Displays <a class="reference internal" href="design-doc.html#screencrapstable-crc-card"><span class="std std-ref">ScreenCrapsTable</span></a>.</p></li>
-<li><p>Allows the player to continue from the point at which the game was
-last saved.</p></li>
+<li><p>Reads <code class="docutils literal notranslate"><span class="pre">$HOME/.local/share/royalcraps/config.yaml</span></code>.</p></li>
+<li><p>Loads the last player YAML.</p></li>
+<li><p>Loads last table YAML.</p></li>
+<li><p>Loads last set of buddy players.</p></li>
+<li><p>Game begins with full screen <a class="reference internal" href="design-doc.html#screencrapstable-crc-card"><span class="std std-ref">ScreenCrapsTable</span></a>.</p></li>
+<li><p>if player name == <code class="docutils literal notranslate"><span class="pre">unnamed</span></code> then message area displays a
+reminder to change name.</p></li>
 </ol>
-<section id="player-configuration-during-subsequent-startups">
-<h3>Player Configuration During Subsequent Startups<a class="headerlink" href="#player-configuration-during-subsequent-startups" title="Link to this heading"></a></h3>
-<p>During subsequent sessions, the player can use
-<code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">-&gt;</span> <span class="pre">Configure</span></code> to perform the following operations.</p>
+<section id="player-configuration-options">
+<h3>Player Configuration Options<a class="headerlink" href="#player-configuration-options" title="Link to this heading"></a></h3>
+<p>At any time, the player can select <code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">-&gt;</span> <span class="pre">Configure</span></code> to perform
+the following operations available from the <code class="docutils literal notranslate"><span class="pre">Configure</span></code> menu:</p>
 <dl>
-<dt>Choose Player</dt><dd><p>Displays the list of available players and prompts the player to
+<dt>Rename Player</dt><dd><p>Prompts for a new name and a brief player description.</p>
+<p>Renames the currently active player to the new name.</p>
+<p>The currently active player YAML file is renamed accordingly.</p>
+<p>Game carries on. Screens are refreshed with new name.</p>
+</dd>
+<dt>New Player</dt><dd><p>Prompts for the name and a brief player description.</p>
+<p>Creates a new player YAML file.</p>
+<p>Name must be unique among the player files.</p>
+<p>Does <em>not</em> automatically switch to new player.</p>
+<p>Consider option for UI to ask to switch to it immediately.</p>
+<p>New player starts with these defaults:</p>
+<ul class="simple">
+<li><p>Bank: <code class="docutils literal notranslate"><span class="pre">$10,000</span></code></p></li>
+<li><p>Empty stats and session history</p></li>
+</ul>
+</dd>
+<dt>Choose Player</dt><dd><p>Displays a list of available players and prompts the player to
 select one.</p>
-<p>Before switching players, RoyalCraps saves the current player.  It
-then loads the selected player’s saved game, including that player’s
-table and game state.</p>
-</dd>
-<dt>New Player</dt><dd><p>Prompts for the name of a new player.</p>
-<p>The current player is saved before the new player is created.  The
-new player is initialized with a bank of <code class="docutils literal notranslate"><span class="pre">10,000</span></code> and uses the
-currently selected table with a reset game state.</p>
-</dd>
-<dt>Rename Player</dt><dd><p>Prompts for a new player name and renames the current player.
-The associated save file or files are renamed accordingly.</p>
+<p>Selecting the already current player is a No-op.</p>
+<p>When switching players:</p>
+<ul class="simple">
+<li><p>Clears current player active bets if any.</p></li>
+<li><p>Saves the current player to YAML file.</p></li>
+<li><p>Loads the selected player’s YAML file.</p></li>
+<li><p>Game continues using the currently active table.</p></li>
+</ul>
 </dd>
 </dl>
 </section>

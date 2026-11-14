@@ -138,6 +138,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6cd7f5f5781e83505e1af34f832243d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2267009d018f4ecc387791551849fe21" id="r_a2267009d018f4ecc387791551849fe21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2267009d018f4ecc387791551849fe21">onBetMade</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> betId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> contractAmount, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> oddsAmount, unsigned pivot)</td></tr>
 <tr class="separator:a2267009d018f4ecc387791551849fe21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af95151404f8caaec4c227a792610fd27" id="r_af95151404f8caaec4c227a792610fd27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af95151404f8caaec4c227a792610fd27">onBetChanged</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> betId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> contractAmount, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> oddsAmount, unsigned pivot)</td></tr>
+<tr class="separator:af95151404f8caaec4c227a792610fd27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b57dd9402c160a5b73c06c4a01fa407" id="r_a6b57dd9402c160a5b73c06c4a01fa407"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b57dd9402c160a5b73c06c4a01fa407">onBetResolved</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> betName, <a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a> betId, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amountWin, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> amountLose)</td></tr>
 <tr class="separator:a6b57dd9402c160a5b73c06c4a01fa407"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -254,6 +256,47 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af95151404f8caaec4c227a792610fd27" name="af95151404f8caaec4c227a792610fd27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af95151404f8caaec4c227a792610fd27">&#9670;&#160;</a></span>onBetChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WindowPlayerArea::onBetChanged </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a4c85ae32d62a87e464aca9a0a6e19e42">Craps::BetId</a></td>          <td class="paramname"><span class="paramname"><em>betId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a></td>          <td class="paramname"><span class="paramname"><em>betName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>contractAmount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1Money.html">Gen::Money</a></td>          <td class="paramname"><span class="paramname"><em>oddsAmount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -378,7 +421,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

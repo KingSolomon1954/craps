@@ -1,12 +1,15 @@
 var searchData=
 [
-  ['screenbase_0',['ScreenBase',['../classCui_1_1ScreenBase.html',1,'Cui']]],
-  ['screencrapstable_1',['ScreenCrapsTable',['../classCui_1_1ScreenCrapsTable.html',1,'Cui']]],
-  ['sessionhistory_2',['SessionHistory',['../classCraps_1_1SessionHistory.html',1,'Craps']]],
-  ['sessionsummary_3',['SessionSummary',['../classCtrl_1_1SessionSummary.html',1,'Ctrl']]],
-  ['signalhandler_4',['SignalHandler',['../classGen_1_1SignalHandler.html',1,'Gen']]],
-  ['stringutils_5',['StringUtils',['../classGen_1_1StringUtils.html',1,'Gen']]],
-  ['summary_6',['Summary',['../structCraps_1_1SessionHistory_1_1Summary.html',1,'Craps::SessionHistory']]],
-  ['surfacebase_7',['SurfaceBase',['../classCui_1_1SurfaceBase.html',1,'Cui']]],
-  ['surfacemanager_8',['SurfaceManager',['../classCui_1_1SurfaceManager.html',1,'Cui']]]
+  ['repeaters_0',['Repeaters',['../classCraps_1_1Repeaters.html',1,'Craps']]],
+  ['reqautofill_1',['ReqAutoFill',['../structCtrl_1_1ReqAutoFill.html',1,'Ctrl']]],
+  ['reqmakebet_2',['ReqMakeBet',['../structCtrl_1_1ReqMakeBet.html',1,'Ctrl']]],
+  ['reqoddsbet_3',['ReqOddsBet',['../structCtrl_1_1ReqOddsBet.html',1,'Ctrl']]],
+  ['reqquickbet_4',['ReqQuickBet',['../structCtrl_1_1ReqQuickBet.html',1,'Ctrl']]],
+  ['reqrolldice_5',['ReqRollDice',['../structCtrl_1_1ReqRollDice.html',1,'Ctrl']]],
+  ['reqswitchplayer_6',['ReqSwitchPlayer',['../structCtrl_1_1ReqSwitchPlayer.html',1,'Ctrl']]],
+  ['reqterminate_7',['ReqTerminate',['../structCtrl_1_1ReqTerminate.html',1,'Ctrl']]],
+  ['rollstats_8',['RollStats',['../classCraps_1_1RollStats.html',1,'Craps']]],
+  ['rspmakebet_9',['RspMakeBet',['../structCtrl_1_1RspMakeBet.html',1,'Ctrl']]],
+  ['rspoddsbet_10',['RspOddsBet',['../structCtrl_1_1RspOddsBet.html',1,'Ctrl']]],
+  ['rspswitchplayer_11',['RspSwitchPlayer',['../structCtrl_1_1RspSwitchPlayer.html',1,'Ctrl']]]
 ];

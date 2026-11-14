@@ -101,54 +101,62 @@ $(function(){ initResizable(false); });
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="CrapsTypes_8h_source.html">craps/CrapsTypes.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="EnumBetName_8h_source.html">craps/EnumBetName.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="LastRollStats_8h_source.html">craps/LastRollStats.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="MoneyUtils_8h_source.html">gen/MoneyUtils.h</a>&gt;</code><br />
-<code>#include &lt;atomic&gt;</code><br />
+<code>#include &lt;<a class="el" href="ErrorPass_8h_source.html">gen/ErrorPass.h</a>&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
-<code>#include &lt;chrono&gt;</code><br />
-<code>#include &lt;memory&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for GameEvents.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="GameEvents_8h__incl.png" border="0" usemap="#asrc_2lib-controller_2include_2controller_2GameEvents_8h" alt=""/></div>
 <map name="asrc_2lib-controller_2include_2controller_2GameEvents_8h" id="asrc_2lib-controller_2include_2controller_2GameEvents_8h">
-<area shape="rect" title=" " alt="" coords="490,5,628,60"/>
-<area shape="rect" href="CrapsTypes_8h.html" title=" " alt="" coords="123,108,270,133"/>
-<area shape="poly" title=" " alt="" coords="490,53,258,107,257,102,489,48"/>
-<area shape="rect" title=" " alt="" coords="403,255,462,280"/>
-<area shape="poly" title=" " alt="" coords="513,62,486,83,464,109,449,142,440,178,434,241,429,240,434,177,444,141,459,107,482,79,509,58"/>
-<area shape="rect" title=" " alt="" coords="318,181,395,207"/>
-<area shape="poly" title=" " alt="" coords="492,63,452,83,415,110,389,140,370,170,366,167,385,136,412,106,449,79,489,58"/>
-<area shape="rect" href="EnumBetName_8h.html" title=" " alt="" coords="474,108,644,133"/>
-<area shape="poly" title=" " alt="" coords="562,60,562,94,556,94,556,60"/>
-<area shape="rect" href="MoneyUtils_8h.html" title=" " alt="" coords="695,108,831,133"/>
-<area shape="poly" title=" " alt="" coords="622,58,724,100,722,105,620,63"/>
-<area shape="rect" title=" " alt="" coords="855,108,922,133"/>
-<area shape="poly" title=" " alt="" coords="629,49,842,105,841,110,628,55"/>
-<area shape="rect" title=" " alt="" coords="946,108,1012,133"/>
-<area shape="poly" title=" " alt="" coords="629,44,933,105,932,110,628,49"/>
-<area shape="poly" title=" " alt="" coords="124,134,74,144,32,160,18,169,10,180,9,191,17,205,42,223,81,237,129,248,184,255,297,263,389,264,389,269,296,268,183,260,128,253,79,242,40,228,13,208,4,192,5,178,14,165,30,155,73,139,122,129"/>
-<area shape="poly" title=" " alt="" coords="223,131,319,173,317,178,221,136"/>
-<area shape="rect" title=" " alt="" coords="28,181,90,207"/>
-<area shape="poly" title=" " alt="" coords="175,136,95,177,92,173,173,131"/>
-<area shape="rect" title=" " alt="" coords="114,181,177,207"/>
-<area shape="poly" title=" " alt="" coords="190,135,164,172,160,169,186,132"/>
-<area shape="rect" href="Uuid_8h.html" title=" " alt="" coords="201,181,293,207"/>
-<area shape="poly" title=" " alt="" coords="207,132,233,169,229,172,203,135"/>
-<area shape="poly" title=" " alt="" coords="278,204,391,247,389,252,276,209"/>
-<area shape="poly" title=" " alt="" coords="551,136,453,246,449,243,547,132"/>
-<area shape="rect" title=" " alt="" coords="521,181,597,207"/>
-<area shape="poly" title=" " alt="" coords="562,134,562,168,556,168,556,134"/>
-<area shape="rect" title=" " alt="" coords="622,181,678,207"/>
-<area shape="poly" title=" " alt="" coords="575,131,625,170,622,175,572,135"/>
-<area shape="poly" title=" " alt="" coords="759,135,733,172,713,192,691,209,636,235,578,252,522,262,476,267,475,262,522,257,577,247,634,230,688,204,710,188,728,168,754,132"/>
-<area shape="rect" title=" " alt="" coords="752,181,827,207"/>
-<area shape="poly" title=" " alt="" coords="770,133,783,168,778,170,765,135"/>
-<area shape="rect" title=" " alt="" coords="851,181,926,207"/>
-<area shape="poly" title=" " alt="" coords="784,131,857,172,855,177,782,136"/>
-<area shape="rect" title=" " alt="" coords="950,181,1037,207"/>
-<area shape="poly" title=" " alt="" coords="801,131,944,175,943,180,799,136"/>
-<area shape="rect" title=" " alt="" coords="1061,181,1193,207"/>
-<area shape="poly" title=" " alt="" coords="822,131,1055,176,1054,181,821,136"/>
+<area shape="rect" title=" " alt="" coords="303,5,441,60"/>
+<area shape="rect" href="CrapsTypes_8h.html" title=" " alt="" coords="976,108,1123,133"/>
+<area shape="poly" title=" " alt="" coords="442,40,962,106,962,111,442,45"/>
+<area shape="rect" title=" " alt="" coords="516,255,575,280"/>
+<area shape="poly" title=" " alt="" coords="357,61,339,93,326,131,322,170,326,188,335,205,346,214,362,223,405,238,503,258,502,263,404,243,359,228,343,219,331,208,321,190,317,171,320,130,334,91,352,59"/>
+<area shape="rect" href="EnumBetName_8h.html" title=" " alt="" coords="352,108,523,133"/>
+<area shape="poly" title=" " alt="" coords="394,58,422,95,418,99,390,62"/>
+<area shape="rect" href="LastRollStats_8h.html" title=" " alt="" coords="114,108,273,133"/>
+<area shape="poly" title=" " alt="" coords="319,62,231,104,228,100,316,58"/>
+<area shape="rect" href="MoneyUtils_8h.html" title=" " alt="" coords="125,181,261,207"/>
+<area shape="poly" title=" " alt="" coords="303,46,245,56,185,71,134,88,116,99,103,110,99,119,99,127,108,144,128,160,152,173,150,178,125,164,104,147,93,128,94,117,99,106,112,94,132,84,183,65,243,51,302,41"/>
+<area shape="rect" href="ErrorPass_8h.html" title=" " alt="" coords="573,108,696,133"/>
+<area shape="poly" title=" " alt="" coords="442,54,587,101,586,106,441,59"/>
+<area shape="poly" title=" " alt="" coords="1052,134,1047,171,1039,191,1026,209,992,228,944,242,886,253,822,260,692,268,589,269,589,264,692,262,821,255,885,247,943,237,990,223,1022,205,1035,189,1042,169,1047,133"/>
+<area shape="rect" title=" " alt="" coords="1204,181,1281,207"/>
+<area shape="poly" title=" " alt="" coords="1081,131,1199,174,1198,179,1079,136"/>
+<area shape="rect" title=" " alt="" coords="1306,181,1369,207"/>
+<area shape="poly" title=" " alt="" coords="1098,131,1293,179,1292,184,1096,136"/>
+<area shape="rect" title=" " alt="" coords="810,181,873,207"/>
+<area shape="poly" title=" " alt="" coords="1017,136,887,180,885,175,1015,131"/>
+<area shape="rect" title=" " alt="" coords="897,181,1012,207"/>
+<area shape="poly" title=" " alt="" coords="1036,135,983,175,980,171,1033,131"/>
+<area shape="rect" href="Uuid_8h.html" title=" " alt="" coords="1087,181,1179,207"/>
+<area shape="poly" title=" " alt="" coords="1065,131,1111,170,1107,174,1061,135"/>
+<area shape="poly" title=" " alt="" coords="1087,206,1068,209,796,243,589,265,588,259,795,238,1068,204,1087,201"/>
+<area shape="poly" title=" " alt="" coords="441,133,449,167,466,205,488,228,512,245,509,250,484,232,462,208,444,169,436,134"/>
+<area shape="rect" title=" " alt="" coords="477,181,553,207"/>
+<area shape="poly" title=" " alt="" coords="452,131,494,170,490,174,448,135"/>
+<area shape="rect" title=" " alt="" coords="345,181,401,207"/>
+<area shape="poly" title=" " alt="" coords="429,135,395,173,391,169,425,132"/>
+<area shape="poly" title=" " alt="" coords="196,134,196,168,191,168,191,134"/>
+<area shape="poly" title=" " alt="" coords="250,204,503,255,502,260,249,209"/>
+<area shape="rect" title=" " alt="" coords="5,255,80,280"/>
+<area shape="poly" title=" " alt="" coords="170,209,81,251,79,246,168,204"/>
+<area shape="rect" title=" " alt="" coords="104,255,179,280"/>
+<area shape="poly" title=" " alt="" coords="187,209,160,245,156,242,183,205"/>
+<area shape="rect" title=" " alt="" coords="203,255,290,280"/>
+<area shape="poly" title=" " alt="" coords="204,205,232,242,228,245,200,209"/>
+<area shape="rect" title=" " alt="" coords="314,255,446,280"/>
+<area shape="poly" title=" " alt="" coords="224,204,338,247,336,252,222,209"/>
+<area shape="poly" title=" " alt="" coords="630,135,562,244,557,242,625,132"/>
+<area shape="poly" title=" " alt="" coords="669,131,798,175,796,180,667,136"/>
+<area shape="poly" title=" " alt="" coords="617,136,548,176,545,172,614,131"/>
+<area shape="rect" title=" " alt="" coords="628,181,695,207"/>
+<area shape="poly" title=" " alt="" coords="642,133,655,168,650,170,637,135"/>
+<area shape="rect" title=" " alt="" coords="719,181,785,207"/>
+<area shape="poly" title=" " alt="" coords="655,131,722,172,720,176,652,136"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -156,49 +164,67 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="GameEvents_8h__dep__incl.png" border="0" usemap="#asrc_2lib-controller_2include_2controller_2GameEvents_8hdep" alt=""/></div>
 <map name="asrc_2lib-controller_2include_2controller_2GameEvents_8hdep" id="asrc_2lib-controller_2include_2controller_2GameEvents_8hdep">
-<area shape="rect" title=" " alt="" coords="803,5,941,60"/>
+<area shape="rect" title=" " alt="" coords="937,5,1076,60"/>
 <area shape="rect" href="EventHandler_8h.html" title=" " alt="" coords="177,108,316,163"/>
-<area shape="poly" title=" " alt="" coords="790,43,579,67,454,86,329,111,317,114,315,108,327,105,453,81,579,62,789,38"/>
+<area shape="poly" title=" " alt="" coords="924,40,806,48,657,61,493,82,329,111,317,113,315,108,327,105,492,76,657,56,806,43,923,35"/>
 <area shape="rect" href="EventHandler_8cpp.html" title=" " alt="" coords="5,211,168,251"/>
-<area shape="poly" title=" " alt="" coords="789,37,637,40,454,50,365,60,284,73,216,89,167,110,141,132,121,159,95,211,91,209,116,156,137,128,164,106,214,84,283,67,364,55,454,45,637,34,789,31"/>
+<area shape="poly" title=" " alt="" coords="924,40,730,49,494,64,283,85,209,97,167,110,141,132,121,159,95,211,91,209,116,156,137,128,164,106,207,92,282,79,493,59,730,44,923,35"/>
 <area shape="rect" href="GameEvents_8cpp.html" title=" " alt="" coords="341,115,499,155"/>
-<area shape="poly" title=" " alt="" coords="790,52,659,78,513,111,485,118,484,113,511,105,658,73,789,47"/>
+<area shape="poly" title=" " alt="" coords="924,46,735,71,513,111,483,118,481,113,511,105,734,66,923,41"/>
 <area shape="rect" href="CrapsTable_8cpp.html" title=" " alt="" coords="524,123,751,148"/>
-<area shape="poly" title=" " alt="" coords="799,68,665,125,663,120,797,63"/>
+<area shape="poly" title=" " alt="" coords="925,59,680,125,679,120,923,54"/>
 <area shape="rect" href="Player_8cpp.html" title=" " alt="" coords="775,123,969,148"/>
-<area shape="poly" title=" " alt="" coords="875,74,875,122,869,122,869,74"/>
-<area shape="rect" href="CuiReceiver_8h.html" title=" " alt="" coords="849,299,1020,339"/>
-<area shape="poly" title=" " alt="" coords="945,65,967,84,984,107,993,132,996,159,994,187,988,214,970,263,949,300,945,297,965,260,983,212,989,186,991,159,988,134,979,109,963,87,941,69"/>
+<area shape="poly" title=" " alt="" coords="962,70,889,125,886,120,959,66"/>
+<area shape="rect" href="CuiReceiver_8h.html" title=" " alt="" coords="781,299,952,339"/>
+<area shape="poly" title=" " alt="" coords="1006,74,998,118,984,164,962,205,936,243,887,300,883,297,932,239,957,202,979,162,993,117,1001,73"/>
+<area shape="rect" href="CuiSender_8h.html" title=" " alt="" coords="1467,115,1626,155"/>
+<area shape="poly" title=" " alt="" coords="1090,47,1467,117,1466,122,1089,52"/>
+<area shape="rect" href="CuiSender_8cpp.html" title=" " alt="" coords="1385,211,1525,251"/>
+<area shape="poly" title=" " alt="" coords="1090,58,1218,106,1332,160,1423,208,1420,213,1329,164,1216,110,1088,63"/>
 <area shape="rect" href="WorkOrder_8h.html" title=" " alt="" coords="1045,115,1206,155"/>
-<area shape="poly" title=" " alt="" coords="952,63,1079,113,1077,118,950,67"/>
-<area shape="rect" href="CuiSender_8cpp.html" title=" " alt="" coords="1230,115,1370,155"/>
-<area shape="poly" title=" " alt="" coords="956,47,1080,73,1218,105,1244,113,1242,118,1217,111,1079,78,955,52"/>
-<area shape="rect" href="WindowNavBar_8cpp.html" title=" " alt="" coords="1395,115,1549,155"/>
-<area shape="poly" title=" " alt="" coords="956,40,1152,65,1268,83,1383,105,1412,113,1411,118,1382,111,1267,88,1151,70,955,45"/>
+<area shape="poly" title=" " alt="" coords="1050,67,1105,113,1101,117,1047,71"/>
+<area shape="rect" href="OperationManager_8h.html" title=" " alt="" coords="1940,115,2191,155"/>
+<area shape="poly" title=" " alt="" coords="1090,39,1940,120,1940,125,1089,44"/>
+<area shape="rect" href="WindowNavBar_8cpp.html" title=" " alt="" coords="2540,211,2695,251"/>
+<area shape="poly" title=" " alt="" coords="1090,34,1654,59,1971,79,2103,92,2203,105,2306,127,2407,155,2567,208,2566,213,2405,160,2305,133,2202,111,2103,97,1971,85,1653,64,1090,39"/>
 <area shape="poly" title=" " alt="" coords="191,172,120,213,118,208,188,167"/>
 <area shape="rect" href="GameMain_8cpp.html" title=" " alt="" coords="192,211,339,251"/>
 <area shape="poly" title=" " alt="" coords="257,176,264,210,259,211,252,177"/>
 <area shape="rect" href="Globals_8cpp.html" title=" " alt="" coords="363,211,491,251"/>
 <area shape="poly" title=" " alt="" coords="311,167,391,208,389,213,308,171"/>
-<area shape="rect" href="CuiMain_8cpp.html" title=" " alt="" coords="839,394,1031,419"/>
-<area shape="poly" title=" " alt="" coords="937,353,937,394,932,394,932,353"/>
-<area shape="rect" href="CuiReceiver_8cpp.html" title=" " alt="" coords="1055,387,1195,427"/>
-<area shape="poly" title=" " alt="" coords="990,342,1085,384,1082,389,988,347"/>
-<area shape="poly" title=" " alt="" coords="1105,168,1094,189,1085,211,1077,247,1074,275,1076,303,1085,338,1096,363,1111,385,1107,388,1092,366,1080,340,1071,304,1068,275,1072,246,1080,210,1089,187,1101,166"/>
-<area shape="rect" href="CuiThread_8h.html" title=" " alt="" coords="1310,299,1469,339"/>
-<area shape="poly" title=" " alt="" coords="1201,157,1288,186,1340,209,1358,229,1372,253,1388,298,1383,299,1367,256,1354,233,1337,213,1286,191,1200,162"/>
-<area shape="rect" href="WindowAnimation_8cpp.html" title=" " alt="" coords="1421,387,1593,427"/>
-<area shape="poly" title=" " alt="" coords="1206,156,1308,186,1372,208,1436,244,1460,265,1484,297,1495,320,1502,344,1509,386,1503,387,1497,345,1490,322,1479,300,1456,268,1433,248,1370,213,1306,191,1204,162"/>
-<area shape="rect" href="WorkOrderDispatcher_8h.html" title=" " alt="" coords="1095,211,1326,251"/>
-<area shape="poly" title=" " alt="" coords="1154,164,1195,209,1191,212,1150,167"/>
-<area shape="poly" title=" " alt="" coords="1297,342,1000,397,999,391,1296,336"/>
-<area shape="poly" title=" " alt="" coords="1319,345,1184,389,1182,384,1318,340"/>
-<area shape="rect" href="CuiThread_8cpp.html" title=" " alt="" coords="1257,387,1397,427"/>
-<area shape="poly" title=" " alt="" coords="1369,352,1343,388,1338,385,1365,348"/>
-<area shape="poly" title=" " alt="" coords="1428,345,1482,384,1479,389,1425,349"/>
-<area shape="poly" title=" " alt="" coords="1263,254,1351,296,1349,301,1261,259"/>
-<area shape="rect" href="WorkOrderDispatcher_8cpp.html" title=" " alt="" coords="1095,299,1286,339"/>
-<area shape="poly" title=" " alt="" coords="1206,265,1198,299,1192,298,1201,264"/>
+<area shape="rect" href="CuiMain_8cpp.html" title=" " alt="" coords="737,394,929,419"/>
+<area shape="poly" title=" " alt="" coords="857,353,840,395,835,393,852,351"/>
+<area shape="rect" href="CuiReceiver_8cpp.html" title=" " alt="" coords="954,387,1094,427"/>
+<area shape="poly" title=" " alt="" coords="914,343,991,384,988,389,912,348"/>
+<area shape="poly" title=" " alt="" coords="1520,167,1475,212,1471,209,1517,163"/>
+<area shape="rect" href="OperationManager_8cpp.html" title=" " alt="" coords="1729,211,1906,251"/>
+<area shape="poly" title=" " alt="" coords="1615,157,1764,208,1762,213,1614,162"/>
+<area shape="rect" href="MenuBetting_8cpp.html" title=" " alt="" coords="1549,211,1705,251"/>
+<area shape="poly" title=" " alt="" coords="1574,164,1613,209,1608,212,1570,167"/>
+<area shape="poly" title=" " alt="" coords="1096,167,1058,212,1032,253,1017,299,1015,346,1022,386,1016,387,1010,346,1012,298,1027,251,1054,209,1092,164"/>
+<area shape="rect" href="CuiThread_8h.html" title=" " alt="" coords="1027,299,1186,339"/>
+<area shape="poly" title=" " alt="" coords="1096,167,1080,188,1068,212,1064,231,1068,250,1079,275,1093,297,1089,300,1074,278,1063,251,1059,231,1063,210,1076,185,1092,164"/>
+<area shape="rect" href="WindowAnimation_8cpp.html" title=" " alt="" coords="1317,387,1489,427"/>
+<area shape="poly" title=" " alt="" coords="1196,157,1268,184,1321,208,1373,249,1398,274,1414,298,1420,321,1421,345,1412,387,1407,386,1415,345,1415,322,1410,300,1394,278,1369,253,1319,213,1266,189,1194,162"/>
+<area shape="rect" href="WorkOrderDispatcher_8h.html" title=" " alt="" coords="1078,211,1309,251"/>
+<area shape="poly" title=" " alt="" coords="1149,165,1182,209,1177,212,1145,168"/>
+<area shape="poly" title=" " alt="" coords="1035,345,871,397,869,391,1033,340"/>
+<area shape="poly" title=" " alt="" coords="1081,351,1044,388,1040,385,1077,347"/>
+<area shape="rect" href="CuiThread_8cpp.html" title=" " alt="" coords="1118,387,1258,427"/>
+<area shape="poly" title=" " alt="" coords="1136,347,1172,385,1168,388,1132,351"/>
+<area shape="poly" title=" " alt="" coords="1185,340,1339,384,1337,389,1184,345"/>
+<area shape="poly" title=" " alt="" coords="1166,262,1128,300,1124,297,1163,259"/>
+<area shape="rect" href="WorkOrderDispatcher_8cpp.html" title=" " alt="" coords="1210,299,1401,339"/>
+<area shape="poly" title=" " alt="" coords="1231,257,1282,296,1279,301,1228,261"/>
+<area shape="poly" title=" " alt="" coords="2004,163,1868,213,1867,208,2002,158"/>
+<area shape="poly" title=" " alt="" coords="2032,166,1971,213,1947,235,1936,245,1920,253,1877,266,1820,278,1681,296,1532,308,1401,316,1401,311,1531,303,1681,291,1820,273,1876,261,1918,248,1933,240,1944,231,1968,209,2028,162"/>
+<area shape="rect" href="DialogBetAmount_8cpp.html" title=" " alt="" coords="1981,211,2149,251"/>
+<area shape="poly" title=" " alt="" coords="2068,169,2068,211,2063,211,2063,169"/>
+<area shape="rect" href="DialogConfirm_8cpp.html" title=" " alt="" coords="2174,211,2333,251"/>
+<area shape="poly" title=" " alt="" coords="2117,159,2217,208,2214,213,2114,164"/>
+<area shape="rect" href="DialogError_8cpp.html" title=" " alt="" coords="2357,211,2515,251"/>
+<area shape="poly" title=" " alt="" coords="2154,156,2362,208,2360,213,2153,161"/>
+<area shape="poly" title=" " alt="" coords="2205,154,2528,208,2540,210,2539,216,2528,213,2204,160"/>
 </map>
 </div>
 </div>
@@ -229,19 +255,60 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslNewShooter.html">Ctrl::UslNewShooter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslTableBalanceChanged.html">Ctrl::UslTableBalanceChanged</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerBalanceChanged.html">Ctrl::UslPlayerBalanceChanged</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslBetMade.html">Ctrl::UslBetMade</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslBetEvaluationFailed.html">Ctrl::UslBetEvaluationFailed</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslBetRemoved.html">Ctrl::UslBetRemoved</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslBetChanged.html">Ctrl::UslBetChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslBetResolved.html">Ctrl::UslBetResolved</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslAutoFillChanged.html">Ctrl::UslAutoFillChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslQuickBetChanged.html">Ctrl::UslQuickBetChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslTableBetsChanged.html">Ctrl::UslTableBetsChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslTableSessionStatsChanged.html">Ctrl::UslTableSessionStatsChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslTableLastRollStatsChanged.html">Ctrl::UslTableLastRollStatsChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslTableBalanceChanged.html">Ctrl::UslTableBalanceChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerBetsChanged.html">Ctrl::UslPlayerBetsChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerSessionStatsChanged.html">Ctrl::UslPlayerSessionStatsChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerLastRollStatsChanged.html">Ctrl::UslPlayerLastRollStatsChanged</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerBalanceChanged.html">Ctrl::UslPlayerBalanceChanged</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerJoinedTable.html">Ctrl::UslPlayerJoinedTable</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerLeftTable.html">Ctrl::UslPlayerLeftTable</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqMakeBet.html">Ctrl::ReqMakeBet</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspMakeBet.html">Ctrl::RspMakeBet</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqSwitchPlayer.html">Ctrl::ReqSwitchPlayer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The person wants to play as a different player.  <a href="structCtrl_1_1ReqSwitchPlayer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspSwitchPlayer.html">Ctrl::RspSwitchPlayer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslUserPlayerSwitched.html">Ctrl::UslUserPlayerSwitched</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqOddsBet.html">Ctrl::ReqOddsBet</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspOddsBet.html">Ctrl::RspOddsBet</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqRollDice.html">Ctrl::ReqRollDice</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqAutoFill.html">Ctrl::ReqAutoFill</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqQuickBet.html">Ctrl::ReqQuickBet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqTerminate.html">Ctrl::ReqTerminate</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -274,37 +341,56 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac9f88e098f6fe4e4e112eeb05ccb9671">Ctrl::Unset</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a7a5de79675acf4bd51eb799546fc1fa7">Ctrl::ReqRollDice</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a4e226028069555ba3251c970e1e551de">Ctrl::ReqMakeBet</a>
-, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aad9e3b3cce846f95775e43083db749e3">Ctrl::ReqRemoveBet</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3af9c0b6acb5f71a2e971e0f6c3f821e97">Ctrl::ReqOddsBet</a>
 , <br />
-&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a39a4d7aad341bb4976e8efeb3374222a">Ctrl::ReqChangeBet</a>
-, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884">Ctrl::ReqTerminate</a>
+&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aad9e3b3cce846f95775e43083db749e3">Ctrl::ReqRemoveBet</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a390a39d7a6fe90a87574716be07bbddb">Ctrl::ReqAutoFill</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a0660637cac012be8263a6dce5886d759">Ctrl::ReqQuickBet</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a6b5741383d3e1a8ef09c25af0608e122">Ctrl::ReqSwitchPlayer</a>
+, <br />
+&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884">Ctrl::ReqTerminate</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004">Ctrl::RspMakeBet</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a4d78add73a3e2c2e1337307f18eae78c">Ctrl::RspOddsBet</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52">Ctrl::RspRemoveBet</a>
 , <br />
 &#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80">Ctrl::RspChangeBet</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a163a00ecc524dfbdee6da1cff60d2513">Ctrl::RspSwitchPlayer</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ad54394414bcef4b92b44bf2abf41f8ed">Ctrl::UslBettingClosed</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a8ab4ed05add088110149237e8279c61d">Ctrl::UslDiceThrowStart</a>
-, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc">Ctrl::UslDiceNewValue</a>
 , <br />
-&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a5e4356c27e7a2603c194550df8d2ebf0">Ctrl::UslResolveBetsStart</a>
+&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc">Ctrl::UslDiceNewValue</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a5e4356c27e7a2603c194550df8d2ebf0">Ctrl::UslResolveBetsStart</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a114b77429783dcc326d4460b2ca1fab4">Ctrl::UslResolveBetsEnd</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ad6111d74444e4de12b96e7970bf167f2">Ctrl::UslPointEstablished</a>
-, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb">Ctrl::UslSevenOut</a>
 , <br />
-&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac62b18f39537806ea7b4d8557ffea75c">Ctrl::UslPassLineWinner</a>
+&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb">Ctrl::UslSevenOut</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac62b18f39537806ea7b4d8557ffea75c">Ctrl::UslPassLineWinner</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac06fab4a3e7e7248da311ebd73503e5d">Ctrl::UslNewShooter</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac2669feb7491e496e18296a0b6acac40">Ctrl::UslBettingOpened</a>
-, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac16a3dd90af2966c7fa6c42549c6388f">Ctrl::UslBetMade</a>
 , <br />
-&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a123e35f80e3fa66d2e5180a487566dd0">Ctrl::UslBetResolved</a>
-, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a2a7a485679558282089b85a3136bdcb1">Ctrl::UslBetRemoved</a>
+&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3af585f0c7691aa143fefa45d443339cfc">Ctrl::UslCountdownRollDice</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ac16a3dd90af2966c7fa6c42549c6388f">Ctrl::UslBetMade</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a123e35f80e3fa66d2e5180a487566dd0">Ctrl::UslBetResolved</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a38ec1a0493868cf59e4dabd41947f2af">Ctrl::UslBetEvaluationFailed</a>
+, <br />
+&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a2a7a485679558282089b85a3136bdcb1">Ctrl::UslBetRemoved</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aedf4c595aa6b2ddaf3b22460d8a95cf2">Ctrl::UslBetChanged</a>
-, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05">Ctrl::UslTableBalanceChanged</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a5f1bcd900cfb0840e06f5a6d5411ac70">Ctrl::UslAutoFillChanged</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a8f0895a9006f69f4419b8b7bc4570c59">Ctrl::UslQuickBetChanged</a>
+, <br />
+&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd">Ctrl::UslUserPlayerSwitched</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42">Ctrl::UslTableBetsChanged</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587">Ctrl::UslTableSessionStatsChanged</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6">Ctrl::UslTableLastRollStatsChanged</a>
+, <br />
+&#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05">Ctrl::UslTableBalanceChanged</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aaecd0f64c2b8f4251e066b805b587bb8">Ctrl::UslPlayerBetsChanged</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ab66219ca5de591ccbb4d9f188673f0d6">Ctrl::UslPlayerSessionStatsChanged</a>
+, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a21009eb28cb667ad9c2cef8e7386ab79">Ctrl::UslPlayerLastRollStatsChanged</a>
 , <br />
 &#160;&#160;<a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79">Ctrl::UslPlayerBalanceChanged</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5">Ctrl::UslPlayerJoinedTable</a>
 , <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aec8d24f370b0e606012aa12be2233d98">Ctrl::UslPlayerLeftTable</a>
-, <a class="el" href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3af585f0c7691aa143fefa45d443339cfc">Ctrl::UslCountdownRollDice</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a080339ce20c437b0d9a51542a36ee3e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the Event.  <a href="namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3">More...</a><br /></td></tr>
@@ -320,7 +406,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:48 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

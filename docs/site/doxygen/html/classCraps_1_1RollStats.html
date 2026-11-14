@@ -104,14 +104,20 @@ Collaboration diagram for Craps::RollStats:</div>
 <div class="dyncontent">
 <div class="center"><img src="classCraps_1_1RollStats__coll__graph.png" border="0" usemap="#aCraps_1_1RollStats_coll__map" alt="Collaboration graph"/></div>
 <map name="aCraps_1_1RollStats_coll__map" id="aCraps_1_1RollStats_coll__map">
-<area shape="rect" title=" " alt="" coords="5,240,131,265"/>
-<area shape="rect" href="structCraps_1_1Counter.html" title=" " alt="" coords="9,5,127,31"/>
-<area shape="poly" title=" " alt="" coords="71,45,71,240,65,240,65,45"/>
+<area shape="rect" title=" " alt="" coords="98,240,223,265"/>
+<area shape="rect" href="structCraps_1_1Counter.html" title=" " alt="" coords="5,5,124,31"/>
+<area shape="poly" title=" " alt="" coords="59,44,51,81,46,125,50,172,57,194,68,214,82,228,99,238,97,242,79,232,64,218,52,196,45,173,41,125,46,80,54,43"/>
+<area shape="rect" href="classCraps_1_1Repeaters.html" title="Counts how many times a number repeats before a run ends." alt="" coords="190,5,323,31"/>
+<area shape="poly" title=" " alt="" coords="262,45,264,81,261,126,251,174,230,218,215,232,198,242,195,238,212,228,225,214,246,172,256,126,259,81,257,45"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a0458917bdb273d5c32ffc1e02a0f7e8d" id="r_a0458917bdb273d5c32ffc1e02a0f7e8d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCraps_1_1WinLossCounts.html">WinLossCounts</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0458917bdb273d5c32ffc1e02a0f7e8d">simulatedCounts</a> (<a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a> name, unsigned pivot=0) const</td></tr>
+<tr class="separator:a0458917bdb273d5c32ffc1e02a0f7e8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fca0f5b3082fccde41e1341bce21ec5" id="r_a3fca0f5b3082fccde41e1341bce21ec5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCraps_1_1HardwayLossCounts.html">HardwayLossCounts</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fca0f5b3082fccde41e1341bce21ec5">simulatedHardwayLosses</a> (unsigned pivot) const</td></tr>
+<tr class="separator:a3fca0f5b3082fccde41e1341bce21ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e1a8ad2798395ec5010eed67533f10a" id="r_a4e1a8ad2798395ec5010eed67533f10a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e1a8ad2798395ec5010eed67533f10a">reset</a> ()</td></tr>
 <tr class="separator:a4e1a8ad2798395ec5010eed67533f10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ea7d64f53bcfb15cedd5b4408b94b54" id="r_a5ea7d64f53bcfb15cedd5b4408b94b54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ea7d64f53bcfb15cedd5b4408b94b54">merge</a> (const <a class="el" href="classCraps_1_1RollStats.html">RollStats</a> &amp;session)</td></tr>
@@ -139,6 +145,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a025847988c84fd477e45cc55dc268ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f8a6754977d898e1cb6b5f167bd47b6" id="r_a6f8a6754977d898e1cb6b5f167bd47b6"><td class="memItemLeft" align="right" valign="top">std::array&lt; <a class="el" href="structCraps_1_1PointCounts.html">PointCounts</a>, 11 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f8a6754977d898e1cb6b5f167bd47b6">hardwayCounts</a> {}</td></tr>
 <tr class="separator:a6f8a6754977d898e1cb6b5f167bd47b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e531540ede9afc7c9dedd93c967c2a2" id="r_a6e531540ede9afc7c9dedd93c967c2a2"><td class="memItemLeft" align="right" valign="top">std::array&lt; <a class="el" href="structCraps_1_1Counter.html">Counter</a>, 11 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e531540ede9afc7c9dedd93c967c2a2">hardwayEasy</a> {}</td></tr>
+<tr class="separator:a6e531540ede9afc7c9dedd93c967c2a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe52a655be3a71833a90497a4952a27e" id="r_afe52a655be3a71833a90497a4952a27e"><td class="memItemLeft" align="right" valign="top">std::array&lt; <a class="el" href="structCraps_1_1Counter.html">Counter</a>, 11 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe52a655be3a71833a90497a4952a27e">hardwaySeven</a> {}</td></tr>
+<tr class="separator:afe52a655be3a71833a90497a4952a27e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada3e33be734a567a6714071fe3c260f1" id="r_ada3e33be734a567a6714071fe3c260f1"><td class="memItemLeft" align="right" valign="top">std::array&lt; <a class="el" href="structCraps_1_1Counter.html">Counter</a>, 13 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada3e33be734a567a6714071fe3c260f1">pointNumberCounts</a> {}</td></tr>
+<tr class="separator:ada3e33be734a567a6714071fe3c260f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac18d07f04f3a586776799338dd6a93df" id="r_ac18d07f04f3a586776799338dd6a93df"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac18d07f04f3a586776799338dd6a93df">numRolls</a> = 0</td></tr>
 <tr class="separator:ac18d07f04f3a586776799338dd6a93df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a5f66b44b16af86b97054486e502305" id="r_a9a5f66b44b16af86b97054486e502305"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a5f66b44b16af86b97054486e502305">numPointsEstablished</a> = 0</td></tr>
@@ -183,6 +195,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a8b789fe555127127dba94f2e9e4f6f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3dc2d166d6af9768ea47b20f8ded32d" id="r_ad3dc2d166d6af9768ea47b20f8ded32d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCraps_1_1Counter.html">Counter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad3dc2d166d6af9768ea47b20f8ded32d">crapsOnComeOutRoll</a></td></tr>
 <tr class="separator:ad3dc2d166d6af9768ea47b20f8ded32d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50de6c34ed1a46939bf2365eb0d98e17" id="r_a50de6c34ed1a46939bf2365eb0d98e17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50de6c34ed1a46939bf2365eb0d98e17">pointRepeaters</a> {<a class="el" href="namespaceCraps.html#aebcdc669c031d9e6554da04e97b4b4cc">NonSevenNums</a>}</td></tr>
+<tr class="separator:a50de6c34ed1a46939bf2365eb0d98e17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88fb5bf5e093f8d3f30dff849559b831" id="r_a88fb5bf5e093f8d3f30dff849559b831"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88fb5bf5e093f8d3f30dff849559b831">placeRepeaters</a> {<a class="el" href="namespaceCraps.html#ad5e734f7f9340b1bf0c49873663cdc16">PointNums</a>}</td></tr>
+<tr class="separator:a88fb5bf5e093f8d3f30dff849559b831"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="abc58dd21318a2a96061fa7a8f11e5148" name="abc58dd21318a2a96061fa7a8f11e5148"></a>
@@ -255,6 +271,44 @@ Public Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0458917bdb273d5c32ffc1e02a0f7e8d" name="a0458917bdb273d5c32ffc1e02a0f7e8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0458917bdb273d5c32ffc1e02a0f7e8d">&#9670;&#160;</a></span>simulatedCounts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structCraps_1_1WinLossCounts.html">WinLossCounts</a> RollStats::simulatedCounts </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__free.html#ga7182e663179cba6d21c5a6619ffc4c84">BetName</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3fca0f5b3082fccde41e1341bce21ec5" name="a3fca0f5b3082fccde41e1341bce21ec5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fca0f5b3082fccde41e1341bce21ec5">&#9670;&#160;</a></span>simulatedHardwayLosses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structCraps_1_1HardwayLossCounts.html">HardwayLossCounts</a> RollStats::simulatedHardwayLosses </td>
+          <td>(</td>
+          <td class="paramtype">unsigned</td>          <td class="paramname"><span class="paramname"><em>pivot</em></span></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -503,6 +557,34 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6e531540ede9afc7c9dedd93c967c2a2" name="a6e531540ede9afc7c9dedd93c967c2a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e531540ede9afc7c9dedd93c967c2a2">&#9670;&#160;</a></span>hardwayEasy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;<a class="el" href="structCraps_1_1Counter.html">Counter</a>, 11&gt; Craps::RollStats::hardwayEasy {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afe52a655be3a71833a90497a4952a27e" name="afe52a655be3a71833a90497a4952a27e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe52a655be3a71833a90497a4952a27e">&#9670;&#160;</a></span>hardwaySeven</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;<a class="el" href="structCraps_1_1Counter.html">Counter</a>, 11&gt; Craps::RollStats::hardwaySeven {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a83db41d41be3a0a428ee57a08b9fe77d" name="a83db41d41be3a0a428ee57a08b9fe77d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a83db41d41be3a0a428ee57a08b9fe77d">&#9670;&#160;</a></span>numberCounts</h2>
 
@@ -581,6 +663,48 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="structCraps_1_1Counter.html">Counter</a> Craps::RollStats::passWinsComeOut</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88fb5bf5e093f8d3f30dff849559b831" name="a88fb5bf5e093f8d3f30dff849559b831"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88fb5bf5e093f8d3f30dff849559b831">&#9670;&#160;</a></span>placeRepeaters</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a> Craps::RollStats::placeRepeaters {<a class="el" href="namespaceCraps.html#ad5e734f7f9340b1bf0c49873663cdc16">PointNums</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ada3e33be734a567a6714071fe3c260f1" name="ada3e33be734a567a6714071fe3c260f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada3e33be734a567a6714071fe3c260f1">&#9670;&#160;</a></span>pointNumberCounts</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;<a class="el" href="structCraps_1_1Counter.html">Counter</a>, 13&gt; Craps::RollStats::pointNumberCounts {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a50de6c34ed1a46939bf2365eb0d98e17" name="a50de6c34ed1a46939bf2365eb0d98e17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50de6c34ed1a46939bf2365eb0d98e17">&#9670;&#160;</a></span>pointRepeaters</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCraps_1_1Repeaters.html">Repeaters</a> Craps::RollStats::pointRepeaters {<a class="el" href="namespaceCraps.html#aebcdc669c031d9e6554da04e97b4b4cc">NonSevenNums</a>}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -692,7 +816,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 14 2026 19:08:49 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>
