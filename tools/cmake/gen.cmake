@@ -1,4 +1,5 @@
 include(version-vars)
+include(grab-app-exec-name)
 include(setup-build-bin-lib-dirs)
 include(setup-path-to-generators)
 include(disable-ctest-targets)

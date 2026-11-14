@@ -13,6 +13,12 @@ endif
 ifndef D_DOCS
     $(error Parent makefile must define 'D_DOCS')
 endif
+ifndef PROJ_NAME
+    $(error Parent makefile must define 'PROJ_NAME')
+endif
+ifndef APP_EXEC
+    $(error Parent makefile must define 'APP_EXEC')
+endif
 
 release-major: BUMP := major
 release-major: release
@@ -48,20 +54,21 @@ update-changelog:
 _D_REL:=$(D_BLD)/release
 
 create-tarball:
-	APP_VERSION=$$(cat version); \
-	APP_NAME_AND_VERSION="$(APP_NAME)-$${APP_VERSION}" ; \
-	TAR_FILE=$(_D_REL)/$${APP_NAME_AND_VERSION}.tgz; \
-	TAR_TOP=$(_D_REL)/tarball-staging/$${APP_NAME_AND_VERSION}; \
+	PROJ_VERSION=$$(cat version); \
+	PROJ_NAME_AND_VERSION="$(PROJ_NAME)-$${PROJ_VERSION}" ; \
+	APP_EXEC_AND_VERSION="$(APP_EXEC)-$${PROJ_VERSION}" ; \
+	TAR_FILE=$(_D_REL)/$${PROJ_NAME_AND_VERSION}.tgz; \
+	TAR_TOP=$(_D_REL)/tarball-staging/$${PROJ_NAME_AND_VERSION}; \
 	mkdir -p $${TAR_TOP}; \
 	cp -p version $${TAR_TOP}/; \
 	cp -p etc/changelog.md $${TAR_TOP}/; \
-	cp -p _build/debug/bin/$(APP_NAME)  $${TAR_TOP}/$(APP_NAME)-db; \
-	cp -p _build/prod/bin/$(APP_NAME)   $${TAR_TOP}/$(APP_NAME); \
+	cp -p _build/debug/bin/$(APP_EXEC)  $${TAR_TOP}/$(APP_EXEC)-db; \
+	cp -p _build/prod/bin/$(APP_EXEC)   $${TAR_TOP}/$(APP_EXEC); \
 	tar -czf $${TAR_FILE} --directory=$${TAR_TOP}/.. .; \
 	# Create some handoff info to simplify pipeline runs; \
-	echo "$$APP_VERSION"           > $(_D_REL)/app-version; \
-	echo "$$APP_NAME_AND_VERSION"  > $(_D_REL)/app-name; \
-	echo "$$TAR_FILE"              > $(_D_REL)/tarfile-name
+	echo "$$PROJ_VERSION"         > $(_D_REL)/app-version; \
+	echo "$$APP_EXEC_AND_VERSION" > $(_D_REL)/app-name; \
+	echo "$$TAR_FILE"             > $(_D_REL)/tarfile-name
 
 test-tarball:
 	@echo "Testing tarball"

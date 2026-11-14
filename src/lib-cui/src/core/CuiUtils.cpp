@@ -339,6 +339,8 @@ CuiUtils::betToCuiBetName(BetName betName, unsigned pivot)
 
         default: assert(false && "Unhandled BetName");
     }
+    return CuiBetName::DontPassOdds;  // Silence compiler warning.
+                                      // Returning anything
 }
 
 //----------------------------------------------------------------

@@ -66,7 +66,7 @@ The application performs no networking.
 Startup/Shutdown
 ----------------
 
-.. include:: StartupBehavior.rst
+.. include:: StartupBehavior.inc
 
 Threads
 -------
@@ -190,7 +190,7 @@ TBS
 OperationManager CRC Card
 -------------------------
 
-.. include:: OperationManager.rst
+.. include:: OperationManager.inc
 
 
 CuiMain CRC Card
