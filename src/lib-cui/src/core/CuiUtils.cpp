@@ -377,3 +377,37 @@ CuiUtils::getActiveTableStats(Craps::TableStats& tableStats)
 }
 
 //----------------------------------------------------------------
+
+void
+CuiUtils::getUserPlayerStats(Craps::PlayerStats& playerStats)
+{
+    Gen::ErrorPass ep;
+    auto rc = Ctrl::CrapsReaders::readPlayerCurrentStats(
+            userPlayerId(), playerStats, ep); // userPlayerId() throws
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        ep.setErrorType(Gen::ErrorPass::ErrorType::ProgrammingError);
+        EP_TRACE(ep);
+        LOG_ERROR(ep.fullDesc());
+        assert(rc == Gen::ReturnCode::Success && "Missing player stats");
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+CuiUtils::getActiveTableStats(Craps::TableStats& tableStats)
+{
+    Gen::ErrorPass ep;
+    auto rc = Ctrl::CrapsReaders::readTableCurrentStats(
+            activeTableId(), tableStats, ep);  // activeTable() throws
+    if (rc == Gen::ReturnCode::Fail)
+    {
+        ep.setErrorType(Gen::ErrorPass::ErrorType::ProgrammingError);
+        EP_TRACE(ep);
+        LOG_ERROR(ep.fullDesc());
+        assert(rc == Gen::ReturnCode::Success && "Missing table stats");
+    }
+}
+
+//----------------------------------------------------------------
