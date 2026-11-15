@@ -67,6 +67,10 @@ public:
     static constexpr auto KeySoundVolume      = "sound.volume";
     static constexpr auto KeyDebugLogging     = "log.debug";
     static constexpr auto KeyTraceLogging     = "log.trace";
+
+    // Startup. Set in the files layer when no user config.yaml existed,
+    // see ConfigSeed.
+    static constexpr auto KeyStartupFirstRun  = "startup.firstRun";
     
     // Table Setup
     static constexpr auto KeyTableStart          = "table.startTable";

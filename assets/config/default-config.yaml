@@ -1,0 +1,31 @@
+#
+# RoyalCraps user configuration.
+#
+# This file was copied here the first time the game started. It is yours
+# to edit; the game never rewrites it. Where the game last left off
+# (table and players) is remembered separately in state.yaml in the
+# user's state directory (~/.local/state/royalcraps), and that takes
+# priority over the table and players named here. Delete state.yaml to
+# go back to the values below.
+#
+table:
+  startTable: "las-vegas-strip.yaml"
+  startWithLastPlayers: true
+  startPlayers:
+    - "unnamed.yaml"
+    - "arthur.yaml"
+    - "paige.yaml"
+  userIsPlayer: "unnamed.yaml"
+  maxSessions: 50
+  maxRecentRolls: 25
+
+rollHistory:
+  format: 1         # [ 1..4 ]
+  scroll: "up"      # [left | right | up | down]
+
+log:
+  debug: false
+  trace: false
+
+player:
+  maxSessions: 50

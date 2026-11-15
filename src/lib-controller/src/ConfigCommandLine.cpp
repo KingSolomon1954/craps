@@ -44,6 +44,10 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         ConfigManager::KeyDirsSysShared).value();
     std::string usrConfigDir = multiConfig.getString(
         ConfigManager::KeyDirsUsrConfig).value();
+    std::string usrDataDir = multiConfig.getString(
+        ConfigManager::KeyDirsUsrData).value();
+    std::string usrStateDir = multiConfig.getString(
+        ConfigManager::KeyDirsUsrState).value();
     
     options.add_options()
         ("cli", "run as command line program",
@@ -62,6 +66,14 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         
         ("usr-config-dir", "User Config Directory instead of default",
          cxxopts::value<std::string>()->default_value(usrConfigDir))
+
+        ("usr-data-dir", "User Data Directory (tables, players, ...) "
+         "instead of default",
+         cxxopts::value<std::string>()->default_value(usrDataDir))
+
+        ("usr-state-dir", "User State Directory (state.yaml) "
+         "instead of default",
+         cxxopts::value<std::string>()->default_value(usrStateDir))
         
         ("debug", "Enable debug logging",
          cxxopts::value<bool>()->default_value("true"))
@@ -119,6 +131,18 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
     {
         std::string usrConfigStr = result["usr-config-dir"].as<std::string>();
         cfg.set(ConfigManager::KeyDirsUsrConfig, usrConfigStr);
+    }
+
+    if (result.count("usr-data-dir"))
+    {
+        std::string usrDataStr = result["usr-data-dir"].as<std::string>();
+        setUsrDataDir(usrDataStr, cfg);
+    }
+
+    if (result.count("usr-state-dir"))
+    {
+        std::string usrStateStr = result["usr-state-dir"].as<std::string>();
+        cfg.set(ConfigManager::KeyDirsUsrState, usrStateStr);
     }
 
     // Explicitly set these if given on command line even if default.
@@ -180,6 +204,25 @@ ConfigCommandLine::setSysConfigDir(const std::string& sysSharedStr,
     cfg.set(ConfigManager::KeyDirsSysPlayers, sysPlayers.string());
     cfg.set(ConfigManager::KeyDirsSysAudio,   sysAudio.string());
     cfg.set(ConfigManager::KeyDirsSysImages,  sysImages.string());
+}
+
+//----------------------------------------------------------------
+//
+// The user data directory holds the writable tables, players, audio and
+// images directories beneath it. Moving it moves them all.
+//
+void
+ConfigCommandLine::setUsrDataDir(const std::string& usrDataStr,
+                                 Gen::ConfigLayer& cfg)
+{
+    namespace fs = std::filesystem;
+    fs::path usrData = usrDataStr;
+
+    cfg.set(ConfigManager::KeyDirsUsrData,    usrData.string());
+    cfg.set(ConfigManager::KeyDirsUsrTables,  (usrData / "tables").string());
+    cfg.set(ConfigManager::KeyDirsUsrPlayers, (usrData / "players").string());
+    cfg.set(ConfigManager::KeyDirsUsrAudio,   (usrData / "audio").string());
+    cfg.set(ConfigManager::KeyDirsUsrImages,  (usrData / "images").string());
 }
 
 //----------------------------------------------------------------

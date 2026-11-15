@@ -15,6 +15,7 @@ add_library(controller STATIC
     src/ConfigDefaults.cpp
     src/ConfigEnv.cpp
     src/ConfigFiles.cpp
+    src/ConfigSeed.cpp
     src/CrapsReaders.cpp
     src/EventHandler.cpp
     src/GameEvents.cpp
@@ -30,6 +31,7 @@ add_library(controller STATIC
     src/TableManifest.cpp
     src/UndoBet.cpp
     src/UndoManager.cpp
+    src/UserState.cpp
     src/YamlFile.cpp
 )
 

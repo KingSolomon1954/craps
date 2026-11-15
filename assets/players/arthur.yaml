@@ -4,10 +4,10 @@ Player:
   shortDescription: High roller
   fullDescription: Likes to have lots of bets each roll
   Bank:
-    originalStartBalance: 30000
-    sessionStartBalance: 30000
-    refillThreshold: 15000
-    refillAmount: 20000
+    originalStartBalance: 10000
+    sessionStartBalance: 10000
+    refillThreshold: 5000
+    refillAmount: 10000
     bankStats:
       numDeposits: 0
       amtDeposited: 0

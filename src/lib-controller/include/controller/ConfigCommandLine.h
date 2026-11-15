@@ -35,6 +35,8 @@ private:
     static void setAppPath(char* argv[], Gen::ConfigLayer& cfg);
     static void setSysConfigDir(const std::string& sysSharedStr,
                                 Gen::ConfigLayer& cfg);
+    static void setUsrDataDir(const std::string& usrDataStr,
+                              Gen::ConfigLayer& cfg);
 };
 
 /*-----------------------------------------------------------*//**

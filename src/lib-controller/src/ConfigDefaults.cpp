@@ -7,6 +7,8 @@
 #include <controller/ConfigDefaults.h>
 #include <cstdlib>
 #include <filesystem>
+#include <system_error>
+#include <vector>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
 #include <gen/Timepoint.h>
@@ -58,7 +60,9 @@ ConfigDefaults::loadDefaultDirs(Gen::ConfigLayer& cfg)
     namespace fs = std::filesystem;
     
     // { dirs.sysshared } System-wide, shared assets/configs, read-only)
-    fs::path sysShared = "/usr/share/" + Gbl::appNameExec;
+    // Found relative to the executable first so an unpacked tarball
+    // works wherever it was unpacked. See findSysSharedDir().
+    fs::path sysShared = findSysSharedDir();
     cfg.set(ConfigManager::KeyDirsSysShared, sysShared.string());
 
     // { dirs.sysconfig } System-wide, shared configs, read-only)
@@ -129,6 +133,65 @@ ConfigDefaults::loadDefaultDirs(Gen::ConfigLayer& cfg)
     cfg.set(ConfigManager::KeyDirsAdmConfig, admConfig.string());
 }
     
+//----------------------------------------------------------------
+//
+// Directory holding the executable, or empty if it can't be determined.
+// /proc/self/exe is reliable even when the program was found via PATH,
+// unlike argv[0].
+//
+std::string
+ConfigDefaults::exeDir()
+{
+    namespace fs = std::filesystem;
+    std::error_code ec;
+    fs::path exe = fs::read_symlink("/proc/self/exe", ec);
+    if (ec || !exe.has_parent_path())
+    {
+        return "";
+    }
+    return exe.parent_path().string();
+}
+
+//----------------------------------------------------------------
+//
+// Finds where the packaged, read-only assets were installed. First
+// candidate holding config/sys-config.yaml wins:
+//
+//     <exe dir>/../share/royalcraps      unpacked tarball, /opt, ~/apps
+//     /usr/local/share/royalcraps        locally installed
+//     /usr/share/royalcraps              distribution installed
+//
+// If none qualify, returns the last one so that the diagnostic at
+// startup names a conventional location. The command line option
+// --sys-config-dir overrides whatever is found here.
+//
+std::string
+ConfigDefaults::findSysSharedDir()
+{
+    namespace fs = std::filesystem;
+
+    std::vector<fs::path> candidates;
+    const std::string exe = exeDir();
+    if (!exe.empty())
+    {
+        candidates.push_back(
+            (fs::path(exe) / ".." / "share" / Gbl::appNameExec)
+            .lexically_normal());
+    }
+    candidates.push_back(fs::path("/usr/local/share") / Gbl::appNameExec);
+    candidates.push_back(fs::path("/usr/share")       / Gbl::appNameExec);
+
+    for (const auto& c : candidates)
+    {
+        std::error_code ec;
+        if (fs::exists(c / "config" / "sys-config.yaml", ec))
+        {
+            return c.string();
+        }
+    }
+    return candidates.back().string();
+}
+
 //----------------------------------------------------------------
 
 std::string

@@ -33,6 +33,8 @@ public:
 
 private:
     static void loadDefaultDirs(Gen::ConfigLayer& cfg);
+    static std::string findSysSharedDir();
+    static std::string exeDir();
     static std::string getEnvOrDefault(const std::string& envVar,
                                        const std::string& fallback);
     static void loadGameDefaults(Gen::ConfigLayer& cfg);

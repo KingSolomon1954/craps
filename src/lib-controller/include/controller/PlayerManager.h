@@ -50,6 +50,8 @@ public:
     const PlayerManifest::PlayerList& getPlayerList() const;
     const Players& getPlayers()                       const;
     Craps::Player* getUserPlayer()                    const;
+    std::string getUserFileName()                     const;
+    std::vector<std::string> getTablePlayerFileNames() const;
     Craps::Player* getPlayer(
         const Craps::PlayerId& playerId,
         Gen::ErrorPass& ep)                           const;

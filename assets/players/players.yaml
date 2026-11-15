@@ -31,4 +31,9 @@ players:
     shortDescription: Beginning craps player
     fullDescription: Interested in learning.
     fileName: winnifred.yaml
-    
+
+  - playerId: 32a92d72-42f7-401e-bc52-b02f8f061b22
+    playerName: unnamed
+    shortDescription: Please rename me
+    fullDescription: A new player. Use Control, Rename Player to choose a name.
+    fileName: unnamed.yaml

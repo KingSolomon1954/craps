@@ -8,10 +8,12 @@
 #include <cui/core/CuiReceiver.h>
 #include <cui/core/CuiStructs.h>
 #include <cui/core/CuiThread.h>
+#include <cui/dialogs/DialogMessage.h>
 #include <cui/managers/ColorManager.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/screens/ScreenCrapsTable.h>
 #include <cui/layouts/LayoutConsole.h>
+#include <controller/CrapsReaders.h>
 #include <controller/Globals.h>
 #include <cstdio>
 #include <cstdlib>
@@ -206,6 +208,36 @@ CuiMain::run()
     WorkOrderSurface work =
         {.type = SurfaceType::SetSurface,
          .pSurface = &ScreenCrapsTable::instance()
+        };
+    CuiThread::instance().enqueueWork(work);
+
+    remindToNamePlayer();
+}
+
+//----------------------------------------------------------------
+//
+// A new installation starts with a player named "unnamed". Until
+// there is a message area on the main screen, remind the user once at
+// startup with a dialog.
+//
+void
+CuiMain::remindToNamePlayer()
+{
+    if (Ctrl::CrapsReaders::getUserPlayerName() != "unnamed")
+    {
+        return;
+    }
+
+    DialogMessage::MessageText m;
+    m.label  = DialogMessage::MessageLabel::Info;
+    m.brief  = "Welcome! You are playing as \"unnamed\"";
+    m.detail = "Control -> Rename Player will let you choose a name for your "
+               "player once that feature is available.";
+    DialogMessage::instance().configure(m);
+
+    WorkOrderSurface work =
+        {.type = SurfaceType::PushSurface,
+         .pSurface = &DialogMessage::instance()
         };
     CuiThread::instance().enqueueWork(work);
 }

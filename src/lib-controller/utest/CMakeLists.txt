@@ -7,11 +7,13 @@
 add_executable(controller-ut
     utest-controller-main.cpp
     ConfigManagerTest.cpp
+    ConfigSeedTest.cpp
     AutoFillTest.cpp
     LastFillTest.cpp
     PlayerPrefsTest.cpp
     QuickBetTest.cpp
     TableManifestTest.cpp
+    UserStateTest.cpp
     YamlFileTest.cpp
 )
 

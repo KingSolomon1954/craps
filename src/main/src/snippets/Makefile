@@ -1,3 +1,20 @@
+# What you need to do
+#
+# Add --usr-data-dir assets/ to your dev command. Without it, your run
+# seeds copies of the assets players into ~/.local/share and works on
+# those. I updated the two lines in snippets/Makefile. Your command
+# becomes _build/debug/bin/royalcraps --sys-config-dir assets/
+# --usr-config-dir assets/ --usr-data-dir assets/ --debug --trace.
+#
+# Your dev runs will now also write
+# ~/.local/state/royalcraps/state.yaml, which overrides
+# assets/config.yaml on the next run. Delete it or pass --usr-state-dir
+# somewhere else if that gets in the way.
+#
+# To exercise first startup, run with scratch directories:
+# --usr-config-dir /tmp/rc/cfg --usr-data-dir /tmp/rc/data
+# --usr-state-dir /tmp/rc/state.
+#
 
 WORKDIR := /work/craps/_build/debug
 
@@ -27,14 +44,18 @@ run-royalcraps:  # Execute on container
 	    -e LANG=en_US_UTF-8 -e LC_ALL=en_US.UTF-8 \
 	    gcc14-tools bin/royalcraps \
 	    --sys-config-dir /work/craps/assets/ \
-	    --usr-config-dir /work/craps/assets/ \
+	    --usr-config-dir /work/craps/_build/local/share/royalcraps \
+	    --usr-data-dir   /work/craps/_build/local/share/royalcraps \
+	    --usr-state-dir  /work/craps/_build/local/state/royalcraps \
 	--debug --trace
 
 run-royalcraps-local:  # Execute on local host
 	@$(STARTING_FOLDER) \
 	_build/debug/bin/royalcraps \
-	    --sys-config-dir assets/ \
-	    --usr-config-dir assets/ \
+	    --sys-config-dir  assets/ \
+	    --usr-config-dir _build/local/share/royalcraps \
+	    --usr-data-dir   _build/local/share/royalcraps \
+	    --usr-state-dir  _build/local/state/royalcraps \
 	--debug --trace
 
 #-----------------------------
