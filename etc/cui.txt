@@ -761,26 +761,7 @@ Betting Menu
 
         All the Set Flag Bet menus are not sticky, so after selection
         return is to the Betting menu, not the Bet Flags menu.
-    [q] Quick Bet
-
-        Dynamic built menu of quick bets configured prior
-        by the player via the configure menu.
-
-        ┌─────────────────────┐
-        │ Quick Bets          │
-        ├─────────────────────┤
-        │ [a] Pass Line $5    │
-        │ [b] Dont Pass $10   │
-        │ [c] Come Bet  $5    │
-        │ [d] Dont Come $10   │
-        │ [e] Place 6   $12   │
-        │ [f] Place 8   $12   │
-        │ [esc] Back          │
-        └─────────────────────┘
-
-        The several Quick Bets menus are not sticky. After selection
-        return is to the Betting menu, not the Bet Flags menu.
-
+        
     [x] Remove Bets
         Dynamic built menu of player's qualifying bets
 
@@ -819,21 +800,33 @@ Control Menu
     ├────────────────────────┤
     │ [p] Pause              │
     │ [r] Resume             │
-    │ [j] Buddy Joins Table  │
-    │ [l] Buddy Leaves Table │
-    │ [p] Rename Player      │
-    │ [s] Switch To Player   │
-    │ [c] Create New Player  │
-    │ [t] Select Table       │
+    │ [l] Players            │
+    │ [t] Tables             │
     │ [c] Configure          │
-    │ [esc] Back             │
+    │ [. or esc] Back        │
     └────────────────────────┘
-
+    
     [p] Pause  (shown only when running)
         Future - need some sort of indication of paused/running
         Return to sticky Control Menu
     [r] Resume (shown only when paused)
         Return to sticky Control Menu
+
+Player Menu
+───────────
+
+    ┌────────────────────────┐
+    │ Player Menu            │
+    ├────────────────────────┤
+    │ [p] Display Players    │
+    │ [b] Display Buddies    │
+    │ [j] Buddy Joins Table  │
+    │ [l] Buddy Leaves Table │
+    │ [r] Rename Player      │
+    │ [s] Switch To Player   │
+    │ [c] Create New Player  │
+    │ [. or esc] Back        │
+    └────────────────────────┘
 
     [j] Buddy Joins Table
         Dynamic built menu of available stock players
@@ -851,7 +844,7 @@ Control Menu
         │ [k] King Solomon the Supreme    │
         │ [b] Brian the Better Better     │
         │ [d] Dani on Vacation            │
-        │ [esc] Back                      │
+        │ [. or esc] Back                 │
         └─────────────────────────────────┘
 
         Return to sticky Control Menu
@@ -867,10 +860,10 @@ Control Menu
         │ [l] Lenny the Dark Side Champ   │
         │ [w] Winnie the Winner           │
         │ [k] King Royal the Supreme      │
-        │ [esc] Back                      │
+        │ [. or esc] Back                 │
         └─────────────────────────────────┘
 
-        Return to sticky Control Menu
+        Return to sticky Player Menu
 
     [p] Rename Player
         ┌─────────────────────────────────┐
@@ -878,7 +871,7 @@ Control Menu
         ├─────────────────────────────────┤
         │__________<text entry>___________│
         ├─────────────────────────────────┤
-        │ [esc] back              [enter] │
+        │ [. or esc] back         [enter] │
         └─────────────────────────────────┘
         
     [s] Switch To Player
@@ -888,7 +881,7 @@ Control Menu
         │ [1] Queen Solomon               │
         │ [2] John                        │
         │ [3] Bill                        │
-        │ [esc] back                      │
+        │ [. or esc] back                 │
         └─────────────────────────────────┘
 
     [c] Create New Player
@@ -897,95 +890,111 @@ Control Menu
         ├─────────────────────────────────┤
         │__________<text entry>___________│
         ├─────────────────────────────────┤
-        │ [esc] back              [enter] │
+        │ [. or esc] back         [enter] │
         └─────────────────────────────────┘
     
-    [s] Select Table
+Table Menu
+──────────
+
+    ┌────────────────────────┐
+    │ Table Menu             │
+    ├────────────────────────┤
+    │ [d] Display Tables     │
+    │ [s] Switch Table       │
+    │ [c] Create Table       │
+    │ [. or esc] Back        │
+    └────────────────────────┘
+
+    [s] Switch Table
         Dynamic built menu of available tables.
 
         ┌─────────────────────────────────┐
-        │ Select Table to Play            │
+        │ Switch Table                    │
         ├─────────────────────────────────┤
         │ [1] Las Vegas Daytime           │
         │ [2] Las Vegas High Roller       │
         │ [3] Las Vegas 10x Odds          │
-        │ [esc] Back                      │
+        │ [. or esc] Back                 │
         └─────────────────────────────────┘
 
         Return to sticky Control Menu
 
-    [c] Configure
+Configure Menu
+──────────────
 
-        ┌─────────────────────────┐
-        │ Configure               │
-        ├─────────────────────────┤
-        │ [f] Format Roll History │
-        │ [q] Quick Bets          │
-        │ [a] Auto Bets           │
-        │ [t] Timed Rolls         │
-        │ [s] Animation Speed     │
-        │ [. or esc] Back         │
-        └─────────────────────────┘
+    ┌─────────────────────────┐
+    │ Configure               │
+    ├─────────────────────────┤
+    │ [f] Format Roll History │
+    │ [q] Quick Bets          │
+    │ [a] Auto Fill Bets      │
+    │ [t] Timed Rolls         │
+    │ [n] Animation Speed     │
+    │ [s] Sound Settings      │
+    │ [. or esc] Back         │
+    └─────────────────────────┘
 
-        [f] Format Roll History
-            Static menu of choices for formatting roll history line
+    [f] Format Roll History
+        Static menu of choices for formatting roll history line
 
-            ┌─────────────────────────────────────┐
-            │ Format Roll History                 │
-            ├─────────────────────────────────────┤
-            │ [1]   7(3,4) 8(4,4) 6(3,3), 10(6,5) │
-            │ [2]   7(34) 8(44) 6(33) 10(65)      │
-            │ [3]   7,8,6,10                      │
-            │ [4]   7 8 6 10                      │
-            │ [esc] Back                          │
-            └─────────────────────────────────────┘
+        ┌─────────────────────────────────────┐
+        │ Format Roll History                 │
+        ├─────────────────────────────────────┤
+        │ [1]   7(3,4) 8(4,4) 6(3,3), 10(6,5) │
+        │ [2]   7(34) 8(44) 6(33) 10(65)      │
+        │ [3]   7,8,6,10                      │
+        │ [4]   7 8 6 10                      │
+        │ [. or esc] Back                     │
+        └─────────────────────────────────────┘
 
-            Return to sticky Configure Menu
+        Return to sticky Configure Menu
 
-        [q] Quick Bet Setup
-            Dynamically built menu
-            Asterisk means quick bet is already set
-            OK to select it anyway to change amount
-            Enter an amount of zero to remove quick bet
+    [q] Quick Bets
+        Dynamically built menu
+        Prompts with values in parens indicate QuickBet is already configured.
+        OK to select it anyway to change amount
+        Enter an amount of zero to remove quick bet
 
-            ┌─────────────────┐
-            │ Quick Bet Setup │
-            ├─────────────────┤
-            │ [p] Pass Line*  │
-            │ [c] Come Bet*   │
-            │ [d] Dont Pass   │
-            │ [k] Dont Come   │
-            │ [f] Field Bet   │
-            │ [4] Place 4     │
-            │ [5] Place 5     │
-            │ [6] Place 6*    │
-            │ [8] Place 8*    │
-            │ [9] Place 9     │
-            │ [0] Place 10    │
-            │ [s] Hard 4      │
-            │ [t] Hard 6      │
-            │ [u] Hard 8      │
-            │ [v] Hard 10     │
-            │ [e] C&E Bet     │
-            │ [a] Any Craps   │
-            │ [7] Any 7       │
-            │ [h] Horn Bet    │
-            │ [w] World Bet   │
-            │ [r] Remove All  │
-            │ [esc] Back      │
-            │                 │
-            │ * = configured  │
-            └─────────────────┘
+        ┌─────────────────────┐
+        │ Quick Bets          │
+        ├─────────────────────┤
+        │ [p] Pass Line ($10) │
+        │ [c] Come Bet  ($10) │
+        │ [d] Dont Pass ($25) │
+        │ [k] Dont Come ($25) │
+        │ [f] Field Bet       │
+        │ [4] Place 4         │
+        │ [5] Place 5         │
+        │ [6] Place 6   ($12) │
+        │ [8] Place 8   ($12) │
+        │ [9] Place 9         │
+        │ [0] Place 10        │
+        │ [s] Hard 4          │
+        │ [t] Hard 6          │
+        │ [u] Hard 8          │
+        │ [v] Hard 10         │
+        │ [e] C&E Bet         │
+        │ [a] Any Craps       │
+        │ [7] Any 7           │
+        │ [h] Horn Bet        │
+        │ [w] World Bet       │
+        │ [r] Remove All      │
+        │ [. or esc] Back     │
+        └─────────────────────┘
 
-            Selection bring up "Amount" dialog.
-            Returns to sticky Configure Menu
+        Selection bring up "Amount" dialog.
+        Returns to sticky Configure Menu
 
-        [a] Auto Bet Setup
-            Make bets automatically according to player rules and
-            table conditions
-            Future - TODO
-        [t] Timed Rolls
-            Future - TODO
+    [a] Auto Fill Bets
+        Make bets automatically according to player rules and
+        table conditions
+        Future - TODO
+    [t] Timed Rolls
+        Future - TODO
+    [n] Animaction Speed
+        Future - TODO
+    [s] Sound Settings
+        Future - TODO
 
 View Menu
 ─────────
