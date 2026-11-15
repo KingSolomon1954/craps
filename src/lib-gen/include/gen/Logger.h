@@ -9,6 +9,7 @@
 #include <fstream>
 #include <mutex>
 #include <string>
+#include <vector>
 #include <rang.hpp>
 
 namespace Gen {
@@ -19,6 +20,7 @@ public:
     static Logger& instance();
     
     void setOutputFile(const std::string& filename);
+    bool hasOutputFile() const;
     void logDebug(const std::string& msg);
     void logTrace(const std::string& msg);
     void logInfo (const std::string& msg);
@@ -47,6 +49,16 @@ private:
         Warn,
         Error
     };
+
+    // A message logged before there is an output file is formatted
+    // right away (so its timestamp is true) and held here. The next
+    // setOutputFile() writes them ahead of anything else.
+    struct Pending
+    {
+        std::string line;       // Complete, ready to write
+    };
+    static constexpr size_t MaxPending = 1000;
+    std::vector<Pending> pending_;
 
     std::ofstream out_;
     bool consoleEnabled_ = true;

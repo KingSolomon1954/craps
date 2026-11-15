@@ -42,8 +42,9 @@ GameMain::GameMain(int argc, char* argv[])
 {
     instancePtr_ = this;
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
+    logStartBanner();                     // Held until log file is known
     std::unique_ptr<Ctrl::ConfigManager>  pCfg(initConfigManager(argc, argv)); (void) pCfg;
-    setupLogging();                       // After config
+    setupLogging();                       // Log file now known
     std::unique_ptr<Ctrl::EventHandler>   pEventHandler(initEventHandler());   (void) pEventHandler;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
@@ -74,6 +75,20 @@ GameMain::terminateApp()
 //----------------------------------------------------------------
 
 void
+GameMain::logStartBanner()
+{
+    Gen::Logger::instance().logInfo("--------------------------------------");
+    Gen::Logger::instance().logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
+    Gen::Logger::instance().logInfo("--------------------------------------");
+}
+
+//----------------------------------------------------------------
+//
+// Called once configuration is resolved. Messages logged until now
+// were held by the logger; this gives it the log file and they are
+// written first.
+//
+void
 GameMain::setupLogging()
 {
     assert(Gbl::pConfigMgr != nullptr);
@@ -90,16 +105,6 @@ GameMain::setupLogging()
     bool trace = Gbl::pConfigMgr->getBool(ConfigManager::KeyTraceLogging).value();
     Gen::Logger::instance().setTraceLevel(trace);
 
-    // First logging entry
-    Gen::Logger::instance().logInfo("--------------------------------------");
-    Gen::Logger::instance().logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
-    Gen::Logger::instance().logInfo("--------------------------------------");
-    if (Gbl::pConfigMgr->getBool(ConfigManager::KeyStartupFirstRun)
-            .value_or(false))
-    {
-        Gen::Logger::instance().logInfo(
-            "First startup: user files were created from the packaged defaults");
-    }
 }
 
 //----------------------------------------------------------------

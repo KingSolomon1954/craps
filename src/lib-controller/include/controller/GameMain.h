@@ -55,6 +55,7 @@ private:
     Ctrl::PlayerManager*  initPlayerManager();
     
     void                  initView();
+    void                  logStartBanner();
     void                  setupLogging();
     void                  disableConsoleLogging();
     void                  explicitShutdown();

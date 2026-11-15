@@ -9,6 +9,7 @@
 #include <string>
 #include <system_error>
 #include <controller/ConfigManager.h>
+#include <gen/Logger.h>
 #include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
@@ -77,6 +78,9 @@ ConfigSeed::seedUserFiles(const Gen::MultiLayerConfig& multiConfig)
     }
 
     using K = ConfigManager;
+    LOG_INFO(std::string(firstRun ? "First startup" : "Repairing user files") +
+             ": populating user directories from " +
+             multiConfig.getString(K::KeyDirsSysShared).value_or("?"));
     copyMissing(dirKey(multiConfig, K::KeyDirsSysTables),
                 dirKey(multiConfig, K::KeyDirsUsrTables));
     copyMissing(dirKey(multiConfig, K::KeyDirsSysPlayers),
@@ -112,6 +116,7 @@ ConfigSeed::seedUserFiles(const Gen::MultiLayerConfig& multiConfig)
             throw std::runtime_error("Unable to create " + dst.string() +
                                      "; " + ec.message());
         }
+        LOG_INFO("Created " + dst.string());
     }
     return firstRun;
 }
@@ -178,6 +183,7 @@ ConfigSeed::copyMissing(const fs::path& srcDir, const fs::path& dstDir)
                 entry.path().string() + " to " + dst.string() +
                 "; " + e2.message());
         }
+        LOG_INFO("Created " + dst.string());
     }
     if (ec)
     {

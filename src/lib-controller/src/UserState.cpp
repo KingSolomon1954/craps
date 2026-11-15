@@ -7,10 +7,10 @@
 #include <controller/UserState.h>
 #include <algorithm>
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 #include <system_error>
 #include <controller/ConfigManager.h>
+#include <gen/Logger.h>
 #include <gen/MultiLayerConfig.h>
 #include <yaml-cpp/yaml.h>
 
@@ -51,9 +51,10 @@ UserState::loadInto(const Gen::MultiLayerConfig& multiConfig,
         state, whyNot);
     if (!ok)
     {
-        std::cerr << "Ignoring " << file.string() << ": " << whyNot << "\n";
+        LOG_WARN("Ignoring " + file.string() + ": " + whyNot);
         return;
     }
+    LOG_INFO("Loaded " + file.string());
 
     cfg.set(K::KeyTableStart,        state.table);
     cfg.set(K::KeyTableUserIsPlayer, state.userPlayer);

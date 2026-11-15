@@ -143,6 +143,7 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
     {
         std::string usrStateStr = result["usr-state-dir"].as<std::string>();
         cfg.set(ConfigManager::KeyDirsUsrState, usrStateStr);
+        cfg.set(ConfigManager::KeyDirsUsrLog,   usrStateStr);  // Log lives with state
     }
 
     // Explicitly set these if given on command line even if default.

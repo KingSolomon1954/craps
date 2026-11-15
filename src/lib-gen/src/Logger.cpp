@@ -6,6 +6,10 @@
 
 #include <gen/Logger.h>
 #include <cassert>
+#include <cerrno>
+#include <cstring>
+#include <iostream>
+#include <stdexcept>
 #include <chrono>
 #include <iomanip>
 #include <sstream>
@@ -23,12 +27,20 @@ Logger::instance()
 
 //----------------------------------------------------------------
 
+//
+// Switches logging to filename (appending). May be called again to
+// switch to another file. Messages logged before the first call were
+// held in memory; they are written to the new file first, then
+// discarded. If the file can't be opened the previous output file,
+// if any, stays in use and the held messages are kept.
+//
 void
 Logger::setOutputFile(const std::string& filename)
 {
-    out_.open(filename, std::ios::app);
+    std::lock_guard<std::mutex> lock(mutex_);
 
-    if (!out_.is_open())
+    std::ofstream next(filename, std::ios::app);
+    if (!next.is_open())
     {
         int error_number = errno;
 
@@ -37,6 +49,23 @@ Logger::setOutputFile(const std::string& filename)
             std::to_string(error_number);
         throw std::runtime_error(diag);
     }
+
+    for (const auto& p : pending_)
+    {
+        next << p.line << std::endl;
+    }
+    pending_.clear();
+
+    out_ = std::move(next);
+}
+
+//----------------------------------------------------------------
+
+bool
+Logger::hasOutputFile() const
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    return out_.is_open();
 }
 
 //----------------------------------------------------------------
@@ -114,13 +143,20 @@ Logger::log(Level level, const std::string& message)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     
-    assert(out_.is_open());  // User must have already set output file
-           
     std::string ts = timestamp();
     std::string label = " [" + levelToString(level) + "] ";
 
-    // Always write to file
-    out_ << ts << std::left << std::setw(9) <<label << message << std::endl;
+    // Always write to file, or hold until there is one.
+    std::ostringstream line;
+    line << ts << std::left << std::setw(9) << label << message;
+    if (out_.is_open())
+    {
+        out_ << line.str() << std::endl;
+    }
+    else if (pending_.size() < MaxPending)
+    {
+        pending_.push_back({line.str()});
+    }
 
     if (consoleEnabled_)  // Write to console if enabled
     {

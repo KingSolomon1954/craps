@@ -52,6 +52,18 @@ gives a genuine first startup every time, which is how first startup is
 tested; pointing them at the packaged files is how development runs
 from a source tree.
 
+Logging During Startup
+~~~~~~~~~~~~~~~~~~~~~~
+
+The log file is in the user state directory, which is not known until
+configuration is resolved, yet startup itself needs to log. The logger
+therefore holds messages in memory (and still echoes them to the
+console) until it is given its file, then writes them to the file ahead
+of everything else with their original timestamps. If startup fails
+before then, the held messages have already appeared on the console.
+Debug and trace messages are only kept once those levels are known, so
+the earliest messages are informational, warnings and errors.
+
 First Startup
 ~~~~~~~~~~~~~
 

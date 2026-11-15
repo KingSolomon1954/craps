@@ -10,6 +10,7 @@
 #include <controller/ConfigManager.h>
 #include <controller/ConfigSeed.h>
 #include <controller/UserState.h>
+#include <gen/Logger.h>
 #include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
@@ -111,6 +112,7 @@ ConfigFiles::loadSystemConfig(
         multiConfig.getString(ConfigManager::KeyDirsSysConfig).value() + "/sys-config.yaml";
     existsOrThrow(filename);
     yamlToMultiConfig(filename, cfg);
+    LOG_INFO("Loaded " + filename);
 }
 
 //----------------------------------------------------------------
@@ -125,6 +127,7 @@ ConfigFiles::loadUserConfig(
     if (fs::exists(filename))
     {
         yamlToMultiConfig(filename, cfg);
+        LOG_INFO("Loaded " + filename);
     }
 }
 
