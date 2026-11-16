@@ -83,7 +83,8 @@ $(_STA_RESULTS_FILE): _create-sta_dirs
 	    --cppcheck-build-dir=/work/$(_D_STA_FILES) \
             -i $(D_SRC)/main/src/snippets \
 	    --output-file=/work/$(_STA_RESULTS_FILE) \
-	        $(addprefix /work/,$(_D_SRCS))
+	    -i snippets \
+	    $(addprefix /work/,$(_D_SRCS))
 
 static-analysis-clean:
 	rm -rf $(_STA_DIR)
