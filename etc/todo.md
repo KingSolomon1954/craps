@@ -2,6 +2,10 @@
 
 ### Write script to copy files/assets to install locations
 
+### Need an asset reset tool
+- zero stats and other values 
+- for table and players
+
 ### Refund on quit - unresolved bets back to player's bank
 - show a message like: “You left the table with active bets.
 - Your chips have been returned to your bank.”
@@ -9,7 +13,7 @@
 - Add a warning like: “You have active bets. Are you sure
 - you want to quit and abandon them?”
 
-### Repeated bet changes the existing bet: View
+### Inform Player in message area of changed bets
 - RspMakeBet now has changed and previousAmount. Tell the player when a
 - bet made again changed the amount of the one already on the table
 - (e.g. Pass Line $10 -> $20)
@@ -29,15 +33,6 @@
 - needs to carry forward buddy players to the newly switched to table
 - maybe a dialog box should prompt the user to carry forward buddies
 - maybe should be a user prefence how to behave
-
-### Save Config to yaml file
-
-- This will also fix the next issue, remembering user player
-
-### Remember the user player across sessions
-- ConfigManager is read-only, so the user player chosen at runtime is
-- lost at quit. Persist it (small session file?) and honor
-- startWithLastPlayers at startup
 
 ### Need unit test for initial bank money
 
@@ -82,6 +77,10 @@
 
 ## Done
 
+(Done) Static analysis includes all libraries, fixed SA errors\
+(Done) Created MenuPlayer, Improved organization of MenuControl\
+(Done) Implement startup from fresh Installation"\
+(Done) In User Guide, add new section "Configuration"\
 (Done) In User Guide, add new section "Understanding Statistics"\
 (Done) New stats feature - track Repeater bets\
 (Done) Stats for Place, Lay, Buy, Any7, CandE, Horn\

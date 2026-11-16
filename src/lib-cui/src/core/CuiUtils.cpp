@@ -65,10 +65,10 @@ CuiUtils::getWindowRect(WINDOW* pWin)
 {
     int h, w;
     getmaxyx(pWin, h, w);
-    int r, c;
-    getyx(pWin, h, w);
+    int y, x;
+    getyx(pWin, y, x);
     
-    return {r,c,h,w};
+    return {y,x,h,w};
 }
 
 /*-----------------------------------------------------------*//**

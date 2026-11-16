@@ -217,17 +217,17 @@ CrapsBet::checkSideBets()
 bool
 CrapsBet::operator==(const CrapsBet& other) const
 {
-    return pPlayer_        == other.pPlayer_        &&
-           betId_          == other.betId_          &&
-           pivot_          == other.pivot_          &&
-           contractAmount_ == other.contractAmount_ &&
-           oddsAmount_     == other.oddsAmount_     &&
+    return pPlayer_             == other.pPlayer_             &&
+           betId_               == other.betId_               &&
+           pivot_               == other.pivot_               &&
+           contractAmount_      == other.contractAmount_      &&
+           oddsAmount_          == other.oddsAmount_          &&
            placementCommission_ == other.placementCommission_ &&
-           hasDecision_ == other.hasDecision_ &&
-           offComeOutRoll_ == other.offComeOutRoll_ &&
-           distance_       == other.distance_       &&
-           whenCreated_    == other.whenCreated_    &&
-           whenDecided_    == other.whenDecided_;
+           hasDecision_         == other.hasDecision_         &&
+           offComeOutRoll_      == other.offComeOutRoll_      &&
+           distance_            == other.distance_            &&
+           whenCreated_         == other.whenCreated_         &&
+           whenDecided_         == other.whenDecided_;
 }
 
 /*-----------------------------------------------------------*//**
@@ -363,16 +363,16 @@ CrapsBet::evaluate(unsigned point, const Dice& dice,
         case BetName::Place   : rc = evalPlace   (point, dice, rules, dr, ep); break;
         case BetName::Buy     : rc = evalBuy     (point, dice, rules, dr, ep); break;
         case BetName::Lay     : rc = evalLay     (point, dice, rules, dr, ep); break;
-        case BetName::Hardway : rc = evalHardway (point, dice, dr, ep); break;
+        case BetName::Hardway : rc = evalHardway (point, dice, dr, ep);        break;
         case BetName::Field   : rc = evalField   (point, dice, rules, dr, ep); break;
-        case BetName::AnyCraps: rc = evalAnyCraps(point, dice, dr, ep); break;
-        case BetName::AnySeven: rc = evalAnySeven(point, dice, dr, ep); break;
-        case BetName::Any711  : rc = evalAny711  (point, dice, dr, ep); break;
-        case BetName::CandE   : rc = evalCandE   (point, dice, dr, ep); break;
-        case BetName::Horn    : rc = evalHorn    (point, dice, dr, ep); break;
-        case BetName::World   : rc = evalWorld   (point, dice, dr, ep); break;
+        case BetName::AnyCraps: rc = evalAnyCraps(point, dice, dr, ep);        break;
+        case BetName::AnySeven: rc = evalAnySeven(point, dice, dr, ep);        break;
+        case BetName::Any711  : rc = evalAny711  (point, dice, dr, ep);        break;
+        case BetName::CandE   : rc = evalCandE   (point, dice, dr, ep);        break;
+        case BetName::Horn    : rc = evalHorn    (point, dice, dr, ep);        break;
+        case BetName::World   : rc = evalWorld   (point, dice, dr, ep);        break;
         case BetName::Count   : // fall through
-        case BetName::Invalid : return Gen::ReturnCode::Fail;           break;
+        case BetName::Invalid : return Gen::ReturnCode::Fail;                  break;
     }
     if (rc == Gen::ReturnCode::Fail)
     {
