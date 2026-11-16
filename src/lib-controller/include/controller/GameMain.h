@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <controller/UserState.h>
 #include <gen/SignalHandler.h>
 
 namespace Gen {
@@ -54,9 +55,12 @@ private:
     Ctrl::PlayerManager*  initPlayerManager();
     
     void                  initView();
+    void                  logStartBanner();
     void                  setupLogging();
     void                  disableConsoleLogging();
     void                  explicitShutdown();
+    UserState             gatherUserState() const;
+    void                  saveUserState(const UserState& state) const;
     void                  shutdownView();
 };
 

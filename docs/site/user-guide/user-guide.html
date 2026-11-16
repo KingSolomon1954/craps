@@ -55,7 +55,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#system-requirements">System requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-instructions">Installation Instructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#user-interface-overview">User Interface Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-use-specific-features">How to Use Specific Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-appname">Configuring Royal Craps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#where-the-files-are">Where the Files Are</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-config-yaml-file">The <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#choosing-the-table-and-players">Choosing the Table and Players</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#how-appname-remembers">How Royal Craps Remembers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#other-settings">Other Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overriding-settings-temporarily">Overriding Settings Temporarily</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#understanding-appname-statistics">Understanding Royal Craps Statistics</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#where-statistics-are-kept">Where statistics are kept</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#roll-counters-and-streaks">Roll counters and streaks</a><ul>
@@ -151,22 +161,30 @@ features:</p>
 <li><p><a class="reference internal" href="#system-requirements" id="id2">System requirements</a></p></li>
 <li><p><a class="reference internal" href="#installation-instructions" id="id3">Installation Instructions</a></p></li>
 <li><p><a class="reference internal" href="#user-interface-overview" id="id4">User Interface Overview</a></p></li>
-<li><p><a class="reference internal" href="#how-to-use-specific-features" id="id5">How to Use Specific Features</a></p></li>
-<li><p><a class="reference internal" href="#understanding-appname-statistics" id="id6">Understanding Royal Craps Statistics</a></p>
+<li><p><a class="reference internal" href="#configuring-appname" id="id5">Configuring Royal Craps</a></p>
 <ul>
-<li><p><a class="reference internal" href="#where-statistics-are-kept" id="id7">Where statistics are kept</a></p></li>
-<li><p><a class="reference internal" href="#roll-counters-and-streaks" id="id8">Roll counters and streaks</a></p></li>
-<li><p><a class="reference internal" href="#bet-statistics" id="id9">Bet statistics</a></p></li>
-<li><p><a class="reference internal" href="#repeaters" id="id10">Repeaters</a></p></li>
-<li><p><a class="reference internal" href="#bank-statistics" id="id11">Bank statistics</a></p></li>
-<li><p><a class="reference internal" href="#session-history" id="id12">Session history</a></p></li>
-<li><p><a class="reference internal" href="#reading-the-numbers" id="id13">Reading the numbers</a></p></li>
+<li><p><a class="reference internal" href="#where-the-files-are" id="id6">Where the Files Are</a></p></li>
+<li><p><a class="reference internal" href="#the-config-yaml-file" id="id7">The <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> File</a></p></li>
+<li><p><a class="reference internal" href="#choosing-the-table-and-players" id="id8">Choosing the Table and Players</a></p></li>
+<li><p><a class="reference internal" href="#other-settings" id="id9">Other Settings</a></p></li>
+<li><p><a class="reference internal" href="#overriding-settings-temporarily" id="id10">Overriding Settings Temporarily</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#frequently-asked-questions" id="id14">Frequently Asked Questions</a></p></li>
-<li><p><a class="reference internal" href="#troubleshooting" id="id15">Troubleshooting</a></p></li>
-<li><p><a class="reference internal" href="#glossary" id="id16">Glossary</a></p></li>
-<li><p><a class="reference internal" href="#support-contact-details" id="id17">Support Contact Details</a></p></li>
+<li><p><a class="reference internal" href="#understanding-appname-statistics" id="id11">Understanding Royal Craps Statistics</a></p>
+<ul>
+<li><p><a class="reference internal" href="#where-statistics-are-kept" id="id12">Where statistics are kept</a></p></li>
+<li><p><a class="reference internal" href="#roll-counters-and-streaks" id="id13">Roll counters and streaks</a></p></li>
+<li><p><a class="reference internal" href="#bet-statistics" id="id14">Bet statistics</a></p></li>
+<li><p><a class="reference internal" href="#repeaters" id="id15">Repeaters</a></p></li>
+<li><p><a class="reference internal" href="#bank-statistics" id="id16">Bank statistics</a></p></li>
+<li><p><a class="reference internal" href="#session-history" id="id17">Session history</a></p></li>
+<li><p><a class="reference internal" href="#reading-the-numbers" id="id18">Reading the numbers</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#frequently-asked-questions" id="id19">Frequently Asked Questions</a></p></li>
+<li><p><a class="reference internal" href="#troubleshooting" id="id20">Troubleshooting</a></p></li>
+<li><p><a class="reference internal" href="#glossary" id="id21">Glossary</a></p></li>
+<li><p><a class="reference internal" href="#support-contact-details" id="id22">Support Contact Details</a></p></li>
 </ul>
 </nav>
 <section id="introduction">
@@ -185,12 +203,190 @@ features:</p>
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">User Interface Overview</a><a class="headerlink" href="#user-interface-overview" title="Link to this heading"></a></h2>
 <p>&lt; give a high-level overview of the interface&gt;</p>
 </section>
-<section id="how-to-use-specific-features">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">How to Use Specific Features</a><a class="headerlink" href="#how-to-use-specific-features" title="Link to this heading"></a></h2>
-<p>&lt;create a section for each core feature, shows users how it works&gt;</p>
+<section id="configuring-appname">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Configuring Royal Craps</a><a class="headerlink" href="#configuring-appname" title="Link to this heading"></a></h2>
+<p>Royal Craps needs no configuration. The first time it runs it creates what
+it needs and puts you at a table, ready to play. This section is for when
+you want something different: always starting as a particular player, for
+example, or starting without the other players.</p>
+<p>Everything you can set lives in one small text file named <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.</p>
+<section id="where-the-files-are">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Where the Files Are</a><a class="headerlink" href="#where-the-files-are" title="Link to this heading"></a></h3>
+<p>Royal Craps keeps your files in your own home directory. The locations follow
+the usual Linux (XDG) conventions, and each can be moved by setting the
+environment variable shown.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34.0%" />
+<col style="width: 66.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Location</p></th>
+<th class="head"><p>What is there</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">~/.config/royalcraps</span></code>
+(<code class="docutils literal notranslate"><span class="pre">$XDG_CONFIG_HOME</span></code>)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, your settings. This is the only file in this
+section that you edit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">~/.local/share/royalcraps</span></code>
+(<code class="docutils literal notranslate"><span class="pre">$XDG_DATA_HOME</span></code>)</p></td>
+<td><p>Your players and tables, with their bank balances and statistics.
+Royal Craps saves these for you.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">~/.local/state/royalcraps</span></code>
+(<code class="docutils literal notranslate"><span class="pre">$XDG_STATE_HOME</span></code>)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">state.yaml</span></code>, which remembers where you left off, and the log
+file <code class="docutils literal notranslate"><span class="pre">royalcraps.log</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Players and tables are changed by the game every time you play. Do not
+edit them by hand while the game is running, and make a copy first if
+you want to experiment.</p>
+</div>
+</section>
+<section id="the-config-yaml-file">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">The <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> File</a><a class="headerlink" href="#the-config-yaml-file" title="Link to this heading"></a></h3>
+<p>When Royal Craps first runs it creates <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> for you. Every setting
+in it is <em>commented out</em>, so out of the box the file changes nothing. To
+use a setting, remove the <code class="docutils literal notranslate"><span class="pre">#</span></code> at the start of its line and change the
+value. The game reads the file when it starts, so quit and restart the game
+for a change to take effect.</p>
+<p>Royal Craps never rewrites this file. Your edits and your comments are safe.</p>
+<p>A few things to know about the file format, which is called YAML:</p>
+<ul class="simple">
+<li><p>Indentation matters. Use spaces, never tabs, and keep each setting lined
+up under the heading it belongs to.</p></li>
+<li><p>A line that begins with <code class="docutils literal notranslate"><span class="pre">#</span></code> is a comment and is ignored.</p></li>
+<li><p>A list is written one item per line, each starting with a dash.</p></li>
+<li><p>File names such as <code class="docutils literal notranslate"><span class="pre">arthur.yaml</span></code> are the names of the files in your
+players and tables directories. Quotes around them are optional.</p></li>
+</ul>
+<p>If you make a mistake that stops the file from being read, the game tells you
+which file and why when it starts. To get a fresh copy, delete
+<code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> and start the game again. It creates a new one, and your
+players and tables are not touched.</p>
+</section>
+<section id="choosing-the-table-and-players">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Choosing the Table and Players</a><a class="headerlink" href="#choosing-the-table-and-players" title="Link to this heading"></a></h3>
+<p>By default Royal Craps starts where you last left off: the same table, you
+playing as the same player, and with the same other players seated. These
+four settings let you override that. Each one is independent of the others,
+and any you leave out are decided by where you last left off.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">table</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">startWithTable</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;las-vegas-strip.yaml&quot;</span>
+<span class="w">  </span><span class="nt">startWithUserPlayer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nathan.yaml&quot;</span>
+<span class="w">  </span><span class="nt">startWithBuddyPlayers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">startWithTheseBuddyPlayers</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;arthur.yaml&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;paige.yaml&quot;</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">startWithTable</span></code></dt><dd><p>Always start at this table.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">startWithUserPlayer</span></code></dt><dd><p>Always start as this player, even if you quit last time as someone else.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">startWithBuddyPlayers</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>, and <code class="docutils literal notranslate"><span class="pre">true</span></code> if you leave it out. A <strong>buddy</strong> is
+any other player seated at your table. Set this to <code class="docutils literal notranslate"><span class="pre">false</span></code> to always
+start by yourself, no matter who sat with you last time and no matter
+what is listed in <code class="docutils literal notranslate"><span class="pre">startWithTheseBuddyPlayers</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">startWithTheseBuddyPlayers</span></code></dt><dd><p>Always start with these buddies, up to five. Leave this out to start
+with the buddies from your last game.</p>
+</dd>
+</dl>
+<p>A few examples:</p>
+<dl class="simple">
+<dt><em>Always start as nathan, with whoever was at the table last time.</em></dt><dd><p>Set only <code class="docutils literal notranslate"><span class="pre">startWithUserPlayer:</span> <span class="pre">&quot;nathan.yaml&quot;</span></code>.</p>
+</dd>
+<dt><em>Always start alone.</em></dt><dd><p>Set only <code class="docutils literal notranslate"><span class="pre">startWithBuddyPlayers:</span> <span class="pre">false</span></code>.</p>
+</dd>
+<dt><em>Always start with the same three players at the Las Vegas table.</em></dt><dd><p>Set <code class="docutils literal notranslate"><span class="pre">startWithTable</span></code>, <code class="docutils literal notranslate"><span class="pre">startWithUserPlayer</span></code> and
+<code class="docutils literal notranslate"><span class="pre">startWithTheseBuddyPlayers</span></code>.</p>
+</dd>
+</dl>
+<section id="how-appname-remembers">
+<h4>How Royal Craps Remembers<a class="headerlink" href="#how-appname-remembers" title="Link to this heading"></a></h4>
+<p>When you quit, Royal Craps writes down your table, your player and your
+buddies in <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code>. Next time, any setting you did not make in
+<code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> is taken from there. Your own settings always take
+priority over it. If you quit with nobody else at the table, the next
+game starts that way too.</p>
+<p>The very first time, with no <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> yet, you start at the Las Vegas
+Strip table as the player <code class="docutils literal notranslate"><span class="pre">unnamed</span></code>, with two buddies, <code class="docutils literal notranslate"><span class="pre">arthur</span></code> and
+<code class="docutils literal notranslate"><span class="pre">paige</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> is only a memory and is always safe to delete. The next game
+then starts from your settings, or from the first-time defaults. You never
+need to edit it. Anything you want to keep belongs in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The game is built to always start. If <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> names a table or
+player that does not exist, say because of a typing mistake or a player
+you removed, the game ignores that one name, writes a warning to the log
+file and falls back to the next choice (where you left off, then the
+defaults). Check the log if the game does not start as you expected.</p>
+</div>
+</section>
+</section>
+<section id="other-settings">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Other Settings</a><a class="headerlink" href="#other-settings" title="Link to this heading"></a></h3>
+<p>These settings are in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> too. They are shown commented out with
+their default values.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">table:</span> <span class="pre">maxSessions</span></code></dt><dd><p>How many past sessions each table keeps in its history, for the statistics
+across all sessions. When there are more, the oldest are dropped. The
+default is 50.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">table:</span> <span class="pre">maxRecentRolls</span></code></dt><dd><p>How many of the most recent dice rolls the table remembers. The
+default is 50.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">log:</span> <span class="pre">debug</span></code> and <code class="docutils literal notranslate"><span class="pre">log:</span> <span class="pre">trace</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> turns on more detailed messages in the log file. This is useful
+when something is wrong and you are asked for the log, and it makes the
+file grow quickly, so leave both <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The file also lists <code class="docutils literal notranslate"><span class="pre">rollHistory</span></code>, <code class="docutils literal notranslate"><span class="pre">sound</span></code> and <code class="docutils literal notranslate"><span class="pre">player:</span> <span class="pre">maxSessions</span></code>
+settings. These are reserved for features that are not in the game yet,
+and changing them has no effect in this version.</p>
+</div>
+</section>
+<section id="overriding-settings-temporarily">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Overriding Settings Temporarily</a><a class="headerlink" href="#overriding-settings-temporarily" title="Link to this heading"></a></h3>
+<p>Settings come from several places. When the same setting is given in more
+than one, the later one in this list wins:</p>
+<ol class="arabic simple">
+<li><p>The program’s built-in defaults and the settings shipped with it.</p></li>
+<li><p>Your <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.</p></li>
+<li><p>Environment variables.</p></li>
+<li><p>The command line.</p></li>
+</ol>
+<p>The command line is the quickest way to try something once without editing
+any file. These options are available:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">--debug</span></code> and <code class="docutils literal notranslate"><span class="pre">--trace</span></code></dt><dd><p>Turn on the detailed logging described above for this run only.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--usr-config-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--usr-data-dir</span></code> and <code class="docutils literal notranslate"><span class="pre">--usr-state-dir</span></code></dt><dd><p>Use another directory in place of the config, data or state locations
+above. Pointing all three at a new, empty directory gives you a brand new
+game, exactly as on a first run, without touching your real players. This
+is a good way to try the game out safely.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--help</span></code></dt><dd><p>Lists every option.</p>
+</dd>
+</dl>
+<p>The environment variable <code class="docutils literal notranslate"><span class="pre">ROYALCRAPS_START_TABLE</span></code> chooses the table for
+a run, taking priority over <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.</p>
+</section>
 </section>
 <section id="understanding-appname-statistics">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Understanding Royal Craps Statistics</a><a class="headerlink" href="#understanding-appname-statistics" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Understanding Royal Craps Statistics</a><a class="headerlink" href="#understanding-appname-statistics" title="Link to this heading"></a></h2>
 <p>Royal Craps records a large number of statistics while you play. This section
 describes what is recorded, how each statistic is counted, and the nuances
 that matter when you interpret the numbers. It assumes you already know
@@ -208,7 +404,7 @@ none of them predicts the next roll. Streaks, repeaters and
 likely to appear after a long absence than after a recent hit.</p>
 </div>
 <section id="where-statistics-are-kept">
-<h3><a class="toc-backref" href="#id7" role="doc-backlink">Where statistics are kept</a><a class="headerlink" href="#where-statistics-are-kept" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Where statistics are kept</a><a class="headerlink" href="#where-statistics-are-kept" title="Link to this heading"></a></h3>
 <p>Every statistic belongs to one of two owners and covers one of two time
 spans.</p>
 <p><strong>Table statistics</strong> describe the dice and the table: every roll made at
@@ -230,7 +426,7 @@ on) are the maximum over all sessions, not the sum of the session maximums.</p>
 </div>
 </section>
 <section id="roll-counters-and-streaks">
-<h3><a class="toc-backref" href="#id8" role="doc-backlink">Roll counters and streaks</a><a class="headerlink" href="#roll-counters-and-streaks" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Roll counters and streaks</a><a class="headerlink" href="#roll-counters-and-streaks" title="Link to this heading"></a></h3>
 <p>Most dice statistics are kept as a <strong>counter</strong>. A counter records two
 things:</p>
 <ul class="simple">
@@ -329,7 +525,7 @@ come out rolls.</p>
 </section>
 </section>
 <section id="bet-statistics">
-<h3><a class="toc-backref" href="#id9" role="doc-backlink">Bet statistics</a><a class="headerlink" href="#bet-statistics" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Bet statistics</a><a class="headerlink" href="#bet-statistics" title="Link to this heading"></a></h3>
 <p>Each player has bet statistics. These record every bet that reached a
 decision: win, lose, or neither (a bet that was taken down or that stayed up
 and was <strong>kept</strong>).</p>
@@ -448,7 +644,7 @@ before the roll, and the dollars and bets won and lost on it.</p>
 </section>
 </section>
 <section id="repeaters">
-<h3><a class="toc-backref" href="#id10" role="doc-backlink">Repeaters</a><a class="headerlink" href="#repeaters" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Repeaters</a><a class="headerlink" href="#repeaters" title="Link to this heading"></a></h3>
 <p>A <strong>repeater</strong> statistic answers the question serious players ask most
 often: <em>how many times does a number show up before a 7 ends the run?</em></p>
 <p>Royal Craps records this as a <strong>histogram</strong>. For a given number, the game
@@ -529,7 +725,7 @@ being added to the histogram.</p>
 </section>
 </section>
 <section id="bank-statistics">
-<h3><a class="toc-backref" href="#id11" role="doc-backlink">Bank statistics</a><a class="headerlink" href="#bank-statistics" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Bank statistics</a><a class="headerlink" href="#bank-statistics" title="Link to this heading"></a></h3>
 <p>Each player keeps a record of bank activity:</p>
 <ul class="simple">
 <li><p>the number and total amount of <strong>deposits</strong>,</p></li>
@@ -547,7 +743,7 @@ refills show how often the bank ran low.</p>
 </div>
 </section>
 <section id="session-history">
-<h3><a class="toc-backref" href="#id12" role="doc-backlink">Session history</a><a class="headerlink" href="#session-history" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">Session history</a><a class="headerlink" href="#session-history" title="Link to this heading"></a></h3>
 <p>The game keeps a summary for each past session: its date and duration, how
 many players took part, how many bets were made, and the total intake and
 payout. From these it reports the number of sessions, the date of the first
@@ -558,7 +754,7 @@ so <code class="docutils literal notranslate"><span class="pre">intake</span> <s
 long enough shows the house edge in these figures.</p>
 </section>
 <section id="reading-the-numbers">
-<h3><a class="toc-backref" href="#id13" role="doc-backlink">Reading the numbers</a><a class="headerlink" href="#reading-the-numbers" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">Reading the numbers</a><a class="headerlink" href="#reading-the-numbers" title="Link to this heading"></a></h3>
 <p>A few cautions that apply to every statistic above.</p>
 <p><strong>Sample size.</strong> Craps results swing widely over short samples. A few hundred
 rolls is too few to say anything about a bet’s performance. Expect numbers
@@ -583,19 +779,19 @@ as the full-screen statistics windows are completed.</p>
 </section>
 </section>
 <section id="frequently-asked-questions">
-<h2><a class="toc-backref" href="#id14" role="doc-backlink">Frequently Asked Questions</a><a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id19" role="doc-backlink">Frequently Asked Questions</a><a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h2>
 <p>&lt;cover some common questions a user might have&gt;</p>
 </section>
 <section id="troubleshooting">
-<h2><a class="toc-backref" href="#id15" role="doc-backlink">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id20" role="doc-backlink">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
 <p>&lt;share troubleshooting advice&gt;</p>
 </section>
 <section id="glossary">
-<h2><a class="toc-backref" href="#id16" role="doc-backlink">Glossary</a><a class="headerlink" href="#glossary" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id21" role="doc-backlink">Glossary</a><a class="headerlink" href="#glossary" title="Link to this heading"></a></h2>
 <p>&lt;terminology specific to your software&gt;</p>
 </section>
 <section id="support-contact-details">
-<h2><a class="toc-backref" href="#id17" role="doc-backlink">Support Contact Details</a><a class="headerlink" href="#support-contact-details" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id22" role="doc-backlink">Support Contact Details</a><a class="headerlink" href="#support-contact-details" title="Link to this heading"></a></h2>
 <p>&lt;how users can contact support&gt;</p>
 </section>
 </section>

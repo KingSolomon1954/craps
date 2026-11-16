@@ -9,7 +9,7 @@ var searchData=
   ['linenum_6',['lineNum',['../classGen_1_1ErrorPass.html#af1f511268d66b0055936fcb2d6230ca0',1,'Gen::ErrorPass']]],
   ['listasstring_7',['listAsString',['../namespaceEnumBetName.html#a9dde1d1a15ec792696abe3f535a83f97',1,'EnumBetName']]],
   ['listlayers_8',['listLayers',['../classGen_1_1MultiLayerConfig.html#a0978a8ba93ea8888d38fff724a5139ad',1,'Gen::MultiLayerConfig']]],
-  ['load_9',['load',['../classCtrl_1_1YamlFile.html#a82e439574acf985ff7dcdf6db3d708f6',1,'Ctrl::YamlFile']]],
+  ['load_9',['load',['../classCtrl_1_1UserState.html#a1303915141ce547ff7272579627e69a0',1,'Ctrl::UserState::load()'],['../classCtrl_1_1YamlFile.html#a82e439574acf985ff7dcdf6db3d708f6',1,'Ctrl::YamlFile::load()']]],
   ['loadfromfile_10',['loadFromFile',['../classCtrl_1_1PlayerManifest.html#a539f4e54b94f4e6cd1ea117f262f7108',1,'Ctrl::PlayerManifest::loadFromFile()'],['../classCtrl_1_1TableManifest.html#a06bc1059677495087016acbd704a713a',1,'Ctrl::TableManifest::loadFromFile()']]],
   ['locationmanager_11',['LocationManager',['../classCui_1_1LocationManager.html#a1c55344991005582a34274f18ce7c14b',1,'Cui::LocationManager']]],
   ['logbet_12',['logBet',['../classCraps_1_1CrapsBet.html#a41491fa502dd22d7035629a3ff7699fd',1,'Craps::CrapsBet']]],

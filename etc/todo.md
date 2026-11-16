@@ -2,6 +2,10 @@
 
 ### Write script to copy files/assets to install locations
 
+### Need an asset reset tool
+- zero stats and other values 
+- for table and players
+
 ### Refund on quit - unresolved bets back to player's bank
 - show a message like: “You left the table with active bets.
 - Your chips have been returned to your bank.”
@@ -9,7 +13,7 @@
 - Add a warning like: “You have active bets. Are you sure
 - you want to quit and abandon them?”
 
-### Repeated bet changes the existing bet: View
+### Inform Player in message area of changed bets
 - RspMakeBet now has changed and previousAmount. Tell the player when a
 - bet made again changed the amount of the one already on the table
 - (e.g. Pass Line $10 -> $20)
@@ -29,15 +33,6 @@
 - needs to carry forward buddy players to the newly switched to table
 - maybe a dialog box should prompt the user to carry forward buddies
 - maybe should be a user prefence how to behave
-
-### Save Config to yaml file
-
-- This will also fix the next issue, remembering user player
-
-### Remember the user player across sessions
-- ConfigManager is read-only, so the user player chosen at runtime is
-- lost at quit. Persist it (small session file?) and honor
-- startWithLastPlayers at startup
 
 ### Need unit test for initial bank money
 
@@ -82,43 +77,47 @@
 
 ## Done
 
-(Done) In User Guide, add new section "Understanding Statistics"
-(Done) New stats feature - track Repeater bets
-(Done) Stats for Place, Lay, Buy, Any7, CandE, Horn
-(Done) Track contract-only amounts separately in BetStats
-(Done) Place bets off on comeout for simulated roles
-(Done) Added new bet Any711
-(Done) Change bet is inferred by makeBet().
-(Done) One bet per spot - prevent multiple same bets same time
-(Done) BetStats - track contract amount and odds amount separately
-(Done) BetStats - improve YAML layout with better organization and hierarchy
-(Done) DialogBetAmount shows min, max bet, and proper multiples for odds
-(Done) TableManager::switchCrapsTable() needs to call EP_SET()
-(Done) Implemented comprehensive Table Rules facility
-(Done) Minimum bets are wrong.
-(Done) Added World bet.
-(Done) Fix evaluation() processing and various bugs
-(Done) Fix Place bets being removed from table after a win
-(Done) Early illegal bet test - jump to error immediately
-(Done) Place, Buy, Lay  bet odds hints
-(Done) Add LastFill feature
-(Done) LastFills (LastBets) saved to and loaded from the user Player's file
-(Done) Player file I/O moved from Craps::Player to PlayerManager (YamlFile)
-(Done) Table file I/O moved from Craps::CrapsTable to TableManager (YamlFile)
-(Done) LastFill is per player (PlayerPrefs), no longer a singleton
-(Done) AutoFills and QuickBets saved to and loaded from the player's file (PlayerPrefs)
-(Done) Switch player in controller and model (ReqSwitchPlayer, RspSwitchPlayer, UslUserPlayerSwitched)
-(Done) A repeated bet changes the existing bet instead of making a second one (Player::makeOrChangeBet)
-(Done) Add payout hint to DialogBetAmount
-(Done) Fix window width of MenuOddsBet
-(Done) Fix multiple odds bets for same bet and number MenuOddsBet
-(Done) Setting an Odds bet shows as two bets on the table and player brief
-(Done) Fix MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?
-(Done) Debug & fix WindowPlayerBrief
-(Done) Added new events to populate WindowPlayerBrief
-(Done) Debug & fix WindowHouseBrief
-(Done) New events needed to populate WindowHouseBrief
-(Done) Complete the first round-trip bet made by the CUI
+(Done) Static analysis includes all libraries, fixed SA errors\
+(Done) Created MenuPlayer, Improved organization of MenuControl\
+(Done) Implement startup from fresh Installation"\
+(Done) In User Guide, add new section "Configuration"\
+(Done) In User Guide, add new section "Understanding Statistics"\
+(Done) New stats feature - track Repeater bets\
+(Done) Stats for Place, Lay, Buy, Any7, CandE, Horn\
+(Done) Track contract-only amounts separately in BetStats\
+(Done) Place bets off on comeout for simulated roles\
+(Done) Added new bet Any711\
+(Done) Change bet is inferred by makeBet()\
+(Done) One bet per spot - prevent multiple same bets same time\
+(Done) BetStats - track contract amount and odds amount separately\
+(Done) BetStats - improve YAML layout with better organization and hierarchy\
+(Done) DialogBetAmount shows min, max bet, and proper multiples for odds\
+(Done) TableManager::switchCrapsTable() needs to call EP_SET()\
+(Done) Implemented comprehensive Table Rules facility\
+(Done) Minimum bets are wrong\
+(Done) Added World bet\
+(Done) Fix evaluation() processing and various bugs\
+(Done) Fix Place bets being removed from table after a win\
+(Done) Early illegal bet test - jump to error immediately\
+(Done) Place, Buy, Lay  bet odds hints\
+(Done) Add LastFill feature\
+(Done) LastFills (LastBets) saved to and loaded from the user Player's file\
+(Done) Player file I/O moved from Craps::Player to PlayerManager (YamlFile)\
+(Done) Table file I/O moved from Craps::CrapsTable to TableManager (YamlFile)\
+(Done) LastFill is per player (PlayerPrefs), no longer a singleton\
+(Done) AutoFills and QuickBets saved to and loaded from the player's file (PlayerPrefs)\
+(Done) Switch player in controller and model (ReqSwitchPlayer, RspSwitchPlayer, UslUserPlayerSwitched)\
+(Done) A repeated bet changes the existing bet instead of making a second one (Player::makeOrChangeBet)\
+(Done) Add payout hint to DialogBetAmount\
+(Done) Fix window width of MenuOddsBet\
+(Done) Fix multiple odds bets for same bet and number MenuOddsBet\
+(Done) Setting an Odds bet shows as two bets on the table and player brief\
+(Done) Fix MenuOddsBet - saw two "Bet::Invalid", CarrierBet init problem?\
+(Done) Debug & fix WindowPlayerBrief\
+(Done) Added new events to populate WindowPlayerBrief\
+(Done) Debug & fix WindowHouseBrief\
+(Done) New events needed to populate WindowHouseBrief\
+(Done) Complete the first round-trip bet made by the CUI\
 (Done) Add DialogConfirm when quitting game tied to operations manager\
 (Done) OperationTracker needs correlationId matching\
 (Done) OperationTracker (manages interactive lifecycle)\

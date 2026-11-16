@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8454155359321753322">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="LOG_TRACE"/>
+    <functioncall functionName="assert"/>
+    <functioncall functionName="draw"/>
+    <functioncall functionName="handleKey"/>
+    <functioncall functionName="instance"/>
+    <functioncall functionName="onBetChanged"/>
+    <functioncall functionName="onBetMade"/>
+    <functioncall functionName="onBetResolved"/>
+    <functioncall functionName="onDiceNewValue"/>
+    <functioncall functionName="onDiceThrowStart"/>
+    <functioncall functionName="onNewShooter"/>
+    <functioncall functionName="onPassLineWinner"/>
+    <functioncall functionName="onPlayerBalanceChanged"/>
+    <functioncall functionName="onPlayerBetsChanged"/>
+    <functioncall functionName="onPlayerLastRollStatsChanged"/>
+    <functioncall functionName="onPlayerSessionStatsChanged"/>
+    <functioncall functionName="onPointEstablished"/>
+    <functioncall functionName="onResolveBetsEnd"/>
+    <functioncall functionName="onRspMakeBet"/>
+    <functioncall functionName="onRspOddsBet"/>
+    <functioncall functionName="onSevenOut"/>
+    <functioncall functionName="onTableBalanceChanged"/>
+    <functioncall functionName="onTableBetsChanged"/>
+    <functioncall functionName="onTableLastRollStatsChanged"/>
+    <functioncall functionName="onTableSessionStatsChanged"/>
+    <functioncall functionName="popSurface"/>
+    <functioncall functionName="process"/>
+    <functioncall functionName="pushSurface"/>
+    <functioncall functionName="setSurface"/>
+    <functioncall functionName="visit"/>
+  </FileInfo>
+</analyzerinfo>

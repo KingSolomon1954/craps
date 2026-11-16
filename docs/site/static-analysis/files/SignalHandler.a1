@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="9268969736900701692">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="SIGHUP"/>
+    <functioncall functionName="SIGQUIT"/>
+    <functioncall functionName="SIG_BLOCK"/>
+    <functioncall functionName="SignalHandler"/>
+    <functioncall functionName="exit"/>
+    <functioncall functionName="pthread_kill"/>
+    <functioncall functionName="pthread_self"/>
+    <functioncall functionName="sigaddset"/>
+    <functioncall functionName="sigdelset"/>
+    <functioncall functionName="sigemptyset"/>
+    <functioncall functionName="sigfillset"/>
+    <functioncall functionName="sigprocmask"/>
+    <functioncall functionName="sigwait"/>
+    <functioncall functionName="tid_"/>
+  </FileInfo>
+</analyzerinfo>

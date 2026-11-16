@@ -8,6 +8,7 @@ add_executable(gen-ut
     utest-gen-main.cpp
     BuildInfoTest.cpp
     EventManagerTest.cpp
+    LoggerTest.cpp
     MoneyTest.cpp
     MoneyUtilsTest.cpp
     MultiLayerConfigTest.cpp

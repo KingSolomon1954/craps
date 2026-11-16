@@ -8,8 +8,10 @@ var searchData=
   ['reqrolldice_5',['ReqRollDice',['../structCtrl_1_1ReqRollDice.html',1,'Ctrl']]],
   ['reqswitchplayer_6',['ReqSwitchPlayer',['../structCtrl_1_1ReqSwitchPlayer.html',1,'Ctrl']]],
   ['reqterminate_7',['ReqTerminate',['../structCtrl_1_1ReqTerminate.html',1,'Ctrl']]],
-  ['rollstats_8',['RollStats',['../classCraps_1_1RollStats.html',1,'Craps']]],
-  ['rspmakebet_9',['RspMakeBet',['../structCtrl_1_1RspMakeBet.html',1,'Ctrl']]],
-  ['rspoddsbet_10',['RspOddsBet',['../structCtrl_1_1RspOddsBet.html',1,'Ctrl']]],
-  ['rspswitchplayer_11',['RspSwitchPlayer',['../structCtrl_1_1RspSwitchPlayer.html',1,'Ctrl']]]
+  ['request_8',['Request',['../structCtrl_1_1StartChoices_1_1Request.html',1,'Ctrl::StartChoices']]],
+  ['result_9',['Result',['../structCtrl_1_1StartChoices_1_1Result.html',1,'Ctrl::StartChoices']]],
+  ['rollstats_10',['RollStats',['../classCraps_1_1RollStats.html',1,'Craps']]],
+  ['rspmakebet_11',['RspMakeBet',['../structCtrl_1_1RspMakeBet.html',1,'Ctrl']]],
+  ['rspoddsbet_12',['RspOddsBet',['../structCtrl_1_1RspOddsBet.html',1,'Ctrl']]],
+  ['rspswitchplayer_13',['RspSwitchPlayer',['../structCtrl_1_1RspSwitchPlayer.html',1,'Ctrl']]]
 ];

@@ -1,4 +1,10 @@
-table.startTable: "las-vegas-strip.yaml"
-table.startWithLastPlayers: true
-sound.enabled: true
-sound.volume: 50
+table:
+  defaultTable: "las-vegas-strip.yaml"
+  defaultUserPlayer: "unnamed.yaml"
+  defaultBuddyPlayers:
+    - "arthur.yaml"
+    - "paige.yaml"
+
+sound:
+  enabled: true
+  volume: 50

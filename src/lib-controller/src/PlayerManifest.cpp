@@ -27,7 +27,7 @@ void
 PlayerManifest::loadFromFile()
 {
     std::string dir = Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysPlayers).value();
+        Ctrl::ConfigManager::KeyDirsUsrPlayers).value();
 
     namespace fs = std::filesystem;
     fs::path path = fs::path(dir) / ("players.yaml");

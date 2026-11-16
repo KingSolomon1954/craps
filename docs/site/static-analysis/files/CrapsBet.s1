@@ -1,0 +1,2 @@
+operator<< call:[betId,betName,contractAmount,distance,getName,oddsAmount,offComeOutRoll,pivot,player,whenCreated,whenDecided]
+operator<< call:[betId,getName,player]

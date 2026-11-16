@@ -31,12 +31,9 @@ User Interface Overview
 
 < give a high-level overview of the interface>
 
-How to Use Specific Features
-============================
+.. include:: configuration.inc
 
-<create a section for each core feature, shows users how it works>
-
-.. include:: statistics.rst
+.. include:: statistics.inc
 
 Frequently Asked Questions
 ==========================

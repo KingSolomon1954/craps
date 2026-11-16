@@ -1,0 +1,5 @@
+statsName call:[toString]
+isRollBet
+rollEntryName call:[statsName,to_string] noreturn:[to_string]
+rollBetName call:[betName,isRollBet,pivot,rollEntryName,statsName,to_string] noreturn:[rollEntryName,to_string]
+initializeBetMap call:[string,to_string,try_emplace] noreturn:[try_emplace]

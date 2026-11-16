@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="7560335895849567122">
+        <error id="missingReturn" severity="error" msg="Found an exit path from function with non-void return type that has missing return statement" verbose="Found an exit path from function with non-void return type that has missing return statement" cwe="758" file0="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp">
+            <location file="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp" line="307" column="9"/>
+        </error>
+  <FileInfo check="Class">
+<class name="BetInfo" file="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp" line="9" col="1" hash="2906645739081767380"/>
+<class name="DynamicMenu" file="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp" line="41" col="1" hash="7159438004479835734"/>
+<class name="DynamicMenu::MenuEntry" file="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp" line="69" col="5" hash="612611357409888519"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp:153:17" my-argnr="1" my-argname="bet" file="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp" line="155" col="47" value="0"/>
+    <unsafe-usage my-id="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp:160:17" my-argnr="1" my-argname="bet" file="/work/src/main/src/snippets/ncurses-dynamic-menu.cpp" line="162" col="31" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="fillOddsBets1" lineNumber="21"/>
+    <functiondecl functionName="fillOddsBets2" lineNumber="30"/>
+    <functiondecl functionName="draw" lineNumber="55"/>
+    <functiondecl functionName="gatherBets" lineNumber="86"/>
+    <functiondecl functionName="sortByWhenCreated" lineNumber="100"/>
+    <functiondecl functionName="buildMenuEntries" lineNumber="110"/>
+    <functiondecl functionName="buildMenuBets" lineNumber="117"/>
+    <functiondecl functionName="indexToHotKey" lineNumber="132"/>
+    <functiondecl functionName="addQuitEntry" lineNumber="140"/>
+    <functiondecl functionName="formatBet" lineNumber="145"/>
+    <functiondecl functionName="formatAmount" lineNumber="153"/>
+    <functiondecl functionName="formatPivot" lineNumber="160"/>
+    <functiondecl functionName="formatHotKey" lineNumber="165"/>
+    <functiondecl functionName="convertToLabel" lineNumber="170"/>
+    <functiondecl functionName="windowResize" lineNumber="179"/>
+    <functiondecl functionName="calcSize" lineNumber="198"/>
+    <functiondecl functionName="drawBorders" lineNumber="216"/>
+    <functiondecl functionName="drawStaticContent" lineNumber="229"/>
+    <functiondecl functionName="populate" lineNumber="235"/>
+    <functiondecl functionName="handleKey" lineNumber="247"/>
+    <functiondecl functionName="quit" lineNumber="270"/>
+    <functiondecl functionName="processSelection" lineNumber="283"/>
+    <functiondecl functionName="findBet" lineNumber="293"/>
+    <functiondecl functionName="populateCarrier" lineNumber="312"/>
+    <functiondecl functionName="prepDialogAmount" lineNumber="321"/>
+    <functiondecl functionName="activateDialogAmount" lineNumber="330"/>
+    <functiondecl functionName="main" lineNumber="340"/>
+    <functioncall functionName="ACS_HLINE"/>
+    <functioncall functionName="ACS_LTEE"/>
+    <functioncall functionName="ACS_RTEE"/>
+    <functioncall functionName="BetInfo"/>
+    <functioncall functionName="MenuEntry"/>
+    <functioncall functionName="activateDialogAmount"/>
+    <functioncall functionName="addQuitEntry"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="box"/>
+    <functioncall functionName="buildMenuBets"/>
+    <functioncall functionName="buildMenuEntries"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="calcSize"/>
+    <functioncall functionName="cbreak"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="convertToLabel"/>
+    <functioncall functionName="curs_set"/>
+    <functioncall functionName="delwin"/>
+    <functioncall functionName="dm"/>
+    <functioncall functionName="doupdate"/>
+    <functioncall functionName="draw"/>
+    <functioncall functionName="drawBorders"/>
+    <functioncall functionName="drawStaticContent"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="endwin"/>
+    <functioncall functionName="fillOddsBets2"/>
+    <functioncall functionName="findBet"/>
+    <functioncall functionName="find_if"/>
+    <functioncall functionName="formatAmount"/>
+    <functioncall functionName="formatBet"/>
+    <functioncall functionName="formatHotKey"/>
+    <functioncall functionName="formatPivot"/>
+    <functioncall functionName="gatherBets"/>
+    <functioncall functionName="getch"/>
+    <functioncall functionName="getmaxyx"/>
+    <functioncall functionName="indexToHotKey"/>
+    <functioncall functionName="initscr"/>
+    <functioncall functionName="max"/>
+    <functioncall functionName="mvprintw"/>
+    <functioncall functionName="mvwaddch"/>
+    <functioncall functionName="mvwaddstr"/>
+    <functioncall functionName="mvwhline"/>
+    <functioncall functionName="mvwin"/>
+    <functioncall functionName="mvwprintw"/>
+    <functioncall functionName="newwin"/>
+    <functioncall functionName="noecho"/>
+    <functioncall functionName="out_of_range"/>
+    <functioncall functionName="populate"/>
+    <functioncall functionName="populateCarrier"/>
+    <functioncall functionName="prepDialogAmount"/>
+    <functioncall functionName="processSelection"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="quit"/>
+    <functioncall functionName="refresh"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="sort"/>
+    <functioncall functionName="sortByWhenCreated"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="werase"/>
+    <functioncall functionName="windowResize"/>
+    <functioncall functionName="wnoutrefresh"/>
+    <functioncall functionName="wresize"/>
+  </FileInfo>
+</analyzerinfo>

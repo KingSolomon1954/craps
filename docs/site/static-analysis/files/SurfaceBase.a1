@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="10327081029975517253">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Menu"/>
+    <functioncall functionName="Right"/>
+    <functioncall functionName="SurfaceBase"/>
+    <functioncall functionName="Unset"/>
+    <functioncall functionName="assert"/>
+    <functioncall functionName="delwin"/>
+    <functioncall functionName="instance"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="mvwin"/>
+    <functioncall functionName="newwin"/>
+    <functioncall functionName="operationResult_"/>
+    <functioncall functionName="pParentSurface_"/>
+    <functioncall functionName="pWin_"/>
+    <functioncall functionName="registerForShutdown"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="setOperationResult"/>
+    <functioncall functionName="shouldSkip_"/>
+    <functioncall functionName="surfaceName_"/>
+    <functioncall functionName="wresize"/>
+  </FileInfo>
+</analyzerinfo>

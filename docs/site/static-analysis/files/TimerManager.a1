@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="2769265624005185170">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="TimerManager"/>
+    <functioncall functionName="armTimer"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="callback"/>
+    <functioncall functionName="createTimer"/>
+    <functioncall functionName="emplace"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="hasActiveTimer"/>
+    <functioncall functionName="join"/>
+    <functioncall functionName="joinable"/>
+    <functioncall functionName="lock"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="mutex"/>
+    <functioncall functionName="mutex_"/>
+    <functioncall functionName="notify_one"/>
+    <functioncall functionName="now"/>
+    <functioncall functionName="running_"/>
+    <functioncall functionName="stop"/>
+    <functioncall functionName="thread_"/>
+    <functioncall functionName="timerThread"/>
+    <functioncall functionName="timers_"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="unlock"/>
+    <functioncall functionName="wait"/>
+    <functioncall functionName="wait_until"/>
+  </FileInfo>
+</analyzerinfo>

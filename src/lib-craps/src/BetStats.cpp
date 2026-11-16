@@ -706,24 +706,24 @@ BetStats::toYAML() const
     YAML::Node node;
     YAML::Node overall;
     YAML::Node bets;
-    bets["count"] = totNumBetsAllBets;
-    bets["wins"] = totNumWinsAllBets;
-    bets["losses"] = totNumLoseAllBets;
-    bets["kept"] = totNumKeepAllBets;
+    bets["count"]   = totNumBetsAllBets;
+    bets["wins"]    = totNumWinsAllBets;
+    bets["losses"]  = totNumLoseAllBets;
+    bets["kept"]    = totNumKeepAllBets;
     overall["bets"] = bets;
 
     YAML::Node amounts;
-    amounts["bet"] = totAmtAllBets;
-    amounts["won"] = totAmtWinsAllBets;
-    amounts["lost"] = totAmtLoseAllBets;
-    amounts["kept"] = totAmtKeepAllBets;
+    amounts["bet"]     = totAmtAllBets;
+    amounts["won"]     = totAmtWinsAllBets;
+    amounts["lost"]    = totAmtLoseAllBets;
+    amounts["kept"]    = totAmtKeepAllBets;
     overall["amounts"] = amounts;
 
     YAML::Node maximums;
-    maximums["bet"] = maxAmtBetOneBet;
-    maximums["win"] = maxAmtWinOneBet;
-    maximums["loss"] = maxAmtLoseOneBet;
-    maximums["kept"] = maxAmtKeepOneBet;
+    maximums["bet"]     = maxAmtBetOneBet;
+    maximums["win"]     = maxAmtWinOneBet;
+    maximums["loss"]    = maxAmtLoseOneBet;
+    maximums["kept"]    = maxAmtKeepOneBet;
     overall["maximums"] = maximums;
     node["overall"] = overall;
 
@@ -734,17 +734,17 @@ BetStats::toYAML() const
 
     YAML::Node perRoll;
     perRoll["betsEvaluated"] = numBetsOneRoll.toYAML();
-    perRoll["betsWon"] = numBetsWinOneRoll.toYAML();
-    perRoll["betsLost"] = numBetsLoseOneRoll.toYAML();
-    perRoll["betsKept"] = numBetsKeepOneRoll.toYAML();
+    perRoll["betsWon"]       = numBetsWinOneRoll.toYAML();
+    perRoll["betsLost"]      = numBetsLoseOneRoll.toYAML();
+    perRoll["betsKept"]      = numBetsKeepOneRoll.toYAML();
 
     YAML::Node rollAmounts;
     rollAmounts["evaluated"] = amtBetsOneRoll.toYAML();
-    rollAmounts["won"] = amtBetsWinOneRoll.toYAML();
-    rollAmounts["lost"] = amtBetsLoseOneRoll.toYAML();
-    rollAmounts["kept"] = amtBetsKeepOneRoll.toYAML();
-    perRoll["amounts"] = rollAmounts;
-    node["rollActivity"] = perRoll;
+    rollAmounts["won"]       = amtBetsWinOneRoll.toYAML();
+    rollAmounts["lost"]      = amtBetsLoseOneRoll.toYAML();
+    rollAmounts["kept"]      = amtBetsKeepOneRoll.toYAML();
+    perRoll["amounts"]       = rollAmounts;
+    node["rollActivity"]     = perRoll;
     return node;
 }
 
@@ -761,14 +761,14 @@ BetStats::fromYAML(const YAML::Node& node)
     totNumKeepAllBets = bets["kept"].as<unsigned>();
 
     const YAML::Node amounts = overall["amounts"];
-    totAmtAllBets = amounts["bet"].as<Gen::Money>();
+    totAmtAllBets     = amounts["bet"].as<Gen::Money>();
     totAmtWinsAllBets = amounts["won"].as<Gen::Money>();
     totAmtLoseAllBets = amounts["lost"].as<Gen::Money>();
     totAmtKeepAllBets = amounts["kept"].as<Gen::Money>();
 
     const YAML::Node maximums = overall["maximums"];
-    maxAmtBetOneBet = maximums["bet"].as<Gen::Money>();
-    maxAmtWinOneBet = maximums["win"].as<Gen::Money>();
+    maxAmtBetOneBet  = maximums["bet"].as<Gen::Money>();
+    maxAmtWinOneBet  = maximums["win"].as<Gen::Money>();
     maxAmtLoseOneBet = maximums["loss"].as<Gen::Money>();
     maxAmtKeepOneBet = maximums["kept"].as<Gen::Money>();
 

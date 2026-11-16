@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="6244681493729893076">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-gen/src/Money.cpp:331:15" my-argnr="2" my-argname="m" file="/work/src/lib-gen/src/Money.cpp" line="339" col="30" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="IsScalar"/>
+    <functioncall functionName="Money"/>
+    <functioncall functionName="ShowCents"/>
+    <functioncall functionName="ShowComma"/>
+    <functioncall functionName="ShowDollar"/>
+    <functioncall functionName="abs"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="cents_"/>
+    <functioncall functionName="diag"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="fromDollars"/>
+    <functioncall functionName="fromString"/>
+    <functioncall functionName="getMoneyFormat"/>
+    <functioncall functionName="insert"/>
+    <functioncall functionName="invalid_argument"/>
+    <functioncall functionName="noCents"/>
+    <functioncall functionName="noDollar"/>
+    <functioncall functionName="pattern"/>
+    <functioncall functionName="rbegin"/>
+    <functioncall functionName="regex_match"/>
+    <functioncall functionName="remove"/>
+    <functioncall functionName="rend"/>
+    <functioncall functionName="round"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="setfill"/>
+    <functioncall functionName="setw"/>
+    <functioncall functionName="showCents"/>
+    <functioncall functionName="showComma"/>
+    <functioncall functionName="showDollar"/>
+    <functioncall functionName="stod"/>
+    <functioncall functionName="str"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="to_string"/>
+  </FileInfo>
+</analyzerinfo>

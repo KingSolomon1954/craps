@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="1850938038789086957">
+  <FileInfo check="ctu">
+<function-call call-id="/work/src/main/src/snippets/ncurses-animation-color.cpp:97:9" call-funcname="make_subwin" call-argnr="1" file="/work/src/main/src/snippets/ncurses-animation-color.cpp" line="118" col="28" call-argexpr="0" call-argvaluetype="0" call-argvalue="0"/><function-call call-id="/work/src/main/src/snippets/ncurses-animation-color.cpp:97:9" call-funcname="make_subwin" call-argnr="4" file="/work/src/main/src/snippets/ncurses-animation-color.cpp" line="118" col="28" call-argexpr="Column::Left" call-argvaluetype="0" call-argvalue="0"/><function-call call-id="/work/src/main/src/snippets/ncurses-animation-color.cpp:97:9" call-funcname="make_subwin" call-argnr="4" file="/work/src/main/src/snippets/ncurses-animation-color.cpp" line="119" col="28" call-argexpr="Column::Left" call-argvaluetype="0" call-argvalue="0"/><function-call call-id="/work/src/main/src/snippets/ncurses-animation-color.cpp:97:9" call-funcname="make_subwin" call-argnr="4" file="/work/src/main/src/snippets/ncurses-animation-color.cpp" line="120" col="28" call-argexpr="Column::Left" call-argvaluetype="0" call-argvalue="0"/><function-call call-id="/work/src/main/src/snippets/ncurses-animation-color.cpp:97:9" call-funcname="make_subwin" call-argnr="4" file="/work/src/main/src/snippets/ncurses-animation-color.cpp" line="121" col="28" call-argexpr="Column::Left" call-argvaluetype="0" call-argvalue="0"/><function-call call-id="/work/src/main/src/snippets/ncurses-animation-color.cpp:97:9" call-funcname="make_subwin" call-argnr="1" file="/work/src/main/src/snippets/ncurses-animation-color.cpp" line="124" col="30" call-argexpr="0" call-argvaluetype="0" call-argvalue="0"/>  </FileInfo>
+  <FileInfo check="Class">
+<class name="Layout" file="/work/src/main/src/snippets/ncurses-animation-color.cpp" line="9" col="1" hash="4750387054672069877"/>
+<class name="Windows" file="/work/src/main/src/snippets/ncurses-animation-color.cpp" line="30" col="1" hash="11049163661008688388"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="draw_frame" lineNumber="36"/>
+    <functiondecl functionName="make_subwin" lineNumber="97"/>
+    <functiondecl functionName="create_subwindows" lineNumber="109"/>
+    <functiondecl functionName="draw_die" lineNumber="132"/>
+    <functiondecl functionName="animate_roll" lineNumber="184"/>
+    <functiondecl functionName="main" lineNumber="284"/>
+    <functioncall functionName="ACS_BTEE"/>
+    <functioncall functionName="ACS_BULLET"/>
+    <functioncall functionName="ACS_HLINE"/>
+    <functioncall functionName="ACS_LLCORNER"/>
+    <functioncall functionName="ACS_LRCORNER"/>
+    <functioncall functionName="ACS_LTEE"/>
+    <functioncall functionName="ACS_PLUS"/>
+    <functioncall functionName="ACS_RTEE"/>
+    <functioncall functionName="ACS_TTEE"/>
+    <functioncall functionName="ACS_ULCORNER"/>
+    <functioncall functionName="ACS_URCORNER"/>
+    <functioncall functionName="ACS_VLINE"/>
+    <functioncall functionName="A_BOLD"/>
+    <functioncall functionName="COLOR_PAIR"/>
+    <functioncall functionName="COLOR_RED"/>
+    <functioncall functionName="COLOR_WHITE"/>
+    <functioncall functionName="Left"/>
+    <functioncall functionName="Right"/>
+    <functioncall functionName="TRUE"/>
+    <functioncall functionName="animate_roll"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="cbreak"/>
+    <functioncall functionName="create_subwindows"/>
+    <functioncall functionName="curs_set"/>
+    <functioncall functionName="doupdate"/>
+    <functioncall functionName="draw_die"/>
+    <functioncall functionName="draw_frame"/>
+    <functioncall functionName="endwin"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="getch"/>
+    <functioncall functionName="getmaxx"/>
+    <functioncall functionName="getmaxy"/>
+    <functioncall functionName="init_pair"/>
+    <functioncall functionName="initscr"/>
+    <functioncall functionName="keypad"/>
+    <functioncall functionName="make_subwin"/>
+    <functioncall functionName="mvaddch"/>
+    <functioncall functionName="mvhline"/>
+    <functioncall functionName="mvprintw"/>
+    <functioncall functionName="mvvline"/>
+    <functioncall functionName="mvwaddch"/>
+    <functioncall functionName="mvwhline"/>
+    <functioncall functionName="mvwprintw"/>
+    <functioncall functionName="mvwvline"/>
+    <functioncall functionName="napms"/>
+    <functioncall functionName="newwin"/>
+    <functioncall functionName="noecho"/>
+    <functioncall functionName="pip"/>
+    <functioncall functionName="rand"/>
+    <functioncall functionName="refresh"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="srand"/>
+    <functioncall functionName="start_color"/>
+    <functioncall functionName="stdscr"/>
+    <functioncall functionName="time"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="use_default_colors"/>
+    <functioncall functionName="wattroff"/>
+    <functioncall functionName="wattron"/>
+    <functioncall functionName="werase"/>
+    <functioncall functionName="wnoutrefresh"/>
+    <functioncall functionName="wrefresh"/>
+  </FileInfo>
+</analyzerinfo>

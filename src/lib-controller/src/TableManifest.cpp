@@ -27,7 +27,7 @@ void
 TableManifest::loadFromFile()
 {
     std::string dir = Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysTables).value();
+        Ctrl::ConfigManager::KeyDirsUsrTables).value();
 
     namespace fs = std::filesystem;
     fs::path path = fs::path(dir) / ("tables.yaml");

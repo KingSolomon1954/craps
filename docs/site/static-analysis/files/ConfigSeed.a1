@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="551891999716850050">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-controller/src/ConfigSeed.cpp:21:1" my-argnr="1" my-argname="cfg" file="/work/src/lib-controller/src/ConfigSeed.cpp" line="23" col="21" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="dirKey" lineNumber="21"/>
+    <functioncall functionName="DefaultConfigFile"/>
+    <functioncall functionName="KeyDirsSysAudio"/>
+    <functioncall functionName="KeyDirsSysConfig"/>
+    <functioncall functionName="KeyDirsSysImages"/>
+    <functioncall functionName="KeyDirsSysPlayers"/>
+    <functioncall functionName="KeyDirsSysShared"/>
+    <functioncall functionName="KeyDirsSysTables"/>
+    <functioncall functionName="KeyDirsUsrAudio"/>
+    <functioncall functionName="KeyDirsUsrConfig"/>
+    <functioncall functionName="KeyDirsUsrImages"/>
+    <functioncall functionName="KeyDirsUsrPlayers"/>
+    <functioncall functionName="KeyDirsUsrTables"/>
+    <functioncall functionName="LOG_INFO"/>
+    <functioncall functionName="PlayersManifest"/>
+    <functioncall functionName="TablesManifest"/>
+    <functioncall functionName="UserConfigFile"/>
+    <functioncall functionName="copyMissing"/>
+    <functioncall functionName="copy_file"/>
+    <functioncall functionName="create_directories"/>
+    <functioncall functionName="dirKey"/>
+    <functioncall functionName="directory_iterator"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="ends_with"/>
+    <functioncall functionName="equivalent"/>
+    <functioncall functionName="exists"/>
+    <functioncall functionName="filename"/>
+    <functioncall functionName="getString"/>
+    <functioncall functionName="isFirstRun"/>
+    <functioncall functionName="is_directory"/>
+    <functioncall functionName="is_regular_file"/>
+    <functioncall functionName="message"/>
+    <functioncall functionName="needsSeeding"/>
+    <functioncall functionName="overwrite_existing"/>
+    <functioncall functionName="path"/>
+    <functioncall functionName="rename"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="value"/>
+    <functioncall functionName="value_or"/>
+  </FileInfo>
+</analyzerinfo>

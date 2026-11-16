@@ -445,6 +445,57 @@ PlayerManager::doSwitchPlayer(const Craps::PlayerId& toPlayerId,
 }
 
 //----------------------------------------------------------------
+//
+// File name (no directory) of the user player, "" if none.
+//
+std::string
+PlayerManager::getUserFileName() const
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    return (pUser_ != nullptr)
+        ? manifest_.getFileName(pUser_->player->getPlayerId())
+        : std::string();
+}
+
+//----------------------------------------------------------------
+//
+// File names of the players seated at the table right now, the user
+// player first, so the user is never lost to a limit on how many are
+// remembered.
+//
+std::vector<std::string>
+PlayerManager::getTablePlayerFileNames() const
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    std::vector<std::string> names;
+    if (Gbl::pTable == nullptr)
+    {
+        return names;
+    }
+
+    auto add = [&](const Entry& e)
+    {
+        std::string f = manifest_.getFileName(e.player->getPlayerId());
+        if (!f.empty() && Gbl::pTable->havePlayer(e.player))
+        {
+            names.push_back(std::move(f));
+        }
+    };
+    if (pUser_ != nullptr)
+    {
+        add(*pUser_);
+    }
+    for (const auto& e : entries_)
+    {
+        if (e.get() != pUser_)
+        {
+            add(*e);
+        }
+    }
+    return names;
+}
+
+//----------------------------------------------------------------
 
 Craps::Player*
 PlayerManager::getPlayer(const Craps::PlayerId& playerId,
@@ -487,7 +538,7 @@ std::filesystem::path
 PlayerManager::formPlayerPath(const std::string& fileName)
 {
     std::string dir = Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysPlayers).value();
+        Ctrl::ConfigManager::KeyDirsUsrPlayers).value();
 
     namespace fs = std::filesystem;
     fs::path path = fs::path(dir) / fileName;

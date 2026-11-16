@@ -43,6 +43,7 @@ public:
     /// @name Observers
     /// @{
     const TableManifest::TableList& getTableList() const;
+    std::string getCurrentFileName() const;
     Craps::CrapsTable* getTable(const Craps::TableId& tableId,
                                 Gen::ErrorPass& ep) const;
     /// @}

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="16941916037052661622">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="LOG_TRACE"/>
+    <functioncall functionName="ScreenBase"/>
+    <functioncall functionName="ScreenCrapsTable"/>
+    <functioncall functionName="configure"/>
+    <functioncall functionName="draw"/>
+    <functioncall functionName="drawNavBar"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="handleKey"/>
+    <functioncall functionName="height"/>
+    <functioncall functionName="init"/>
+    <functioncall functionName="instance"/>
+    <functioncall functionName="isActiveSurface"/>
+    <functioncall functionName="leftCol"/>
+    <functioncall functionName="newWindow"/>
+    <functioncall functionName="pWin_"/>
+    <functioncall functionName="pushSurface"/>
+    <functioncall functionName="showBettingMenu"/>
+    <functioncall functionName="showNavBarViewsMenu"/>
+    <functioncall functionName="topRow"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="werase"/>
+    <functioncall functionName="width"/>
+  </FileInfo>
+</analyzerinfo>

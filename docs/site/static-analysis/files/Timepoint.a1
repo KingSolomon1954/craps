@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="5147699831706925194">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-gen/src/Timepoint.cpp:194:1" my-argnr="1" my-argname="os" file="/work/src/lib-gen/src/Timepoint.cpp" line="196" col="12" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-gen/src/Timepoint.cpp:194:1" my-argnr="2" my-argname="tp" file="/work/src/lib-gen/src/Timepoint.cpp" line="196" col="18" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Timepoint"/>
+    <functioncall functionName="count"/>
+    <functioncall functionName="days"/>
+    <functioncall functionName="diag"/>
+    <functioncall functionName="duration_cast"/>
+    <functioncall functionName="fail"/>
+    <functioncall functionName="format"/>
+    <functioncall functionName="fromString"/>
+    <functioncall functionName="invalid_argument"/>
+    <functioncall functionName="iss"/>
+    <functioncall functionName="now"/>
+    <functioncall functionName="parse"/>
+    <functioncall functionName="re"/>
+    <functioncall functionName="regex_match"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="seconds"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="stoi"/>
+    <functioncall functionName="str"/>
+    <functioncall functionName="system_clock"/>
+    <functioncall functionName="timeStream"/>
+    <functioncall functionName="time_point"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="tp_"/>
+  </FileInfo>
+</analyzerinfo>

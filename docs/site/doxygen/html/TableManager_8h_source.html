@@ -131,30 +131,31 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a>&amp; toTableId, <a class="code hl_class" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a>&amp; ep);</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="classCtrl_1_1TableManifest.html#a4e5f1e35c174ecb7fc0f035d6af40deb">TableManifest::TableList</a>&amp; <a class="code hl_function" href="classCtrl_1_1TableManager.html#a1f5af5d2fe13a75c82ec0ea234632d50">getTableList</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_class" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>* <a class="code hl_function" href="classCtrl_1_1TableManager.html#a803483681670f496e12c82d2591bae01">getTable</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a>&amp; tableId,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                                <a class="code hl_class" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a>&amp; ep) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_class" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>* pCurrentCrapsTable_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::unique_ptr&lt;YamlFile&gt; pCurrentFile_;   <span class="comment">// file of the current table</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <a class="code hl_class" href="classCtrl_1_1TableManifest.html">TableManifest</a> manifest_;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_typedef" href="classCtrl_1_1TableManager.html#a94e29d86bc4a46f603d259e25720f82f">Tables</a> tables_;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <a class="code hl_class" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>* loadCrapsTable(<span class="keyword">const</span> std::string&amp; fileName,</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                                      std::unique_ptr&lt;YamlFile&gt;&amp; file);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_class" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>* loadStartingCrapsTable(std::unique_ptr&lt;YamlFile&gt;&amp; file);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">void</span> saveCurrentTable() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> retrieveMaxSessions();</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> retrieveMaxRecentRolls();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">static</span> std::filesystem::path formTablePath(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a>&amp; tableId);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    std::string <a class="code hl_function" href="classCtrl_1_1TableManager.html#a8898609414314b29e5b66e4ef243b12e">getCurrentFileName</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_class" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>* <a class="code hl_function" href="classCtrl_1_1TableManager.html#a803483681670f496e12c82d2591bae01">getTable</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a>&amp; tableId,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                                <a class="code hl_class" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a>&amp; ep) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_class" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>* pCurrentCrapsTable_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::unique_ptr&lt;YamlFile&gt; pCurrentFile_;   <span class="comment">// file of the current table</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_class" href="classCtrl_1_1TableManifest.html">TableManifest</a> manifest_;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <a class="code hl_typedef" href="classCtrl_1_1TableManager.html#a94e29d86bc4a46f603d259e25720f82f">Tables</a> tables_;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <a class="code hl_class" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>* loadCrapsTable(<span class="keyword">const</span> std::string&amp; fileName,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                                      std::unique_ptr&lt;YamlFile&gt;&amp; file);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_class" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>* loadStartingCrapsTable(std::unique_ptr&lt;YamlFile&gt;&amp; file);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">void</span> saveCurrentTable() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> retrieveMaxSessions();</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> retrieveMaxRecentRolls();</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keyword">static</span> std::filesystem::path formTablePath(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a>&amp; tableId);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
 </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">/*-----------------------------------------------------------*/</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}  <span class="comment">// namespace Ctrl</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment">//----------------------------------------------------------------</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">/*-----------------------------------------------------------*/</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}  <span class="comment">// namespace Ctrl</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="ttc" id="aCrapsTypes_8h_html"><div class="ttname"><a href="CrapsTypes_8h.html">CrapsTypes.h</a></div></div>
 <div class="ttc" id="aErrorPass_8h_html"><div class="ttname"><a href="ErrorPass_8h.html">ErrorPass.h</a></div></div>
 <div class="ttc" id="aReturnCode_8h_html"><div class="ttname"><a href="ReturnCode_8h.html">ReturnCode.h</a></div></div>
@@ -163,11 +164,12 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aYamlFile_8h_html"><div class="ttname"><a href="YamlFile_8h.html">YamlFile.h</a></div></div>
 <div class="ttc" id="aclassCraps_1_1CrapsTable_html"><div class="ttname"><a href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a></div><div class="ttdoc">Craps Table.</div><div class="ttdef"><b>Definition</b> CrapsTable.h:33</div></div>
 <div class="ttc" id="aclassCtrl_1_1TableManager_html"><div class="ttname"><a href="classCtrl_1_1TableManager.html">Ctrl::TableManager</a></div><div class="ttdoc">Management across multiple Craps Tables.</div><div class="ttdef"><b>Definition</b> TableManager.h:26</div></div>
-<div class="ttc" id="aclassCtrl_1_1TableManager_html_a0e770f372ce2a5f12a5edba4daba937c"><div class="ttname"><a href="classCtrl_1_1TableManager.html#a0e770f372ce2a5f12a5edba4daba937c">Ctrl::TableManager::switchCrapsTable</a></div><div class="ttdeci">Gen::ReturnCode switchCrapsTable(const Craps::TableId &amp;toTableId, Gen::ErrorPass &amp;ep)</div><div class="ttdef"><b>Definition</b> TableManager.cpp:161</div></div>
+<div class="ttc" id="aclassCtrl_1_1TableManager_html_a0e770f372ce2a5f12a5edba4daba937c"><div class="ttname"><a href="classCtrl_1_1TableManager.html#a0e770f372ce2a5f12a5edba4daba937c">Ctrl::TableManager::switchCrapsTable</a></div><div class="ttdeci">Gen::ReturnCode switchCrapsTable(const Craps::TableId &amp;toTableId, Gen::ErrorPass &amp;ep)</div><div class="ttdef"><b>Definition</b> TableManager.cpp:173</div></div>
 <div class="ttc" id="aclassCtrl_1_1TableManager_html_a1f5af5d2fe13a75c82ec0ea234632d50"><div class="ttname"><a href="classCtrl_1_1TableManager.html#a1f5af5d2fe13a75c82ec0ea234632d50">Ctrl::TableManager::getTableList</a></div><div class="ttdeci">const TableManifest::TableList &amp; getTableList() const</div><div class="ttdef"><b>Definition</b> TableManager.cpp:55</div></div>
-<div class="ttc" id="aclassCtrl_1_1TableManager_html_a803483681670f496e12c82d2591bae01"><div class="ttname"><a href="classCtrl_1_1TableManager.html#a803483681670f496e12c82d2591bae01">Ctrl::TableManager::getTable</a></div><div class="ttdeci">Craps::CrapsTable * getTable(const Craps::TableId &amp;tableId, Gen::ErrorPass &amp;ep) const</div><div class="ttdef"><b>Definition</b> TableManager.cpp:63</div></div>
+<div class="ttc" id="aclassCtrl_1_1TableManager_html_a803483681670f496e12c82d2591bae01"><div class="ttname"><a href="classCtrl_1_1TableManager.html#a803483681670f496e12c82d2591bae01">Ctrl::TableManager::getTable</a></div><div class="ttdeci">Craps::CrapsTable * getTable(const Craps::TableId &amp;tableId, Gen::ErrorPass &amp;ep) const</div><div class="ttdef"><b>Definition</b> TableManager.cpp:75</div></div>
+<div class="ttc" id="aclassCtrl_1_1TableManager_html_a8898609414314b29e5b66e4ef243b12e"><div class="ttname"><a href="classCtrl_1_1TableManager.html#a8898609414314b29e5b66e4ef243b12e">Ctrl::TableManager::getCurrentFileName</a></div><div class="ttdeci">std::string getCurrentFileName() const</div><div class="ttdef"><b>Definition</b> TableManager.cpp:66</div></div>
 <div class="ttc" id="aclassCtrl_1_1TableManager_html_a94e29d86bc4a46f603d259e25720f82f"><div class="ttname"><a href="classCtrl_1_1TableManager.html#a94e29d86bc4a46f603d259e25720f82f">Ctrl::TableManager::Tables</a></div><div class="ttdeci">std::vector&lt; Craps::CrapsTable * &gt; Tables</div><div class="ttdef"><b>Definition</b> TableManager.h:28</div></div>
-<div class="ttc" id="aclassCtrl_1_1TableManager_html_ab41ed8619d701d58e2b4ba9013d01f32"><div class="ttname"><a href="classCtrl_1_1TableManager.html#ab41ed8619d701d58e2b4ba9013d01f32">Ctrl::TableManager::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdef"><b>Definition</b> TableManager.cpp:133</div></div>
+<div class="ttc" id="aclassCtrl_1_1TableManager_html_ab41ed8619d701d58e2b4ba9013d01f32"><div class="ttname"><a href="classCtrl_1_1TableManager.html#ab41ed8619d701d58e2b4ba9013d01f32">Ctrl::TableManager::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdef"><b>Definition</b> TableManager.cpp:145</div></div>
 <div class="ttc" id="aclassCtrl_1_1TableManager_html_abddb7609da669f54c0d5bdc4da0c2ba5"><div class="ttname"><a href="classCtrl_1_1TableManager.html#abddb7609da669f54c0d5bdc4da0c2ba5">Ctrl::TableManager::~TableManager</a></div><div class="ttdeci">~TableManager()</div><div class="ttdef"><b>Definition</b> TableManager.cpp:47</div></div>
 <div class="ttc" id="aclassCtrl_1_1TableManager_html_ae33f3f994f019755552584bec352af9b"><div class="ttname"><a href="classCtrl_1_1TableManager.html#ae33f3f994f019755552584bec352af9b">Ctrl::TableManager::TableManager</a></div><div class="ttdeci">TableManager()</div><div class="ttdef"><b>Definition</b> TableManager.cpp:37</div></div>
 <div class="ttc" id="aclassCtrl_1_1TableManifest_html"><div class="ttname"><a href="classCtrl_1_1TableManifest.html">Ctrl::TableManifest</a></div><div class="ttdoc">Reads in table.yaml, populates tables_ vector.</div><div class="ttdef"><b>Definition</b> TableManifest.h:16</div></div>
@@ -180,7 +182,7 @@ $(function(){ initResizable(false); });
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 14 2026 11:16:58 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Mon Nov 16 2026 15:42:24 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

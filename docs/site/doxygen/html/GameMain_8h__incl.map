@@ -1,7 +1,17 @@
 <map id="src/lib&#45;controller/include/controller/GameMain.h" name="src/lib&#45;controller/include/controller/GameMain.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="12,5,151,60"/>
-<area shape="rect" id="Node000002" href="$SignalHandler_8h.html" title=" " alt="" coords="5,108,157,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,60,84,94,79,94,79,60"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="39,181,123,207"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="84,134,84,168,79,168,79,134"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="269,5,408,60"/>
+<area shape="rect" id="Node000002" href="$UserState_8h.html" title=" " alt="" coords="166,108,330,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="313,62,272,100,268,96,309,58"/>
+<area shape="rect" id="Node000007" href="$SignalHandler_8h.html" title=" " alt="" coords="355,108,507,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="369,58,410,96,406,100,365,62"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,181,96,207"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="217,136,97,179,95,174,215,131"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="120,181,195,207"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="235,135,185,175,181,170,232,131"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="219,181,277,207"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="251,134,251,168,245,168,245,134"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="302,181,365,207"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="263,131,311,170,307,175,260,135"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="389,181,473,207"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="433,134,433,168,428,168,428,134"/>
 </map>

@@ -1,0 +1,17 @@
+<map id="src/lib&#45;controller/include/controller/StartChoices.h" name="src/lib&#45;controller/include/controller/StartChoices.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="123,5,261,60"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,181,96,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,62,118,84,91,110,73,139,60,169,56,167,68,137,87,106,114,80,144,58"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="135,181,209,207"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,62,119,83,100,109,97,127,105,144,120,159,138,172,135,176,117,163,101,147,92,128,95,107,115,79,140,58"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="240,181,299,207"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="244,58,269,79,289,107,294,123,293,139,285,169,280,168,288,139,288,123,284,109,265,83,240,62"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="327,181,390,207"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="244,58,278,80,309,106,333,137,350,167,345,170,328,140,305,110,274,84,242,62"/>
+<area shape="rect" id="Node000006" href="$UserState_8h.html" title=" " alt="" coords="110,108,274,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="195,60,195,94,189,94,189,60"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="170,136,87,177,85,173,168,131"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="191,134,181,169,176,167,186,133"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="206,131,248,170,245,174,203,135"/>
+<area shape="poly" id="edge9_Node000006_Node000005" title=" " alt="" coords="220,131,320,173,318,178,218,136"/>
+</map>

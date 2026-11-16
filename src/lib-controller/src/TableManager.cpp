@@ -59,6 +59,18 @@ TableManager::getTableList() const
 
 //----------------------------------------------------------------
 
+//
+// File name (no directory) of the current table, e.g. "las-vegas-strip.yaml".
+//
+std::string
+TableManager::getCurrentFileName() const
+{
+    return pCurrentFile_ ? pCurrentFile_->getPath().filename().string()
+                         : std::string();
+}
+
+//----------------------------------------------------------------
+
 Craps::CrapsTable*
 TableManager::getTable(const Craps::TableId& tableId,
                        Gen::ErrorPass& ep) const
@@ -212,7 +224,7 @@ std::filesystem::path
 TableManager::formTablePath(const std::string& fileName)
 {
     std::string dir = Gbl::pConfigMgr->getString(
-        Ctrl::ConfigManager::KeyDirsSysTables).value();
+        Ctrl::ConfigManager::KeyDirsUsrTables).value();
 
     namespace fs = std::filesystem;
     fs::path path = fs::path(dir) / fileName;

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="15435100517934345743">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="QuickBetEntry"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="betEntriesFromYAML"/>
+    <functioncall functionName="betEntriesToYAML"/>
+    <functioncall functionName="bets_"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="find_if"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="setQuickBet"/>
+    <functioncall functionName="size"/>
+  </FileInfo>
+</analyzerinfo>

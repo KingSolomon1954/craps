@@ -42,8 +42,9 @@ GameMain::GameMain(int argc, char* argv[])
 {
     instancePtr_ = this;
     std::unique_ptr<Gen::BuildInfo>       pBuildInfo(initBuildInfo());         (void) pBuildInfo;
+    logStartBanner();                     // Held until log file is known
     std::unique_ptr<Ctrl::ConfigManager>  pCfg(initConfigManager(argc, argv)); (void) pCfg;
-    setupLogging();                       // After config
+    setupLogging();                       // Log file now known
     std::unique_ptr<Ctrl::EventHandler>   pEventHandler(initEventHandler());   (void) pEventHandler;
     std::unique_ptr<Ctrl::TableManager>   pTablerMgr(initTableManager());      (void) pTablerMgr;
     std::unique_ptr<Ctrl::PlayerManager>  pPlayerMgr(initPlayerManager());     (void) pPlayerMgr;
@@ -74,6 +75,20 @@ GameMain::terminateApp()
 //----------------------------------------------------------------
 
 void
+GameMain::logStartBanner()
+{
+    Gen::Logger::instance().logInfo("--------------------------------------");
+    Gen::Logger::instance().logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
+    Gen::Logger::instance().logInfo("--------------------------------------");
+}
+
+//----------------------------------------------------------------
+//
+// Called once configuration is resolved. Messages logged until now
+// were held by the logger; this gives it the log file and they are
+// written first.
+//
+void
 GameMain::setupLogging()
 {
     assert(Gbl::pConfigMgr != nullptr);
@@ -90,10 +105,6 @@ GameMain::setupLogging()
     bool trace = Gbl::pConfigMgr->getBool(ConfigManager::KeyTraceLogging).value();
     Gen::Logger::instance().setTraceLevel(trace);
 
-    // First logging entry
-    Gen::Logger::instance().logInfo("--------------------------------------");
-    Gen::Logger::instance().logInfo("Starting " + Gbl::pBuildInfo->shortInfo());
-    Gen::Logger::instance().logInfo("--------------------------------------");
 }
 
 //----------------------------------------------------------------
@@ -209,11 +220,16 @@ GameMain::explicitShutdown()
     // model publishes from here on are dropped by the View.
     shutdownView();
 
+    // Remember who is playing where while the table still has them.
+    const UserState state = gatherUserState();
+
     // Order matters. The table shuts its players down, merging this
     // session into their stats, and saves itself. Only then can
     // PlayerManager save the players.
     Gbl::pTableMgr ->shutdown();
     Gbl::pPlayerMgr->shutdown();
+
+    saveUserState(state);
 
     // Gbl::pEventHandler->shutdown();  // N/A
     // Gbl::pConfigMgr   ->shutdown();  // N/A
@@ -221,4 +237,50 @@ GameMain::explicitShutdown()
 }
 
 //----------------------------------------------------------------
+//
+// Collects what the next run should start with: the table, the user
+// player and the players at the table.
+//
+UserState
+GameMain::gatherUserState() const
+{
+    UserState state;
+    state.table      = Gbl::pTableMgr->getCurrentFileName();
+    state.userPlayer = Gbl::pPlayerMgr->getUserFileName();
+    for (auto& f : Gbl::pPlayerMgr->getTablePlayerFileNames())
+    {
+        if (f != state.userPlayer)
+        {
+            state.buddies.push_back(std::move(f));
+        }
+    }
+    if (state.buddies.size() > UserState::MaxBuddies)
+    {
+        state.buddies.resize(UserState::MaxBuddies);
+    }
+    return state;
+}
 
+//----------------------------------------------------------------
+//
+// Writes state.yaml. A failure is logged; it never prevents quitting.
+//
+void
+GameMain::saveUserState(const UserState& state) const
+{
+    if (state.table.empty() || state.userPlayer.empty())
+    {
+        return;  // Nothing worth remembering
+    }
+    try
+    {
+        state.save(Gbl::pConfigMgr->getString(
+            ConfigManager::KeyDirsUsrState).value());
+    }
+    catch (const std::exception& e)
+    {
+        LOG_ERROR(std::string("GameMain::saveUserState(): ") + e.what());
+    }
+}
+
+//----------------------------------------------------------------

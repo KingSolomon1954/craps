@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="7029734179693079103">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="IsDefined"/>
+    <functioncall functionName="IsMap"/>
+    <functioncall functionName="Map"/>
+    <functioncall functionName="autoFill_"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="fromYAML"/>
+    <functioncall functionName="lastFill_"/>
+    <functioncall functionName="node"/>
+    <functioncall functionName="quickBet_"/>
+    <functioncall functionName="toYAML"/>
+  </FileInfo>
+</analyzerinfo>

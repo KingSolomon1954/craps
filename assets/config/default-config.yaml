@@ -1,0 +1,36 @@
+#
+# RoyalCraps user configuration.
+#
+# This file was copied here the first time the game started. It is yours
+# to edit; the game never rewrites it. Everything below is optional and
+# commented out. Whatever you uncomment is always honored.
+#
+# Anything you leave out is decided by where the last game left off,
+# which the game remembers in state.yaml in the state directory
+# (~/.local/state/royalcraps), and on a fresh install by the packaged
+# defaults (table las-vegas-strip, player unnamed, buddies arthur and
+# paige). Names are file names in the data directory
+# (~/.local/share/royalcraps/tables and .../players).
+#
+# table:
+#   startWithTable: "las-vegas-strip.yaml"    # Always start at this table
+#   startWithUserPlayer: "unnamed.yaml"       # Always start as this player,
+#                                             # whoever you were last time
+#   startWithBuddyPlayers: true               # false: start alone, whoever
+#                                             # sat with you last time
+#   startWithTheseBuddyPlayers:               # Always start with these
+#     - "arthur.yaml"                         # buddies (up to 5); ignored
+#     - "paige.yaml"                          # if startWithBuddyPlayers is false
+#   maxSessions: 50
+#   maxRecentRolls: 50
+#
+# rollHistory:
+#   format: 1         # [ 1..4 ]
+#   scroll: "up"      # [left | right | up | down]
+#
+# log:
+#   debug: false
+#   trace: false
+#
+# player:
+#   maxSessions: 50

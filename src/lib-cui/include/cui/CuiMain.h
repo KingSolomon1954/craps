@@ -25,6 +25,7 @@ private:
     void initTerminal();
     void initCui();
     void run();
+    void remindToNamePlayer();
     void initLocale();
     void initNcurses();
     bool utf8_enabled();

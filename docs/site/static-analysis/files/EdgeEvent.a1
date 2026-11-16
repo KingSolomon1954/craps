@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="11331561192942672875">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="ETIMEDOUT"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="lock"/>
+    <functioncall functionName="mutex"/>
+    <functioncall functionName="mutex_"/>
+    <functioncall functionName="nanoseconds"/>
+    <functioncall functionName="notify_one"/>
+    <functioncall functionName="now"/>
+    <functioncall functionName="signaled_"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="wait"/>
+    <functioncall functionName="wait_until"/>
+  </FileInfo>
+</analyzerinfo>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="2594060780016148183">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="LineInput"/>
+    <functioncall functionName="beep"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="cursorPos_"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="insert"/>
+    <functioncall functionName="isdigit"/>
+    <functioncall functionName="maxChars_"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="resize"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="true"/>
+  </FileInfo>
+</analyzerinfo>

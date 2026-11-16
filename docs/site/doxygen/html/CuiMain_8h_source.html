@@ -121,32 +121,33 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordtype">void</span> initTerminal();</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordtype">void</span> initCui();</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">void</span> run();</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> initLocale();</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">void</span> initNcurses();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordtype">bool</span> utf8_enabled();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">void</span> requestTerminalResize    (<span class="keywordtype">int</span> rows,     <span class="keywordtype">int</span> cols);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">bool</span> promptUserToResize       (<span class="keywordtype">int</span> haveRows, <span class="keywordtype">int</span> haveCols,</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                                   <span class="keywordtype">int</span> needRows, <span class="keywordtype">int</span> needCols);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">bool</span> ensureMinimumTerminalSize(<span class="keywordtype">int</span> minRows,  <span class="keywordtype">int</span> minCols);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> remindToNamePlayer();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">void</span> initLocale();</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordtype">void</span> initNcurses();</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">bool</span> utf8_enabled();</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">void</span> requestTerminalResize    (<span class="keywordtype">int</span> rows,     <span class="keywordtype">int</span> cols);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordtype">bool</span> promptUserToResize       (<span class="keywordtype">int</span> haveRows, <span class="keywordtype">int</span> haveCols,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                                   <span class="keywordtype">int</span> needRows, <span class="keywordtype">int</span> needCols);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">bool</span> ensureMinimumTerminalSize(<span class="keywordtype">int</span> minRows,  <span class="keywordtype">int</span> minCols);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>};</div>
 </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">/*-----------------------------------------------------------*/</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>} <span class="comment">// namespace Cui</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">//----------------------------------------------------------------</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">/*-----------------------------------------------------------*/</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>} <span class="comment">// namespace Cui</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">//----------------------------------------------------------------</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="ttc" id="aclassCui_1_1CuiMain_html"><div class="ttname"><a href="classCui_1_1CuiMain.html">Cui::CuiMain</a></div><div class="ttdoc">Main entry point for CUI library.</div><div class="ttdef"><b>Definition</b> CuiMain.h:13</div></div>
-<div class="ttc" id="aclassCui_1_1CuiMain_html_a0992940584b002973a3593ff919dbcf4"><div class="ttname"><a href="classCui_1_1CuiMain.html#a0992940584b002973a3593ff919dbcf4">Cui::CuiMain::instance</a></div><div class="ttdeci">static CuiMain &amp; instance()</div><div class="ttdef"><b>Definition</b> CuiMain.cpp:34</div></div>
-<div class="ttc" id="aclassCui_1_1CuiMain_html_a62d615a320e525cb5725441f3739885d"><div class="ttname"><a href="classCui_1_1CuiMain.html#a62d615a320e525cb5725441f3739885d">Cui::CuiMain::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdef"><b>Definition</b> CuiMain.cpp:43</div></div>
-<div class="ttc" id="aclassCui_1_1CuiMain_html_a99166d3a6777a13aa9eddea8437e1870"><div class="ttname"><a href="classCui_1_1CuiMain.html#a99166d3a6777a13aa9eddea8437e1870">Cui::CuiMain::CuiMain</a></div><div class="ttdeci">CuiMain()</div><div class="ttdef"><b>Definition</b> CuiMain.cpp:24</div></div>
+<div class="ttc" id="aclassCui_1_1CuiMain_html_a0992940584b002973a3593ff919dbcf4"><div class="ttname"><a href="classCui_1_1CuiMain.html#a0992940584b002973a3593ff919dbcf4">Cui::CuiMain::instance</a></div><div class="ttdeci">static CuiMain &amp; instance()</div><div class="ttdef"><b>Definition</b> CuiMain.cpp:36</div></div>
+<div class="ttc" id="aclassCui_1_1CuiMain_html_a62d615a320e525cb5725441f3739885d"><div class="ttname"><a href="classCui_1_1CuiMain.html#a62d615a320e525cb5725441f3739885d">Cui::CuiMain::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdef"><b>Definition</b> CuiMain.cpp:45</div></div>
+<div class="ttc" id="aclassCui_1_1CuiMain_html_a99166d3a6777a13aa9eddea8437e1870"><div class="ttname"><a href="classCui_1_1CuiMain.html#a99166d3a6777a13aa9eddea8437e1870">Cui::CuiMain::CuiMain</a></div><div class="ttdeci">CuiMain()</div><div class="ttdef"><b>Definition</b> CuiMain.cpp:26</div></div>
 <div class="ttc" id="aclassCui_1_1CuiMain_html_ac62879ae3eaf0937d4fca8237dbd6341"><div class="ttname"><a href="classCui_1_1CuiMain.html#ac62879ae3eaf0937d4fca8237dbd6341">Cui::CuiMain::~CuiMain</a></div><div class="ttdeci">~CuiMain()=default</div></div>
-<div class="ttc" id="aclassCui_1_1CuiMain_html_ad3c1cb4fad84e129946f37324884dc6a"><div class="ttname"><a href="classCui_1_1CuiMain.html#ad3c1cb4fad84e129946f37324884dc6a">Cui::CuiMain::useUnicodePips</a></div><div class="ttdeci">bool useUnicodePips() const</div><div class="ttdef"><b>Definition</b> CuiMain.cpp:216</div></div>
+<div class="ttc" id="aclassCui_1_1CuiMain_html_ad3c1cb4fad84e129946f37324884dc6a"><div class="ttname"><a href="classCui_1_1CuiMain.html#ad3c1cb4fad84e129946f37324884dc6a">Cui::CuiMain::useUnicodePips</a></div><div class="ttdeci">bool useUnicodePips() const</div><div class="ttdef"><b>Definition</b> CuiMain.cpp:248</div></div>
 <div class="ttc" id="anamespaceCui_html"><div class="ttname"><a href="namespaceCui.html">Cui</a></div><div class="ttdoc">CUI Library (lib-cui)</div><div class="ttdef"><b>Definition</b> DialogBase.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 14 2026 11:16:58 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Mon Nov 16 2026 15:42:25 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

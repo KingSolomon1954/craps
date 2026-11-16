@@ -36,8 +36,12 @@ _D_SRCS  := $(D_SRC)/main/src \
             $(D_SRC)/main/include \
             $(D_SRC)/lib-gen/src \
             $(D_SRC)/lib-gen/include \
-            $(D_SRC)/lib-codec/src \
-            $(D_SRC)/lib-codec/include
+            $(D_SRC)/lib-controller/src \
+            $(D_SRC)/lib-controller/include \
+            $(D_SRC)/lib-craps/src \
+            $(D_SRC)/lib-craps/include \
+            $(D_SRC)/lib-cui/src \
+            $(D_SRC)/lib-cui/include
 
 # Using STA as the mnemonic for static analysis
 
@@ -77,8 +81,9 @@ $(_STA_RESULTS_FILE): _create-sta_dirs
 	    --template=gcc --xml \
 	    --suppressions-list=/work/$(_STA_SUPPRESS_FILE) \
 	    --cppcheck-build-dir=/work/$(_D_STA_FILES) \
+            -i $(D_SRC)/main/src/snippets \
 	    --output-file=/work/$(_STA_RESULTS_FILE) \
-	    $(addprefix /work/,$(_D_SRCS))
+	        $(addprefix /work/,$(_D_SRCS))
 
 static-analysis-clean:
 	rm -rf $(_STA_DIR)

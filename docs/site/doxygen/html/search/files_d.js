@@ -10,11 +10,13 @@ var searchData=
   ['sessionsummary_2eh_7',['SessionSummary.h',['../SessionSummary_8h.html',1,'']]],
   ['signalhandler_2ecpp_8',['SignalHandler.cpp',['../SignalHandler_8cpp.html',1,'']]],
   ['signalhandler_2eh_9',['SignalHandler.h',['../SignalHandler_8h.html',1,'']]],
-  ['stringutils_2ecpp_10',['StringUtils.cpp',['../StringUtils_8cpp.html',1,'']]],
-  ['stringutils_2eh_11',['StringUtils.h',['../StringUtils_8h.html',1,'']]],
-  ['stringutils_2ehpp_12',['StringUtils.hpp',['../StringUtils_8hpp.html',1,'']]],
-  ['surfacebase_2ecpp_13',['SurfaceBase.cpp',['../SurfaceBase_8cpp.html',1,'']]],
-  ['surfacebase_2eh_14',['SurfaceBase.h',['../SurfaceBase_8h.html',1,'']]],
-  ['surfacemanager_2ecpp_15',['SurfaceManager.cpp',['../SurfaceManager_8cpp.html',1,'']]],
-  ['surfacemanager_2eh_16',['SurfaceManager.h',['../SurfaceManager_8h.html',1,'']]]
+  ['startchoices_2ecpp_10',['StartChoices.cpp',['../StartChoices_8cpp.html',1,'']]],
+  ['startchoices_2eh_11',['StartChoices.h',['../StartChoices_8h.html',1,'']]],
+  ['stringutils_2ecpp_12',['StringUtils.cpp',['../StringUtils_8cpp.html',1,'']]],
+  ['stringutils_2eh_13',['StringUtils.h',['../StringUtils_8h.html',1,'']]],
+  ['stringutils_2ehpp_14',['StringUtils.hpp',['../StringUtils_8hpp.html',1,'']]],
+  ['surfacebase_2ecpp_15',['SurfaceBase.cpp',['../SurfaceBase_8cpp.html',1,'']]],
+  ['surfacebase_2eh_16',['SurfaceBase.h',['../SurfaceBase_8h.html',1,'']]],
+  ['surfacemanager_2ecpp_17',['SurfaceManager.cpp',['../SurfaceManager_8cpp.html',1,'']]],
+  ['surfacemanager_2eh_18',['SurfaceManager.h',['../SurfaceManager_8h.html',1,'']]]
 ];

@@ -8,6 +8,9 @@
 #include <filesystem>
 #include <functional>
 #include <controller/ConfigManager.h>
+#include <controller/ConfigSeed.h>
+#include <controller/StartChoices.h>
+#include <gen/Logger.h>
 #include <gen/MultiLayerConfig.h>
 
 using namespace Ctrl;
@@ -17,10 +20,17 @@ namespace fs = std::filesystem;
 
 Process startup config files.
 
-1. Creates local user directories
-2. Throws if system directories are missing and needed
-3. Finds config files based on MultiLayerConfig
-4. Loads config files into MultiLayerConfig in files layer
+1. Throws if system directories are missing and needed
+2. Creates local user directories
+3. Seeds the user directories from the packaged files if they are not
+   populated yet, see ConfigSeed. Notes a first run in the config.
+4. Finds config files based on MultiLayerConfig
+5. Loads config files into MultiLayerConfig in files layer, each
+   overriding the previous: packaged sys-config.yaml, then the user's
+   config.yaml.
+6. Decides the starting table and players from what the user wrote,
+   what the last run remembered (state.yaml) and the packaged defaults.
+   See StartChoices.
 
 @param[in] multiConfig
     The multi-layer configuration structure.
@@ -30,12 +40,15 @@ ConfigFiles::processFiles(Gen::MultiLayerConfig& multiConfig)
 {
     checkSystemDirs(multiConfig);
     createUserDirs(multiConfig);
+    const bool firstRun = ConfigSeed::seedUserFiles(multiConfig);
 
     // Work with layer directly from here on.
     auto& cfg = multiConfig.getLayer(ConfigManager::LayerNameFiles);
-    
+    cfg.set(ConfigManager::KeyStartupFirstRun, firstRun ? "true" : "false");
+
     loadSystemConfig(multiConfig, cfg);  // Load the packaged config
     loadUserConfig(multiConfig, cfg);    // Overrides packaged config
+    StartChoices::apply(multiConfig, cfg); // Combines them with state.yaml
 }
 
 //----------------------------------------------------------------
@@ -69,21 +82,26 @@ ConfigFiles::createUserDirs(const Gen::MultiLayerConfig& multiConfig)
 void
 ConfigFiles::checkSystemDirs(const Gen::MultiLayerConfig& multiConfig)
 {
-    // Check system directories created by installer
+    // Check system directories created by installer. Packaged audio
+    // and images are optional (nothing reads them yet, and an empty
+    // directory does not survive some packaging steps).
     std::string sysSharedDir  = multiConfig.getString(ConfigManager::KeyDirsSysShared).value();
     std::string sysConfigDir  = multiConfig.getString(ConfigManager::KeyDirsSysConfig).value();
     std::string sysTablesDir  = multiConfig.getString(ConfigManager::KeyDirsSysTables).value();
     std::string sysPlayersDir = multiConfig.getString(ConfigManager::KeyDirsSysPlayers).value();
-    std::string sysAudioDir   = multiConfig.getString(ConfigManager::KeyDirsSysAudio).value();
-    std::string sysImagesDir  = multiConfig.getString(ConfigManager::KeyDirsSysImages).value();
 
     // Can't continue if basic assets are not found
-    existsOrThrow(sysSharedDir);
+    if (!fs::exists(sysSharedDir))
+    {
+        throw std::runtime_error("Packaged game files not found: " +
+            sysSharedDir + ". Searched <executable dir>/../share/" +
+            "royalcraps, /usr/local/share/royalcraps and "
+            "/usr/share/royalcraps. Use --sys-config-dir to name the "
+            "directory holding config, tables and players.");
+    }
     existsOrThrow(sysConfigDir);
     existsOrThrow(sysTablesDir);
     existsOrThrow(sysPlayersDir);
-    existsOrThrow(sysAudioDir);
-    existsOrThrow(sysImagesDir);
 }
 
 //----------------------------------------------------------------
@@ -97,6 +115,7 @@ ConfigFiles::loadSystemConfig(
         multiConfig.getString(ConfigManager::KeyDirsSysConfig).value() + "/sys-config.yaml";
     existsOrThrow(filename);
     yamlToMultiConfig(filename, cfg);
+    LOG_INFO("Loaded " + filename);
 }
 
 //----------------------------------------------------------------
@@ -111,6 +130,7 @@ ConfigFiles::loadUserConfig(
     if (fs::exists(filename))
     {
         yamlToMultiConfig(filename, cfg);
+        LOG_INFO("Loaded " + filename);
     }
 }
 
@@ -152,6 +172,11 @@ ConfigFiles::yamlToMultiConfig(const std::string& filename,
             else if (node.IsScalar())
             {
                 cfg.set(prefix, node.as<std::string>());
+            }
+            else if (node.IsNull())
+            {
+                // An empty file, or a key with no value, says nothing.
+                // The shipped config.yaml is all comments.
             }
             else
             {

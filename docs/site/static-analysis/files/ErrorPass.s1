@@ -1,0 +1,1 @@
+operator<< call:[additionalInfo,codeNum,count,description,empty,errorNameStr,errorTypeStr,fileName,format,funcName,gmtime,lineNum,probableCause,proposedRepair,severityStr,size,stackTrace,time_since_epoch,timestamp,to_time_t] noreturn:[format]

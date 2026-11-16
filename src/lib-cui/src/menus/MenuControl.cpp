@@ -6,6 +6,7 @@
 
 #include <cui/menus/MenuControl.h>
 #include <cui/menus/MenuConfigure.h>
+#include <cui/menus/MenuPlayers.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/Logger.h>
@@ -39,20 +40,16 @@ MenuControl::instance()
 // filled window.
 //
 //    0123456789 123456789 1234
-// 0  ┌────────────────────────┐
-// 1  │ Control Menu           │
-// 2  ├────────────────────────┤
-// 3  │ [c] Configure          │
-// 4  │ [p] Pause              │
-// 5  │ [r] Resume             │
-// 6  │ [j] Buddy Joins Table  │
-// 7  │ [l] Buddy Leaves Table │
-// 8  │ [n] Rename Player      │
-// 9  │ [s] Switch To Player   │
-// 10 │ [e] Create New Player  │
-// 11 │ [a] Change Table       │
-// 12 │ [. or esc] Back        │
-// 13 └────────────────────────┘
+// 0  ┌───────────────────────┐
+// 1  │ Control Menu          │
+// 2  ├───────────────────────┤
+// 3  │ [c] Configure         │
+// 4  │ [p] Players           │
+// 5  │ [t] Tables            │
+// 6  │ [a] Pause             │
+// 7  │ [r] Resume            │
+// 8  │ [. or esc] Back       │
+// 9  └───────────────────────┘
 //
 void
 MenuControl::fillWindow()
@@ -64,17 +61,13 @@ MenuControl::fillWindow()
     mvwaddch(pWin_, 2, 0, ACS_LTEE);
     mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 
-    mvwaddstr(pWin_,  1, 2, "Control");
+    mvwaddstr(pWin_,  1, 2, "Control Menu");
     mvwaddstr(pWin_,  3, 2, "[c] Configure");
-    mvwaddstr(pWin_,  4, 2, "[p] Pause");
-    mvwaddstr(pWin_,  5, 2, "[r] Resume");
-    mvwaddstr(pWin_,  6, 2, "[j] Buddy Joins Table");
-    mvwaddstr(pWin_,  7, 2, "[l] Buddy Leaves Table");
-    mvwaddstr(pWin_,  8, 2, "[n] Rename Player");
-    mvwaddstr(pWin_,  9, 2, "[s] Switch Player");
-    mvwaddstr(pWin_, 10, 2, "[e] Create Player");
-    mvwaddstr(pWin_, 11, 2, "[a] Change Table");
-    mvwaddstr(pWin_, 12, 2, "[. or esc] Back");
+    mvwaddstr(pWin_,  4, 2, "[p] Players");
+    mvwaddstr(pWin_,  5, 2, "[t] Tables");
+    mvwaddstr(pWin_,  6, 2, "[a] Pause");
+    mvwaddstr(pWin_,  7, 2, "[r] Resume");
+    mvwaddstr(pWin_,  8, 2, "[. or esc] Back");
 }
 
 //----------------------------------------------------------------
@@ -132,14 +125,10 @@ MenuControl::handleKey(int ch)
     switch(ch)
     {
     case 'c': doConfigure();    break;
-    case 'p': doPause();        break;
+    case 'p': doPlayers();      break;
+    case 't': doTables();       break;
+    case 'a': doPause();        break;
     case 'r': doResume();       break;
-    case 'j': doBuddyJoins();   break;
-    case 'l': doBuddyLeaves();  break;
-    case 'n': doRenamePlayer(); break;
-    case 's': doSwitchPlayer(); break;
-    case 'e': doCreatePlayer(); break;
-    case 'a': doChangeTable();  break;
     case '.':
     case 27 : back();           break;
     default : handled = false;  break;
@@ -158,6 +147,21 @@ MenuControl::doConfigure()
 //----------------------------------------------------------------
 
 void
+MenuControl::doPlayers()
+{
+    SurfaceManager::instance().pushSurface(&MenuPlayers::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+MenuControl::doTables()
+{
+}
+
+//----------------------------------------------------------------
+
+void
 MenuControl::doPause()
 {
 }
@@ -166,48 +170,6 @@ MenuControl::doPause()
 
 void
 MenuControl::doResume()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doBuddyJoins()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doBuddyLeaves()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doRenamePlayer()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doSwitchPlayer()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doCreatePlayer()
-{
-}
-
-//----------------------------------------------------------------
-
-void
-MenuControl::doChangeTable()
 {
 }
 

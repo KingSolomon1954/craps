@@ -135,10 +135,12 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Process startup config files.</p>
 <ol type="1">
-<li>Creates local user directories</li>
 <li>Throws if system directories are missing and needed</li>
+<li>Creates local user directories</li>
+<li>Seeds the user directories from the packaged files if they are not populated yet, see <a class="el" href="classCtrl_1_1ConfigSeed.html" title="Populates the user&#39;s directories from the packaged defaults.">ConfigSeed</a>. Notes a first run in the config.</li>
 <li>Finds config files based on MultiLayerConfig</li>
-<li>Loads config files into MultiLayerConfig in files layer</li>
+<li>Loads config files into MultiLayerConfig in files layer, each overriding the previous: packaged sys-config.yaml, then the user's config.yaml.</li>
+<li>Decides the starting table and players from what the user wrote, what the last run remembered (state.yaml) and the packaged defaults. See <a class="el" href="classCtrl_1_1StartChoices.html" title="Decides which table and players the game starts with.">StartChoices</a>.</li>
 </ol>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -156,7 +158,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 14 2026 11:16:59 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Mon Nov 16 2026 15:42:25 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

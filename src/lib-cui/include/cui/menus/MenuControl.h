@@ -34,20 +34,16 @@ public:
     
 private:
     WindowPosition   winPos_{};
-    const WindowSize winSize_ = {14, 25};  // rows, cols
+    const WindowSize winSize_ = {10, 25};  // rows, cols
 
 private:
     MenuControl();  // Private ctor
     void fillWindow();
     void doConfigure();
+    void doPlayers();
+    void doTables();
     void doPause();
     void doResume();
-    void doBuddyJoins();
-    void doBuddyLeaves();
-    void doRenamePlayer();
-    void doSwitchPlayer();
-    void doCreatePlayer();
-    void doChangeTable();
     void back();
 };
 

@@ -50,3 +50,5 @@ Repeaters
 seven-out
 seven-outs
 YAML
+XDG
+tarball
