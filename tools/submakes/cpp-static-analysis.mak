@@ -43,9 +43,6 @@ _D_SRCS  := $(D_SRC)/main/src \
             $(D_SRC)/lib-cui/src \
             $(D_SRC)/lib-cui/include
 
-_D_SRCS88  := $(D_SRC)/lib-gen/src \
-            $(D_SRC)/lib-gen/include
-
 # Using STA as the mnemonic for static analysis
 
 _STA_DIR           := $(D_BLD)/static-analysis
@@ -84,6 +81,7 @@ $(_STA_RESULTS_FILE): _create-sta_dirs
 	    --template=gcc --xml \
 	    --suppressions-list=/work/$(_STA_SUPPRESS_FILE) \
 	    --cppcheck-build-dir=/work/$(_D_STA_FILES) \
+            -i $(D_SRC)/main/src/snippets \
 	    --output-file=/work/$(_STA_RESULTS_FILE) \
 	    -i snippets \
 	    $(addprefix /work/,$(_D_SRCS))
