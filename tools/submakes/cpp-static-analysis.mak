@@ -78,7 +78,6 @@ $(_STA_INDEX_FILE): $(_STA_RESULTS_FILE)
 	echo "  error-count: $${value}" >> $(_STA_BADGE_FILE)
 
 $(_STA_RESULTS_FILE): _create-sta_dirs
-	sleep 5
 	$(CNTR_TECH) run --rm \
 	    --volume $(PWD):/work \
 	    $(CNTR_CPPCHECK_TOOLS_PATH) \
