@@ -90,7 +90,7 @@ static-analysis-clean:
 
 _create-sta_dirs:
 	mkdir -p $(_D_STA_FILES) $(_D_STA_REPORT)
-        sleep 1
+	sleep 1
 
 .PHONY: static-analysis static-analysis-clean \
         static-analysis-report _create-sta_dirs
