@@ -9,7 +9,7 @@
 #include <functional>
 #include <controller/ConfigManager.h>
 #include <controller/ConfigSeed.h>
-#include <controller/UserState.h>
+#include <controller/StartChoices.h>
 #include <gen/Logger.h>
 #include <gen/MultiLayerConfig.h>
 
@@ -26,8 +26,11 @@ Process startup config files.
    populated yet, see ConfigSeed. Notes a first run in the config.
 4. Finds config files based on MultiLayerConfig
 5. Loads config files into MultiLayerConfig in files layer, each
-   overriding the previous: packaged sys-config.yaml, the user's
-   config.yaml, then state.yaml (what the last run remembered).
+   overriding the previous: packaged sys-config.yaml, then the user's
+   config.yaml.
+6. Decides the starting table and players from what the user wrote,
+   what the last run remembered (state.yaml) and the packaged defaults.
+   See StartChoices.
 
 @param[in] multiConfig
     The multi-layer configuration structure.
@@ -45,7 +48,7 @@ ConfigFiles::processFiles(Gen::MultiLayerConfig& multiConfig)
 
     loadSystemConfig(multiConfig, cfg);  // Load the packaged config
     loadUserConfig(multiConfig, cfg);    // Overrides packaged config
-    UserState::loadInto(multiConfig, cfg); // Overrides user config
+    StartChoices::apply(multiConfig, cfg); // Combines them with state.yaml
 }
 
 //----------------------------------------------------------------
@@ -169,6 +172,11 @@ ConfigFiles::yamlToMultiConfig(const std::string& filename,
             else if (node.IsScalar())
             {
                 cfg.set(prefix, node.as<std::string>());
+            }
+            else if (node.IsNull())
+            {
+                // An empty file, or a key with no value, says nothing.
+                // The shipped config.yaml is all comments.
             }
             else
             {

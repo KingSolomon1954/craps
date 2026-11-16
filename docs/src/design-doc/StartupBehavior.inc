@@ -32,20 +32,22 @@ variable, when set, replaces the default shown.
    * - ``$XDG_CONFIG_HOME/royalcraps`` (``~/.config/royalcraps``)
      - read/write
      - ``config.yaml``: the user's preferences. Hand edited; never
-       rewritten by the game.
+       rewritten by the game. Delivered with every setting commented
+       out.
    * - ``$XDG_DATA_HOME/royalcraps`` (``~/.local/share/royalcraps``)
      - read/write
      - ``players/`` and ``tables/`` (each with its manifest,
        ``players.yaml`` and ``tables.yaml``), ``audio/``, ``images/``.
    * - ``$XDG_STATE_HOME/royalcraps`` (``~/.local/state/royalcraps``)
      - read/write
-     - ``state.yaml``: last table and players, written at quit.
+     - ``state.yaml``: last table and players, written at quit; a
+       memory only, see `Choosing the Table and Players`_.
        Also the log file.
 
 The configuration is resolved in layers, each overriding the one before:
-built-in defaults, the files (packaged ``sys-config.yaml``, the user's
-``config.yaml``, then ``state.yaml``), environment variables, and
-finally the command line. The directories themselves can be overridden
+built-in defaults, the files (packaged ``sys-config.yaml``, then the
+user's ``config.yaml``), environment variables, and finally the command
+line. The directories themselves can be overridden
 with ``--sys-config-dir``, ``--usr-config-dir``, ``--usr-data-dir`` and
 ``--usr-state-dir``. Pointing the user directories at a scratch location
 gives a genuine first startup every time, which is how first startup is
@@ -88,9 +90,10 @@ gets a working game back rather than an error.
 #. Copies ``default-config.yaml`` to the user's ``config.yaml``. This is
    done last, so an interrupted first startup is simply repeated on the
    next start.
-#. The delivered ``config.yaml`` specifies table ``las-vegas-strip.yaml``,
-   the user player ``unnamed.yaml`` and the players at the table
-   (``unnamed.yaml`` and two buddies).
+#. The delivered ``config.yaml`` says nothing about the table or
+   players, so the packaged defaults in ``sys-config.yaml`` apply: table
+   ``las-vegas-strip.yaml``, user player ``unnamed.yaml`` and two buddy
+   players.
 #. The delivered ``unnamed.yaml`` specifies a starting bank of $10,000.
 #. |AppName| continues start up as normal.
 #. Game begins with full screen :ref:`ScreenCrapsTable <ScreenCrapsTable CRC Card>`.
@@ -102,14 +105,9 @@ Subsequent Startups
 ~~~~~~~~~~~~~~~~~~~
 
 #. Reads ``config.yaml`` from the user's config directory.
-#. Reads ``state.yaml`` from the user's state directory, if there is
-   one. Its table, user player and players override those in
-   ``config.yaml``. The file is checked before use: if it is
-   unreadable, or names a table or player file that no longer exists,
-   or its user player is not among its players, it is ignored in its
-   entirety and ``config.yaml`` applies. A damaged ``state.yaml`` can
-   therefore never prevent the game from starting, and deleting it is
-   always safe.
+#. Reads ``state.yaml`` from the user's state directory, if there is one.
+#. Decides the table and players as described in
+   `Choosing the Table and Players`_.
 #. Loads the user player, the table and the other players from the
    user's data directory.
 #. Game begins with full screen :ref:`ScreenCrapsTable <ScreenCrapsTable CRC Card>`.
@@ -117,8 +115,57 @@ Subsequent Startups
    shown.
 
 At quit, after the table and players are saved, the table, the user
-player and the players seated at the table are written to
+player and the other players seated at the table are written to
 ``state.yaml``.
+
+Choosing the Table and Players
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Three sources can say which table and players to start with, in this
+order of authority: what the user wrote in ``config.yaml``, what the
+last game left in ``state.yaml``, and the packaged defaults in
+``sys-config.yaml``. The user's ``config.yaml`` always wins;
+``state.yaml`` only fills in what it leaves out. Each setting is
+decided on its own.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - ``config.yaml`` setting
+     - Meaning
+   * - ``startWithTable``
+     - Always start at this table. If absent, the last table, else the
+       packaged default.
+   * - ``startWithUserPlayer``
+     - Always start as this player, whoever the user played last time.
+       If absent, the last user player, else the packaged default.
+   * - ``startWithBuddyPlayers``
+     - ``true`` (the default) or ``false``. ``false`` means start with
+       no buddy players, regardless of anything else, including the
+       buddies of the last game.
+   * - ``startWithTheseBuddyPlayers``
+     - A list of up to five buddy players to always start with. If
+       absent, the buddies of the last game, else the packaged default
+       buddies. Ignored when ``startWithBuddyPlayers`` is ``false``.
+
+The packaged defaults are ``defaultTable``, ``defaultUserPlayer`` and
+``defaultBuddyPlayers`` in ``sys-config.yaml``. They are separate keys
+because a value present in ``sys-config.yaml`` under the names the user
+uses could not be told apart from something the user wrote. A game that
+was left with no buddies is remembered as having none; the default
+buddies are only for when there is no ``state.yaml``.
+
+The game must always be able to start, so a file name that does not
+exist in the user's tables or players directory (a typing mistake, or a
+player that was deleted) is skipped with a warning in the log and the
+next source is tried; for buddies, just that one buddy is dropped. The
+user player is never also a buddy. A ``state.yaml`` that cannot be read
+is ignored, and deleting it is always safe.
+
+The result is stored under the keys the rest of the game reads:
+``table.startTable``, ``table.userIsPlayer`` and
+``table.startPlayers``.
 
 .. note::
 

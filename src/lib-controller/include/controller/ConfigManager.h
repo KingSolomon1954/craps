@@ -74,7 +74,6 @@ public:
     
     // Table Setup
     static constexpr auto KeyTableStart          = "table.startTable";
-    static constexpr auto KeyTableStartLastPlyrs = "table.startWithLastPlayers";
     static constexpr auto KeyTablePlayer1        = "table.startPlayers[0]";
     static constexpr auto KeyTablePlayer2        = "table.startPlayers[1]";
     static constexpr auto KeyTablePlayer3        = "table.startPlayers[2]";
@@ -84,6 +83,19 @@ public:
     static constexpr auto KeyTableMaxSessions    = "table.maxSessions";
     static constexpr auto KeyTableMaxRecentRolls = "table.maxRecentRolls";
     static constexpr auto KeyTableUserIsPlayer   = "table.userIsPlayer";
+
+    // Table Setup, as the user states it in config.yaml. All optional;
+    // never given a default, since absent means "not stated". See
+    // StartChoices.
+    static constexpr auto KeyTableStartWithTable   = "table.startWithTable";
+    static constexpr auto KeyTableStartWithUser    = "table.startWithUserPlayer";
+    static constexpr auto KeyTableStartWithBuddies = "table.startWithBuddyPlayers";
+    static constexpr auto KeyTableStartWithThese   = "table.startWithTheseBuddyPlayers";
+
+    // Table Setup, packaged defaults from sys-config.yaml
+    static constexpr auto KeyTableDefaultTable     = "table.defaultTable";
+    static constexpr auto KeyTableDefaultUser      = "table.defaultUserPlayer";
+    static constexpr auto KeyTableDefaultBuddies   = "table.defaultBuddyPlayers";
 
     // Player
     static constexpr auto KeyPlayerMaxSessions  = "player.maxSessions";

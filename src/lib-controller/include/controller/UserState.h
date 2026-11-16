@@ -7,11 +7,11 @@
 #pragma once
 
 #include <filesystem>
+#include <optional>
 #include <string>
 #include <vector>
 
 namespace Gen {
-    class ConfigLayer;       // fwd
     class MultiLayerConfig;  // fwd
 }
 
@@ -20,28 +20,23 @@ namespace Ctrl {
 class UserState
 {
 public:
-    static constexpr auto FileName   = "state.yaml";
-    static constexpr size_t MaxStartPlayers = 6;
+    static constexpr auto   FileName        = "state.yaml";
+    static constexpr size_t MaxStartPlayers = 6;                 // table seats
+    static constexpr size_t MaxBuddies      = MaxStartPlayers - 1;
 
     // What is remembered between runs.
     std::string              table;        // file name, e.g. las-vegas-strip.yaml
     std::string              userPlayer;   // file name of the user player
-    std::vector<std::string> players;      // file names of players at the table
-
-    /// @name Modifiers
-    /// @{
-    static void loadInto(const Gen::MultiLayerConfig& multiConfig,
-                         Gen::ConfigLayer& cfg);
-    /// @}
+    std::vector<std::string> buddies;      // file names of the other players
 
     /// @name Observers
     /// @{
-    void save(const std::filesystem::path& stateDir) const; // throws
+    static std::optional<UserState> load(
+        const Gen::MultiLayerConfig& multiConfig);
     static bool read(const std::filesystem::path& file,
-                     const std::filesystem::path& tablesDir,
-                     const std::filesystem::path& playersDir,
                      UserState& state,
                      std::string& whyNot);
+    void save(const std::filesystem::path& stateDir) const; // throws
     /// @}
 };
 
@@ -53,30 +48,26 @@ public:
 
 Kept in state.yaml in the user state directory
 ($XDG_STATE_HOME/royalcraps, usually ~/.local/state/royalcraps). The
-game writes it at quit. It is never shipped, and its absence is normal:
-the starting table and players then come from the user's config.yaml.
-
-The file mirrors the keys of config.yaml so it can be loaded into the
-same configuration layer, after config.yaml, and override it:
+game writes it at quit. It is never shipped, and its absence is normal.
 
 @code
-table:
-  startTable: las-vegas-strip.yaml
-  userIsPlayer: arthur.yaml
-  startPlayers:               # always six entries, "" for unused
-    - arthur.yaml
+last:
+  table: las-vegas-strip.yaml
+  userPlayer: arthur.yaml
+  buddyPlayers:
     - paige.yaml
-    - ""
-    - ""
-    - ""
-    - ""
+    - nathan.yaml
 @endcode
 
-A state file must never stop the game from starting. read() checks that
-the table file and every player file exist in the user's directories and
-that the user player is one of the players. If anything is wrong,
-including unparseable YAML, the whole file is ignored and the user's
-config.yaml values apply.
+state.yaml is only a memory. It says what happened last time and it
+does not override anything the user wrote in config.yaml; see
+StartChoices for how the two combine. This class only reads and writes
+the file. It does not check that the files named exist, which is
+StartChoices' job, because what to do about a missing file depends on
+where the name came from.
+
+load() never throws. A state file that can't be parsed or is missing
+its sections is reported in the log and treated as absent.
 
 */
 

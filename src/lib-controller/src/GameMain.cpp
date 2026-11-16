@@ -247,7 +247,17 @@ GameMain::gatherUserState() const
     UserState state;
     state.table      = Gbl::pTableMgr->getCurrentFileName();
     state.userPlayer = Gbl::pPlayerMgr->getUserFileName();
-    state.players    = Gbl::pPlayerMgr->getTablePlayerFileNames();
+    for (auto& f : Gbl::pPlayerMgr->getTablePlayerFileNames())
+    {
+        if (f != state.userPlayer)
+        {
+            state.buddies.push_back(std::move(f));
+        }
+    }
+    if (state.buddies.size() > UserState::MaxBuddies)
+    {
+        state.buddies.resize(UserState::MaxBuddies);
+    }
     return state;
 }
 

@@ -5,7 +5,6 @@
 //----------------------------------------------------------------
 
 #include <controller/UserState.h>
-#include <algorithm>
 #include <fstream>
 #include <stdexcept>
 #include <system_error>
@@ -19,131 +18,80 @@ namespace fs = std::filesystem;
 
 /*-----------------------------------------------------------*//**
 
-Reads state.yaml from the user state directory, if there is a usable
-one, and puts its values in cfg. Never throws. A state file that is
-unusable is reported on stderr and ignored.
+Reads state.yaml from the user state directory.
 
 @param[in] multiConfig
     Directory keys must be resolved.
-@param[in,out] cfg
-    The layer to receive table.startTable, table.userIsPlayer and
-    table.startPlayers[0..5].
+@return
+    The remembered state, or nothing if there is no state file or it
+    can't be used (which is logged).
 */
-void
-UserState::loadInto(const Gen::MultiLayerConfig& multiConfig,
-                    Gen::ConfigLayer& cfg)
+std::optional<UserState>
+UserState::load(const Gen::MultiLayerConfig& multiConfig)
 {
-    using K = ConfigManager;
-    const fs::path file = fs::path(
-        multiConfig.getString(K::KeyDirsUsrState).value()) / FileName;
+    const fs::path file = fs::path(multiConfig.getString(
+        ConfigManager::KeyDirsUsrState).value()) / FileName;
 
     std::error_code ec;
     if (!fs::exists(file, ec))
     {
-        return;
+        return std::nullopt;
     }
 
     UserState state;
     std::string whyNot;
-    const bool ok = read(file,
-        multiConfig.getString(K::KeyDirsUsrTables).value(),
-        multiConfig.getString(K::KeyDirsUsrPlayers).value(),
-        state, whyNot);
-    if (!ok)
+    if (!read(file, state, whyNot))
     {
         LOG_WARN("Ignoring " + file.string() + ": " + whyNot);
-        return;
+        return std::nullopt;
     }
     LOG_INFO("Loaded " + file.string());
-
-    cfg.set(K::KeyTableStart,        state.table);
-    cfg.set(K::KeyTableUserIsPlayer, state.userPlayer);
-
-    const char* slots[MaxStartPlayers] = {
-        K::KeyTablePlayer1, K::KeyTablePlayer2, K::KeyTablePlayer3,
-        K::KeyTablePlayer4, K::KeyTablePlayer5, K::KeyTablePlayer6 };
-    for (size_t i = 0; i < MaxStartPlayers; i++)
-    {
-        cfg.set(slots[i], i < state.players.size() ? state.players[i] : "");
-    }
+    return state;
 }
 
 /*-----------------------------------------------------------*//**
 
-Parses and validates a state file. Never throws.
+Parses a state file. Never throws.
 
 @param[in] file
     Path of the state file.
-@param[in] tablesDir
-    User tables directory; the table file must exist there.
-@param[in] playersDir
-    User players directory; each player file must exist there.
 @param[out] state
     Receives the contents when the return value is true.
 @param[out] whyNot
     Receives the reason when the return value is false.
 @return
-    true if the file was readable and consistent.
+    true if the file was readable and had the expected sections.
 */
 bool
-UserState::read(const fs::path& file, const fs::path& tablesDir,
-                const fs::path& playersDir, UserState& state,
-                std::string& whyNot)
+UserState::read(const fs::path& file, UserState& state, std::string& whyNot)
 {
     try
     {
         const YAML::Node root = YAML::LoadFile(file.string());
-        const YAML::Node t = root["table"];
-        if (!t || !t.IsMap())
+        const YAML::Node last = root["last"];
+        if (!last || !last.IsMap())
         {
-            whyNot = "no table section";
+            whyNot = "no \"last\" section";
             return false;
         }
 
         UserState s;
-        s.table      = t["startTable"].as<std::string>();
-        s.userPlayer = t["userIsPlayer"].as<std::string>();
+        s.table      = last["table"].as<std::string>();
+        s.userPlayer = last["userPlayer"].as<std::string>();
 
-        const YAML::Node sp = t["startPlayers"];
-        if (!sp || !sp.IsSequence())
+        const YAML::Node b = last["buddyPlayers"];
+        if (!b || !b.IsSequence())
         {
-            whyNot = "no startPlayers list";
+            whyNot = "no buddyPlayers list";
             return false;
         }
-        for (const auto& n : sp)
+        for (const auto& n : b)
         {
             const std::string f = n.as<std::string>();
             if (!f.empty())
             {
-                s.players.push_back(f);
+                s.buddies.push_back(f);
             }
-        }
-        if (s.players.size() > MaxStartPlayers)
-        {
-            whyNot = "too many players";
-            return false;
-        }
-
-        std::error_code ec;
-        if (s.table.empty() || !fs::exists(tablesDir / s.table, ec))
-        {
-            whyNot = "table file \"" + s.table + "\" not found";
-            return false;
-        }
-        for (const auto& p : s.players)
-        {
-            if (!fs::exists(playersDir / p, ec))
-            {
-                whyNot = "player file \"" + p + "\" not found";
-                return false;
-            }
-        }
-        if (std::find(s.players.begin(), s.players.end(), s.userPlayer)
-            == s.players.end())
-        {
-            whyNot = "user player \"" + s.userPlayer +
-                     "\" is not among the players";
-            return false;
         }
 
         state = std::move(s);
@@ -168,18 +116,18 @@ void
 UserState::save(const fs::path& stateDir) const
 {
     YAML::Node list(YAML::NodeType::Sequence);
-    for (size_t i = 0; i < MaxStartPlayers; i++)
+    for (const auto& b : buddies)
     {
-        list.push_back(i < players.size() ? players[i] : std::string());
+        list.push_back(b);
     }
 
-    YAML::Node t;
-    t["startTable"]   = table;
-    t["userIsPlayer"] = userPlayer;
-    t["startPlayers"] = list;
+    YAML::Node last;
+    last["table"]        = table;
+    last["userPlayer"]   = userPlayer;
+    last["buddyPlayers"] = list;
 
     YAML::Node root;
-    root["table"] = t;
+    root["last"] = last;
 
     YAML::Emitter out;
     out << YAML::Comment("Written by the game at quit. Safe to delete.");

@@ -16,6 +16,7 @@ add_library(controller STATIC
     src/ConfigEnv.cpp
     src/ConfigFiles.cpp
     src/ConfigSeed.cpp
+    src/StartChoices.cpp
     src/CrapsReaders.cpp
     src/EventHandler.cpp
     src/GameEvents.cpp

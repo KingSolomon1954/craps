@@ -798,11 +798,11 @@ Control Menu
     ┌────────────────────────┐
     │ Control Menu           │
     ├────────────────────────┤
+    │ [c] Configure          │
+    │ [y] Players            │
+    │ [t] Tables             │
     │ [p] Pause              │
     │ [r] Resume             │
-    │ [l] Players            │
-    │ [t] Tables             │
-    │ [c] Configure          │
     │ [. or esc] Back        │
     └────────────────────────┘
     
@@ -818,19 +818,91 @@ Player Menu
     ┌────────────────────────┐
     │ Player Menu            │
     ├────────────────────────┤
-    │ [p] Display Players    │
-    │ [b] Display Buddies    │
-    │ [j] Buddy Joins Table  │
-    │ [l] Buddy Leaves Table │
-    │ [r] Rename Player      │
+    │ [l] List Players       │
     │ [s] Switch To Player   │
+    │ [r] Rename Player      │
     │ [c] Create New Player  │
+    │ [d] Delete Player      │
+    │ [b] List Buddies       │
+    │ [j] Buddy Joins Table  │
+    │ [k] Buddy Leaves Table │
     │ [. or esc] Back        │
     └────────────────────────┘
+    
+    [p] List Players
+        Dynamic built menu of available Players
 
+        ┌──────────────────────────────────────────┐
+        │ List Players                             │
+        ├──────────────────────────────────────────┤
+        │ [a] PlayerAAA     | brief description... │
+        │ [b] PlayerNameBBB | brief description... │
+        │ [c] PlayerNameCCC | brief description... │
+        │ ...               |                      │
+        │ [. or esc] back                          │
+        └──────────────────────────────────────────┘
+        
+    [s] Switch To Player
+    
+        ┌─────────────────────────────────┐
+        │ Switch to Player                │
+        ├─────────────────────────────────┤
+        │ [1] Queen Solomon               │
+        │ [2] John                        │
+        │ [3] Bill                        │
+        │ [. or esc] back                 │
+        └─────────────────────────────────┘
+
+    [r] Rename Player
+    
+        ┌─────────────────────────────────┐
+        │ Rename: Queen Solomon           │
+        ├─────────────────────────────────┤
+        │__________<text entry>___________│
+        ├─────────────────────────────────┤
+        │ [. or esc] back         [enter] │
+        └─────────────────────────────────┘
+        
+    [c] Create New Player
+    
+        ┌─────────────────────────────────┐
+        │ Create New Player               │
+        ├─────────────────────────────────┤
+        │_<Name>__________________________│
+        ├─────────────────────────────────┤
+        │_<Brief Description>_____________│
+        ├─────────────────────────────────┤
+        │ [. or esc] back         [enter] │
+        └─────────────────────────────────┘
+        
+    [c] Delete Player
+    
+        ┌──────────────────────────┐
+        │ Delete Player Name       │
+        ├──────────────────────────┤
+        │ [a] PlayerNameAAA        │
+        │ [b] PlayerNameBBB        │
+        │ [c] PlayerNameCCC        │
+        │ ...                      │
+        │ [. or esc] back          │
+        └──────────────────────────┘
+        
+    [p] List Buddies
+        Dynamic built menu of available Buddies
+
+        ┌──────────────────────────────────────────┐
+        │ List Buddies                             │
+        ├──────────────────────────────────────────┤
+        │ [a] BuddyAAA     | brief description...  │
+        │ [b] BuddyNameBBB | brief description...  │
+        │ [c] BuddyNameCCC | brief description...  │
+        │ ...              |                       │
+        │ [. or esc] back                          │
+        └──────────────────────────────────────────┘
+        
     [j] Buddy Joins Table
         Dynamic built menu of available stock players
-        Game is delivered with stock players
+        Game is delivered with stock Buddy players
         6 players max, current player + 5 buddy players.
 
         ┌─────────────────────────────────┐
@@ -847,8 +919,6 @@ Player Menu
         │ [. or esc] Back                 │
         └─────────────────────────────────┘
 
-        Return to sticky Control Menu
-
     [l] Buddy Leaves Table
         Dynamic built menu of buddies currently at the table.
 
@@ -861,36 +931,6 @@ Player Menu
         │ [w] Winnie the Winner           │
         │ [k] King Royal the Supreme      │
         │ [. or esc] Back                 │
-        └─────────────────────────────────┘
-
-        Return to sticky Player Menu
-
-    [p] Rename Player
-        ┌─────────────────────────────────┐
-        │ Rename: Queen Solomon           │
-        ├─────────────────────────────────┤
-        │__________<text entry>___________│
-        ├─────────────────────────────────┤
-        │ [. or esc] back         [enter] │
-        └─────────────────────────────────┘
-        
-    [s] Switch To Player
-        ┌─────────────────────────────────┐
-        │ Switch to Player                │
-        ├─────────────────────────────────┤
-        │ [1] Queen Solomon               │
-        │ [2] John                        │
-        │ [3] Bill                        │
-        │ [. or esc] back                 │
-        └─────────────────────────────────┘
-
-    [c] Create New Player
-        ┌─────────────────────────────────┐
-        │ New Player Name                 │
-        ├─────────────────────────────────┤
-        │__________<text entry>___________│
-        ├─────────────────────────────────┤
-        │ [. or esc] back         [enter] │
         └─────────────────────────────────┘
     
 Table Menu

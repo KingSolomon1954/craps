@@ -1,13 +1,12 @@
 table:
-  startTable: "las-vegas-strip.yaml"
-  startWithLastPlayers: true
-  startPlayers:
-    - "nathan.yaml"
+  startWithTable: "las-vegas-strip.yaml"
+  startWithUserPlayer: "nathan.yaml"
+  startWithBuddyPlayers: true
+  startWithTheseBuddyPlayers:
     - "arthur.yaml"
     - "paige.yaml"
-  maxSessions: 44
-  maxRecentRolls: 33
-  userIsPlayer: "nathan.yaml"
+  maxSessions: 10
+  maxRecentRolls: 50
   
 rollHistory:
   format: 1         # [ 1..4 ]
@@ -18,4 +17,4 @@ log:
   trace: false
 
 player:
-  maxSessions: 22
+  maxSessions: 10

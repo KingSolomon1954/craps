@@ -8,6 +8,7 @@ add_executable(controller-ut
     utest-controller-main.cpp
     ConfigManagerTest.cpp
     ConfigSeedTest.cpp
+    StartChoicesTest.cpp
     AutoFillTest.cpp
     LastFillTest.cpp
     PlayerPrefsTest.cpp
