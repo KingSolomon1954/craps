@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="11094753170128527331">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="IsSequence"/>
+    <functioncall functionName="Money"/>
+    <functioncall functionName="Timepoint"/>
+    <functioncall functionName="amtIntake"/>
+    <functioncall functionName="amtPayout"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="curSessionStartTime_"/>
+    <functioncall functionName="duration"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="firstSessionDate_"/>
+    <functioncall functionName="formatDurationWithDays"/>
+    <functioncall functionName="fromYAML"/>
+    <functioncall functionName="longestSessionAlltime_"/>
+    <functioncall functionName="max"/>
+    <functioncall functionName="maxSessions_"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="numBets"/>
+    <functioncall functionName="numPlayers"/>
+    <functioncall functionName="numSessionsAlltime_"/>
+    <functioncall functionName="parseDurationWithDays"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="sessions_"/>
+    <functioncall functionName="sinceNow"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="toYAML"/>
+    <functioncall functionName="trimToMaxSessions"/>
+  </FileInfo>
+</analyzerinfo>

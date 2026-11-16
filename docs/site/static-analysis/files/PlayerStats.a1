@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="2121797982991627239">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="fromYAML"/>
+    <functioncall functionName="merge"/>
+    <functioncall functionName="recordKeep"/>
+    <functioncall functionName="recordLose"/>
+    <functioncall functionName="recordWin"/>
+    <functioncall functionName="reset"/>
+    <functioncall functionName="toYAML"/>
+  </FileInfo>
+</analyzerinfo>

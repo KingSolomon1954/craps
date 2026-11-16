@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="436273529732862253">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-gen/src/ErrorPass.cpp:552:1" my-argnr="1" my-argname="out" file="/work/src/lib-gen/src/ErrorPass.cpp" line="596" col="5" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-gen/src/ErrorPass.cpp:552:1" my-argnr="2" my-argname="ep" file="/work/src/lib-gen/src/ErrorPass.cpp" line="557" col="9" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="ErrorPass"/>
+    <functioncall functionName="UnsetSeverity"/>
+    <functioncall functionName="additionalInfo"/>
+    <functioncall functionName="additionalInfo_"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="codeNum"/>
+    <functioncall functionName="codeNum_"/>
+    <functioncall functionName="count"/>
+    <functioncall functionName="description"/>
+    <functioncall functionName="description_"/>
+    <functioncall functionName="duration_cast"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="errorNameStr"/>
+    <functioncall functionName="errorName_"/>
+    <functioncall functionName="errorTypeStr"/>
+    <functioncall functionName="errorType_"/>
+    <functioncall functionName="fileName"/>
+    <functioncall functionName="fileName_"/>
+    <functioncall functionName="format"/>
+    <functioncall functionName="funcName"/>
+    <functioncall functionName="funcName_"/>
+    <functioncall functionName="gmtime"/>
+    <functioncall functionName="lineNum"/>
+    <functioncall functionName="lineNum_"/>
+    <functioncall functionName="milliseconds"/>
+    <functioncall functionName="min"/>
+    <functioncall functionName="now"/>
+    <functioncall functionName="probableCause"/>
+    <functioncall functionName="probableCause_"/>
+    <functioncall functionName="proposedRepair"/>
+    <functioncall functionName="proposedRepair_"/>
+    <functioncall functionName="pushTrace"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="set"/>
+    <functioncall functionName="severityStr"/>
+    <functioncall functionName="severity_"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="stackTrace"/>
+    <functioncall functionName="stackTrace_"/>
+    <functioncall functionName="str"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="time_since_epoch"/>
+    <functioncall functionName="timestamp"/>
+    <functioncall functionName="to_time_t"/>
+    <functioncall functionName="ts_"/>
+  </FileInfo>
+</analyzerinfo>

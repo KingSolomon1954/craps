@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="6569112701050884107">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="padLine" lineNumber="39"/>
+    <functiondecl functionName="payoutLabel" lineNumber="50"/>
+    <functiondecl functionName="referencePayoutDetails" lineNumber="69"/>
+    <functiondecl functionName="money" lineNumber="87"/>
+    <functiondecl functionName="expectedMoney" lineNumber="95"/>
+    <functiondecl functionName="signedMoney" lineNumber="107"/>
+    <functiondecl functionName="percent" lineNumber="117"/>
+    <functiondecl functionName="profileFor" lineNumber="143"/>
+    <functiondecl functionName="referenceFor" lineNumber="433"/>
+    <functioncall functionName="ACS_HLINE"/>
+    <functioncall functionName="ACS_LTEE"/>
+    <functioncall functionName="ACS_RTEE"/>
+    <functioncall functionName="All"/>
+    <functioncall functionName="Cancel"/>
+    <functioncall functionName="Dialog"/>
+    <functioncall functionName="DialogBase"/>
+    <functioncall functionName="DialogBetAmount"/>
+    <functioncall functionName="Money"/>
+    <functioncall functionName="Prompts"/>
+    <functioncall functionName="Right"/>
+    <functioncall functionName="autoFill"/>
+    <functioncall functionName="back"/>
+    <functioncall functionName="beep"/>
+    <functioncall functionName="box"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="col"/>
+    <functioncall functionName="cols"/>
+    <functioncall functionName="contains"/>
+    <functioncall functionName="curs_set"/>
+    <functioncall functionName="cursorPosition"/>
+    <functioncall functionName="data"/>
+    <functioncall functionName="details"/>
+    <functioncall functionName="doAutoFill"/>
+    <functioncall functionName="doEnter"/>
+    <functioncall functionName="doHelp"/>
+    <functioncall functionName="doQuickBet"/>
+    <functioncall functionName="doupdate"/>
+    <functioncall functionName="drawAmountLimits"/>
+    <functioncall functionName="drawBorders"/>
+    <functioncall functionName="drawInput"/>
+    <functioncall functionName="drawPrompts"/>
+    <functioncall functionName="drawReference"/>
+    <functioncall functionName="drawStaticContent"/>
+    <functioncall functionName="drawStatistics"/>
+    <functioncall functionName="drawTitle"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="expectedMoney"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="find_first_not_of"/>
+    <functioncall functionName="format"/>
+    <functioncall functionName="front"/>
+    <functioncall functionName="getActiveTableStats"/>
+    <functioncall functionName="getAutoFill"/>
+    <functioncall functionName="getBetName"/>
+    <functioncall functionName="getContractAmount"/>
+    <functioncall functionName="getLastFill"/>
+    <functioncall functionName="getPivot"/>
+    <functioncall functionName="getPrefillAmount"/>
+    <functioncall functionName="getTitleBetAmount"/>
+    <functioncall functionName="getUserPlayer"/>
+    <functioncall functionName="getUserPlayerStats"/>
+    <functioncall functionName="handleKey"/>
+    <functioncall functionName="inputAmount_"/>
+    <functioncall functionName="inputCol_"/>
+    <functioncall functionName="inputRow_"/>
+    <functioncall functionName="instance"/>
+    <functioncall functionName="isOddsBet"/>
+    <functioncall functionName="makeBet"/>
+    <functioncall functionName="max"/>
+    <functioncall functionName="min"/>
+    <functioncall functionName="money"/>
+    <functioncall functionName="mvwaddch"/>
+    <functioncall functionName="mvwaddstr"/>
+    <functioncall functionName="mvwhline"/>
+    <functioncall functionName="newWindow"/>
+    <functioncall functionName="pWin_"/>
+    <functioncall functionName="padLine"/>
+    <functioncall functionName="payoutLabel"/>
+    <functioncall functionName="percent"/>
+    <functioncall functionName="popSurfaces"/>
+    <functioncall functionName="prepLineInput"/>
+    <functioncall functionName="processAmount"/>
+    <functioncall functionName="profileFor"/>
+    <functioncall functionName="quickBet"/>
+    <functioncall functionName="readBetAmountLimits"/>
+    <functioncall functionName="readInputAmount"/>
+    <functioncall functionName="referenceFor"/>
+    <functioncall functionName="referencePayoutDetails"/>
+    <functioncall functionName="repos"/>
+    <functioncall functionName="resize"/>
+    <functioncall functionName="row"/>
+    <functioncall functionName="rows"/>
+    <functioncall functionName="setAmount"/>
+    <functioncall functionName="setOperationResult"/>
+    <functioncall functionName="setValue"/>
+    <functioncall functionName="signedMoney"/>
+    <functioncall functionName="simulatedCounts"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="starts_with"/>
+    <functioncall functionName="statsLine"/>
+    <functioncall functionName="stoll"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="string_view"/>
+    <functioncall functionName="substr"/>
+    <functioncall functionName="tally"/>
+    <functioncall functionName="tallyPoint"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="transfer"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="value"/>
+    <functioncall functionName="winPos_"/>
+    <functioncall functionName="winSize_"/>
+    <functioncall functionName="wmove"/>
+    <functioncall functionName="wnoutrefresh"/>
+  </FileInfo>
+</analyzerinfo>

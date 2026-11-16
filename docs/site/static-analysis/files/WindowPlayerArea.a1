@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="17557301517002006476">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="AllPlayers"/>
+    <functioncall functionName="OnePlayer"/>
+    <functioncall functionName="PanelBase"/>
+    <functioncall functionName="WindowPlayerArea"/>
+    <functioncall functionName="advancePlayer"/>
+    <functioncall functionName="allPlayersView_"/>
+    <functioncall functionName="createWindow"/>
+    <functioncall functionName="draw"/>
+    <functioncall functionName="drawExternalJunctions"/>
+    <functioncall functionName="drawExternalJunctionsAllPlayers"/>
+    <functioncall functionName="drawExternalJunctionsOnePlayer"/>
+    <functioncall functionName="drawInternalBorders"/>
+    <functioncall functionName="drawStaticContent"/>
+    <functioncall functionName="eraseExternalJunctionsAllPlayers"/>
+    <functioncall functionName="eraseExternalJunctionsOnePlayer"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="init"/>
+    <functioncall functionName="instance"/>
+    <functioncall functionName="newWindow"/>
+    <functioncall functionName="onBetChanged"/>
+    <functioncall functionName="onBetMade"/>
+    <functioncall functionName="onBetResolved"/>
+    <functioncall functionName="onePlayerView_"/>
+    <functioncall functionName="pWin_"/>
+    <functioncall functionName="playerAreaHeight"/>
+    <functioncall functionName="playerAreaLeftCol"/>
+    <functioncall functionName="playerAreaTopRow"/>
+    <functioncall functionName="playerAreaWidth"/>
+    <functioncall functionName="transfer"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="werase"/>
+  </FileInfo>
+</analyzerinfo>

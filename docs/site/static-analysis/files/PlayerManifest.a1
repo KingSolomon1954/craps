@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8517584460627860230">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="IsSequence"/>
+    <functioncall functionName="KeyDirsUsrPlayers"/>
+    <functioncall functionName="Load"/>
+    <functioncall functionName="PlayerId"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="diag"/>
+    <functioncall functionName="emplace_back"/>
+    <functioncall functionName="fileName"/>
+    <functioncall functionName="fromYAML"/>
+    <functioncall functionName="fullDescription"/>
+    <functioncall functionName="getString"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="openOrThrow"/>
+    <functioncall functionName="path"/>
+    <functioncall functionName="playerId"/>
+    <functioncall functionName="playerName"/>
+    <functioncall functionName="players_"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="shortDescription"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="value"/>
+    <functioncall functionName="what"/>
+  </FileInfo>
+</analyzerinfo>

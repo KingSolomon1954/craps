@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="5691009259179522078">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="ConfigLayer"/>
+    <functioncall functionName="emplace_back"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="get"/>
+    <functioncall functionName="getAll"/>
+    <functioncall functionName="has_value"/>
+    <functioncall functionName="layers_"/>
+    <functioncall functionName="make_shared"/>
+    <functioncall functionName="nullopt"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="set"/>
+    <functioncall functionName="stoi"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="try_emplace"/>
+    <functioncall functionName="value"/>
+    <functioncall functionName="values_"/>
+  </FileInfo>
+</analyzerinfo>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8184128447792795192">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="dist"/>
+    <functioncall functionName="setfill"/>
+    <functioncall functionName="setw"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="str"/>
+    <functioncall functionName="uint32_t"/>
+    <functioncall functionName="uint8_t"/>
+  </FileInfo>
+</analyzerinfo>

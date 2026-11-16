@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="6607013400416441380">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="CorrelationId"/>
+    <functioncall functionName="EventId"/>
+    <functioncall functionName="fetch_add"/>
+    <functioncall functionName="memory_order_relaxed"/>
+  </FileInfo>
+</analyzerinfo>

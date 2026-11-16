@@ -10,8 +10,9 @@ var searchData=
   ['bookends_7',['BookEnds',['../namespaceCraps.html#a0074a36dbad8351c8df837c8c02856c9',1,'Craps']]],
   ['botrow_8',['botRow',['../structCui_1_1LayoutConsole.html#afe82d3cada814378c27c49c8fcf21819',1,'Cui::LayoutConsole::botRow'],['../classCui_1_1LayoutCrapsScreen.html#a561f94055e4e162cc390bb4015f05b13',1,'Cui::LayoutCrapsScreen::botRow']]],
   ['brief_9',['brief',['../structCui_1_1DialogMessage_1_1MessageText.html#a0a76346d7d68fcd27eda9e0794bb4de8',1,'Cui::DialogMessage::MessageText']]],
-  ['buycommission_10',['buyCommission',['../structCraps_1_1TableRules.html#a6d6d0dab9fbe5ac34a65675c1ac1b7bb',1,'Craps::TableRules']]],
-  ['buyrepeaters_11',['buyRepeaters',['../classCraps_1_1PlayerStats.html#a085e5751c8e36e1a49aa32da093ca592',1,'Craps::PlayerStats']]],
-  ['buystr_12',['BuyStr',['../EnumBetName_8cpp.html#abad8b221354dec01ba940d955170e884',1,'EnumBetName.cpp']]],
-  ['bybet_13',['byBet',['../classCraps_1_1BetStats.html#a93a8c1c30b719dce866f330138fb7429',1,'Craps::BetStats']]]
+  ['buddies_10',['buddies',['../structCtrl_1_1StartChoices_1_1Request.html#ae6c604a2e6e1e54b029fd61fe6b625ae',1,'Ctrl::StartChoices::Request::buddies'],['../structCtrl_1_1StartChoices_1_1Result.html#a213c60bce477c539e09b3f9c476e5432',1,'Ctrl::StartChoices::Result::buddies'],['../classCtrl_1_1UserState.html#a8b04ea85f578241f606e6faf7d8747fa',1,'Ctrl::UserState::buddies']]],
+  ['buycommission_11',['buyCommission',['../structCraps_1_1TableRules.html#a6d6d0dab9fbe5ac34a65675c1ac1b7bb',1,'Craps::TableRules']]],
+  ['buyrepeaters_12',['buyRepeaters',['../classCraps_1_1PlayerStats.html#a085e5751c8e36e1a49aa32da093ca592',1,'Craps::PlayerStats']]],
+  ['buystr_13',['BuyStr',['../EnumBetName_8cpp.html#abad8b221354dec01ba940d955170e884',1,'EnumBetName.cpp']]],
+  ['bybet_14',['byBet',['../classCraps_1_1BetStats.html#a93a8c1c30b719dce866f330138fb7429',1,'Craps::BetStats']]]
 ];

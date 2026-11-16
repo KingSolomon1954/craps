@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="10786048376189284056">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="IsMap"/>
+    <functioncall functionName="Map"/>
+    <functioncall functionName="Repeaters"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="buckets"/>
+    <functioncall functionName="buckets_"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="contains"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="entry"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="node"/>
+    <functioncall functionName="running"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="to_string"/>
+  </FileInfo>
+</analyzerinfo>

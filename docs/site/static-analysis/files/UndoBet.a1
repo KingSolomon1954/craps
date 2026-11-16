@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="7961729519146044158">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="UndoBetAdded"/>
+    <functioncall functionName="UndoBetModifiedAmount"/>
+    <functioncall functionName="UndoBetModifiedFlags"/>
+    <functioncall functionName="UndoBetRemoved"/>
+    <functioncall functionName="betId"/>
+    <functioncall functionName="pBet_"/>
+    <functioncall functionName="player"/>
+    <functioncall functionName="prevState_"/>
+    <functioncall functionName="removeBet"/>
+    <functioncall functionName="restoreAmounts"/>
+    <functioncall functionName="restoreBet"/>
+  </FileInfo>
+</analyzerinfo>

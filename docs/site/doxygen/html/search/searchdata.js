@@ -5,7 +5,7 @@ var indexSectionsWithContent =
   2: "ceg",
   3: "abcdefglmopqrstuvwxy",
   4: "abcdefghijlmnopqrstuvwy~",
-  5: "abcdefhiklmnoprstvw",
+  5: "abcdefhiklmnoprstuvw",
   6: "abcdeglmpqrstuw",
   7: "bcdelmoprsw",
   8: "abcdefhiklmnopqrstuvwy",

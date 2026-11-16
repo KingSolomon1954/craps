@@ -11,9 +11,10 @@ var searchData=
   ['aggregatelimit_8',['aggregateLimit',['../structCraps_1_1TableRules.html#acaad1bddb1e3b3b0f74965ad0e45754c',1,'Craps::TableRules::aggregateLimit(BetName name) const'],['../structCraps_1_1TableRules.html#a34fb66213dbddc40aab4019ce6cfad34',1,'Craps::TableRules::aggregateLimit(BetName name)']]],
   ['allplayers_9',['allPlayers',['../classCui_1_1WindowPlayerArea.html#aafccc910f04ed29f51aaa7dd61c4cbfe',1,'Cui::WindowPlayerArea']]],
   ['append_10',['append',['../classGen_1_1ErrorPass.html#a51c9a2a8b5dc2e2e2e9991b7b7996d3a',1,'Gen::ErrorPass']]],
-  ['applyquickbet_11',['applyQuickBet',['../classCtrl_1_1QuickBet.html#ae26bba05b4931a0abd6bc3347440dcbe',1,'Ctrl::QuickBet']]],
-  ['appname_12',['appName',['../classGen_1_1BuildInfo.html#ae4d01a1dc0e501d2bd1ce952da8143bf',1,'Gen::BuildInfo']]],
-  ['armtimer_13',['armTimer',['../classGen_1_1TimerManager.html#a51d9c36ad8e44c1089536b2ca65020ed',1,'Gen::TimerManager']]],
-  ['autofill_14',['AutoFill',['../classCtrl_1_1AutoFill.html#ac21c21cd7247239ccf6b0f54f39a52a8',1,'Ctrl::AutoFill']]],
-  ['autofill_15',['autoFill',['../classCtrl_1_1PlayerPrefs.html#a09f9cfb740e6d8a028eb0fce75208c8e',1,'Ctrl::PlayerPrefs::autoFill()'],['../classCtrl_1_1PlayerPrefs.html#a1c1cfdbcce3c3a05201274055f7a181a',1,'Ctrl::PlayerPrefs::autoFill() const'],['../classCui_1_1OperationManager.html#a550659cdcaa915511daf2659d2485670',1,'Cui::OperationManager::autoFill()']]]
+  ['apply_11',['apply',['../classCtrl_1_1StartChoices.html#a961b9dd1128c5235f83601e945479eb9',1,'Ctrl::StartChoices']]],
+  ['applyquickbet_12',['applyQuickBet',['../classCtrl_1_1QuickBet.html#ae26bba05b4931a0abd6bc3347440dcbe',1,'Ctrl::QuickBet']]],
+  ['appname_13',['appName',['../classGen_1_1BuildInfo.html#ae4d01a1dc0e501d2bd1ce952da8143bf',1,'Gen::BuildInfo']]],
+  ['armtimer_14',['armTimer',['../classGen_1_1TimerManager.html#a51d9c36ad8e44c1089536b2ca65020ed',1,'Gen::TimerManager']]],
+  ['autofill_15',['AutoFill',['../classCtrl_1_1AutoFill.html#ac21c21cd7247239ccf6b0f54f39a52a8',1,'Ctrl::AutoFill']]],
+  ['autofill_16',['autoFill',['../classCtrl_1_1PlayerPrefs.html#a09f9cfb740e6d8a028eb0fce75208c8e',1,'Ctrl::PlayerPrefs::autoFill()'],['../classCtrl_1_1PlayerPrefs.html#a1c1cfdbcce3c3a05201274055f7a181a',1,'Ctrl::PlayerPrefs::autoFill() const'],['../classCui_1_1OperationManager.html#a550659cdcaa915511daf2659d2485670',1,'Cui::OperationManager::autoFill()']]]
 ];

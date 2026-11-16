@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="5604929147102915766">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="UndoBet"/>
+    <functioncall functionName="back"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="pop_back"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="undo"/>
+  </FileInfo>
+</analyzerinfo>

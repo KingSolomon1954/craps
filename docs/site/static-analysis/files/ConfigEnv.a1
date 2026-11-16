@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="6766345655692021729">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="KeySoundEnabled"/>
+    <functioncall functionName="KeySoundVolume"/>
+    <functioncall functionName="KeyTableStart"/>
+    <functioncall functionName="KeyViewType"/>
+    <functioncall functionName="LayerNameEnv"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="getLayer"/>
+    <functioncall functionName="getenv"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="set"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="what"/>
+  </FileInfo>
+</analyzerinfo>

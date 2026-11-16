@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="6980972677276612898">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="CuiThread"/>
+    <functioncall functionName="TRUE"/>
+    <functioncall functionName="cuiThreadFunc"/>
+    <functioncall functionName="dispatch"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="flushinp"/>
+    <functioncall functionName="front"/>
+    <functioncall functionName="get_id"/>
+    <functioncall functionName="join"/>
+    <functioncall functionName="joinable"/>
+    <functioncall functionName="lock"/>
+    <functioncall functionName="milliseconds"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="mutex"/>
+    <functioncall functionName="mutex_"/>
+    <functioncall functionName="nodelay"/>
+    <functioncall functionName="notify_one"/>
+    <functioncall functionName="pop_front"/>
+    <functioncall functionName="processWorkQueue"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="shutdown"/>
+    <functioncall functionName="shutdownRequested_"/>
+    <functioncall functionName="signal"/>
+    <functioncall functionName="stdscr"/>
+    <functioncall functionName="thread"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="wait"/>
+    <functioncall functionName="wait_for"/>
+    <functioncall functionName="wgetch"/>
+  </FileInfo>
+</analyzerinfo>

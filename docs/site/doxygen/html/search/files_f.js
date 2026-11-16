@@ -4,6 +4,8 @@ var searchData=
   ['undobet_2eh_1',['UndoBet.h',['../UndoBet_8h.html',1,'']]],
   ['undomanager_2ecpp_2',['UndoManager.cpp',['../UndoManager_8cpp.html',1,'']]],
   ['undomanager_2eh_3',['UndoManager.h',['../UndoManager_8h.html',1,'']]],
-  ['uuid_2ecpp_4',['Uuid.cpp',['../Uuid_8cpp.html',1,'']]],
-  ['uuid_2eh_5',['Uuid.h',['../Uuid_8h.html',1,'']]]
+  ['userstate_2ecpp_4',['UserState.cpp',['../UserState_8cpp.html',1,'']]],
+  ['userstate_2eh_5',['UserState.h',['../UserState_8h.html',1,'']]],
+  ['uuid_2ecpp_6',['Uuid.cpp',['../Uuid_8cpp.html',1,'']]],
+  ['uuid_2eh_7',['Uuid.h',['../Uuid_8h.html',1,'']]]
 ];

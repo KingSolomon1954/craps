@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="1535540100316506372">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Money"/>
+    <functioncall functionName="amtDeposited"/>
+    <functioncall functionName="amtRefilled"/>
+    <functioncall functionName="amtWithdrawn"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="maxAmtDepositedSession"/>
+    <functioncall functionName="maxAmtWithdrawnSession"/>
+    <functioncall functionName="numDeposits"/>
+    <functioncall functionName="numRefills"/>
+    <functioncall functionName="numWithdrawals"/>
+    <functioncall functionName="setToNow"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toString"/>
+  </FileInfo>
+</analyzerinfo>

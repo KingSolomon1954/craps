@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="7990947355063687233">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Clone"/>
+    <functioncall functionName="IsDefined"/>
+    <functioncall functionName="IsMap"/>
+    <functioncall functionName="LOG_DEBUG"/>
+    <functioncall functionName="Load"/>
+    <functioncall functionName="Node"/>
+    <functioncall functionName="YamlFile"/>
+    <functioncall functionName="close"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="flush"/>
+    <functioncall functionName="fname"/>
+    <functioncall functionName="fout"/>
+    <functioncall functionName="good"/>
+    <functioncall functionName="is_open"/>
+    <functioncall functionName="message"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="openOrThrow"/>
+    <functioncall functionName="path_"/>
+    <functioncall functionName="remove"/>
+    <functioncall functionName="rename"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="trunc"/>
+    <functioncall functionName="what"/>
+  </FileInfo>
+</analyzerinfo>

@@ -1,117 +1,1886 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuite name="Linux-c++"
-	tests="12"
+	tests="188"
 	failures="0"
 	disabled="0"
 	skipped="0"
-	hostname="e48daf45185a"
-	time="0"
-	timestamp="2025-01-05T01:19:02"
+	hostname="20dd7611e2a3"
+	time="34"
+	timestamp="2026-11-16T15:37:01"
 	>
-	<testcase name="Gen::BuildInfoTest: all" classname="Gen::BuildInfoTest: all" time="0.0028839" status="run">
+	<testcase name="BuildInfoTest:all" classname="BuildInfoTest:all" time="0.00568697" status="run">
 		<system-out>[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases:  1 |  1 passed | 0 failed | 1 skipped
+[doctest] test cases:  1 |  1 passed | 0 failed | 15 skipped
 [doctest] assertions: 15 | 15 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Gen::StringUtilsTest: all" classname="Gen::StringUtilsTest: all" time="0.00286613" status="run">
+	<testcase name="EventManager" classname="EventManager" time="0.00652003" status="run">
 		<system-out>[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases:  1 |  1 passed | 0 failed | 1 skipped
+[doctest] test cases:  1 |  1 passed | 0 failed | 15 skipped
+[doctest] assertions: 19 | 19 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Logger: messages before the output file are kept and written first" classname="Logger: messages before the output file are kept and written first" time="0.00634381" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+2026-11-16 15:37:02.001 [INFO]  Console logging disabled
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Logger: failing to open a file keeps the current one" classname="Logger: failing to open a file keeps the current one" time="0.00481281" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+2026-11-16 15:37:02.006 [INFO]  Console logging disabled
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Money:ctor" classname="Money:ctor" time="0.00476718" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases:  1 |  1 passed | 0 failed | 15 skipped
+[doctest] assertions: 17 | 17 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Money:arithmeticAndComparison" classname="Money:arithmeticAndComparison" time="0.00456571" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Money:stringParsing" classname="Money:stringParsing" time="0.00523015" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Money:toString" classname="Money:toString" time="0.00453139" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Money:formattedOutput" classname="Money:formattedOutput" time="0.00417436" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Money:roundTripYAML" classname="Money:roundTripYAML" time="0.00457431" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 1 | 1 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="MoneyUtils:toStringBasicFormatting" classname="MoneyUtils:toStringBasicFormatting" time="0.00480704" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases:  1 |  1 passed | 0 failed | 15 skipped
+[doctest] assertions: 10 | 10 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="MoneyUtils:fromStringParsing" classname="MoneyUtils:fromStringParsing" time="0.00477233" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="MoneyUtils:RoundTripYAML" classname="MoneyUtils:RoundTripYAML" time="0.00486989" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 1 | 1 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="MultiLayerConfig:layering" classname="MultiLayerConfig:layering" time="0.00508577" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 1 | 1 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="StringUtilsTest:all" classname="StringUtilsTest:all" time="0.00474714" status="run">
+		<system-out>[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases:  1 |  1 passed | 0 failed | 15 skipped
 [doctest] assertions: 33 | 33 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Codec::CodecFast:all" classname="Codec::CodecFast:all" time="0.00262434" status="run">
+	<testcase name="TimerManager" classname="TimerManager" time="1.3601" status="run">
 		<system-out>[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 7 skipped
+[doctest] test cases: 1 | 1 passed | 0 failed | 15 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="2026-11-16 15:36:47.424 [INFO]  Console logging disabled" classname="2026-11-16 15:36:47.424 [INFO]  Console logging disabled" time="0.00989376" status="run">
+		<system-out>2026-11-16 15:37:03.428 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 0 | 0 passed | 0 failed | 124 skipped
+[doctest] assertions: 0 | 0 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Bank:basicFunctionality" classname="Bank:basicFunctionality" time="0.00946419" status="run">
+		<system-out>2026-11-16 15:37:03.435 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 14 | 14 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:tally come out and point scopes" classname="BetStats:tally come out and point scopes" time="0.0105439" status="run">
+		<system-out>2026-11-16 15:37:03.446 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 19 | 19 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:tally do side and dont side" classname="BetStats:tally do side and dont side" time="0.0102257" status="run">
+		<system-out>2026-11-16 15:37:03.456 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 10 | 10 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:field recorded overall and by number" classname="BetStats:field recorded overall and by number" time="0.0103676" status="run">
+		<system-out>2026-11-16 15:37:03.467 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 22 | 22 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:any seven recorded overall and by number" classname="BetStats:any seven recorded overall and by number" time="0.011971" status="run">
+		<system-out>2026-11-16 15:37:03.479 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 10 | 10 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:any 711 recorded overall and by number" classname="BetStats:any 711 recorded overall and by number" time="0.0111631" status="run">
+		<system-out>2026-11-16 15:37:03.491 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 13 | 13 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:roll dependent entries survive merge" classname="BetStats:roll dependent entries survive merge" time="0.00923194" status="run">
+		<system-out>2026-11-16 15:37:03.500 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="RollStats:simulatedCounts" classname="RollStats:simulatedCounts" time="0.0110178" status="run">
+		<system-out>2026-11-16 15:37:03.512 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:odds recorded separately from contract" classname="BetStats:odds recorded separately from contract" time="0.0115144" status="run">
+		<system-out>2026-11-16 15:37:03.523 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 19 | 19 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:BetStat odds fields yaml" classname="BetStats:BetStat odds fields yaml" time="0.00989756" status="run">
+		<system-out>2026-11-16 15:37:03.533 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
 [doctest] assertions: 1 | 1 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Codec::CodecSlow:all" classname="Codec::CodecSlow:all" time="0.00264836" status="run">
-		<system-out>[doctest] doctest version is "2.4.11"
+	<testcase name="BetStats:hardway losses by cause" classname="BetStats:hardway losses by cause" time="0.00985425" status="run">
+		<system-out>2026-11-16 15:37:03.543 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 7 skipped
-[doctest] assertions: 1 | 1 passed | 0 failed |
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 19 | 19 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Codec::EnumChannelDirectionTest: toString" classname="Codec::EnumChannelDirectionTest: toString" time="0.00266211" status="run">
-		<system-out>[doctest] doctest version is "2.4.11"
+	<testcase name="BetStats:classifyRoll" classname="BetStats:classifyRoll" time="0.0105971" status="run">
+		<system-out>2026-11-16 15:37:03.554 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 7 skipped
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 14 | 14 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:tallyRollOutcome" classname="BetStats:tallyRollOutcome" time="0.0115397" status="run">
+		<system-out>2026-11-16 15:37:03.565 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 13 | 13 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:per roll counters" classname="BetStats:per roll counters" time="0.00989819" status="run">
+		<system-out>2026-11-16 15:37:03.576 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 13 | 13 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="BetStats:rollActivity yaml names and round trip" classname="BetStats:rollActivity yaml names and round trip" time="0.0225704" status="run">
+		<system-out>2026-11-16 15:37:03.586 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 11 | 11 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:Constructor" classname="CrapsBet:Constructor" time="0.0106293" status="run">
+		<system-out>2026-11-16 15:37:03.608 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 63 | 63 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:args" classname="CrapsBet:evaluate:args" time="0.0117508" status="run">
+		<system-out>2026-11-16 15:37:03.621 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:PassLine" classname="CrapsBet:evaluate:PassLine" time="0.0132852" status="run">
+		<system-out>2026-11-16 15:37:03.632 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 398 | 398 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:DontPass" classname="CrapsBet:evaluate:DontPass" time="0.0142051" status="run">
+		<system-out>2026-11-16 15:37:03.646 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 360 | 360 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Come" classname="CrapsBet:evaluate:Come" time="0.0123626" status="run">
+		<system-out>2026-11-16 15:37:03.659 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 341 | 341 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:DontCome" classname="CrapsBet:evaluate:DontCome" time="0.0125865" status="run">
+		<system-out>2026-11-16 15:37:03.671 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 341 | 341 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Place" classname="CrapsBet:evaluate:Place" time="0.0147518" status="run">
+		<system-out>2026-11-16 15:37:03.686 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 324 | 324 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Buy" classname="CrapsBet:evaluate:Buy" time="0.0132172" status="run">
+		<system-out>2026-11-16 15:37:03.700 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 156 | 156 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Lay" classname="CrapsBet:evaluate:Lay" time="0.0142839" status="run">
+		<system-out>2026-11-16 15:37:03.714 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 448 | 448 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Hardway" classname="CrapsBet:evaluate:Hardway" time="0.0129949" status="run">
+		<system-out>2026-11-16 15:37:03.727 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 500 | 500 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Field" classname="CrapsBet:evaluate:Field" time="0.0125224" status="run">
+		<system-out>2026-11-16 15:37:03.741 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 88 | 88 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:AnyCraps" classname="CrapsBet:evaluate:AnyCraps" time="0.0128975" status="run">
+		<system-out>2026-11-16 15:37:03.753 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 112 | 112 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:AnySeven" classname="CrapsBet:evaluate:AnySeven" time="0.0143837" status="run">
+		<system-out>2026-11-16 15:37:03.768 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 168 | 168 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Any711" classname="CrapsBet:evaluate:Any711" time="0.0129049" status="run">
+		<system-out>2026-11-16 15:37:03.781 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 864 | 864 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:C&amp;E" classname="CrapsBet:evaluate:C&amp;E" time="0.0128125" status="run">
+		<system-out>2026-11-16 15:37:03.794 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 184 | 184 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Horn" classname="CrapsBet:evaluate:Horn" time="0.0121477" status="run">
+		<system-out>2026-11-16 15:37:03.806 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 184 | 184 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:resolved wager lifetime" classname="CrapsBet:resolved wager lifetime" time="0.0124164" status="run">
+		<system-out>2026-11-16 15:37:03.819 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 20 | 20 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:Hardway on/off" classname="CrapsBet:Hardway on/off" time="0.0114766" status="run">
+		<system-out>2026-11-16 15:37:03.830 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 8 | 8 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:World" classname="CrapsBet:evaluate:World" time="0.0142108" status="run">
+		<system-out>2026-11-16 15:37:03.844 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 51 | 51 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsBet:evaluate:Field uses TableRules" classname="CrapsBet:evaluate:Field uses TableRules" time="0.0140229" status="run">
+		<system-out>2026-11-16 15:37:03.859 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
 [doctest] assertions: 3 | 3 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Codec::EnumChannelDirectionTest: fromString" classname="Codec::EnumChannelDirectionTest: fromString" time="0.0027702" status="run">
-		<system-out>[doctest] doctest version is "2.4.11"
+	<testcase name="CrapsBet:TableRules:odds rounding and commissions" classname="CrapsBet:TableRules:odds rounding and commissions" time="0.0140559" status="run">
+		<system-out>2026-11-16 15:37:03.872 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 7 skipped
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 8 | 8 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:reject null bet pointers" classname="CrapsTable:reject null bet pointers" time="0.0134536" status="run">
+		<system-out>2026-11-16 15:37:03.886 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 9 | 9 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable: placement commission is collected and refunded on cancellation" classname="CrapsTable: placement commission is collected and refunded on cancellation" time="0.118167" status="run">
+		<system-out>2026-11-16 15:37:03.901 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 16 | 16 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable: placement commission is not charged or refunded twice after a win" classname="CrapsTable: placement commission is not charged or refunded twice after a win" time="0.117497" status="run">
+		<system-out>2026-11-16 15:37:04.018 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 14 | 14 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable: bet amount limits reflect table rules" classname="CrapsTable: bet amount limits reflect table rules" time="0.116897" status="run">
+		<system-out>2026-11-16 15:37:04.135 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable: aggregate component wager limit is enforced" classname="CrapsTable: aggregate component wager limit is enforced" time="0.116608" status="run">
+		<system-out>2026-11-16 15:37:04.252 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable: aggregate potential win limit is enforced" classname="CrapsTable: aggregate potential win limit is enforced" time="0.117947" status="run">
+		<system-out>2026-11-16 15:37:04.370 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
 [doctest] assertions: 4 | 4 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Codec::EnumChannelDirectionTest: isConvertibleFrom" classname="Codec::EnumChannelDirectionTest: isConvertibleFrom" time="0.00268413" status="run">
-		<system-out>[doctest] doctest version is "2.4.11"
+	<testcase name="CrapsTable:bet evaluation failure is propagated" classname="CrapsTable:bet evaluation failure is propagated" time="0.0150395" status="run">
+		<system-out>2026-11-16 15:37:04.488 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 7 skipped
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:roll stats use the point when the dice were thrown" classname="CrapsTable:roll stats use the point when the dice were thrown" time="0.0147499" status="run">
+		<system-out>2026-11-16 15:37:04.503 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 11 | 11 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:ctor" classname="CrapsTable:ctor" time="0.160061" status="run">
+		<system-out>2026-11-16 15:37:04.517 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 17 | 17 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:players" classname="CrapsTable:players" time="0.0155143" status="run">
+		<system-out>2026-11-16 15:37:04.677 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 53 | 53 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:placingBets" classname="CrapsTable:placingBets" time="0.0249949" status="run">
+		<system-out>2026-11-16 15:37:04.694 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 153 | 153 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:rollDice" classname="CrapsTable:rollDice" time="0.017161" status="run">
+		<system-out>2026-11-16 15:37:04.720 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+John makes PassLine bet
+Jane makes DontPass bet
+John makes PassLine bet
+Jane makes DontPass bet
+John makes PassLine bet
+Jane makes DontPass bet
+John makes PassLine bet
+Jane makes DontPass bet
+John makes PassLine bet
+Jane makes DontPass bet
+John makes PassLine bet
+Jane makes DontPass bet
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 91 | 91 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:rolls" classname="CrapsTable:rolls" time="29.4421" status="run">
+		<system-out>2026-11-16 15:37:04.736 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1      | 1      passed | 0 failed | 123 skipped
+[doctest] assertions: 400032 | 400032 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:recentRolls" classname="CrapsTable:recentRolls" time="0.0162051" status="run">
+		<system-out>2026-11-16 15:37:34.179 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 13 | 13 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:Buy win accounting and lifetime" classname="CrapsTable:Buy win accounting and lifetime" time="0.01759" status="run">
+		<system-out>2026-11-16 15:37:34.197 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 14 | 14 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:Come odds refunded once on come-out win" classname="CrapsTable:Come odds refunded once on come-out win" time="0.0158084" status="run">
+		<system-out>2026-11-16 15:37:34.212 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:Lay commission accounting and lifetime" classname="CrapsTable:Lay commission accounting and lifetime" time="0.0156886" status="run">
+		<system-out>2026-11-16 15:37:34.229 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 8 | 8 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:DontCome odds refunded once on come-out win" classname="CrapsTable:DontCome odds refunded once on come-out win" time="0.0144706" status="run">
+		<system-out>2026-11-16 15:37:34.243 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:World bet settlement and statistics" classname="CrapsTable:World bet settlement and statistics" time="0.0145698" status="run">
+		<system-out>2026-11-16 15:37:34.258 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 24 | 24 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:Horn and C&amp;E settle net of losing components" classname="CrapsTable:Horn and C&amp;E settle net of losing components" time="0.0164839" status="run">
+		<system-out>2026-11-16 15:37:34.274 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 23 | 23 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:player per roll stats restart each roll" classname="CrapsTable:player per roll stats restart each roll" time="0.0154109" status="run">
+		<system-out>2026-11-16 15:37:34.290 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 9 | 9 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:World bet amount validation" classname="CrapsTable:World bet amount validation" time="0.0143887" status="run">
+		<system-out>2026-11-16 15:37:34.305 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:payout-compatible wager limits" classname="CrapsTable:payout-compatible wager limits" time="0.117785" status="run">
+		<system-out>2026-11-16 15:37:34.321 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 11 | 11 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:Any711 pays 3 to 1 on 7 and 11" classname="CrapsTable:Any711 pays 3 to 1 on 7 and 11" time="0.0173746" status="run">
+		<system-out>2026-11-16 15:37:34.439 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 8 | 8 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:player point repeaters pass line" classname="CrapsTable:player point repeaters pass line" time="0.0173981" status="run">
+		<system-out>2026-11-16 15:37:34.457 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:player point repeaters come bet traveling" classname="CrapsTable:player point repeaters come bet traveling" time="0.0145325" status="run">
+		<system-out>2026-11-16 15:37:34.473 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:player place repeaters with zero bucket" classname="CrapsTable:player place repeaters with zero bucket" time="0.0149376" status="run">
+		<system-out>2026-11-16 15:37:34.487 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 10 | 10 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:player buy repeaters" classname="CrapsTable:player buy repeaters" time="0.0147583" status="run">
+		<system-out>2026-11-16 15:37:34.502 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:player place run survives come out seven" classname="CrapsTable:player place run survives come out seven" time="0.0146049" status="run">
+		<system-out>2026-11-16 15:37:34.517 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:player with no bets records no repeaters" classname="CrapsTable:player with no bets records no repeaters" time="0.0138868" status="run">
+		<system-out>2026-11-16 15:37:34.532 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="EnumBetName:toString" classname="EnumBetName:toString" time="0.0126512" status="run">
+		<system-out>2026-11-16 15:37:34.546 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 15 | 15 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="EnumBetName:fromString" classname="EnumBetName:fromString" time="0.014392" status="run">
+		<system-out>2026-11-16 15:37:34.560 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 16 | 16 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="EnumBetName:isConvertibleFrom" classname="EnumBetName:isConvertibleFrom" time="0.0129487" status="run">
+		<system-out>2026-11-16 15:37:34.573 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 14 | 14 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="EnumBetName:fromUnsigned" classname="EnumBetName:fromUnsigned" time="0.0126311" status="run">
+		<system-out>2026-11-16 15:37:34.586 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 16 | 16 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="EnumBetName:listAsString" classname="EnumBetName:listAsString" time="0.0134855" status="run">
+		<system-out>2026-11-16 15:37:34.599 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 1 | 1 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="EnumBetName:ostreamOperator" classname="EnumBetName:ostreamOperator" time="0.013166" status="run">
+		<system-out>2026-11-16 15:37:34.613 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 1 | 1 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:ctor" classname="Player:ctor" time="0.0409219" status="run">
+		<system-out>2026-11-16 15:37:34.628 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 11 | 11 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:joinTable" classname="Player:joinTable" time="0.0152675" status="run">
+		<system-out>2026-11-16 15:37:34.668 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 32 | 32 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:after leaving the table" classname="Player:after leaving the table" time="0.0163289" status="run">
+		<system-out>2026-11-16 15:37:34.685 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:endSession then join starts a new session" classname="Player:endSession then join starts a new session" time="0.0506714" status="run">
+		<system-out>2026-11-16 15:37:34.700 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 11 | 11 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:shooter leaves the table" classname="CrapsTable:shooter leaves the table" time="0.0145564" status="run">
+		<system-out>2026-11-16 15:37:34.750 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 16 | 16 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="CrapsTable:replacePlayer" classname="CrapsTable:replacePlayer" time="0.0237782" status="run">
+		<system-out>2026-11-16 15:37:34.765 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 71 | 71 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:findBet" classname="Player:findBet" time="0.0147297" status="run">
+		<system-out>2026-11-16 15:37:34.789 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 13 | 13 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:makeOrChangeBet" classname="Player:makeOrChangeBet" time="0.0183939" status="run">
+		<system-out>2026-11-16 15:37:34.805 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 63 | 63 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:makeBet" classname="Player:makeBet" time="0.016311" status="run">
+		<system-out>2026-11-16 15:37:34.823 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 37 | 37 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:setOddsAmount" classname="Player:setOddsAmount" time="0.0181714" status="run">
+		<system-out>2026-11-16 15:37:34.841 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 44 | 44 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Player:decisions" classname="Player:decisions" time="0.0158699" status="run">
+		<system-out>2026-11-16 15:37:34.857 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 53 | 53 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Repeaters:hits are bucketed when the run ends" classname="Repeaters:hits are bucketed when the run ends" time="0.0151161" status="run">
+		<system-out>2026-11-16 15:37:34.874 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 9 | 9 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Repeaters:buckets stay in ascending order of hits" classname="Repeaters:buckets stay in ascending order of hits" time="0.0142186" status="run">
+		<system-out>2026-11-16 15:37:34.889 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Repeaters:zero hit runs recorded on request" classname="Repeaters:zero hit runs recorded on request" time="0.014814" status="run">
+		<system-out>2026-11-16 15:37:34.904 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
 [doctest] assertions: 4 | 4 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Codec::EnumChannelDirectionTest: fromUnsigned" classname="Codec::EnumChannelDirectionTest: fromUnsigned" time="0.00268176" status="run">
-		<system-out>[doctest] doctest version is "2.4.11"
+	<testcase name="Repeaters:merge and reset" classname="Repeaters:merge and reset" time="0.0150219" status="run">
+		<system-out>2026-11-16 15:37:34.919 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 7 skipped
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
 [doctest] assertions: 4 | 4 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Codec::EnumChannelDirectionTest: listAsString" classname="Codec::EnumChannelDirectionTest: listAsString" time="0.002773" status="run">
-		<system-out>[doctest] doctest version is "2.4.11"
+	<testcase name="Repeaters:yaml round trip drops the running tally" classname="Repeaters:yaml round trip drops the running tally" time="0.0143322" status="run">
+		<system-out>2026-11-16 15:37:34.933 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 7 skipped
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Repeaters:yaml is strict about missing numbers" classname="Repeaters:yaml is strict about missing numbers" time="0.0154231" status="run">
+		<system-out>2026-11-16 15:37:34.948 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:repeaters one point cycle, seven out" classname="TableStats:repeaters one point cycle, seven out" time="0.0141675" status="run">
+		<system-out>2026-11-16 15:37:34.963 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:repeaters come out seven ends point run only" classname="TableStats:repeaters come out seven ends point run only" time="0.0141358" status="run">
+		<system-out>2026-11-16 15:37:34.977 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:repeaters cover 2 3 11 12 but place does not" classname="TableStats:repeaters cover 2 3 11 12 but place does not" time="0.0144274" status="run">
+		<system-out>2026-11-16 15:37:34.992 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="RollStats:repeaters merge reset and yaml" classname="RollStats:repeaters merge reset and yaml" time="0.0173176" status="run">
+		<system-out>2026-11-16 15:37:35.006 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Repeaters:closeRun ends only the given numbers" classname="Repeaters:closeRun ends only the given numbers" time="0.0142585" status="run">
+		<system-out>2026-11-16 15:37:35.024 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="PlayerStats:repeaters merge reset and yaml" classname="PlayerStats:repeaters merge reset and yaml" time="0.0293583" status="run">
+		<system-out>2026-11-16 15:37:35.038 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 8 | 8 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:hardway simulated on come out, loss cause split" classname="TableStats:hardway simulated on come out, loss cause split" time="0.0142217" status="run">
+		<system-out>2026-11-16 15:37:35.067 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 12 | 12 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:place buy lay simulated use point rolls only" classname="TableStats:place buy lay simulated use point rolls only" time="0.0142907" status="run">
+		<system-out>2026-11-16 15:37:35.082 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 9 | 9 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="RollStats:new counters yaml and merge" classname="RollStats:new counters yaml and merge" time="0.0183169" status="run">
+		<system-out>2026-11-16 15:37:35.097 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="RollStats:field lose yaml is not the field wins" classname="RollStats:field lose yaml is not the field wins" time="0.0176272" status="run">
+		<system-out>2026-11-16 15:37:35.115 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="RollStats:fromYAML requires every key" classname="RollStats:fromYAML requires every key" time="0.0238767" status="run">
+		<system-out>2026-11-16 15:37:35.132 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="SessionHistory:ctor" classname="SessionHistory:ctor" time="0.0401153" status="run">
+		<system-out>2026-11-16 15:37:35.157 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="SessionHistory:addSessionSummary" classname="SessionHistory:addSessionSummary" time="0.0143183" status="run">
+		<system-out>2026-11-16 15:37:35.197 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="SessionHistory:yaml roundtrip" classname="SessionHistory:yaml roundtrip" time="0.0177628" status="run">
+		<system-out>2026-11-16 15:37:35.212 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 10 | 10 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="SessionHistory:max sessions" classname="SessionHistory:max sessions" time="0.0706944" status="run">
+		<system-out>2026-11-16 15:37:35.229 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 51 | 51 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableRules: YAML round trip preserves configurable rules" classname="TableRules: YAML round trip preserves configurable rules" time="0.0150174" status="run">
+		<system-out>2026-11-16 15:37:35.300 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 21 | 21 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableRules: reads legacy table-wide aggregate settings" classname="TableRules: reads legacy table-wide aggregate settings" time="0.016713" status="run">
+		<system-out>2026-11-16 15:37:35.316 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 9 | 9 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableRules: rejects invalid configuration" classname="TableRules: rejects invalid configuration" time="0.0205586" status="run">
+		<system-out>2026-11-16 15:37:35.333 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableRules: accepts both C&amp;E aggregate YAML keys" classname="TableRules: accepts both C&amp;E aggregate YAML keys" time="0.0151115" status="run">
+		<system-out>2026-11-16 15:37:35.353 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 123 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:ctor" classname="TableStats:ctor" time="0.0145749" status="run">
+		<system-out>2026-11-16 15:37:35.368 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 306 | 306 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:counter" classname="TableStats:counter" time="0.0284132" status="run">
+		<system-out>2026-11-16 15:37:35.384 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 35 | 35 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:allsevens" classname="TableStats:diceroll:allsevens" time="0.0159921" status="run">
+		<system-out>2026-11-16 15:37:35.412 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1   | 1   passed | 0 failed | 123 skipped
+[doctest] assertions: 476 | 476 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:one" classname="TableStats:diceroll:one" time="0.0153448" status="run">
+		<system-out>2026-11-16 15:37:35.427 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1    | 1    passed | 0 failed | 123 skipped
+[doctest] assertions: 1110 | 1110 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:two" classname="TableStats:diceroll:two" time="0.016943" status="run">
+		<system-out>2026-11-16 15:37:35.442 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1    | 1    passed | 0 failed | 123 skipped
+[doctest] assertions: 1834 | 1834 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:three" classname="TableStats:diceroll:three" time="0.0246625" status="run">
+		<system-out>2026-11-16 15:37:35.462 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1    | 1    passed | 0 failed | 123 skipped
+[doctest] assertions: 3668 | 3668 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:four" classname="TableStats:diceroll:four" time="0.0238542" status="run">
+		<system-out>2026-11-16 15:37:35.485 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1    | 1    passed | 0 failed | 123 skipped
+[doctest] assertions: 1048 | 1048 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:five" classname="TableStats:diceroll:five" time="0.0223546" status="run">
+		<system-out>2026-11-16 15:37:35.508 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 34 | 34 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:six" classname="TableStats:diceroll:six" time="0.0238251" status="run">
+		<system-out>2026-11-16 15:37:35.532 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 15 | 15 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:seven" classname="TableStats:diceroll:seven" time="0.0231374" status="run">
+		<system-out>2026-11-16 15:37:35.555 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 19 | 19 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:diceroll:eight" classname="TableStats:diceroll:eight" time="0.0232442" status="run">
+		<system-out>2026-11-16 15:37:35.578 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 19 | 19 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:betstats:win1" classname="TableStats:betstats:win1" time="0.023898" status="run">
+		<system-out>2026-11-16 15:37:35.602 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 25 | 25 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:betstats:win2" classname="TableStats:betstats:win2" time="0.0225668" status="run">
+		<system-out>2026-11-16 15:37:35.626 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 55 | 55 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:betstats:win3" classname="TableStats:betstats:win3" time="0.0244609" status="run">
+		<system-out>2026-11-16 15:37:35.649 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 25 | 25 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:betstats:lose1" classname="TableStats:betstats:lose1" time="0.0234286" status="run">
+		<system-out>2026-11-16 15:37:35.673 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 25 | 25 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="TableStats:betstats:lose3" classname="TableStats:betstats:lose3" time="0.0250445" status="run">
+		<system-out>2026-11-16 15:37:35.698 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 123 skipped
+[doctest] assertions: 27 | 27 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="2026-11-16 15:36:25.806 [INFO]  Console logging disabled" classname="2026-11-16 15:36:25.806 [INFO]  Console logging disabled" time="0.00744888" status="run">
+		<system-out>2026-11-16 15:37:35.724 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 0 | 0 passed | 0 failed | 45 skipped
+[doctest] assertions: 0 | 0 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="AutoFill:set, replace, get, delete" classname="AutoFill:set, replace, get, delete" time="0.00546647" status="run">
+		<system-out>2026-11-16 15:37:35.729 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 8 | 8 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="AutoFill:zero is a valid amount" classname="AutoFill:zero is a valid amount" time="0.00610602" status="run">
+		<system-out>2026-11-16 15:37:35.735 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="AutoFill:YAML round trip keeps order" classname="AutoFill:YAML round trip keeps order" time="0.00606724" status="run">
+		<system-out>2026-11-16 15:37:35.741 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="AutoFill:fromYAML is forgiving" classname="AutoFill:fromYAML is forgiving" time="0.00644706" status="run">
+		<system-out>2026-11-16 15:37:35.747 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="ConfigManager::ctor" classname="ConfigManager::ctor" time="0.0078896" status="run">
+		<system-out>2026-11-16 15:37:35.756 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 0 | 0 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="ConfigSeed: first run copies packaged files" classname="ConfigSeed: first run copies packaged files" time="0.00822595" status="run">
+		<system-out>2026-11-16 15:37:35.762 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 44 skipped
+[doctest] assertions: 24 | 24 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="ConfigSeed: second startup does nothing" classname="ConfigSeed: second startup does nothing" time="0.00821168" status="run">
+		<system-out>2026-11-16 15:37:35.770 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="ConfigSeed: never overwrites existing files" classname="ConfigSeed: never overwrites existing files" time="0.00831883" status="run">
+		<system-out>2026-11-16 15:37:35.779 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="ConfigSeed: missing user manifest triggers reseeding" classname="ConfigSeed: missing user manifest triggers reseeding" time="0.00818567" status="run">
+		<system-out>2026-11-16 15:37:35.787 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="ConfigSeed: missing packaged default config throws" classname="ConfigSeed: missing packaged default config throws" time="0.00763336" status="run">
+		<system-out>2026-11-16 15:37:35.795 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="ConfigSeed: same directories are left alone" classname="ConfigSeed: same directories are left alone" time="0.00818682" status="run">
+		<system-out>2026-11-16 15:37:35.804 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="LastFill:YAML round trip" classname="LastFill:YAML round trip" time="0.00647085" status="run">
+		<system-out>2026-11-16 15:37:35.812 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 44 skipped
+[doctest] assertions: 11 | 11 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="LastFill:toYAML shape" classname="LastFill:toYAML shape" time="0.00674319" status="run">
+		<system-out>2026-11-16 15:37:35.819 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="LastFill:fromYAML from text" classname="LastFill:fromYAML from text" time="0.0065171" status="run">
+		<system-out>2026-11-16 15:37:35.825 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="LastFill:fromYAML missing or wrong shape gives empty" classname="LastFill:fromYAML missing or wrong shape gives empty" time="0.00644459" status="run">
+		<system-out>2026-11-16 15:37:35.832 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="LastFill:fromYAML skips bad entries, keeps good ones" classname="LastFill:fromYAML skips bad entries, keeps good ones" time="0.00802103" status="run">
+		<system-out>2026-11-16 15:37:35.840 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="LastFill:fromYAML duplicates collapse, later wins" classname="LastFill:fromYAML duplicates collapse, later wins" time="0.00632179" status="run">
+		<system-out>2026-11-16 15:37:35.847 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="LastFill:clear" classname="LastFill:clear" time="0.0068988" status="run">
+		<system-out>2026-11-16 15:37:35.854 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="PlayerPrefs:empty toYAML" classname="PlayerPrefs:empty toYAML" time="0.00577301" status="run">
+		<system-out>2026-11-16 15:37:35.860 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 7 | 7 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="PlayerPrefs:YAML round trip" classname="PlayerPrefs:YAML round trip" time="0.00728852" status="run">
+		<system-out>2026-11-16 15:37:35.867 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 44 skipped
+[doctest] assertions: 11 | 11 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="PlayerPrefs:fromYAML missing or wrong shape gives empty" classname="PlayerPrefs:fromYAML missing or wrong shape gives empty" time="0.00719928" status="run">
+		<system-out>2026-11-16 15:37:35.874 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 44 skipped
+[doctest] assertions: 13 | 13 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="PlayerPrefs:instances are independent" classname="PlayerPrefs:instances are independent" time="0.00635271" status="run">
+		<system-out>2026-11-16 15:37:35.881 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="QuickBet:set, replace, delete by entry and by index" classname="QuickBet:set, replace, delete by entry and by index" time="0.00749582" status="run">
+		<system-out>2026-11-16 15:37:35.889 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 44 skipped
+[doctest] assertions: 10 | 10 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="QuickBet:YAML round trip keeps order" classname="QuickBet:YAML round trip keeps order" time="0.00649733" status="run">
+		<system-out>2026-11-16 15:37:35.895 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="QuickBet:fromYAML is forgiving" classname="QuickBet:fromYAML is forgiving" time="0.00686274" status="run">
+		<system-out>2026-11-16 15:37:35.902 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="StartChoices: fresh install uses the packaged defaults" classname="StartChoices: fresh install uses the packaged defaults" time="0.00708528" status="run">
+		<system-out>2026-11-16 15:37:35.909 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="StartChoices: state fills in what config.yaml leaves out" classname="StartChoices: state fills in what config.yaml leaves out" time="0.00693987" status="run">
+		<system-out>2026-11-16 15:37:35.916 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="StartChoices: config.yaml wins, setting by setting" classname="StartChoices: config.yaml wins, setting by setting" time="0.00745062" status="run">
+		<system-out>2026-11-16 15:37:35.923 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 6 | 6 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="StartChoices: startWithBuddyPlayers false means no buddies" classname="StartChoices: startWithBuddyPlayers false means no buddies" time="0.00987932" status="run">
+		<system-out>2026-11-16 15:37:35.932 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="StartChoices: a remembered game with no buddies stays that way" classname="StartChoices: a remembered game with no buddies stays that way" time="0.00824392" status="run">
+		<system-out>2026-11-16 15:37:35.942 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
 [doctest] assertions: 1 | 1 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="Codec::EnumChannelDirectionTest: ostreamOperator" classname="Codec::EnumChannelDirectionTest: ostreamOperator" time="0.00275247" status="run">
-		<system-out>[doctest] doctest version is "2.4.11"
+	<testcase name="StartChoices: names that are not files are skipped" classname="StartChoices: names that are not files are skipped" time="0.0112865" status="run">
+		<system-out>2026-11-16 15:37:35.950 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 7 skipped
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 4 | 4 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="StartChoices: buddies never repeat or include the user player" classname="StartChoices: buddies never repeat or include the user player" time="0.00669669" status="run">
+		<system-out>2026-11-16 15:37:35.960 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
 [doctest] assertions: 1 | 1 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="main::Properties:all" classname="main::Properties:all" time="0.00221298" status="run">
-		<system-out>[doctest] doctest version is "2.4.11"
+	<testcase name="StartChoices: at most five buddies" classname="StartChoices: at most five buddies" time="0.00845596" status="run">
+		<system-out>2026-11-16 15:37:35.969 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 1 skipped
-[doctest] assertions: 1 | 1 passed | 0 failed |
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>
 	</testcase>
-	<testcase name="main::RedFlame:all" classname="main::RedFlame:all" time="0.00213298" status="run">
+	<testcase name="TableManifest:fromYAML" classname="TableManifest:fromYAML" time="0.00692932" status="run">
+		<system-out>2026-11-16 15:37:35.976 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1  | 1  passed | 0 failed | 44 skipped
+[doctest] assertions: 12 | 12 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="UserState: save then read round trip" classname="UserState: save then read round trip" time="0.00884321" status="run">
+		<system-out>2026-11-16 15:37:35.984 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="UserState: a game with no buddies round trips as no buddies" classname="UserState: a game with no buddies round trips as no buddies" time="0.00695061" status="run">
+		<system-out>2026-11-16 15:37:35.992 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="UserState: unusable state files are refused" classname="UserState: unusable state files are refused" time="0.0081191" status="run">
+		<system-out>2026-11-16 15:37:35.999 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 8 | 8 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="YamlFile:save then load" classname="YamlFile:save then load" time="0.00730463" status="run">
+		<system-out>2026-11-16 15:37:36.007 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="YamlFile:save twice overwrites" classname="YamlFile:save twice overwrites" time="0.00849258" status="run">
+		<system-out>2026-11-16 15:37:36.016 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="YamlFile:sections are replaced, other sections are kept" classname="YamlFile:sections are replaced, other sections are kept" time="0.00748367" status="run">
+		<system-out>2026-11-16 15:37:36.023 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="YamlFile:sections other than the required one are optional" classname="YamlFile:sections other than the required one are optional" time="0.00663103" status="run">
+		<system-out>2026-11-16 15:37:36.031 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="YamlFile:required section is whatever the caller names" classname="YamlFile:required section is whatever the caller names" time="0.00808716" status="run">
+		<system-out>2026-11-16 15:37:36.039 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="YamlFile:getters and setters hand out copies" classname="YamlFile:getters and setters hand out copies" time="0.00647718" status="run">
+		<system-out>2026-11-16 15:37:36.046 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 2 | 2 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="YamlFile:load failures throw and name the file" classname="YamlFile:load failures throw and name the file" time="0.00892711" status="run">
+		<system-out>2026-11-16 15:37:36.054 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 5 | 5 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="YamlFile:save failures throw" classname="YamlFile:save failures throw" time="0.00692818" status="run">
+		<system-out>2026-11-16 15:37:36.062 [INFO]  Console logging disabled
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 44 skipped
+[doctest] assertions: 3 | 3 passed | 0 failed |
+[doctest] Status: SUCCESS!
+</system-out>
+	</testcase>
+	<testcase name="Gui::Placeholder" classname="Gui::Placeholder" time="0.00462265" status="run">
 		<system-out>[doctest] doctest version is "2.4.11"
 [doctest] run with "--help" for options
 ===============================================================================
-[doctest] test cases: 1 | 1 passed | 0 failed | 1 skipped
+[doctest] test cases: 1 | 1 passed | 0 failed | 0 skipped
 [doctest] assertions: 1 | 1 passed | 0 failed |
 [doctest] Status: SUCCESS!
 </system-out>

@@ -8,7 +8,8 @@ var searchData=
   ['menuoddsbet_5',['MenuOddsBet',['../classCui_1_1MenuOddsBet.html',1,'Cui']]],
   ['menupivot_6',['MenuPivot',['../classCui_1_1MenuPivot.html',1,'Cui']]],
   ['menuplacebet_7',['MenuPlaceBet',['../classCui_1_1MenuPlaceBet.html',1,'Cui']]],
-  ['messagetext_8',['MessageText',['../structCui_1_1DialogMessage_1_1MessageText.html',1,'Cui::DialogMessage']]],
-  ['money_9',['Money',['../classGen_1_1Money.html',1,'Gen']]],
-  ['multilayerconfig_10',['MultiLayerConfig',['../classGen_1_1MultiLayerConfig.html',1,'Gen']]]
+  ['menuplayers_8',['MenuPlayers',['../classCui_1_1MenuPlayers.html',1,'Cui']]],
+  ['messagetext_9',['MessageText',['../structCui_1_1DialogMessage_1_1MessageText.html',1,'Cui::DialogMessage']]],
+  ['money_10',['Money',['../classGen_1_1Money.html',1,'Gen']]],
+  ['multilayerconfig_11',['MultiLayerConfig',['../classGen_1_1MultiLayerConfig.html',1,'Gen']]]
 ];

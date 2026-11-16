@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="18042663951485674449">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="d1_"/>
+    <functioncall functionName="d2_"/>
+    <functioncall functionName="dist"/>
+    <functioncall functionName="format"/>
+    <functioncall functionName="gen"/>
+    <functioncall functionName="getRandomNumber"/>
+    <functioncall functionName="invalid_argument"/>
+    <functioncall functionName="rd"/>
+    <functioncall functionName="rollCount_"/>
+    <functioncall functionName="to_string"/>
+  </FileInfo>
+</analyzerinfo>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="6737082670207857312">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="IsSequence"/>
+    <functioncall functionName="KeyDirsUsrTables"/>
+    <functioncall functionName="Load"/>
+    <functioncall functionName="TableId"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="diag"/>
+    <functioncall functionName="emplace_back"/>
+    <functioncall functionName="fileName"/>
+    <functioncall functionName="fromYAML"/>
+    <functioncall functionName="fullDescription"/>
+    <functioncall functionName="getString"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="openOrThrow"/>
+    <functioncall functionName="path"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="shortDescription"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="tableId"/>
+    <functioncall functionName="tableName"/>
+    <functioncall functionName="tables_"/>
+    <functioncall functionName="value"/>
+    <functioncall functionName="what"/>
+  </FileInfo>
+</analyzerinfo>

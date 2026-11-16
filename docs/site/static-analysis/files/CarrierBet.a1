@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="13113239756074245600">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Invalid"/>
+    <functioncall functionName="assert"/>
+    <functioncall functionName="betId_"/>
+    <functioncall functionName="betName_"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="contractAmount_"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="isOddsBet_"/>
+    <functioncall functionName="oddsAmount_"/>
+    <functioncall functionName="pivot_"/>
+    <functioncall functionName="playerId_"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="true"/>
+  </FileInfo>
+</analyzerinfo>

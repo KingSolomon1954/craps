@@ -237,43 +237,190 @@ The application performs no networking.</p>
 <h3>Startup/Shutdown<a class="headerlink" href="#startup-shutdown" title="Link to this heading"></a></h3>
 <section id="startup-behavior">
 <h4>Startup Behavior<a class="headerlink" href="#startup-behavior" title="Link to this heading"></a></h4>
-<p>Royal Craps determines its startup behavior by checking whether an always
-present file exists. Looks for <code class="docutils literal notranslate"><span class="pre">$HOME/.local/share/royalcraps/config.yaml</span></code></p>
+<p>Royal Craps must bring the user straight into a working game, with no
+configuration steps, on a fresh installation and on every start after.
+Packaged files are read-only and shared, so everything the game writes
+(players, tables, preferences, what was last played) lives in the user’s
+own directories and is created from the packaged defaults when missing.</p>
+<section id="directory-layout">
+<h5>Directory Layout<a class="headerlink" href="#directory-layout" title="Link to this heading"></a></h5>
+<p>The layout follows the XDG Base Directory conventions. Each <code class="docutils literal notranslate"><span class="pre">$XDG_*</span></code>
+variable, when set, replaces the default shown.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 20.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Directory</p></th>
+<th class="head"><p>Access</p></th>
+<th class="head"><p>Contents</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;exe</span> <span class="pre">dir&gt;/../share/royalcraps</span></code>, else
+<code class="docutils literal notranslate"><span class="pre">/usr/local/share/royalcraps</span></code>, else
+<code class="docutils literal notranslate"><span class="pre">/usr/share/royalcraps</span></code></p></td>
+<td><p>read-only</p></td>
+<td><p>Packaged files: <code class="docutils literal notranslate"><span class="pre">config/sys-config.yaml</span></code>,
+<code class="docutils literal notranslate"><span class="pre">config/default-config.yaml</span></code>, <code class="docutils literal notranslate"><span class="pre">tables/</span></code>, <code class="docutils literal notranslate"><span class="pre">players/</span></code>,
+<code class="docutils literal notranslate"><span class="pre">audio/</span></code>, <code class="docutils literal notranslate"><span class="pre">images/</span></code>. The first location holding
+<code class="docutils literal notranslate"><span class="pre">config/sys-config.yaml</span></code> is used, so an unpacked tarball works
+wherever it is unpacked.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">$XDG_CONFIG_HOME/royalcraps</span></code> (<code class="docutils literal notranslate"><span class="pre">~/.config/royalcraps</span></code>)</p></td>
+<td><p>read/write</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>: the user’s preferences. Hand edited; never
+rewritten by the game. Delivered with every setting commented
+out.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">$XDG_DATA_HOME/royalcraps</span></code> (<code class="docutils literal notranslate"><span class="pre">~/.local/share/royalcraps</span></code>)</p></td>
+<td><p>read/write</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">players/</span></code> and <code class="docutils literal notranslate"><span class="pre">tables/</span></code> (each with its manifest,
+<code class="docutils literal notranslate"><span class="pre">players.yaml</span></code> and <code class="docutils literal notranslate"><span class="pre">tables.yaml</span></code>), <code class="docutils literal notranslate"><span class="pre">audio/</span></code>, <code class="docutils literal notranslate"><span class="pre">images/</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">$XDG_STATE_HOME/royalcraps</span></code> (<code class="docutils literal notranslate"><span class="pre">~/.local/state/royalcraps</span></code>)</p></td>
+<td><p>read/write</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">state.yaml</span></code>: last table and players, written at quit; a
+memory only, see <a class="reference internal" href="#choosing-the-table-and-players">Choosing the Table and Players</a>.
+Also the log file.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The configuration is resolved in layers, each overriding the one before:
+built-in defaults, the files (packaged <code class="docutils literal notranslate"><span class="pre">sys-config.yaml</span></code>, then the
+user’s <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>), environment variables, and finally the command
+line. The directories themselves can be overridden
+with <code class="docutils literal notranslate"><span class="pre">--sys-config-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--usr-config-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--usr-data-dir</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--usr-state-dir</span></code>. Pointing the user directories at a scratch location
+gives a genuine first startup every time, which is how first startup is
+tested; pointing them at the packaged files is how development runs
+from a source tree.</p>
+</section>
+<section id="logging-during-startup">
+<h5>Logging During Startup<a class="headerlink" href="#logging-during-startup" title="Link to this heading"></a></h5>
+<p>The log file is in the user state directory, which is not known until
+configuration is resolved, yet startup itself needs to log. The logger
+therefore holds messages in memory (and still echoes them to the
+console) until it is given its file, then writes them to the file ahead
+of everything else with their original timestamps. If startup fails
+before then, the held messages have already appeared on the console.
+Debug and trace messages are only kept once those levels are known, so
+the earliest messages are informational, warnings and errors.</p>
+</section>
 <section id="first-startup">
 <h5>First Startup<a class="headerlink" href="#first-startup" title="Link to this heading"></a></h5>
-<p>If no <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> exists, Royal Craps performs the
-following steps:</p>
+<p>First startup is detected by the absence of the user’s <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.
+The same population work also runs if the user’s <code class="docutils literal notranslate"><span class="pre">players.yaml</span></code> or
+<code class="docutils literal notranslate"><span class="pre">tables.yaml</span></code> is missing, so a user who deletes their data directory
+gets a working game back rather than an error.</p>
+<p>Royal Craps performs the following steps:</p>
 <ol class="arabic simple">
-<li><p>Creates the user directory structure for the game in $HOME.</p></li>
-<li><p>Populates the directory structure with packaged default YAML files.
-These include:</p>
+<li><p>Creates the user directories.</p></li>
+<li><p>Copies the packaged files into the user directories. A file is
+copied only if it does not already exist there, so existing players
+and their statistics are never overwritten. Each file is copied to a
+temporary name and renamed into place. These include:</p>
 <ul class="simple">
-<li><p>default <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.</p></li>
-<li><p>default player <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code>.</p></li>
+<li><p>player <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code>.</p></li>
 <li><p>packaged <strong>buddy</strong> player YAML files.</p></li>
 <li><p>packaged table YAML files.</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">players.yaml</span></code> and <code class="docutils literal notranslate"><span class="pre">tables.yaml</span></code> manifests.</p></li>
 </ul>
 </li>
-<li><p>default <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> specifies player <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code>.</p></li>
-<li><p>default <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> specifies table <code class="docutils literal notranslate"><span class="pre">Las</span> <span class="pre">Vegas</span> <span class="pre">Strip</span></code>.</p></li>
-<li><p>default <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code> specifies starting bank at $10,000.</p></li>
-<li><p>Royal Craps continues start up as normal</p></li>
+<li><p>Copies <code class="docutils literal notranslate"><span class="pre">default-config.yaml</span></code> to the user’s <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>. This is
+done last, so an interrupted first startup is simply repeated on the
+next start.</p></li>
+<li><p>The delivered <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> says nothing about the table or
+players, so the packaged defaults in <code class="docutils literal notranslate"><span class="pre">sys-config.yaml</span></code> apply: table
+<code class="docutils literal notranslate"><span class="pre">las-vegas-strip.yaml</span></code>, user player <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code> and two buddy
+players.</p></li>
+<li><p>The delivered <code class="docutils literal notranslate"><span class="pre">unnamed.yaml</span></code> specifies a starting bank of $10,000.</p></li>
+<li><p>Royal Craps continues start up as normal.</p></li>
 <li><p>Game begins with full screen <a class="reference internal" href="#screencrapstable-crc-card"><span class="std std-ref">ScreenCrapsTable</span></a>.</p></li>
-<li><p>If user-player name == <code class="docutils literal notranslate"><span class="pre">unnamed</span></code> then message area displays a
-reminder to change name.</p></li>
+<li><p>If the user player’s name is <code class="docutils literal notranslate"><span class="pre">unnamed</span></code> then a message reminds the
+user to change the name. Until the main screen has a message area
+this is an acknowledged dialog.</p></li>
 </ol>
 </section>
 <section id="subsequent-startups">
 <h5>Subsequent Startups<a class="headerlink" href="#subsequent-startups" title="Link to this heading"></a></h5>
 <ol class="arabic simple">
-<li><p>Reads <code class="docutils literal notranslate"><span class="pre">$HOME/.local/share/royalcraps/config.yaml</span></code>.</p></li>
-<li><p>Loads the last player YAML.</p></li>
-<li><p>Loads last table YAML.</p></li>
-<li><p>Loads last set of buddy players.</p></li>
+<li><p>Reads <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> from the user’s config directory.</p></li>
+<li><p>Reads <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> from the user’s state directory, if there is one.</p></li>
+<li><p>Decides the table and players as described in
+<a class="reference internal" href="#choosing-the-table-and-players">Choosing the Table and Players</a>.</p></li>
+<li><p>Loads the user player, the table and the other players from the
+user’s data directory.</p></li>
 <li><p>Game begins with full screen <a class="reference internal" href="#screencrapstable-crc-card"><span class="std std-ref">ScreenCrapsTable</span></a>.</p></li>
-<li><p>if player name == <code class="docutils literal notranslate"><span class="pre">unnamed</span></code> then message area displays a
-reminder to change name.</p></li>
+<li><p>If the user player’s name is <code class="docutils literal notranslate"><span class="pre">unnamed</span></code> then the same reminder is
+shown.</p></li>
 </ol>
+<p>At quit, after the table and players are saved, the table, the user
+player and the other players seated at the table are written to
+<code class="docutils literal notranslate"><span class="pre">state.yaml</span></code>.</p>
+</section>
+<section id="choosing-the-table-and-players">
+<h5>Choosing the Table and Players<a class="headerlink" href="#choosing-the-table-and-players" title="Link to this heading"></a></h5>
+<p>Three sources can say which table and players to start with, in this
+order of authority: what the user wrote in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, what the
+last game left in <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code>, and the packaged defaults in
+<code class="docutils literal notranslate"><span class="pre">sys-config.yaml</span></code>. The user’s <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> always wins;
+<code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> only fills in what it leaves out. Each setting is
+decided on its own.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> setting</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">startWithTable</span></code></p></td>
+<td><p>Always start at this table. If absent, the last table, else the
+packaged default.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">startWithUserPlayer</span></code></p></td>
+<td><p>Always start as this player, whoever the user played last time.
+If absent, the last user player, else the packaged default.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">startWithBuddyPlayers</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code> (the default) or <code class="docutils literal notranslate"><span class="pre">false</span></code>. <code class="docutils literal notranslate"><span class="pre">false</span></code> means start with
+no buddy players, regardless of anything else, including the
+buddies of the last game.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">startWithTheseBuddyPlayers</span></code></p></td>
+<td><p>A list of up to five buddy players to always start with. If
+absent, the buddies of the last game, else the packaged default
+buddies. Ignored when <code class="docutils literal notranslate"><span class="pre">startWithBuddyPlayers</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The packaged defaults are <code class="docutils literal notranslate"><span class="pre">defaultTable</span></code>, <code class="docutils literal notranslate"><span class="pre">defaultUserPlayer</span></code> and
+<code class="docutils literal notranslate"><span class="pre">defaultBuddyPlayers</span></code> in <code class="docutils literal notranslate"><span class="pre">sys-config.yaml</span></code>. They are separate keys
+because a value present in <code class="docutils literal notranslate"><span class="pre">sys-config.yaml</span></code> under the names the user
+uses could not be told apart from something the user wrote. A game that
+was left with no buddies is remembered as having none; the default
+buddies are only for when there is no <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code>.</p>
+<p>The game must always be able to start, so a file name that does not
+exist in the user’s tables or players directory (a typing mistake, or a
+player that was deleted) is skipped with a warning in the log and the
+next source is tried; for buddies, just that one buddy is dropped. The
+user player is never also a buddy. A <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> that cannot be read
+is ignored, and deleting it is always safe.</p>
+<p>The result is stored under the keys the rest of the game reads:
+<code class="docutils literal notranslate"><span class="pre">table.startTable</span></code>, <code class="docutils literal notranslate"><span class="pre">table.userIsPlayer</span></code> and
+<code class="docutils literal notranslate"><span class="pre">table.startPlayers</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Packaged files added by a later release (a new table or buddy) are
+not copied into an existing installation, and are not in the user’s
+manifests. A way to deliver them is not yet defined.</p>
+</div>
 <section id="player-configuration-options">
 <h6>Player Configuration Options<a class="headerlink" href="#player-configuration-options" title="Link to this heading"></a></h6>
 <p>At any time, the player can select <code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">-&gt;</span> <span class="pre">Configure</span></code> to perform

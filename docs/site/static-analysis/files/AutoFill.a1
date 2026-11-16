@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="7712716350142515169">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="AutoFillEntry"/>
+    <functioncall functionName="Fail"/>
+    <functioncall functionName="Success"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="betEntriesFromYAML"/>
+    <functioncall functionName="betEntriesToYAML"/>
+    <functioncall functionName="cbegin"/>
+    <functioncall functionName="cend"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="fills_"/>
+    <functioncall functionName="findEntry"/>
+    <functioncall functionName="find_if"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="setAutoFill"/>
+  </FileInfo>
+</analyzerinfo>

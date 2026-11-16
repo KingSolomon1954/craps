@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="1210691650491090436">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="LOG_TRACE"/>
+    <functioncall functionName="activeSurface"/>
+    <functioncall functionName="assert"/>
+    <functioncall functionName="assignLocation"/>
+    <functioncall functionName="back"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="doupdate"/>
+    <functioncall functionName="draw"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="findPosition"/>
+    <functioncall functionName="getLocationRequest"/>
+    <functioncall functionName="handleKey"/>
+    <functioncall functionName="onAttach"/>
+    <functioncall functionName="onDetach"/>
+    <functioncall functionName="onPause"/>
+    <functioncall functionName="onResume"/>
+    <functioncall functionName="pop_back"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="release"/>
+    <functioncall functionName="releaseNcursesResources"/>
+    <functioncall functionName="setLocation"/>
+    <functioncall functionName="shouldSkip"/>
+    <functioncall functionName="shutdownNcursesResources"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="stack_"/>
+    <functioncall functionName="surfaceName"/>
+    <functioncall functionName="surfaces_"/>
+    <functioncall functionName="to_string"/>
+  </FileInfo>
+</analyzerinfo>

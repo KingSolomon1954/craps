@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="12955994740373164244">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="LOG_TRACE"/>
+    <functioncall functionName="LocationManager"/>
+    <functioncall functionName="WindowPosition"/>
+    <functioncall functionName="WindowRect"/>
+    <functioncall functionName="assert"/>
+    <functioncall functionName="bottom"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="findDialogPosition"/>
+    <functioncall functionName="findIndependentPosition"/>
+    <functioncall functionName="findMenuPosition"/>
+    <functioncall functionName="fitsOnScreen"/>
+    <functioncall functionName="getRect"/>
+    <functioncall functionName="height"/>
+    <functioncall functionName="nullopt"/>
+    <functioncall functionName="overlapsExisting"/>
+    <functioncall functionName="right"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="screenCols_"/>
+    <functioncall functionName="screenRows_"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="width"/>
+    <functioncall functionName="windows_"/>
+  </FileInfo>
+</analyzerinfo>

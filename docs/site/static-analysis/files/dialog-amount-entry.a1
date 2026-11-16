@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="12000369470770250265">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="main" lineNumber="4"/>
+    <functioncall functionName="clearState"/>
+    <functioncall functionName="dialog"/>
+    <functioncall functionName="init"/>
+    <functioncall functionName="pushScreen"/>
+    <functioncall functionName="run"/>
+    <functioncall functionName="setTitle"/>
+    <functioncall functionName="shutdown"/>
+  </FileInfo>
+</analyzerinfo>

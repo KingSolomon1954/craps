@@ -1,3 +1,8 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="294370844157636777">
+<analyzerinfo hash="540995331741576565">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="main" lineNumber="14"/>
+    <functioncall functionName="craps"/>
+    <functioncall functionName="what"/>
+  </FileInfo>
 </analyzerinfo>

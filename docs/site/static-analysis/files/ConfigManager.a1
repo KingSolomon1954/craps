@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="14462358022040728057">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="ConfigManager"/>
+    <functioncall functionName="LayerNameCmdLine"/>
+    <functioncall functionName="LayerNameDefaults"/>
+    <functioncall functionName="LayerNameEnv"/>
+    <functioncall functionName="LayerNameFiles"/>
+    <functioncall functionName="addLayer"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="dumpConfig"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="exportResolved"/>
+    <functioncall functionName="processCmdLine"/>
+    <functioncall functionName="processDefaults"/>
+    <functioncall functionName="processEnv"/>
+    <functioncall functionName="processFiles"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="sortedConfig"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="what"/>
+  </FileInfo>
+</analyzerinfo>

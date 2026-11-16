@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="16935432229178658398">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-controller/src/StartChoices.cpp:20:1" my-argnr="2" my-argname="name" file="/work/src/lib-controller/src/StartChoices.cpp" line="23" col="13" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-controller/src/StartChoices.cpp:58:1" my-argnr="1" my-argname="s" file="/work/src/lib-controller/src/StartChoices.cpp" line="60" col="12" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-controller/src/StartChoices.cpp:80:1" my-argnr="1" my-argname="layer" file="/work/src/lib-controller/src/StartChoices.cpp" line="82" col="14" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="haveFile" lineNumber="20"/>
+    <functiondecl functionName="pickOne" lineNumber="28"/>
+    <functiondecl functionName="nonEmpty" lineNumber="58"/>
+    <functiondecl functionName="readList" lineNumber="64"/>
+    <functiondecl functionName="readBool" lineNumber="80"/>
+    <functioncall functionName="KeyDirsUsrPlayers"/>
+    <functioncall functionName="KeyDirsUsrTables"/>
+    <functioncall functionName="KeyTableDefaultBuddies"/>
+    <functioncall functionName="KeyTableDefaultTable"/>
+    <functioncall functionName="KeyTableDefaultUser"/>
+    <functioncall functionName="KeyTablePlayer1"/>
+    <functioncall functionName="KeyTablePlayer2"/>
+    <functioncall functionName="KeyTablePlayer3"/>
+    <functioncall functionName="KeyTablePlayer4"/>
+    <functioncall functionName="KeyTablePlayer5"/>
+    <functioncall functionName="KeyTablePlayer6"/>
+    <functioncall functionName="KeyTableStart"/>
+    <functioncall functionName="KeyTableStartWithBuddies"/>
+    <functioncall functionName="KeyTableStartWithTable"/>
+    <functioncall functionName="KeyTableStartWithThese"/>
+    <functioncall functionName="KeyTableStartWithUser"/>
+    <functioncall functionName="KeyTableUserIsPlayer"/>
+    <functioncall functionName="LOG_INFO"/>
+    <functioncall functionName="LOG_WARN"/>
+    <functioncall functionName="MaxBuddies"/>
+    <functioncall functionName="MaxStartPlayers"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="get"/>
+    <functioncall functionName="getString"/>
+    <functioncall functionName="has_value"/>
+    <functioncall functionName="haveFile"/>
+    <functioncall functionName="insert"/>
+    <functioncall functionName="is_regular_file"/>
+    <functioncall functionName="load"/>
+    <functioncall functionName="nonEmpty"/>
+    <functioncall functionName="nullopt"/>
+    <functioncall functionName="optional"/>
+    <functioncall functionName="pickOne"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="readBool"/>
+    <functioncall functionName="readList"/>
+    <functioncall functionName="resolve"/>
+    <functioncall functionName="set"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="value"/>
+    <functioncall functionName="value_or"/>
+  </FileInfo>
+</analyzerinfo>

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8647586782367849050">
+  <FileInfo check="Null pointer">
+    <unsafe-usage my-id="/work/src/lib-craps/src/TableRules.cpp:19:12" my-argnr="1" my-argname="aggregates" file="/work/src/lib-craps/src/TableRules.cpp" line="22" col="18" value="0"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-craps/src/TableRules.cpp:19:12" my-argnr="1" my-argname="aggregates" file="/work/src/lib-craps/src/TableRules.cpp" line="22" col="18" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="findAggregateEntry" lineNumber="19"/>
+    <functioncall functionName="AmountWagered"/>
+    <functioncall functionName="CandE"/>
+    <functioncall functionName="Down"/>
+    <functioncall functionName="Exact"/>
+    <functioncall functionName="Field"/>
+    <functioncall functionName="FlatMultiplier"/>
+    <functioncall functionName="Horn"/>
+    <functioncall functionName="IsMap"/>
+    <functioncall functionName="IsSequence"/>
+    <functioncall functionName="Money"/>
+    <functioncall functionName="Node"/>
+    <functioncall functionName="OnPlacement"/>
+    <functioncall functionName="OnWager"/>
+    <functioncall functionName="OnWin"/>
+    <functioncall functionName="OnWinningDecision"/>
+    <functioncall functionName="PointSchedule"/>
+    <functioncall functionName="PotentialWin"/>
+    <functioncall functionName="Sequence"/>
+    <functioncall functionName="TableRules"/>
+    <functioncall functionName="World"/>
+    <functioncall functionName="aggregateLimit"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="buyCommission"/>
+    <functioncall functionName="commissionToYAML"/>
+    <functioncall functionName="denominator"/>
+    <functioncall functionName="enumerators"/>
+    <functioncall functionName="fieldPayouts"/>
+    <functioncall functionName="fill"/>
+    <functioncall functionName="findAggregateEntry"/>
+    <functioncall functionName="flatMultiplier"/>
+    <functioncall functionName="layCommission"/>
+    <functioncall functionName="maximumPotentialWin"/>
+    <functioncall functionName="maximumWager"/>
+    <functioncall functionName="numerator"/>
+    <functioncall functionName="out_of_range"/>
+    <functioncall functionName="payoutRounding"/>
+    <functioncall functionName="payoutUnit"/>
+    <functioncall functionName="pointMultipliers"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="readCommission"/>
+    <functioncall functionName="readRounding"/>
+    <functioncall functionName="roundingUnit"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="validUnit"/>
+    <functioncall functionName="validate"/>
+    <functioncall functionName="wagerIncrement"/>
+    <functioncall functionName="wagerLimit"/>
+    <functioncall functionName="wagers"/>
+  </FileInfo>
+</analyzerinfo>

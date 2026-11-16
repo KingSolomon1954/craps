@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="15585362656191966653">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="LOG_TRACE"/>
+    <functioncall functionName="PanelBase"/>
+    <functioncall functionName="WindowNavBar"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="confirmQuit"/>
+    <functioncall functionName="doBetting"/>
+    <functioncall functionName="doControl"/>
+    <functioncall functionName="doHelp"/>
+    <functioncall functionName="doQuit"/>
+    <functioncall functionName="doStats"/>
+    <functioncall functionName="doView"/>
+    <functioncall functionName="drawStaticContent"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="instance"/>
+    <functioncall functionName="mvwprintw"/>
+    <functioncall functionName="navHeight"/>
+    <functioncall functionName="navLeftCol"/>
+    <functioncall functionName="navTopRow"/>
+    <functioncall functionName="navWidth"/>
+    <functioncall functionName="newWindow"/>
+    <functioncall functionName="pWin_"/>
+    <functioncall functionName="populate"/>
+    <functioncall functionName="pushSurface"/>
+    <functioncall functionName="transfer"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="werase"/>
+  </FileInfo>
+</analyzerinfo>

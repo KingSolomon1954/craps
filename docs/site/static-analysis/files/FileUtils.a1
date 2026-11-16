@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="7702209591407917412">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="back"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="exists"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="fin"/>
+    <functioncall functionName="front"/>
+    <functioncall functionName="is_open"/>
+    <functioncall functionName="isalnum"/>
+    <functioncall functionName="isspace"/>
+    <functioncall functionName="pop_back"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="reserve"/>
+    <functioncall functionName="runtime_error"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="tolower"/>
+    <functioncall functionName="true"/>
+  </FileInfo>
+</analyzerinfo>

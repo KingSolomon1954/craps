@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="11973340133639252625">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Bank"/>
+    <functioncall functionName="Money"/>
+    <functioncall functionName="alltimeStats_"/>
+    <functioncall functionName="amtDeposited_"/>
+    <functioncall functionName="amtRefilled_"/>
+    <functioncall functionName="amtWithdrawn_"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="currentStats_"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="fromYAML"/>
+    <functioncall functionName="getBalance"/>
+    <functioncall functionName="merge"/>
+    <functioncall functionName="numDeposits_"/>
+    <functioncall functionName="numRefills_"/>
+    <functioncall functionName="numWithdrawals_"/>
+    <functioncall functionName="originalStartBalance_"/>
+    <functioncall functionName="refill"/>
+    <functioncall functionName="refillAmount_"/>
+    <functioncall functionName="refillThreshold_"/>
+    <functioncall functionName="reset"/>
+    <functioncall functionName="sessionStartBalance_"/>
+    <functioncall functionName="toYAML"/>
+    <functioncall functionName="true"/>
+  </FileInfo>
+</analyzerinfo>

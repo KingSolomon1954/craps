@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="301542801762367720">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="statsName" lineNumber="14"/>
+    <functiondecl functionName="isRollBet" lineNumber="21"/>
+    <functiondecl functionName="rollEntryName" lineNumber="38"/>
+    <functiondecl functionName="rollBetName" lineNumber="49"/>
+    <functiondecl functionName="initializeBetMap" lineNumber="295"/>
+    <functioncall functionName="BetOutcomeStats"/>
+    <functioncall functionName="BetStats"/>
+    <functioncall functionName="BreakEven"/>
+    <functioncall functionName="CleanWin"/>
+    <functioncall functionName="Come"/>
+    <functioncall functionName="DontCome"/>
+    <functioncall functionName="DontPass"/>
+    <functioncall functionName="EntireLoss"/>
+    <functioncall functionName="Hardway"/>
+    <functioncall functionName="Money"/>
+    <functioncall functionName="PartialWin"/>
+    <functioncall functionName="PassLine"/>
+    <functioncall functionName="PointNums"/>
+    <functioncall functionName="add"/>
+    <functioncall functionName="amount"/>
+    <functioncall functionName="amountBet"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="betName"/>
+    <functioncall functionName="byBet"/>
+    <functioncall functionName="classifyRoll"/>
+    <functioncall functionName="contains"/>
+    <functioncall functionName="contractAmount"/>
+    <functioncall functionName="count"/>
+    <functioncall functionName="current"/>
+    <functioncall functionName="distance"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="expandBetName"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="fromYAML"/>
+    <functioncall functionName="initializeBetMap"/>
+    <functioncall functionName="isRollBet"/>
+    <functioncall functionName="losses"/>
+    <functioncall functionName="max"/>
+    <functioncall functionName="maxAmtBetOneBet"/>
+    <functioncall functionName="maxAmtKeepOneBet"/>
+    <functioncall functionName="maxAmtLoseOneBet"/>
+    <functioncall functionName="maxAmtWinOneBet"/>
+    <functioncall functionName="merge"/>
+    <functioncall functionName="oddsAmount"/>
+    <functioncall functionName="oddsBet"/>
+    <functioncall functionName="pivot"/>
+    <functioncall functionName="recordCommon"/>
+    <functioncall functionName="recordOutcome"/>
+    <functioncall functionName="reset"/>
+    <functioncall functionName="rollBetName"/>
+    <functioncall functionName="rollEntryName"/>
+    <functioncall functionName="statsName"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="tally"/>
+    <functioncall functionName="tallyRoll"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="toYAML"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="totAmtAllBets"/>
+    <functioncall functionName="totAmtKeepAllBets"/>
+    <functioncall functionName="totAmtLoseAllBets"/>
+    <functioncall functionName="totAmtWinsAllBets"/>
+    <functioncall functionName="totDistance"/>
+    <functioncall functionName="totNumBetsAllBets"/>
+    <functioncall functionName="totNumKeepAllBets"/>
+    <functioncall functionName="totNumLoseAllBets"/>
+    <functioncall functionName="totNumWinsAllBets"/>
+    <functioncall functionName="total"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="try_emplace"/>
+    <functioncall functionName="wins"/>
+  </FileInfo>
+</analyzerinfo>
