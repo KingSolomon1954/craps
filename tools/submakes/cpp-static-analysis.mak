@@ -32,7 +32,7 @@ include $(D_MAK)/git-repo-name.mak
 
 # ------------ Setup Section ------------
 
-_D_SRCSXX  := $(D_SRC)/main/src \
+_D_SRCS  := $(D_SRC)/main/src \
             $(D_SRC)/main/include \
             $(D_SRC)/lib-gen/src \
             $(D_SRC)/lib-gen/include \
@@ -43,7 +43,7 @@ _D_SRCSXX  := $(D_SRC)/main/src \
             $(D_SRC)/lib-cui/src \
             $(D_SRC)/lib-cui/include
 
-_D_SRCS  := $(D_SRC)/lib-gen/src \
+_D_SRCS88  := $(D_SRC)/lib-gen/src \
             $(D_SRC)/lib-gen/include
 
 # Using STA as the mnemonic for static analysis
