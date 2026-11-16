@@ -81,9 +81,9 @@ $(_STA_RESULTS_FILE): _create-sta_dirs
 	    --template=gcc --xml \
 	    --suppressions-list=/work/$(_STA_SUPPRESS_FILE) \
 	    --cppcheck-build-dir=/work/$(_D_STA_FILES) \
-            -i $(D_SRC)/main/src/snippets \
+            -i /work/src/main/src/snippets/ \
 	    --output-file=/work/$(_STA_RESULTS_FILE) \
-	        $(addprefix /work/,$(_D_SRCS))
+	    $(addprefix /work/,$(_D_SRCS))
 
 static-analysis-clean:
 	rm -rf $(_STA_DIR)
