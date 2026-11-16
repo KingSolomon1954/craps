@@ -137,7 +137,7 @@ jobs:
           echo "tagName=v$triplet"        >> ${GITHUB_OUTPUT}
 
       - name: Test tarball
-        if: "!contains(github.event.head_commit.message, '[skip-tarball]')
+        if: "!contains(github.event.head_commit.message, '[skip-tarball]')"
         run:  make test-tarball
 
         # Performs a checkin on docs, version file and changelog.
