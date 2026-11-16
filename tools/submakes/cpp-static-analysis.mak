@@ -78,6 +78,7 @@ $(_STA_INDEX_FILE): $(_STA_RESULTS_FILE)
 	echo "  error-count: $${value}" >> $(_STA_BADGE_FILE)
 
 $(_STA_RESULTS_FILE): _create-sta_dirs
+	sleep 5
 	$(CNTR_TECH) run --rm \
 	    --volume $(PWD):/work \
 	    $(CNTR_CPPCHECK_TOOLS_PATH) \
@@ -85,10 +86,8 @@ $(_STA_RESULTS_FILE): _create-sta_dirs
 	    --suppressions-list=/work/$(_STA_SUPPRESS_FILE) \
 	    --cppcheck-build-dir=/work/$(_D_STA_FILES) \
 	    --output-file=/work/$(_STA_RESULTS_FILE) \
+	    -i snippets \
 	    $(addprefix /work/,$(_D_SRCS))
-
-#	    -i snippets \
-
 
 static-analysis-clean:
 	rm -rf $(_STA_DIR)
