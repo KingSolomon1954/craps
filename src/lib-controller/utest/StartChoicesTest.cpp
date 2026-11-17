@@ -206,3 +206,37 @@ TEST_CASE("StartChoices: at most five buddies")
 }
 
 //----------------------------------------------------------------
+
+TEST_CASE("StartChoices: kinds keep buddies out of the user slot and back")
+{
+    using Ctrl::PlayerKind;
+    ChoiceFixture fx;
+    fx.req.kinds = {
+        {"unnamed.yaml", PlayerKind::User},  {"nathan.yaml", PlayerKind::User},
+        {"arthur.yaml",  PlayerKind::Buddy}, {"paige.yaml",  PlayerKind::Buddy},
+        {"lenny.yaml",   PlayerKind::Buddy} };
+
+    SUBCASE("a buddy named as the user player is skipped")
+    {
+        fx.req.userPlayer = "arthur.yaml";
+        auto r = StartChoices::resolve(fx.req);
+        CHECK(r.userPlayer == "unnamed.yaml");       // falls to the default
+        CHECK(r.buddies == Names{"arthur.yaml", "paige.yaml"});
+    }
+    SUBCASE("a user player named as a buddy is skipped")
+    {
+        fx.req.userPlayer = "nathan.yaml";
+        fx.req.buddies    = Names{"unnamed.yaml", "lenny.yaml"};
+        auto r = StartChoices::resolve(fx.req);
+        CHECK(r.userPlayer == "nathan.yaml");
+        CHECK(r.buddies == Names{"lenny.yaml"});
+    }
+    SUBCASE("a file missing from the manifest is skipped")
+    {
+        fx.req.buddies = Names{"winnifred.yaml", "paige.yaml"};
+        auto r = StartChoices::resolve(fx.req);
+        CHECK(r.buddies == Names{"paige.yaml"});
+    }
+}
+
+//----------------------------------------------------------------

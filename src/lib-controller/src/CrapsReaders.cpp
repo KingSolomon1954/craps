@@ -285,6 +285,17 @@ CrapsReaders::readPlayerList()
 
 //----------------------------------------------------------------
 //
+// Every known player with kind, whether he is the user and whether he
+// is at the table.
+//
+std::vector<PlayerManager::PlayerInfo>
+CrapsReaders::readPlayerRoster()
+{
+    return Gbl::pPlayerMgr->listPlayers();
+}
+
+//----------------------------------------------------------------
+//
 // Bet related
 //
 //----------------------------------------------------------------

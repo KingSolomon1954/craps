@@ -34,6 +34,7 @@ enum class EventType
     ReqAutoFill,
     ReqQuickBet,
     ReqSwitchPlayer,
+    ReqManagePlayer,
     ReqTerminate,
 
     // Responses
@@ -42,6 +43,7 @@ enum class EventType
     RspRemoveBet,              // not yet implemented
     RspChangeBet,              // not yet implemented
     RspSwitchPlayer,
+    RspManagePlayer,
 
     // Unsolicited
     UslBettingClosed,
@@ -64,6 +66,7 @@ enum class EventType
     UslAutoFillChanged,
     UslQuickBetChanged,
     UslUserPlayerSwitched,
+    UslPlayerRenamed,
 
     UslTableBetsChanged,
     UslTableSessionStatsChanged,
@@ -538,6 +541,61 @@ struct UslUserPlayerSwitched : public GameEvent
 
     UslUserPlayerSwitched()
         : GameEvent{EventSource::Controller, EventType::UslUserPlayerSwitched}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// What ReqManagePlayer asks for.
+enum class PlayerAction
+{
+    Rename,        ///< playerId gets the name
+    Create,        ///< a new user player with the name
+    Delete,        ///< playerId, a user player, is deleted
+    BuddyJoins,    ///< buddy playerId sits at the table
+    BuddyLeaves    ///< buddy playerId leaves the table
+};
+
+/// The person wants to change the roster of players or who is at the
+/// table. Answered by RspManagePlayer.
+struct ReqManagePlayer : public GameEvent
+{
+    PlayerAction    action = PlayerAction::Rename;
+    Craps::PlayerId playerId;   ///< Not used by Create
+    std::string     name;       ///< Used by Rename and Create
+
+    ReqManagePlayer()
+        : GameEvent{EventSource::View, EventType::ReqManagePlayer}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqManagePlayer. If not ok, nothing changed and error says
+/// why. For Create, playerId is the new player.
+struct RspManagePlayer : public GameEvent
+{
+    PlayerAction    action = PlayerAction::Rename;
+    bool            ok = false;
+    Craps::PlayerId playerId;
+    std::string     name;       ///< The player's name after the change
+    Gen::ErrorPass  error;
+
+    RspManagePlayer()
+        : GameEvent{EventSource::Controller, EventType::RspManagePlayer}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// A player's name changed. Names the View has kept are stale.
+struct UslPlayerRenamed : public GameEvent
+{
+    Craps::PlayerId playerId;
+    std::string     newName;
+
+    UslPlayerRenamed()
+        : GameEvent{EventSource::Controller, EventType::UslPlayerRenamed}
     {}
 };
 

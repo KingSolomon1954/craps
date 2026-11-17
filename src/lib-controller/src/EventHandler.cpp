@@ -61,6 +61,12 @@ EventHandler::EventHandler()
             this->onReqSwitchPlayer(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::ReqManagePlayer>(
+        [this](const Ctrl::ReqManagePlayer& ev)
+        {
+            this->onReqManagePlayer(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::ReqTerminate>(
         [this](const Ctrl::ReqTerminate& ev)
         {
@@ -306,6 +312,74 @@ EventHandler::onReqSwitchPlayer(const Ctrl::ReqSwitchPlayer& ev) const
         Ctrl::UslUserPlayerSwitched usl;
         usl.fromPlayerId = rsp.fromPlayerId;
         usl.toPlayerId   = rsp.toPlayerId;
+        Gen::EventManager::instance().publish(usl);
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Renames, creates or deletes a player, or has a buddy join or leave
+// the table. Always answers with RspManagePlayer. After a rename that
+// happened, follows with UslPlayerRenamed.
+//
+void
+EventHandler::onReqManagePlayer(const Ctrl::ReqManagePlayer& ev) const
+{
+    const std::string fname("EventHandler::onReqManagePlayer(): ");
+    LOG_TRACE("Entered " + fname);
+
+    Ctrl::RspManagePlayer rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.action        = ev.action;
+    rsp.playerId      = ev.playerId;
+    rsp.name          = ev.name;
+
+    Gen::ErrorPass ep;
+    Gen::ReturnCode rc = Gen::ReturnCode::Fail;
+    switch (ev.action)
+    {
+    case Ctrl::PlayerAction::Rename:
+        rc = Gbl::pPlayerMgr->renamePlayer(ev.playerId, ev.name, ep);
+        break;
+    case Ctrl::PlayerAction::Create:
+        rc = Gbl::pPlayerMgr->createPlayer(ev.name, rsp.playerId, ep);
+        break;
+    case Ctrl::PlayerAction::Delete:
+        rc = Gbl::pPlayerMgr->deletePlayer(ev.playerId, ep);
+        break;
+    case Ctrl::PlayerAction::BuddyJoins:
+        rc = Gbl::pPlayerMgr->buddyJoinsTable(ev.playerId, ep);
+        break;
+    case Ctrl::PlayerAction::BuddyLeaves:
+        rc = Gbl::pPlayerMgr->buddyLeavesTable(ev.playerId, ep);
+        break;
+    }
+
+    if (rc == Gen::ReturnCode::Success)
+    {
+        rsp.ok = true;
+        // The name actually used was trimmed.
+        for (const auto& info : Gbl::pPlayerMgr->listPlayers())
+        {
+            if (info.playerId == rsp.playerId)
+            {
+                rsp.name = info.name;
+                break;
+            }
+        }
+    }
+    else
+    {
+        ep.prepend(fname);
+        rsp.error = std::move(ep);
+    }
+    Gen::EventManager::instance().publish(rsp);
+
+    if (rsp.ok && ev.action == Ctrl::PlayerAction::Rename)
+    {
+        Ctrl::UslPlayerRenamed usl;
+        usl.playerId = rsp.playerId;
+        usl.newName  = rsp.name;
         Gen::EventManager::instance().publish(usl);
     }
 }

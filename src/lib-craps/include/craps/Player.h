@@ -46,6 +46,7 @@ public:
    ~Player() = default;
     void shutdown();
     void endSession();
+    void rename(const std::string& playerName);  ///< Changes the name only
 
     static Player* createPlayer(const std::string& playerName); // Fresh PlayerId
     static Player* fromString  (const std::string& yaml,

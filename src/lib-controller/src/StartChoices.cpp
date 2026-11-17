@@ -23,10 +23,38 @@ haveFile(const fs::path& dir, const std::string& name)
     return !name.empty() && fs::is_regular_file(dir / name, ec);
 }
 
+// Tells whether name may be used as a player of the wanted kind. Warns
+// when not. kinds empty means no checking.
+bool
+kindOkay(const std::map<std::string, PlayerKind>& kinds,
+         const std::string& name, PlayerKind want, const char* from)
+{
+    if (kinds.empty())
+    {
+        return true;
+    }
+    auto it = kinds.find(name);
+    if (it == kinds.end())
+    {
+        LOG_WARN("Startup player \"" + name + "\" from " + from +
+                 " is not listed in players.yaml");
+        return false;
+    }
+    if (it->second != want)
+    {
+        LOG_WARN("Startup player \"" + name + "\" from " + from + " is a " +
+                 toString(it->second) + " player, not a " + toString(want) +
+                 " player");
+        return false;
+    }
+    return true;
+}
+
 // Chooses the first source whose file exists.
 std::string
 pickOne(const char* what,
         const fs::path& dir,
+        const std::map<std::string, PlayerKind>* kinds,
         const std::optional<std::string>& fromConfig,
         const std::optional<std::string>& fromState,
         const std::string& fromDefault)
@@ -44,12 +72,17 @@ pickOne(const char* what,
         {
             continue;
         }
-        if (haveFile(dir, **s.val))
+        if (haveFile(dir, **s.val) &&
+            (kinds == nullptr ||
+             kindOkay(*kinds, **s.val, PlayerKind::User, s.from)))
         {
             return **s.val;
         }
-        LOG_WARN(std::string("Startup ") + what + " \"" + **s.val +
-                 "\" from " + s.from + " not found in " + dir.string());
+        else if (!haveFile(dir, **s.val))
+        {
+            LOG_WARN(std::string("Startup ") + what + " \"" + **s.val +
+                     "\" from " + s.from + " not found in " + dir.string());
+        }
     }
     return fromDefault;   // Install is broken; let loading it say so
 }
@@ -90,6 +123,31 @@ readBool(const Gen::ConfigLayer& layer, const std::string& key)
     return std::nullopt;
 }
 
+// Reads which file is a user player and which a buddy. Empty if the
+// manifest cannot be read; PlayerManager reports that problem later,
+// with better words.
+std::map<std::string, PlayerKind>
+readKinds(const fs::path& manifest)
+{
+    std::map<std::string, PlayerKind> kinds;
+    try
+    {
+        YAML::Node root = YAML::LoadFile(manifest.string());
+        for (const auto& n : root["players"])
+        {
+            kinds[n["fileName"].as<std::string>()] =
+                playerKindFromString(n["kind"].as<std::string>());
+        }
+    }
+    catch (const std::exception& e)
+    {
+        LOG_WARN("Unable to read player kinds from " + manifest.string() +
+                 "; " + e.what());
+        kinds.clear();
+    }
+    return kinds;
+}
+
 } // namespace
 
 /*-----------------------------------------------------------*//**
@@ -110,10 +168,10 @@ StartChoices::resolve(const Request& r)
         lastUser  = nonEmpty(r.last->userPlayer);
     }
 
-    res.table = pickOne("table", r.tablesDir, r.table, lastTable,
+    res.table = pickOne("table", r.tablesDir, nullptr, r.table, lastTable,
                         r.defaultTable);
-    res.userPlayer = pickOne("user player", r.playersDir, r.userPlayer,
-                             lastUser, r.defaultUserPlayer);
+    res.userPlayer = pickOne("user player", r.playersDir, &r.kinds,
+                             r.userPlayer, lastUser, r.defaultUserPlayer);
 
     if (r.useBuddies.has_value() && !*r.useBuddies)
     {
@@ -145,6 +203,10 @@ StartChoices::resolve(const Request& r)
         {
             LOG_WARN("Startup buddy player \"" + b + "\" from " + from +
                      " not found in " + r.playersDir.string());
+            continue;
+        }
+        if (!kindOkay(r.kinds, b, PlayerKind::Buddy, from))
+        {
             continue;
         }
         if (res.buddies.size() >= UserState::MaxBuddies)
@@ -191,6 +253,7 @@ StartChoices::apply(const Gen::MultiLayerConfig& multiConfig,
 
     r.tablesDir  = multiConfig.getString(K::KeyDirsUsrTables).value();
     r.playersDir = multiConfig.getString(K::KeyDirsUsrPlayers).value();
+    r.kinds      = readKinds(r.playersDir / "players.yaml");
 
     const Result res = resolve(r);
 

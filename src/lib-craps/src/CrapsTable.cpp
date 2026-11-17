@@ -226,7 +226,10 @@ CrapsTable::removePlayer(Player& player)
         newShooter = (*it != &player) ? *it : nullptr;
     }
 
-    removePlayerBets(&player);   // Bet money given to the house bank.
+    // Normally nothing is left: Player::leaveTable() has already taken the
+    // player's bets off the table and returned the money to him. Anything
+    // still here would be given to the house bank.
+    removePlayerBets(&player);
     removePlayerByPtr(&player);
 
     if (newShooter != pCurrentShooter_)
