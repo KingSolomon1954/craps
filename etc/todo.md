@@ -47,8 +47,6 @@
 
 ### Need More MenuBetting implementation
 
-### Implement "Unknown" player start up logic
-
 ### Implement the many MenuConfiguration options
 
 ### Need to inhibit various actions during animation roll
@@ -74,6 +72,10 @@
 ### Want DialogBetAmount to show whether off-on-comeout
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
+
+### Add AutoOdds capability
+- maybe add AutoOdds menu selection to DialogBetAmount
+- just for pass/come/dontpass/dontcome
 
 ## Done
 
