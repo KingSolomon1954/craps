@@ -77,6 +77,11 @@
 
 ## Done
 
+(Done) Update user-guide with Player handling\
+(Done) Use colors for net win/loss in WindowPlayerBrief\
+(Done) Player operations checkout, create, switch, delete, etc\
+(Done) Buddy players leave and join table\
+(Done) MenuPlayer implements all player operations\
 (Done) Static analysis includes all libraries, fixed SA errors\
 (Done) Created MenuPlayer, Improved organization of MenuControl\
 (Done) Implement startup from fresh Installation"\

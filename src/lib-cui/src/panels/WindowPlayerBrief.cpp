@@ -289,7 +289,21 @@ WindowPlayerBrief::populateLast()
     s += std::to_string(playerIntakeLastRoll_) + "W,";
     s += std::to_string(playerOutputLastRoll_) + "L";
 
+    // Yellow for a net win, red for a net loss, normal for even.
+    // The same colors the roll history uses for winners and seven-outs.
+    short pair = 0;
+    if (playerIntakeLastRoll_ > playerOutputLastRoll_)
+    {
+        pair = ColorManager::instance().pair(Color::PassLineWinner);
+    }
+    else if (playerIntakeLastRoll_ < playerOutputLastRoll_)
+    {
+        pair = ColorManager::instance().pair(Color::SevenOut);
+    }
+
+    if (pair != 0) wattron(pWin_, COLOR_PAIR(pair));
     mvwaddstr(pWin_, 5, 1, s.c_str());
+    if (pair != 0) wattroff(pWin_, COLOR_PAIR(pair));
 }
 
 //----------------------------------------------------------------
