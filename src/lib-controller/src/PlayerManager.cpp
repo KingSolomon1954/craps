@@ -675,6 +675,35 @@ PlayerManager::checkName(const std::string& name, std::string& whyNot)
 
 //----------------------------------------------------------------
 //
+// A short description may be empty. Otherwise it is at most
+// MaxDescriptionLength printable ASCII characters. Call with the text
+// already trimmed.
+//
+bool
+PlayerManager::checkDescription(const std::string& description,
+                                std::string& whyNot)
+{
+    if (description.size() > MaxDescriptionLength)
+    {
+        whyNot = "A description can be at most " +
+                 std::to_string(MaxDescriptionLength) + " characters.";
+        return false;
+    }
+    for (char c : description)
+    {
+        const unsigned char u = static_cast<unsigned char>(c);
+        if (u < 0x20 || u > 0x7e)
+        {
+            whyNot = "A description can only have letters, digits, spaces "
+                     "and ordinary punctuation.";
+            return false;
+        }
+    }
+    return true;
+}
+
+//----------------------------------------------------------------
+//
 // Name is valid and no other player has it. Caller holds the mutex.
 //
 bool
@@ -713,6 +742,7 @@ PlayerManager::listPlayers() const
         info.playerId = d.playerId;
         info.name     = d.playerName;
         info.fileName = d.fileName;
+        info.description = d.shortDescription;
         info.kind     = d.kind;
         info.isUser   = (pUser_ != nullptr &&
                          pUser_->player->getPlayerId() == d.playerId);
@@ -859,6 +889,7 @@ Makes a new user player. See the class description.
 */
 Gen::ReturnCode
 PlayerManager::createPlayer(const std::string& name,
+                            const std::string& description,
                             Craps::PlayerId& newPlayerId,
                             Gen::ErrorPass& ep)
 {
@@ -870,6 +901,12 @@ PlayerManager::createPlayer(const std::string& name,
         if (!nameOk(trimmed, Craps::PlayerId(), ep))
         {
             return Gen::ReturnCode::Fail;
+        }
+        const std::string about = trim(description);
+        std::string why;
+        if (!checkDescription(about, why))
+        {
+            return fail(ep, En::InvalidArgumentError, why);
         }
 
         // Start from a default player, then set the starting bank.
@@ -894,8 +931,8 @@ PlayerManager::createPlayer(const std::string& name,
         desc.playerId         = id;
         desc.kind             = PlayerKind::User;
         desc.playerName       = trimmed;
-        desc.shortDescription = "Created by you";
-        desc.fullDescription  = "A player you created.";
+        desc.shortDescription = about.empty() ? "Created by you" : about;
+        desc.fullDescription  = about.empty() ? "A player you created." : about;
         desc.fileName         = fileName;
         manifest_.add(desc);
         try

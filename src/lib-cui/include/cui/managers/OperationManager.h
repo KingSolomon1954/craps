@@ -93,6 +93,8 @@ private:
     Craps::PlayerId targetId_;       // Player picked, or the user player
     std::string     targetName_;
     std::string     text_;           // Name typed
+    std::string     description_;    // Short description typed (Create)
+    bool            askingDescription_ = false;  // Create: name given, now description
 
 private:
     OperationManager() = default;
@@ -102,6 +104,7 @@ private:
                    const char* defaultName = "Unable to Make Bet");
     void showNotice(const std::string& brief, const std::string& detail);
     void askConfirmation(const std::string& question);
+    void askForDescription();
     void askForName(const std::string& title,
                     const std::string& initial,
                     const Craps::PlayerId& exceptId);

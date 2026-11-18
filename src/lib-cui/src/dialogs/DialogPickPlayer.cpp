@@ -17,6 +17,7 @@ namespace {
 constexpr const char* PickHint = "Up/Down, Enter or 1-9. Esc cancels";
 constexpr const char* ShowHint = "[. or enter or esc] Back";
 constexpr std::size_t NumberCols = 3;    // "1  " in front of each line
+const std::string Separator(" | ");
 } // namespace
 
 //----------------------------------------------------------------
@@ -80,21 +81,33 @@ DialogPickPlayer::calcSize()
 {
     textWidth_ = 0;
     noteWidth_ = 0;
+    std::size_t longestDesc = 0;
     for (const auto& i : items_)
     {
-        textWidth_ = std::max(textWidth_, i.text.size());
-        noteWidth_ = std::max(noteWidth_, i.note.size());
+        textWidth_  = std::max(textWidth_, i.text.size());
+        noteWidth_  = std::max(noteWidth_, i.note.size());
+        longestDesc = std::max(longestDesc, i.description.size());
     }
 
     const std::size_t numberCols = (mode_ == Mode::Pick) ? NumberCols : 0;
     const std::size_t hintCols   = std::string(
         mode_ == Mode::Pick ? PickHint : ShowHint).size();
-    const std::size_t listCols   = numberCols + textWidth_ +
-                                   (noteWidth_ ? 2 + noteWidth_ : 0);
-    const std::size_t inner      = std::max({title_.size(), listCols, hintCols});
+    const std::size_t leftCols   = numberCols + textWidth_ +
+                                   (noteWidth_ ? 1 + noteWidth_ : 0);
+
+    // Room for descriptions after the bar, within the dialog limit.
+    descWidth_ = 0;
+    if (longestDesc > 0 && leftCols + Separator.size() < maxInnerCols_)
+    {
+        descWidth_ = std::min(longestDesc,
+                              maxInnerCols_ - leftCols - Separator.size());
+    }
+    const std::size_t listCols = leftCols +
+        (descWidth_ ? Separator.size() + descWidth_ : 0);
+    const std::size_t inner    = std::max({title_.size(), listCols, hintCols});
 
     const std::size_t visible = std::min(items_.size(), maxVisible_);
-    winSize_.rows = static_cast<int>(3 + visible + 2);  // title; list; hint
+    winSize_.rows = static_cast<int>(3 + visible + 3);  // title; list; hint
     winSize_.cols = static_cast<int>(inner) + 4;
 }
 
@@ -123,13 +136,14 @@ DialogPickPlayer::setLocation(WindowPosition pos)
 
 //----------------------------------------------------------------
 //
-// 0   ┌────────────────────────────────────┐
-// 1   │ Switch to Player                   │
-// 2   ├────────────────────────────────────┤
-// 3   │ 1  Nathan                          │ selected line is reversed
-// 4   │ 2  Howie                (you)      │
-// 5   │ Up/Down, Enter or 1-9. Esc cancels │
-// 6   └────────────────────────────────────┘
+// 0   ┌────────────────────────────────────────┐
+// 1   │ Switch to Player                       │
+// 2   ├────────────────────────────────────────┤
+// 3   │ 1  Nathan        | Primary player      │   selected is reversed
+// 4   │ 2  Howie  (you)  | Left-handed thrower │
+// 5   ├────────────────────────────────────────┤
+// 6   │ Up/Down, Enter or 1-9. Esc cancels     │
+// 7   └────────────────────────────────────────┘
 //
 void
 DialogPickPlayer::drawFrame()
@@ -140,6 +154,12 @@ DialogPickPlayer::drawFrame()
     mvwaddch(pWin_, 2, winSize_.cols - 1, ACS_RTEE);
 
     mvwaddstr(pWin_, 1, 2, title_.c_str());
+
+    const int hintSepRow = winSize_.rows - 3;
+    mvwhline(pWin_, hintSepRow, 1, ACS_HLINE, winSize_.cols - 2);
+    mvwaddch(pWin_, hintSepRow, 0, ACS_LTEE);
+    mvwaddch(pWin_, hintSepRow, winSize_.cols - 1, ACS_RTEE);
+
     mvwaddstr(pWin_, winSize_.rows - 2, 2,
               mode_ == Mode::Pick ? PickHint : ShowHint);
 }
@@ -168,7 +188,20 @@ DialogPickPlayer::drawItems()
         text += name;
         if (noteWidth_ > 0)
         {
-            text += "  " + item.note;
+            std::string note = item.note;
+            note.resize(noteWidth_, ' ');
+            text += " " + note;
+        }
+        if (descWidth_ > 0)
+        {
+            std::string desc = item.description;
+            if (desc.size() > descWidth_)
+            {
+                desc = (descWidth_ > 3)
+                    ? desc.substr(0, descWidth_ - 3) + "..."
+                    : desc.substr(0, descWidth_);
+            }
+            text += Separator + desc;
         }
         text.resize(innerCols, ' ');
 

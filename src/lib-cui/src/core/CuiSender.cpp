@@ -93,7 +93,8 @@ CuiSender::reqSwitchPlayer(const Craps::PlayerId& playerId)
 Ctrl::CorrelationId
 CuiSender::reqManagePlayer(Ctrl::PlayerAction action,
                            const Craps::PlayerId& playerId,
-                           const std::string& name)
+                           const std::string& name,
+                           const std::string& description)
 {
     LOG_TRACE("CuiSender::reqManagePlayer()");
 
@@ -101,6 +102,7 @@ CuiSender::reqManagePlayer(Ctrl::PlayerAction action,
     ev.action   = action;
     ev.playerId = playerId;
     ev.name     = name;
+    ev.description = description;
     const auto correlationId = ev.correlationId;
     Gen::EventManager::instance().publish(ev);
     return correlationId;

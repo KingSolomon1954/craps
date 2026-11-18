@@ -563,6 +563,7 @@ struct ReqManagePlayer : public GameEvent
     PlayerAction    action = PlayerAction::Rename;
     Craps::PlayerId playerId;   ///< Not used by Create
     std::string     name;       ///< Used by Rename and Create
+    std::string     description;///< Used by Create; may be empty
 
     ReqManagePlayer()
         : GameEvent{EventSource::View, EventType::ReqManagePlayer}

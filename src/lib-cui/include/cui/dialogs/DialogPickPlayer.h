@@ -29,7 +29,8 @@ public:
     {
         Craps::PlayerId playerId;
         std::string     text;     ///< Usually the name
-        std::string     note;     ///< Shown at the right, e.g. "(you)"
+        std::string     note;     ///< Shown after the name, e.g. "(you)"
+        std::string     description; ///< Shown after a vertical bar; clipped
     };
 
     /// @name Lifecycle
@@ -59,6 +60,7 @@ public:
 
 private:
     static constexpr std::size_t maxVisible_ = 8;
+    static constexpr std::size_t maxInnerCols_ = 76;   // 80 column dialog
 
     DialogPickPlayer();
 
@@ -80,6 +82,7 @@ private:
     std::size_t       top_ = 0;            // First visible item
     std::size_t       textWidth_ = 0;
     std::size_t       noteWidth_ = 0;
+    std::size_t       descWidth_ = 0;      // 0 if no descriptions
 };
 
 /*-----------------------------------------------------------*//**
@@ -87,6 +90,10 @@ private:
 @class DialogPickPlayer
 
 @brief Shows a short list of players, optionally to pick one
+
+Each line is the name, an optional note, then a vertical bar and the
+short description, aligned on the bar and clipped to keep the dialog
+within 80 columns.
 
 Pick mode: Up/Down move, Enter chooses, 1-9 chooses that line, Esc
 cancels. Show mode: the same list for looking only; Enter or Esc

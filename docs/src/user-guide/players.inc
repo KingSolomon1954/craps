@@ -24,18 +24,20 @@ the Control menu, then ``p``.
    * - Key
      - What it does
    * - ``l``
-     - **List Players** shows the players you can play as. The one you are
-       playing now is marked ``(you)``.
+     - **List Players** shows the players you can play as, each with a short
+       description. The one you are playing now is marked ``(you)``.
    * - ``s``
      - **Switch to Player** changes who you play as.
    * - ``r``
      - **Rename Player** changes the name of the player you are playing as.
    * - ``c``
-     - **Create New Player** makes a new player.
+     - **Create New Player** asks for a name and a short description, then
+       makes a new player.
    * - ``d``
      - **Delete Player** deletes a player you are not playing as.
    * - ``b``
-     - **List Buddies** shows the buddy players and which are at the table.
+     - **List Buddies** shows the buddy players, with their descriptions,
+       and which are at the table.
    * - ``j``
      - **Buddy Joins Table** seats a buddy player at the table.
    * - ``k``
@@ -43,6 +45,22 @@ the Control menu, then ``p``.
 
 Choosing From a List
 --------------------
+
+Players are listed with their descriptions, like this:
+
+.. code-block:: text
+
+   ┌────────────────────────────────────────────┐
+   │ Your Players                               │
+   ├────────────────────────────────────────────┤
+   │ Nathan   (you) | Primary player            │
+   │ Howie          | Left-handed dice thrower  │
+   ├────────────────────────────────────────────┤
+   │ [. or esc or enter] Back                   │
+   └────────────────────────────────────────────┘
+
+A description that is too long for the screen is cut short with three
+dots.
 
 Where you pick a player from a list, use the up and down arrow keys and
 press ``Enter``, or press the number shown next to the name. ``Esc`` backs
@@ -67,8 +85,11 @@ cannot have both *Howie* and *howie*.
 Creating and Switching
 ----------------------
 
-Create New Player asks for a name and makes a player with a fresh bank of
-$10,000 and no statistics. It does *not* switch to the new player. Use
+Create New Player asks for a name and then for a short description, such as
+*Left-handed dice thrower*. The description is optional: press ``Enter``
+with nothing typed to skip it. A description can be up to 40 characters.
+The new player starts with a fresh bank of $10,000 and no statistics. It
+does *not* switch to the new player. Use
 Switch to Player when you are ready to play as them.
 
 When you switch, the player you were playing leaves the table and the new

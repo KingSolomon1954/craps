@@ -313,6 +313,8 @@ OperationManager::finish()
     correlationId_ = 0;
     targetId_.clear();
     text_.clear();
+    description_.clear();
+    askingDescription_ = false;
 }
 
 //----------------------------------------------------------------
@@ -349,7 +351,8 @@ OperationManager::playerOperation(PlayerOp op)
         {
             if (wanted(p))
             {
-                items.push_back({p.playerId, p.name, noteFor(p)});
+                items.push_back({p.playerId, p.name, noteFor(p),
+                                 p.description});
             }
         }
         return items;
@@ -444,6 +447,8 @@ OperationManager::playerOperation(PlayerOp op)
     type_     = OperationType::Player;
     playerOp_ = op;
     text_.clear();
+    description_.clear();
+    askingDescription_ = false;
     targetId_.clear();
     targetName_.clear();
 
@@ -581,8 +586,48 @@ OperationManager::onTextResult(bool accepted, const std::string& text)
         finish();
         return;
     }
-    text_ = trimmed(text);
+    if (playerOp_ == PlayerOp::Create && !askingDescription_)
+    {
+        text_ = trimmed(text);
+        askForDescription();     // Second question; the first is answered
+        return;
+    }
+    if (playerOp_ == PlayerOp::Create)
+    {
+        description_ = trimmed(text);
+    }
+    else
+    {
+        text_ = trimmed(text);
+    }
     sendPlayerRequest();
+}
+
+//----------------------------------------------------------------
+//
+// Creating a player: after the name, an optional short description.
+// Esc here cancels the whole creation.
+//
+void
+OperationManager::askForDescription()
+{
+    askingDescription_ = true;
+
+    auto validator = [](const std::string& raw) -> std::string
+    {
+        std::string why;
+        if (!Ctrl::PlayerManager::checkDescription(trimmed(raw), why))
+        {
+            return why;
+        }
+        return std::string();       // Empty is fine
+    };
+
+    stage_ = Stage::AwaitingText;
+    DialogTextInput::instance().configure(
+        "Describe " + text_ + " (optional)", "About: ", "",
+        Ctrl::PlayerManager::MaxDescriptionLength, std::move(validator));
+    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
 }
 
 //----------------------------------------------------------------
@@ -614,7 +659,7 @@ OperationManager::sendPlayerRequest()
         break;
     case PlayerOp::Create:
         correlationId_ = sender.reqManagePlayer(
-            Ctrl::PlayerAction::Create, Craps::PlayerId(), text_);
+            Ctrl::PlayerAction::Create, Craps::PlayerId(), text_, description_);
         break;
     case PlayerOp::Delete:
         correlationId_ = sender.reqManagePlayer(

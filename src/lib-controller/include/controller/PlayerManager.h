@@ -35,12 +35,14 @@ public:
         Craps::PlayerId playerId;
         std::string     name;
         std::string     fileName;
+        std::string     description;       ///< Short description
         PlayerKind      kind    = PlayerKind::User;
         bool            isUser  = false;   ///< The current user player
         bool            atTable = false;
     };
 
-    static constexpr std::size_t MaxNameLength = 16;
+    static constexpr std::size_t MaxNameLength        = 16;
+    static constexpr std::size_t MaxDescriptionLength = 40;
 
     /// @name Lifecycle
     /// @{
@@ -59,6 +61,7 @@ public:
                                  const std::string& newName,
                                  Gen::ErrorPass& ep);
     Gen::ReturnCode createPlayer(const std::string& name,
+                                 const std::string& description,
                                  Craps::PlayerId& newPlayerId,
                                  Gen::ErrorPass& ep);
     Gen::ReturnCode deletePlayer(const Craps::PlayerId& playerId,
@@ -75,6 +78,8 @@ public:
     const PlayerManifest::PlayerList& getPlayerList() const;
     std::vector<PlayerInfo> listPlayers()             const;
     static bool checkName(const std::string& name, std::string& whyNot);
+    static bool checkDescription(const std::string& description,
+                                 std::string& whyNot);
     const Players& getPlayers()                       const;
     Craps::Player* getUserPlayer()                    const;
     std::string getUserFileName()                     const;
@@ -212,7 +217,8 @@ ASCII characters, and unique ignoring case. Only the name changes; the
 player id and the file name stay the same, because config.yaml and
 state.yaml refer to players by file name. The manifest is saved at once.
 The manifest's name is the one that counts when a player is loaded.
-@li createPlayer(): makes a user player with a fresh id, a file name made
+@li createPlayer(): makes a user player with a fresh id, an optional short
+description (up to MaxDescriptionLength printable ASCII characters), a file name made
 from the name (unique), and the usual starting bank. The player file and
 the manifest are written at once. Does not switch to the new player.
 @li deletePlayer(): user players only; not the current user and not

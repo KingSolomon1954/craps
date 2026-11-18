@@ -342,7 +342,7 @@ EventHandler::onReqManagePlayer(const Ctrl::ReqManagePlayer& ev) const
         rc = Gbl::pPlayerMgr->renamePlayer(ev.playerId, ev.name, ep);
         break;
     case Ctrl::PlayerAction::Create:
-        rc = Gbl::pPlayerMgr->createPlayer(ev.name, rsp.playerId, ep);
+        rc = Gbl::pPlayerMgr->createPlayer(ev.name, ev.description, rsp.playerId, ep);
         break;
     case Ctrl::PlayerAction::Delete:
         rc = Gbl::pPlayerMgr->deletePlayer(ev.playerId, ep);
