@@ -32,6 +32,7 @@ public:
     void onDiceThrowStart();
     void onDiceNewValue(int d1, int d2, int rollCount);
     void onNewShooter(const Craps::PlayerId& id);
+    void onRosterChanged();   // Shooter may have a new name or have left
     /// @}
 
     /// @name Observers

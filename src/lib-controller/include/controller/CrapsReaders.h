@@ -73,6 +73,10 @@ public:
         const Craps::PlayerId& playerId,
         Gen::Money& balance,
         Gen::ErrorPass& ep);
+    static Gen::ReturnCode readPlayerSessionNet(
+        const Craps::PlayerId& playerId,
+        int& netBalance,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerLastRollStats(
         const Craps::PlayerId& playerId,
         Craps::LastRollStats& lastRollStats,

@@ -183,6 +183,18 @@ WindowPlayerArea::advancePlayer(bool next)
 
 //----------------------------------------------------------------
 
+//
+// Both views re-learn the players. The caller redraws.
+//
+void
+WindowPlayerArea::onRosterChanged()
+{
+    allPlayersView_.rebuild();
+    onePlayerView_.rebuild();
+}
+
+//----------------------------------------------------------------
+
 void
 WindowPlayerArea::onBetMade(
     const Craps::PlayerId& playerId,

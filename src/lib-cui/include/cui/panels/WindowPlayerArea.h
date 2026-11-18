@@ -35,6 +35,7 @@ public:
     void onePlayer();
     void nextPlayer();
     void prevPlayer();
+    void onRosterChanged();   // Players, order or names changed
     void onBetMade(
         const Craps::PlayerId& playerId,
         Craps::BetId           betId,

@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/core/WorkOrderDispatcher.h>
+#include <cui/managers/ColorManager.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/managers/OperationManager.h>
 #include <cui/panels/WindowAnimation.h>
@@ -375,3 +376,79 @@ WorkOrderDispatcher::process(const Ctrl::RspOddsBet& ev)
 
 //----------------------------------------------------------------
 
+//----------------------------------------------------------------
+//
+// Who is at the table, who the user player is, or a player's name
+// changed. Rather than patch each panel for each kind of change, bring
+// everything that shows players up to date from the current facts,
+// then redraw the whole screen composition.
+//
+void
+WorkOrderDispatcher::refreshRoster()
+{
+    ColorManager::instance().syncPlayerColors();
+    WindowPlayerArea::instance().onRosterChanged();
+    WindowPlayerBrief::instance().reload();
+    WindowAnimation::instance().onRosterChanged();
+    SurfaceManager::instance().draw();
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslPlayerJoinedTable& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslPlayerJoinedTable)");
+    (void) ev;
+    refreshRoster();
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslPlayerLeftTable& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslPlayerLeftTable)");
+    (void) ev;
+    refreshRoster();
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslUserPlayerSwitched& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslUserPlayerSwitched)");
+    (void) ev;
+    refreshRoster();
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslPlayerRenamed& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslPlayerRenamed)");
+    (void) ev;
+    refreshRoster();
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspSwitchPlayer& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspSwitchPlayer)");
+    OperationManager::instance().onRspSwitchPlayer(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspManagePlayer& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspManagePlayer)");
+    OperationManager::instance().onRspManagePlayer(ev);
+}
+
+//----------------------------------------------------------------

@@ -26,6 +26,10 @@ public:
     /// @name Modifiers
     /// @{
     void reqTerminate();
+    Ctrl::CorrelationId reqSwitchPlayer(const Craps::PlayerId& playerId);
+    Ctrl::CorrelationId reqManagePlayer(Ctrl::PlayerAction action,
+                                        const Craps::PlayerId& playerId,
+                                        const std::string& name);
     void reqRollDice();
     Ctrl::CorrelationId reqMakeBet(const Craps::PlayerId& playerId,
                                    BetName betName,

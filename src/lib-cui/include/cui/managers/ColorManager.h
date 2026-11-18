@@ -67,6 +67,10 @@ public:
     // Release all player color assignments.
     void clearPlayerColors();
 
+    // Make the assignments match who is at the table now: release the
+    // colors of players who left, give colors to players who joined.
+    void syncPlayerColors();
+
     void onPlayerJonedTable(const Craps::PlayerId& playerId);
     void onPlayerLeftTable (const Craps::PlayerId& playerId);
 

@@ -231,8 +231,8 @@ CuiMain::remindToNamePlayer()
     DialogMessage::MessageText m;
     m.label  = DialogMessage::MessageLabel::Info;
     m.brief  = "Welcome! You are playing as \"unnamed\"";
-    m.detail = "Control -> Rename Player will let you choose a name for your "
-               "player once that feature is available.";
+    m.detail = "Control -> Players -> Rename Player lets you choose a name "
+               "for your player.";
     DialogMessage::instance().configure(m);
 
     WorkOrderSurface work =

@@ -59,6 +59,44 @@ PlayerAreaAllPlayers::buildPlayerInfo()
 
 //----------------------------------------------------------------
 
+//
+// Who is at the table, in what order or by what name has changed. Learn
+// the players again, and carry each player's bet markers to his new
+// column.
+//
+void
+PlayerAreaAllPlayers::rebuild()
+{
+    const std::vector<Player> oldPlayers = players_;
+    const auto oldBets = bets_;
+
+    buildPlayerInfo();
+
+    for (std::size_t row = 0; row < bets_.size(); ++row)
+    {
+        for (std::size_t col = 0; col < MaxPlayers; ++col)
+        {
+            Detail& d = bets_[row].detail[col];   // d.col never changes
+            d.betId = 0;
+            d.state = BetState::None;
+
+            if (col >= players_.size()) continue;
+
+            for (std::size_t old = 0; old < oldPlayers.size(); ++old)
+            {
+                if (oldPlayers[old].playerId == players_[col].playerId)
+                {
+                    d.betId = oldBets[row].detail[old].betId;
+                    d.state = oldBets[row].detail[old].state;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
 std::size_t
 PlayerAreaAllPlayers::removePlayer(const Craps::PlayerId& playerId)
 {
@@ -131,13 +169,14 @@ PlayerAreaAllPlayers::drawSectionHeader(int startCol)
     
     for (std::size_t i = 0; i < MaxPlayers; ++i)
     {
-        wchar_t initial = players_[i].initial;
-        if (i >= players_.size())
+        wchar_t initial = Layout::DoubleDash;   // Empty seat
+        short   pair    = 0;
+        if (i < players_.size())
         {
-            initial = Layout::DoubleDash;
+            initial = players_[i].initial;
+            pair    = players_[i].colorPair;
         }
-        drawWideCharacter(row, startCol, initial,
-                          players_[i].colorPair);
+        drawWideCharacter(row, startCol, initial, pair);
         startCol += 2;
     }
 }
@@ -182,10 +221,12 @@ PlayerAreaAllPlayers::drawBetMarkers()
     {
         for (std::size_t i = 0; i < b.detail.size(); i++)
         {
+            const short pair =
+                (i < players_.size()) ? players_[i].colorPair : 0;
             drawBetMarker(b.row,
                           b.detail[i].col,
                           b.detail[i].state, 
-                          players_[i].colorPair);
+                          pair);
         }
     }
         
@@ -261,7 +302,12 @@ PlayerAreaAllPlayers::onBetMade(
     (void)betId;
 
     const std::size_t playerIndex = getPlayerIndex(playerId);
-    assert(playerIndex < players_.size());
+    if (playerIndex >= players_.size())
+    {
+        // Can happen briefly when a player has just left the table.
+        LOG_WARN("PlayerAreaAllPlayers::onBetMade(): player is not shown");
+        return;
+    }
 
     CuiUtils::CuiBetName cuiBetName =
         CuiUtils::betToCuiBetName(betName, pivot);
@@ -332,8 +378,9 @@ PlayerAreaAllPlayers::onBetResolved(
                 auto& d = bet.detail[i];  // convenience
                 d.betId = 0;
                 d.state = BetState::None;
-                drawBetMarker(bet.row, d.col,
-                              d.state, players_[i].colorPair);
+                drawBetMarker(bet.row, d.col, d.state,
+                              (i < players_.size()) ? players_[i].colorPair
+                                                    : short(0));
                 return;
             }
         }

@@ -69,9 +69,16 @@ using GameEvent = std::variant<
     Ctrl::UslPlayerSessionStatsChanged,
     Ctrl::UslPlayerLastRollStatsChanged,
     Ctrl::UslPlayerBalanceChanged,
+
+    Ctrl::UslPlayerJoinedTable,
+    Ctrl::UslPlayerLeftTable,
+    Ctrl::UslUserPlayerSwitched,
+    Ctrl::UslPlayerRenamed,
     
     Ctrl::RspMakeBet,
-    Ctrl::RspOddsBet
+    Ctrl::RspOddsBet,
+    Ctrl::RspSwitchPlayer,
+    Ctrl::RspManagePlayer
     >;
     
 struct WorkOrderEvent

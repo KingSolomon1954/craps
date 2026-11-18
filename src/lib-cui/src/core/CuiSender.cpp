@@ -76,6 +76,38 @@ CuiSender::reqTerminate()
 
 //----------------------------------------------------------------
 
+Ctrl::CorrelationId
+CuiSender::reqSwitchPlayer(const Craps::PlayerId& playerId)
+{
+    LOG_TRACE("CuiSender::reqSwitchPlayer()");
+
+    Ctrl::ReqSwitchPlayer ev;
+    ev.playerId = playerId;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
+CuiSender::reqManagePlayer(Ctrl::PlayerAction action,
+                           const Craps::PlayerId& playerId,
+                           const std::string& name)
+{
+    LOG_TRACE("CuiSender::reqManagePlayer()");
+
+    Ctrl::ReqManagePlayer ev;
+    ev.action   = action;
+    ev.playerId = playerId;
+    ev.name     = name;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
 void
 CuiSender::reqRollDice()
 {

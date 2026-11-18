@@ -6,6 +6,9 @@
 
 #include <cui/panels/WindowPlayerBrief.h>
 #include <cui/core/CuiUtils.h>
+#include <controller/CrapsReaders.h>
+#include <craps/LastRollStats.h>
+#include <craps/PlayerStats.h>
 #include <cui/core/CuiStructs.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/managers/ColorManager.h>
@@ -49,6 +52,56 @@ WindowPlayerBrief::initPlayer()
     
     playerName_ = Ctrl::CrapsReaders::getUserPlayerName();
     (void) Ctrl::CrapsReaders::readPlayerBalance(playerId_, balance_, ep);
+}
+
+//----------------------------------------------------------------
+//
+// The user player is a different player, or has a new name. Learn
+// everything about him from the controller instead of from events.
+//
+void
+WindowPlayerBrief::reload()
+{
+    initPlayer();     // id, name, balance
+
+    Gen::ErrorPass ep;
+    int net = 0;
+    if (Ctrl::CrapsReaders::readPlayerSessionNet(playerId_, net, ep) ==
+        Gen::ReturnCode::Success)
+    {
+        netBalance_ = net;
+    }
+
+    Craps::PlayerStats stats;
+    if (Ctrl::CrapsReaders::readPlayerCurrentStats(playerId_, stats, ep) ==
+        Gen::ReturnCode::Success)
+    {
+        numBetsPlayerWins_  = stats.betStats.totNumWinsAllBets;
+        numBetsPlayerLoses_ = stats.betStats.totNumLoseAllBets;
+    }
+
+    Craps::LastRollStats lrs;
+    if (Ctrl::CrapsReaders::readPlayerLastRollStats(playerId_, lrs, ep) ==
+        Gen::ReturnCode::Success)
+    {
+        playerIntakeLastRoll_ = lrs.amountWin;
+        playerOutputLastRoll_ = lrs.amountLose;
+    }
+
+    (void) Ctrl::CrapsReaders::readPlayerNumBetsOnTable(
+               playerId_, numBetsOnTable_, ep);
+    (void) Ctrl::CrapsReaders::readPlayerAmountOnTable(
+               playerId_, amtOnTable_, ep);
+
+    Craps::PlayerId shooterId;
+    shooter_.clear();
+    if (Ctrl::CrapsReaders::readTableCurrentShooter(
+            CuiUtils::activeTableId(), shooterId, ep) ==
+        Gen::ReturnCode::Success &&
+        shooterId == playerId_)
+    {
+        shooter_ = " (shooter)";
+    }
 }
 
 //----------------------------------------------------------------

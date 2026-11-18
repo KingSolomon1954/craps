@@ -5,11 +5,16 @@
 //----------------------------------------------------------------
 
 #include <cui/menus/MenuPlayers.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/Logger.h>
 
 using namespace Cui;
+
+namespace {
+using Op = OperationManager::PlayerOp;
+}
 
 //----------------------------------------------------------------
 
@@ -148,6 +153,7 @@ MenuPlayers::handleKey(int ch)
 void
 MenuPlayers::doListPlayers()
 {
+    (void) OperationManager::instance().playerOperation(Op::List);
 }
 
 //----------------------------------------------------------------
@@ -155,6 +161,7 @@ MenuPlayers::doListPlayers()
 void
 MenuPlayers::doSwitchToPlayer()
 {
+    (void) OperationManager::instance().playerOperation(Op::Switch);
 }
 
 //----------------------------------------------------------------
@@ -162,6 +169,7 @@ MenuPlayers::doSwitchToPlayer()
 void
 MenuPlayers::doRenamePlayer()
 {
+    (void) OperationManager::instance().playerOperation(Op::Rename);
 }
 
 //----------------------------------------------------------------
@@ -169,6 +177,7 @@ MenuPlayers::doRenamePlayer()
 void
 MenuPlayers::doCreatePlayer()
 {
+    (void) OperationManager::instance().playerOperation(Op::Create);
 }
 
 //----------------------------------------------------------------
@@ -176,6 +185,7 @@ MenuPlayers::doCreatePlayer()
 void
 MenuPlayers::doDeletePlayer()
 {
+    (void) OperationManager::instance().playerOperation(Op::Delete);
 }
 
 //----------------------------------------------------------------
@@ -183,6 +193,7 @@ MenuPlayers::doDeletePlayer()
 void
 MenuPlayers::doListBuddies()
 {
+    (void) OperationManager::instance().playerOperation(Op::ListBuddies);
 }
 
 //----------------------------------------------------------------
@@ -190,6 +201,7 @@ MenuPlayers::doListBuddies()
 void
 MenuPlayers::doBuddyJoinsTable()
 {
+    (void) OperationManager::instance().playerOperation(Op::BuddyJoins);
 }
 
 //----------------------------------------------------------------
@@ -197,6 +209,7 @@ MenuPlayers::doBuddyJoinsTable()
 void
 MenuPlayers::doBuddyLeavesTable()
 {
+    (void) OperationManager::instance().playerOperation(Op::BuddyLeaves);
 }
 
 //----------------------------------------------------------------
