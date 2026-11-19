@@ -31,6 +31,8 @@ public:
 private:
     void onRspMakeBet                (const Ctrl::RspMakeBet& ev)                   const;
     void onRspOddsBet                (const Ctrl::RspOddsBet& ev)                   const;
+    void onRspSwitchPlayer           (const Ctrl::RspSwitchPlayer& ev)              const;
+    void onRspManagePlayer           (const Ctrl::RspManagePlayer& ev)              const;
     void onBettingClosed             (const Ctrl::UslBettingClosed& ev)             const;
     void onDiceNewValue              (const Ctrl::UslDiceNewValue& ev)              const;
     void onDiceThrowStart            (const Ctrl::UslDiceThrowStart& ev)            const;
@@ -54,8 +56,10 @@ private:
     void onPlayerLastRollStatsChanged(const Ctrl::UslPlayerLastRollStatsChanged& ev) const;
     void onPlayerSessionStatsChanged (const Ctrl::UslPlayerSessionStatsChanged& ev)  const;
     void onPlayerBalanceChanged      (const Ctrl::UslPlayerBalanceChanged& ev)      const;
-//  void onPlayerJoinTable           (const Ctrl::UslPlayerJoinTable& ev)           const;
-//  void onPlayerLeftTable           (const Ctrl::UslPlayerLeftTable& ev)           const;
+    void onPlayerJoinedTable         (const Ctrl::UslPlayerJoinedTable& ev)         const;
+    void onPlayerLeftTable           (const Ctrl::UslPlayerLeftTable& ev)           const;
+    void onUserPlayerSwitched        (const Ctrl::UslUserPlayerSwitched& ev)        const;
+    void onPlayerRenamed             (const Ctrl::UslPlayerRenamed& ev)             const;
 };
 
 /*-----------------------------------------------------------*//**

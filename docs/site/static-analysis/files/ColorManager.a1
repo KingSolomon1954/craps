@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="11736035248663294811">
+<analyzerinfo hash="15170224270321383545">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="COLOR_BLACK"/>
     <functioncall functionName="COLOR_BLUE"/>
@@ -22,6 +22,7 @@
     <functioncall functionName="DialogMessageError"/>
     <functioncall functionName="DialogMessageInfo"/>
     <functioncall functionName="DialogMessageWarn"/>
+    <functioncall functionName="LOG_ERROR"/>
     <functioncall functionName="PassLineWinner"/>
     <functioncall functionName="PlayerColor"/>
     <functioncall functionName="PlayerColor1"/>
@@ -35,8 +36,11 @@
     <functioncall functionName="SevenOut"/>
     <functioncall functionName="assert"/>
     <functioncall functionName="assignPlayerColor"/>
+    <functioncall functionName="begin"/>
     <functioncall functionName="bkgd"/>
     <functioncall functionName="description"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="find"/>
     <functioncall functionName="getActiveCrapsTable"/>
     <functioncall functionName="getPlayerColor"/>
     <functioncall functionName="has_value"/>

@@ -26,6 +26,7 @@ public:
     /// @name Modifiers
     /// @{
     void draw() override;
+    void reload();   // The user player changed, learn everything again
     void onResolveBetsEnd();
     void onNewShooter(       const Craps::PlayerId& playerId);
     void onPlayerBetsChanged(const Craps::PlayerId& playerId,

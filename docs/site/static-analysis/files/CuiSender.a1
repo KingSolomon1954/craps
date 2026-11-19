@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="13660820500095302905">
+<analyzerinfo hash="10981676825269211717">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="LOG_DEBUG"/>
     <functioncall functionName="LOG_TRACE"/>

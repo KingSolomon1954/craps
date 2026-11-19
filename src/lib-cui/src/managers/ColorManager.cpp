@@ -7,7 +7,10 @@
 #include <cui/managers/ColorManager.h>
 #include <controller/CrapsReaders.h>
 #include <ncurses.h>
+#include <gen/Logger.h>
+#include <algorithm>
 #include <cassert>
+#include <vector>
 
 using namespace Cui;
 
@@ -213,6 +216,40 @@ ColorManager::clearPlayerColors()
 {
     for (auto& assignment : playerAssignments_)
         assignment.reset();
+}
+
+//----------------------------------------------------------------
+
+void
+ColorManager::syncPlayerColors()
+{
+    Gen::ErrorPass ep;
+    Craps::TableId tableId;
+    std::vector<Craps::PlayerId> present;
+
+    if (Ctrl::CrapsReaders::getActiveCrapsTable(tableId, ep) ==
+            Gen::ReturnCode::Fail ||
+        Ctrl::CrapsReaders::readTablePlayers(tableId, present, ep) ==
+            Gen::ReturnCode::Fail)
+    {
+        LOG_ERROR("ColorManager::syncPlayerColors(): unable to read the "
+                  "players at the table; " + ep.description());
+        return;
+    }
+
+    for (auto& assignment : playerAssignments_)
+    {
+        if (assignment.has_value() &&
+            std::find(present.begin(), present.end(),
+                      assignment->playerId) == present.end())
+        {
+            assignment.reset();
+        }
+    }
+    for (const auto& id : present)
+    {
+        (void) assignPlayerColor(id);   // Only six players fit anyway
+    }
 }
 
 //----------------------------------------------------------------

@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">477</td>
-            <td class="headerCovTableEntry">595</td>
-            <td class="headerCovTableEntryMed">80.2 %</td>
+            <td class="headerCovTableEntry">598</td>
+            <td class="headerCovTableEntryMed">79.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-16 15:37:45</td>
+            <td class="headerValue">2026-11-19 03:37:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">49</td>
-            <td class="headerCovTableEntry">64</td>
-            <td class="headerCovTableEntryMed">76.6 %</td>
+            <td class="headerCovTableEntry">65</td>
+            <td class="headerCovTableEntryMed">75.4 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -1268,303 +1268,314 @@
 <a name="1206"><span class="lineNum">    1206 </span><span class="lineCov">        502 : }</span></a>
 <a name="1207"><span class="lineNum">    1207 </span>            : </a>
 <a name="1208"><span class="lineNum">    1208 </span>            : //----------------------------------------------------------------</a>
-<a name="1209"><span class="lineNum">    1209 </span>            : </a>
-<a name="1210"><span class="lineNum">    1210 </span>            : Gen::Money</a>
-<a name="1211"><span class="lineNum">    1211 </span><span class="lineCov">     600288 : Player::getBalance() const</span></a>
-<a name="1212"><span class="lineNum">    1212 </span>            : {</a>
-<a name="1213"><span class="lineNum">    1213 </span><span class="lineCov">     600288 :     return wallet_.getBalance();</span></a>
-<a name="1214"><span class="lineNum">    1214 </span>            : }</a>
-<a name="1215"><span class="lineNum">    1215 </span>            : </a>
-<a name="1216"><span class="lineNum">    1216 </span>            : //----------------------------------------------------------------</a>
-<a name="1217"><span class="lineNum">    1217 </span>            : </a>
-<a name="1218"><span class="lineNum">    1218 </span>            : int</a>
-<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">     600169 : Player::getSessionNet() const</span></a>
-<a name="1220"><span class="lineNum">    1220 </span>            : {</a>
-<a name="1221"><span class="lineNum">    1221 </span><span class="lineCov">     600169 :     return wallet_.getSessionNet();</span></a>
-<a name="1222"><span class="lineNum">    1222 </span>            : }</a>
-<a name="1223"><span class="lineNum">    1223 </span>            : </a>
-<a name="1224"><span class="lineNum">    1224 </span>            : /*-----------------------------------------------------------*//**</a>
-<a name="1225"><span class="lineNum">    1225 </span>            : </a>
-<a name="1226"><span class="lineNum">    1226 </span>            : Returns read-only access to current session player stats.</a>
-<a name="1227"><span class="lineNum">    1227 </span>            : </a>
-<a name="1228"><span class="lineNum">    1228 </span>            : @return current session player stats (read-only)</a>
-<a name="1229"><span class="lineNum">    1229 </span>            : </a>
-<a name="1230"><span class="lineNum">    1230 </span>            : */</a>
-<a name="1231"><span class="lineNum">    1231 </span>            : const PlayerStats&amp;</a>
-<a name="1232"><span class="lineNum">    1232 </span><span class="lineCov">         12 : Player::getCurrentStats() const</span></a>
-<a name="1233"><span class="lineNum">    1233 </span>            : {</a>
-<a name="1234"><span class="lineNum">    1234 </span><span class="lineCov">         12 :     return currentStats_;</span></a>
-<a name="1235"><span class="lineNum">    1235 </span>            : }</a>
+<a name="1209"><span class="lineNum">    1209 </span>            : //</a>
+<a name="1210"><span class="lineNum">    1210 </span>            : // The player id does not change, so the table, bets and anything else</a>
+<a name="1211"><span class="lineNum">    1211 </span>            : // that knows him by id are unaffected.</a>
+<a name="1212"><span class="lineNum">    1212 </span>            : //</a>
+<a name="1213"><span class="lineNum">    1213 </span>            : void</a>
+<a name="1214"><span class="lineNum">    1214 </span><span class="lineNoCov">          0 : Player::rename(const std::string&amp; playerName)</span></a>
+<a name="1215"><span class="lineNum">    1215 </span>            : {</a>
+<a name="1216"><span class="lineNum">    1216 </span><span class="lineNoCov">          0 :     setName(playerName);</span></a>
+<a name="1217"><span class="lineNum">    1217 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1218"><span class="lineNum">    1218 </span>            : </a>
+<a name="1219"><span class="lineNum">    1219 </span>            : //----------------------------------------------------------------</a>
+<a name="1220"><span class="lineNum">    1220 </span>            : </a>
+<a name="1221"><span class="lineNum">    1221 </span>            : Gen::Money</a>
+<a name="1222"><span class="lineNum">    1222 </span><span class="lineCov">     600288 : Player::getBalance() const</span></a>
+<a name="1223"><span class="lineNum">    1223 </span>            : {</a>
+<a name="1224"><span class="lineNum">    1224 </span><span class="lineCov">     600288 :     return wallet_.getBalance();</span></a>
+<a name="1225"><span class="lineNum">    1225 </span>            : }</a>
+<a name="1226"><span class="lineNum">    1226 </span>            : </a>
+<a name="1227"><span class="lineNum">    1227 </span>            : //----------------------------------------------------------------</a>
+<a name="1228"><span class="lineNum">    1228 </span>            : </a>
+<a name="1229"><span class="lineNum">    1229 </span>            : int</a>
+<a name="1230"><span class="lineNum">    1230 </span><span class="lineCov">     600169 : Player::getSessionNet() const</span></a>
+<a name="1231"><span class="lineNum">    1231 </span>            : {</a>
+<a name="1232"><span class="lineNum">    1232 </span><span class="lineCov">     600169 :     return wallet_.getSessionNet();</span></a>
+<a name="1233"><span class="lineNum">    1233 </span>            : }</a>
+<a name="1234"><span class="lineNum">    1234 </span>            : </a>
+<a name="1235"><span class="lineNum">    1235 </span>            : /*-----------------------------------------------------------*//**</a>
 <a name="1236"><span class="lineNum">    1236 </span>            : </a>
-<a name="1237"><span class="lineNum">    1237 </span>            : /*-----------------------------------------------------------*//**</a>
+<a name="1237"><span class="lineNum">    1237 </span>            : Returns read-only access to current session player stats.</a>
 <a name="1238"><span class="lineNum">    1238 </span>            : </a>
-<a name="1239"><span class="lineNum">    1239 </span>            : Returns read-only access to all-time stats.</a>
+<a name="1239"><span class="lineNum">    1239 </span>            : @return current session player stats (read-only)</a>
 <a name="1240"><span class="lineNum">    1240 </span>            : </a>
-<a name="1241"><span class="lineNum">    1241 </span>            : All-time stats are an aggregation of all sessions for this player.</a>
-<a name="1242"><span class="lineNum">    1242 </span>            : </a>
-<a name="1243"><span class="lineNum">    1243 </span>            : Note that all-time stats are only updated when the current session ends.</a>
-<a name="1244"><span class="lineNum">    1244 </span>            : </a>
-<a name="1245"><span class="lineNum">    1245 </span>            : @return all-time table stats (read-only)</a>
-<a name="1246"><span class="lineNum">    1246 </span>            : </a>
-<a name="1247"><span class="lineNum">    1247 </span>            : */</a>
-<a name="1248"><span class="lineNum">    1248 </span>            : const PlayerStats&amp;</a>
-<a name="1249"><span class="lineNum">    1249 </span><span class="lineNoCov">          0 : Player::getAlltimeStats() const</span></a>
-<a name="1250"><span class="lineNum">    1250 </span>            : {</a>
-<a name="1251"><span class="lineNum">    1251 </span><span class="lineNoCov">          0 :     return alltimeStats_;</span></a>
-<a name="1252"><span class="lineNum">    1252 </span>            : }</a>
+<a name="1241"><span class="lineNum">    1241 </span>            : */</a>
+<a name="1242"><span class="lineNum">    1242 </span>            : const PlayerStats&amp;</a>
+<a name="1243"><span class="lineNum">    1243 </span><span class="lineCov">         12 : Player::getCurrentStats() const</span></a>
+<a name="1244"><span class="lineNum">    1244 </span>            : {</a>
+<a name="1245"><span class="lineNum">    1245 </span><span class="lineCov">         12 :     return currentStats_;</span></a>
+<a name="1246"><span class="lineNum">    1246 </span>            : }</a>
+<a name="1247"><span class="lineNum">    1247 </span>            : </a>
+<a name="1248"><span class="lineNum">    1248 </span>            : /*-----------------------------------------------------------*//**</a>
+<a name="1249"><span class="lineNum">    1249 </span>            : </a>
+<a name="1250"><span class="lineNum">    1250 </span>            : Returns read-only access to all-time stats.</a>
+<a name="1251"><span class="lineNum">    1251 </span>            : </a>
+<a name="1252"><span class="lineNum">    1252 </span>            : All-time stats are an aggregation of all sessions for this player.</a>
 <a name="1253"><span class="lineNum">    1253 </span>            : </a>
-<a name="1254"><span class="lineNum">    1254 </span>            : //----------------------------------------------------------------</a>
+<a name="1254"><span class="lineNum">    1254 </span>            : Note that all-time stats are only updated when the current session ends.</a>
 <a name="1255"><span class="lineNum">    1255 </span>            : </a>
-<a name="1256"><span class="lineNum">    1256 </span>            : const BankStats&amp;</a>
-<a name="1257"><span class="lineNum">    1257 </span><span class="lineNoCov">          0 : Player::getBankCurrentStats() const</span></a>
-<a name="1258"><span class="lineNum">    1258 </span>            : {</a>
-<a name="1259"><span class="lineNum">    1259 </span><span class="lineNoCov">          0 :     return wallet_.getCurrentStats();</span></a>
-<a name="1260"><span class="lineNum">    1260 </span>            : }</a>
-<a name="1261"><span class="lineNum">    1261 </span>            : </a>
-<a name="1262"><span class="lineNum">    1262 </span>            : //----------------------------------------------------------------</a>
-<a name="1263"><span class="lineNum">    1263 </span>            : </a>
-<a name="1264"><span class="lineNum">    1264 </span>            : const BankStats&amp;</a>
-<a name="1265"><span class="lineNum">    1265 </span><span class="lineNoCov">          0 : Player::getBankAlltimeStats() const</span></a>
-<a name="1266"><span class="lineNum">    1266 </span>            : {</a>
-<a name="1267"><span class="lineNum">    1267 </span><span class="lineNoCov">          0 :     return wallet_.getAlltimeStats();</span></a>
-<a name="1268"><span class="lineNum">    1268 </span>            : }</a>
-<a name="1269"><span class="lineNum">    1269 </span>            : </a>
-<a name="1270"><span class="lineNum">    1270 </span>            : //----------------------------------------------------------------</a>
-<a name="1271"><span class="lineNum">    1271 </span>            : </a>
-<a name="1272"><span class="lineNum">    1272 </span>            : const LastRollStats&amp;</a>
-<a name="1273"><span class="lineNum">    1273 </span><span class="lineCov">         16 : Player::getLastRollStats() const</span></a>
-<a name="1274"><span class="lineNum">    1274 </span>            : {</a>
-<a name="1275"><span class="lineNum">    1275 </span>            : //    if (pTable_ != nullptr)</a>
-<a name="1276"><span class="lineNum">    1276 </span>            : //    {</a>
-<a name="1277"><span class="lineNum">    1277 </span><span class="lineCov">         16 :         lastRollStats_.rollCount = pTable_-&gt;getNumRolls();</span></a>
-<a name="1278"><span class="lineNum">    1278 </span>            : //    }</a>
-<a name="1279"><span class="lineNum">    1279 </span><span class="lineCov">         16 :     return lastRollStats_;</span></a>
-<a name="1280"><span class="lineNum">    1280 </span>            : }</a>
-<a name="1281"><span class="lineNum">    1281 </span>            : </a>
-<a name="1282"><span class="lineNum">    1282 </span>            : //----------------------------------------------------------------</a>
-<a name="1283"><span class="lineNum">    1283 </span>            : //</a>
-<a name="1284"><span class="lineNum">    1284 </span>            : // Return session history.</a>
-<a name="1285"><span class="lineNum">    1285 </span>            : //</a>
-<a name="1286"><span class="lineNum">    1286 </span>            : // This is just a relay function for convenience.</a>
-<a name="1287"><span class="lineNum">    1287 </span>            : //</a>
-<a name="1288"><span class="lineNum">    1288 </span>            : const SessionHistory::Sessions&amp;</a>
-<a name="1289"><span class="lineNum">    1289 </span><span class="lineCov">          5 : Player::getSessionHistory() const</span></a>
-<a name="1290"><span class="lineNum">    1290 </span>            : {</a>
-<a name="1291"><span class="lineNum">    1291 </span><span class="lineCov">          5 :     return alltimeStats_.sessionHistory.getSessions();</span></a>
-<a name="1292"><span class="lineNum">    1292 </span>            : }</a>
-<a name="1293"><span class="lineNum">    1293 </span>            : </a>
-<a name="1294"><span class="lineNum">    1294 </span>            : //----------------------------------------------------------------</a>
-<a name="1295"><span class="lineNum">    1295 </span>            : </a>
-<a name="1296"><span class="lineNum">    1296 </span>            : void</a>
-<a name="1297"><span class="lineNum">    1297 </span><span class="lineNoCov">          0 : Player::diagBadBetId(const std::string&amp; funcName, BetId betId) const</span></a>
-<a name="1298"><span class="lineNum">    1298 </span>            : {</a>
-<a name="1299"><span class="lineNum">    1299 </span>            :     std::string diag =</a>
-<a name="1300"><span class="lineNum">    1300 </span>            :         &quot;Internal Error: Unable to process decision record. &quot;</a>
-<a name="1301"><span class="lineNum">    1301 </span><span class="lineNoCov">          0 :         &quot;Player::&quot; + funcName + &quot;cant match &quot;</span></a>
-<a name="1302"><span class="lineNum">    1302 </span>            :         &quot;decision record betId against any betId held &quot;</a>
-<a name="1303"><span class="lineNum">    1303 </span><span class="lineNoCov">          0 :         &quot;in player betList. Bad betId:&quot; + std::to_string(betId);</span></a>
-<a name="1304"><span class="lineNum">    1304 </span><span class="lineNoCov">          0 :     LOG_ERROR(diag);</span></a>
-<a name="1305"><span class="lineNum">    1305 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1256"><span class="lineNum">    1256 </span>            : @return all-time table stats (read-only)</a>
+<a name="1257"><span class="lineNum">    1257 </span>            : </a>
+<a name="1258"><span class="lineNum">    1258 </span>            : */</a>
+<a name="1259"><span class="lineNum">    1259 </span>            : const PlayerStats&amp;</a>
+<a name="1260"><span class="lineNum">    1260 </span><span class="lineNoCov">          0 : Player::getAlltimeStats() const</span></a>
+<a name="1261"><span class="lineNum">    1261 </span>            : {</a>
+<a name="1262"><span class="lineNum">    1262 </span><span class="lineNoCov">          0 :     return alltimeStats_;</span></a>
+<a name="1263"><span class="lineNum">    1263 </span>            : }</a>
+<a name="1264"><span class="lineNum">    1264 </span>            : </a>
+<a name="1265"><span class="lineNum">    1265 </span>            : //----------------------------------------------------------------</a>
+<a name="1266"><span class="lineNum">    1266 </span>            : </a>
+<a name="1267"><span class="lineNum">    1267 </span>            : const BankStats&amp;</a>
+<a name="1268"><span class="lineNum">    1268 </span><span class="lineNoCov">          0 : Player::getBankCurrentStats() const</span></a>
+<a name="1269"><span class="lineNum">    1269 </span>            : {</a>
+<a name="1270"><span class="lineNum">    1270 </span><span class="lineNoCov">          0 :     return wallet_.getCurrentStats();</span></a>
+<a name="1271"><span class="lineNum">    1271 </span>            : }</a>
+<a name="1272"><span class="lineNum">    1272 </span>            : </a>
+<a name="1273"><span class="lineNum">    1273 </span>            : //----------------------------------------------------------------</a>
+<a name="1274"><span class="lineNum">    1274 </span>            : </a>
+<a name="1275"><span class="lineNum">    1275 </span>            : const BankStats&amp;</a>
+<a name="1276"><span class="lineNum">    1276 </span><span class="lineNoCov">          0 : Player::getBankAlltimeStats() const</span></a>
+<a name="1277"><span class="lineNum">    1277 </span>            : {</a>
+<a name="1278"><span class="lineNum">    1278 </span><span class="lineNoCov">          0 :     return wallet_.getAlltimeStats();</span></a>
+<a name="1279"><span class="lineNum">    1279 </span>            : }</a>
+<a name="1280"><span class="lineNum">    1280 </span>            : </a>
+<a name="1281"><span class="lineNum">    1281 </span>            : //----------------------------------------------------------------</a>
+<a name="1282"><span class="lineNum">    1282 </span>            : </a>
+<a name="1283"><span class="lineNum">    1283 </span>            : const LastRollStats&amp;</a>
+<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">         16 : Player::getLastRollStats() const</span></a>
+<a name="1285"><span class="lineNum">    1285 </span>            : {</a>
+<a name="1286"><span class="lineNum">    1286 </span>            : //    if (pTable_ != nullptr)</a>
+<a name="1287"><span class="lineNum">    1287 </span>            : //    {</a>
+<a name="1288"><span class="lineNum">    1288 </span><span class="lineCov">         16 :         lastRollStats_.rollCount = pTable_-&gt;getNumRolls();</span></a>
+<a name="1289"><span class="lineNum">    1289 </span>            : //    }</a>
+<a name="1290"><span class="lineNum">    1290 </span><span class="lineCov">         16 :     return lastRollStats_;</span></a>
+<a name="1291"><span class="lineNum">    1291 </span>            : }</a>
+<a name="1292"><span class="lineNum">    1292 </span>            : </a>
+<a name="1293"><span class="lineNum">    1293 </span>            : //----------------------------------------------------------------</a>
+<a name="1294"><span class="lineNum">    1294 </span>            : //</a>
+<a name="1295"><span class="lineNum">    1295 </span>            : // Return session history.</a>
+<a name="1296"><span class="lineNum">    1296 </span>            : //</a>
+<a name="1297"><span class="lineNum">    1297 </span>            : // This is just a relay function for convenience.</a>
+<a name="1298"><span class="lineNum">    1298 </span>            : //</a>
+<a name="1299"><span class="lineNum">    1299 </span>            : const SessionHistory::Sessions&amp;</a>
+<a name="1300"><span class="lineNum">    1300 </span><span class="lineCov">          5 : Player::getSessionHistory() const</span></a>
+<a name="1301"><span class="lineNum">    1301 </span>            : {</a>
+<a name="1302"><span class="lineNum">    1302 </span><span class="lineCov">          5 :     return alltimeStats_.sessionHistory.getSessions();</span></a>
+<a name="1303"><span class="lineNum">    1303 </span>            : }</a>
+<a name="1304"><span class="lineNum">    1304 </span>            : </a>
+<a name="1305"><span class="lineNum">    1305 </span>            : //----------------------------------------------------------------</a>
 <a name="1306"><span class="lineNum">    1306 </span>            : </a>
-<a name="1307"><span class="lineNum">    1307 </span>            : //----------------------------------------------------------------</a>
-<a name="1308"><span class="lineNum">    1308 </span>            : </a>
-<a name="1309"><span class="lineNum">    1309 </span>            : std::string</a>
-<a name="1310"><span class="lineNum">    1310 </span><span class="lineCov">          8 : Player::diagPrefix(size_t idx) const</span></a>
-<a name="1311"><span class="lineNum">    1311 </span>            : {</a>
-<a name="1312"><span class="lineNum">    1312 </span><span class="lineCov">          8 :     assert(idx == 1 || idx == 2);</span></a>
-<a name="1313"><span class="lineNum">    1313 </span><span class="lineCov">          8 :     std::string diag(&quot;Player::&quot;);</span></a>
-<a name="1314"><span class="lineNum">    1314 </span><span class="lineCov">          8 :     if (idx == 1)</span></a>
-<a name="1315"><span class="lineNum">    1315 </span>            :     {</a>
-<a name="1316"><span class="lineNum">    1316 </span><span class="lineNoCov">          0 :         diag += &quot;makeBet(): Player:&quot; + playerName_  + &quot;; Unable to make bet; &quot;;</span></a>
-<a name="1317"><span class="lineNum">    1317 </span>            :     }</a>
-<a name="1318"><span class="lineNum">    1318 </span><span class="lineCov">          8 :     if (idx == 2)</span></a>
-<a name="1319"><span class="lineNum">    1319 </span>            :     {</a>
-<a name="1320"><span class="lineNum">    1320 </span><span class="lineCov">          8 :         diag += &quot;setOdds(): Player:&quot; + playerName_  + &quot;; Unable to set odds; &quot;;</span></a>
-<a name="1321"><span class="lineNum">    1321 </span>            :     }</a>
-<a name="1322"><span class="lineNum">    1322 </span><span class="lineCov">          8 :     return diag;</span></a>
-<a name="1323"><span class="lineNum">    1323 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1324"><span class="lineNum">    1324 </span>            : </a>
-<a name="1325"><span class="lineNum">    1325 </span>            : //----------------------------------------------------------------</a>
-<a name="1326"><span class="lineNum">    1326 </span>            : </a>
-<a name="1327"><span class="lineNum">    1327 </span>            : void</a>
-<a name="1328"><span class="lineNum">    1328 </span><span class="lineCov">     200060 : Player::sendEventBetResolved(BetName betName,</span></a>
-<a name="1329"><span class="lineNum">    1329 </span>            :                              BetId betId,</a>
-<a name="1330"><span class="lineNum">    1330 </span>            :                              const DecisionRecord&amp; dr) const</a>
-<a name="1331"><span class="lineNum">    1331 </span>            : {</a>
-<a name="1332"><span class="lineNum">    1332 </span><span class="lineCov">     200060 :     Ctrl::UslBetResolved ev;</span></a>
-<a name="1333"><span class="lineNum">    1333 </span><span class="lineCov">     200060 :     ev.playerId       = playerId_,</span></a>
-<a name="1334"><span class="lineNum">    1334 </span><span class="lineCov">     200060 :     ev.betName        = betName,</span></a>
-<a name="1335"><span class="lineNum">    1335 </span><span class="lineCov">     200060 :     ev.betId          = betId,</span></a>
-<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">     200060 :     ev.amountWin      = dr.win;</span></a>
-<a name="1337"><span class="lineNum">    1337 </span><span class="lineCov">     200060 :     ev.amountLose     = dr.lose;</span></a>
-<a name="1338"><span class="lineNum">    1338 </span><span class="lineCov">     200060 :     ev.returnToPlayer = dr.returnToPlayer;</span></a>
-<a name="1339"><span class="lineNum">    1339 </span><span class="lineCov">     200060 :     ev.commission      = dr.commission;</span></a>
-<a name="1340"><span class="lineNum">    1340 </span>            : </a>
-<a name="1341"><span class="lineNum">    1341 </span><span class="lineCov">     200060 :     Gen::EventManager::instance().publish(ev);</span></a>
-<a name="1342"><span class="lineNum">    1342 </span><span class="lineCov">     200060 : }</span></a>
-<a name="1343"><span class="lineNum">    1343 </span>            : </a>
-<a name="1344"><span class="lineNum">    1344 </span>            : //----------------------------------------------------------------</a>
-<a name="1345"><span class="lineNum">    1345 </span>            : </a>
-<a name="1346"><span class="lineNum">    1346 </span>            : void</a>
-<a name="1347"><span class="lineNum">    1347 </span><span class="lineCov">     600168 : Player::sendEventPlayerBetsChanged() const</span></a>
-<a name="1348"><span class="lineNum">    1348 </span>            : {</a>
-<a name="1349"><span class="lineNum">    1349 </span><span class="lineCov">     600168 :     Ctrl::UslPlayerBetsChanged ev;</span></a>
-<a name="1350"><span class="lineNum">    1350 </span><span class="lineCov">     600168 :     ev.playerId       = playerId_;</span></a>
-<a name="1351"><span class="lineNum">    1351 </span><span class="lineCov">     600168 :     ev.numBetsOnTable = getNumBetsOnTable();</span></a>
-<a name="1352"><span class="lineNum">    1352 </span><span class="lineCov">     600168 :     ev.amountOnTable  = getAmountOnTable();</span></a>
-<a name="1353"><span class="lineNum">    1353 </span>            : </a>
-<a name="1354"><span class="lineNum">    1354 </span><span class="lineCov">     600168 :     Gen::EventManager::instance().publish(ev);</span></a>
-<a name="1355"><span class="lineNum">    1355 </span><span class="lineCov">     600168 : }</span></a>
+<a name="1307"><span class="lineNum">    1307 </span>            : void</a>
+<a name="1308"><span class="lineNum">    1308 </span><span class="lineNoCov">          0 : Player::diagBadBetId(const std::string&amp; funcName, BetId betId) const</span></a>
+<a name="1309"><span class="lineNum">    1309 </span>            : {</a>
+<a name="1310"><span class="lineNum">    1310 </span>            :     std::string diag =</a>
+<a name="1311"><span class="lineNum">    1311 </span>            :         &quot;Internal Error: Unable to process decision record. &quot;</a>
+<a name="1312"><span class="lineNum">    1312 </span><span class="lineNoCov">          0 :         &quot;Player::&quot; + funcName + &quot;cant match &quot;</span></a>
+<a name="1313"><span class="lineNum">    1313 </span>            :         &quot;decision record betId against any betId held &quot;</a>
+<a name="1314"><span class="lineNum">    1314 </span><span class="lineNoCov">          0 :         &quot;in player betList. Bad betId:&quot; + std::to_string(betId);</span></a>
+<a name="1315"><span class="lineNum">    1315 </span><span class="lineNoCov">          0 :     LOG_ERROR(diag);</span></a>
+<a name="1316"><span class="lineNum">    1316 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1317"><span class="lineNum">    1317 </span>            : </a>
+<a name="1318"><span class="lineNum">    1318 </span>            : //----------------------------------------------------------------</a>
+<a name="1319"><span class="lineNum">    1319 </span>            : </a>
+<a name="1320"><span class="lineNum">    1320 </span>            : std::string</a>
+<a name="1321"><span class="lineNum">    1321 </span><span class="lineCov">          8 : Player::diagPrefix(size_t idx) const</span></a>
+<a name="1322"><span class="lineNum">    1322 </span>            : {</a>
+<a name="1323"><span class="lineNum">    1323 </span><span class="lineCov">          8 :     assert(idx == 1 || idx == 2);</span></a>
+<a name="1324"><span class="lineNum">    1324 </span><span class="lineCov">          8 :     std::string diag(&quot;Player::&quot;);</span></a>
+<a name="1325"><span class="lineNum">    1325 </span><span class="lineCov">          8 :     if (idx == 1)</span></a>
+<a name="1326"><span class="lineNum">    1326 </span>            :     {</a>
+<a name="1327"><span class="lineNum">    1327 </span><span class="lineNoCov">          0 :         diag += &quot;makeBet(): Player:&quot; + playerName_  + &quot;; Unable to make bet; &quot;;</span></a>
+<a name="1328"><span class="lineNum">    1328 </span>            :     }</a>
+<a name="1329"><span class="lineNum">    1329 </span><span class="lineCov">          8 :     if (idx == 2)</span></a>
+<a name="1330"><span class="lineNum">    1330 </span>            :     {</a>
+<a name="1331"><span class="lineNum">    1331 </span><span class="lineCov">          8 :         diag += &quot;setOdds(): Player:&quot; + playerName_  + &quot;; Unable to set odds; &quot;;</span></a>
+<a name="1332"><span class="lineNum">    1332 </span>            :     }</a>
+<a name="1333"><span class="lineNum">    1333 </span><span class="lineCov">          8 :     return diag;</span></a>
+<a name="1334"><span class="lineNum">    1334 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1335"><span class="lineNum">    1335 </span>            : </a>
+<a name="1336"><span class="lineNum">    1336 </span>            : //----------------------------------------------------------------</a>
+<a name="1337"><span class="lineNum">    1337 </span>            : </a>
+<a name="1338"><span class="lineNum">    1338 </span>            : void</a>
+<a name="1339"><span class="lineNum">    1339 </span><span class="lineCov">     200060 : Player::sendEventBetResolved(BetName betName,</span></a>
+<a name="1340"><span class="lineNum">    1340 </span>            :                              BetId betId,</a>
+<a name="1341"><span class="lineNum">    1341 </span>            :                              const DecisionRecord&amp; dr) const</a>
+<a name="1342"><span class="lineNum">    1342 </span>            : {</a>
+<a name="1343"><span class="lineNum">    1343 </span><span class="lineCov">     200060 :     Ctrl::UslBetResolved ev;</span></a>
+<a name="1344"><span class="lineNum">    1344 </span><span class="lineCov">     200060 :     ev.playerId       = playerId_,</span></a>
+<a name="1345"><span class="lineNum">    1345 </span><span class="lineCov">     200060 :     ev.betName        = betName,</span></a>
+<a name="1346"><span class="lineNum">    1346 </span><span class="lineCov">     200060 :     ev.betId          = betId,</span></a>
+<a name="1347"><span class="lineNum">    1347 </span><span class="lineCov">     200060 :     ev.amountWin      = dr.win;</span></a>
+<a name="1348"><span class="lineNum">    1348 </span><span class="lineCov">     200060 :     ev.amountLose     = dr.lose;</span></a>
+<a name="1349"><span class="lineNum">    1349 </span><span class="lineCov">     200060 :     ev.returnToPlayer = dr.returnToPlayer;</span></a>
+<a name="1350"><span class="lineNum">    1350 </span><span class="lineCov">     200060 :     ev.commission      = dr.commission;</span></a>
+<a name="1351"><span class="lineNum">    1351 </span>            : </a>
+<a name="1352"><span class="lineNum">    1352 </span><span class="lineCov">     200060 :     Gen::EventManager::instance().publish(ev);</span></a>
+<a name="1353"><span class="lineNum">    1353 </span><span class="lineCov">     200060 : }</span></a>
+<a name="1354"><span class="lineNum">    1354 </span>            : </a>
+<a name="1355"><span class="lineNum">    1355 </span>            : //----------------------------------------------------------------</a>
 <a name="1356"><span class="lineNum">    1356 </span>            : </a>
-<a name="1357"><span class="lineNum">    1357 </span>            : //----------------------------------------------------------------</a>
-<a name="1358"><span class="lineNum">    1358 </span>            : </a>
-<a name="1359"><span class="lineNum">    1359 </span>            : void</a>
-<a name="1360"><span class="lineNum">    1360 </span><span class="lineCov">     200044 : Player::sendEventPlayerSessionStatsChanged() const</span></a>
-<a name="1361"><span class="lineNum">    1361 </span>            : {</a>
-<a name="1362"><span class="lineNum">    1362 </span><span class="lineCov">     200044 :     Ctrl::UslPlayerSessionStatsChanged ev;</span></a>
-<a name="1363"><span class="lineNum">    1363 </span><span class="lineCov">     200044 :     ev.playerId    = playerId_;</span></a>
-<a name="1364"><span class="lineNum">    1364 </span><span class="lineCov">     200044 :     ev.numBetsWon  = currentStats_.betStats.totNumWinsAllBets;</span></a>
-<a name="1365"><span class="lineNum">    1365 </span><span class="lineCov">     200044 :     ev.numBetsLost = currentStats_.betStats.totNumLoseAllBets;</span></a>
-<a name="1366"><span class="lineNum">    1366 </span>            : </a>
-<a name="1367"><span class="lineNum">    1367 </span><span class="lineCov">     200044 :     Gen::EventManager::instance().publish(ev);</span></a>
-<a name="1368"><span class="lineNum">    1368 </span><span class="lineCov">     200044 : }</span></a>
+<a name="1357"><span class="lineNum">    1357 </span>            : void</a>
+<a name="1358"><span class="lineNum">    1358 </span><span class="lineCov">     600168 : Player::sendEventPlayerBetsChanged() const</span></a>
+<a name="1359"><span class="lineNum">    1359 </span>            : {</a>
+<a name="1360"><span class="lineNum">    1360 </span><span class="lineCov">     600168 :     Ctrl::UslPlayerBetsChanged ev;</span></a>
+<a name="1361"><span class="lineNum">    1361 </span><span class="lineCov">     600168 :     ev.playerId       = playerId_;</span></a>
+<a name="1362"><span class="lineNum">    1362 </span><span class="lineCov">     600168 :     ev.numBetsOnTable = getNumBetsOnTable();</span></a>
+<a name="1363"><span class="lineNum">    1363 </span><span class="lineCov">     600168 :     ev.amountOnTable  = getAmountOnTable();</span></a>
+<a name="1364"><span class="lineNum">    1364 </span>            : </a>
+<a name="1365"><span class="lineNum">    1365 </span><span class="lineCov">     600168 :     Gen::EventManager::instance().publish(ev);</span></a>
+<a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">     600168 : }</span></a>
+<a name="1367"><span class="lineNum">    1367 </span>            : </a>
+<a name="1368"><span class="lineNum">    1368 </span>            : //----------------------------------------------------------------</a>
 <a name="1369"><span class="lineNum">    1369 </span>            : </a>
-<a name="1370"><span class="lineNum">    1370 </span>            : //----------------------------------------------------------------</a>
-<a name="1371"><span class="lineNum">    1371 </span>            : </a>
-<a name="1372"><span class="lineNum">    1372 </span>            : void</a>
-<a name="1373"><span class="lineNum">    1373 </span><span class="lineCov">     400092 : Player::sendEventPlayerLastRollStatsChanged() const</span></a>
-<a name="1374"><span class="lineNum">    1374 </span>            : {</a>
-<a name="1375"><span class="lineNum">    1375 </span><span class="lineCov">     400092 :     Ctrl::UslPlayerLastRollStatsChanged lrs{};</span></a>
-<a name="1376"><span class="lineNum">    1376 </span><span class="lineCov">     400092 :     lrs.playerId = playerId_;</span></a>
-<a name="1377"><span class="lineNum">    1377 </span><span class="lineCov">     400092 :     lrs.stats    = lastRollStats_;</span></a>
-<a name="1378"><span class="lineNum">    1378 </span><span class="lineCov">     400092 :     Gen::EventManager::instance().publish(lrs);</span></a>
-<a name="1379"><span class="lineNum">    1379 </span><span class="lineCov">     400092 : }</span></a>
+<a name="1370"><span class="lineNum">    1370 </span>            : void</a>
+<a name="1371"><span class="lineNum">    1371 </span><span class="lineCov">     200044 : Player::sendEventPlayerSessionStatsChanged() const</span></a>
+<a name="1372"><span class="lineNum">    1372 </span>            : {</a>
+<a name="1373"><span class="lineNum">    1373 </span><span class="lineCov">     200044 :     Ctrl::UslPlayerSessionStatsChanged ev;</span></a>
+<a name="1374"><span class="lineNum">    1374 </span><span class="lineCov">     200044 :     ev.playerId    = playerId_;</span></a>
+<a name="1375"><span class="lineNum">    1375 </span><span class="lineCov">     200044 :     ev.numBetsWon  = currentStats_.betStats.totNumWinsAllBets;</span></a>
+<a name="1376"><span class="lineNum">    1376 </span><span class="lineCov">     200044 :     ev.numBetsLost = currentStats_.betStats.totNumLoseAllBets;</span></a>
+<a name="1377"><span class="lineNum">    1377 </span>            : </a>
+<a name="1378"><span class="lineNum">    1378 </span><span class="lineCov">     200044 :     Gen::EventManager::instance().publish(ev);</span></a>
+<a name="1379"><span class="lineNum">    1379 </span><span class="lineCov">     200044 : }</span></a>
 <a name="1380"><span class="lineNum">    1380 </span>            : </a>
 <a name="1381"><span class="lineNum">    1381 </span>            : //----------------------------------------------------------------</a>
 <a name="1382"><span class="lineNum">    1382 </span>            : </a>
 <a name="1383"><span class="lineNum">    1383 </span>            : void</a>
-<a name="1384"><span class="lineNum">    1384 </span><span class="lineCov">     600168 : Player::sendEventPlayerBalanceChanged() const</span></a>
+<a name="1384"><span class="lineNum">    1384 </span><span class="lineCov">     400092 : Player::sendEventPlayerLastRollStatsChanged() const</span></a>
 <a name="1385"><span class="lineNum">    1385 </span>            : {</a>
-<a name="1386"><span class="lineNum">    1386 </span><span class="lineCov">     600168 :     Ctrl::UslPlayerBalanceChanged ev;</span></a>
-<a name="1387"><span class="lineNum">    1387 </span><span class="lineCov">     600168 :     ev.playerId   = playerId_;</span></a>
-<a name="1388"><span class="lineNum">    1388 </span><span class="lineCov">     600168 :     ev.balance    = getBalance();    // how much left in wallet</span></a>
-<a name="1389"><span class="lineNum">    1389 </span><span class="lineCov">     600168 :     ev.netBalance = getSessionNet(); // profilt/loss session start</span></a>
-<a name="1390"><span class="lineNum">    1390 </span>            : </a>
-<a name="1391"><span class="lineNum">    1391 </span><span class="lineCov">     600168 :     Gen::EventManager::instance().publish(ev);</span></a>
-<a name="1392"><span class="lineNum">    1392 </span><span class="lineCov">     600168 : }</span></a>
+<a name="1386"><span class="lineNum">    1386 </span><span class="lineCov">     400092 :     Ctrl::UslPlayerLastRollStatsChanged lrs{};</span></a>
+<a name="1387"><span class="lineNum">    1387 </span><span class="lineCov">     400092 :     lrs.playerId = playerId_;</span></a>
+<a name="1388"><span class="lineNum">    1388 </span><span class="lineCov">     400092 :     lrs.stats    = lastRollStats_;</span></a>
+<a name="1389"><span class="lineNum">    1389 </span><span class="lineCov">     400092 :     Gen::EventManager::instance().publish(lrs);</span></a>
+<a name="1390"><span class="lineNum">    1390 </span><span class="lineCov">     400092 : }</span></a>
+<a name="1391"><span class="lineNum">    1391 </span>            : </a>
+<a name="1392"><span class="lineNum">    1392 </span>            : //----------------------------------------------------------------</a>
 <a name="1393"><span class="lineNum">    1393 </span>            : </a>
-<a name="1394"><span class="lineNum">    1394 </span>            : //----------------------------------------------------------------</a>
-<a name="1395"><span class="lineNum">    1395 </span>            : </a>
-<a name="1396"><span class="lineNum">    1396 </span>            : bool</a>
-<a name="1397"><span class="lineNum">    1397 </span><span class="lineCov">     400131 : Player::fifNoTable(Gen::ErrorPass&amp; ep) const</span></a>
-<a name="1398"><span class="lineNum">    1398 </span>            : {</a>
-<a name="1399"><span class="lineNum">    1399 </span>            :     // fault if player is not joined to a table and sets ep error diag</a>
-<a name="1400"><span class="lineNum">    1400 </span><span class="lineCov">     400131 :     if (pTable_ == nullptr)</span></a>
-<a name="1401"><span class="lineNum">    1401 </span>            :     {</a>
-<a name="1402"><span class="lineNum">    1402 </span><span class="lineCov">          2 :         std::string s(&quot;Player &quot; + playerName_ + &quot; has not yet joined a table.&quot;);</span></a>
-<a name="1403"><span class="lineNum">    1403 </span><span class="lineCov">          6 :         EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,</span></a>
-<a name="1404"><span class="lineNum">    1404 </span>            :                Es::Indeterminate, s);</a>
-<a name="1405"><span class="lineNum">    1405 </span><span class="lineCov">          2 :         return true;</span></a>
-<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">          2 :     }</span></a>
-<a name="1407"><span class="lineNum">    1407 </span><span class="lineCov">     400129 :     return false;</span></a>
-<a name="1408"><span class="lineNum">    1408 </span>            : }</a>
-<a name="1409"><span class="lineNum">    1409 </span>            : </a>
-<a name="1410"><span class="lineNum">    1410 </span>            : //----------------------------------------------------------------</a>
-<a name="1411"><span class="lineNum">    1411 </span>            : </a>
-<a name="1412"><span class="lineNum">    1412 </span>            : bool</a>
-<a name="1413"><span class="lineNum">    1413 </span><span class="lineCov">     400131 : Player::fifInsufficientFunds(BetPtr pBet, Gen::Money newAmount,</span></a>
-<a name="1414"><span class="lineNum">    1414 </span>            :                              Gen::Money oldAmount,</a>
-<a name="1415"><span class="lineNum">    1415 </span>            :                              Gen::ErrorPass&amp; ep) const</a>
-<a name="1416"><span class="lineNum">    1416 </span>            : {</a>
-<a name="1417"><span class="lineNum">    1417 </span>            :     // fault if insufficient funds and sets ep error diag</a>
-<a name="1418"><span class="lineNum">    1418 </span>            : </a>
-<a name="1419"><span class="lineNum">    1419 </span>            :     // nullptr arg is expected when called from makeBet(), since a</a>
-<a name="1420"><span class="lineNum">    1420 </span>            :     // bet has not yet been created.</a>
-<a name="1421"><span class="lineNum">    1421 </span>            : </a>
-<a name="1422"><span class="lineNum">    1422 </span><span class="lineCov">     400131 :     int diff = 0;</span></a>
-<a name="1423"><span class="lineNum">    1423 </span><span class="lineCov">     400131 :     if (pBet == nullptr)</span></a>
-<a name="1424"><span class="lineNum">    1424 </span>            :     {</a>
-<a name="1425"><span class="lineNum">    1425 </span><span class="lineCov">     200104 :         diff = newAmount;</span></a>
-<a name="1426"><span class="lineNum">    1426 </span>            :     }</a>
-<a name="1427"><span class="lineNum">    1427 </span>            :     else</a>
-<a name="1428"><span class="lineNum">    1428 </span>            :     {</a>
-<a name="1429"><span class="lineNum">    1429 </span><span class="lineCov">     200027 :         diff = newAmount - oldAmount;</span></a>
-<a name="1430"><span class="lineNum">    1430 </span>            :     }</a>
-<a name="1431"><span class="lineNum">    1431 </span>            : </a>
-<a name="1432"><span class="lineNum">    1432 </span><span class="lineCov">     400131 :     if (diff &lt;= 0)</span></a>
-<a name="1433"><span class="lineNum">    1433 </span>            :     {</a>
-<a name="1434"><span class="lineNum">    1434 </span><span class="lineCov">          8 :         return false;  // Reducing existing bet, always enough funds.</span></a>
-<a name="1435"><span class="lineNum">    1435 </span>            :     }</a>
-<a name="1436"><span class="lineNum">    1436 </span>            : </a>
-<a name="1437"><span class="lineNum">    1437 </span><span class="lineCov">     400123 :     if (diff &gt; wallet_.getBalance())</span></a>
-<a name="1438"><span class="lineNum">    1438 </span>            :     {</a>
-<a name="1439"><span class="lineNum">    1439 </span>            :         std::string s = fmt::format(</a>
-<a name="1440"><span class="lineNum">    1440 </span>            :             &quot;Player {} has insufficient funds to make a {} bet; &quot;</a>
-<a name="1441"><span class="lineNum">    1441 </span><span class="lineCov">          3 :             &quot;current balance:{}.&quot;, playerName_,</span></a>
-<a name="1442"><span class="lineNum">    1442 </span><span class="lineCov">          3 :             Gen::MoneyUtils::toString(newAmount),</span></a>
-<a name="1443"><span class="lineNum">    1443 </span><span class="lineCov">          9 :             Gen::MoneyUtils::toString(getBalance()));</span></a>
-<a name="1444"><span class="lineNum">    1444 </span><span class="lineCov">          9 :         EP_SET(ep, En::UnderflowError, Et::ProcessingError,</span></a>
-<a name="1445"><span class="lineNum">    1445 </span>            :                Es::Indeterminate, s);</a>
-<a name="1446"><span class="lineNum">    1446 </span><span class="lineCov">          3 :         return true;</span></a>
-<a name="1447"><span class="lineNum">    1447 </span><span class="lineCov">          3 :     }</span></a>
-<a name="1448"><span class="lineNum">    1448 </span><span class="lineCov">     400120 :     return false;</span></a>
-<a name="1449"><span class="lineNum">    1449 </span>            : }</a>
-<a name="1450"><span class="lineNum">    1450 </span>            : </a>
-<a name="1451"><span class="lineNum">    1451 </span>            : //----------------------------------------------------------------</a>
-<a name="1452"><span class="lineNum">    1452 </span>            : </a>
-<a name="1453"><span class="lineNum">    1453 </span>            : bool</a>
-<a name="1454"><span class="lineNum">    1454 </span><span class="lineCov">     200099 : Player::fifBadAddBet(BetPtr pBet, Gen::ErrorPass&amp; ep) const</span></a>
-<a name="1455"><span class="lineNum">    1455 </span>            : {</a>
-<a name="1456"><span class="lineNum">    1456 </span>            :     // fault if can't add bet and sets ep error diag</a>
-<a name="1457"><span class="lineNum">    1457 </span><span class="lineCov">     200099 :     assert(pBet != nullptr);</span></a>
-<a name="1458"><span class="lineNum">    1458 </span><span class="lineCov">     200099 :     assert(pTable_ != nullptr);</span></a>
-<a name="1459"><span class="lineNum">    1459 </span>            : </a>
-<a name="1460"><span class="lineNum">    1460 </span><span class="lineCov">     200099 :     if (pTable_-&gt;addBet(pBet, ep) == Gen::ReturnCode::Fail)</span></a>
-<a name="1461"><span class="lineNum">    1461 </span>            :     {</a>
-<a name="1462"><span class="lineNum">    1462 </span><span class="lineCov">          3 :         return true;</span></a>
-<a name="1463"><span class="lineNum">    1463 </span>            :     }</a>
-<a name="1464"><span class="lineNum">    1464 </span><span class="lineCov">     200096 :     return false;</span></a>
-<a name="1465"><span class="lineNum">    1465 </span>            : }</a>
-<a name="1466"><span class="lineNum">    1466 </span>            : </a>
-<a name="1467"><span class="lineNum">    1467 </span>            : //----------------------------------------------------------------</a>
-<a name="1468"><span class="lineNum">    1468 </span>            : </a>
-<a name="1469"><span class="lineNum">    1469 </span>            : bool</a>
-<a name="1470"><span class="lineNum">    1470 </span><span class="lineCov">     200030 : Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass&amp; ep) const</span></a>
-<a name="1471"><span class="lineNum">    1471 </span>            : {</a>
-<a name="1472"><span class="lineNum">    1472 </span>            :     // fault if bet is not owned by this player and sets ep error diag</a>
-<a name="1473"><span class="lineNum">    1473 </span>            : </a>
-<a name="1474"><span class="lineNum">    1474 </span><span class="lineCov">     200030 :     if (pBet == nullptr)</span></a>
-<a name="1475"><span class="lineNum">    1475 </span>            :     {</a>
-<a name="1476"><span class="lineNum">    1476 </span><span class="lineCov">          3 :         EP_SET(ep, En::NullPointerError, Et::ProcessingError,</span></a>
-<a name="1477"><span class="lineNum">    1477 </span>            :                Es::Indeterminate, diagPrefix(2) + &quot;BetPtr is null.&quot;);</a>
-<a name="1478"><span class="lineNum">    1478 </span><span class="lineCov">          1 :         return true;</span></a>
-<a name="1479"><span class="lineNum">    1479 </span>            :     }</a>
-<a name="1480"><span class="lineNum">    1480 </span>            : </a>
-<a name="1481"><span class="lineNum">    1481 </span><span class="lineCov">     200029 :     if (findBetById(pBet-&gt;betId()) == nullptr)</span></a>
-<a name="1482"><span class="lineNum">    1482 </span>            :     {</a>
-<a name="1483"><span class="lineNum">    1483 </span><span class="lineCov">          2 :         if (pBet-&gt;player().getPlayerId() == playerId_)</span></a>
-<a name="1484"><span class="lineNum">    1484 </span>            :         {</a>
-<a name="1485"><span class="lineNum">    1485 </span>            :             // Bet was somehow created outside of makeOrChangeBet()</a>
-<a name="1486"><span class="lineNum">    1486 </span>            :             std::string s = fmt::format(</a>
-<a name="1487"><span class="lineNum">    1487 </span>            :                 &quot;{} Player:{} does not have this bet in their bet list; &quot;</a>
-<a name="1488"><span class="lineNum">    1488 </span>            :                 &quot;Programmer error; Must use Player::makeOrChangeBet() to make &quot;</a>
-<a name="1489"><span class="lineNum">    1489 </span><span class="lineCov">          2 :                 &quot;a bet; {}.&quot;, diagPrefix(2), playerName_, pBet-&gt;diagBetId());</span></a>
-<a name="1490"><span class="lineNum">    1490 </span><span class="lineCov">          3 :             EP_SET(ep, En::LogicError, Et::ProcessingError,</span></a>
-<a name="1491"><span class="lineNum">    1491 </span>            :                    Es::Indeterminate, s);</a>
-<a name="1492"><span class="lineNum">    1492 </span><span class="lineCov">          1 :             return true;</span></a>
-<a name="1493"><span class="lineNum">    1493 </span><span class="lineCov">          1 :         }</span></a>
-<a name="1494"><span class="lineNum">    1494 </span>            :         std::string s = fmt::format(</a>
-<a name="1495"><span class="lineNum">    1495 </span>            :             &quot;{} Player:{} does not own this bet {}; Owned by Player:{}.&quot;,</a>
-<a name="1496"><span class="lineNum">    1496 </span><span class="lineCov">          1 :             diagPrefix(2), playerName_,</span></a>
-<a name="1497"><span class="lineNum">    1497 </span><span class="lineCov">          3 :             pBet-&gt;diagBetId(), pBet-&gt;player().getName());</span></a>
-<a name="1498"><span class="lineNum">    1498 </span><span class="lineCov">          3 :         EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,</span></a>
-<a name="1499"><span class="lineNum">    1499 </span>            :                Es::Indeterminate, s);</a>
-<a name="1500"><span class="lineNum">    1500 </span><span class="lineCov">          1 :         return true;</span></a>
-<a name="1501"><span class="lineNum">    1501 </span><span class="lineCov">          1 :     }</span></a>
-<a name="1502"><span class="lineNum">    1502 </span><span class="lineCov">     200027 :     return false;</span></a>
-<a name="1503"><span class="lineNum">    1503 </span>            : }</a>
-<a name="1504"><span class="lineNum">    1504 </span>            : </a>
-<a name="1505"><span class="lineNum">    1505 </span>            : //----------------------------------------------------------------</a>
+<a name="1394"><span class="lineNum">    1394 </span>            : void</a>
+<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">     600168 : Player::sendEventPlayerBalanceChanged() const</span></a>
+<a name="1396"><span class="lineNum">    1396 </span>            : {</a>
+<a name="1397"><span class="lineNum">    1397 </span><span class="lineCov">     600168 :     Ctrl::UslPlayerBalanceChanged ev;</span></a>
+<a name="1398"><span class="lineNum">    1398 </span><span class="lineCov">     600168 :     ev.playerId   = playerId_;</span></a>
+<a name="1399"><span class="lineNum">    1399 </span><span class="lineCov">     600168 :     ev.balance    = getBalance();    // how much left in wallet</span></a>
+<a name="1400"><span class="lineNum">    1400 </span><span class="lineCov">     600168 :     ev.netBalance = getSessionNet(); // profilt/loss session start</span></a>
+<a name="1401"><span class="lineNum">    1401 </span>            : </a>
+<a name="1402"><span class="lineNum">    1402 </span><span class="lineCov">     600168 :     Gen::EventManager::instance().publish(ev);</span></a>
+<a name="1403"><span class="lineNum">    1403 </span><span class="lineCov">     600168 : }</span></a>
+<a name="1404"><span class="lineNum">    1404 </span>            : </a>
+<a name="1405"><span class="lineNum">    1405 </span>            : //----------------------------------------------------------------</a>
+<a name="1406"><span class="lineNum">    1406 </span>            : </a>
+<a name="1407"><span class="lineNum">    1407 </span>            : bool</a>
+<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">     400131 : Player::fifNoTable(Gen::ErrorPass&amp; ep) const</span></a>
+<a name="1409"><span class="lineNum">    1409 </span>            : {</a>
+<a name="1410"><span class="lineNum">    1410 </span>            :     // fault if player is not joined to a table and sets ep error diag</a>
+<a name="1411"><span class="lineNum">    1411 </span><span class="lineCov">     400131 :     if (pTable_ == nullptr)</span></a>
+<a name="1412"><span class="lineNum">    1412 </span>            :     {</a>
+<a name="1413"><span class="lineNum">    1413 </span><span class="lineCov">          2 :         std::string s(&quot;Player &quot; + playerName_ + &quot; has not yet joined a table.&quot;);</span></a>
+<a name="1414"><span class="lineNum">    1414 </span><span class="lineCov">          6 :         EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,</span></a>
+<a name="1415"><span class="lineNum">    1415 </span>            :                Es::Indeterminate, s);</a>
+<a name="1416"><span class="lineNum">    1416 </span><span class="lineCov">          2 :         return true;</span></a>
+<a name="1417"><span class="lineNum">    1417 </span><span class="lineCov">          2 :     }</span></a>
+<a name="1418"><span class="lineNum">    1418 </span><span class="lineCov">     400129 :     return false;</span></a>
+<a name="1419"><span class="lineNum">    1419 </span>            : }</a>
+<a name="1420"><span class="lineNum">    1420 </span>            : </a>
+<a name="1421"><span class="lineNum">    1421 </span>            : //----------------------------------------------------------------</a>
+<a name="1422"><span class="lineNum">    1422 </span>            : </a>
+<a name="1423"><span class="lineNum">    1423 </span>            : bool</a>
+<a name="1424"><span class="lineNum">    1424 </span><span class="lineCov">     400131 : Player::fifInsufficientFunds(BetPtr pBet, Gen::Money newAmount,</span></a>
+<a name="1425"><span class="lineNum">    1425 </span>            :                              Gen::Money oldAmount,</a>
+<a name="1426"><span class="lineNum">    1426 </span>            :                              Gen::ErrorPass&amp; ep) const</a>
+<a name="1427"><span class="lineNum">    1427 </span>            : {</a>
+<a name="1428"><span class="lineNum">    1428 </span>            :     // fault if insufficient funds and sets ep error diag</a>
+<a name="1429"><span class="lineNum">    1429 </span>            : </a>
+<a name="1430"><span class="lineNum">    1430 </span>            :     // nullptr arg is expected when called from makeBet(), since a</a>
+<a name="1431"><span class="lineNum">    1431 </span>            :     // bet has not yet been created.</a>
+<a name="1432"><span class="lineNum">    1432 </span>            : </a>
+<a name="1433"><span class="lineNum">    1433 </span><span class="lineCov">     400131 :     int diff = 0;</span></a>
+<a name="1434"><span class="lineNum">    1434 </span><span class="lineCov">     400131 :     if (pBet == nullptr)</span></a>
+<a name="1435"><span class="lineNum">    1435 </span>            :     {</a>
+<a name="1436"><span class="lineNum">    1436 </span><span class="lineCov">     200104 :         diff = newAmount;</span></a>
+<a name="1437"><span class="lineNum">    1437 </span>            :     }</a>
+<a name="1438"><span class="lineNum">    1438 </span>            :     else</a>
+<a name="1439"><span class="lineNum">    1439 </span>            :     {</a>
+<a name="1440"><span class="lineNum">    1440 </span><span class="lineCov">     200027 :         diff = newAmount - oldAmount;</span></a>
+<a name="1441"><span class="lineNum">    1441 </span>            :     }</a>
+<a name="1442"><span class="lineNum">    1442 </span>            : </a>
+<a name="1443"><span class="lineNum">    1443 </span><span class="lineCov">     400131 :     if (diff &lt;= 0)</span></a>
+<a name="1444"><span class="lineNum">    1444 </span>            :     {</a>
+<a name="1445"><span class="lineNum">    1445 </span><span class="lineCov">          8 :         return false;  // Reducing existing bet, always enough funds.</span></a>
+<a name="1446"><span class="lineNum">    1446 </span>            :     }</a>
+<a name="1447"><span class="lineNum">    1447 </span>            : </a>
+<a name="1448"><span class="lineNum">    1448 </span><span class="lineCov">     400123 :     if (diff &gt; wallet_.getBalance())</span></a>
+<a name="1449"><span class="lineNum">    1449 </span>            :     {</a>
+<a name="1450"><span class="lineNum">    1450 </span>            :         std::string s = fmt::format(</a>
+<a name="1451"><span class="lineNum">    1451 </span>            :             &quot;Player {} has insufficient funds to make a {} bet; &quot;</a>
+<a name="1452"><span class="lineNum">    1452 </span><span class="lineCov">          3 :             &quot;current balance:{}.&quot;, playerName_,</span></a>
+<a name="1453"><span class="lineNum">    1453 </span><span class="lineCov">          3 :             Gen::MoneyUtils::toString(newAmount),</span></a>
+<a name="1454"><span class="lineNum">    1454 </span><span class="lineCov">          9 :             Gen::MoneyUtils::toString(getBalance()));</span></a>
+<a name="1455"><span class="lineNum">    1455 </span><span class="lineCov">          9 :         EP_SET(ep, En::UnderflowError, Et::ProcessingError,</span></a>
+<a name="1456"><span class="lineNum">    1456 </span>            :                Es::Indeterminate, s);</a>
+<a name="1457"><span class="lineNum">    1457 </span><span class="lineCov">          3 :         return true;</span></a>
+<a name="1458"><span class="lineNum">    1458 </span><span class="lineCov">          3 :     }</span></a>
+<a name="1459"><span class="lineNum">    1459 </span><span class="lineCov">     400120 :     return false;</span></a>
+<a name="1460"><span class="lineNum">    1460 </span>            : }</a>
+<a name="1461"><span class="lineNum">    1461 </span>            : </a>
+<a name="1462"><span class="lineNum">    1462 </span>            : //----------------------------------------------------------------</a>
+<a name="1463"><span class="lineNum">    1463 </span>            : </a>
+<a name="1464"><span class="lineNum">    1464 </span>            : bool</a>
+<a name="1465"><span class="lineNum">    1465 </span><span class="lineCov">     200099 : Player::fifBadAddBet(BetPtr pBet, Gen::ErrorPass&amp; ep) const</span></a>
+<a name="1466"><span class="lineNum">    1466 </span>            : {</a>
+<a name="1467"><span class="lineNum">    1467 </span>            :     // fault if can't add bet and sets ep error diag</a>
+<a name="1468"><span class="lineNum">    1468 </span><span class="lineCov">     200099 :     assert(pBet != nullptr);</span></a>
+<a name="1469"><span class="lineNum">    1469 </span><span class="lineCov">     200099 :     assert(pTable_ != nullptr);</span></a>
+<a name="1470"><span class="lineNum">    1470 </span>            : </a>
+<a name="1471"><span class="lineNum">    1471 </span><span class="lineCov">     200099 :     if (pTable_-&gt;addBet(pBet, ep) == Gen::ReturnCode::Fail)</span></a>
+<a name="1472"><span class="lineNum">    1472 </span>            :     {</a>
+<a name="1473"><span class="lineNum">    1473 </span><span class="lineCov">          3 :         return true;</span></a>
+<a name="1474"><span class="lineNum">    1474 </span>            :     }</a>
+<a name="1475"><span class="lineNum">    1475 </span><span class="lineCov">     200096 :     return false;</span></a>
+<a name="1476"><span class="lineNum">    1476 </span>            : }</a>
+<a name="1477"><span class="lineNum">    1477 </span>            : </a>
+<a name="1478"><span class="lineNum">    1478 </span>            : //----------------------------------------------------------------</a>
+<a name="1479"><span class="lineNum">    1479 </span>            : </a>
+<a name="1480"><span class="lineNum">    1480 </span>            : bool</a>
+<a name="1481"><span class="lineNum">    1481 </span><span class="lineCov">     200030 : Player::fifMissingBet(BetPtr pBet, Gen::ErrorPass&amp; ep) const</span></a>
+<a name="1482"><span class="lineNum">    1482 </span>            : {</a>
+<a name="1483"><span class="lineNum">    1483 </span>            :     // fault if bet is not owned by this player and sets ep error diag</a>
+<a name="1484"><span class="lineNum">    1484 </span>            : </a>
+<a name="1485"><span class="lineNum">    1485 </span><span class="lineCov">     200030 :     if (pBet == nullptr)</span></a>
+<a name="1486"><span class="lineNum">    1486 </span>            :     {</a>
+<a name="1487"><span class="lineNum">    1487 </span><span class="lineCov">          3 :         EP_SET(ep, En::NullPointerError, Et::ProcessingError,</span></a>
+<a name="1488"><span class="lineNum">    1488 </span>            :                Es::Indeterminate, diagPrefix(2) + &quot;BetPtr is null.&quot;);</a>
+<a name="1489"><span class="lineNum">    1489 </span><span class="lineCov">          1 :         return true;</span></a>
+<a name="1490"><span class="lineNum">    1490 </span>            :     }</a>
+<a name="1491"><span class="lineNum">    1491 </span>            : </a>
+<a name="1492"><span class="lineNum">    1492 </span><span class="lineCov">     200029 :     if (findBetById(pBet-&gt;betId()) == nullptr)</span></a>
+<a name="1493"><span class="lineNum">    1493 </span>            :     {</a>
+<a name="1494"><span class="lineNum">    1494 </span><span class="lineCov">          2 :         if (pBet-&gt;player().getPlayerId() == playerId_)</span></a>
+<a name="1495"><span class="lineNum">    1495 </span>            :         {</a>
+<a name="1496"><span class="lineNum">    1496 </span>            :             // Bet was somehow created outside of makeOrChangeBet()</a>
+<a name="1497"><span class="lineNum">    1497 </span>            :             std::string s = fmt::format(</a>
+<a name="1498"><span class="lineNum">    1498 </span>            :                 &quot;{} Player:{} does not have this bet in their bet list; &quot;</a>
+<a name="1499"><span class="lineNum">    1499 </span>            :                 &quot;Programmer error; Must use Player::makeOrChangeBet() to make &quot;</a>
+<a name="1500"><span class="lineNum">    1500 </span><span class="lineCov">          2 :                 &quot;a bet; {}.&quot;, diagPrefix(2), playerName_, pBet-&gt;diagBetId());</span></a>
+<a name="1501"><span class="lineNum">    1501 </span><span class="lineCov">          3 :             EP_SET(ep, En::LogicError, Et::ProcessingError,</span></a>
+<a name="1502"><span class="lineNum">    1502 </span>            :                    Es::Indeterminate, s);</a>
+<a name="1503"><span class="lineNum">    1503 </span><span class="lineCov">          1 :             return true;</span></a>
+<a name="1504"><span class="lineNum">    1504 </span><span class="lineCov">          1 :         }</span></a>
+<a name="1505"><span class="lineNum">    1505 </span>            :         std::string s = fmt::format(</a>
+<a name="1506"><span class="lineNum">    1506 </span>            :             &quot;{} Player:{} does not own this bet {}; Owned by Player:{}.&quot;,</a>
+<a name="1507"><span class="lineNum">    1507 </span><span class="lineCov">          1 :             diagPrefix(2), playerName_,</span></a>
+<a name="1508"><span class="lineNum">    1508 </span><span class="lineCov">          3 :             pBet-&gt;diagBetId(), pBet-&gt;player().getName());</span></a>
+<a name="1509"><span class="lineNum">    1509 </span><span class="lineCov">          3 :         EP_SET(ep, En::InvalidAccessError, Et::ProcessingError,</span></a>
+<a name="1510"><span class="lineNum">    1510 </span>            :                Es::Indeterminate, s);</a>
+<a name="1511"><span class="lineNum">    1511 </span><span class="lineCov">          1 :         return true;</span></a>
+<a name="1512"><span class="lineNum">    1512 </span><span class="lineCov">          1 :     }</span></a>
+<a name="1513"><span class="lineNum">    1513 </span><span class="lineCov">     200027 :     return false;</span></a>
+<a name="1514"><span class="lineNum">    1514 </span>            : }</a>
+<a name="1515"><span class="lineNum">    1515 </span>            : </a>
+<a name="1516"><span class="lineNum">    1516 </span>            : //----------------------------------------------------------------</a>
 </pre>
       </td>
     </tr>

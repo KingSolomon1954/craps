@@ -1206,6 +1206,17 @@ Player::setName(const std::string& playerName)
 }
 
 //----------------------------------------------------------------
+//
+// The player id does not change, so the table, bets and anything else
+// that knows him by id are unaffected.
+//
+void
+Player::rename(const std::string& playerName)
+{
+    setName(playerName);
+}
+
+//----------------------------------------------------------------
 
 Gen::Money
 Player::getBalance() const

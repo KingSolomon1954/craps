@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="2594060780016148183">
+<analyzerinfo hash="2971248642072738220">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="LineInput"/>
+    <functioncall functionName="accepts"/>
     <functioncall functionName="beep"/>
+    <functioncall functionName="charset_"/>
     <functioncall functionName="clear"/>
     <functioncall functionName="cursorPos_"/>
     <functioncall functionName="erase"/>

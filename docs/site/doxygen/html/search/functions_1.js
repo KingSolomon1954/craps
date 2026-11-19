@@ -14,6 +14,8 @@ var searchData=
   ['bottom_11',['bottom',['../structCui_1_1WindowRect.html#a10dcc7d1f4144ea0e166377fb78325b2',1,'Cui::WindowRect']]],
   ['branch_12',['branch',['../classGen_1_1BuildInfo.html#a410fdd2aecba31fdfcd36791f60327ae',1,'Gen::BuildInfo']]],
   ['buckets_13',['buckets',['../classCraps_1_1Repeaters.html#ad5188e05a5c5566cd348596e0192665f',1,'Craps::Repeaters']]],
-  ['buildinfo_14',['BuildInfo',['../classGen_1_1BuildInfo.html#a9c6ce85b22f9ae8b7c0f7acfc52bfdd6',1,'Gen::BuildInfo::BuildInfo(std::string_view appName)'],['../classGen_1_1BuildInfo.html#a68be8576b24d0f53dd7f4f513b07bfe5',1,'Gen::BuildInfo::BuildInfo(std::string_view appName, unsigned bldMajor, unsigned bldMinor, unsigned bldPatch, unsigned bldNumber, unsigned bldEpochSecs, std::string_view bldDateTime, std::string_view bldCreator, std::string_view bldBranch, std::string_view bldCommitHash)']]],
-  ['bump_15',['bump',['../structCraps_1_1Counter.html#aaf5c8b919b980e4448cae8cfe64cedb4',1,'Craps::Counter']]]
+  ['buddyjoinstable_14',['buddyJoinsTable',['../classCtrl_1_1PlayerManager.html#ad88d6bebe970189ef063710ee4399bb2',1,'Ctrl::PlayerManager']]],
+  ['buddyleavestable_15',['buddyLeavesTable',['../classCtrl_1_1PlayerManager.html#a7719e22878f6b7fb79639f21c8e2501f',1,'Ctrl::PlayerManager']]],
+  ['buildinfo_16',['BuildInfo',['../classGen_1_1BuildInfo.html#a9c6ce85b22f9ae8b7c0f7acfc52bfdd6',1,'Gen::BuildInfo::BuildInfo(std::string_view appName)'],['../classGen_1_1BuildInfo.html#a68be8576b24d0f53dd7f4f513b07bfe5',1,'Gen::BuildInfo::BuildInfo(std::string_view appName, unsigned bldMajor, unsigned bldMinor, unsigned bldPatch, unsigned bldNumber, unsigned bldEpochSecs, std::string_view bldDateTime, std::string_view bldCreator, std::string_view bldBranch, std::string_view bldCommitHash)']]],
+  ['bump_17',['bump',['../structCraps_1_1Counter.html#aaf5c8b919b980e4448cae8cfe64cedb4',1,'Craps::Counter']]]
 ];

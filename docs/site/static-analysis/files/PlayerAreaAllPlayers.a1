@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="15834284202655543746">
+<analyzerinfo hash="4538011881949002994">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="Bet"/>
     <functioncall functionName="BetWithOdds"/>
@@ -9,11 +9,14 @@
     <functioncall functionName="FilledCircle"/>
     <functioncall functionName="HollowCircle"/>
     <functioncall functionName="LOG_ERROR"/>
+    <functioncall functionName="LOG_WARN"/>
     <functioncall functionName="MaxPlayers"/>
     <functioncall functionName="None"/>
+    <functioncall functionName="Player"/>
     <functioncall functionName="PlayerAreaAllPlayers"/>
     <functioncall functionName="assert"/>
     <functioncall functionName="begin"/>
+    <functioncall functionName="betId"/>
     <functioncall functionName="betToCuiBetName"/>
     <functioncall functionName="bets_"/>
     <functioncall functionName="buildPlayerInfo"/>
@@ -48,7 +51,9 @@
     <functioncall functionName="orderedPlayerIds"/>
     <functioncall functionName="pWin_"/>
     <functioncall functionName="playerColorPair"/>
+    <functioncall functionName="playerId"/>
     <functioncall functionName="playerName"/>
+    <functioncall functionName="players_"/>
     <functioncall functionName="push_back"/>
     <functioncall functionName="removePlayer"/>
     <functioncall functionName="reserve"/>

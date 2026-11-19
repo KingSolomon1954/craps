@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-16 15:37:45</td>
+            <td class="headerValue">2026-11-19 03:37:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -81,10 +81,10 @@
 <a name="19"><span class="lineNum">      19 </span>            : //----------------------------------------------------------------</a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            : Logger&amp;</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">    2101731 : Logger::instance()</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">    2101750 : Logger::instance()</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : {</a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">    2101731 :     static Logger instance;</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">    2101731 :     return instance;</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">    2101750 :     static Logger instance;</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">    2101750 :     return instance;</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : }</a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span>            : //----------------------------------------------------------------</a>
@@ -97,12 +97,12 @@
 <a name="35"><span class="lineNum">      35 </span>            : // if any, stays in use and the held messages are kept.</a>
 <a name="36"><span class="lineNum">      36 </span>            : //</a>
 <a name="37"><span class="lineNum">      37 </span>            : void</a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">        176 : Logger::setOutputFile(const std::string&amp; filename)</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">        184 : Logger::setOutputFile(const std::string&amp; filename)</span></a>
 <a name="39"><span class="lineNum">      39 </span>            : {</a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">        176 :     std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">        184 :     std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">        176 :     std::ofstream next(filename, std::ios::app);</span></a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        176 :     if (!next.is_open())</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">        184 :     std::ofstream next(filename, std::ios::app);</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        184 :     if (!next.is_open())</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :     {</a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">          1 :         int error_number = errno;</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
@@ -112,14 +112,14 @@
 <a name="50"><span class="lineNum">      50 </span><span class="lineCov">          1 :         throw std::runtime_error(diag);</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineCov">          1 :     }</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        177 :     for (const auto&amp; p : pending_)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        185 :     for (const auto&amp; p : pending_)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :     {</a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">          2 :         next &lt;&lt; p.line &lt;&lt; std::endl;</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :     }</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        175 :     pending_.clear();</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        183 :     pending_.clear();</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">        175 :     out_ = std::move(next);</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        177 : }</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">        183 :     out_ = std::move(next);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        185 : }</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span>            : //----------------------------------------------------------------</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
@@ -142,11 +142,11 @@
 <a name="80"><span class="lineNum">      80 </span>            : //----------------------------------------------------------------</a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
 <a name="82"><span class="lineNum">      82 </span>            : void</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">        173 : Logger::disableConsoleLogging()</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">        181 : Logger::disableConsoleLogging()</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : {</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">        519 :     if (consoleEnabled_) log(Level::Info, &quot;Console logging disabled&quot;);</span></a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">        173 :     consoleEnabled_ = false;</span></a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        173 : }</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">        543 :     if (consoleEnabled_) log(Level::Info, &quot;Console logging disabled&quot;);</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">        181 :     consoleEnabled_ = false;</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        181 : }</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span>            : //----------------------------------------------------------------</a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
@@ -180,10 +180,10 @@
 <a name="118"><span class="lineNum">     118 </span>            : //----------------------------------------------------------------</a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span>            : void</a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">         25 : Logger::logWarn(const std::string&amp; msg)</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">         28 : Logger::logWarn(const std::string&amp; msg)</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : {</a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">         25 :     log(Level::Warn,  msg);</span></a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">         25 : }</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">         28 :     log(Level::Warn,  msg);</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">         28 : }</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
 <a name="126"><span class="lineNum">     126 </span>            : //----------------------------------------------------------------</a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
@@ -201,68 +201,68 @@
 <a name="139"><span class="lineNum">     139 </span>            : // 2025-07-05 15:10:06.586 [DEBUG] TableStats::saveFile(/work/craps.log)</a>
 <a name="140"><span class="lineNum">     140 </span>            : //</a>
 <a name="141"><span class="lineNum">     141 </span>            : void</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     900545 : Logger::log(Level level, const std::string&amp; message)</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     900556 : Logger::log(Level level, const std::string&amp; message)</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : {</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     900545 :     std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     900556 :     std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
 <a name="145"><span class="lineNum">     145 </span>            :     </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">     900545 :     std::string ts = timestamp();</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     900545 :     std::string label = &quot; [&quot; + levelToString(level) + &quot;] &quot;;</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">     900556 :     std::string ts = timestamp();</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     900556 :     std::string label = &quot; [&quot; + levelToString(level) + &quot;] &quot;;</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : </a>
 <a name="149"><span class="lineNum">     149 </span>            :     // Always write to file, or hold until there is one.</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">     900545 :     std::ostringstream line;</span></a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">     900545 :     line &lt;&lt; ts &lt;&lt; std::left &lt;&lt; std::setw(9) &lt;&lt; label &lt;&lt; message;</span></a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">     900545 :     if (out_.is_open())</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">     900556 :     std::ostringstream line;</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">     900556 :     line &lt;&lt; ts &lt;&lt; std::left &lt;&lt; std::setw(9) &lt;&lt; label &lt;&lt; message;</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">     900556 :     if (out_.is_open())</span></a>
 <a name="153"><span class="lineNum">     153 </span>            :     {</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     900543 :         out_ &lt;&lt; line.str() &lt;&lt; std::endl;</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     900554 :         out_ &lt;&lt; line.str() &lt;&lt; std::endl;</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :     }</a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineCov">          2 :     else if (pending_.size() &lt; MaxPending)</span></a>
 <a name="157"><span class="lineNum">     157 </span>            :     {</a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineCov">          2 :         pending_.push_back({line.str()});</span></a>
 <a name="159"><span class="lineNum">     159 </span>            :     }</a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">     900545 :     if (consoleEnabled_)  // Write to console if enabled</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">     900556 :     if (consoleEnabled_)  // Write to console if enabled</span></a>
 <a name="162"><span class="lineNum">     162 </span>            :     {</a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">        173 :         std::cout &lt;&lt; ts &lt;&lt; levelColor(level)</span></a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">        173 :                &lt;&lt; std::left &lt;&lt; std::setw(9) &lt;&lt; label</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">        173 :                &lt;&lt; rang::style::reset &lt;&lt; message &lt;&lt; std::endl;</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">        181 :         std::cout &lt;&lt; ts &lt;&lt; levelColor(level)</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">        181 :                &lt;&lt; std::left &lt;&lt; std::setw(9) &lt;&lt; label</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">        181 :                &lt;&lt; rang::style::reset &lt;&lt; message &lt;&lt; std::endl;</span></a>
 <a name="166"><span class="lineNum">     166 </span>            :     }</a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     900547 : }</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     900558 : }</span></a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span>            : //----------------------------------------------------------------</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span>            : std::string</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     900545 : Logger::timestamp() const</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     900556 : Logger::timestamp() const</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : {</a>
 <a name="174"><span class="lineNum">     174 </span>            :     using namespace std::chrono;</a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">     900545 :     auto now = system_clock::now();</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     900545 :     auto time_t_now = system_clock::to_time_t(now);</span></a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     900545 :     auto ms = duration_cast&lt;milliseconds&gt;(now.time_since_epoch()) % 1000;</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">     900556 :     auto now = system_clock::now();</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     900556 :     auto time_t_now = system_clock::to_time_t(now);</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     900556 :     auto ms = duration_cast&lt;milliseconds&gt;(now.time_since_epoch()) % 1000;</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">     900545 :     std::tm tm{};</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">     900556 :     std::tm tm{};</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : #ifdef _WIN32</a>
 <a name="182"><span class="lineNum">     182 </span>            :     localtime_s(&amp;tm, &amp;time_t_now);</a>
 <a name="183"><span class="lineNum">     183 </span>            : #else</a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">     900545 :     localtime_r(&amp;time_t_now, &amp;tm);</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">     900556 :     localtime_r(&amp;time_t_now, &amp;tm);</span></a>
 <a name="185"><span class="lineNum">     185 </span>            : #endif</a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">     900545 :     std::ostringstream ss;</span></a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">     900545 :     ss &lt;&lt; std::put_time(&amp;tm, &quot;%F %T&quot;);  // e.g., 2025-06-25 13:45:12</span></a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">     900545 :     ss &lt;&lt; '.' &lt;&lt; std::setfill('0') &lt;&lt; std::setw(3) &lt;&lt; ms.count();  // append .XYZ</span></a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">    1801090 :     return ss.str();</span></a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">     900545 : }</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">     900556 :     std::ostringstream ss;</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">     900556 :     ss &lt;&lt; std::put_time(&amp;tm, &quot;%F %T&quot;);  // e.g., 2025-06-25 13:45:12</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">     900556 :     ss &lt;&lt; '.' &lt;&lt; std::setfill('0') &lt;&lt; std::setw(3) &lt;&lt; ms.count();  // append .XYZ</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">    1801112 :     return ss.str();</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">     900556 : }</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span>            : //----------------------------------------------------------------</a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
 <a name="195"><span class="lineNum">     195 </span>            : std::string</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     900545 : Logger::levelToString(Level level) const</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     900556 : Logger::levelToString(Level level) const</span></a>
 <a name="197"><span class="lineNum">     197 </span>            : {</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">     900545 :     switch (level)</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">     900556 :     switch (level)</span></a>
 <a name="199"><span class="lineNum">     199 </span>            :     {</a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :         case Level::Debug: return &quot;DEBUG&quot;;</span></a>
 <a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :         case Level::Trace: return &quot;TRACE&quot;;</span></a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    2401473 :         case Level::Info:  return &quot;INFO&quot;;</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">         75 :         case Level::Warn:  return &quot;WARN&quot;;</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    2401497 :         case Level::Info:  return &quot;INFO&quot;;</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">         84 :         case Level::Warn:  return &quot;WARN&quot;;</span></a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineCov">     300087 :         case Level::Error: return &quot;ERROR&quot;;</span></a>
 <a name="205"><span class="lineNum">     205 </span>            :     }</a>
 <a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :     return &quot;UNKNOWN&quot;;</span></a>
@@ -271,13 +271,13 @@
 <a name="209"><span class="lineNum">     209 </span>            : //----------------------------------------------------------------</a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
 <a name="211"><span class="lineNum">     211 </span>            : rang::fg</a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">        173 : Logger::levelColor(Level level) const</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">        181 : Logger::levelColor(Level level) const</span></a>
 <a name="213"><span class="lineNum">     213 </span>            : {</a>
 <a name="214"><span class="lineNum">     214 </span>            :     using namespace rang;</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">        173 :     switch (level) {</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">        181 :     switch (level) {</span></a>
 <a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :         case Level::Debug: return fg::cyan;</span></a>
 <a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :         case Level::Trace: return fg::cyan;</span></a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">        173 :         case Level::Info:  return fg::green;</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">        181 :         case Level::Info:  return fg::green;</span></a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :         case Level::Warn:  return fg::yellow;</span></a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :         case Level::Error: return fg::red;</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :     }</a>

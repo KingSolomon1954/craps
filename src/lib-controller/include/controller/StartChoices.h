@@ -8,8 +8,10 @@
 
 #include <filesystem>
 #include <optional>
+#include <map>
 #include <string>
 #include <vector>
+#include <controller/PlayerManifest.h>
 #include <controller/UserState.h>
 
 namespace Gen {
@@ -42,6 +44,11 @@ public:
         // Where the files named above must exist.
         std::filesystem::path                   tablesDir;
         std::filesystem::path                   playersDir;
+
+        // File name -> kind, from players.yaml. When not empty, the user
+        // player must be a user player, buddies must be buddy players,
+        // and all must be in it. When empty nothing is checked.
+        std::map<std::string, PlayerKind>       kinds;
     };
 
     // The answer.

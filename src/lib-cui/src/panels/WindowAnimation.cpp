@@ -45,6 +45,11 @@ WindowAnimation::WindowAnimation()
     (void) Ctrl::CrapsReaders::readTableCurrentShooter(tid, pid, ep);
     
     (void) Ctrl::CrapsReaders::readPlayerName(pid, shooter_, ep);
+    shooterPlayerId_ = pid;
+    if (const auto pColor = ColorManager::instance().getPlayerColor(pid))
+    {
+        shooterPlayerColor_ = *pColor;
+    }
 }
 
 //----------------------------------------------------------------
@@ -86,6 +91,49 @@ WindowAnimation::onNewShooter(const Craps::PlayerId& id)
     const auto pColor = ColorManager::instance().getPlayerColor(id);
     assert(pColor.has_value());
     shooterPlayerColor_ = *pColor;
+}
+
+//----------------------------------------------------------------
+//
+// Players were renamed, left or joined. Learn who the shooter is now
+// and what he is called. The color assignments are already up to date.
+//
+void
+WindowAnimation::onRosterChanged()
+{
+    Gen::ErrorPass ep;
+    Craps::TableId tid;
+    Craps::PlayerId pid;
+    if (Ctrl::CrapsReaders::getActiveCrapsTable(tid, ep) ==
+            Gen::ReturnCode::Fail ||
+        Ctrl::CrapsReaders::readTableCurrentShooter(tid, pid, ep) ==
+            Gen::ReturnCode::Fail)
+    {
+        return;               // No shooter right now; keep what is shown
+    }
+
+    std::string name;
+    if (Ctrl::CrapsReaders::readPlayerName(pid, name, ep) ==
+        Gen::ReturnCode::Fail)
+    {
+        return;
+    }
+    const auto pColor = ColorManager::instance().getPlayerColor(pid);
+    if (!pColor.has_value())
+    {
+        return;
+    }
+
+    shooterPlayerId_    = pid;
+    shooter_            = name;
+    shooterPlayerColor_ = *pColor;
+
+    // The dice may be mid-throw, showing the shooter who threw them.
+    if (prevShooterPlayerId_ == pid)
+    {
+        prevShooter_            = name;
+        prevShooterPlayerColor_ = *pColor;
+    }
 }
 
 //----------------------------------------------------------------

@@ -47,7 +47,7 @@ run-royalcraps:  # Execute on container
 	    --usr-config-dir /work/craps/_build/local/share/royalcraps \
 	    --usr-data-dir   /work/craps/_build/local/share/royalcraps \
 	    --usr-state-dir  /work/craps/_build/local/state/royalcraps \
-	--debug --trace
+	    --debug --trace
 
 run-royalcraps-local:  # Execute on local host
 	@$(STARTING_FOLDER) \
@@ -56,7 +56,28 @@ run-royalcraps-local:  # Execute on local host
 	    --usr-config-dir _build/local/share/royalcraps \
 	    --usr-data-dir   _build/local/share/royalcraps \
 	    --usr-state-dir  _build/local/state/royalcraps \
-	--debug --trace
+	    --debug --trace
+
+run-royalcraps-as-if-fresh-install:  # Execute on container
+	podman exec -w $(WORKDIR) gcc14-tools rm -rf /tmp/rc
+	podman exec -it -w $(WORKDIR) \
+	    -e LANG=en_US_UTF-8 -e LC_ALL=en_US.UTF-8 \
+	    gcc14-tools bin/royalcraps \
+	    --sys-config-dir /work/craps/assets/ \
+	    --usr-config-dir /tmp/rc/cfg \
+	    --usr-data-dir   /tmp/rc/data \
+	    --usr-state-dir  /tmp/rc/state \
+	    --debug --trace
+
+run-royalcraps-local-as-if-fresh-install:  # Execute on local host
+	rm -rf ~/tmp/rc
+	@$(STARTING_FOLDER) \
+	_build/debug/bin/royalcraps \
+	    --sys-config-dir  assets/ \
+	    --usr-config-dir ~/tmp/rc/cfg \
+	    --usr-data-dir   ~/tmp/rc/data \
+	    --usr-state-dir  ~/tmp/rc/state \
+	    --debug --trace
 
 #-----------------------------
 #

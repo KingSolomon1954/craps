@@ -13,9 +13,25 @@ namespace Cui {
 
 //----------------------------------------------------------------
 
-LineInput::LineInput(std::size_t maxChars)
+LineInput::LineInput(std::size_t maxChars, Charset charset)
     : maxChars_(maxChars)
+    , charset_(charset)
 {
+}
+
+//----------------------------------------------------------------
+
+bool
+LineInput::accepts(int ch) const
+{
+    // Negative values and ncurses KEY_ codes (above 255) never match.
+    if (ch < 0 || ch > 255) return false;
+
+    if (charset_ == Charset::Digits)
+    {
+        return std::isdigit(static_cast<unsigned char>(ch)) != 0;
+    }
+    return ch >= 0x20 && ch <= 0x7e;
 }
 
 //----------------------------------------------------------------
@@ -54,8 +70,7 @@ LineInput::handleKey(int ch)
         return true;
     }
 
-    // Avoid passing negative ncurses key codes to std::isdigit.
-    if (ch >= 0 && std::isdigit(static_cast<unsigned char>(ch)))
+    if (accepts(ch))
     {
         if (value_.size() >= maxChars_)
         {

@@ -56,6 +56,7 @@ public:
 
     void onBetResolved();
 
+    void rebuild();
     void onPlayerJoinedTable(const Craps::PlayerId& playerId);
     void onPlayerLeftTable  (const Craps::PlayerId& playerId);
     /// @}

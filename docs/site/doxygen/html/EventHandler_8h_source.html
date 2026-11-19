@@ -122,16 +122,17 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">void</span> onReqAutoFill (<span class="keyword">const</span> <a class="code hl_struct" href="structCtrl_1_1ReqAutoFill.html">Ctrl::ReqAutoFill</a>&amp; ev)      <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">void</span> onReqQuickBet (<span class="keyword">const</span> <a class="code hl_struct" href="structCtrl_1_1ReqQuickBet.html">Ctrl::ReqQuickBet</a>&amp; ev)      <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">void</span> onReqSwitchPlayer(<span class="keyword">const</span> <a class="code hl_struct" href="structCtrl_1_1ReqSwitchPlayer.html">Ctrl::ReqSwitchPlayer</a>&amp; ev) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">void</span> onReqTerminate(<span class="keyword">const</span> <a class="code hl_struct" href="structCtrl_1_1ReqTerminate.html">Ctrl::ReqTerminate</a>&amp; ev)     <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">void</span> setLastFill(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a>&amp; playerId,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                     <span class="keyword">const</span> <a class="code hl_class" href="classCraps_1_1CrapsBet.html">Craps::CrapsBet</a>&amp; bet, <span class="keywordtype">bool</span> isOddsBet) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>};</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">void</span> onReqManagePlayer(<span class="keyword">const</span> <a class="code hl_struct" href="structCtrl_1_1ReqManagePlayer.html">Ctrl::ReqManagePlayer</a>&amp; ev) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">void</span> onReqTerminate(<span class="keyword">const</span> <a class="code hl_struct" href="structCtrl_1_1ReqTerminate.html">Ctrl::ReqTerminate</a>&amp; ev)     <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> setLastFill(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a>&amp; playerId,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                     <span class="keyword">const</span> <a class="code hl_class" href="classCraps_1_1CrapsBet.html">Craps::CrapsBet</a>&amp; bet, <span class="keywordtype">bool</span> isOddsBet) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
 </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">/*-----------------------------------------------------------*/</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>} <span class="comment">// namespace Ctrl</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">//----------------------------------------------------------------</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">/*-----------------------------------------------------------*/</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>} <span class="comment">// namespace Ctrl</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="ttc" id="aCrapsTypes_8h_html"><div class="ttname"><a href="CrapsTypes_8h.html">CrapsTypes.h</a></div></div>
 <div class="ttc" id="aGameEvents_8h_html"><div class="ttname"><a href="GameEvents_8h.html">GameEvents.h</a></div></div>
 <div class="ttc" id="aclassCraps_1_1CrapsBet_html"><div class="ttname"><a href="classCraps_1_1CrapsBet.html">Craps::CrapsBet</a></div><div class="ttdoc">A bet on the Craps table.</div><div class="ttdef"><b>Definition</b> CrapsBet.h:33</div></div>
@@ -140,17 +141,18 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclassCtrl_1_1EventHandler_html_aa6448bf4f070bc03cf66289b75412563"><div class="ttname"><a href="classCtrl_1_1EventHandler.html#aa6448bf4f070bc03cf66289b75412563">Ctrl::EventHandler::~EventHandler</a></div><div class="ttdeci">~EventHandler()=default</div></div>
 <div class="ttc" id="anamespaceCraps_html_a9efd0f28587bc0010ce60ab037e08a8d"><div class="ttname"><a href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a></div><div class="ttdeci">Gen::Uuid PlayerId</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:24</div></div>
 <div class="ttc" id="anamespaceCtrl_html"><div class="ttname"><a href="namespaceCtrl.html">Ctrl</a></div><div class="ttdoc">Controller Library (lib-controller)</div><div class="ttdef"><b>Definition</b> AutoFill.h:15</div></div>
-<div class="ttc" id="astructCtrl_1_1ReqAutoFill_html"><div class="ttname"><a href="structCtrl_1_1ReqAutoFill.html">Ctrl::ReqAutoFill</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:583</div></div>
-<div class="ttc" id="astructCtrl_1_1ReqMakeBet_html"><div class="ttname"><a href="structCtrl_1_1ReqMakeBet.html">Ctrl::ReqMakeBet</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:471</div></div>
-<div class="ttc" id="astructCtrl_1_1ReqOddsBet_html"><div class="ttname"><a href="structCtrl_1_1ReqOddsBet.html">Ctrl::ReqOddsBet</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:547</div></div>
-<div class="ttc" id="astructCtrl_1_1ReqQuickBet_html"><div class="ttname"><a href="structCtrl_1_1ReqQuickBet.html">Ctrl::ReqQuickBet</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:597</div></div>
-<div class="ttc" id="astructCtrl_1_1ReqRollDice_html"><div class="ttname"><a href="structCtrl_1_1ReqRollDice.html">Ctrl::ReqRollDice</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:574</div></div>
-<div class="ttc" id="astructCtrl_1_1ReqSwitchPlayer_html"><div class="ttname"><a href="structCtrl_1_1ReqSwitchPlayer.html">Ctrl::ReqSwitchPlayer</a></div><div class="ttdoc">The person wants to play as a different player.</div><div class="ttdef"><b>Definition</b> GameEvents.h:506</div></div>
-<div class="ttc" id="astructCtrl_1_1ReqTerminate_html"><div class="ttname"><a href="structCtrl_1_1ReqTerminate.html">Ctrl::ReqTerminate</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:611</div></div>
+<div class="ttc" id="astructCtrl_1_1ReqAutoFill_html"><div class="ttname"><a href="structCtrl_1_1ReqAutoFill.html">Ctrl::ReqAutoFill</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:642</div></div>
+<div class="ttc" id="astructCtrl_1_1ReqMakeBet_html"><div class="ttname"><a href="structCtrl_1_1ReqMakeBet.html">Ctrl::ReqMakeBet</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:474</div></div>
+<div class="ttc" id="astructCtrl_1_1ReqManagePlayer_html"><div class="ttname"><a href="structCtrl_1_1ReqManagePlayer.html">Ctrl::ReqManagePlayer</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:562</div></div>
+<div class="ttc" id="astructCtrl_1_1ReqOddsBet_html"><div class="ttname"><a href="structCtrl_1_1ReqOddsBet.html">Ctrl::ReqOddsBet</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:606</div></div>
+<div class="ttc" id="astructCtrl_1_1ReqQuickBet_html"><div class="ttname"><a href="structCtrl_1_1ReqQuickBet.html">Ctrl::ReqQuickBet</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:656</div></div>
+<div class="ttc" id="astructCtrl_1_1ReqRollDice_html"><div class="ttname"><a href="structCtrl_1_1ReqRollDice.html">Ctrl::ReqRollDice</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:633</div></div>
+<div class="ttc" id="astructCtrl_1_1ReqSwitchPlayer_html"><div class="ttname"><a href="structCtrl_1_1ReqSwitchPlayer.html">Ctrl::ReqSwitchPlayer</a></div><div class="ttdoc">The person wants to play as a different player.</div><div class="ttdef"><b>Definition</b> GameEvents.h:509</div></div>
+<div class="ttc" id="astructCtrl_1_1ReqTerminate_html"><div class="ttname"><a href="structCtrl_1_1ReqTerminate.html">Ctrl::ReqTerminate</a></div><div class="ttdef"><b>Definition</b> GameEvents.h:670</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 16 2026 15:42:24 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-16 15:37:45</td>
+            <td class="headerValue">2026-11-19 03:37:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -97,83 +97,84 @@
 <a name="35"><span class="lineNum">      35 </span>            :     void onePlayer();</a>
 <a name="36"><span class="lineNum">      36 </span>            :     void nextPlayer();</a>
 <a name="37"><span class="lineNum">      37 </span>            :     void prevPlayer();</a>
-<a name="38"><span class="lineNum">      38 </span>            :     void onBetMade(</a>
-<a name="39"><span class="lineNum">      39 </span>            :         const Craps::PlayerId&amp; playerId,</a>
-<a name="40"><span class="lineNum">      40 </span>            :         Craps::BetId           betId,</a>
-<a name="41"><span class="lineNum">      41 </span>            :         BetName                betName,</a>
-<a name="42"><span class="lineNum">      42 </span>            :         Gen::Money             contractAmount,</a>
-<a name="43"><span class="lineNum">      43 </span>            :         Gen::Money             oddsAmount,</a>
-<a name="44"><span class="lineNum">      44 </span>            :         unsigned               pivot);</a>
-<a name="45"><span class="lineNum">      45 </span>            : </a>
-<a name="46"><span class="lineNum">      46 </span>            :     void onBetChanged(</a>
-<a name="47"><span class="lineNum">      47 </span>            :         const Craps::PlayerId&amp; playerId,</a>
-<a name="48"><span class="lineNum">      48 </span>            :         Craps::BetId           betId,</a>
-<a name="49"><span class="lineNum">      49 </span>            :         BetName                betName,</a>
-<a name="50"><span class="lineNum">      50 </span>            :         Gen::Money             contractAmount,</a>
-<a name="51"><span class="lineNum">      51 </span>            :         Gen::Money             oddsAmount,</a>
-<a name="52"><span class="lineNum">      52 </span>            :         unsigned               pivot);</a>
-<a name="53"><span class="lineNum">      53 </span>            : </a>
-<a name="54"><span class="lineNum">      54 </span>            :     void onBetResolved(</a>
-<a name="55"><span class="lineNum">      55 </span>            :         const Craps::PlayerId&amp; playerId,</a>
-<a name="56"><span class="lineNum">      56 </span>            :         BetName                betName,</a>
-<a name="57"><span class="lineNum">      57 </span>            :         Craps::BetId           betId,</a>
-<a name="58"><span class="lineNum">      58 </span>            :         Gen::Money             amountWin,</a>
-<a name="59"><span class="lineNum">      59 </span>            :         Gen::Money             amountLose);</a>
-<a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span>            :     /// @}</a>
-<a name="62"><span class="lineNum">      62 </span>            : </a>
-<a name="63"><span class="lineNum">      63 </span>            :     /// @name Observers</a>
-<a name="64"><span class="lineNum">      64 </span>            :     /// @{</a>
-<a name="65"><span class="lineNum">      65 </span>            :     /// @}</a>
-<a name="66"><span class="lineNum">      66 </span>            :     </a>
-<a name="67"><span class="lineNum">      67 </span>            : private:</a>
-<a name="68"><span class="lineNum">      68 </span>            :     </a>
-<a name="69"><span class="lineNum">      69 </span>            :     struct Layout</a>
-<a name="70"><span class="lineNum">      70 </span>            :     {</a>
-<a name="71"><span class="lineNum">      71 </span>            :         using L = LayoutCrapsScreen;</a>
-<a name="72"><span class="lineNum">      72 </span>            :         </a>
-<a name="73"><span class="lineNum">      73 </span>            :         // Sizing and location based on LayoutCrapsScreen</a>
-<a name="74"><span class="lineNum">      74 </span>            :         static constexpr int playerAreaTopRow   = L::playerAreaBorderTopRow   + 1;</a>
-<a name="75"><span class="lineNum">      75 </span>            :         static constexpr int playerAreaBotRow   = L::playerAreaBorderBotRow   - 1;</a>
-<a name="76"><span class="lineNum">      76 </span>            :         static constexpr int playerAreaLeftCol  = L::playerAreaBorderLeftCol  + 1;</a>
-<a name="77"><span class="lineNum">      77 </span>            :         static constexpr int playerAreaRightCol = L::playerAreaBorderRightCol - 1;</a>
-<a name="78"><span class="lineNum">      78 </span>            :         static constexpr int playerAreaHeight   = playerAreaBotRow   - playerAreaTopRow  + 1;</a>
-<a name="79"><span class="lineNum">      79 </span>            :         static constexpr int playerAreaWidth    = playerAreaRightCol - playerAreaLeftCol + 1;</a>
-<a name="80"><span class="lineNum">      80 </span>            : </a>
-<a name="81"><span class="lineNum">      81 </span>            :         static_assert(playerAreaTopRow   == 5);</a>
-<a name="82"><span class="lineNum">      82 </span>            :         static_assert(playerAreaBotRow   == 23);</a>
-<a name="83"><span class="lineNum">      83 </span>            :         static_assert(playerAreaLeftCol  == 1);</a>
-<a name="84"><span class="lineNum">      84 </span>            :         static_assert(playerAreaRightCol == 68);</a>
-<a name="85"><span class="lineNum">      85 </span>            :         static_assert(playerAreaHeight   == 19);</a>
-<a name="86"><span class="lineNum">      86 </span>            :         static_assert(playerAreaWidth    == 68);</a>
-<a name="87"><span class="lineNum">      87 </span>            :     };        </a>
-<a name="88"><span class="lineNum">      88 </span>            : </a>
-<a name="89"><span class="lineNum">      89 </span>            :     enum class OneOrAll</a>
-<a name="90"><span class="lineNum">      90 </span>            :     {</a>
-<a name="91"><span class="lineNum">      91 </span>            :         OnePlayer,</a>
-<a name="92"><span class="lineNum">      92 </span>            :         AllPlayers</a>
-<a name="93"><span class="lineNum">      93 </span>            :     };</a>
-<a name="94"><span class="lineNum">      94 </span>            : </a>
-<a name="95"><span class="lineNum">      95 </span>            :     std::vector&lt;Craps::PlayerId&gt; playerIds_;</a>
-<a name="96"><span class="lineNum">      96 </span>            :     PlayerAreaAllPlayers         allPlayersView_;</a>
-<a name="97"><span class="lineNum">      97 </span>            :     PlayerAreaOnePlayer          onePlayerView_;</a>
-<a name="98"><span class="lineNum">      98 </span>            :     OneOrAll                     currentFocus_ = OneOrAll::OnePlayer;</a>
-<a name="99"><span class="lineNum">      99 </span>            : </a>
-<a name="100"><span class="lineNum">     100 </span>            : private:</a>
-<a name="101"><span class="lineNum">     101 </span>            :     WindowPlayerArea();</a>
-<a name="102"><span class="lineNum">     102 </span>            :     void createWindow();</a>
-<a name="103"><span class="lineNum">     103 </span>            :     void drawExternalJunctions();</a>
-<a name="104"><span class="lineNum">     104 </span>            :     void drawInternalBorders();</a>
-<a name="105"><span class="lineNum">     105 </span>            :     void drawStaticContent();</a>
-<a name="106"><span class="lineNum">     106 </span>            :         </a>
-<a name="107"><span class="lineNum">     107 </span>            :     void advancePlayer(bool next);</a>
-<a name="108"><span class="lineNum">     108 </span>            :     Craps::PlayerId getNextPlayerId(const Craps::PlayerId&amp; pid) const;</a>
-<a name="109"><span class="lineNum">     109 </span>            :     Craps::PlayerId getPrevPlayerId(const Craps::PlayerId&amp; pid) const;</a>
-<a name="110"><span class="lineNum">     110 </span>            : };</a>
-<a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span>            : } // namespace Cui</a>
-<a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span>            : //----------------------------------------------------------------</a>
+<a name="38"><span class="lineNum">      38 </span>            :     void onRosterChanged();   // Players, order or names changed</a>
+<a name="39"><span class="lineNum">      39 </span>            :     void onBetMade(</a>
+<a name="40"><span class="lineNum">      40 </span>            :         const Craps::PlayerId&amp; playerId,</a>
+<a name="41"><span class="lineNum">      41 </span>            :         Craps::BetId           betId,</a>
+<a name="42"><span class="lineNum">      42 </span>            :         BetName                betName,</a>
+<a name="43"><span class="lineNum">      43 </span>            :         Gen::Money             contractAmount,</a>
+<a name="44"><span class="lineNum">      44 </span>            :         Gen::Money             oddsAmount,</a>
+<a name="45"><span class="lineNum">      45 </span>            :         unsigned               pivot);</a>
+<a name="46"><span class="lineNum">      46 </span>            : </a>
+<a name="47"><span class="lineNum">      47 </span>            :     void onBetChanged(</a>
+<a name="48"><span class="lineNum">      48 </span>            :         const Craps::PlayerId&amp; playerId,</a>
+<a name="49"><span class="lineNum">      49 </span>            :         Craps::BetId           betId,</a>
+<a name="50"><span class="lineNum">      50 </span>            :         BetName                betName,</a>
+<a name="51"><span class="lineNum">      51 </span>            :         Gen::Money             contractAmount,</a>
+<a name="52"><span class="lineNum">      52 </span>            :         Gen::Money             oddsAmount,</a>
+<a name="53"><span class="lineNum">      53 </span>            :         unsigned               pivot);</a>
+<a name="54"><span class="lineNum">      54 </span>            : </a>
+<a name="55"><span class="lineNum">      55 </span>            :     void onBetResolved(</a>
+<a name="56"><span class="lineNum">      56 </span>            :         const Craps::PlayerId&amp; playerId,</a>
+<a name="57"><span class="lineNum">      57 </span>            :         BetName                betName,</a>
+<a name="58"><span class="lineNum">      58 </span>            :         Craps::BetId           betId,</a>
+<a name="59"><span class="lineNum">      59 </span>            :         Gen::Money             amountWin,</a>
+<a name="60"><span class="lineNum">      60 </span>            :         Gen::Money             amountLose);</a>
+<a name="61"><span class="lineNum">      61 </span>            : </a>
+<a name="62"><span class="lineNum">      62 </span>            :     /// @}</a>
+<a name="63"><span class="lineNum">      63 </span>            : </a>
+<a name="64"><span class="lineNum">      64 </span>            :     /// @name Observers</a>
+<a name="65"><span class="lineNum">      65 </span>            :     /// @{</a>
+<a name="66"><span class="lineNum">      66 </span>            :     /// @}</a>
+<a name="67"><span class="lineNum">      67 </span>            :     </a>
+<a name="68"><span class="lineNum">      68 </span>            : private:</a>
+<a name="69"><span class="lineNum">      69 </span>            :     </a>
+<a name="70"><span class="lineNum">      70 </span>            :     struct Layout</a>
+<a name="71"><span class="lineNum">      71 </span>            :     {</a>
+<a name="72"><span class="lineNum">      72 </span>            :         using L = LayoutCrapsScreen;</a>
+<a name="73"><span class="lineNum">      73 </span>            :         </a>
+<a name="74"><span class="lineNum">      74 </span>            :         // Sizing and location based on LayoutCrapsScreen</a>
+<a name="75"><span class="lineNum">      75 </span>            :         static constexpr int playerAreaTopRow   = L::playerAreaBorderTopRow   + 1;</a>
+<a name="76"><span class="lineNum">      76 </span>            :         static constexpr int playerAreaBotRow   = L::playerAreaBorderBotRow   - 1;</a>
+<a name="77"><span class="lineNum">      77 </span>            :         static constexpr int playerAreaLeftCol  = L::playerAreaBorderLeftCol  + 1;</a>
+<a name="78"><span class="lineNum">      78 </span>            :         static constexpr int playerAreaRightCol = L::playerAreaBorderRightCol - 1;</a>
+<a name="79"><span class="lineNum">      79 </span>            :         static constexpr int playerAreaHeight   = playerAreaBotRow   - playerAreaTopRow  + 1;</a>
+<a name="80"><span class="lineNum">      80 </span>            :         static constexpr int playerAreaWidth    = playerAreaRightCol - playerAreaLeftCol + 1;</a>
+<a name="81"><span class="lineNum">      81 </span>            : </a>
+<a name="82"><span class="lineNum">      82 </span>            :         static_assert(playerAreaTopRow   == 5);</a>
+<a name="83"><span class="lineNum">      83 </span>            :         static_assert(playerAreaBotRow   == 23);</a>
+<a name="84"><span class="lineNum">      84 </span>            :         static_assert(playerAreaLeftCol  == 1);</a>
+<a name="85"><span class="lineNum">      85 </span>            :         static_assert(playerAreaRightCol == 68);</a>
+<a name="86"><span class="lineNum">      86 </span>            :         static_assert(playerAreaHeight   == 19);</a>
+<a name="87"><span class="lineNum">      87 </span>            :         static_assert(playerAreaWidth    == 68);</a>
+<a name="88"><span class="lineNum">      88 </span>            :     };        </a>
+<a name="89"><span class="lineNum">      89 </span>            : </a>
+<a name="90"><span class="lineNum">      90 </span>            :     enum class OneOrAll</a>
+<a name="91"><span class="lineNum">      91 </span>            :     {</a>
+<a name="92"><span class="lineNum">      92 </span>            :         OnePlayer,</a>
+<a name="93"><span class="lineNum">      93 </span>            :         AllPlayers</a>
+<a name="94"><span class="lineNum">      94 </span>            :     };</a>
+<a name="95"><span class="lineNum">      95 </span>            : </a>
+<a name="96"><span class="lineNum">      96 </span>            :     std::vector&lt;Craps::PlayerId&gt; playerIds_;</a>
+<a name="97"><span class="lineNum">      97 </span>            :     PlayerAreaAllPlayers         allPlayersView_;</a>
+<a name="98"><span class="lineNum">      98 </span>            :     PlayerAreaOnePlayer          onePlayerView_;</a>
+<a name="99"><span class="lineNum">      99 </span>            :     OneOrAll                     currentFocus_ = OneOrAll::OnePlayer;</a>
+<a name="100"><span class="lineNum">     100 </span>            : </a>
+<a name="101"><span class="lineNum">     101 </span>            : private:</a>
+<a name="102"><span class="lineNum">     102 </span>            :     WindowPlayerArea();</a>
+<a name="103"><span class="lineNum">     103 </span>            :     void createWindow();</a>
+<a name="104"><span class="lineNum">     104 </span>            :     void drawExternalJunctions();</a>
+<a name="105"><span class="lineNum">     105 </span>            :     void drawInternalBorders();</a>
+<a name="106"><span class="lineNum">     106 </span>            :     void drawStaticContent();</a>
+<a name="107"><span class="lineNum">     107 </span>            :         </a>
+<a name="108"><span class="lineNum">     108 </span>            :     void advancePlayer(bool next);</a>
+<a name="109"><span class="lineNum">     109 </span>            :     Craps::PlayerId getNextPlayerId(const Craps::PlayerId&amp; pid) const;</a>
+<a name="110"><span class="lineNum">     110 </span>            :     Craps::PlayerId getPrevPlayerId(const Craps::PlayerId&amp; pid) const;</a>
+<a name="111"><span class="lineNum">     111 </span>            : };</a>
+<a name="112"><span class="lineNum">     112 </span>            : </a>
+<a name="113"><span class="lineNum">     113 </span>            : } // namespace Cui</a>
+<a name="114"><span class="lineNum">     114 </span>            : </a>
+<a name="115"><span class="lineNum">     115 </span>            : //----------------------------------------------------------------</a>
 </pre>
       </td>
     </tr>

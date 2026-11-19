@@ -17,6 +17,8 @@ add_library(cui STATIC
     src/dialogs/DialogConfirm.cpp
     src/dialogs/DialogError.cpp
     src/dialogs/DialogMessage.cpp
+    src/dialogs/DialogPickPlayer.cpp
+    src/dialogs/DialogTextInput.cpp
     src/layouts/LayoutCrapsScreen.cpp
     src/managers/CarrierBet.cpp
     src/managers/ColorManager.cpp

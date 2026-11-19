@@ -53,6 +53,37 @@ PlayerAreaOnePlayer::buildPlayerInfo()
 
 //----------------------------------------------------------------
 
+//
+// Who is at the table or a name has changed. Learn the players again.
+// Keep showing the same player if he is still here, otherwise the user
+// player, who is always first.
+//
+void
+PlayerAreaOnePlayer::rebuild()
+{
+    Craps::PlayerId showing;
+    if (playerIndex_ >= 0 &&
+        static_cast<std::size_t>(playerIndex_) < players_.size())
+    {
+        showing = players_[playerIndex_].playerId;
+    }
+
+    buildPlayerInfo();
+
+    playerIndex_ = 0;
+    for (std::size_t i = 0; i < players_.size(); ++i)
+    {
+        if (players_[i].playerId == showing)
+        {
+            playerIndex_ = static_cast<int>(i);
+            break;
+        }
+    }
+    refreshAllBets();
+}
+
+//----------------------------------------------------------------
+
 std::size_t
 PlayerAreaOnePlayer::removePlayer(const Craps::PlayerId& playerId)
 {
@@ -103,6 +134,15 @@ PlayerAreaOnePlayer::drawStaticContent()
 {
     drawName();
     drawLabels();
+
+    // A full redraw erased the window. Put back the amounts that exist.
+    for (const auto& b : bets_)
+    {
+        if (b.amount > 0)
+        {
+            drawOneBet(b);
+        }
+    }
 }
 
 //----------------------------------------------------------------

@@ -22,7 +22,14 @@ namespace Cui
 class LineInput
 {
 public:
-    explicit LineInput(std::size_t maxChars);
+    /// Which characters the field accepts.
+    enum class Charset
+    {
+        Digits,      ///< 0-9 only, for amounts
+        PlayerName   ///< printable ASCII, letters, digits, space, punctuation
+    };
+
+    explicit LineInput(std::size_t maxChars, Charset charset = Charset::Digits);
 
     /// Process an editing key. Returns false for keys not handled here.
     bool handleKey(int ch);
@@ -38,6 +45,9 @@ private:
     std::string value_;
     std::size_t cursorPos_ = 0;
     std::size_t maxChars_;
+    Charset     charset_;
+
+    bool accepts(int ch) const;
 };
 
 } // namespace Cui

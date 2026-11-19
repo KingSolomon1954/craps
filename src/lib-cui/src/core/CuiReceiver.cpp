@@ -38,6 +38,42 @@ CuiReceiver::CuiReceiver()
             this->onRspOddsBet(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::RspSwitchPlayer>(
+        [this](const Ctrl::RspSwitchPlayer& ev)
+        {
+            this->onRspSwitchPlayer(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::RspManagePlayer>(
+        [this](const Ctrl::RspManagePlayer& ev)
+        {
+            this->onRspManagePlayer(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::UslPlayerJoinedTable>(
+        [this](const Ctrl::UslPlayerJoinedTable& ev)
+        {
+            this->onPlayerJoinedTable(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::UslPlayerLeftTable>(
+        [this](const Ctrl::UslPlayerLeftTable& ev)
+        {
+            this->onPlayerLeftTable(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::UslUserPlayerSwitched>(
+        [this](const Ctrl::UslUserPlayerSwitched& ev)
+        {
+            this->onUserPlayerSwitched(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::UslPlayerRenamed>(
+        [this](const Ctrl::UslPlayerRenamed& ev)
+        {
+            this->onPlayerRenamed(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::UslBettingClosed>(
         [this](const Ctrl::UslBettingClosed& ev)
         {
@@ -425,3 +461,70 @@ CuiReceiver::onQuickBetChanged(const Ctrl::UslQuickBetChanged& ev) const
 
 //----------------------------------------------------------------
 
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onRspSwitchPlayer(const Ctrl::RspSwitchPlayer& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onRspSwitchPlayer()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onRspManagePlayer(const Ctrl::RspManagePlayer& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onRspManagePlayer()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onPlayerJoinedTable(const Ctrl::UslPlayerJoinedTable& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onPlayerJoinedTable()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onPlayerLeftTable(const Ctrl::UslPlayerLeftTable& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onPlayerLeftTable()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onUserPlayerSwitched(const Ctrl::UslUserPlayerSwitched& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onUserPlayerSwitched()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onPlayerRenamed(const Ctrl::UslPlayerRenamed& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onPlayerRenamed()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------

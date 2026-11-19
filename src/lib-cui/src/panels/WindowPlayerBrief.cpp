@@ -6,6 +6,9 @@
 
 #include <cui/panels/WindowPlayerBrief.h>
 #include <cui/core/CuiUtils.h>
+#include <controller/CrapsReaders.h>
+#include <craps/LastRollStats.h>
+#include <craps/PlayerStats.h>
 #include <cui/core/CuiStructs.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/managers/ColorManager.h>
@@ -49,6 +52,56 @@ WindowPlayerBrief::initPlayer()
     
     playerName_ = Ctrl::CrapsReaders::getUserPlayerName();
     (void) Ctrl::CrapsReaders::readPlayerBalance(playerId_, balance_, ep);
+}
+
+//----------------------------------------------------------------
+//
+// The user player is a different player, or has a new name. Learn
+// everything about him from the controller instead of from events.
+//
+void
+WindowPlayerBrief::reload()
+{
+    initPlayer();     // id, name, balance
+
+    Gen::ErrorPass ep;
+    int net = 0;
+    if (Ctrl::CrapsReaders::readPlayerSessionNet(playerId_, net, ep) ==
+        Gen::ReturnCode::Success)
+    {
+        netBalance_ = net;
+    }
+
+    Craps::PlayerStats stats;
+    if (Ctrl::CrapsReaders::readPlayerCurrentStats(playerId_, stats, ep) ==
+        Gen::ReturnCode::Success)
+    {
+        numBetsPlayerWins_  = stats.betStats.totNumWinsAllBets;
+        numBetsPlayerLoses_ = stats.betStats.totNumLoseAllBets;
+    }
+
+    Craps::LastRollStats lrs;
+    if (Ctrl::CrapsReaders::readPlayerLastRollStats(playerId_, lrs, ep) ==
+        Gen::ReturnCode::Success)
+    {
+        playerIntakeLastRoll_ = lrs.amountWin;
+        playerOutputLastRoll_ = lrs.amountLose;
+    }
+
+    (void) Ctrl::CrapsReaders::readPlayerNumBetsOnTable(
+               playerId_, numBetsOnTable_, ep);
+    (void) Ctrl::CrapsReaders::readPlayerAmountOnTable(
+               playerId_, amtOnTable_, ep);
+
+    Craps::PlayerId shooterId;
+    shooter_.clear();
+    if (Ctrl::CrapsReaders::readTableCurrentShooter(
+            CuiUtils::activeTableId(), shooterId, ep) ==
+        Gen::ReturnCode::Success &&
+        shooterId == playerId_)
+    {
+        shooter_ = " (shooter)";
+    }
 }
 
 //----------------------------------------------------------------
@@ -236,7 +289,21 @@ WindowPlayerBrief::populateLast()
     s += std::to_string(playerIntakeLastRoll_) + "W,";
     s += std::to_string(playerOutputLastRoll_) + "L";
 
+    // Yellow for a net win, red for a net loss, normal for even.
+    // The same colors the roll history uses for winners and seven-outs.
+    short pair = 0;
+    if (playerIntakeLastRoll_ > playerOutputLastRoll_)
+    {
+        pair = ColorManager::instance().pair(Color::PassLineWinner);
+    }
+    else if (playerIntakeLastRoll_ < playerOutputLastRoll_)
+    {
+        pair = ColorManager::instance().pair(Color::SevenOut);
+    }
+
+    if (pair != 0) wattron(pWin_, COLOR_PAIR(pair));
     mvwaddstr(pWin_, 5, 1, s.c_str());
+    if (pair != 0) wattroff(pWin_, COLOR_PAIR(pair));
 }
 
 //----------------------------------------------------------------

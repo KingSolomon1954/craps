@@ -58,6 +58,7 @@ public:
                        Gen::Money             amountLose);
 
 
+    void rebuild();
     void onPlayerJoinedTable(const Craps::PlayerId& playerId);
     void onPlayerLeftTable  (const Craps::PlayerId& playerId);
     /// @}

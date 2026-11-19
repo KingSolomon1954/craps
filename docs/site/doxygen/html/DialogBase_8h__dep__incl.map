@@ -1,34 +1,45 @@
 <map id="src/lib&#45;cui/include/cui/bases/DialogBase.h" name="src/lib&#45;cui/include/cui/bases/DialogBase.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="747,5,924,45"/>
-<area shape="rect" id="Node000002" href="$DialogBetAmount_8h.html" title=" " alt="" coords="838,93,1065,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="874,52,927,91,924,95,870,56"/>
-<area shape="rect" id="Node000008" href="$DialogConfirm_8h.html" title=" " alt="" coords="246,93,451,133"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="734,47,452,97,451,91,733,42"/>
-<area shape="rect" id="Node000011" href="$DialogError_8h.html" title=" " alt="" coords="557,93,741,133"/>
-<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="783,53,691,96,688,91,781,49"/>
-<area shape="rect" id="Node000013" href="$DialogMessage_8h.html" title=" " alt="" coords="1376,93,1588,133"/>
-<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="938,38,1376,95,1376,101,937,43"/>
-<area shape="rect" id="Node000003" href="$DialogBetAmount_8cpp.html" title=" " alt="" coords="753,181,921,221"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="917,144,864,183,860,179,913,140"/>
-<area shape="rect" id="Node000004" href="$OperationManager_8cpp.html" title=" " alt="" coords="368,181,545,221"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="825,138,557,184,546,186,545,181,556,179,824,133"/>
-<area shape="rect" id="Node000005" href="$MenuBetting_8cpp.html" title=" " alt="" coords="1305,181,1461,221"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="1062,133,1293,179,1306,181,1305,186,1292,184,1061,139"/>
-<area shape="rect" id="Node000006" href="$MenuOddsBet_8cpp.html" title=" " alt="" coords="945,181,1101,221"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="978,142,1009,179,1005,183,974,146"/>
-<area shape="rect" id="Node000007" href="$MenuPivot_8cpp.html" title=" " alt="" coords="1125,181,1281,221"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="1020,135,1149,179,1147,184,1019,140"/>
-<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="385,140,434,179,431,183,382,144"/>
-<area shape="rect" id="Node000009" href="$DialogConfirm_8cpp.html" title=" " alt="" coords="5,181,164,221"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="279,140,143,184,142,179,277,135"/>
-<area shape="rect" id="Node000010" href="$WindowNavBar_8cpp.html" title=" " alt="" coords="189,181,343,221"/>
-<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="323,145,286,183,282,179,319,142"/>
-<area shape="poly" id="edge13_Node000011_Node000004" title=" " alt="" coords="595,141,500,184,498,179,593,137"/>
-<area shape="rect" id="Node000012" href="$DialogError_8cpp.html" title=" " alt="" coords="569,181,728,221"/>
-<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="651,147,651,181,646,181,646,147"/>
-<area shape="poly" id="edge17_Node000013_Node000005" title=" " alt="" coords="1452,144,1407,183,1403,179,1448,140"/>
-<area shape="rect" id="Node000014" href="$CuiMain_8cpp.html" title=" " alt="" coords="1486,189,1678,214"/>
-<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="1516,140,1570,186,1566,190,1513,144"/>
-<area shape="rect" id="Node000015" href="$DialogMessage_8cpp.html" title=" " alt="" coords="1703,181,1861,221"/>
-<area shape="poly" id="edge16_Node000013_Node000015" title=" " alt="" coords="1562,135,1717,179,1716,184,1560,140"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1219,5,1397,45"/>
+<area shape="rect" id="Node000002" href="$DialogBetAmount_8h.html" title=" " alt="" coords="433,93,660,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1206,41,661,102,660,97,1206,35"/>
+<area shape="rect" id="Node000008" href="$DialogConfirm_8h.html" title=" " alt="" coords="876,93,1081,133"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1223,51,1051,96,1050,91,1222,46"/>
+<area shape="rect" id="Node000011" href="$DialogError_8h.html" title=" " alt="" coords="1105,93,1289,133"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="1274,56,1223,95,1220,91,1271,52"/>
+<area shape="rect" id="Node000013" href="$DialogMessage_8h.html" title=" " alt="" coords="1314,93,1526,133"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="1346,52,1397,91,1394,95,1342,56"/>
+<area shape="rect" id="Node000016" href="$DialogPickPlayer_8h.html" title=" " alt="" coords="1551,93,1772,133"/>
+<area shape="poly" id="edge19_Node000001_Node000016" title=" " alt="" coords="1399,46,1585,91,1583,96,1398,51"/>
+<area shape="rect" id="Node000018" href="$DialogTextInput_8h.html" title=" " alt="" coords="1797,93,2011,133"/>
+<area shape="poly" id="edge22_Node000001_Node000018" title=" " alt="" coords="1411,38,1784,91,1796,92,1796,98,1784,96,1410,43"/>
+<area shape="rect" id="Node000003" href="$DialogBetAmount_8cpp.html" title=" " alt="" coords="5,181,173,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="431,138,186,184,174,186,173,181,185,179,430,133"/>
+<area shape="rect" id="Node000004" href="$OperationManager_8cpp.html" title=" " alt="" coords="1283,181,1461,221"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="674,120,949,143,1271,179,1283,181,1283,186,1270,184,949,148,674,126"/>
+<area shape="rect" id="Node000005" href="$MenuBetting_8cpp.html" title=" " alt="" coords="558,181,714,221"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="578,141,618,179,614,183,575,145"/>
+<area shape="rect" id="Node000006" href="$MenuOddsBet_8cpp.html" title=" " alt="" coords="198,181,354,221"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="475,140,336,184,334,179,473,135"/>
+<area shape="rect" id="Node000007" href="$MenuPivot_8cpp.html" title=" " alt="" coords="378,181,534,221"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="519,145,478,183,474,179,515,141"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="1079,134,1286,179,1285,184,1078,139"/>
+<area shape="rect" id="Node000009" href="$DialogConfirm_8cpp.html" title=" " alt="" coords="918,181,1077,221"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="988,146,996,181,991,182,983,147"/>
+<area shape="rect" id="Node000010" href="$WindowNavBar_8cpp.html" title=" " alt="" coords="739,181,893,221"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="932,142,853,184,850,179,930,137"/>
+<area shape="poly" id="edge13_Node000011_Node000004" title=" " alt="" coords="1249,137,1335,179,1333,184,1247,142"/>
+<area shape="rect" id="Node000012" href="$DialogError_8cpp.html" title=" " alt="" coords="1101,181,1259,221"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1193,147,1186,182,1181,181,1188,146"/>
+<area shape="poly" id="edge17_Node000013_Node000004" title=" " alt="" coords="1405,147,1385,182,1380,180,1400,144"/>
+<area shape="poly" id="edge18_Node000013_Node000005" title=" " alt="" coords="1301,136,1138,151,1011,158,886,166,727,184,714,186,714,181,726,179,885,160,1011,152,1138,146,1300,131"/>
+<area shape="rect" id="Node000014" href="$CuiMain_8cpp.html" title=" " alt="" coords="1485,189,1677,214"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="1469,137,1561,186,1559,191,1466,142"/>
+<area shape="rect" id="Node000015" href="$DialogMessage_8cpp.html" title=" " alt="" coords="1702,181,1861,221"/>
+<area shape="poly" id="edge16_Node000013_Node000015" title=" " alt="" coords="1513,134,1703,179,1702,184,1512,139"/>
+<area shape="poly" id="edge21_Node000016_Node000004" title=" " alt="" coords="1586,140,1436,184,1435,179,1584,135"/>
+<area shape="rect" id="Node000017" href="$DialogPickPlayer_8cpp.html" title=" " alt="" coords="1885,181,2048,221"/>
+<area shape="poly" id="edge20_Node000016_Node000017" title=" " alt="" coords="1742,134,1901,179,1899,184,1741,140"/>
+<area shape="poly" id="edge24_Node000018_Node000004" title=" " alt="" coords="1783,136,1474,184,1461,186,1460,181,1473,179,1782,131"/>
+<area shape="rect" id="Node000019" href="$DialogTextInput_8cpp.html" title=" " alt="" coords="2073,181,2231,221"/>
+<area shape="poly" id="edge23_Node000018_Node000019" title=" " alt="" coords="1972,135,2099,179,2097,184,1971,140"/>
 </map>

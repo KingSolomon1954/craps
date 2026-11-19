@@ -29,6 +29,21 @@ class PlayerManager
 public:
     using Players = std::vector<Craps::Player*>;
 
+    /// One known player, as the View needs to show it.
+    struct PlayerInfo
+    {
+        Craps::PlayerId playerId;
+        std::string     name;
+        std::string     fileName;
+        std::string     description;       ///< Short description
+        PlayerKind      kind    = PlayerKind::User;
+        bool            isUser  = false;   ///< The current user player
+        bool            atTable = false;
+    };
+
+    static constexpr std::size_t MaxNameLength        = 16;
+    static constexpr std::size_t MaxDescriptionLength = 40;
+
     /// @name Lifecycle
     /// @{
     PlayerManager();
@@ -42,12 +57,29 @@ public:
                                  Gen::ErrorPass& ep);
     PlayerPrefs& userPrefs();
     PlayerPrefs* getPrefs(const Craps::PlayerId& playerId);
+    Gen::ReturnCode renamePlayer(const Craps::PlayerId& playerId,
+                                 const std::string& newName,
+                                 Gen::ErrorPass& ep);
+    Gen::ReturnCode createPlayer(const std::string& name,
+                                 const std::string& description,
+                                 Craps::PlayerId& newPlayerId,
+                                 Gen::ErrorPass& ep);
+    Gen::ReturnCode deletePlayer(const Craps::PlayerId& playerId,
+                                 Gen::ErrorPass& ep);
+    Gen::ReturnCode buddyJoinsTable(const Craps::PlayerId& playerId,
+                                    Gen::ErrorPass& ep);
+    Gen::ReturnCode buddyLeavesTable(const Craps::PlayerId& playerId,
+                                     Gen::ErrorPass& ep);
     /// @}
 
     /// @name Observers
     /// @{
     const PlayerPrefs& userPrefs()                    const;
     const PlayerManifest::PlayerList& getPlayerList() const;
+    std::vector<PlayerInfo> listPlayers()             const;
+    static bool checkName(const std::string& name, std::string& whyNot);
+    static bool checkDescription(const std::string& description,
+                                 std::string& whyNot);
     const Players& getPlayers()                       const;
     Craps::Player* getUserPlayer()                    const;
     std::string getUserFileName()                     const;
@@ -91,6 +123,10 @@ private:
     Entry* findEntryById(const Craps::PlayerId& playerId) const;
     Gen::ReturnCode doSwitchPlayer(const Craps::PlayerId& toPlayerId,
                                    Gen::ErrorPass& ep);     // may throw
+    Entry* ensureLoaded(const Craps::PlayerId& playerId);   // throws
+    bool   nameOk(const std::string& name, const Craps::PlayerId& exceptId,
+                  Gen::ErrorPass& ep) const;
+    std::string makeFileName(const std::string& name) const;
     void   saveEntry(Entry& entry) const;                   // throws
     void   saveAll() const;
     void   loadStartingPlayers();  // throws
@@ -163,6 +199,34 @@ it is logged; the switch still stands.
 
 A player who switched out stays loaded. If he is switched in again later
 he starts a new session.
+
+@par Player kinds
+
+Every player in the manifest is a user player or a buddy player. User
+players are the ones the person can become (switchPlayer()), rename and
+delete. Buddy players come with the game: they can sit at the table
+(buddyJoinsTable(), buddyLeavesTable()) but never become the user player
+and are never renamed or deleted. A new player is always a user player.
+
+@par Managing players
+
+All of these never throw and change nothing on failure.
+
+@li renamePlayer(): names are trimmed, 1 to MaxNameLength printable
+ASCII characters, and unique ignoring case. Only the name changes; the
+player id and the file name stay the same, because config.yaml and
+state.yaml refer to players by file name. The manifest is saved at once.
+The manifest's name is the one that counts when a player is loaded.
+@li createPlayer(): makes a user player with a fresh id, an optional short
+description (up to MaxDescriptionLength printable ASCII characters), a file name made
+from the name (unique), and the usual starting bank. The player file and
+the manifest are written at once. Does not switch to the new player.
+@li deletePlayer(): user players only; not the current user and not
+anyone at the table. The file is moved to the "trash" folder inside the
+players folder, not erased.
+@li buddyJoinsTable() and buddyLeavesTable(): a leaving buddy's bets come
+off the table and are returned to him, the same as for any player who
+leaves.
 
 @par Threads
 

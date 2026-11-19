@@ -47,8 +47,6 @@
 
 ### Need More MenuBetting implementation
 
-### Implement "Unknown" player start up logic
-
 ### Implement the many MenuConfiguration options
 
 ### Need to inhibit various actions during animation roll
@@ -75,8 +73,18 @@
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
+### Add AutoOdds capability
+- maybe add AutoOdds menu selection to DialogBetAmount
+- just for pass/come/dontpass/dontcome
+
 ## Done
 
+(Done) Create Player prompts for player's short description\
+(Done) Update user-guide with Player handling\
+(Done) Use colors for net win/loss in WindowPlayerBrief\
+(Done) Player operations checkout, create, switch, delete, etc\
+(Done) Buddy players leave and join table\
+(Done) MenuPlayer implements all player operations\
 (Done) Static analysis includes all libraries, fixed SA errors\
 (Done) Created MenuPlayer, Improved organization of MenuControl\
 (Done) Implement startup from fresh Installation"\

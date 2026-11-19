@@ -91,6 +91,7 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classCui_1_1LineInput-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Cui::LineInput Class Reference</div></div>
@@ -102,10 +103,18 @@ $(function(){ initResizable(false); });
 
 <p><code>#include &lt;<a class="el" href="LineInput_8h_source.html">LineInput.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a56247a9f13bb3b6f4b0587380cb08984" id="r_a56247a9f13bb3b6f4b0587380cb08984"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56247a9f13bb3b6f4b0587380cb08984">Charset</a> { <a class="el" href="#a56247a9f13bb3b6f4b0587380cb08984a1051b04f09c0cf06b4290d2caab0856f">Digits</a>
+, <a class="el" href="#a56247a9f13bb3b6f4b0587380cb08984aa2b668f156b39ec54443760e3d13515a">PlayerName</a>
+ }</td></tr>
+<tr class="memdesc:a56247a9f13bb3b6f4b0587380cb08984"><td class="mdescLeft">&#160;</td><td class="mdescRight">Which characters the field accepts.  <a href="#a56247a9f13bb3b6f4b0587380cb08984">More...</a><br /></td></tr>
+<tr class="separator:a56247a9f13bb3b6f4b0587380cb08984"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4ffedf58c98d3f8004aba44709509de5" id="r_a4ffedf58c98d3f8004aba44709509de5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ffedf58c98d3f8004aba44709509de5">LineInput</a> (std::size_t <a class="el" href="#ad1fc85db37427962ff114e7a74846549">maxChars</a>)</td></tr>
-<tr class="separator:a4ffedf58c98d3f8004aba44709509de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a869a981f75af2439bd91194e09ed2e54" id="r_a869a981f75af2439bd91194e09ed2e54"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a869a981f75af2439bd91194e09ed2e54">LineInput</a> (std::size_t <a class="el" href="#ad1fc85db37427962ff114e7a74846549">maxChars</a>, <a class="el" href="#a56247a9f13bb3b6f4b0587380cb08984">Charset</a> charset=<a class="el" href="#a56247a9f13bb3b6f4b0587380cb08984a1051b04f09c0cf06b4290d2caab0856f">Charset::Digits</a>)</td></tr>
+<tr class="separator:a869a981f75af2439bd91194e09ed2e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d085727fe8034c6727ae4ca7e7eb9f6" id="r_a8d085727fe8034c6727ae4ca7e7eb9f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d085727fe8034c6727ae4ca7e7eb9f6">handleKey</a> (int ch)</td></tr>
 <tr class="memdesc:a8d085727fe8034c6727ae4ca7e7eb9f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process an editing key. Returns false for keys not handled here.  <br /></td></tr>
 <tr class="separator:a8d085727fe8034c6727ae4ca7e7eb9f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,9 +132,40 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Edits a bounded, single-line string using ncurses key codes. </p>
 <p><a class="el" href="classCui_1_1LineInput.html" title="Edits a bounded, single-line string using ncurses key codes.">LineInput</a> owns the input buffer and cursor position, but does not draw anything. The owning surface is responsible for rendering <a class="el" href="#a030d0b7de578869ef57de9f5416edc89">value()</a> and positioning the terminal cursor at <a class="el" href="#a7b3a80519bd90edc15d00e380299cf33">cursorPosition()</a>. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a4ffedf58c98d3f8004aba44709509de5" name="a4ffedf58c98d3f8004aba44709509de5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ffedf58c98d3f8004aba44709509de5">&#9670;&#160;</a></span>LineInput()</h2>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a56247a9f13bb3b6f4b0587380cb08984" name="a56247a9f13bb3b6f4b0587380cb08984"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56247a9f13bb3b6f4b0587380cb08984">&#9670;&#160;</a></span>Charset</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a56247a9f13bb3b6f4b0587380cb08984">Cui::LineInput::Charset</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Which characters the field accepts. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a56247a9f13bb3b6f4b0587380cb08984a1051b04f09c0cf06b4290d2caab0856f" name="a56247a9f13bb3b6f4b0587380cb08984a1051b04f09c0cf06b4290d2caab0856f"></a>Digits&#160;</td><td class="fielddoc"><p>0-9 only, for amounts </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a56247a9f13bb3b6f4b0587380cb08984aa2b668f156b39ec54443760e3d13515a" name="a56247a9f13bb3b6f4b0587380cb08984aa2b668f156b39ec54443760e3d13515a"></a>PlayerName&#160;</td><td class="fielddoc"><p>printable ASCII, letters, digits, space, punctuation </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a869a981f75af2439bd91194e09ed2e54" name="a869a981f75af2439bd91194e09ed2e54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a869a981f75af2439bd91194e09ed2e54">&#9670;&#160;</a></span>LineInput()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -136,8 +176,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">Cui::LineInput::LineInput </td>
           <td>(</td>
-          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>maxChars</em></span></td><td>)</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>maxChars</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="#a56247a9f13bb3b6f4b0587380cb08984">Charset</a></td>          <td class="paramname"><span class="paramname"><em>charset</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a56247a9f13bb3b6f4b0587380cb08984a1051b04f09c0cf06b4290d2caab0856f">Charset::Digits</a></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -285,7 +329,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 16 2026 15:42:25 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

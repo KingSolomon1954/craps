@@ -1,27 +1,63 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="8517584460627860230">
+<analyzerinfo hash="3332699100814285989">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-controller/src/PlayerManifest.cpp:22:1" my-argnr="1" my-argname="a" file="/work/src/lib-controller/src/PlayerManifest.cpp" line="24" col="12" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-controller/src/PlayerManifest.cpp:22:1" my-argnr="2" my-argname="b" file="/work/src/lib-controller/src/PlayerManifest.cpp" line="24" col="24" value="0"/>
+  </FileInfo>
   <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="sameNameIgnoringCase" lineNumber="22"/>
+    <functioncall functionName="Buddy"/>
     <functioncall functionName="IsSequence"/>
     <functioncall functionName="KeyDirsUsrPlayers"/>
     <functioncall functionName="Load"/>
     <functioncall functionName="PlayerId"/>
+    <functioncall functionName="Sequence"/>
+    <functioncall functionName="User"/>
     <functioncall functionName="as"/>
+    <functioncall functionName="begin"/>
     <functioncall functionName="clear"/>
+    <functioncall functionName="close"/>
     <functioncall functionName="diag"/>
     <functioncall functionName="emplace_back"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="equal"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="false"/>
     <functioncall functionName="fileName"/>
+    <functioncall functionName="find_if"/>
+    <functioncall functionName="flush"/>
+    <functioncall functionName="fname"/>
+    <functioncall functionName="fout"/>
     <functioncall functionName="fromYAML"/>
     <functioncall functionName="fullDescription"/>
     <functioncall functionName="getString"/>
+    <functioncall functionName="good"/>
+    <functioncall functionName="is_open"/>
+    <functioncall functionName="kind"/>
+    <functioncall functionName="message"/>
     <functioncall functionName="move"/>
     <functioncall functionName="openOrThrow"/>
     <functioncall functionName="path"/>
+    <functioncall functionName="path_"/>
     <functioncall functionName="playerId"/>
+    <functioncall functionName="playerKindFromString"/>
     <functioncall functionName="playerName"/>
     <functioncall functionName="players_"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="remove"/>
+    <functioncall functionName="rename"/>
     <functioncall functionName="runtime_error"/>
+    <functioncall functionName="sameNameIgnoringCase"/>
+    <functioncall functionName="seq"/>
     <functioncall functionName="shortDescription"/>
+    <functioncall functionName="size"/>
     <functioncall functionName="string"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="toYAML"/>
+    <functioncall functionName="tolower"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="trunc"/>
     <functioncall functionName="value"/>
     <functioncall functionName="what"/>
   </FileInfo>

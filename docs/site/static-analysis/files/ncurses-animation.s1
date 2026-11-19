@@ -1,6 +1,0 @@
-draw_frame call:[mvaddch,mvhline,mvprintw,mvvline,refresh] noreturn:[refresh]
-make_subwin call:[newwin] noreturn:[newwin]
-create_subwindows call:[make_subwin]
-draw_die call:[mvwaddch,mvwaddwstr,mvwhline,mvwvline,pip,wattroff,wattron] noreturn:[mvwaddch,mvwaddwstr,mvwhline,wattroff]
-animate_roll call:[c_str,draw_die,getmaxx,getmaxy,mvwprintw,napms,rand,size,srand,time,to_string,werase,wrefresh] noreturn:[napms,wrefresh]
-main call:[animate_roll,cbreak,create_subwindows,curs_set,doupdate,draw_frame,endwin,getch,initscr,keypad,mvwprintw,noecho,setlocale,srand,time,wnoutrefresh] noreturn:[animate_roll]

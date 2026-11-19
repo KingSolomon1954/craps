@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <controller/PlayerManager.h>
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
 #include <controller/AutoFill.h>
@@ -72,6 +73,10 @@ public:
         const Craps::PlayerId& playerId,
         Gen::Money& balance,
         Gen::ErrorPass& ep);
+    static Gen::ReturnCode readPlayerSessionNet(
+        const Craps::PlayerId& playerId,
+        int& netBalance,
+        Gen::ErrorPass& ep);
     static Gen::ReturnCode readPlayerLastRollStats(
         const Craps::PlayerId& playerId,
         Craps::LastRollStats& lastRollStats,
@@ -93,6 +98,7 @@ public:
         Craps::SessionHistory::Sessions& playerSessionHistory,
         Gen::ErrorPass& ep);
     static const PlayerManifest::PlayerList& readPlayerList();
+    static std::vector<PlayerManager::PlayerInfo> readPlayerRoster();
     
     // Bet related
     static Gen::ReturnCode readBetIsAllowed(

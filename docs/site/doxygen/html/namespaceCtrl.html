@@ -149,7 +149,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Managers players.  <a href="classCtrl_1_1PlayerManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1PlayerManifest.html">PlayerManifest</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads in players.yaml, populates players_ vector.  <a href="classCtrl_1_1PlayerManifest.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads and writes players.yaml, the list of known players.  <a href="classCtrl_1_1PlayerManifest.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1PlayerPrefs.html">PlayerPrefs</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">One player's controller-level preferences.  <a href="classCtrl_1_1PlayerPrefs.html#details">More...</a><br /></td></tr>
@@ -164,6 +164,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqMakeBet.html">ReqMakeBet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqManagePlayer.html">ReqManagePlayer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqOddsBet.html">ReqOddsBet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqQuickBet.html">ReqQuickBet</a></td></tr>
@@ -176,6 +178,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqTerminate.html">ReqTerminate</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspMakeBet.html">RspMakeBet</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspManagePlayer.html">RspManagePlayer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspOddsBet.html">RspOddsBet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -246,6 +250,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerLeftTable.html">UslPlayerLeftTable</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerRenamed.html">UslPlayerRenamed</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A player's name changed. Names the View has kept are stale.  <a href="structCtrl_1_1UslPlayerRenamed.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPlayerSessionStatsChanged.html">UslPlayerSessionStatsChanged</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslPointEstablished.html">UslPointEstablished</a></td></tr>
@@ -310,53 +317,72 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a0660637cac012be8263a6dce5886d759">ReqQuickBet</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a6b5741383d3e1a8ef09c25af0608e122">ReqSwitchPlayer</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884">ReqTerminate</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a0009c9943a5c315fe884624814d59af6">ReqManagePlayer</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884">ReqTerminate</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004">RspMakeBet</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a4d78add73a3e2c2e1337307f18eae78c">RspOddsBet</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52">RspRemoveBet</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80">RspChangeBet</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52">RspRemoveBet</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80">RspChangeBet</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a163a00ecc524dfbdee6da1cff60d2513">RspSwitchPlayer</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad54394414bcef4b92b44bf2abf41f8ed">UslBettingClosed</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab0ad955f8420c77f9abddce003a84e83">RspManagePlayer</a>
+, <br />
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad54394414bcef4b92b44bf2abf41f8ed">UslBettingClosed</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a8ab4ed05add088110149237e8279c61d">UslDiceThrowStart</a>
-, <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc">UslDiceNewValue</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc">UslDiceNewValue</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a5e4356c27e7a2603c194550df8d2ebf0">UslResolveBetsStart</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a114b77429783dcc326d4460b2ca1fab4">UslResolveBetsEnd</a>
+, <br />
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a114b77429783dcc326d4460b2ca1fab4">UslResolveBetsEnd</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad6111d74444e4de12b96e7970bf167f2">UslPointEstablished</a>
-, <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb">UslSevenOut</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb">UslSevenOut</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac62b18f39537806ea7b4d8557ffea75c">UslPassLineWinner</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac06fab4a3e7e7248da311ebd73503e5d">UslNewShooter</a>
+, <br />
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac06fab4a3e7e7248da311ebd73503e5d">UslNewShooter</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac2669feb7491e496e18296a0b6acac40">UslBettingOpened</a>
-, <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3af585f0c7691aa143fefa45d443339cfc">UslCountdownRollDice</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3af585f0c7691aa143fefa45d443339cfc">UslCountdownRollDice</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac16a3dd90af2966c7fa6c42549c6388f">UslBetMade</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a123e35f80e3fa66d2e5180a487566dd0">UslBetResolved</a>
+, <br />
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a123e35f80e3fa66d2e5180a487566dd0">UslBetResolved</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a38ec1a0493868cf59e4dabd41947f2af">UslBetEvaluationFailed</a>
-, <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a2a7a485679558282089b85a3136bdcb1">UslBetRemoved</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a2a7a485679558282089b85a3136bdcb1">UslBetRemoved</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aedf4c595aa6b2ddaf3b22460d8a95cf2">UslBetChanged</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a5f1bcd900cfb0840e06f5a6d5411ac70">UslAutoFillChanged</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a8f0895a9006f69f4419b8b7bc4570c59">UslQuickBetChanged</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd">UslUserPlayerSwitched</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42">UslTableBetsChanged</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a5f1bcd900cfb0840e06f5a6d5411ac70">UslAutoFillChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a8f0895a9006f69f4419b8b7bc4570c59">UslQuickBetChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd">UslUserPlayerSwitched</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3adb714c17e1d51eaf46ca2c289191a3d4">UslPlayerRenamed</a>
+, <br />
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42">UslTableBetsChanged</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587">UslTableSessionStatsChanged</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6">UslTableLastRollStatsChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05">UslTableBalanceChanged</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05">UslTableBalanceChanged</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aaecd0f64c2b8f4251e066b805b587bb8">UslPlayerBetsChanged</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aaecd0f64c2b8f4251e066b805b587bb8">UslPlayerBetsChanged</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab66219ca5de591ccbb4d9f188673f0d6">UslPlayerSessionStatsChanged</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a21009eb28cb667ad9c2cef8e7386ab79">UslPlayerLastRollStatsChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79">UslPlayerBalanceChanged</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79">UslPlayerBalanceChanged</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5">UslPlayerJoinedTable</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5">UslPlayerJoinedTable</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aec8d24f370b0e606012aa12be2233d98">UslPlayerLeftTable</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a080339ce20c437b0d9a51542a36ee3e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the Event.  <a href="#a080339ce20c437b0d9a51542a36ee3e3">More...</a><br /></td></tr>
 <tr class="separator:a080339ce20c437b0d9a51542a36ee3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca8b99acad6a0265b926e92ea37fa516" id="r_aca8b99acad6a0265b926e92ea37fa516"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca8b99acad6a0265b926e92ea37fa516">PlayerAction</a> { <br />
+&#160;&#160;<a class="el" href="#aca8b99acad6a0265b926e92ea37fa516a904a8304056d77e4547744781b7ceb50">Rename</a>
+, <a class="el" href="#aca8b99acad6a0265b926e92ea37fa516a686e697538050e4664636337cc3b834f">Create</a>
+, <a class="el" href="#aca8b99acad6a0265b926e92ea37fa516af2a6c498fb90ee345d997f888fce3b18">Delete</a>
+, <a class="el" href="#aca8b99acad6a0265b926e92ea37fa516acc4ad94a53c093268bbec3f96d8d49de">BuddyJoins</a>
+, <br />
+&#160;&#160;<a class="el" href="#aca8b99acad6a0265b926e92ea37fa516a0a15c7ebdb469586619f8e177d0bd755">BuddyLeaves</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:aca8b99acad6a0265b926e92ea37fa516"><td class="mdescLeft">&#160;</td><td class="mdescRight">What ReqManagePlayer asks for.  <a href="#aca8b99acad6a0265b926e92ea37fa516">More...</a><br /></td></tr>
+<tr class="separator:aca8b99acad6a0265b926e92ea37fa516"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a483aaf9a60e115516178a101bbf49782" id="r_a483aaf9a60e115516178a101bbf49782"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a483aaf9a60e115516178a101bbf49782">PlayerKind</a> { <a class="el" href="#a483aaf9a60e115516178a101bbf49782a8f9bfe9d1345237cb3b2b205864da075">User</a>
+, <a class="el" href="#a483aaf9a60e115516178a101bbf49782a8fb645e200b5986d7cdfb4a5d2542a7f">Buddy</a>
+ }</td></tr>
+<tr class="separator:a483aaf9a60e115516178a101bbf49782"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -371,6 +397,13 @@ Functions</h2></td></tr>
 <tr class="separator:aaff18678ecff63433a67d8b4ce2e830f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26f8b92725c87456be558e64df66fafb" id="r_a26f8b92725c87456be558e64df66fafb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a469de83a5b91f8ca630e556d9bcf9f46">CorrelationId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26f8b92725c87456be558e64df66fafb">getNextCorrelationId</a> ()</td></tr>
 <tr class="separator:a26f8b92725c87456be558e64df66fafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78f14faef002f92481b92cb9f0e0f505" id="r_a78f14faef002f92481b92cb9f0e0f505"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78f14faef002f92481b92cb9f0e0f505">toString</a> (<a class="el" href="#a483aaf9a60e115516178a101bbf49782">PlayerKind</a> kind)</td></tr>
+<tr class="separator:a78f14faef002f92481b92cb9f0e0f505"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e85144da34dba2eaec96f62d919ddd0" id="r_a4e85144da34dba2eaec96f62d919ddd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a483aaf9a60e115516178a101bbf49782">PlayerKind</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e85144da34dba2eaec96f62d919ddd0">playerKindFromString</a> (const std::string &amp;s)</td></tr>
+<tr class="separator:a4e85144da34dba2eaec96f62d919ddd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fd24f0ee7dc1d790dee4684ea7501d7" id="r_a0fd24f0ee7dc1d790dee4684ea7501d7"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fd24f0ee7dc1d790dee4684ea7501d7">operator&lt;&lt;</a> (std::ostream &amp;os, <a class="el" href="#a483aaf9a60e115516178a101bbf49782">PlayerKind</a> kind)</td></tr>
+<tr class="memdesc:a0fd24f0ee7dc1d790dee4684ea7501d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lets doctest show a PlayerKind when a check fails.  <br /></td></tr>
+<tr class="separator:a0fd24f0ee7dc1d790dee4684ea7501d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Controller Library (lib-controller) </p>
@@ -487,12 +520,14 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a390a39d7a6fe90a87574716be07bbddb" name="a080339ce20c437b0d9a51542a36ee3e3a390a39d7a6fe90a87574716be07bbddb"></a>ReqAutoFill&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a0660637cac012be8263a6dce5886d759" name="a080339ce20c437b0d9a51542a36ee3e3a0660637cac012be8263a6dce5886d759"></a>ReqQuickBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a6b5741383d3e1a8ef09c25af0608e122" name="a080339ce20c437b0d9a51542a36ee3e3a6b5741383d3e1a8ef09c25af0608e122"></a>ReqSwitchPlayer&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a0009c9943a5c315fe884624814d59af6" name="a080339ce20c437b0d9a51542a36ee3e3a0009c9943a5c315fe884624814d59af6"></a>ReqManagePlayer&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884" name="a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884"></a>ReqTerminate&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004" name="a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004"></a>RspMakeBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a4d78add73a3e2c2e1337307f18eae78c" name="a080339ce20c437b0d9a51542a36ee3e3a4d78add73a3e2c2e1337307f18eae78c"></a>RspOddsBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52" name="a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52"></a>RspRemoveBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80" name="a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80"></a>RspChangeBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a163a00ecc524dfbdee6da1cff60d2513" name="a080339ce20c437b0d9a51542a36ee3e3a163a00ecc524dfbdee6da1cff60d2513"></a>RspSwitchPlayer&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ab0ad955f8420c77f9abddce003a84e83" name="a080339ce20c437b0d9a51542a36ee3e3ab0ad955f8420c77f9abddce003a84e83"></a>RspManagePlayer&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ad54394414bcef4b92b44bf2abf41f8ed" name="a080339ce20c437b0d9a51542a36ee3e3ad54394414bcef4b92b44bf2abf41f8ed"></a>UslBettingClosed&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a8ab4ed05add088110149237e8279c61d" name="a080339ce20c437b0d9a51542a36ee3e3a8ab4ed05add088110149237e8279c61d"></a>UslDiceThrowStart&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc" name="a080339ce20c437b0d9a51542a36ee3e3a2a49b4d99563d8f83ee10adc9c13cdcc"></a>UslDiceNewValue&#160;</td><td class="fielddoc"></td></tr>
@@ -512,6 +547,7 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a5f1bcd900cfb0840e06f5a6d5411ac70" name="a080339ce20c437b0d9a51542a36ee3e3a5f1bcd900cfb0840e06f5a6d5411ac70"></a>UslAutoFillChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a8f0895a9006f69f4419b8b7bc4570c59" name="a080339ce20c437b0d9a51542a36ee3e3a8f0895a9006f69f4419b8b7bc4570c59"></a>UslQuickBetChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd" name="a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd"></a>UslUserPlayerSwitched&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3adb714c17e1d51eaf46ca2c289191a3d4" name="a080339ce20c437b0d9a51542a36ee3e3adb714c17e1d51eaf46ca2c289191a3d4"></a>UslPlayerRenamed&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42" name="a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42"></a>UslTableBetsChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587" name="a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587"></a>UslTableSessionStatsChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6" name="a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6"></a>UslTableLastRollStatsChanged&#160;</td><td class="fielddoc"></td></tr>
@@ -522,6 +558,69 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79" name="a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79"></a>UslPlayerBalanceChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5" name="a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5"></a>UslPlayerJoinedTable&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3aec8d24f370b0e606012aa12be2233d98" name="a080339ce20c437b0d9a51542a36ee3e3aec8d24f370b0e606012aa12be2233d98"></a>UslPlayerLeftTable&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="aca8b99acad6a0265b926e92ea37fa516" name="aca8b99acad6a0265b926e92ea37fa516"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca8b99acad6a0265b926e92ea37fa516">&#9670;&#160;</a></span>PlayerAction</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#aca8b99acad6a0265b926e92ea37fa516">Ctrl::PlayerAction</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>What <a class="el" href="structCtrl_1_1ReqManagePlayer.html">ReqManagePlayer</a> asks for. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aca8b99acad6a0265b926e92ea37fa516a904a8304056d77e4547744781b7ceb50" name="aca8b99acad6a0265b926e92ea37fa516a904a8304056d77e4547744781b7ceb50"></a>Rename&#160;</td><td class="fielddoc"><p>playerId gets the name </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aca8b99acad6a0265b926e92ea37fa516a686e697538050e4664636337cc3b834f" name="aca8b99acad6a0265b926e92ea37fa516a686e697538050e4664636337cc3b834f"></a>Create&#160;</td><td class="fielddoc"><p>a new user player with the name </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aca8b99acad6a0265b926e92ea37fa516af2a6c498fb90ee345d997f888fce3b18" name="aca8b99acad6a0265b926e92ea37fa516af2a6c498fb90ee345d997f888fce3b18"></a>Delete&#160;</td><td class="fielddoc"><p>playerId, a user player, is deleted </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aca8b99acad6a0265b926e92ea37fa516acc4ad94a53c093268bbec3f96d8d49de" name="aca8b99acad6a0265b926e92ea37fa516acc4ad94a53c093268bbec3f96d8d49de"></a>BuddyJoins&#160;</td><td class="fielddoc"><p>buddy playerId sits at the table </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aca8b99acad6a0265b926e92ea37fa516a0a15c7ebdb469586619f8e177d0bd755" name="aca8b99acad6a0265b926e92ea37fa516a0a15c7ebdb469586619f8e177d0bd755"></a>BuddyLeaves&#160;</td><td class="fielddoc"><p>buddy playerId leaves the table </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a483aaf9a60e115516178a101bbf49782" name="a483aaf9a60e115516178a101bbf49782"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a483aaf9a60e115516178a101bbf49782">&#9670;&#160;</a></span>PlayerKind</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a483aaf9a60e115516178a101bbf49782">Ctrl::PlayerKind</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Who a player is for. A user player can become the user player; a buddy player is delivered with the game and only ever sits at the table. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a483aaf9a60e115516178a101bbf49782a8f9bfe9d1345237cb3b2b205864da075" name="a483aaf9a60e115516178a101bbf49782a8f9bfe9d1345237cb3b2b205864da075"></a>User&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a483aaf9a60e115516178a101bbf49782a8fb645e200b5986d7cdfb4a5d2542a7f" name="a483aaf9a60e115516178a101bbf49782a8fb645e200b5986d7cdfb4a5d2542a7f"></a>Buddy&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -611,10 +710,75 @@ template&lt;class Container &gt; </div>
 
 </div>
 </div>
+<a id="a0fd24f0ee7dc1d790dee4684ea7501d7" name="a0fd24f0ee7dc1d790dee4684ea7501d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fd24f0ee7dc1d790dee4684ea7501d7">&#9670;&#160;</a></span>operator&lt;&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream &amp; Ctrl::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;</td>          <td class="paramname"><span class="paramname"><em>os</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a483aaf9a60e115516178a101bbf49782">PlayerKind</a></td>          <td class="paramname"><span class="paramname"><em>kind</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Lets doctest show a PlayerKind when a check fails. </p>
+
+</div>
+</div>
+<a id="a4e85144da34dba2eaec96f62d919ddd0" name="a4e85144da34dba2eaec96f62d919ddd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e85144da34dba2eaec96f62d919ddd0">&#9670;&#160;</a></span>playerKindFromString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a483aaf9a60e115516178a101bbf49782">PlayerKind</a> Ctrl::playerKindFromString </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a78f14faef002f92481b92cb9f0e0f505" name="a78f14faef002f92481b92cb9f0e0f505"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78f14faef002f92481b92cb9f0e0f505">&#9670;&#160;</a></span>toString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * Ctrl::toString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a483aaf9a60e115516178a101bbf49782">PlayerKind</a></td>          <td class="paramname"><span class="paramname"><em>kind</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 16 2026 15:42:25 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

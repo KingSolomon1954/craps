@@ -170,6 +170,24 @@ CrapsReaders::readPlayerNumBetsOnTable(
 //----------------------------------------------------------------
 
 Gen::ReturnCode
+CrapsReaders::readPlayerSessionNet(
+    const Craps::PlayerId& playerId,
+    int& netBalance,
+    Gen::ErrorPass& ep)
+{
+    Craps::Player* p = Gbl::pPlayerMgr->getPlayer(playerId, ep);
+    if (p == nullptr)
+    {
+        ep.prepend(diagPrefix("playerSessionNet", "retrieve player session net"));
+        return Gen::ReturnCode::Fail;
+    }
+    netBalance = p->getSessionNet();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
 CrapsReaders::readPlayerBalance(
     const Craps::PlayerId& playerId,
     Gen::Money& balance,
@@ -281,6 +299,17 @@ const PlayerManifest::PlayerList&
 CrapsReaders::readPlayerList()
 {
     return Gbl::pPlayerMgr->getPlayerList();
+}
+
+//----------------------------------------------------------------
+//
+// Every known player with kind, whether he is the user and whether he
+// is at the table.
+//
+std::vector<PlayerManager::PlayerInfo>
+CrapsReaders::readPlayerRoster()
+{
+    return Gbl::pPlayerMgr->listPlayers();
 }
 
 //----------------------------------------------------------------

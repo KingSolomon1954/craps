@@ -31,6 +31,8 @@ User Interface Overview
 
 < give a high-level overview of the interface>
 
+.. include:: players.inc
+
 .. include:: configuration.inc
 
 .. include:: statistics.inc

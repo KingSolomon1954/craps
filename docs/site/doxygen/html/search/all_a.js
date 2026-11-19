@@ -45,5 +45,6 @@ var searchData=
   ['keytableuserisplayer_42',['KeyTableUserIsPlayer',['../classCtrl_1_1ConfigManager.html#a1cd84a4978489b57dd809c6960e8bb32',1,'Ctrl::ConfigManager']]],
   ['keytracelogging_43',['KeyTraceLogging',['../classCtrl_1_1ConfigManager.html#ac86d5aea2be14caa1f037f689f244b3a',1,'Ctrl::ConfigManager']]],
   ['keyviewtype_44',['KeyViewType',['../classCtrl_1_1ConfigManager.html#a6885750dc2ea70dfe0418cfceb02784b',1,'Ctrl::ConfigManager']]],
-  ['kind_45',['kind',['../structCui_1_1LocationRequest.html#ac32c7b72b604d9d5a722478b4300a134',1,'Cui::LocationRequest']]]
+  ['kind_45',['kind',['../structCtrl_1_1PlayerManager_1_1PlayerInfo.html#a64b2f6510b56911b8ccd4ba10c8a6f7c',1,'Ctrl::PlayerManager::PlayerInfo::kind'],['../structCtrl_1_1PlayerManifest_1_1PlayerDescription.html#a617306c8e27b06853a7ca5f4f86ab5c0',1,'Ctrl::PlayerManifest::PlayerDescription::kind'],['../structCui_1_1LocationRequest.html#ac32c7b72b604d9d5a722478b4300a134',1,'Cui::LocationRequest::kind']]],
+  ['kinds_46',['kinds',['../structCtrl_1_1StartChoices_1_1Request.html#a8cadeba7b6f3425b6aaef82f671171da',1,'Ctrl::StartChoices::Request']]]
 ];

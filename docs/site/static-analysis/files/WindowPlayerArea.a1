@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="17557301517002006476">
+<analyzerinfo hash="13856044266615585026">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="AllPlayers"/>
     <functioncall functionName="OnePlayer"/>
@@ -29,6 +29,7 @@
     <functioncall functionName="playerAreaLeftCol"/>
     <functioncall functionName="playerAreaTopRow"/>
     <functioncall functionName="playerAreaWidth"/>
+    <functioncall functionName="rebuild"/>
     <functioncall functionName="transfer"/>
     <functioncall functionName="true"/>
     <functioncall functionName="werase"/>
