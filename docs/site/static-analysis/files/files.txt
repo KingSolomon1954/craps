@@ -65,6 +65,8 @@ DialogBetAmount.a1::/work/src/lib-cui/src/dialogs/DialogBetAmount.cpp
 DialogConfirm.a1::/work/src/lib-cui/src/dialogs/DialogConfirm.cpp
 DialogError.a1::/work/src/lib-cui/src/dialogs/DialogError.cpp
 DialogMessage.a1::/work/src/lib-cui/src/dialogs/DialogMessage.cpp
+DialogPickPlayer.a1::/work/src/lib-cui/src/dialogs/DialogPickPlayer.cpp
+DialogTextInput.a1::/work/src/lib-cui/src/dialogs/DialogTextInput.cpp
 LayoutCrapsScreen.a1::/work/src/lib-cui/src/layouts/LayoutCrapsScreen.cpp
 CarrierBet.a1::/work/src/lib-cui/src/managers/CarrierBet.cpp
 ColorManager.a1::/work/src/lib-cui/src/managers/ColorManager.cpp

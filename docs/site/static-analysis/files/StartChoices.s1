@@ -1,5 +1,7 @@
 haveFile call:[empty,is_regular_file] noreturn:[is_regular_file]
-pickOne call:[LOG_WARN,empty,has_value,haveFile,string] noreturn:[LOG_WARN]
+kindOkay call:[LOG_WARN,empty,end,find,toString]
+pickOne call:[LOG_WARN,empty,has_value,haveFile,kindOkay,string] noreturn:[LOG_WARN]
 nonEmpty call:[empty]
 readList call:[get,push_back,to_string] noreturn:[push_back]
 readBool call:[LOG_WARN,get]
+readKinds call:[LOG_WARN,LoadFile,clear,playerKindFromString,string,what] noreturn:[clear,playerKindFromString]

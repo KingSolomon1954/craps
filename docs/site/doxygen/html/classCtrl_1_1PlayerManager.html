@@ -91,7 +91,9 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classCtrl_1_1PlayerManager-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Ctrl::PlayerManager Class Reference</div></div>
 </div><!--header-->
@@ -102,6 +104,12 @@ $(function(){ initResizable(false); });
 
 <p><code>#include &lt;<a class="el" href="PlayerManager_8h_source.html">PlayerManager.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1PlayerManager_1_1PlayerInfo.html">PlayerInfo</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">One known player, as the View needs to show it.  <a href="structCtrl_1_1PlayerManager_1_1PlayerInfo.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a2015c56793bf61a8df91eeb091b58730" id="r_a2015c56793bf61a8df91eeb091b58730"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2015c56793bf61a8df91eeb091b58730">Players</a> = std::vector&lt;<a class="el" href="classCraps_1_1Player.html">Craps::Player</a>*&gt;</td></tr>
@@ -123,11 +131,31 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab0b0c7aaa9d655016062a57e1637dd8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a454cef7ae3b06317d561903903a747fc" id="r_a454cef7ae3b06317d561903903a747fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCtrl_1_1PlayerPrefs.html">PlayerPrefs</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a454cef7ae3b06317d561903903a747fc">getPrefs</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId)</td></tr>
 <tr class="separator:a454cef7ae3b06317d561903903a747fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Observers</div></td></tr>
+<tr class="memitem:ad76ced9118dbc6cf61cebd74218ea716" id="r_ad76ced9118dbc6cf61cebd74218ea716"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad76ced9118dbc6cf61cebd74218ea716">renamePlayer</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, const std::string &amp;newName, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:ad76ced9118dbc6cf61cebd74218ea716"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b7db788b5a7f4999a7874a779f61b39" id="r_a6b7db788b5a7f4999a7874a779f61b39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b7db788b5a7f4999a7874a779f61b39">createPlayer</a> (const std::string &amp;name, const std::string &amp;description, <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;newPlayerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:a6b7db788b5a7f4999a7874a779f61b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c38eb02334e1511be922cb35a933fb2" id="r_a9c38eb02334e1511be922cb35a933fb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c38eb02334e1511be922cb35a933fb2">deletePlayer</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:a9c38eb02334e1511be922cb35a933fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad88d6bebe970189ef063710ee4399bb2" id="r_ad88d6bebe970189ef063710ee4399bb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad88d6bebe970189ef063710ee4399bb2">buddyJoinsTable</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:ad88d6bebe970189ef063710ee4399bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7719e22878f6b7fb79639f21c8e2501f" id="r_a7719e22878f6b7fb79639f21c8e2501f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7719e22878f6b7fb79639f21c8e2501f">buddyLeavesTable</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:a7719e22878f6b7fb79639f21c8e2501f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a200c6fb02d4a097f8c45510b03b7e688" id="r_a200c6fb02d4a097f8c45510b03b7e688"><td class="memItemLeft" align="right" valign="top">static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a200c6fb02d4a097f8c45510b03b7e688">MaxNameLength</a> = 16</td></tr>
+<tr class="separator:a200c6fb02d4a097f8c45510b03b7e688"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0926db0627690a834a2a0d1e723c1492" id="r_a0926db0627690a834a2a0d1e723c1492"><td class="memItemLeft" align="right" valign="top">static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0926db0627690a834a2a0d1e723c1492">MaxDescriptionLength</a> = 40</td></tr>
+<tr class="separator:a0926db0627690a834a2a0d1e723c1492"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Observers</h2></td></tr>
 <tr class="memitem:aad082183942a70f5a40d916cdd7c6198" id="r_aad082183942a70f5a40d916cdd7c6198"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classCtrl_1_1PlayerPrefs.html">PlayerPrefs</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad082183942a70f5a40d916cdd7c6198">userPrefs</a> () const</td></tr>
 <tr class="separator:aad082183942a70f5a40d916cdd7c6198"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a907344c4d52e5926f7cf0143b4854355" id="r_a907344c4d52e5926f7cf0143b4854355"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classCtrl_1_1PlayerManifest.html#af3675d861b3db3d50ef07ff81342de4b">PlayerManifest::PlayerList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a907344c4d52e5926f7cf0143b4854355">getPlayerList</a> () const</td></tr>
 <tr class="separator:a907344c4d52e5926f7cf0143b4854355"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfff5e6c10bcfb4cc15125d3c93a6ec9" id="r_adfff5e6c10bcfb4cc15125d3c93a6ec9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structCtrl_1_1PlayerManager_1_1PlayerInfo.html">PlayerInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfff5e6c10bcfb4cc15125d3c93a6ec9">listPlayers</a> () const</td></tr>
+<tr class="separator:adfff5e6c10bcfb4cc15125d3c93a6ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94012cd6d2522412e5e1607d3852d3a3" id="r_a94012cd6d2522412e5e1607d3852d3a3"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="#a2015c56793bf61a8df91eeb091b58730">Players</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94012cd6d2522412e5e1607d3852d3a3">getPlayers</a> () const</td></tr>
 <tr class="separator:a94012cd6d2522412e5e1607d3852d3a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac90adf0f0456e5130b5bb56109a6d31f" id="r_ac90adf0f0456e5130b5bb56109a6d31f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCraps_1_1Player.html">Craps::Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac90adf0f0456e5130b5bb56109a6d31f">getUserPlayer</a> () const</td></tr>
@@ -138,6 +166,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8a8c1cd4e337da87f4493c52c9d7a2d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91a841aebb994e00e3af067b41dfccd1" id="r_a91a841aebb994e00e3af067b41dfccd1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCraps_1_1Player.html">Craps::Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91a841aebb994e00e3af067b41dfccd1">getPlayer</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep) const</td></tr>
 <tr class="separator:a91a841aebb994e00e3af067b41dfccd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6afbb380def9c389337a7a8974fc166a" id="r_a6afbb380def9c389337a7a8974fc166a"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6afbb380def9c389337a7a8974fc166a">checkName</a> (const std::string &amp;name, std::string &amp;whyNot)</td></tr>
+<tr class="separator:a6afbb380def9c389337a7a8974fc166a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ba378f25e0e5878e411279ce140ac1c" id="r_a5ba378f25e0e5878e411279ce140ac1c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ba378f25e0e5878e411279ce140ac1c">checkDescription</a> (const std::string &amp;description, std::string &amp;whyNot)</td></tr>
+<tr class="separator:a5ba378f25e0e5878e411279ce140ac1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Managers players. </p>
@@ -172,6 +204,16 @@ Public Member Functions</h2></td></tr>
 <li>Then the player who left is written to his file. If that write fails it is logged; the switch still stands.</li>
 </ul>
 <p>A player who switched out stays loaded. If he is switched in again later he starts a new session.</p>
+<dl class="section user"><dt>Player kinds</dt><dd></dd></dl>
+<p>Every player in the manifest is a user player or a buddy player. User players are the ones the person can become (<a class="el" href="#a539c51fbc5f61680cdb3bc9bedc2b8ef">switchPlayer()</a>), rename and delete. Buddy players come with the game: they can sit at the table (<a class="el" href="#ad88d6bebe970189ef063710ee4399bb2">buddyJoinsTable()</a>, <a class="el" href="#a7719e22878f6b7fb79639f21c8e2501f">buddyLeavesTable()</a>) but never become the user player and are never renamed or deleted. A new player is always a user player.</p>
+<dl class="section user"><dt>Managing players</dt><dd></dd></dl>
+<p>All of these never throw and change nothing on failure.</p>
+<ul>
+<li><a class="el" href="#ad76ced9118dbc6cf61cebd74218ea716">renamePlayer()</a>: names are trimmed, 1 to MaxNameLength printable ASCII characters, and unique ignoring case. Only the name changes; the player id and the file name stay the same, because config.yaml and state.yaml refer to players by file name. The manifest is saved at once. The manifest's name is the one that counts when a player is loaded. </li>
+<li><a class="el" href="#a6b7db788b5a7f4999a7874a779f61b39">createPlayer()</a>: makes a user player with a fresh id, an optional short description (up to MaxDescriptionLength printable ASCII characters), a file name made from the name (unique), and the usual starting bank. The player file and the manifest are written at once. Does not switch to the new player. </li>
+<li><a class="el" href="#a9c38eb02334e1511be922cb35a933fb2">deletePlayer()</a>: user players only; not the current user and not anyone at the table. The file is moved to the "trash" folder inside the players folder, not erased. </li>
+<li><a class="el" href="#ad88d6bebe970189ef063710ee4399bb2">buddyJoinsTable()</a> and <a class="el" href="#a7719e22878f6b7fb79639f21c8e2501f">buddyLeavesTable()</a>: a leaving buddy's bets come off the table and are returned to him, the same as for any player who leaves.</li>
+</ul>
 <dl class="section user"><dt>Threads</dt><dd></dd></dl>
 <p>Requests arrive on the EventManager thread while the View thread reads through <a class="el" href="classCtrl_1_1CrapsReaders.html" title="Retrieves read-only information directly from the model.">CrapsReaders</a>. The manager's own bookkeeping (who is loaded, who is the user) is guarded by a mutex. <a class="el" href="#a94012cd6d2522412e5e1607d3852d3a3">getPlayers()</a> hands out a reference and so is not protected; do not call it while a switch can be running. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
@@ -226,6 +268,204 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad88d6bebe970189ef063710ee4399bb2" name="ad88d6bebe970189ef063710ee4399bb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad88d6bebe970189ef063710ee4399bb2">&#9670;&#160;</a></span>buddyJoinsTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> PlayerManager::buddyJoinsTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A buddy player sits down at the table.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">playerId</td><td>the buddy player </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ep</td><td>if error, ep has the reason. For example, the table is full. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success or Fail </dd></dl>
+
+</div>
+</div>
+<a id="a7719e22878f6b7fb79639f21c8e2501f" name="a7719e22878f6b7fb79639f21c8e2501f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7719e22878f6b7fb79639f21c8e2501f">&#9670;&#160;</a></span>buddyLeavesTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> PlayerManager::buddyLeavesTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A buddy player leaves the table. His bets come off the table and are returned to him, and his session is saved.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">playerId</td><td>the buddy player </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ep</td><td>if error, ep has the reason </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success or Fail </dd></dl>
+
+</div>
+</div>
+<a id="a5ba378f25e0e5878e411279ce140ac1c" name="a5ba378f25e0e5878e411279ce140ac1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ba378f25e0e5878e411279ce140ac1c">&#9670;&#160;</a></span>checkDescription()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool PlayerManager::checkDescription </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>description</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>whyNot</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6afbb380def9c389337a7a8974fc166a" name="a6afbb380def9c389337a7a8974fc166a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6afbb380def9c389337a7a8974fc166a">&#9670;&#160;</a></span>checkName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool PlayerManager::checkName </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>whyNot</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Tells whether name is acceptable for a player, apart from being unique.</p>
+<p>A name is 1 to MaxNameLength printable ASCII characters. Call with the name already trimmed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>the proposed name </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">whyNot</td><td>if not acceptable, a sentence the person can read </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6b7db788b5a7f4999a7874a779f61b39" name="a6b7db788b5a7f4999a7874a779f61b39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b7db788b5a7f4999a7874a779f61b39">&#9670;&#160;</a></span>createPlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> PlayerManager::createPlayer </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>description</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>newPlayerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Makes a new user player. See the class description.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>the new player's name; leading and trailing blanks are ignored </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">newPlayerId</td><td>the new player's id, if successful </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ep</td><td>if error, ep has the reason </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success or Fail </dd></dl>
+
+</div>
+</div>
+<a id="a9c38eb02334e1511be922cb35a933fb2" name="a9c38eb02334e1511be922cb35a933fb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c38eb02334e1511be922cb35a933fb2">&#9670;&#160;</a></span>deletePlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> PlayerManager::deletePlayer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deletes a user player. See the class description. The player's file is moved to the "trash" folder, so it can be recovered by hand.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">playerId</td><td>the player to delete </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ep</td><td>if error, ep has the reason </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success or Fail </dd></dl>
+
+</div>
+</div>
 <a id="a91a841aebb994e00e3af067b41dfccd1" name="a91a841aebb994e00e3af067b41dfccd1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a91a841aebb994e00e3af067b41dfccd1">&#9670;&#160;</a></span>getPlayer()</h2>
 
@@ -351,6 +591,59 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="adfff5e6c10bcfb4cc15125d3c93a6ec9" name="adfff5e6c10bcfb4cc15125d3c93a6ec9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfff5e6c10bcfb4cc15125d3c93a6ec9">&#9670;&#160;</a></span>listPlayers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="structCtrl_1_1PlayerManager_1_1PlayerInfo.html">PlayerManager::PlayerInfo</a> &gt; PlayerManager::listPlayers </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad76ced9118dbc6cf61cebd74218ea716" name="ad76ced9118dbc6cf61cebd74218ea716"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad76ced9118dbc6cf61cebd74218ea716">&#9670;&#160;</a></span>renamePlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> PlayerManager::renamePlayer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>newName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gives a player a new name. See the class description.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">playerId</td><td>the player to rename </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">newName</td><td>the new name; leading and trailing blanks are ignored </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ep</td><td>if error, ep has the reason </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success or Fail </dd></dl>
+
+</div>
+</div>
 <a id="a96cfc316c4fcd368e2d34c881518ce73" name="a96cfc316c4fcd368e2d34c881518ce73"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a96cfc316c4fcd368e2d34c881518ce73">&#9670;&#160;</a></span>shutdown()</h2>
 
@@ -433,6 +726,51 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a0926db0627690a834a2a0d1e723c1492" name="a0926db0627690a834a2a0d1e723c1492"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0926db0627690a834a2a0d1e723c1492">&#9670;&#160;</a></span>MaxDescriptionLength</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Ctrl::PlayerManager::MaxDescriptionLength = 40</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a200c6fb02d4a097f8c45510b03b7e688" name="a200c6fb02d4a097f8c45510b03b7e688"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a200c6fb02d4a097f8c45510b03b7e688">&#9670;&#160;</a></span>MaxNameLength</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t Ctrl::PlayerManager::MaxNameLength = 16</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/lib-controller/include/controller/<a class="el" href="PlayerManager_8h_source.html">PlayerManager.h</a></li>
 <li>src/lib-controller/src/<a class="el" href="PlayerManager_8cpp.html">PlayerManager.cpp</a></li>
@@ -440,7 +778,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 16 2026 15:42:25 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['tableconfig_0',['TableConfig',['../structCraps_1_1TableConfig.html',1,'Craps']]],
-  ['tabledescription_1',['TableDescription',['../structCtrl_1_1TableDescription.html',1,'Ctrl::TableDescription'],['../structCtrl_1_1TableManifest_1_1TableDescription.html',1,'Ctrl::TableManifest::TableDescription']]],
-  ['tabledescriptions_2',['TableDescriptions',['../structTableDescriptions.html',1,'']]],
-  ['tablemanager_3',['TableManager',['../classCtrl_1_1TableManager.html',1,'Ctrl']]],
-  ['tablemanifest_4',['TableManifest',['../classCtrl_1_1TableManifest.html',1,'Ctrl']]],
-  ['tableminmaxrules_5',['TableMinMaxRules',['../structCtrl_1_1CrapsReaders_1_1TableMinMaxRules.html',1,'Ctrl::CrapsReaders']]],
-  ['tablerules_6',['TableRules',['../structCraps_1_1TableRules.html',1,'Craps']]],
-  ['tablestats_7',['TableStats',['../classCraps_1_1TableStats.html',1,'Craps']]],
-  ['timepoint_8',['Timepoint',['../classGen_1_1Timepoint.html',1,'Gen']]],
-  ['timermanager_9',['TimerManager',['../classGen_1_1TimerManager.html',1,'Gen']]]
+  ['screenbase_0',['ScreenBase',['../classCui_1_1ScreenBase.html',1,'Cui']]],
+  ['screencrapstable_1',['ScreenCrapsTable',['../classCui_1_1ScreenCrapsTable.html',1,'Cui']]],
+  ['sessionhistory_2',['SessionHistory',['../classCraps_1_1SessionHistory.html',1,'Craps']]],
+  ['sessionsummary_3',['SessionSummary',['../classCtrl_1_1SessionSummary.html',1,'Ctrl']]],
+  ['signalhandler_4',['SignalHandler',['../classGen_1_1SignalHandler.html',1,'Gen']]],
+  ['startchoices_5',['StartChoices',['../classCtrl_1_1StartChoices.html',1,'Ctrl']]],
+  ['stringutils_6',['StringUtils',['../classGen_1_1StringUtils.html',1,'Gen']]],
+  ['summary_7',['Summary',['../structCraps_1_1SessionHistory_1_1Summary.html',1,'Craps::SessionHistory']]],
+  ['surfacebase_8',['SurfaceBase',['../classCui_1_1SurfaceBase.html',1,'Cui']]],
+  ['surfacemanager_9',['SurfaceManager',['../classCui_1_1SurfaceManager.html',1,'Cui']]]
 ];

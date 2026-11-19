@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="2126614559596420395">
+<analyzerinfo hash="6999915537412292156">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="BetPlaced"/>
     <functioncall functionName="BetPtr"/>

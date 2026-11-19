@@ -1,0 +1,8 @@
+<map id="Cui::DialogTextInput" name="Cui::DialogTextInput">
+<area shape="rect" id="Node000001" title="Asks the person to type one line of text, such as a name." alt="" coords="5,155,159,180"/>
+<area shape="rect" id="Node000002" href="$classCui_1_1DialogBase.html" title="Specialized surface type for dialog boxes." alt="" coords="19,80,145,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,120,85,154,79,154,79,120"/>
+<area shape="rect" id="Node000003" href="$classCui_1_1SurfaceBase.html" title="Common abstraction for anything occupying a visible/input surface." alt="" coords="16,5,148,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,45,85,80,79,80,79,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="163,10,175,18,166,25,149,27,148,22,164,20,169,18,161,15"/>
+</map>

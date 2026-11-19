@@ -99,7 +99,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Reads in players.yaml, populates players_ vector.  
+<p>Reads and writes players.yaml, the list of known players.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="PlayerManifest_8h_source.html">PlayerManifest.h</a>&gt;</code></p>
@@ -122,13 +122,31 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6ee63a8b24b9fdc99c2b9da09a88c2ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab629b0a2fa798c76a0c1156f62d4ba36" id="r_ab629b0a2fa798c76a0c1156f62d4ba36"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="#af3675d861b3db3d50ef07ff81342de4b">PlayerList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab629b0a2fa798c76a0c1156f62d4ba36">getPlayerList</a> () const</td></tr>
 <tr class="separator:ab629b0a2fa798c76a0c1156f62d4ba36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abae9d4bae0e7f6d0e8fc8567467fb77b" id="r_abae9d4bae0e7f6d0e8fc8567467fb77b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structCtrl_1_1PlayerManifest_1_1PlayerDescription.html">PlayerDescription</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abae9d4bae0e7f6d0e8fc8567467fb77b">find</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId) const</td></tr>
+<tr class="separator:abae9d4bae0e7f6d0e8fc8567467fb77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af501639799beea7f603db80134830002" id="r_af501639799beea7f603db80134830002"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structCtrl_1_1PlayerManifest_1_1PlayerDescription.html">PlayerDescription</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af501639799beea7f603db80134830002">findByName</a> (const std::string &amp;name) const</td></tr>
+<tr class="separator:af501639799beea7f603db80134830002"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a64b151a33d1f838a15fb055fc5cb72" id="r_a0a64b151a33d1f838a15fb055fc5cb72"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a64b151a33d1f838a15fb055fc5cb72">fileNameInUse</a> (const std::string &amp;fileName) const</td></tr>
+<tr class="separator:a0a64b151a33d1f838a15fb055fc5cb72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a539f4e54b94f4e6cd1ea117f262f7108" id="r_a539f4e54b94f4e6cd1ea117f262f7108"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a539f4e54b94f4e6cd1ea117f262f7108">loadFromFile</a> ()</td></tr>
 <tr class="separator:a539f4e54b94f4e6cd1ea117f262f7108"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92fd76133643769036b3117f636f1fe8" id="r_a92fd76133643769036b3117f636f1fe8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92fd76133643769036b3117f636f1fe8">fromYAML</a> (const YAML::Node &amp;node)</td></tr>
 <tr class="separator:a92fd76133643769036b3117f636f1fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace0ab499de658b60643079e463c255d4" id="r_ace0ab499de658b60643079e463c255d4"><td class="memItemLeft" align="right" valign="top">YAML::Node&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace0ab499de658b60643079e463c255d4">toYAML</a> () const</td></tr>
+<tr class="separator:ace0ab499de658b60643079e463c255d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
+<tr class="memitem:a7c192acb2c72e17a0dca037f486ffc29" id="r_a7c192acb2c72e17a0dca037f486ffc29"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c192acb2c72e17a0dca037f486ffc29">add</a> (<a class="el" href="structCtrl_1_1PlayerManifest_1_1PlayerDescription.html">PlayerDescription</a> desc)</td></tr>
+<tr class="separator:a7c192acb2c72e17a0dca037f486ffc29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdc599a83d0081fae62069f9e7f8b3ee" id="r_afdc599a83d0081fae62069f9e7f8b3ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdc599a83d0081fae62069f9e7f8b3ee">remove</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId)</td></tr>
+<tr class="separator:afdc599a83d0081fae62069f9e7f8b3ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0650aedbe92b0cf58f49015300105ba" id="r_ab0650aedbe92b0cf58f49015300105ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0650aedbe92b0cf58f49015300105ba">rename</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, const std::string &amp;newName)</td></tr>
+<tr class="separator:ab0650aedbe92b0cf58f49015300105ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1a57c9a700598e828d1af8c04ddf34b" id="r_ad1a57c9a700598e828d1af8c04ddf34b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1a57c9a700598e828d1af8c04ddf34b">saveToFile</a> () const</td></tr>
+<tr class="separator:ad1a57c9a700598e828d1af8c04ddf34b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Reads in players.yaml, populates players_ vector. </p>
+<div class="textblock"><p>Reads and writes players.yaml, the list of known players. </p>
+<p>Each entry has a kind, "user" or "buddy". The file is strict: an entry without a kind is an error. <a class="el" href="#ad1a57c9a700598e828d1af8c04ddf34b">saveToFile()</a> writes to a temporary file and renames it, so a failure never leaves a half-written manifest. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="af3675d861b3db3d50ef07ff81342de4b" name="af3675d861b3db3d50ef07ff81342de4b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af3675d861b3db3d50ef07ff81342de4b">&#9670;&#160;</a></span>PlayerList</h2>
@@ -145,6 +163,74 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7c192acb2c72e17a0dca037f486ffc29" name="a7c192acb2c72e17a0dca037f486ffc29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c192acb2c72e17a0dca037f486ffc29">&#9670;&#160;</a></span>add()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlayerManifest::add </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCtrl_1_1PlayerManifest_1_1PlayerDescription.html">PlayerDescription</a></td>          <td class="paramname"><span class="paramname"><em>desc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0a64b151a33d1f838a15fb055fc5cb72" name="a0a64b151a33d1f838a15fb055fc5cb72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a64b151a33d1f838a15fb055fc5cb72">&#9670;&#160;</a></span>fileNameInUse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool PlayerManifest::fileNameInUse </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>fileName</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abae9d4bae0e7f6d0e8fc8567467fb77b" name="abae9d4bae0e7f6d0e8fc8567467fb77b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abae9d4bae0e7f6d0e8fc8567467fb77b">&#9670;&#160;</a></span>find()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structCtrl_1_1PlayerManifest_1_1PlayerDescription.html">PlayerManifest::PlayerDescription</a> * PlayerManifest::find </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af501639799beea7f603db80134830002" name="af501639799beea7f603db80134830002"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af501639799beea7f603db80134830002">&#9670;&#160;</a></span>findByName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structCtrl_1_1PlayerManifest_1_1PlayerDescription.html">PlayerManifest::PlayerDescription</a> * PlayerManifest::findByName </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a92fd76133643769036b3117f636f1fe8" name="a92fd76133643769036b3117f636f1fe8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a92fd76133643769036b3117f636f1fe8">&#9670;&#160;</a></span>fromYAML()</h2>
 
@@ -230,6 +316,78 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afdc599a83d0081fae62069f9e7f8b3ee" name="afdc599a83d0081fae62069f9e7f8b3ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdc599a83d0081fae62069f9e7f8b3ee">&#9670;&#160;</a></span>remove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool PlayerManifest::remove </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab0650aedbe92b0cf58f49015300105ba" name="ab0650aedbe92b0cf58f49015300105ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0650aedbe92b0cf58f49015300105ba">&#9670;&#160;</a></span>rename()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool PlayerManifest::rename </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>newName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1a57c9a700598e828d1af8c04ddf34b" name="ad1a57c9a700598e828d1af8c04ddf34b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1a57c9a700598e828d1af8c04ddf34b">&#9670;&#160;</a></span>saveToFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlayerManifest::saveToFile </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ace0ab499de658b60643079e463c255d4" name="ace0ab499de658b60643079e463c255d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace0ab499de658b60643079e463c255d4">&#9670;&#160;</a></span>toYAML()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">YAML::Node PlayerManifest::toYAML </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/lib-controller/include/controller/<a class="el" href="PlayerManifest_8h_source.html">PlayerManifest.h</a></li>
 <li>src/lib-controller/src/<a class="el" href="PlayerManifest_8cpp.html">PlayerManifest.cpp</a></li>
@@ -237,7 +395,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 16 2026 15:42:25 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

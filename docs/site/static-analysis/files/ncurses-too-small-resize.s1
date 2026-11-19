@@ -1,5 +1,0 @@
-initNcurses call:[cbreak,curs_set,initscr,keypad,noecho,start_color,use_default_colors] noreturn:[use_default_colors]
-requestTerminalResize call:[fflush,printf] noreturn:[fflush]
-promptUserToResize call:[clear,getch,mvprintw,refresh,return] noreturn:[return]
-ensureMinimumTerminalSize call:[clear,getmaxyx,is_term_resized,mvprintw,napms,promptUserToResize,refresh,requestTerminalResize,resize_term] noreturn:[resize_term]
-main call:[endwin,ensureMinimumTerminalSize,fflush,fprintf,initNcurses]

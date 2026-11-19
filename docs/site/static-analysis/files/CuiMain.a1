@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="8600469604941666652">
+<analyzerinfo hash="11692774342092872670">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="CuiMain"/>
     <functioncall functionName="Info"/>

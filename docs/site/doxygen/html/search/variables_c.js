@@ -11,5 +11,6 @@ var searchData=
   ['oddsplace_8',['oddsPlace',['../classCraps_1_1OddsTables.html#a7ec1cbfe488979f69fa83013d0de1520',1,'Craps::OddsTables']]],
   ['oddswin_9',['oddsWin',['../structCraps_1_1DecisionRecord.html#a35c2a5a8e2a62f7e15e946c60b15268c',1,'Craps::DecisionRecord']]],
   ['oddsworld_10',['oddsWorld',['../classCraps_1_1OddsTables.html#ac26773038f1c652b5711a2b55032f9d3',1,'Craps::OddsTables']]],
-  ['operationresult_5f_11',['operationResult_',['../classCui_1_1SurfaceBase.html#a22d107ae7ed1f35a1c958ffe57a8d19f',1,'Cui::SurfaceBase']]]
+  ['ok_11',['ok',['../structCtrl_1_1RspManagePlayer.html#a5e3e8fc30354fd441e271a7e1cef1c36',1,'Ctrl::RspManagePlayer']]],
+  ['operationresult_5f_12',['operationResult_',['../classCui_1_1SurfaceBase.html#a22d107ae7ed1f35a1c958ffe57a8d19f',1,'Cui::SurfaceBase']]]
 ];

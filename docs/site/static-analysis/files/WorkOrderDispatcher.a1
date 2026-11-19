@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="8454155359321753322">
+<analyzerinfo hash="4866577071393854370">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="LOG_TRACE"/>
     <functioncall functionName="assert"/>
@@ -19,8 +19,11 @@
     <functioncall functionName="onPlayerSessionStatsChanged"/>
     <functioncall functionName="onPointEstablished"/>
     <functioncall functionName="onResolveBetsEnd"/>
+    <functioncall functionName="onRosterChanged"/>
     <functioncall functionName="onRspMakeBet"/>
+    <functioncall functionName="onRspManagePlayer"/>
     <functioncall functionName="onRspOddsBet"/>
+    <functioncall functionName="onRspSwitchPlayer"/>
     <functioncall functionName="onSevenOut"/>
     <functioncall functionName="onTableBalanceChanged"/>
     <functioncall functionName="onTableBetsChanged"/>
@@ -29,7 +32,10 @@
     <functioncall functionName="popSurface"/>
     <functioncall functionName="process"/>
     <functioncall functionName="pushSurface"/>
+    <functioncall functionName="refreshRoster"/>
+    <functioncall functionName="reload"/>
     <functioncall functionName="setSurface"/>
+    <functioncall functionName="syncPlayerColors"/>
     <functioncall functionName="visit"/>
   </FileInfo>
 </analyzerinfo>

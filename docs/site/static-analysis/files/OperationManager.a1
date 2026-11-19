@@ -1,21 +1,55 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="15301475417971419099">
+<analyzerinfo hash="13366328147599060028">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:29:1" my-argnr="1" my-argname="s" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="31" col="28" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:38:1" my-argnr="1" my-argname="a" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="40" col="12" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:38:1" my-argnr="2" my-argname="b" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="40" col="24" value="0"/>
+  </FileInfo>
   <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="trimmed" lineNumber="29"/>
+    <functiondecl functionName="sameIgnoringCase" lineNumber="38"/>
     <functioncall functionName="AwaitingConfirmation"/>
     <functioncall functionName="AwaitingErrorAcknowledgement"/>
+    <functioncall functionName="AwaitingPick"/>
     <functioncall functionName="AwaitingResponse"/>
+    <functioncall functionName="AwaitingText"/>
+    <functioncall functionName="BuddyJoins"/>
+    <functioncall functionName="BuddyLeaves"/>
+    <functioncall functionName="Create"/>
+    <functioncall functionName="Delete"/>
     <functioncall functionName="Idle"/>
+    <functioncall functionName="Info"/>
+    <functioncall functionName="Item"/>
+    <functioncall functionName="LOG_ERROR"/>
     <functioncall functionName="LOG_TRACE"/>
     <functioncall functionName="LOG_WARN"/>
     <functioncall functionName="MakeBet"/>
+    <functioncall functionName="MaxDescriptionLength"/>
+    <functioncall functionName="MaxNameLength"/>
     <functioncall functionName="None"/>
+    <functioncall functionName="Pick"/>
+    <functioncall functionName="Player"/>
+    <functioncall functionName="PlayerId"/>
     <functioncall functionName="Quit"/>
+    <functioncall functionName="Rename"/>
+    <functioncall functionName="Show"/>
+    <functioncall functionName="askConfirmation"/>
+    <functioncall functionName="askForDescription"/>
+    <functioncall functionName="askForName"/>
+    <functioncall functionName="askingDescription_"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="checkDescription"/>
+    <functioncall functionName="checkName"/>
+    <functioncall functionName="clear"/>
     <functioncall functionName="configure"/>
     <functioncall functionName="correlationId_"/>
     <functioncall functionName="description"/>
+    <functioncall functionName="description_"/>
     <functioncall functionName="doContractBet"/>
     <functioncall functionName="doOddsBet"/>
     <functioncall functionName="empty"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="equal"/>
     <functioncall functionName="errorNameStr"/>
     <functioncall functionName="errorTypeStr"/>
     <functioncall functionName="false"/>
@@ -26,21 +60,47 @@
     <functioncall functionName="getOddsAmount"/>
     <functioncall functionName="getPivot"/>
     <functioncall functionName="getPlayerId"/>
+    <functioncall functionName="getUserPlayerId"/>
     <functioncall functionName="instance"/>
     <functioncall functionName="isActive"/>
+    <functioncall functionName="isBuddyKind"/>
     <functioncall functionName="isOddsBet"/>
+    <functioncall functionName="isUserKind"/>
+    <functioncall functionName="isspace"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="noteFor"/>
+    <functioncall functionName="pickable"/>
+    <functioncall functionName="playerOpVerb"/>
+    <functioncall functionName="playerOp_"/>
     <functioncall functionName="popToRoot"/>
     <functioncall functionName="pushSurface"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="readPlayerNumBetsOnTable"/>
+    <functioncall functionName="readPlayerRoster"/>
     <functioncall functionName="reqAutoFill"/>
     <functioncall functionName="reqMakeBet"/>
+    <functioncall functionName="reqManagePlayer"/>
     <functioncall functionName="reqOddsBet"/>
     <functioncall functionName="reqQuickBet"/>
+    <functioncall functionName="reqSwitchPlayer"/>
     <functioncall functionName="reqTerminate"/>
+    <functioncall functionName="sameIgnoringCase"/>
+    <functioncall functionName="sendPlayerRequest"/>
     <functioncall functionName="setDescription"/>
     <functioncall functionName="setErrorName"/>
     <functioncall functionName="setErrorType"/>
     <functioncall functionName="showError"/>
+    <functioncall functionName="showNotice"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="substr"/>
+    <functioncall functionName="targetId_"/>
+    <functioncall functionName="targetName_"/>
+    <functioncall functionName="text_"/>
     <functioncall functionName="to_string"/>
+    <functioncall functionName="tolower"/>
+    <functioncall functionName="trimmed"/>
     <functioncall functionName="true"/>
+    <functioncall functionName="wanted"/>
   </FileInfo>
 </analyzerinfo>

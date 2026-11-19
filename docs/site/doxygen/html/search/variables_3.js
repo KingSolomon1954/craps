@@ -9,7 +9,7 @@ var searchData=
   ['defaulttable_6',['defaultTable',['../structCtrl_1_1StartChoices_1_1Request.html#ae8887c3fcad60882a72afc2dbff5d38c',1,'Ctrl::StartChoices::Request']]],
   ['defaultuserplayer_7',['defaultUserPlayer',['../structCtrl_1_1StartChoices_1_1Request.html#ab10a0f935dc189dab1c3be84ade44ad4',1,'Ctrl::StartChoices::Request']]],
   ['denominator_8',['denominator',['../structCraps_1_1OddsTables_1_1OddsEntry.html#a97e0140710b178db0b41c7e9819a65b7',1,'Craps::OddsTables::OddsEntry::denominator'],['../structCraps_1_1TableRules_1_1Payout.html#a682a4b3c1d171ba5fe4a844b2d20aacd',1,'Craps::TableRules::Payout::denominator']]],
-  ['description_9',['description',['../structCtrl_1_1UslBetEvaluationFailed.html#a0c35c34cbeba0555d10bb0bd5e0ed4a2',1,'Ctrl::UslBetEvaluationFailed']]],
+  ['description_9',['description',['../structCtrl_1_1UslBetEvaluationFailed.html#a0c35c34cbeba0555d10bb0bd5e0ed4a2',1,'Ctrl::UslBetEvaluationFailed::description'],['../structCtrl_1_1ReqManagePlayer.html#a69d0565f334713973690d09d296ec710',1,'Ctrl::ReqManagePlayer::description'],['../structCtrl_1_1PlayerManager_1_1PlayerInfo.html#ae71f163c5dab74f52e71ab997bacdf9b',1,'Ctrl::PlayerManager::PlayerInfo::description'],['../structCui_1_1DialogPickPlayer_1_1Item.html#a31812be59d37934aff41fc9a756eccb5',1,'Cui::DialogPickPlayer::Item::description']]],
   ['detail_10',['detail',['../structCui_1_1DialogMessage_1_1MessageText.html#afd12ce4fde37f4cf46063bb10284db79',1,'Cui::DialogMessage::MessageText']]],
   ['direction_11',['direction',['../structCui_1_1LocationRequest.html#a6149023bed56ed48e23454f999d50941',1,'Cui::LocationRequest']]],
   ['dontcomelosecomeout_12',['dontComeLoseComeOut',['../classCraps_1_1RollStats.html#a5c454f2c92b76125bc9b67cdca493121',1,'Craps::RollStats']]],

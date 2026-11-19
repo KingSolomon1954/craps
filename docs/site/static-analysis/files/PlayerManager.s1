@@ -1,0 +1,3 @@
+guarded call:[EP_SET,LOG_ERROR,fullDesc,op,what] noreturn:[EP_SET,op]
+fail call:[EP_SET]
+trim call:[isspace,size,substr] noreturn:[substr]

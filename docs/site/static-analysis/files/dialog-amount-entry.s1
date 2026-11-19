@@ -1,1 +1,0 @@
-main call:[clearState,dialog,init,pushScreen,run,setTitle,shutdown] noreturn:[shutdown]

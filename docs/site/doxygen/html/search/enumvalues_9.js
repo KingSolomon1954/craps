@@ -9,5 +9,7 @@ var searchData=
   ['lay9_6',['Lay9',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3eae3d8eb9c8532e86ed8780742f605b991',1,'Cui::CuiUtils']]],
   ['left_7',['Left',['../namespaceCui.html#a6e70c5ed0d1d8f5c07aabe4f25948db1a945d5e233cf7d6240f6b783b36a374ff',1,'Cui']]],
   ['lengtherror_8',['LengthError',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cda743f86382c5da351d9412d567a083658',1,'Gen::ErrorPass']]],
-  ['logicerror_9',['LogicError',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cdaa50b3452a2f7b026eb9325c5df52c157',1,'Gen::ErrorPass']]]
+  ['list_9',['List',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8a4ee29ca12c7d126654bd0e5275de6135',1,'Cui::OperationManager']]],
+  ['listbuddies_10',['ListBuddies',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8ab7e6f4708f177cb16ca7fa4c1c57b850',1,'Cui::OperationManager']]],
+  ['logicerror_11',['LogicError',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cdaa50b3452a2f7b026eb9325c5df52c157',1,'Gen::ErrorPass']]]
 ];

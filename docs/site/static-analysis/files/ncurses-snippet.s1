@@ -1,4 +1,0 @@
-draw_frame call:[mvaddch,mvhline,mvprintw,mvvline,refresh] noreturn:[refresh]
-make_subwin call:[newwin] noreturn:[newwin]
-create_subwindows call:[make_subwin]
-main call:[cbreak,create_subwindows,curs_set,doupdate,draw_frame,endwin,getch,initscr,mvprintw,mvwprintw,noecho,refresh,wnoutrefresh]

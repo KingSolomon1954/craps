@@ -7,7 +7,7 @@ var searchData=
   ['fieldpayouts_4',['fieldPayouts',['../structCraps_1_1TableRules.html#a08ae5b10a6b2a649a7814ecdb4724df9',1,'Craps::TableRules']]],
   ['fieldstr_5',['FieldStr',['../EnumBetName_8cpp.html#a8b3ac2ed587aae8c92631e626a8fb8ff',1,'EnumBetName.cpp']]],
   ['filename_6',['FileName',['../classCtrl_1_1UserState.html#a2e2e82b4d65a6a999db61eabf001a6e3',1,'Ctrl::UserState']]],
-  ['filename_7',['fileName',['../structCtrl_1_1PlayerManifest_1_1PlayerDescription.html#a1a85c400440996c47a7b569364ee0e66',1,'Ctrl::PlayerManifest::PlayerDescription::fileName'],['../structCtrl_1_1TableManifest_1_1TableDescription.html#ac645da98112d71f09b8c741cc9e996e4',1,'Ctrl::TableManifest::TableDescription::fileName']]],
+  ['filename_7',['fileName',['../structCtrl_1_1PlayerManager_1_1PlayerInfo.html#ad1eb5342a451ddf25deeb3c157702e7c',1,'Ctrl::PlayerManager::PlayerInfo::fileName'],['../structCtrl_1_1PlayerManifest_1_1PlayerDescription.html#a1a85c400440996c47a7b569364ee0e66',1,'Ctrl::PlayerManifest::PlayerDescription::fileName'],['../structCtrl_1_1TableManifest_1_1TableDescription.html#ac645da98112d71f09b8c741cc9e996e4',1,'Ctrl::TableManifest::TableDescription::fileName']]],
   ['fiveninenums_8',['FiveNineNums',['../namespaceCraps.html#ace9935039b0744f4b69d0e9478fc8c8b',1,'Craps']]],
   ['flatmultiplier_9',['flatMultiplier',['../structCraps_1_1TableRules_1_1OddsLimit.html#a055ea0b5f7816f0bf5e537e1534a6462',1,'Craps::TableRules::OddsLimit']]],
   ['fourtennums_10',['FourTenNums',['../namespaceCraps.html#aa217187637e40a33b6cae5f716384124',1,'Craps']]],

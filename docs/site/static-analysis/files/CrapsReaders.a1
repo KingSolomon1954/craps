@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="13056620872777978714">
+<analyzerinfo hash="2408190367493115142">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="Critical"/>
     <functioncall functionName="EP_SET"/>
     <functioncall functionName="Fail"/>
     <functioncall functionName="NotFoundError"/>
+    <functioncall functionName="PlayerInfo"/>
     <functioncall functionName="ProgrammingError"/>
     <functioncall functionName="Success"/>
     <functioncall functionName="assert"/>
@@ -48,6 +49,7 @@
     <functioncall functionName="getQuickBets"/>
     <functioncall functionName="getRecentRolls"/>
     <functioncall functionName="getSessionHistory"/>
+    <functioncall functionName="getSessionNet"/>
     <functioncall functionName="getTable"/>
     <functioncall functionName="getTableId"/>
     <functioncall functionName="getTableList"/>
@@ -62,6 +64,7 @@
     <functioncall functionName="isBettingOpen"/>
     <functioncall functionName="isComeOutRoll"/>
     <functioncall functionName="lastFill"/>
+    <functioncall functionName="listPlayers"/>
     <functioncall functionName="oddsAmount"/>
     <functioncall functionName="offComeOutRoll"/>
     <functioncall functionName="pTable"/>
