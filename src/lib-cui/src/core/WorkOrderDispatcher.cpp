@@ -127,6 +127,8 @@ WorkOrderDispatcher::process(const Ctrl::UslResolveBetsEnd& ev)
 
     WindowHouseBrief::instance().onResolveBetsEnd();
     WindowPlayerBrief::instance().onResolveBetsEnd();
+    WindowPlayerArea::instance().onResolveBetsEnd();
+    SurfaceManager::instance().draw();
 }
 
 //----------------------------------------------------------------
@@ -195,6 +197,7 @@ WorkOrderDispatcher::process(const Ctrl::UslBetMade& ev)
         ev.contractAmount,
         ev.oddsAmount,
         ev.pivot);
+    SurfaceManager::instance().draw();
 }
 
 //----------------------------------------------------------------
@@ -210,6 +213,7 @@ WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
         ev.betId,
         ev.amountWin,
         ev.amountLose);
+    SurfaceManager::instance().draw();
     // TODO    
     // WindowMessageArea::instance().onBetResolved(
     //     ev.playerId,
@@ -235,6 +239,7 @@ WorkOrderDispatcher::process(const Ctrl::UslBetChanged& ev)
         ev.contractAmount,
         ev.oddsAmount,
         ev.pivot);
+    SurfaceManager::instance().draw();
 }
 
 //----------------------------------------------------------------

@@ -43,6 +43,7 @@ private:
     void onNewShooter                (const Ctrl::UslNewShooter& ev)                const;
     void onBettingOpened             (const Ctrl::UslBettingOpened& ev)             const;
     void onBetMade                   (const Ctrl::UslBetMade& ev)                   const;
+    void onBetChanged                (const Ctrl::UslBetChanged& ev)                const;
     void onBetResolved               (const Ctrl::UslBetResolved& ev)               const;
     void onAutoFillChanged           (const Ctrl::UslAutoFillChanged& ev)           const;
     void onQuickBetChanged           (const Ctrl::UslQuickBetChanged& ev)           const;

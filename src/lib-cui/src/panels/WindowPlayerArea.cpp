@@ -172,7 +172,7 @@ WindowPlayerArea::advancePlayer(bool next)
     if (currentFocus_ == OneOrAll::OnePlayer)
     {
         onePlayerView_.advancePlayer(next);
-        CuiUtils::transfer(pWin_);
+        draw();     // Redraws name and amounts for the new player
     }
     else
     {
@@ -216,6 +216,14 @@ WindowPlayerArea::onBetMade(
                              contractAmount,
                              oddsAmount,
                              pivot);
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerArea::onResolveBetsEnd()
+{
+    onePlayerView_.onResolveBetsEnd();
 }
 
 //----------------------------------------------------------------

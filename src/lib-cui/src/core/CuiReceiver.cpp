@@ -134,6 +134,12 @@ CuiReceiver::CuiReceiver()
             this->onBetMade(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::UslBetChanged>(
+        [this](const Ctrl::UslBetChanged& ev)
+        {
+            this->onBetChanged(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::UslBetResolved>(
         [this](const Ctrl::UslBetResolved& ev)
         {
@@ -333,6 +339,17 @@ void
 CuiReceiver::onBetMade(const Ctrl::UslBetMade& ev) const
 {
     LOG_TRACE("CuiReceiver()::onBetMade()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onBetChanged(const Ctrl::UslBetChanged& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onBetChanged()");
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);

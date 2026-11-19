@@ -9,6 +9,7 @@
 #include <controller/CrapsReaders.h>
 #include <gen/ErrorPass.h>
 #include <gen/Logger.h>
+#include <gen/MoneyUtils.h>
 #include <cassert>
 
 using namespace Cui;
@@ -119,12 +120,13 @@ PlayerAreaOnePlayer::drawInternalBorders()
     mvwvline(pWin_, L::lineBetsBorderTopRow + 1, L::colComeDont2, 0, L::rowsLineBets);
     
     // Junctions
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col4_5,       ACS_BTEE);
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col5_6,       ACS_BTEE);
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col6_8,       ACS_BTEE);
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col8_9,       ACS_BTEE);
-    mvwaddch(pWin_, L::fieldBorderTopRow,    L::col9_10,      ACS_BTEE);
+    mvwaddch(pWin_, L::lineBetsBorderTopRow, L::col4_5,       ACS_BTEE);
+    mvwaddch(pWin_, L::lineBetsBorderTopRow, L::col5_6,       ACS_BTEE);
+    mvwaddch(pWin_, L::lineBetsBorderTopRow, L::col6_8,       ACS_BTEE);
+    mvwaddch(pWin_, L::lineBetsBorderTopRow, L::col8_9,       ACS_BTEE);
+    mvwaddch(pWin_, L::lineBetsBorderTopRow, L::col9_10,      ACS_BTEE);
     mvwaddch(pWin_, L::lineBetsBorderTopRow, L::colComeDont2, ACS_TTEE);
+    mvwaddch(pWin_, L::fieldBorderTopRow,    L::colComeDont2, ACS_BTEE);
 }
 
 //----------------------------------------------------------------
@@ -151,8 +153,10 @@ void
 PlayerAreaOnePlayer::drawName()
 {
     wattron(pWin_, COLOR_PAIR(players_[playerIndex_].colorPair));
-    mvwaddstr(pWin_, 0, 1, players_[playerIndex_].name.c_str());
-    waddch(pWin_, ':');
+    // Drawn on the Field numbers row, left side, where there is room
+    // for the longest legal name (16 chars) before the numbers at col 24.
+    mvwaddstr(pWin_, Layout::fieldNumbersRow, 1,
+              players_[playerIndex_].name.c_str());
     wattroff(pWin_, COLOR_PAIR(players_[playerIndex_].colorPair));
 }
 
@@ -174,7 +178,10 @@ PlayerAreaOnePlayer::drawBets()
 {
     for (const auto& b : bets_)
     {
-        drawOneBet(b);
+        if (b.amount > 0)
+        {
+            drawOneBet(b);
+        }
     }
 }
 
@@ -183,7 +190,30 @@ PlayerAreaOnePlayer::drawBets()
 void
 PlayerAreaOnePlayer::drawOneBet(const Bet& b)
 {
-    mvwaddstr(pWin_, b.row, b.col, std::to_string(b.amount).c_str());
+    using L = Layout;
+
+    // Always blank the whole field first so a shorter amount does not
+    // leave digits from a longer one behind.
+    mvwaddstr(pWin_, b.row, b.col,
+              std::string(L::betAmountWidth, ' ').c_str());
+
+    if (b.amount == 0) return;
+
+    // Left justified. Show the "$" only if the amount fits with it.
+    std::string text = Gen::MoneyUtils::toStringNoCommas(b.amount);
+    if (text.size() > static_cast<std::size_t>(L::betAmountWidth))
+    {
+        text = Gen::MoneyUtils::toStringPlain(b.amount);
+    }
+    // Amounts stand out from the labels: the player's color and bold.
+    // Swap the attributes below to taste (e.g. A_REVERSE).
+    const attr_t  attrs = A_BOLD;
+    const short   pair  = players_.empty()
+                              ? short(0)
+                              : players_[playerIndex_].colorPair;
+    wattr_on(pWin_, attrs | COLOR_PAIR(pair), nullptr);
+    mvwaddstr(pWin_, b.row, b.col, text.c_str());
+    wattr_off(pWin_, attrs | COLOR_PAIR(pair), nullptr);
 }
 
 //----------------------------------------------------------------
@@ -204,16 +234,11 @@ PlayerAreaOnePlayer::refreshAllBets()
 
     for (auto betId : betIds)
     {
-        auto betName        = getBetName(betId);
-        auto pivot          = getPivot(betId);
-        auto contractAmount = getContractAmount(betId);
-        auto oddsAmount     = getOddsAmount(betId);
-
-        int idx = getBetIndex(betName, pivot);
-        Gen::Money amount = pivot == 0 ? contractAmount : oddsAmount;
-        bets_[idx].betId  = betId;
-        bets_[idx].amount = amount;
-        drawOneBet(bets_[idx]);
+        applyBet(betId,
+                 getBetName(betId),
+                 getPivot(betId),
+                 getContractAmount(betId),
+                 getOddsAmount(betId));
     }
 }
 
@@ -304,6 +329,134 @@ PlayerAreaOnePlayer::getBetIndex(BetName  betName,
 }
 
 //----------------------------------------------------------------
+//
+// The screen has one cell per CuiBetName. A bet can fill two cells: the
+// contract amount and its odds amount. Where they go:
+//   PassLine/DontPass  contract -> PassLine/DontPass, any pivot
+//                      odds     -> PassLineOdds/DontPassOdds
+//   Come/DontCome      pivot 0  -> Come/DontCome (not yet traveled)
+//                      pivot N  -> Come<N>/DontCome<N> and the odds row
+//   everything else    contract -> its own cell (odds are always zero)
+//
+int
+PlayerAreaOnePlayer::slotsFor(BetName    betName,
+                              unsigned   pivot,
+                              Gen::Money contractAmount,
+                              Gen::Money oddsAmount,
+                              std::array<Slot, 2>& slots)
+{
+    using N = CuiUtils::CuiBetName;
+
+    auto byPivot = [pivot](N n4, N n5, N n6, N n8, N n9, N n10) -> N
+    {
+        switch (pivot)
+        {
+            case 4:  return n4;
+            case 5:  return n5;
+            case 6:  return n6;
+            case 8:  return n8;
+            case 9:  return n9;
+            default: return n10;
+        }
+    };
+
+    switch (betName)
+    {
+    case BetName::PassLine:
+        slots[0] = {N::PassLine,     contractAmount};
+        slots[1] = {N::PassLineOdds, oddsAmount};
+        return 2;
+
+    case BetName::DontPass:
+        slots[0] = {N::DontPass,     contractAmount};
+        slots[1] = {N::DontPassOdds, oddsAmount};
+        return 2;
+
+    case BetName::Come:
+        if (pivot == 0)
+        {
+            slots[0] = {N::Come, contractAmount};
+            return 1;
+        }
+        slots[0] = {byPivot(N::Come4, N::Come5, N::Come6,
+                            N::Come8, N::Come9, N::Come10),
+                    contractAmount};
+        slots[1] = {byPivot(N::ComeOdds4, N::ComeOdds5, N::ComeOdds6,
+                            N::ComeOdds8, N::ComeOdds9, N::ComeOdds10),
+                    oddsAmount};
+        return 2;
+
+    case BetName::DontCome:
+        if (pivot == 0)
+        {
+            slots[0] = {N::DontCome, contractAmount};
+            return 1;
+        }
+        slots[0] = {byPivot(N::DontCome4, N::DontCome5, N::DontCome6,
+                            N::DontCome8, N::DontCome9, N::DontCome10),
+                    contractAmount};
+        slots[1] = {byPivot(N::DontOdds4, N::DontOdds5, N::DontOdds6,
+                            N::DontOdds8, N::DontOdds9, N::DontOdds10),
+                    oddsAmount};
+        return 2;
+
+    default:
+        slots[0] = {CuiUtils::betToCuiBetName(betName, pivot),
+                    contractAmount};
+        return 1;
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Remember a bet. First forget where it was, because a bet can move
+// (a Come bet travels to its number, odds get added).
+//
+void
+PlayerAreaOnePlayer::applyBet(Craps::BetId betId,
+                              BetName      betName,
+                              unsigned     pivot,
+                              Gen::Money   contractAmount,
+                              Gen::Money   oddsAmount)
+{
+    clearBetId(betId);
+
+    std::array<Slot, 2> slots{};
+    const int n = slotsFor(betName, pivot,
+                           contractAmount, oddsAmount, slots);
+
+    for (int i = 0; i < n; ++i)
+    {
+        if (slots[i].amount == 0) continue;
+
+        for (auto& b : bets_)
+        {
+            if (b.betName == slots[i].name)
+            {
+                b.betId  = betId;
+                b.amount = slots[i].amount;
+                break;
+            }
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaOnePlayer::clearBetId(Craps::BetId betId)
+{
+    for (auto& b : bets_)
+    {
+        if (b.betId == betId && b.amount != 0)
+        {
+            b.betId  = 0;
+            b.amount = 0;
+        }
+    }
+}
+
+//----------------------------------------------------------------
 
 void    
 PlayerAreaOnePlayer::advancePlayer(bool next)
@@ -317,8 +470,7 @@ PlayerAreaOnePlayer::advancePlayer(bool next)
         prevPlayerIndex();
     }
 
-    refreshAllBets();
-    drawBets();
+    refreshAllBets();   // The caller redraws the window
 }
 
 //----------------------------------------------------------------
@@ -356,19 +508,11 @@ PlayerAreaOnePlayer::onBetMade(
     Gen::Money             oddsAmount,
     unsigned               pivot)
 {
-    (void)betId;
-
+    if (players_.empty()) return;
     if (playerId != players_[playerIndex_].playerId) return;
-    
-    int idx = getBetIndex(betName, pivot);
-    if (idx == bets_.size())
-        return;
 
-    bets_[idx].betId = betId;
-    Gen::Money amount = pivot == 0 ? contractAmount : oddsAmount;
-    bets_[idx].amount = amount;
-    
-    drawOneBet(bets_[idx]);
+    // Only updates what is remembered. The caller redraws the window.
+    applyBet(betId, betName, pivot, contractAmount, oddsAmount);
 }
 
 //----------------------------------------------------------------
@@ -400,20 +544,26 @@ PlayerAreaOnePlayer::onBetResolved(
     Gen::Money             amountWin,
     Gen::Money             amountLose)
 {
+    if (players_.empty()) return;
     if (playerId != players_[playerIndex_].playerId) return;
 
-    for (auto& b : bets_)
-    {
-        if (b.betId == betId)
-        {
-            b.amount = 0;
-            b.betId  = 0;
-            drawOneBet(b);
-            return;
-        }
-    }
-    LOG_ERROR("PlayerAreaOnePlayer::onBetResolved(): "
-              "did not find the resolved bet on the screen.");
+    // A win does not mean the bet left the table. Place, Buy, Lay and
+    // Hardway bets stay up, and Come bets travel to their number. The
+    // screen is re-synced from the model once the roll is settled; see
+    // onResolveBetsEnd().
+    (void)betName; (void)betId; (void)amountWin; (void)amountLose;
+}
+
+//----------------------------------------------------------------
+//
+// The roll is fully settled. Bets were removed or moved (Come bets
+// travel to their number without any event), so learn them again.
+//
+void
+PlayerAreaOnePlayer::onResolveBetsEnd()
+{
+    if (players_.empty()) return;
+    refreshAllBets();
 }
 
 //----------------------------------------------------------------
@@ -458,7 +608,6 @@ PlayerAreaOnePlayer::onPlayerLeftTable(
     {
         playerIndex_ = 0;  // Revert to userPlayer
         refreshAllBets();
-        drawBets();
     }
 }
 

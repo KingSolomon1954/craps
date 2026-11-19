@@ -13,6 +13,7 @@
 #include <cui/core/CuiUtils.h>
 #include <gen/MoneyUtils.h>
 #include <ncurses.h>
+#include <array>
 #include <vector>
 
 namespace Cui
@@ -55,6 +56,7 @@ public:
                        Gen::Money             amountLose);
 
     void onBetResolved();
+    void onResolveBetsEnd();
 
     void rebuild();
     void onPlayerJoinedTable(const Craps::PlayerId& playerId);
@@ -81,9 +83,14 @@ private:
         static constexpr int col9_10 = 58;
         static constexpr int colComeDont2 = 35;  // between come and dont come
 
-        static constexpr int fieldBorderTopRow    = 9;
-        static constexpr int crapsBorderTopRow    = 13;
-        static constexpr int lineBetsBorderTopRow = 16;
+        // Top to bottom: numbers, line bets, field, craps/props
+        static constexpr int lineBetsBorderTopRow = 9;
+        static constexpr int fieldBorderTopRow    = 12;
+        static constexpr int crapsBorderTopRow    = 16;
+
+        static constexpr int fieldLabelRow   = 13;   // "Field"
+        static constexpr int fieldNumbersRow = 14;   // name + 2 3 4 9 ...
+        static constexpr int fieldBetRow     = 15;
 
         static constexpr int betLabelWidth  = 8;
         static constexpr int betAmountWidth = 8;
@@ -118,20 +125,20 @@ private:
         "Buy",       6, 1,
         "Lay",       7, 1,
         "Hardways",  8, 1,
-        "Field",    10, 32,
-        "2  3  4  9  10  11  12", 11, 24,
-        "C&E",      14, 1,
-        "Any7",     14, 29,
-        "Horn",     14, 54,
-        "AnyCraps", 15, 1,
-        "Any711",   15, 29,
-        "World",    15, 54,
-        "Come",     17, 1,
-        "DontCome", 17, 37,
-        "PassLine", 18, 1,
-        "Odds",     18, 20,
-        "DontPass", 18, 37,
-        "Odds",     18, 55
+        "Field",    13, 33,
+        "2  3  4  9  10  11  12", 14, 24,
+        "C&E",      17, 1,
+        "Any7",     17, 29,
+        "Horn",     17, 54,
+        "AnyCraps", 18, 1,
+        "Any711",   18, 29,
+        "World",    18, 54,
+        "Come",     11, 1,
+        "DontCome", 11, 37,
+        "PassLine", 10, 1,
+        "Odds",     10, 20,
+        "DontPass", 10, 37,
+        "Odds",     10, 55
     };
 
     struct Bet
@@ -190,19 +197,19 @@ private:
         0, CuiUtils::CuiBetName::Hard6,         8, 30, 0,
         0, CuiUtils::CuiBetName::Hard8,         8, 40, 0,
         0, CuiUtils::CuiBetName::Hard10,        8, 60, 0,
-        0, CuiUtils::CuiBetName::Field,        12, 31, 0,
-        0, CuiUtils::CuiBetName::CandE,        14, 10, 0,
-        0, CuiUtils::CuiBetName::Any7,         14, 36, 0,
-        0, CuiUtils::CuiBetName::Horn,         14, 60, 0,
-        0, CuiUtils::CuiBetName::AnyCraps,     15, 10, 0,
-        0, CuiUtils::CuiBetName::Any711,       15, 36, 0,
-        0, CuiUtils::CuiBetName::World,        15, 60, 0,
-        0, CuiUtils::CuiBetName::Come,         17, 10, 0,
-        0, CuiUtils::CuiBetName::DontCome,     17, 46, 0,
-        0, CuiUtils::CuiBetName::PassLine,     18, 10, 0,
-        0, CuiUtils::CuiBetName::PassLineOdds, 18, 25, 0,
-        0, CuiUtils::CuiBetName::DontPass,     18, 46, 0,
-        0, CuiUtils::CuiBetName::DontPassOdds, 18, 60, 0
+        0, CuiUtils::CuiBetName::Field,        15, 32, 0,
+        0, CuiUtils::CuiBetName::CandE,        17, 10, 0,
+        0, CuiUtils::CuiBetName::Any7,         17, 36, 0,
+        0, CuiUtils::CuiBetName::Horn,         17, 60, 0,
+        0, CuiUtils::CuiBetName::AnyCraps,     18, 10, 0,
+        0, CuiUtils::CuiBetName::Any711,       18, 36, 0,
+        0, CuiUtils::CuiBetName::World,        18, 60, 0,
+        0, CuiUtils::CuiBetName::Come,         11, 10, 0,
+        0, CuiUtils::CuiBetName::DontCome,     11, 46, 0,
+        0, CuiUtils::CuiBetName::PassLine,     10, 10, 0,
+        0, CuiUtils::CuiBetName::PassLineOdds, 10, 25, 0,
+        0, CuiUtils::CuiBetName::DontPass,     10, 46, 0,
+        0, CuiUtils::CuiBetName::DontPassOdds, 10, 60, 0
     };
 
 private:
@@ -220,6 +227,18 @@ private:
     void drawLabels();
     void drawBets();
     void drawOneBet(const Bet& b);
+
+    struct Slot
+    {
+        CuiUtils::CuiBetName name;
+        Gen::Money           amount;
+    };
+    static int slotsFor(BetName betName, unsigned pivot,
+                        Gen::Money contractAmount, Gen::Money oddsAmount,
+                        std::array<Slot, 2>& slots);
+    void applyBet(Craps::BetId betId, BetName betName, unsigned pivot,
+                  Gen::Money contractAmount, Gen::Money oddsAmount);
+    void clearBetId(Craps::BetId betId);
     int getBetIndex(BetName betName, unsigned pivot) const;
     void refreshAllBets();
     void clearBets();

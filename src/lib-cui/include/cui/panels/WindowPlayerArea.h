@@ -52,6 +52,7 @@ public:
         Gen::Money             oddsAmount,
         unsigned               pivot);
 
+    void onResolveBetsEnd();
     void onBetResolved(
         const Craps::PlayerId& playerId,
         BetName                betName,
