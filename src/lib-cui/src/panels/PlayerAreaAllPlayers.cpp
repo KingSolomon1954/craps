@@ -93,6 +93,8 @@ PlayerAreaAllPlayers::rebuild()
             }
         }
     }
+
+    resyncFromModel();
 }
 
 //----------------------------------------------------------------
@@ -290,6 +292,81 @@ PlayerAreaAllPlayers::calcBetState(
 
 //----------------------------------------------------------------
 
+//
+// Which screen cell holds a bet. One cell per bet; the marker says
+// whether odds were taken. Returns bets_.size() if the bet has no cell.
+//
+// PassLine/DontPass keep their cell at any pivot (betToCuiBetName()
+// would map a pivoted one to its odds cell, which this view lacks).
+//
+std::size_t
+PlayerAreaAllPlayers::findBetRow(BetName betName, unsigned pivot) const
+{
+    using N = CuiUtils::CuiBetName;
+
+    N name;
+    switch (betName)
+    {
+        case BetName::PassLine: name = N::PassLine; break;
+        case BetName::DontPass: name = N::DontPass; break;
+        default: name = CuiUtils::betToCuiBetName(betName, pivot); break;
+    }
+
+    for (std::size_t i = 0; i < bets_.size(); ++i)
+    {
+        if (bets_[i].betName == name) return i;
+    }
+    return bets_.size();
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaAllPlayers::clearBetId(Craps::BetId betId)
+{
+    for (auto& bet : bets_)
+    {
+        for (auto& d : bet.detail)
+        {
+            if (d.betId == betId)
+            {
+                d.betId = 0;
+                d.state = BetState::None;
+            }
+        }
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Remember a bet. First forget where it was, because a bet can move
+// (a Come bet travels to its number). Only remembers state. The
+// caller redraws the window.
+//
+void
+PlayerAreaAllPlayers::applyBet(const Craps::PlayerId& playerId,
+                               Craps::BetId           betId,
+                               BetName                betName,
+                               Gen::Money             contractAmount,
+                               Gen::Money             oddsAmount,
+                               unsigned               pivot)
+{
+    clearBetId(betId);
+
+    const std::size_t playerIndex = getPlayerIndex(playerId);
+    if (playerIndex >= players_.size()) return;  // Not shown
+    if (contractAmount == 0) return;
+
+    const std::size_t row = findBetRow(betName, pivot);
+    if (row >= bets_.size()) return;
+
+    Detail& d = bets_[row].detail[playerIndex];
+    d.betId   = betId;
+    d.state   = calcBetState(contractAmount, oddsAmount);
+}
+
+//----------------------------------------------------------------
+
 void
 PlayerAreaAllPlayers::onBetMade(
     const Craps::PlayerId& playerId,
@@ -299,31 +376,9 @@ PlayerAreaAllPlayers::onBetMade(
     Gen::Money             oddsAmount,
     unsigned               pivot)
 {
-    (void)betId;
-
-    const std::size_t playerIndex = getPlayerIndex(playerId);
-    if (playerIndex >= players_.size())
-    {
-        // Can happen briefly when a player has just left the table.
-        LOG_WARN("PlayerAreaAllPlayers::onBetMade(): player is not shown");
-        return;
-    }
-
-    CuiUtils::CuiBetName cuiBetName =
-        CuiUtils::betToCuiBetName(betName, pivot);
-
-    std::size_t betIndex = getBetIndex(cuiBetName, playerIndex);
-
-    Bet&    bet    = bets_[betIndex];
-    Detail& detail = bet.detail[playerIndex];
-        
-    detail.state = calcBetState(contractAmount, oddsAmount);
-    drawBetMarker(bet.row,
-                  detail.col,
-                  detail.state, 
-                  players_[playerIndex].colorPair);
+    applyBet(playerId, betId, betName, contractAmount, oddsAmount, pivot);
 }
-    
+
 //----------------------------------------------------------------
 
 void
@@ -335,28 +390,7 @@ PlayerAreaAllPlayers::onBetChanged(
     Gen::Money             oddsAmount,
     unsigned               pivot)
 {
-    onBetMade(playerId,
-              betId,
-              betName,
-              contractAmount,
-              oddsAmount,
-              pivot);
-}
-    
-//----------------------------------------------------------------
-
-std::size_t
-PlayerAreaAllPlayers::getBetIndex(CuiUtils::CuiBetName betName,
-                                  std::size_t playerIndex) const
-{
-    for (std::size_t i = 0; i < bets_.size(); ++i)
-    {
-        if (bets_[i].betName == betName)
-        {
-            return i + playerIndex;
-        }
-    }
-    return bets_.size();
+    applyBet(playerId, betId, betName, contractAmount, oddsAmount, pivot);
 }
 
 //----------------------------------------------------------------
@@ -369,24 +403,71 @@ PlayerAreaAllPlayers::onBetResolved(
     Gen::Money             amountWin,
     Gen::Money             amountLose)
 {
+    // A win does not mean the bet left the table (Place, Buy, Lay and
+    // Hardway stay up; Come bets travel). The screen is re-synced from
+    // the model in onResolveBetsEnd().
+    (void)playerId; (void)betName; (void)betId;
+    (void)amountWin; (void)amountLose;
+}
+
+//----------------------------------------------------------------
+//
+// The roll is settled. Bets were removed or moved without any event,
+// so learn every shown player's bets again from the model.
+//
+void
+PlayerAreaAllPlayers::onResolveBetsEnd()
+{
+    resyncFromModel();
+}
+
+//----------------------------------------------------------------
+
+void
+PlayerAreaAllPlayers::resyncFromModel()
+{
     for (auto& bet : bets_)
     {
-        for (std::size_t i = 0; i < bet.detail.size(); ++i)
+        for (auto& d : bet.detail)
         {
-            if (bet.detail[i].betId == betId)
-            {
-                auto& d = bet.detail[i];  // convenience
-                d.betId = 0;
-                d.state = BetState::None;
-                drawBetMarker(bet.row, d.col, d.state,
-                              (i < players_.size()) ? players_[i].colorPair
-                                                    : short(0));
-                return;
-            }
+            d.betId = 0;
+            d.state = BetState::None;
         }
     }
-    LOG_ERROR("PlayerAreaAllPlayers::onBetResolved(): "
-              "did not find the resolved bet on the screen.");
+
+    for (const auto& player : players_)
+    {
+        Gen::ErrorPass ep;
+        std::vector<Craps::BetId> betIds;
+        if (Ctrl::CrapsReaders::readPlayerGetBets(
+                player.playerId, betIds, ep) != Gen::ReturnCode::Success)
+        {
+            continue;
+        }
+
+        for (auto betId : betIds)
+        {
+            BetName    betName;
+            unsigned   pivot = 0;
+            Gen::Money contract = 0;
+            Gen::Money odds     = 0;
+            Gen::ErrorPass ep2;
+
+            // A bet can disappear between the list and the reads
+            if (Ctrl::CrapsReaders::readBetName(betId, betName, ep2)
+                    != Gen::ReturnCode::Success ||
+                Ctrl::CrapsReaders::readBetPivot(betId, pivot, ep2)
+                    != Gen::ReturnCode::Success ||
+                Ctrl::CrapsReaders::readBetContractAmount(betId, contract, ep2)
+                    != Gen::ReturnCode::Success ||
+                Ctrl::CrapsReaders::readBetOddsAmount(betId, odds, ep2)
+                    != Gen::ReturnCode::Success)
+            {
+                continue;
+            }
+            applyBet(player.playerId, betId, betName, contract, odds, pivot);
+        }
+    }
 }
 
 //----------------------------------------------------------------

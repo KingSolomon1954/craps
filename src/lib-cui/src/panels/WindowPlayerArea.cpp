@@ -223,6 +223,7 @@ WindowPlayerArea::onBetMade(
 void
 WindowPlayerArea::onResolveBetsEnd()
 {
+    allPlayersView_.onResolveBetsEnd();
     onePlayerView_.onResolveBetsEnd();
 }
 
