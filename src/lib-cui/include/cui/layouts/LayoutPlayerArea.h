@@ -29,9 +29,10 @@ struct LayoutOnePlayer
     static constexpr int col6 = 59;
     static constexpr int colComeDont1 = 36;  // between come and dont come
         
-    static constexpr int rowField    = 14;
-    static constexpr int rowCraps    = 18;
-    static constexpr int rowLineBets = 21;
+    // Borders below: numbers, line bets, field
+    static constexpr int rowLineBets = 14;
+    static constexpr int rowField    = 17;
+    static constexpr int rowCraps    = 21;
 };
 
 } // namespace Cui

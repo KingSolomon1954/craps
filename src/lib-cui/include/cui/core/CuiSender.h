@@ -36,6 +36,8 @@ public:
                                    BetName betName,
                                    Gen::Money contractAmount,
                                    unsigned pivot);
+    Ctrl::CorrelationId reqRemoveBet(const Craps::PlayerId& playerId,
+                                     Craps::BetId betId);
     Ctrl::CorrelationId reqOddsBet(const Craps::PlayerId& playerId,
                                    Craps::BetId betId,
                                    Gen::Money oddsAmount);

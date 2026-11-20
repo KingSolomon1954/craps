@@ -134,6 +134,24 @@ CuiReceiver::CuiReceiver()
             this->onBetMade(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::UslBetChanged>(
+        [this](const Ctrl::UslBetChanged& ev)
+        {
+            this->onBetChanged(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::RspRemoveBet>(
+        [this](const Ctrl::RspRemoveBet& ev)
+        {
+            this->onRspRemoveBet(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::UslBetRemoved>(
+        [this](const Ctrl::UslBetRemoved& ev)
+        {
+            this->onBetRemoved(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::UslBetResolved>(
         [this](const Ctrl::UslBetResolved& ev)
         {
@@ -336,6 +354,37 @@ CuiReceiver::onBetMade(const Ctrl::UslBetMade& ev) const
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onBetChanged(const Ctrl::UslBetChanged& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onBetChanged()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onRspRemoveBet(const Ctrl::RspRemoveBet& ev) const
+{
+    LOG_TRACE("CuiReceiver::onRspRemoveBet()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onBetRemoved(const Ctrl::UslBetRemoved& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onBetRemoved()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
 }
 
 //----------------------------------------------------------------

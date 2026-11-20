@@ -281,10 +281,12 @@ DialogPickPlayer::handleKey(int ch)
 void
 DialogPickPlayer::choose(std::size_t index)
 {
-    const Craps::PlayerId id = items_[index].playerId;
+    const Craps::PlayerId id    = items_[index].playerId;
+    const Craps::BetId    betId = items_[index].betId;
+    const std::size_t     tag   = items_[index].tag;
     setOperationResult(OperationResult::Success);
     SurfaceManager::instance().popSurface();
-    OperationManager::instance().onPickResult(true, id);
+    OperationManager::instance().onPickResult(true, id, betId, tag);
 }
 
 //----------------------------------------------------------------

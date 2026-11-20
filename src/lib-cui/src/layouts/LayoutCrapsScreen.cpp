@@ -164,9 +164,6 @@ LayoutCrapsScreen::drawExternalJunctionsOnePlayer()
     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col5, ACS_TTEE);
     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col6, ACS_TTEE);
 
-    // Bottom border
-    mvwaddch(pWin_, L::playerAreaBorderBotRow, O::colComeDont1, ACS_BTEE);
-
     // Left border    
     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderLeftCol, ACS_LTEE);
     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderLeftCol, ACS_LTEE);
@@ -196,9 +193,6 @@ LayoutCrapsScreen::eraseExternalJunctionsOnePlayer()
     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col4, ACS_HLINE);
     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col5, ACS_HLINE);
     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col6, ACS_HLINE);
-
-    // Bottom border
-    mvwaddch(pWin_, L::playerAreaBorderBotRow, O::colComeDont1, ACS_HLINE);
 
     // Left border    
     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderLeftCol, ACS_VLINE);

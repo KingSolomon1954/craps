@@ -58,9 +58,9 @@ public:
                        Gen::Money             amountLose);
 
 
+    void onResolveBetsEnd();
+    void onBetRemoved(const Craps::PlayerId& playerId, Craps::BetId betId);
     void rebuild();
-    void onPlayerJoinedTable(const Craps::PlayerId& playerId);
-    void onPlayerLeftTable  (const Craps::PlayerId& playerId);
     /// @}
 
     /// @name Observers
@@ -292,7 +292,6 @@ private:
 
 private:
     void buildPlayerInfo();
-    std::size_t removePlayer(const Craps::PlayerId& playerId);
 
     void drawPlayerHeaders();
     void drawSectionHeader(int startCol);
@@ -303,8 +302,12 @@ private:
                            wchar_t ch, short colorPair);
     wchar_t chooseInitial(std::string_view name) const;
     std::size_t getPlayerIndex(const Craps::PlayerId& playerId) const;
-    std::size_t getBetIndex(CuiUtils::CuiBetName betName,
-                            std::size_t playerIndex) const;
+    std::size_t findBetRow(BetName betName, unsigned pivot) const;
+    void clearBetId(Craps::BetId betId);
+    void applyBet(const Craps::PlayerId& playerId, Craps::BetId betId,
+                  BetName betName, Gen::Money contractAmount,
+                  Gen::Money oddsAmount, unsigned pivot);
+    void resyncFromModel();
     BetState calcBetState(Gen::Money contractAmount,
                           Gen::Money oddsAmount) const;
     wchar_t getMarker(BetState s) const;

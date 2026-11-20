@@ -31,6 +31,8 @@ public:
         std::string     text;     ///< Usually the name
         std::string     note;     ///< Shown after the name, e.g. "(you)"
         std::string     description; ///< Shown after a vertical bar; clipped
+        Craps::BetId    betId = 0;   ///< Set when the list is bets, not players
+        std::size_t     tag   = 0;   ///< Caller's own meaning, handed back
     };
 
     /// @name Lifecycle

@@ -45,6 +45,26 @@ CuiSender::reqMakeBet(const Craps::PlayerId& playerId,
 //----------------------------------------------------------------
 
 Ctrl::CorrelationId
+CuiSender::reqRemoveBet(const Craps::PlayerId& playerId,
+                        Craps::BetId betId)
+{
+    LOG_TRACE("CuiSender::reqRemoveBet()");
+
+    Ctrl::ReqRemoveBet ev;
+    ev.playerId = playerId;
+    ev.betId    = betId;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+
+    LOG_DEBUG("CuiSender::reqRemoveBet() correlationId = " +
+              std::to_string(correlationId));
+
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
 CuiSender::reqOddsBet(const Craps::PlayerId& playerId,
                       Craps::BetId betId,
                       Gen::Money oddsAmount)

@@ -79,6 +79,7 @@
 
 ## Done
 
+(Done) Implement PlayerAreaOnePlayer - show bets on screen\
 (Done) Create Player prompts for player's short description\
 (Done) Update user-guide with Player handling\
 (Done) Use colors for net win/loss in WindowPlayerBrief\

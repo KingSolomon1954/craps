@@ -10,6 +10,7 @@
 #include <cui/dialogs/DialogBetAmount.h>
 #include <cui/dialogs/DialogMessage.h>
 #include <cui/managers/CarrierBet.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
 #include <controller/CrapsReaders.h>
 #include <cui/core/CuiSender.h>
@@ -312,7 +313,7 @@ MenuBetting::doBetFlags()
 void
 MenuBetting::doRemoveBets()
 {
-    // TODO
+    OperationManager::instance().removeBets();
 }
 
 //----------------------------------------------------------------

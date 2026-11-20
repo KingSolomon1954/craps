@@ -129,6 +129,7 @@ public:
         point_ = point;
         dice_.set(d1, d2);
     }
+    void testSetBettingOpen(bool open) { bettingOpen_ = open; }
 #endif
 
 private:

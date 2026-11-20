@@ -17,6 +17,10 @@
 #include <controller/CrapsReaders.h>
 #include <controller/PlayerManager.h>
 #include <algorithm>
+#include <cstdint>
+#include <functional>
+#include <gen/MoneyUtils.h>
+#include <craps/EnumBetName.h>
 #include <cctype>
 #include <gen/Logger.h>
 #include <string>
@@ -149,6 +153,198 @@ OperationManager::onRspMakeBet(const Ctrl::RspMakeBet& ev)
 }
 
 //----------------------------------------------------------------
+//
+// Lists what can come down from the user player's bets and lets the
+// person pick one entry, or all of them.
+//
+//   - A bet the table allows to be removed: "remove the whole bet".
+//   - A bet with odds: "remove the odds only", leaving the contract bet.
+//     That is the only way to take down the odds on a Pass Line or Come
+//     bet once its point is set, because those contract bets must stay.
+//
+bool
+OperationManager::removeBets()
+{
+    if (isActive()) return false;
+
+    using Reader = Ctrl::CrapsReaders;
+    const auto playerId = Reader::getUserPlayerId();
+
+    Gen::ErrorPass ep;
+    Craps::BetIds betIds;
+    (void) Reader::readPlayerGetBets(playerId, betIds, ep);
+
+    // Newest first; ids grow as bets are made
+    std::sort(betIds.begin(), betIds.end(), std::greater<Craps::BetId>());
+
+    std::vector<DialogPickPlayer::Item> items;
+    std::vector<Removal> choices;
+    std::size_t numBets = 0, numOddsOnly = 0, numLocked = 0;
+
+    auto money = [](Gen::Money m) { return Gen::MoneyUtils::toStringNoCommas(m); };
+
+    for (auto betId : betIds)
+    {
+        Gen::ErrorPass epBet;
+        bool removable = false;
+        BetName    betName  = BetName::Invalid;
+        unsigned   pivot    = 0;
+        Gen::Money contract = 0;
+        Gen::Money odds     = 0;
+
+        if (Reader::readBetIsRemovable(betId, removable, epBet) !=
+                Gen::ReturnCode::Success ||
+            Reader::readBetName(betId, betName, epBet) !=
+                Gen::ReturnCode::Success ||
+            Reader::readBetPivot(betId, pivot, epBet) !=
+                Gen::ReturnCode::Success ||
+            Reader::readBetContractAmount(betId, contract, epBet) !=
+                Gen::ReturnCode::Success ||
+            Reader::readBetOddsAmount(betId, odds, epBet) !=
+                Gen::ReturnCode::Success)
+        {
+            continue;     // Bet went away while we looked
+        }
+
+        const std::string name = EnumBetName::toString(betName) +
+            (pivot != 0 ? " " + std::to_string(pivot) : std::string());
+
+        if (removable)
+        {
+            DialogPickPlayer::Item item;
+            item.playerId    = playerId;
+            item.betId       = betId;
+            item.tag         = choices.size();
+            item.text        = name;
+            item.note        = money(contract);
+            item.description = odds > 0 ? "odds " + money(odds) : "";
+            items.push_back(std::move(item));
+            choices.push_back({betId, false});
+            ++numBets;
+        }
+        else
+        {
+            ++numLocked;
+        }
+
+        if (odds > 0)
+        {
+            DialogPickPlayer::Item item;
+            item.playerId    = playerId;
+            item.betId       = betId;
+            item.tag         = choices.size();
+            item.text        = name + " odds only";
+            item.note        = money(odds);
+            item.description = "keeps " + money(contract) + " bet";
+            items.push_back(std::move(item));
+            choices.push_back({betId, true});
+            if (!removable) ++numOddsOnly;
+        }
+    }
+
+    if (items.empty())
+    {
+        if (numLocked > 0)
+        {
+            showNotice("No bets can be removed",
+                       "Pass Line and Come bets must stay on the table "
+                       "once their point is established.");
+        }
+        else
+        {
+            showNotice("No bets to remove",
+                       "You have no bets on the table.");
+        }
+        return true;
+    }
+
+    // Last, so that pressing Enter on the first line can't do it by accident
+    if (numBets + numOddsOnly > 1)
+    {
+        DialogPickPlayer::Item item;
+        item.playerId = playerId;
+        item.tag      = choices.size();            // One past the end: all
+        item.text     = "All removable";
+        std::string d = std::to_string(numBets) +
+                        (numBets == 1 ? " bet" : " bets");
+        if (numOddsOnly > 0)
+        {
+            d += ", odds on " + std::to_string(numOddsOnly);
+        }
+        item.description = d;
+        items.push_back(std::move(item));
+    }
+
+    removalChoices_ = std::move(choices);
+    type_  = OperationType::RemoveBet;
+    stage_ = Stage::AwaitingPick;
+    DialogPickPlayer::instance().configure("Remove Bets", std::move(items),
+                                           DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+    return true;
+}
+
+//----------------------------------------------------------------
+//
+// Send the next queued removal. An odds-only removal is a request to
+// set the odds amount to zero, which the table accepts as taking down
+// the odds. One request at a time; the response sends the next.
+//
+void
+OperationManager::sendNextRemoval()
+{
+    const Removal r = removalQueue_.front();
+    removalQueue_.erase(removalQueue_.begin());
+
+    const auto playerId = Ctrl::CrapsReaders::getUserPlayerId();
+    stage_ = Stage::AwaitingResponse;
+    correlationId_ = r.oddsOnly
+        ? CuiSender::instance().reqOddsBet(playerId, r.betId, 0)
+        : CuiSender::instance().reqRemoveBet(playerId, r.betId);
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRemovalResult(bool accepted, const Gen::ErrorPass& error)
+{
+    if (accepted)
+    {
+        if (!removalQueue_.empty())
+        {
+            sendNextRemoval();
+            return;
+        }
+        SurfaceManager::instance().popToRoot();
+        finish();
+        return;
+    }
+
+    removalQueue_.clear();     // Stop at the first failure
+    showError(error, "Betting Error", "Unable to Remove Bet");
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRspRemoveBet(const Ctrl::RspRemoveBet& ev)
+{
+    LOG_TRACE("OperationManager::onRspRemoveBet() "
+              "correlationId = " + std::to_string(correlationId_));
+
+    if (stage_ != Stage::AwaitingResponse ||
+        type_  != OperationType::RemoveBet ||
+        ev.correlationId != correlationId_)
+    {
+        LOG_WARN("OperationManager::onRspRemoveBet(): ignoring "
+                 "unmatched RspRemoveBet: rsp.correlationId = " +
+                 std::to_string(ev.correlationId));
+        return;
+    }
+    onRemovalResult(ev.accepted, ev.error);
+}
+
+//----------------------------------------------------------------
 
 void
 OperationManager::onRspOddsBet(const Ctrl::RspOddsBet& ev)
@@ -156,6 +352,14 @@ OperationManager::onRspOddsBet(const Ctrl::RspOddsBet& ev)
     LOG_TRACE("OperationManager::onRspOddsBet() "
               "correlationId = " + std::to_string(correlationId_));
              
+    if (stage_ == Stage::AwaitingResponse &&
+        type_  == OperationType::RemoveBet &&
+        ev.correlationId == correlationId_)
+    {
+        onRemovalResult(ev.accepted, ev.error);   // Odds taken down
+        return;
+    }
+
     if (stage_ != Stage::AwaitingResponse ||
         type_  != OperationType::MakeBet  ||
         ev.correlationId != correlationId_)
@@ -311,6 +515,8 @@ OperationManager::finish()
     type_          = OperationType::None;
     stage_         = Stage::Idle;
     correlationId_ = 0;
+    removalChoices_.clear();
+    removalQueue_.clear();
     targetId_.clear();
     text_.clear();
     description_.clear();
@@ -519,8 +725,49 @@ OperationManager::askForName(const std::string& title,
 //----------------------------------------------------------------
 
 void
-OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId)
+OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
+                               Craps::BetId betId, std::size_t tag)
 {
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::RemoveBet)
+    {
+        (void)playerId; (void)betId;
+        if (!accepted || tag > removalChoices_.size())
+        {
+            finish();       // Cancelled; stay on the betting menu
+            return;
+        }
+
+        // tag is an index into removalChoices_; one past the end means
+        // "all of them".
+        if (tag == removalChoices_.size())
+        {
+            removalQueue_ = removalChoices_;   // All is already the right set
+            // Choices hold both "whole" and "odds only" for a Don't bet
+            // with odds. Keep just one removal per bet: the whole bet.
+            std::vector<Removal> unique;
+            for (const auto& r : removalChoices_)
+            {
+                bool seen = false;
+                for (auto& u : unique)
+                {
+                    if (u.betId == r.betId)
+                    {
+                        seen = true;
+                        if (!r.oddsOnly) u.oddsOnly = false;
+                    }
+                }
+                if (!seen) unique.push_back(r);
+            }
+            removalQueue_ = std::move(unique);
+        }
+        else
+        {
+            removalQueue_.assign(1, removalChoices_[tag]);
+        }
+        sendNextRemoval();
+        return;
+    }
+
     if (stage_ != Stage::AwaitingPick || type_ != OperationType::Player)
         return;
 

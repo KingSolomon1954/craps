@@ -172,7 +172,7 @@ WindowPlayerArea::advancePlayer(bool next)
     if (currentFocus_ == OneOrAll::OnePlayer)
     {
         onePlayerView_.advancePlayer(next);
-        CuiUtils::transfer(pWin_);
+        draw();     // Redraws name and amounts for the new player
     }
     else
     {
@@ -216,6 +216,25 @@ WindowPlayerArea::onBetMade(
                              contractAmount,
                              oddsAmount,
                              pivot);
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerArea::onBetRemoved(const Craps::PlayerId& playerId,
+                               Craps::BetId           betId)
+{
+    allPlayersView_.onBetRemoved(playerId, betId);
+    onePlayerView_.onBetRemoved(playerId, betId);
+}
+
+//----------------------------------------------------------------
+
+void
+WindowPlayerArea::onResolveBetsEnd()
+{
+    allPlayersView_.onResolveBetsEnd();
+    onePlayerView_.onResolveBetsEnd();
 }
 
 //----------------------------------------------------------------
