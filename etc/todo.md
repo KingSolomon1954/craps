@@ -59,8 +59,6 @@
 
 ### Implement UndoLastBet in MenuBetting
 
-### Implement RemoveBets in MenuBetting
-
 ### Implement doBetFlags in MenuBetting
 
 ### Implement WindowPlayerArea - show bets on screen
@@ -79,6 +77,7 @@
 
 ## Done
 
+(Done) Implemented RemoveBets in MenuBetting
 (Done) Implement PlayerAreaOnePlayer - show bets on screen\
 (Done) Create Player prompts for player's short description\
 (Done) Update user-guide with Player handling\

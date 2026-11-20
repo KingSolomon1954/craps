@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <cui/bases/PanelBase.h>
 #include <cui/managers/ColorManager.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
@@ -29,7 +30,7 @@ public:
     /// @name Modifiers
     /// @{
     void draw() override;
-    void onDiceThrowStart();
+    bool onDiceThrowStart();   // true if the dice will be animated
     void onDiceNewValue(int d1, int d2, int rollCount);
     void onNewShooter(const Craps::PlayerId& id);
     void onRosterChanged();   // Shooter may have a new name or have left
@@ -121,6 +122,8 @@ private:
     void renderFinalFrame();
     void drawDie(int top, int left, int value);
     void startAnimation();
+    static bool animationEnabled();
+    static std::chrono::milliseconds frameInterval();
     void stopAnimation();
     void enqueueDraw();
     int  randomDieValue();

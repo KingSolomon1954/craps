@@ -193,6 +193,11 @@ OperationManager CRC Card
 .. include:: OperationManager.inc
 
 
+Dice Roll Animation Synchronization
+-----------------------------------
+
+.. include:: RollAnimationSync.inc
+
 CuiMain CRC Card
 ----------------
 

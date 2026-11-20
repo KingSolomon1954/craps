@@ -29,7 +29,8 @@ enum class SurfaceType
     Draw,
     PopSurface,
     PushSurface,
-    SetSurface
+    SetSurface,
+    ReleaseHeldEvents   // Dice have landed; show the roll results
 };
 
 //----------------------------------------------------------------
