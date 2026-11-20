@@ -1112,7 +1112,9 @@ Player::removeBet(const BetId& betId)
 {
     Gen::ErrorPass ep;
 
-    auto it = std::remove_if(bets_.begin(), bets_.end(),
+    // find_if, not remove_if: remove_if shifts the survivors and leaves
+    // moved-from (null) pointers at the end, so *it would not be our bet.
+    auto it = std::find_if(bets_.begin(), bets_.end(),
         [betId](const BetPtr& b)
         {
             return (b->betId() == betId);
@@ -1139,7 +1141,7 @@ Player::removeBet(const BetId& betId)
     if (placementFee > 0)
         pTable_->refundPlacementCommission(*(*it));
     wallet_.deposit((*it)->contractAmount() + (*it)->oddsAmount() + placementFee);
-    bets_.erase(it, bets_.end());  // remove from our list of bets
+    bets_.erase(it);  // remove from our list of bets
 
     sendEventPlayerBetsChanged();
     sendEventPlayerBalanceChanged();

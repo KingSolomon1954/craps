@@ -30,7 +30,7 @@ enum class EventType
     ReqRollDice,
     ReqMakeBet,
     ReqOddsBet,
-    ReqRemoveBet,              // not yet implemented
+    ReqRemoveBet,
     ReqAutoFill,
     ReqQuickBet,
     ReqSwitchPlayer,
@@ -40,7 +40,7 @@ enum class EventType
     // Responses
     RspMakeBet,
     RspOddsBet,
-    RspRemoveBet,              // not yet implemented
+    RspRemoveBet,
     RspChangeBet,              // not yet implemented
     RspSwitchPlayer,
     RspManagePlayer,
@@ -624,6 +624,38 @@ struct RspOddsBet : public GameEvent
 
     RspOddsBet()
         : GameEvent{EventSource::Controller, EventType::RspOddsBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Take a bet off the table. Funds (contract and odds) return to the player.
+struct ReqRemoveBet : public GameEvent
+{
+    Craps::PlayerId playerId;
+    Craps::BetId    betId = 0;
+
+    ReqRemoveBet()
+        : GameEvent{EventSource::View, EventType::ReqRemoveBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqRemoveBet. When accepted, betName/pivot say what was
+/// removed and returned is the money that went back to the player.
+struct RspRemoveBet : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    Craps::BetId    betId = 0;
+    BetName         betName = BetName::Invalid;
+    unsigned        pivot = 0;
+    Gen::Money      returned = 0;
+    Gen::ErrorPass  error;
+
+    RspRemoveBet()
+        : GameEvent{EventSource::Controller, EventType::RspRemoveBet}
     {}
 };
 

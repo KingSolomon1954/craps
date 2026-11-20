@@ -542,6 +542,53 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:makeBet")
         CHECK(p1->getBalance() == bal - 100);
 // std::cout << ep.diag << std::endl;
     }
+
+    SUBCASE("removeBet is refused while betting is closed")
+    {
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+        auto result1 = p1->joinTable(*t); REQUIRE(result1);
+
+        Gen::Money bal = p1->getBalance();
+        auto r1 = p1->testMakeBet(BetName::Place, 100, 6); REQUIRE(r1);
+        BetPtr b1 = r1.value();
+
+        t->testSetBettingOpen(false);
+        result1 = p1->removeBet(b1->betId()); CHECK(!result1);
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(t->getNumBetsOnTable() == 1);
+        CHECK(p1->getBalance() == bal - 100);
+
+        t->testSetBettingOpen(true);
+        result1 = p1->removeBet(b1->betId()); CHECK(result1);
+        CHECK(p1->getBalance() == bal);
+    }
+
+    SUBCASE("removeBet from the middle keeps the others")
+    {
+        std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+        auto result1 = p1->joinTable(*t); REQUIRE(result1);
+
+        Gen::Money bal = p1->getBalance();
+        auto r1 = p1->testMakeBet(BetName::Place, 100, 4); REQUIRE(r1);
+        auto r2 = p1->testMakeBet(BetName::Place, 200, 5); REQUIRE(r2);
+        auto r3 = p1->testMakeBet(BetName::Place, 300, 6); REQUIRE(r3);
+        BetPtr b1 = r1.value(), b2 = r2.value(), b3 = r3.value();
+        REQUIRE(p1->getNumBetsOnTable() == 3);
+
+        result1 = p1->removeBet(b2->betId()); CHECK(result1);
+        CHECK(p1->getNumBetsOnTable() == 2);
+        CHECK(t->getNumBetsOnTable() == 2);
+        CHECK(p1->getBalance() == bal - 400);
+
+        // The remaining bets are intact and still removable
+        Gen::ErrorPass ep;
+        CHECK(p1->getBet(b1->betId(), ep) != nullptr);
+        CHECK(p1->getBet(b3->betId(), ep) != nullptr);
+        result1 = p1->removeBet(b1->betId()); CHECK(result1);
+        result1 = p1->removeBet(b3->betId()); CHECK(result1);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getBalance() == bal);
+    }
 }
 
 //----------------------------------------------------------------

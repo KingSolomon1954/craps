@@ -99,22 +99,6 @@ PlayerAreaAllPlayers::rebuild()
 
 //----------------------------------------------------------------
 
-std::size_t
-PlayerAreaAllPlayers::removePlayer(const Craps::PlayerId& playerId)
-{
-    for (std::size_t i = 0; i < players_.size(); ++i)
-    {
-        if (players_[i].playerId == playerId)
-        {
-            players_.erase(players_.begin() + i);
-            return i;
-        }
-    }
-    return 0;
-}
-
-//----------------------------------------------------------------
-
 wchar_t
 PlayerAreaAllPlayers::chooseInitial(std::string_view name) const
 {
@@ -412,6 +396,19 @@ PlayerAreaAllPlayers::onBetResolved(
 
 //----------------------------------------------------------------
 //
+// The bet left the table (taken down, or finished, or its player left).
+// The window redraw paints it.
+//
+void
+PlayerAreaAllPlayers::onBetRemoved(const Craps::PlayerId& playerId,
+                                   Craps::BetId           betId)
+{
+    (void)playerId;
+    clearBetId(betId);
+}
+
+//----------------------------------------------------------------
+//
 // The roll is settled. Bets were removed or moved without any event,
 // so learn every shown player's bets again from the model.
 //
@@ -468,64 +465,6 @@ PlayerAreaAllPlayers::resyncFromModel()
             applyBet(player.playerId, betId, betName, contract, odds, pivot);
         }
     }
-}
-
-//----------------------------------------------------------------
-
-void
-PlayerAreaAllPlayers::onPlayerJoinedTable(
-    const Craps::PlayerId& playerId)
-{
-    for (std::size_t i = 0; i < players_.size(); ++i)
-    {
-        if (players_[i].playerId == playerId)  // Already have it
-            return;  
-    }
-
-    if (players_.size() >= MaxPlayers)
-    {
-        Gen::Logger::instance().logWarn(
-            "PlayerAreaOnePlayer: cannot display player; "
-            "maximum players reached");
-        return;
-    }
-
-    players_.push_back(
-    {
-        .playerId  = playerId,
-        .initial   = chooseInitial(CuiUtils::playerName(playerId)),
-        .colorPair = CuiUtils::playerColorPair(playerId),
-    });
-
-    drawPlayerHeaders();
-    drawBetMarkers();
-}
-
-//----------------------------------------------------------------
-
-void
-PlayerAreaAllPlayers::onPlayerLeftTable(
-    const Craps::PlayerId& playerId)
-{
-    std::size_t idx = removePlayer(playerId);
-    if (idx == 0) return;  // playerId wasn't found
-
-    // Player bet states are stored by column index. Compact every
-    // column after the removed player so the remaining players retain
-    // their states.
-    for (Bet& bet : bets_)
-    {
-        for (std::size_t i = idx; i + 1 < MaxPlayers; ++i)
-        {
-            bet.detail[i] = bet.detail[i + 1];
-            bet.detail[i] = bet.detail[i + 1];
-        }
-
-        bet.detail[MaxPlayers - 1].state = BetState::None;
-    }
-
-    drawPlayerHeaders();
-    drawBetMarkers();
 }
 
 //----------------------------------------------------------------

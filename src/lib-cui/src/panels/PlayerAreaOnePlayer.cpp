@@ -556,6 +556,19 @@ PlayerAreaOnePlayer::onBetResolved(
 
 //----------------------------------------------------------------
 //
+// The bet left the table (taken down, or finished, or its player left).
+// The window redraw paints it.
+//
+void
+PlayerAreaOnePlayer::onBetRemoved(const Craps::PlayerId& playerId,
+                                  Craps::BetId           betId)
+{
+    (void)playerId;
+    clearBetId(betId);
+}
+
+//----------------------------------------------------------------
+//
 // The roll is fully settled. Bets were removed or moved (Come bets
 // travel to their number without any event), so learn them again.
 //

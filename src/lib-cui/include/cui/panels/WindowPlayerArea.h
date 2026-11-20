@@ -53,6 +53,7 @@ public:
         unsigned               pivot);
 
     void onResolveBetsEnd();
+    void onBetRemoved(const Craps::PlayerId& playerId, Craps::BetId betId);
     void onBetResolved(
         const Craps::PlayerId& playerId,
         BetName                betName,

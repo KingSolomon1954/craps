@@ -12,6 +12,7 @@
 #include <gen/ErrorPass.h>
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace Cui {
 
@@ -45,6 +46,7 @@ public:
     /// @{
     bool playerOperation(PlayerOp op);  // Workflow: Player menu operations
     void makeBet();      // Workflow: Asynchronous bet operation
+    bool removeBets();   // Workflow: Pick one of your bets to take down
     bool confirmQuit();  // Workflow: Confirmation to quit application
     void autoFill();     // Workflow: Set up an AutoFill entry
     void quickBet();     // Workflow: Set up an QuickBet entry
@@ -52,8 +54,10 @@ public:
     // Called only on the CUI thread by WorkOrderDispatcher / dialogs.
     void onRspMakeBet(const Ctrl::RspMakeBet& response);
     void onRspOddsBet(const Ctrl::RspOddsBet& response);
+    void onRspRemoveBet(const Ctrl::RspRemoveBet& response);
     void onConfirmationResult(SurfaceBase::OperationResult result);
-    void onPickResult(bool accepted, const Craps::PlayerId& playerId);
+    void onPickResult(bool accepted, const Craps::PlayerId& playerId,
+                      Craps::BetId betId = 0, std::size_t tag = 0);
     void onTextResult(bool accepted, const std::string& text);
     void onRspSwitchPlayer(const Ctrl::RspSwitchPlayer& response);
     void onRspManagePlayer(const Ctrl::RspManagePlayer& response);
@@ -70,6 +74,7 @@ private:
     {
         None,
         MakeBet,
+        RemoveBet,
         Quit,
         Player
     };
@@ -83,6 +88,15 @@ private:
         AwaitingPick,
         AwaitingText
     };
+
+    // Taking bets down: what the pick list offered, and what is left to do
+    struct Removal
+    {
+        Craps::BetId betId    = 0;
+        bool         oddsOnly = false;   // Contract bet stays
+    };
+    std::vector<Removal> removalChoices_;
+    std::vector<Removal> removalQueue_;   // Sent one at a time
 
     OperationType type_                = OperationType::None;
     Stage stage_                       = Stage::Idle;
@@ -110,6 +124,8 @@ private:
                     const Craps::PlayerId& exceptId);
     void sendPlayerRequest();
     const char* playerOpVerb() const;
+    void sendNextRemoval();
+    void onRemovalResult(bool accepted, const Gen::ErrorPass& error);
     void doContractBet(const CarrierBet& cb);
     void doOddsBet(const CarrierBet& cb);
 };

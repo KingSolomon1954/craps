@@ -462,6 +462,7 @@ Gen::ReturnCode
 CrapsTable::removeBet(BetPtr pBet, Gen::ErrorPass& ep)
 {
     if (fifBetPtrNull(pBet, "removeBet()", ep)) return Gen::ReturnCode::Fail;
+    if (fifBettingClosed(*pBet, 4, ep))         return Gen::ReturnCode::Fail;
     if (fifMissingBet(*pBet, 4, ep))            return Gen::ReturnCode::Fail;
     if (fifBetMustRemain(pBet, ep))             return Gen::ReturnCode::Fail;
 

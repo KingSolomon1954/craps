@@ -221,6 +221,16 @@ WindowPlayerArea::onBetMade(
 //----------------------------------------------------------------
 
 void
+WindowPlayerArea::onBetRemoved(const Craps::PlayerId& playerId,
+                               Craps::BetId           betId)
+{
+    allPlayersView_.onBetRemoved(playerId, betId);
+    onePlayerView_.onBetRemoved(playerId, betId);
+}
+
+//----------------------------------------------------------------
+
+void
 WindowPlayerArea::onResolveBetsEnd()
 {
     allPlayersView_.onResolveBetsEnd();

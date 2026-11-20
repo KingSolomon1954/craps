@@ -37,6 +37,12 @@ EventHandler::EventHandler()
             this->onReqOddsBet(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::ReqRemoveBet>(
+        [this](const Ctrl::ReqRemoveBet& ev)
+        {
+            this->onReqRemoveBet(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::ReqRollDice>(
         [this](const Ctrl::ReqRollDice& ev)
         {
@@ -166,7 +172,61 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
             else
             {
                 rsp.accepted = true;
-                setLastFill(ev.playerId, *betPtr, true); // Set/replace last fill
+                if (ev.oddsAmount > 0)   // Zero takes odds down; not a fill
+                {
+                    setLastFill(ev.playerId, *betPtr, true);
+                }
+            }
+        }
+    }
+    Gen::EventManager::instance().publish(rsp);
+}
+
+//----------------------------------------------------------------
+
+void
+EventHandler::onReqRemoveBet(const Ctrl::ReqRemoveBet& ev) const
+{
+    const std::string fname("EventHandler::onReqRemoveBet(): ");
+    LOG_TRACE("Entered " + fname);
+
+    Ctrl::RspRemoveBet rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.playerId      = ev.playerId;
+    rsp.betId         = ev.betId;
+
+    Gen::ErrorPass ep;
+    Craps::Player* pPlayer = Gbl::pPlayerMgr->getPlayer(ev.playerId, ep);
+    if (pPlayer == nullptr)
+    {
+        ep.prepend(fname);
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        rsp.error = std::move(ep);
+    }
+    else
+    {
+        auto betPtr = pPlayer->getBet(ev.betId, ep);
+        if (!betPtr)
+        {
+            ep.prepend(fname);
+            LOG_ERROR(fname + " Error" + ep.fullDesc());
+            rsp.error = std::move(ep);
+        }
+        else
+        {
+            // Remember what it was; the bet is gone after removal.
+            rsp.betName  = betPtr->betName();
+            rsp.pivot    = betPtr->pivot();
+            rsp.returned = betPtr->contractAmount() + betPtr->oddsAmount();
+
+            auto result = pPlayer->removeBet(ev.betId);
+            if (!result)
+            {
+                rsp.error = std::move(result).error();
+            }
+            else
+            {
+                rsp.accepted = true;
             }
         }
     }

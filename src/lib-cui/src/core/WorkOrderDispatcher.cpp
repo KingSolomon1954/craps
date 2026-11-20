@@ -228,6 +228,17 @@ WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslBetRemoved& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslBetRemoved)");
+
+    WindowPlayerArea::instance().onBetRemoved(ev.playerId, ev.betId);
+    SurfaceManager::instance().draw();
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslBetChanged& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslBetChanged)");
@@ -368,6 +379,15 @@ WorkOrderDispatcher::process(const Ctrl::RspMakeBet& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(RspMakeBet)");
     OperationManager::instance().onRspMakeBet(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspRemoveBet& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspRemoveBet)");
+    OperationManager::instance().onRspRemoveBet(ev);
 }
 
 //----------------------------------------------------------------
