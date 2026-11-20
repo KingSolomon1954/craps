@@ -13,6 +13,7 @@
 #include <controller/ConfigEnv.h>
 #include <controller/ConfigFiles.h>
 #include <controller/Globals.h>
+#include <gen/Logger.h>
 
 using namespace Ctrl;
 
@@ -28,11 +29,13 @@ ConfigManager::ConfigManager(int argc, char* argv[])
         Gen::ConfigLayer filesLayer;
         Gen::ConfigLayer envLayer;
         Gen::ConfigLayer cmdLineLayer;
+        Gen::ConfigLayer sessionLayer;
         
         addLayer(LayerNameDefaults, defaultsLayer);
         addLayer(LayerNameFiles,    filesLayer);
         addLayer(LayerNameEnv,      envLayer);
         addLayer(LayerNameCmdLine,  cmdLineLayer);
+        addLayer(LayerNameSession,  sessionLayer);   // Highest priority
 
         // Be aware that addLayer() does a make_shared<> which creates a
         // copy, so can't use these four layers directly anymore.
@@ -51,6 +54,94 @@ ConfigManager::ConfigManager(int argc, char* argv[])
         const std::string diag = "Unable to process configuration. ";
         throw std::runtime_error(diag  + e.what());
     }
+}
+
+//----------------------------------------------------------------
+
+AnimationSpeed
+ConfigManager::animationSpeed() const
+{
+    const auto v = getString(KeyAnimationSpeed);
+    if (!v) return AnimationSpeed::Normal;
+
+    const auto speed = parseAnimationSpeed(*v);
+    if (!speed)
+    {
+        LOG_WARN("Ignoring " + std::string(KeyAnimationSpeed) + ": \"" + *v +
+                 "\" is not one of off, fast, normal or slow");
+        return AnimationSpeed::Normal;
+    }
+    return *speed;
+}
+
+//----------------------------------------------------------------
+
+void
+ConfigManager::setAnimationSpeed(AnimationSpeed speed)
+{
+    set(LayerNameSession, KeyAnimationSpeed, toString(speed));
+}
+
+//----------------------------------------------------------------
+
+RollHistoryFormat
+ConfigManager::rollHistoryFormat() const
+{
+    const auto v = getString(KeyRollHistoryFormat);
+    if (!v) return RollHistoryFormat::Spaced;
+
+    const auto f = parseRollHistoryFormat(*v);
+    if (!f)
+    {
+        LOG_WARN("Ignoring " + std::string(KeyRollHistoryFormat) + ": \"" + *v +
+                 "\" is not 1, 2, 3 or 4");
+        return RollHistoryFormat::Spaced;
+    }
+    return *f;
+}
+
+//----------------------------------------------------------------
+
+void
+ConfigManager::setRollHistoryFormat(RollHistoryFormat format)
+{
+    set(LayerNameSession, KeyRollHistoryFormat, toString(format));
+}
+
+//----------------------------------------------------------------
+
+std::optional<RollHistoryFormat>
+ConfigManager::rollHistoryFormatToRemember() const
+{
+    if (auto v = const_cast<ConfigManager*>(this)->getLayer(LayerNameSession)
+                     .get(KeyRollHistoryFormat))
+    {
+        return parseRollHistoryFormat(*v);
+    }
+    if (auto v = getString(KeyRollHistoryFormatRemembered))
+    {
+        return parseRollHistoryFormat(*v);
+    }
+    return std::nullopt;
+}
+
+//----------------------------------------------------------------
+
+std::optional<AnimationSpeed>
+ConfigManager::animationSpeedToRemember() const
+{
+    // Chosen while playing?
+    if (auto v = const_cast<ConfigManager*>(this)->getLayer(LayerNameSession)
+                     .get(KeyAnimationSpeed))
+    {
+        return parseAnimationSpeed(*v);
+    }
+    // Otherwise keep what the last game remembered
+    if (auto v = getString(KeyAnimationSpeedRemembered))
+    {
+        return parseAnimationSpeed(*v);
+    }
+    return std::nullopt;
 }
 
 //----------------------------------------------------------------

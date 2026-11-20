@@ -29,7 +29,8 @@ enum class SurfaceType
     Draw,
     PopSurface,
     PushSurface,
-    SetSurface
+    SetSurface,
+    ReleaseHeldEvents   // Dice have landed; show the roll results
 };
 
 //----------------------------------------------------------------
@@ -74,6 +75,7 @@ using GameEvent = std::variant<
     Ctrl::UslPlayerLeftTable,
     Ctrl::UslUserPlayerSwitched,
     Ctrl::UslPlayerRenamed,
+    Ctrl::UslRollHistoryFormatChanged,
     
     Ctrl::RspMakeBet,
     Ctrl::RspOddsBet,

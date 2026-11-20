@@ -7,6 +7,7 @@
 add_executable(cui-ut
     utest-cui-main.cpp
     LineInputTest.cpp
+    RollLogTest.cpp
 )
 
 target_link_libraries(cui-ut

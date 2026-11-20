@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <controller/AnimationSpeed.h>
+#include <controller/RollHistoryFormat.h>
 #include <filesystem>
 #include <optional>
 #include <string>
@@ -28,6 +30,10 @@ public:
     std::string              table;        // file name, e.g. las-vegas-strip.yaml
     std::string              userPlayer;   // file name of the user player
     std::vector<std::string> buddies;      // file names of the other players
+
+    // Settings the person changed while playing. Absent if never changed.
+    std::optional<AnimationSpeed> animationSpeed;
+    std::optional<RollHistoryFormat> rollHistoryFormat;
 
     /// @name Observers
     /// @{
@@ -57,7 +63,13 @@ last:
   buddyPlayers:
     - paige.yaml
     - nathan.yaml
+settings:
+  animationSpeed: fast
+  rollHistoryFormat: 2
 @endcode
+
+The settings section is optional. A setting in it is only used when
+config.yaml does not state that setting.
 
 state.yaml is only a memory. It says what happened last time and it
 does not override anything the user wrote in config.yaml; see

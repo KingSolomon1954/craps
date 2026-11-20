@@ -104,7 +104,7 @@ TableManager::loadCrapsTable(const std::string& fileName,
 
     Craps::TableConfig config;
     config.maxSessions    = TableManager::retrieveMaxSessions();
-    config.maxRecentRolls = TableManager::retrieveMaxRecentRolls();
+    config.maxRecentRolls = TableManager::MaxRecentRolls;
 
     auto newFile = std::make_unique<YamlFile>(
         TableManager::formTablePath(fileName));
@@ -207,15 +207,6 @@ TableManager::retrieveMaxSessions()
 {
     return Gbl::pConfigMgr->getInt(
         Ctrl::ConfigManager::KeyTableMaxSessions).value();
-}
-
-//----------------------------------------------------------------
-
-size_t
-TableManager::retrieveMaxRecentRolls()
-{
-    return Gbl::pConfigMgr->getInt(
-        Ctrl::ConfigManager::KeyTableMaxRecentRolls).value();
 }
 
 //----------------------------------------------------------------

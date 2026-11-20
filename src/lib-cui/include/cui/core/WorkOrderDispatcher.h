@@ -7,6 +7,9 @@
 #pragma once
 
 #include <cui/core/WorkOrder.h>
+#include <chrono>
+#include <functional>
+#include <vector>
 
 //----------------------------------------------------------------
 
@@ -24,6 +27,11 @@ public:
     WorkOrderDispatcher& operator=(WorkOrderDispatcher&&)      = delete;
     
     void dispatch(const WorkOrder& wo);  // Main entry point
+
+    // Called regularly by the CuiThread. Safety net that releases held
+    // results if the animation never reports that the dice have landed.
+    void tick();
+    void releaseHeldEvents();
     
 private:
     void process(const WorkOrderKey& wo);
@@ -44,6 +52,7 @@ private:
     void process(const Ctrl::UslBetMade& ev);
     void process(const Ctrl::UslBetResolved& ev);
     void process(const Ctrl::UslBetRemoved& ev);
+    void process(const Ctrl::UslRollHistoryFormatChanged& ev);
     void process(const Ctrl::UslBetChanged& ev);
     void process(const Ctrl::UslAutoFillChanged& ev);
     void process(const Ctrl::UslQuickBetChanged& ev);
@@ -71,6 +80,17 @@ private:
 
 private:
     void refreshRoster();
+
+    // While the dice animation plays, the results of the roll are held
+    // back so the person does not see them before the dice land.
+    static bool passesThrough(const WorkOrderEvent& woe);
+    void        holdOrRun(std::function<void()> fn);
+
+    static constexpr std::chrono::seconds MaxHold{10};
+
+    bool holding_ = false;
+    std::chrono::steady_clock::time_point holdStart_;
+    std::vector<std::function<void()>>    held_;
 };
 
 /*-----------------------------------------------------------*//**
@@ -79,7 +99,15 @@ private:
 
 @brief Dispatches work orders to the many CUI presentation classes
 
-Receives all WorkOrders coming off the CuiThread. Translates work orders
+Receives all WorkOrders coming off the CuiThread.
+
+The model resolves a roll in one burst, but the person should first
+watch the dice land. From UslDiceThrowStart until the animation reports
+it is done, result events are queued here and then replayed in their
+original order. Events that must not wait (the animation's own dice
+values, responses to requests) pass straight through.
+
+ Translates work orders
 and GameEvents into primitive data types, then calls into various
 windows using hard coded knowledge of which window wants what
 information.

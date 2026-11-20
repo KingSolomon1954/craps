@@ -63,16 +63,53 @@ WindowAnimation::instance()
 
 //----------------------------------------------------------------
 
-void
+//
+// Animation Speed setting (Control -> Configuration). Read at each throw.
+// Off means no animation: results show at once and nothing is held back.
+// Otherwise the speed sets the time between frames.
+//
+bool
+WindowAnimation::animationEnabled()
+{
+    return Ctrl::CrapsReaders::readAnimationSpeed() != Ctrl::AnimationSpeed::Off;
+}
+
+//----------------------------------------------------------------
+
+std::chrono::milliseconds
+WindowAnimation::frameInterval()
+{
+    using Ctrl::AnimationSpeed;
+    switch (Ctrl::CrapsReaders::readAnimationSpeed())
+    {
+    case AnimationSpeed::Fast: return std::chrono::milliseconds(45);
+    case AnimationSpeed::Slow: return std::chrono::milliseconds(135);
+    default:                   return std::chrono::milliseconds(90);
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Returns true if the dice are animated. The dispatcher then holds the
+// roll's results until the animation calls stopAnimation().
+//
+bool
 WindowAnimation::onDiceThrowStart()
 {
-    state_          = AnimationState::Animating;
-    animationPhase_ = AnimationPhase::Falling;
-    
     prevShooter_            = shooter_;
     prevShooterPlayerId_    = shooterPlayerId_;
     prevShooterPlayerColor_ = shooterPlayerColor_;
+
+    if (!animationEnabled())
+    {
+        state_ = AnimationState::ShowingRoll;   // onDiceNewValue() redraws
+        return false;
+    }
+
+    state_          = AnimationState::Animating;
+    animationPhase_ = AnimationPhase::Falling;
     startAnimation();
+    return true;
 }
 
 //----------------------------------------------------------------
@@ -143,7 +180,7 @@ WindowAnimation::startAnimation()
 {
     // Start the animation timer, repeats every "n" mils.
     Gen::TimerManager::instance().armTimer(
-        timerId_, std::chrono::milliseconds(90), true);
+        timerId_, frameInterval(), true);
     animationY_ = 2;
 }
 
@@ -157,6 +194,11 @@ WindowAnimation::stopAnimation()
 {
     Gen::TimerManager::instance().cancelTimer(timerId_);
     state_ = AnimationState::ShowingRoll;
+
+    // The dice have landed: reveal what the roll did to the table
+    WorkOrderSurface release{.type = SurfaceType::ReleaseHeldEvents};
+    CuiThread::instance().enqueueWork(release);
+
     WorkOrderSurface wo{.type = SurfaceType::Draw};
     CuiThread::instance().enqueueWork(wo);
 }
@@ -172,6 +214,11 @@ WindowAnimation::onDiceNewValue(int d1, int d2, int rollCount)
     lastRoll_.rollCount = rollCount;
 
     // These values will be used later when the animation finishes.
+    // Without animation there is no later: show them now.
+    if (state_ == AnimationState::ShowingRoll)
+    {
+        enqueueDraw();
+    }
 }
 
 //----------------------------------------------------------------

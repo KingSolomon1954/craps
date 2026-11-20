@@ -45,6 +45,7 @@ private:
     void onBetMade                   (const Ctrl::UslBetMade& ev)                   const;
     void onRspRemoveBet              (const Ctrl::RspRemoveBet& ev)                 const;
     void onBetRemoved                (const Ctrl::UslBetRemoved& ev)                const;
+    void onRollHistoryFormatChanged  (const Ctrl::UslRollHistoryFormatChanged& ev) const;
     void onBetChanged                (const Ctrl::UslBetChanged& ev)                const;
     void onBetResolved               (const Ctrl::UslBetResolved& ev)               const;
     void onAutoFillChanged           (const Ctrl::UslAutoFillChanged& ev)           const;

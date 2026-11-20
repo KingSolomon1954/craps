@@ -40,16 +40,11 @@
 
 ### Need unit test ConfigManagerTest
 
-### Add Roll History Format A,B,C,D to multi-configuration
-- Modify Roll History to grab Format from multi-configuration
-
 ### LocationManager needs smarter options for window placement
 
 ### Need More MenuBetting implementation
 
 ### Implement the many MenuConfiguration options
-
-### Need to inhibit various actions during animation roll
 
 ### Implement QuickBet::applyQuickBet for new CUI design
 
@@ -59,11 +54,7 @@
 
 ### Implement UndoLastBet in MenuBetting
 
-### Implement RemoveBets in MenuBetting
-
 ### Implement doBetFlags in MenuBetting
-
-### Implement WindowPlayerArea - show bets on screen
 
 ### Implement WindowMessageArea
 
@@ -79,6 +70,11 @@
 
 ## Done
 
+(Done) Created DeepRollHistory dialog for future integration\
+(Done) Implemented Roll History Format and configuration\
+(Done) Implemente Animation Speed adjustments and configuration\
+(Done) Hold off seeing roll results until after roll animation ends\
+(Done) Implemented RemoveBets in MenuBetting\
 (Done) Implement PlayerAreaOnePlayer - show bets on screen\
 (Done) Create Player prompts for player's short description\
 (Done) Update user-guide with Player handling\

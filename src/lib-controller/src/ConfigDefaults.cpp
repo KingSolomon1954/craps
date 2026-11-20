@@ -217,7 +217,6 @@ ConfigDefaults::loadGameDefaults(Gen::ConfigLayer& cfg)
     cfg.set(ConfigManager::KeySessionStartTime,    tp.toString());
     cfg.set(ConfigManager::KeyTableStart,          "las-vegas-strip.yaml");
     cfg.set(ConfigManager::KeyTableMaxSessions,    "50");
-    cfg.set(ConfigManager::KeyTableMaxRecentRolls, "25");
 
     cfg.set(ConfigManager::KeyTablePlayer1, "");
     cfg.set(ConfigManager::KeyTablePlayer2, "");

@@ -95,6 +95,7 @@ CuiThread::cuiThreadFunc()
         }
 
         processWorkQueue();
+        dispatcher_.tick();
 
         std::unique_lock<std::mutex> lock(mutex_);
         if (shutdownRequested_ && workQueue_.empty()) return;

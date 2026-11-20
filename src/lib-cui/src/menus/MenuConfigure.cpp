@@ -6,6 +6,7 @@
 
 #include <cui/menus/MenuConfigure.h>
 #include <cui/core/CuiUtils.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
 #include <gen/Logger.h>
 
@@ -108,7 +109,9 @@ MenuConfigure::draw()
 {
      LOG_TRACE("MenuConfigure::draw()");
      
-    // Just reuse already filled window over and over
+    // Just reuse already filled window over and over. touchwin() forces
+    // ncurses to rewrite it after a dialog on top has been popped.
+    touchwin(pWin_);
     CuiUtils::transfer(pWin_);
 }    
 
@@ -139,7 +142,7 @@ MenuConfigure::handleKey(int ch)
 void
 MenuConfigure::doFormatRollHistory()
 {
-    // TODO
+    OperationManager::instance().chooseRollHistoryFormat();
 }
 
 //----------------------------------------------------------------
@@ -171,7 +174,7 @@ MenuConfigure::doTimedRolls()
 void
 MenuConfigure::doAnimationSpeed()
 {
-    // TODO
+    OperationManager::instance().chooseAnimationSpeed();
 }
 
 //----------------------------------------------------------------

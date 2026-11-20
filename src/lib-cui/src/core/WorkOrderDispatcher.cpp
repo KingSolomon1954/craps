@@ -16,6 +16,8 @@
 #include <cui/panels/WindowTitleBar.h>
 #include <gen/Logger.h>
 #include <cassert>
+#include <string>
+#include <type_traits>
 
 using namespace Cui;
 
@@ -62,6 +64,10 @@ WorkOrderDispatcher::process(const WorkOrderSurface& wo)
         SurfaceManager::instance().setSurface(wo.pSurface);
         break;
 
+    case SurfaceType::ReleaseHeldEvents:
+        releaseHeldEvents();
+        break;
+
     case SurfaceType::PopSurface:
         SurfaceManager::instance().popSurface();
         break;
@@ -77,15 +83,94 @@ WorkOrderDispatcher::process(const WorkOrderSurface& wo)
 
 //----------------------------------------------------------------
 
+// Events that are never held back while the dice are rolling
+bool
+WorkOrderDispatcher::passesThrough(const WorkOrderEvent& woe)
+{
+    return std::visit(
+        [](const auto& event) -> bool
+        {
+            using T = std::decay_t<decltype(event)>;
+            return std::is_same_v<T, Ctrl::UslDiceThrowStart> ||
+                   std::is_same_v<T, Ctrl::UslDiceNewValue>   || // splits itself
+                   std::is_same_v<T, Ctrl::UslBettingClosed>  ||
+                   std::is_same_v<T, Ctrl::RspMakeBet>        ||
+                   std::is_same_v<T, Ctrl::RspOddsBet>        ||
+                   std::is_same_v<T, Ctrl::RspRemoveBet>      ||
+                   std::is_same_v<T, Ctrl::RspSwitchPlayer>   ||
+                   std::is_same_v<T, Ctrl::RspManagePlayer>;
+        },
+        woe.event);
+}
+
+//----------------------------------------------------------------
+
 void
 WorkOrderDispatcher::process(const WorkOrderEvent& woe)
 {
-    std::visit(
-        [this](const auto& event)
-        {
-            process(event);
-        },
-        woe.event);
+    auto run = [this, woe]
+    {
+        std::visit(
+            [this](const auto& event)
+            {
+                process(event);
+            },
+            woe.event);
+    };
+
+    if (holding_ && !passesThrough(woe))
+    {
+        held_.push_back(std::move(run));
+        return;
+    }
+    run();
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::holdOrRun(std::function<void()> fn)
+{
+    if (holding_) held_.push_back(std::move(fn));
+    else          fn();
+}
+
+//----------------------------------------------------------------
+//
+// The dice have landed (or we gave up waiting). Show everything that
+// was held, in the order it happened.
+//
+void
+WorkOrderDispatcher::releaseHeldEvents()
+{
+    if (!holding_ && held_.empty()) return;
+
+    holding_ = false;
+    auto queued = std::move(held_);
+    held_.clear();
+
+    LOG_DEBUG("WorkOrderDispatcher::releaseHeldEvents() releasing " +
+              std::to_string(queued.size()) + " held events");
+
+    for (auto& fn : queued)
+    {
+        fn();
+    }
+    SurfaceManager::instance().draw();
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::tick()
+{
+    if (holding_ &&
+        std::chrono::steady_clock::now() - holdStart_ > MaxHold)
+    {
+        LOG_WARN("WorkOrderDispatcher::tick(): animation did not finish; "
+                 "releasing held events");
+        releaseHeldEvents();
+    }
 }
 
 //----------------------------------------------------------------
@@ -103,7 +188,12 @@ WorkOrderDispatcher::process(const Ctrl::UslDiceThrowStart& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslDiceThrowStart)");
 
-    WindowAnimation::instance().onDiceThrowStart();
+    // If the dice are animated, hold the results until they land.
+    if (WindowAnimation::instance().onDiceThrowStart())
+    {
+        holding_   = true;
+        holdStart_ = std::chrono::steady_clock::now();
+    }
 }
 
 //----------------------------------------------------------------
@@ -113,9 +203,14 @@ WorkOrderDispatcher::process(const Ctrl::UslDiceNewValue& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslDiceNewValue)");
     
-    WindowAnimation::instance().onDiceNewValue  (ev.d1, ev.d2, ev.rollCount);
-    WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
-    WindowTitleBar::instance().onDiceNewValue   (ev.d1, ev.d2, ev.rollCount);
+    // The animation needs the dice right away; everyone else waits
+    WindowAnimation::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
+
+    holdOrRun([ev]
+    {
+        WindowRollHistory::instance().onDiceNewValue(ev.d1, ev.d2, ev.rollCount);
+        WindowTitleBar::instance().onDiceNewValue   (ev.d1, ev.d2, ev.rollCount);
+    });
 }
 
 //----------------------------------------------------------------
@@ -223,6 +318,16 @@ WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
     //     ev.amountLose,
     //     ev.returnedToPlayer,
     //     ev.commission);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslRollHistoryFormatChanged& ev)
+{
+    (void) ev;      // WindowRollHistory reads the setting as it draws
+    LOG_TRACE("WorkOrderDispatcher::process(UslRollHistoryFormatChanged)");
+    SurfaceManager::instance().draw();
 }
 
 //----------------------------------------------------------------

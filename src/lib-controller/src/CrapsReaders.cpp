@@ -4,6 +4,7 @@
 //
 //----------------------------------------------------------------
 
+#include <controller/ConfigManager.h>
 #include <controller/CrapsReaders.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
@@ -1123,6 +1124,22 @@ CrapsReaders::getUserPlayerName()
         return "getUserPlayerName():Error";
     }
     return p->getName();
+}
+
+//----------------------------------------------------------------
+
+RollHistoryFormat
+CrapsReaders::readRollHistoryFormat()
+{
+    return Gbl::pConfigMgr->rollHistoryFormat();
+}
+
+//----------------------------------------------------------------
+
+AnimationSpeed
+CrapsReaders::readAnimationSpeed()
+{
+    return Gbl::pConfigMgr->animationSpeed();
 }
 
 //----------------------------------------------------------------

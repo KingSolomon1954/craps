@@ -60,7 +60,9 @@ private:
     void saveCurrentTable() const;
 
     static size_t retrieveMaxSessions();
-    static size_t retrieveMaxRecentRolls();
+    /// How many recent rolls a table remembers. Not a user setting.
+    /// Matches what the View's Deep Roll History can show.
+    static constexpr size_t MaxRecentRolls = 120;
     static std::filesystem::path formTablePath(const Craps::TableId& tableId);
 };
 

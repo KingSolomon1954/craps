@@ -257,6 +257,28 @@ StartChoices::apply(const Gen::MultiLayerConfig& multiConfig,
 
     const Result res = resolve(r);
 
+    // Animation speed. config.yaml wins; else what the last game remembered.
+    if (r.last && r.last->animationSpeed)
+    {
+        cfg.set(K::KeyAnimationSpeedRemembered, toString(*r.last->animationSpeed));
+        if (!cfg.get(K::KeyAnimationSpeed))
+        {
+            cfg.set(K::KeyAnimationSpeed, toString(*r.last->animationSpeed));
+        }
+    }
+
+    // Roll history format: the same rule
+    if (r.last && r.last->rollHistoryFormat)
+    {
+        cfg.set(K::KeyRollHistoryFormatRemembered,
+                toString(*r.last->rollHistoryFormat));
+        if (!cfg.get(K::KeyRollHistoryFormat))
+        {
+            cfg.set(K::KeyRollHistoryFormat,
+                    toString(*r.last->rollHistoryFormat));
+        }
+    }
+
     cfg.set(K::KeyTableStart,        res.table);
     cfg.set(K::KeyTableUserIsPlayer, res.userPlayer);
 

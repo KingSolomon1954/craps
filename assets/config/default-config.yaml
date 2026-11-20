@@ -22,10 +22,12 @@
 #     - "arthur.yaml"                         # buddies (up to 5); ignored
 #     - "paige.yaml"                          # if startWithBuddyPlayers is false
 #   maxSessions: 50
-#   maxRecentRolls: 50
+#
+# animation:
+#   speed: normal     # [ off | fast | normal | slow ] dice roll animation
 #
 # rollHistory:
-#   format: 1         # [ 1..4 ]
+#   format: 1         # [ 1..4 ] 1: 7 8 6   2: 7,8,6   3: 7(34)   4: 7(3,4)
 #   scroll: "up"      # [left | right | up | down]
 #
 # log:
