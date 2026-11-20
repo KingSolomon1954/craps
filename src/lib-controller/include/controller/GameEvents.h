@@ -6,6 +6,7 @@
 
 #pragma once
 #include <controller/AnimationSpeed.h>
+#include <controller/RollHistoryFormat.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/LastRollStats.h>
@@ -33,6 +34,7 @@ enum class EventType
     ReqOddsBet,
     ReqRemoveBet,
     ReqSetAnimationSpeed,
+    ReqSetRollHistoryFormat,
     ReqAutoFill,
     ReqQuickBet,
     ReqSwitchPlayer,
@@ -69,6 +71,7 @@ enum class EventType
     UslQuickBetChanged,
     UslUserPlayerSwitched,
     UslPlayerRenamed,
+    UslRollHistoryFormatChanged,
 
     UslTableBetsChanged,
     UslTableSessionStatsChanged,
@@ -639,6 +642,32 @@ struct ReqSetAnimationSpeed : public GameEvent
 
     ReqSetAnimationSpeed()
         : GameEvent{EventSource::View, EventType::ReqSetAnimationSpeed}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Change how the roll history is shown, for the rest of this game.
+/// The choice is remembered at quit. The answer is
+/// UslRollHistoryFormatChanged.
+struct ReqSetRollHistoryFormat : public GameEvent
+{
+    RollHistoryFormat format = RollHistoryFormat::Spaced;
+
+    ReqSetRollHistoryFormat()
+        : GameEvent{EventSource::View, EventType::ReqSetRollHistoryFormat}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// The roll history format is now as given. The View redraws.
+struct UslRollHistoryFormatChanged : public GameEvent
+{
+    RollHistoryFormat format = RollHistoryFormat::Spaced;
+
+    UslRollHistoryFormatChanged()
+        : GameEvent{EventSource::Controller, EventType::UslRollHistoryFormatChanged}
     {}
 };
 

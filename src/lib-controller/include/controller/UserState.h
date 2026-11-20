@@ -7,6 +7,7 @@
 #pragma once
 
 #include <controller/AnimationSpeed.h>
+#include <controller/RollHistoryFormat.h>
 #include <filesystem>
 #include <optional>
 #include <string>
@@ -32,6 +33,7 @@ public:
 
     // Settings the person changed while playing. Absent if never changed.
     std::optional<AnimationSpeed> animationSpeed;
+    std::optional<RollHistoryFormat> rollHistoryFormat;
 
     /// @name Observers
     /// @{
@@ -63,6 +65,7 @@ last:
     - nathan.yaml
 settings:
   animationSpeed: fast
+  rollHistoryFormat: 2
 @endcode
 
 The settings section is optional. A setting in it is only used when

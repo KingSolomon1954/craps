@@ -44,6 +44,12 @@ EventHandler::EventHandler()
             this->onReqRemoveBet(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::ReqSetRollHistoryFormat>(
+        [this](const Ctrl::ReqSetRollHistoryFormat& ev)
+        {
+            this->onReqSetRollHistoryFormat(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::ReqSetAnimationSpeed>(
         [this](const Ctrl::ReqSetAnimationSpeed& ev)
         {
@@ -187,6 +193,19 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
         }
     }
     Gen::EventManager::instance().publish(rsp);
+}
+
+//----------------------------------------------------------------
+
+void
+EventHandler::onReqSetRollHistoryFormat(const Ctrl::ReqSetRollHistoryFormat& ev) const
+{
+    LOG_TRACE("Entered EventHandler::onReqSetRollHistoryFormat()");
+    Gbl::pConfigMgr->setRollHistoryFormat(ev.format);
+
+    Ctrl::UslRollHistoryFormatChanged changed;
+    changed.format = ev.format;
+    Gen::EventManager::instance().publish(changed);
 }
 
 //----------------------------------------------------------------

@@ -323,6 +323,16 @@ WorkOrderDispatcher::process(const Ctrl::UslBetResolved& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslRollHistoryFormatChanged& ev)
+{
+    (void) ev;      // WindowRollHistory reads the setting as it draws
+    LOG_TRACE("WorkOrderDispatcher::process(UslRollHistoryFormatChanged)");
+    SurfaceManager::instance().draw();
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslBetRemoved& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslBetRemoved)");

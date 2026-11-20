@@ -8,6 +8,7 @@
 
 #include <cui/bases/PanelBase.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
+#include <controller/RollHistoryFormat.h>
 #include <deque>
 
 namespace Cui
@@ -58,13 +59,7 @@ private:
         bool point = false;
     };
 
-    enum class Format
-    {
-        A, // │ [A]   7(3,4) 8(4,4) 6(3,3) 11(6,5)  │
-        B, // │ [B]   7(34) 8(44) 6(33) 11(65)      │
-        C, // │ [C]   7,8,6,11                      │
-        D  // │ [D]   7 8 6 11                      │
-    };     
+    using Format = Ctrl::RollHistoryFormat;   // From Control, Configure menu
 
     std::deque<Roll> rolls_;  // newest first
     static constexpr std::size_t MaxSize = 100;

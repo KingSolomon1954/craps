@@ -9,6 +9,7 @@
 #include <cui/managers/ColorManager.h>
 #include <cui/core/CuiUtils.h>
 #include <cui/core/CuiStructs.h>
+#include <controller/CrapsReaders.h>
 #include <gen/Logger.h>
 
 using namespace Cui;
@@ -89,8 +90,8 @@ WindowRollHistory::drawStaticContent()
 void
 WindowRollHistory::populate()
 {
-    // TODO: look up the user-configured format.
-    constexpr Format fmtConfig = Format::D;
+    // Rolls keep their colors, so a new format just redraws them.
+    const Format fmtConfig = Ctrl::CrapsReaders::readRollHistoryFormat();
 
     int column = 1;
     const int rightColumn = 1 + static_cast<int>(CharLimit);
@@ -153,37 +154,28 @@ WindowRollHistory::attrOff(const Roll& r)
 
 //----------------------------------------------------------------
 //
-// │ [A]   7(3,4) 8(4,4) 6(3,3) 11(6,5)  │
-// │ [B]   7(34) 8(44) 6(33) 11(65)      │
-// │ [C]   7,8,6,11                      │
-// │ [D]   7 8 6 11                      │
+// Formats 1 to 4, most compact first. Each ends with its separator.
+//
+//   1  7 8 6 10
+//   2  7,8,6,10
+//   3  7(34) 8(44) 6(33) 10(65)
+//   4  7(3,4) 8(4,4) 6(3,3) 10(6,5)
 //
 std::string
 WindowRollHistory::format(Format fmt, const Roll& r) const
 {
-    std::string d1_s (std::to_string(r.d1));
-    std::string d2_s (std::to_string(r.d2));
-    std::string val_s(std::to_string(r.d1 + r.d2));
-    
-    std::string rollFmtd;
-    if (fmt == Format::A)
+    const std::string d1_s (std::to_string(r.d1));
+    const std::string d2_s (std::to_string(r.d2));
+    const std::string val_s(std::to_string(r.d1 + r.d2));
+
+    switch (fmt)
     {
-        rollFmtd = val_s + "(" + d1_s + "," + d2_s + ") ";
+    case Format::Spaced:     return val_s + " ";
+    case Format::Commas:     return val_s + ",";
+    case Format::DiceJoined: return val_s + "(" + d1_s + d2_s + ") ";
+    case Format::DiceComma:  return val_s + "(" + d1_s + "," + d2_s + ") ";
     }
-    if (fmt == Format::B)
-    {
-        rollFmtd = val_s + "(" + d1_s + d2_s + ") ";
-    }
-    if (fmt == Format::C)
-    {
-        rollFmtd = val_s + ",";
-    }
-    if (fmt == Format::D)
-    {
-        rollFmtd = val_s + " ";
-    }
-    
-    return rollFmtd;
+    return val_s + " ";
 }
 
 //----------------------------------------------------------------

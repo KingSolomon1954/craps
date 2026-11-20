@@ -40,9 +40,6 @@
 
 ### Need unit test ConfigManagerTest
 
-### Add Roll History Format A,B,C,D to multi-configuration
-- Modify Roll History to grab Format from multi-configuration
-
 ### LocationManager needs smarter options for window placement
 
 ### Need More MenuBetting implementation
@@ -73,7 +70,8 @@
 
 ## Done
 
-(Done) Implementd Animation Speed adjustments and configuration\
+(Done) Implemented Roll History Format and configuration\
+(Done) Implemente Animation Speed adjustments and configuration\
 (Done) Hold off seeing roll results until after roll animation ends\
 (Done) Implemented RemoveBets in MenuBetting\
 (Done) Implement PlayerAreaOnePlayer - show bets on screen\

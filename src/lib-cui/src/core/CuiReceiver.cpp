@@ -146,6 +146,12 @@ CuiReceiver::CuiReceiver()
             this->onRspRemoveBet(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::UslRollHistoryFormatChanged>(
+        [this](const Ctrl::UslRollHistoryFormatChanged& ev)
+        {
+            this->onRollHistoryFormatChanged(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::UslBetRemoved>(
         [this](const Ctrl::UslBetRemoved& ev)
         {
@@ -373,6 +379,17 @@ void
 CuiReceiver::onRspRemoveBet(const Ctrl::RspRemoveBet& ev) const
 {
     LOG_TRACE("CuiReceiver::onRspRemoveBet()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onRollHistoryFormatChanged(
+    const Ctrl::UslRollHistoryFormatChanged& ev) const
+{
+    LOG_TRACE("CuiReceiver::onRollHistoryFormatChanged()");
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(std::move(wo));
 }

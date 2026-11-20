@@ -7,6 +7,7 @@
 #pragma once
 
 #include <controller/AnimationSpeed.h>
+#include <controller/RollHistoryFormat.h>
 #include <gen/MultiLayerConfig.h>
 #include <optional>
 #include <string>
@@ -29,6 +30,7 @@ public:
     /// @{
     /// Changes the speed for the rest of this game (the session layer).
     void setAnimationSpeed(AnimationSpeed speed);
+    void setRollHistoryFormat(RollHistoryFormat format);
     /// @}
 
     /// @name Observers
@@ -38,6 +40,11 @@ public:
     /// The animation speed in effect now: what the person chose this
     /// game, else the command line, config.yaml, last game, or Normal.
     AnimationSpeed animationSpeed() const;
+
+    /// The roll history format in effect now. Same precedence as the
+    /// animation speed. Default is 1, the most compact.
+    RollHistoryFormat rollHistoryFormat() const;
+    std::optional<RollHistoryFormat> rollHistoryFormatToRemember() const;
 
     /// What state.yaml should remember: this game's choice if there
     /// was one, otherwise what the last game remembered.
@@ -85,6 +92,10 @@ public:
     static constexpr auto KeyAnimationSpeed           = "animation.speed";
     // What state.yaml remembered; carried to the next state.yaml
     static constexpr auto KeyAnimationSpeedRemembered = "animation.remembered";
+
+    // Roll history format: 1 to 4. Same key config.yaml has always listed.
+    static constexpr auto KeyRollHistoryFormat           = "rollHistory.format";
+    static constexpr auto KeyRollHistoryFormatRemembered = "rollHistory.remembered";
 
     // Startup. Set in the files layer when no user config.yaml existed,
     // see ConfigSeed.

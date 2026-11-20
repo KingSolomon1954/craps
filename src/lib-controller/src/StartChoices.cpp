@@ -267,6 +267,18 @@ StartChoices::apply(const Gen::MultiLayerConfig& multiConfig,
         }
     }
 
+    // Roll history format: the same rule
+    if (r.last && r.last->rollHistoryFormat)
+    {
+        cfg.set(K::KeyRollHistoryFormatRemembered,
+                toString(*r.last->rollHistoryFormat));
+        if (!cfg.get(K::KeyRollHistoryFormat))
+        {
+            cfg.set(K::KeyRollHistoryFormat,
+                    toString(*r.last->rollHistoryFormat));
+        }
+    }
+
     cfg.set(K::KeyTableStart,        res.table);
     cfg.set(K::KeyTableUserIsPlayer, res.userPlayer);
 

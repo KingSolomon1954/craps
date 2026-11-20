@@ -130,6 +130,59 @@ TEST_CASE("UserState: a bad animation speed is ignored, not fatal")
 
 //----------------------------------------------------------------
 
+TEST_CASE("UserState: roll history format round trips")
+{
+    StateFixture fx;
+    UserState s;
+    s.table      = "las-vegas-strip.yaml";
+    s.userPlayer = "paige.yaml";
+    s.animationSpeed = Ctrl::AnimationSpeed::Off;
+
+    for (auto f : Ctrl::AllRollHistoryFormats)
+    {
+        s.rollHistoryFormat = f;
+        s.save(fx.dir);
+        UserState got;
+        std::string why;
+        REQUIRE(UserState::read(fx.file(), got, why));
+        REQUIRE(got.rollHistoryFormat.has_value());
+        CHECK((*got.rollHistoryFormat == f));
+        // The other setting is not disturbed
+        REQUIRE(got.animationSpeed.has_value());
+        CHECK((*got.animationSpeed == Ctrl::AnimationSpeed::Off));
+    }
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("UserState: a bad roll history format is ignored, not fatal")
+{
+    StateFixture fx;
+    fx.write("last:\n  table: a.yaml\n  userPlayer: b.yaml\n  buddyPlayers: []\n"
+             "settings:\n  rollHistoryFormat: 9\n");
+    UserState got;
+    std::string why;
+    REQUIRE(UserState::read(fx.file(), got, why));
+    CHECK_FALSE(got.rollHistoryFormat.has_value());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("RollHistoryFormat: parsing")
+{
+    using Ctrl::RollHistoryFormat;
+    using Ctrl::parseRollHistoryFormat;
+    CHECK((*parseRollHistoryFormat("1")  == RollHistoryFormat::Spaced));
+    CHECK((*parseRollHistoryFormat(" 4 ") == RollHistoryFormat::DiceComma));
+    CHECK_FALSE(parseRollHistoryFormat("0").has_value());
+    CHECK_FALSE(parseRollHistoryFormat("5").has_value());
+    CHECK_FALSE(parseRollHistoryFormat("").has_value());
+    CHECK_FALSE(parseRollHistoryFormat("a").has_value());
+    CHECK(Ctrl::toString(RollHistoryFormat::Commas) == "2");
+}
+
+//----------------------------------------------------------------
+
 TEST_CASE("AnimationSpeed: parsing")
 {
     using Ctrl::AnimationSpeed;

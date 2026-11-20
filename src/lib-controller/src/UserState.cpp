@@ -105,6 +105,15 @@ UserState::read(const fs::path& file, UserState& state, std::string& whyNot)
             }
             catch (const std::exception&) {}
         }
+        if (settings && settings.IsMap() && settings["rollHistoryFormat"])
+        {
+            try
+            {
+                s.rollHistoryFormat = parseRollHistoryFormat(
+                    settings["rollHistoryFormat"].as<std::string>());
+            }
+            catch (const std::exception&) {}
+        }
 
         state = std::move(s);
         return true;
@@ -144,6 +153,10 @@ UserState::save(const fs::path& stateDir) const
     if (animationSpeed)
     {
         root["settings"]["animationSpeed"] = toString(*animationSpeed);
+    }
+    if (rollHistoryFormat)
+    {
+        root["settings"]["rollHistoryFormat"] = toString(*rollHistoryFormat);
     }
 
     YAML::Emitter out;

@@ -45,6 +45,18 @@ CuiSender::reqMakeBet(const Craps::PlayerId& playerId,
 //----------------------------------------------------------------
 
 void
+CuiSender::reqSetRollHistoryFormat(Ctrl::RollHistoryFormat format)
+{
+    LOG_TRACE("CuiSender::reqSetRollHistoryFormat()");
+
+    Ctrl::ReqSetRollHistoryFormat ev;
+    ev.format = format;
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+void
 CuiSender::reqSetAnimationSpeed(Ctrl::AnimationSpeed speed)
 {
     LOG_TRACE("CuiSender::reqSetAnimationSpeed()");

@@ -1128,6 +1128,14 @@ CrapsReaders::getUserPlayerName()
 
 //----------------------------------------------------------------
 
+RollHistoryFormat
+CrapsReaders::readRollHistoryFormat()
+{
+    return Gbl::pConfigMgr->rollHistoryFormat();
+}
+
+//----------------------------------------------------------------
+
 AnimationSpeed
 CrapsReaders::readAnimationSpeed()
 {

@@ -84,6 +84,49 @@ ConfigManager::setAnimationSpeed(AnimationSpeed speed)
 
 //----------------------------------------------------------------
 
+RollHistoryFormat
+ConfigManager::rollHistoryFormat() const
+{
+    const auto v = getString(KeyRollHistoryFormat);
+    if (!v) return RollHistoryFormat::Spaced;
+
+    const auto f = parseRollHistoryFormat(*v);
+    if (!f)
+    {
+        LOG_WARN("Ignoring " + std::string(KeyRollHistoryFormat) + ": \"" + *v +
+                 "\" is not 1, 2, 3 or 4");
+        return RollHistoryFormat::Spaced;
+    }
+    return *f;
+}
+
+//----------------------------------------------------------------
+
+void
+ConfigManager::setRollHistoryFormat(RollHistoryFormat format)
+{
+    set(LayerNameSession, KeyRollHistoryFormat, toString(format));
+}
+
+//----------------------------------------------------------------
+
+std::optional<RollHistoryFormat>
+ConfigManager::rollHistoryFormatToRemember() const
+{
+    if (auto v = const_cast<ConfigManager*>(this)->getLayer(LayerNameSession)
+                     .get(KeyRollHistoryFormat))
+    {
+        return parseRollHistoryFormat(*v);
+    }
+    if (auto v = getString(KeyRollHistoryFormatRemembered))
+    {
+        return parseRollHistoryFormat(*v);
+    }
+    return std::nullopt;
+}
+
+//----------------------------------------------------------------
+
 std::optional<AnimationSpeed>
 ConfigManager::animationSpeedToRemember() const
 {

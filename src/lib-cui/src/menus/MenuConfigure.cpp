@@ -142,7 +142,7 @@ MenuConfigure::handleKey(int ch)
 void
 MenuConfigure::doFormatRollHistory()
 {
-    // TODO
+    OperationManager::instance().chooseRollHistoryFormat();
 }
 
 //----------------------------------------------------------------

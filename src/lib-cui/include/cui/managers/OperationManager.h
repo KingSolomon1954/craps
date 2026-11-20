@@ -48,6 +48,7 @@ public:
     void makeBet();      // Workflow: Asynchronous bet operation
     bool removeBets();   // Workflow: Pick one of your bets to take down
     bool chooseAnimationSpeed(); // Workflow: Pick the dice animation speed
+    bool chooseRollHistoryFormat(); // Workflow: Pick how rolls are listed
     bool confirmQuit();  // Workflow: Confirmation to quit application
     void autoFill();     // Workflow: Set up an AutoFill entry
     void quickBet();     // Workflow: Set up an QuickBet entry
@@ -78,7 +79,8 @@ private:
         RemoveBet,
         Quit,
         Player,
-        AnimationSpeed
+        AnimationSpeed,
+        RollHistoryFormat
     };
     
     enum class Stage

@@ -119,7 +119,8 @@ How |AppName| Remembers
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 When you quit, |AppName| writes down your table, your player, your
-buddies and your dice animation speed in ``state.yaml``. Next time, any setting you did not make in
+buddies, your dice animation speed and your roll history format in
+``state.yaml``. Next time, any setting you did not make in
 ``config.yaml`` is taken from there. Your own settings always take
 priority over it. If you quit with nobody else at the table, the next
 game starts that way too.
@@ -162,7 +163,8 @@ their default values.
 
 .. note::
 
-   The file also lists ``rollHistory``, ``sound`` and ``player: maxSessions``
+   The file also lists ``rollHistory: scroll``, ``sound`` and
+   ``player: maxSessions``
    settings. These are reserved for features that are not in the game yet,
    and changing them has no effect in this version.
 
@@ -207,6 +209,45 @@ still change it during a game with the menu. The command line option
    If the speed is not one of the four words above, the game writes a
    warning to the log file and uses ``normal``. Unquoted ``off`` is also
    understood in ``config.yaml``.
+
+Roll History Format
+-------------------
+
+The roll history under the title bar lists the most recent rolls, newest
+first. You can choose how each roll is written. The formats run from the most
+compact, which fits the most rolls, to the most detailed:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Format
+     - Looks like
+   * - ``1``
+     - ``7 8 6 10``
+   * - ``2``
+     - ``7,8,6,10``
+   * - ``3``
+     - ``7(34) 8(44) 6(33) 10(65)``
+   * - ``4``
+     - ``7(3,4) 8(4,4) 6(3,3) 10(6,5)``
+
+The numbers in parentheses are the two dice. Format 1 is the default.
+
+To change the format while you play, open the Control menu, choose
+Configuration, then Format Roll History (press ``f``). Press ``1`` to ``4``,
+or move to a line and press Enter. The current format is marked. The whole
+history is redrawn at once in the new format and keeps its colors for seven
+outs, pass line winners and points.
+
+Like the animation speed, the format you pick is remembered in
+``state.yaml`` when you quit. To always start with a particular format, put it
+in ``config.yaml``::
+
+   rollHistory:
+     format: 3
+
+A format in ``config.yaml`` is used at the start of every game, and you can
+still change it during a game with the menu.
 
 Overriding Settings Temporarily
 -------------------------------

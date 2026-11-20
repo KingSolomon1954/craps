@@ -16,6 +16,7 @@
 #include <cui/dialogs/DialogTextInput.h>
 #include <controller/AnimationSpeed.h>
 #include <controller/CrapsReaders.h>
+#include <controller/RollHistoryFormat.h>
 #include <controller/PlayerManager.h>
 #include <algorithm>
 #include <cstdint>
@@ -332,6 +333,51 @@ OperationManager::chooseAnimationSpeed()
     type_  = OperationType::AnimationSpeed;
     stage_ = Stage::AwaitingPick;
     DialogPickPlayer::instance().configure("Animation Speed", std::move(items),
+                                           DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+    return true;
+}
+
+//----------------------------------------------------------------
+//
+// Pick how the roll history lists the rolls. Same shape as
+// chooseAnimationSpeed(). Keys 1 to 4 pick directly.
+//
+bool
+OperationManager::chooseRollHistoryFormat()
+{
+    if (isActive()) return false;
+
+    using Ctrl::RollHistoryFormat;
+    const auto current = Ctrl::CrapsReaders::readRollHistoryFormat();
+
+    auto sample = [](RollHistoryFormat f) -> const char*
+    {
+        switch (f)
+        {
+        case RollHistoryFormat::Spaced:     return "7 8 6 10";
+        case RollHistoryFormat::Commas:     return "7,8,6,10";
+        case RollHistoryFormat::DiceJoined: return "7(34) 8(44) 6(33) 10(65)";
+        case RollHistoryFormat::DiceComma:  return "7(3,4) 8(4,4) 6(3,3) 10(6,5)";
+        }
+        return "";
+    };
+
+    std::vector<DialogPickPlayer::Item> items;
+    std::size_t index = 0;
+    for (auto f : Ctrl::AllRollHistoryFormats)
+    {
+        DialogPickPlayer::Item item;
+        item.tag         = index++;
+        item.text        = sample(f);
+        item.description = (f == current) ? "current" : "";
+        items.push_back(std::move(item));
+    }
+
+    type_  = OperationType::RollHistoryFormat;
+    stage_ = Stage::AwaitingPick;
+    DialogPickPlayer::instance().configure("Format Roll History",
+                                           std::move(items),
                                            DialogPickPlayer::Mode::Pick);
     SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
     return true;
@@ -827,6 +873,17 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
         {
             CuiSender::instance().reqSetAnimationSpeed(
                 Ctrl::AllAnimationSpeeds[tag]);
+        }
+        finish();
+        return;
+    }
+
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::RollHistoryFormat)
+    {
+        if (accepted && tag < Ctrl::AllRollHistoryFormats.size())
+        {
+            CuiSender::instance().reqSetRollHistoryFormat(
+                Ctrl::AllRollHistoryFormats[tag]);
         }
         finish();
         return;
