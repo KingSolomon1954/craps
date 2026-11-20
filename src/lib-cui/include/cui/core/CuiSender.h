@@ -32,6 +32,7 @@ public:
                                         const std::string& name,
                                         const std::string& description = "");
     void reqRollDice();
+    void reqSetAnimationSpeed(Ctrl::AnimationSpeed speed);
     Ctrl::CorrelationId reqMakeBet(const Craps::PlayerId& playerId,
                                    BetName betName,
                                    Gen::Money contractAmount,

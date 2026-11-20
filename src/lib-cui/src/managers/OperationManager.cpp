@@ -14,6 +14,7 @@
 #include <cui/dialogs/DialogMessage.h>
 #include <cui/dialogs/DialogPickPlayer.h>
 #include <cui/dialogs/DialogTextInput.h>
+#include <controller/AnimationSpeed.h>
 #include <controller/CrapsReaders.h>
 #include <controller/PlayerManager.h>
 #include <algorithm>
@@ -279,6 +280,58 @@ OperationManager::removeBets()
     type_  = OperationType::RemoveBet;
     stage_ = Stage::AwaitingPick;
     DialogPickPlayer::instance().configure("Remove Bets", std::move(items),
+                                           DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+    return true;
+}
+
+//----------------------------------------------------------------
+//
+// Pick how fast the dice roll animation plays. The setting applies to
+// the rest of this game and is remembered for the next one. The picker
+// pops itself, which returns to the Configuration menu.
+//
+bool
+OperationManager::chooseAnimationSpeed()
+{
+    if (isActive()) return false;
+
+    using Ctrl::AnimationSpeed;
+    const auto current = Ctrl::CrapsReaders::readAnimationSpeed();
+
+    auto describe = [](AnimationSpeed s) -> const char*
+    {
+        switch (s)
+        {
+        case AnimationSpeed::Off:    return "no animation; the roll shows at once";
+        case AnimationSpeed::Fast:   return "twice as fast as normal";
+        case AnimationSpeed::Normal: return "the usual pace";
+        case AnimationSpeed::Slow:   return "one and a half times slower";
+        }
+        return "";
+    };
+    auto label = [](AnimationSpeed s) -> std::string
+    {
+        std::string t = Ctrl::toString(s);
+        t[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(t[0])));
+        return t;
+    };
+
+    std::vector<DialogPickPlayer::Item> items;
+    std::size_t index = 0;
+    for (auto s : Ctrl::AllAnimationSpeeds)
+    {
+        DialogPickPlayer::Item item;
+        item.tag         = index++;
+        item.text        = label(s);
+        item.note        = (s == current) ? "(current)" : "";
+        item.description = describe(s);
+        items.push_back(std::move(item));
+    }
+
+    type_  = OperationType::AnimationSpeed;
+    stage_ = Stage::AwaitingPick;
+    DialogPickPlayer::instance().configure("Animation Speed", std::move(items),
                                            DialogPickPlayer::Mode::Pick);
     SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
     return true;
@@ -765,6 +818,17 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
             removalQueue_.assign(1, removalChoices_[tag]);
         }
         sendNextRemoval();
+        return;
+    }
+
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::AnimationSpeed)
+    {
+        if (accepted && tag < Ctrl::AllAnimationSpeeds.size())
+        {
+            CuiSender::instance().reqSetAnimationSpeed(
+                Ctrl::AllAnimationSpeeds[tag]);
+        }
+        finish();
         return;
     }
 

@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <controller/AnimationSpeed.h>
 #include <controller/PlayerManager.h>
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
@@ -260,6 +261,9 @@ public:
         Gen::ErrorPass& ep);
     static std::string getUserPlayerName();
     static const Craps::PlayerId& getUserPlayerId();
+
+    // Settings
+    static AnimationSpeed readAnimationSpeed();
     
     // Last Fill
     static Gen::ReturnCode getLastFill(

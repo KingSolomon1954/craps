@@ -118,8 +118,8 @@ A few examples:
 How |AppName| Remembers
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-When you quit, |AppName| writes down your table, your player and your
-buddies in ``state.yaml``. Next time, any setting you did not make in
+When you quit, |AppName| writes down your table, your player, your
+buddies and your dice animation speed in ``state.yaml``. Next time, any setting you did not make in
 ``config.yaml`` is taken from there. Your own settings always take
 priority over it. If you quit with nobody else at the table, the next
 game starts that way too.
@@ -166,6 +166,48 @@ their default values.
    settings. These are reserved for features that are not in the game yet,
    and changing them has no effect in this version.
 
+Dice Roll Animation Speed
+-------------------------
+
+The dice tumble across the table before the roll is shown. The bets are not
+settled until the dice land, so you never see a result before the roll. If
+you would rather not wait, you can speed the animation up or turn it off.
+
+The speeds are:
+
+``off``
+   No animation. The roll shows at once.
+
+``fast``
+   Twice as fast as normal.
+
+``normal``
+   The usual pace. This is the default.
+
+``slow``
+   One and a half times slower than normal.
+
+To change the speed while you play, open the Control menu, choose
+Configuration, then Animation Speed (press ``s``). Pick a speed from the
+list. It takes effect on the next roll. The current speed is marked.
+
+The speed you pick is remembered in ``state.yaml`` when you quit, so the next
+game starts at the same speed. To always start at a particular speed, no
+matter what you chose last time, put it in ``config.yaml``::
+
+   animation:
+     speed: fast
+
+A speed in ``config.yaml`` is used at the start of every game, and you can
+still change it during a game with the menu. The command line option
+``--animation-speed`` (see below) overrides ``config.yaml`` for one run.
+
+.. note::
+
+   If the speed is not one of the four words above, the game writes a
+   warning to the log file and uses ``normal``. Unquoted ``off`` is also
+   understood in ``config.yaml``.
+
 Overriding Settings Temporarily
 -------------------------------
 
@@ -182,6 +224,11 @@ any file. These options are available:
 
 ``--debug`` and ``--trace``
    Turn on the detailed logging described above for this run only.
+
+``--animation-speed``
+   Set the dice roll animation speed for this run: ``off``, ``fast``,
+   ``normal`` or ``slow``. Anything else stops the game with a message
+   listing the choices.
 
 ``--usr-config-dir``, ``--usr-data-dir`` and ``--usr-state-dir``
    Use another directory in place of the config, data or state locations

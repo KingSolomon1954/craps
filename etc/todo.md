@@ -49,8 +49,6 @@
 
 ### Implement the many MenuConfiguration options
 
-### Need to inhibit various actions during animation roll
-
 ### Implement QuickBet::applyQuickBet for new CUI design
 
 ### Implement MenuQuickBet
@@ -60,8 +58,6 @@
 ### Implement UndoLastBet in MenuBetting
 
 ### Implement doBetFlags in MenuBetting
-
-### Implement WindowPlayerArea - show bets on screen
 
 ### Implement WindowMessageArea
 
@@ -77,7 +73,9 @@
 
 ## Done
 
-(Done) Implemented RemoveBets in MenuBetting
+(Done) Implementd Animation Speed adjustments and configuration\
+(Done) Hold off seeing roll results until after roll animation ends\
+(Done) Implemented RemoveBets in MenuBetting\
 (Done) Implement PlayerAreaOnePlayer - show bets on screen\
 (Done) Create Player prompts for player's short description\
 (Done) Update user-guide with Player handling\

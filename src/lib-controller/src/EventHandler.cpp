@@ -4,6 +4,7 @@
 //
 //----------------------------------------------------------------
 
+#include <controller/ConfigManager.h>
 #include <controller/EventHandler.h>
 #include <controller/GameEvents.h>
 #include <controller/GameMain.h>
@@ -41,6 +42,12 @@ EventHandler::EventHandler()
         [this](const Ctrl::ReqRemoveBet& ev)
         {
             this->onReqRemoveBet(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::ReqSetAnimationSpeed>(
+        [this](const Ctrl::ReqSetAnimationSpeed& ev)
+        {
+            this->onReqSetAnimationSpeed(ev);
         });
 
     Gen::EventManager::instance().subscribe<Ctrl::ReqRollDice>(
@@ -180,6 +187,16 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
         }
     }
     Gen::EventManager::instance().publish(rsp);
+}
+
+//----------------------------------------------------------------
+
+void
+EventHandler::onReqSetAnimationSpeed(const Ctrl::ReqSetAnimationSpeed& ev) const
+{
+    LOG_TRACE("Entered EventHandler::onReqSetAnimationSpeed()");
+    Gbl::pConfigMgr->setAnimationSpeed(ev.speed);
+    // No response event
 }
 
 //----------------------------------------------------------------

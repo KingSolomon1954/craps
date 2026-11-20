@@ -258,6 +258,7 @@ GameMain::gatherUserState() const
     {
         state.buddies.resize(UserState::MaxBuddies);
     }
+    state.animationSpeed = Gbl::pConfigMgr->animationSpeedToRemember();
     return state;
 }
 

@@ -6,7 +6,9 @@
 
 #pragma once
 
+#include <controller/AnimationSpeed.h>
 #include <gen/MultiLayerConfig.h>
+#include <optional>
 #include <string>
 
 namespace Gen {
@@ -25,11 +27,21 @@ public:
 
     /// @name Modifiers
     /// @{
+    /// Changes the speed for the rest of this game (the session layer).
+    void setAnimationSpeed(AnimationSpeed speed);
     /// @}
 
     /// @name Observers
     /// @{
     void dumpConfig();
+
+    /// The animation speed in effect now: what the person chose this
+    /// game, else the command line, config.yaml, last game, or Normal.
+    AnimationSpeed animationSpeed() const;
+
+    /// What state.yaml should remember: this game's choice if there
+    /// was one, otherwise what the last game remembered.
+    std::optional<AnimationSpeed> animationSpeedToRemember() const;
     /// @}
 
 public:
@@ -37,6 +49,7 @@ public:
     static constexpr auto LayerNameFiles    = "files";
     static constexpr auto LayerNameEnv      = "env";
     static constexpr auto LayerNameCmdLine  = "cmdline";
+    static constexpr auto LayerNameSession  = "session";   // Changes made while playing
 
     // Keys to retrieve/deposit config values
     static constexpr auto KeyAppPath        = "app.execAbsPath";
@@ -67,6 +80,11 @@ public:
     static constexpr auto KeySoundVolume      = "sound.volume";
     static constexpr auto KeyDebugLogging     = "log.debug";
     static constexpr auto KeyTraceLogging     = "log.trace";
+
+    // Dice roll animation: off | fast | normal | slow
+    static constexpr auto KeyAnimationSpeed           = "animation.speed";
+    // What state.yaml remembered; carried to the next state.yaml
+    static constexpr auto KeyAnimationSpeedRemembered = "animation.remembered";
 
     // Startup. Set in the files layer when no user config.yaml existed,
     // see ConfigSeed.

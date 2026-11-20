@@ -64,14 +64,14 @@ WindowAnimation::instance()
 //----------------------------------------------------------------
 
 //
-// Hooks for the planned Animation Speed setting (Control -> Configuration).
+// Animation Speed setting (Control -> Configuration). Read at each throw.
 // Off means no animation: results show at once and nothing is held back.
-// A speed would scale the frame interval.
+// Otherwise the speed sets the time between frames.
 //
 bool
 WindowAnimation::animationEnabled()
 {
-    return true;    // TODO: from the Animation Speed setting
+    return Ctrl::CrapsReaders::readAnimationSpeed() != Ctrl::AnimationSpeed::Off;
 }
 
 //----------------------------------------------------------------
@@ -79,7 +79,13 @@ WindowAnimation::animationEnabled()
 std::chrono::milliseconds
 WindowAnimation::frameInterval()
 {
-    return std::chrono::milliseconds(90);   // TODO: scale by the setting
+    using Ctrl::AnimationSpeed;
+    switch (Ctrl::CrapsReaders::readAnimationSpeed())
+    {
+    case AnimationSpeed::Fast: return std::chrono::milliseconds(45);
+    case AnimationSpeed::Slow: return std::chrono::milliseconds(135);
+    default:                   return std::chrono::milliseconds(90);
+    }
 }
 
 //----------------------------------------------------------------

@@ -94,6 +94,18 @@ UserState::read(const fs::path& file, UserState& state, std::string& whyNot)
             }
         }
 
+        // Optional and forgiving: anything unusable is just not remembered
+        const YAML::Node settings = root["settings"];
+        if (settings && settings.IsMap() && settings["animationSpeed"])
+        {
+            try
+            {
+                s.animationSpeed = parseAnimationSpeed(
+                    settings["animationSpeed"].as<std::string>());
+            }
+            catch (const std::exception&) {}
+        }
+
         state = std::move(s);
         return true;
     }
@@ -128,6 +140,11 @@ UserState::save(const fs::path& stateDir) const
 
     YAML::Node root;
     root["last"] = last;
+
+    if (animationSpeed)
+    {
+        root["settings"]["animationSpeed"] = toString(*animationSpeed);
+    }
 
     YAML::Emitter out;
     out << YAML::Comment("Written by the game at quit. Safe to delete.");

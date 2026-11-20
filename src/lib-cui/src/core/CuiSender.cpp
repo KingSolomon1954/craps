@@ -44,6 +44,18 @@ CuiSender::reqMakeBet(const Craps::PlayerId& playerId,
 
 //----------------------------------------------------------------
 
+void
+CuiSender::reqSetAnimationSpeed(Ctrl::AnimationSpeed speed)
+{
+    LOG_TRACE("CuiSender::reqSetAnimationSpeed()");
+
+    Ctrl::ReqSetAnimationSpeed ev;
+    ev.speed = speed;
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
 Ctrl::CorrelationId
 CuiSender::reqRemoveBet(const Craps::PlayerId& playerId,
                         Craps::BetId betId)

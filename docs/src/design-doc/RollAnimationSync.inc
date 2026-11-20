@@ -101,12 +101,25 @@ Rules
 Animation Speed
 ^^^^^^^^^^^^^^^
 
-The Animation Speed option on the Control, Configuration menu is meant to
-drive this mechanism through two small functions in ``WindowAnimation``:
+The Animation Speed option on the Control, Configuration menu drives this
+mechanism through two small functions in ``WindowAnimation``. Both read
+the setting from ``CrapsReaders::readAnimationSpeed()`` at each throw, so a
+change applies to the next roll:
 
-* ``animationEnabled()`` selects no animation, and so no hold.
-* ``frameInterval()`` sets the timer period, scaling the length of the
-  animation.
+* ``animationEnabled()`` is false for Off, so there is no animation and no
+  hold. ``onDiceThrowStart()`` returns false and the dispatcher passes the
+  roll's results straight through.
+* ``frameInterval()`` sets the timer period: 45 ms for Fast, 90 ms for
+  Normal and 135 ms for Slow. The length of the animation scales with it.
 
-If animation can ever become much slower than it is now, ``MaxHold`` must
-be raised to stay above the longest animation.
+Slow is about two seconds, well under ``MaxHold``. If an animation can ever
+become much slower than that, ``MaxHold`` must be raised to stay above the
+longest animation.
+
+The setting lives in the configuration as ``animation.speed``. The session
+layer, the highest priority, holds a choice made in the menu, which sends
+``ReqSetAnimationSpeed``. Below it are the command line
+(``--animation-speed``), config.yaml, and what ``state.yaml`` remembered.
+At quit the session choice, or else the remembered value, is written back to
+``state.yaml`` under ``settings``. A config.yaml value is never written
+there, so removing it from config.yaml restores the remembered speed.

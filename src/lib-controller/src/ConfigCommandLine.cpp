@@ -7,6 +7,7 @@
 #include <controller/ConfigCommandLine.h>
 #include <filesystem>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <cxxopts.hpp>
 #include <rang.hpp>
@@ -87,6 +88,9 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         ("no-trace", "Disable trace logging",
          cxxopts::value<bool>()->default_value("true"))
         
+        ("animation-speed", "Dice roll animation: off, fast, normal or slow",
+         cxxopts::value<std::string>())
+
         ("v,version", "Print version info then exit")
         
         ("h,help", "Print usage")
@@ -104,6 +108,18 @@ ConfigCommandLine::processCmdLine(int argc, char* argv[],
         std::cout << rang::style::bold
                   << Gbl::pBuildInfo->fullInfo() << rang::style::reset;
         exit(0);
+    }
+
+    if (result.count("animation-speed"))
+    {
+        const auto v = result["animation-speed"].as<std::string>();
+        if (!parseAnimationSpeed(v))
+        {
+            throw std::invalid_argument(
+                "--animation-speed must be off, fast, normal or slow, "
+                "not \"" + v + "\"");
+        }
+        cfg.set(ConfigManager::KeyAnimationSpeed, v);
     }
 
     if (result.count("con"))

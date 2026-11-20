@@ -24,6 +24,9 @@
 #   maxSessions: 50
 #   maxRecentRolls: 50
 #
+# animation:
+#   speed: normal     # [ off | fast | normal | slow ] dice roll animation
+#
 # rollHistory:
 #   format: 1         # [ 1..4 ]
 #   scroll: "up"      # [left | right | up | down]

@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #pragma once
+#include <controller/AnimationSpeed.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
 #include <craps/LastRollStats.h>
@@ -31,6 +32,7 @@ enum class EventType
     ReqMakeBet,
     ReqOddsBet,
     ReqRemoveBet,
+    ReqSetAnimationSpeed,
     ReqAutoFill,
     ReqQuickBet,
     ReqSwitchPlayer,
@@ -624,6 +626,19 @@ struct RspOddsBet : public GameEvent
 
     RspOddsBet()
         : GameEvent{EventSource::Controller, EventType::RspOddsBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Change how the dice roll animation plays, for the rest of this game.
+/// The choice is remembered at quit. No response.
+struct ReqSetAnimationSpeed : public GameEvent
+{
+    AnimationSpeed speed = AnimationSpeed::Normal;
+
+    ReqSetAnimationSpeed()
+        : GameEvent{EventSource::View, EventType::ReqSetAnimationSpeed}
     {}
 };
 

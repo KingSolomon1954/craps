@@ -47,6 +47,7 @@ public:
     bool playerOperation(PlayerOp op);  // Workflow: Player menu operations
     void makeBet();      // Workflow: Asynchronous bet operation
     bool removeBets();   // Workflow: Pick one of your bets to take down
+    bool chooseAnimationSpeed(); // Workflow: Pick the dice animation speed
     bool confirmQuit();  // Workflow: Confirmation to quit application
     void autoFill();     // Workflow: Set up an AutoFill entry
     void quickBet();     // Workflow: Set up an QuickBet entry
@@ -76,7 +77,8 @@ private:
         MakeBet,
         RemoveBet,
         Quit,
-        Player
+        Player,
+        AnimationSpeed
     };
     
     enum class Stage
