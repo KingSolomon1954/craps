@@ -70,6 +70,7 @@
 
 ## Done
 
+(Done) Created DeepRollHistory dialog for future integration\
 (Done) Implemented Roll History Format and configuration\
 (Done) Implemente Animation Speed adjustments and configuration\
 (Done) Hold off seeing roll results until after roll animation ends\

@@ -9,7 +9,7 @@
 #include <cui/bases/PanelBase.h>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <controller/RollHistoryFormat.h>
-#include <deque>
+#include <cui/core/RollLog.h>
 
 namespace Cui
 {
@@ -50,19 +50,10 @@ private:
         static constexpr int rollHistWidth    = rollHistRightCol - rollHistLeftCol + 1;
     };
 
-    struct Roll
-    {
-        unsigned d1 = 0;
-        unsigned d2 = 0;
-        bool passLineWinner = false;
-        bool sevenOut = false;
-        bool point = false;
-    };
+    using Roll = RollEntry;   // Kept in RollLog, shared with Deep Roll History
 
     using Format = Ctrl::RollHistoryFormat;   // From Control, Configure menu
 
-    std::deque<Roll> rolls_;  // newest first
-    static constexpr std::size_t MaxSize = 100;
     static constexpr std::size_t CharLimit = Layout::rollHistWidth - 2;  // space on either side
 
 private:
@@ -72,11 +63,9 @@ private:
     void drawStaticContent();
     void populate();
 
-    void add    (const Roll& r);
     void attrOn (const Roll& r);
     void attrOff(const Roll& r);
     std::string format(Format fmt, const Roll& r) const;
-    const Roll& operator[](std::size_t index) const;
 };
 
 } // namespace Cui

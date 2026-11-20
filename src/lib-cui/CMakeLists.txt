@@ -15,6 +15,7 @@ add_library(cui STATIC
     src/core/WorkOrderDispatcher.cpp
     src/dialogs/DialogBetAmount.cpp
     src/dialogs/DialogConfirm.cpp
+    src/dialogs/DialogDeepRollHistory.cpp
     src/dialogs/DialogError.cpp
     src/dialogs/DialogMessage.cpp
     src/dialogs/DialogPickPlayer.cpp

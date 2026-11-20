@@ -110,7 +110,6 @@ public:
     static constexpr auto KeyTablePlayer5        = "table.startPlayers[4]";
     static constexpr auto KeyTablePlayer6        = "table.startPlayers[5]";
     static constexpr auto KeyTableMaxSessions    = "table.maxSessions";
-    static constexpr auto KeyTableMaxRecentRolls = "table.maxRecentRolls";
     static constexpr auto KeyTableUserIsPlayer   = "table.userIsPlayer";
 
     // Table Setup, as the user states it in config.yaml. All optional;

@@ -96,7 +96,7 @@ WindowRollHistory::populate()
     int column = 1;
     const int rightColumn = 1 + static_cast<int>(CharLimit);
 
-    for (const auto& r : rolls_)
+    for (const auto& r : RollLog::instance().rolls())
     {
         const std::string text = format(fmtConfig, r);
 
@@ -185,7 +185,7 @@ WindowRollHistory::onDiceNewValue(unsigned d1, unsigned d2, unsigned rollCount)
 {
     (void) rollCount;
     
-    add(Roll{d1, d2});
+    RollLog::instance().add(d1, d2);
 }
 
 //----------------------------------------------------------------
@@ -194,7 +194,7 @@ void
 WindowRollHistory::onSevenOut()
 {
     // Retro-actively mark the front element indicating seven out.
-    rolls_[0].sevenOut = true;
+    RollLog::instance().markSevenOut();
 }
 
 //----------------------------------------------------------------
@@ -203,7 +203,7 @@ void
 WindowRollHistory::onPassLineWinner()
 {
     // Retro-actively mark the front element indicating pass line winner.
-    rolls_[0].passLineWinner = true;
+    RollLog::instance().markPassLineWinner();
 }
 
 //----------------------------------------------------------------
@@ -211,30 +211,10 @@ WindowRollHistory::onPassLineWinner()
 void
 WindowRollHistory::onPointEstablished(unsigned point)
 {
-    // Retro-actively mark the front element indicating pass line winner.
-    rolls_[0].point = true;
+    // Retro-actively mark the front element indicating a point was set.
+    (void) point;
+    RollLog::instance().markPoint();
 }
-
-//----------------------------------------------------------------
-
-void
-WindowRollHistory::add(const Roll& r)
-{
-    rolls_.push_front(r);
-
-    if (rolls_.size() > MaxSize)
-    {
-        rolls_.pop_back();  // remove oldest
-    }
-}
-
-//----------------------------------------------------------------
-
-const WindowRollHistory::Roll&
-WindowRollHistory::operator[](std::size_t index) const
-{
-    return rolls_[index];
-}    
 
 //----------------------------------------------------------------
 

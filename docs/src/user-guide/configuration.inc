@@ -152,10 +152,6 @@ their default values.
    across all sessions. When there are more, the oldest are dropped. The
    default is 50.
 
-``table: maxRecentRolls``
-   How many of the most recent dice rolls the table remembers. The
-   default is 50.
-
 ``log: debug`` and ``log: trace``
    ``true`` turns on more detailed messages in the log file. This is useful
    when something is wrong and you are asked for the log, and it makes the
