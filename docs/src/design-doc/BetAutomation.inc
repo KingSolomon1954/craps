@@ -1,0 +1,219 @@
+Automation Purpose
+^^^^^^^^^^^^^^^^^^
+
+Three features place bets for a player without the player entering each
+bet by hand:
+
+* **QuickBets**: a named bundle of bets that the user applies with a key.
+* **AutoOdds**: odds that are placed automatically on a contract bet when it
+  becomes eligible for them.
+* **Automated bets**: bets that a buddy player places on its own, according
+  to a plan. Buddies are the main reason for this feature, and it is not
+  built yet.
+
+They differ in when they act, not in what they do. All of them turn a list of
+bets into bet requests for a player. This section describes the one mechanism
+they share, so that the parts built first, QuickBets and AutoOdds, are the
+parts that buddy automation will need.
+
+The earlier AutoFill and single QuickBet features are removed. LastFill
+covers what AutoFill did, and a QuickBets entry holding one bet covers what a
+single QuickBet did.
+
+Automation Vocabulary
+^^^^^^^^^^^^^^^^^^^^^
+
+Bet spec
+   One bet to place: the bet name, the pivot if the bet has one, whether it
+   is an odds bet, and an amount. This is what ``QuickBetEntry`` and
+   ``AutoFillEntry`` already were, as two copies of one struct.
+
+Bet plan
+   A named, ordered list of bet specs. A QuickBets entry is a bet plan.
+
+Trigger
+   The moment something is applied. Manual (the user presses a key), betting
+   opened after a roll, come-out, point established, and so on.
+
+Rule
+   A trigger joined to an action: apply a bet plan, or apply the AutoOdds
+   settings. Only rules for buddies need a general form.
+
+Automation Participants
+^^^^^^^^^^^^^^^^^^^^^^^
+
+* ``BetExecutor`` (Controller) applies a list of bet specs for a player and
+  reports what happened. It is the only place that turns specs into bets.
+* ``QuickBets`` (Controller) holds a player's bet plans. Plain data, one per
+  player, held in ``PlayerPrefs``, as the older classes were.
+* ``AutoOdds`` (Controller) holds a player's odds multiples and the master
+  switch, also in ``PlayerPrefs``, and decides which bets need odds.
+* ``EventHandler`` receives the requests from the View, calls the executor,
+  and watches for the trigger events for AutoOdds.
+* ``UndoManager`` records each application as one undo step.
+* The View has the dialogs: a picker to apply a QuickBets entry, the Set or
+  Add dialog and an AutoOdds entry in ``DialogBetAmount``, and management
+  dialogs on the Configuration menu.
+
+Applying a Plan
+^^^^^^^^^^^^^^^
+
+``BetExecutor`` applies the specs of a plan, or of an AutoOdds pass, in order:
+
+* **Best effort.** A bet that cannot be placed is skipped and the rest go
+  on. The player is told what was placed and what was skipped and why, in
+  one summary, rather than an error dialog per bet. This is chosen over
+  refusing the whole plan because a plan made for one table may not fit
+  another table's limits and multiples, and a plan that places most of its
+  bets is more useful than one that does nothing.
+* **Set, not add.** A player has at most one bet per spot. A spec for a spot
+  that already has a bet sets that bet to the spec's amount. A spec whose
+  amount equals the bet's amount changes nothing and is counted as already
+  in place.
+* **Order.** In a plan, a contract bet is placed before the odds on it.
+  Odds specs are limited to PassLine and DontPass odds, whose point is
+  implied. Odds on a Come or DontCome bet exist only after the bet has
+  moved to a number, so they are handled by AutoOdds and cannot be saved in
+  a plan.
+* **Same paths as the View.** Each placement goes through the same
+  ``Player::makeOrChangeBet`` and ``setOddsAmount`` that bet requests use,
+  so all the table's rules, limits, funds checks and events apply
+  unchanged. The player's balance and the screens follow from the usual
+  events.
+* **One undo step.** The placements of one application are recorded with
+  ``undoJoinsPrevious``, so a single undo takes back the whole application.
+  This holds for automation too: pressing undo right after a roll takes
+  back what AutoOdds did for that roll.
+* **Summary.** The result lists, for each spec, placed, changed, already in
+  place or skipped with the reason. It goes to the View as an event. The
+  View puts a short line in the Message area when there is one, and the
+  executor always writes it to the log.
+
+QuickBets Rules
+^^^^^^^^^^^^^^^
+
+* A QuickBets entry has a name chosen by the user and a list of bet specs.
+  The View shows the name and a generated description of the bets.
+* At most 20 entries and 12 specs in an entry, so that the lists fit the
+  screen and each entry can have a letter key.
+* The Betting menu key ``q`` shows the entries to apply. The Configuration
+  menu lists, creates, renames, adds to, trims, changes the amounts of and
+  deletes entries.
+* ``DialogBetAmount`` has ``q`` for "QuickBets, set or add". The dialog
+  then offers "Set as new QuickBets entry", which asks for a name, or "Add
+  to an existing entry". Adding a spec whose spot is already in the entry
+  replaces the amount, which matches one bet per spot.
+* Amounts are fixed dollar amounts, validated when applied. They are not
+  converted when the table changes.
+* Order of the entries matters and is kept in the player file.
+
+AutoOdds Rules
+^^^^^^^^^^^^^^
+
+AutoOdds places odds on a contract bet for the user, in a size that depends
+on the kind of bet and the point it is on.
+
+* **Settings.** A table of multiples *n* for each of PassLine, DontPass,
+  Come and DontCome and each of the points 4, 5, 6, 8, 9 and 10. The odds
+  amount is *n* times the contract amount. A missing entry or zero means no
+  automatic odds for that bet type and point. This is needed because odds
+  size depends on the point as well as on the bet. A player may want much
+  more behind a DontPass bet on the 10 than on the 6. Typical examples are
+  3, 4 and 5 times for the 4 and 10, the 5 and 9 and the 6 and 8. The
+  Configuration menu offers that as a preset and can also set one multiple
+  for every point of a bet type.
+* **Master switch.** There is one on and off switch for each player, so
+  AutoOdds can be paused without losing the table of multiples. When it is on,
+  the View shows a visible indicator, and each automatic placement is
+  reported in the Message area, since the feature spends the player's money
+  unprompted.
+* **When.** AutoOdds runs on ``UslBettingOpened``, after the roll's results
+  are settled. It looks at the player's bets rather than following events,
+  so it does not matter whether the bet became eligible because the point
+  was set, a Come bet traveled to a number, or the table was switched.
+* **Which bets.** A contract bet that has a point or pivot, has no odds, and
+  has not been handled by AutoOdds before. The controller remembers the ids
+  of the bets it has handled. This is needed so that odds the player takes
+  down by hand stay down. Without it AutoOdds would put them back after the
+  next roll. The set is pruned of ids that are no longer on the table.
+* **Amount.** *n* times the contract, rounded down to the table's required
+  odds multiple and not above the table's maximum odds for that bet. The
+  table already knows both, from its odds limit rules. If the result is
+  below one odds increment, the bet is skipped and the reason is reported.
+* **Failures.** Insufficient funds or a refusal from the table skips the
+  bet. AutoOdds does not retry within the same pass. It has already marked
+  the bet as handled.
+* **From DialogBetAmount.** ``a`` sets or unsets the multiple for the bet
+  type and point of the odds bet being entered. The multiple is the entered
+  odds amount divided by the contract amount, rounded down, and the Message
+  area states the multiple that was stored. A zero amount removes it. The
+  line is shown only when the dialog is for an odds bet and is blank
+  otherwise, so that the dialog does not change shape.
+
+Buddy Automation
+^^^^^^^^^^^^^^^^
+
+Not built yet. This is what the other parts are shaped for.
+
+* A buddy is an ordinary player with its own ``PlayerPrefs``. Its plans,
+  AutoOdds and rules are kept in that file, as the user's are.
+* A rule is a trigger and an action. The first triggers are betting opened
+  with no point (come-out), betting opened with a point, and betting opened
+  after any roll. The actions are to apply a named plan, or to apply AutoOdds.
+  Conditions such as the player's balance and progressions that change
+  amounts after wins and losses come later and fit between the trigger and
+  the action.
+* ``EventHandler`` runs the rules for every player that has them at the
+  same ``UslBettingOpened``, through the same executor.
+* A buddy's undo stack is never used. It is cleared at each roll as every
+  stack is, so it cannot grow.
+
+Automation Persistence
+^^^^^^^^^^^^^^^^^^^^^^
+
+In the player file under ``Prefs``, replacing ``AutoFills`` and
+``QuickBets`` in their present form:
+
+.. code-block:: yaml
+
+   QuickBets:
+     - name: Place Hi
+       bets:
+         - { betName: Place, pivot: 8,  amount: 24 }
+         - { betName: Place, pivot: 9,  amount: 20 }
+         - { betName: Place, pivot: 10, amount: 20 }
+   AutoOdds:
+     enabled: true
+     multiples:
+       PassLine:
+         4: 3
+         5: 4
+         6: 5
+
+Loading follows the Prefs rules already in force: an entry that cannot be
+read is logged and skipped, and loading never throws.
+
+Automation Staging
+^^^^^^^^^^^^^^^^^^
+
+#. Remove AutoFill and the single QuickBet, with their tests, events,
+   dialog entries, YAML and documentation.
+#. ``BetSpec``, bet plans and ``BetExecutor``, with the single undo step,
+   the summary event, ``QuickBets`` data and persistence, and the Betting
+   menu key to apply an entry.
+#. The Set or Add dialog in ``DialogBetAmount`` and the Configuration menu
+   pages for QuickBets.
+#. AutoOdds: settings and persistence, the pass on ``UslBettingOpened``,
+   the ``DialogBetAmount`` entry, the Configuration menu pages, the master
+   switch and its indicator.
+#. Buddy automation rules and their triggers.
+
+Automation Open Items
+^^^^^^^^^^^^^^^^^^^^^
+
+* Whether AutoOdds should also offer a "maximum the table allows" setting
+  in place of a multiple.
+* A place for the Message area to show summaries before the Message area
+  exists. Until then the summary is only logged.
+* Whether QuickBets entries should be shared between a user and the buddies,
+  or only per player.
