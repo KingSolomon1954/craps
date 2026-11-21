@@ -3,8 +3,8 @@ var searchData=
   ['undobet_0',['UndoBet',['../classCtrl_1_1UndoBet.html',1,'Ctrl']]],
   ['undobetadded_1',['UndoBetAdded',['../classCtrl_1_1UndoBetAdded.html',1,'Ctrl']]],
   ['undobetmodifiedamount_2',['UndoBetModifiedAmount',['../classCtrl_1_1UndoBetModifiedAmount.html',1,'Ctrl']]],
-  ['undobetmodifiedflags_3',['UndoBetModifiedFlags',['../classCtrl_1_1UndoBetModifiedFlags.html',1,'Ctrl']]],
-  ['undobetremoved_4',['UndoBetRemoved',['../classCtrl_1_1UndoBetRemoved.html',1,'Ctrl']]],
+  ['undobetremoved_3',['UndoBetRemoved',['../classCtrl_1_1UndoBetRemoved.html',1,'Ctrl']]],
+  ['undogroup_4',['UndoGroup',['../classCtrl_1_1UndoGroup.html',1,'Ctrl']]],
   ['undomanager_5',['UndoManager',['../classCtrl_1_1UndoManager.html',1,'Ctrl']]],
   ['userstate_6',['UserState',['../classCtrl_1_1UserState.html',1,'Ctrl']]],
   ['uslautofillchanged_7',['UslAutoFillChanged',['../structCtrl_1_1UslAutoFillChanged.html',1,'Ctrl']]],
@@ -30,10 +30,11 @@ var searchData=
   ['uslquickbetchanged_27',['UslQuickBetChanged',['../structCtrl_1_1UslQuickBetChanged.html',1,'Ctrl']]],
   ['uslresolvebetsend_28',['UslResolveBetsEnd',['../structCtrl_1_1UslResolveBetsEnd.html',1,'Ctrl']]],
   ['uslresolvebetsstart_29',['UslResolveBetsStart',['../structCtrl_1_1UslResolveBetsStart.html',1,'Ctrl']]],
-  ['uslsevenout_30',['UslSevenOut',['../structCtrl_1_1UslSevenOut.html',1,'Ctrl']]],
-  ['usltablebalancechanged_31',['UslTableBalanceChanged',['../structCtrl_1_1UslTableBalanceChanged.html',1,'Ctrl']]],
-  ['usltablebetschanged_32',['UslTableBetsChanged',['../structCtrl_1_1UslTableBetsChanged.html',1,'Ctrl']]],
-  ['usltablelastrollstatschanged_33',['UslTableLastRollStatsChanged',['../structCtrl_1_1UslTableLastRollStatsChanged.html',1,'Ctrl']]],
-  ['usltablesessionstatschanged_34',['UslTableSessionStatsChanged',['../structCtrl_1_1UslTableSessionStatsChanged.html',1,'Ctrl']]],
-  ['usluserplayerswitched_35',['UslUserPlayerSwitched',['../structCtrl_1_1UslUserPlayerSwitched.html',1,'Ctrl']]]
+  ['uslrollhistoryformatchanged_30',['UslRollHistoryFormatChanged',['../structCtrl_1_1UslRollHistoryFormatChanged.html',1,'Ctrl']]],
+  ['uslsevenout_31',['UslSevenOut',['../structCtrl_1_1UslSevenOut.html',1,'Ctrl']]],
+  ['usltablebalancechanged_32',['UslTableBalanceChanged',['../structCtrl_1_1UslTableBalanceChanged.html',1,'Ctrl']]],
+  ['usltablebetschanged_33',['UslTableBetsChanged',['../structCtrl_1_1UslTableBetsChanged.html',1,'Ctrl']]],
+  ['usltablelastrollstatschanged_34',['UslTableLastRollStatsChanged',['../structCtrl_1_1UslTableLastRollStatsChanged.html',1,'Ctrl']]],
+  ['usltablesessionstatschanged_35',['UslTableSessionStatsChanged',['../structCtrl_1_1UslTableSessionStatsChanged.html',1,'Ctrl']]],
+  ['usluserplayerswitched_36',['UslUserPlayerSwitched',['../structCtrl_1_1UslUserPlayerSwitched.html',1,'Ctrl']]]
 ];

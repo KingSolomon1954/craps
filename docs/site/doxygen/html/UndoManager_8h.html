@@ -96,76 +96,99 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">UndoManager.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;memory&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="UndoBet_8h_source.html">controller/UndoBet.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="CrapsTypes_8h_source.html">craps/CrapsTypes.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="ErrorPass_8h_source.html">gen/ErrorPass.h</a>&gt;</code><br />
+<code>#include &lt;map&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;mutex&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;<a class="el" href="UndoBet_8h_source.html">controller/UndoBet.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for UndoManager.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="UndoManager_8h__incl.png" border="0" usemap="#asrc_2lib-controller_2include_2controller_2UndoManager_8h" alt=""/></div>
 <map name="asrc_2lib-controller_2include_2controller_2UndoManager_8h" id="asrc_2lib-controller_2include_2controller_2UndoManager_8h">
-<area shape="rect" title=" " alt="" coords="40,5,179,60"/>
-<area shape="rect" title=" " alt="" coords="5,328,83,353"/>
-<area shape="poly" title=" " alt="" coords="106,61,52,315,47,314,101,59"/>
-<area shape="rect" title=" " alt="" coords="107,328,170,353"/>
-<area shape="poly" title=" " alt="" coords="114,60,139,314,134,314,109,60"/>
-<area shape="rect" href="UndoBet_8h.html" title=" " alt="" coords="147,108,303,133"/>
-<area shape="poly" title=" " alt="" coords="146,58,200,97,197,102,143,62"/>
-<area shape="rect" href="CrapsTypes_8h.html" title=" " alt="" coords="149,255,296,280"/>
-<area shape="poly" title=" " alt="" coords="228,134,226,241,220,241,222,134"/>
-<area shape="rect" href="CrapsBet_8h.html" title=" " alt="" coords="702,181,834,207"/>
-<area shape="poly" title=" " alt="" coords="304,130,689,180,688,185,303,135"/>
-<area shape="poly" title=" " alt="" coords="195,283,87,325,85,320,193,278"/>
-<area shape="poly" title=" " alt="" coords="211,282,165,321,161,317,207,278"/>
-<area shape="rect" title=" " alt="" coords="809,401,868,427"/>
-<area shape="poly" title=" " alt="" coords="234,279,270,316,295,335,322,351,362,364,417,375,550,392,688,403,796,408,796,414,688,408,550,397,416,380,361,369,320,356,292,340,267,320,230,282"/>
-<area shape="rect" title=" " alt="" coords="194,328,257,353"/>
-<area shape="poly" title=" " alt="" coords="226,280,227,314,222,315,220,280"/>
-<area shape="rect" title=" " alt="" coords="473,328,588,353"/>
-<area shape="poly" title=" " alt="" coords="273,277,468,322,467,328,272,283"/>
-<area shape="rect" href="Uuid_8h.html" title=" " alt="" coords="333,328,425,353"/>
-<area shape="poly" title=" " alt="" coords="249,278,342,320,340,325,247,282"/>
-<area shape="poly" title=" " alt="" coords="425,346,796,403,795,409,424,352"/>
-<area shape="poly" title=" " alt="" coords="702,207,310,257,309,252,701,201"/>
-<area shape="poly" title=" " alt="" coords="771,207,775,271,783,312,796,352,820,389,816,392,791,354,778,313,770,271,765,207"/>
-<area shape="poly" title=" " alt="" coords="703,207,640,224,610,238,582,257,558,285,542,316,537,313,553,282,578,253,607,234,639,219,701,201"/>
-<area shape="poly" title=" " alt="" coords="702,198,611,200,508,209,459,216,417,227,383,240,361,256,354,269,354,284,366,315,361,317,349,285,349,268,357,253,380,235,415,222,458,211,507,204,610,195,702,192"/>
-<area shape="rect" title=" " alt="" coords="805,328,872,353"/>
-<area shape="poly" title=" " alt="" coords="776,206,829,314,825,317,771,208"/>
-<area shape="rect" title=" " alt="" coords="973,401,1049,427"/>
-<area shape="poly" title=" " alt="" coords="835,201,930,221,971,235,998,253,1016,285,1023,322,1023,358,1019,388,1014,387,1018,358,1018,323,1011,287,994,256,969,240,929,226,833,207"/>
-<area shape="rect" href="EnumBetName_8h.html" title=" " alt="" coords="1048,328,1219,353"/>
-<area shape="poly" title=" " alt="" coords="835,198,935,215,989,230,1041,252,1084,283,1117,316,1114,320,1081,287,1039,257,988,235,934,220,834,203"/>
-<area shape="rect" href="OddsTables_8h.html" title=" " alt="" coords="371,255,517,280"/>
-<area shape="poly" title=" " alt="" coords="717,209,510,254,509,249,715,204"/>
-<area shape="rect" href="TableRules_8h.html" title=" " alt="" coords="1185,255,1327,280"/>
-<area shape="poly" title=" " alt="" coords="835,202,1171,251,1170,256,834,208"/>
-<area shape="rect" href="MoneyUtils_8h.html" title=" " alt="" coords="1344,328,1480,353"/>
-<area shape="poly" title=" " alt="" coords="834,193,957,197,1104,207,1243,224,1300,237,1341,252,1360,265,1377,281,1401,314,1397,317,1373,285,1357,269,1339,257,1298,242,1243,229,1104,212,956,203,834,199"/>
-<area shape="rect" href="ReturnCode_8h.html" title=" " alt="" coords="592,255,731,280"/>
-<area shape="poly" title=" " alt="" coords="752,209,692,249,689,245,749,204"/>
-<area shape="rect" href="Timepoint_8h.html" title=" " alt="" coords="856,255,984,280"/>
-<area shape="poly" title=" " alt="" coords="794,204,884,246,882,251,791,209"/>
-<area shape="poly" title=" " alt="" coords="1087,356,882,405,881,400,1085,351"/>
-<area shape="poly" title=" " alt="" coords="1115,356,1044,397,1041,392,1112,351"/>
-<area shape="rect" title=" " alt="" coords="1121,401,1177,427"/>
-<area shape="poly" title=" " alt="" coords="1139,353,1146,388,1141,389,1133,354"/>
-<area shape="poly" title=" " alt="" coords="1238,282,1166,323,1164,319,1235,278"/>
-<area shape="poly" title=" " alt="" coords="1258,281,1251,315,1243,336,1233,355,1211,378,1186,396,1183,392,1207,374,1229,352,1239,334,1245,314,1252,280"/>
-<area shape="poly" title=" " alt="" coords="1282,278,1375,320,1373,325,1280,282"/>
-<area shape="rect" title=" " alt="" coords="1218,401,1350,427"/>
-<area shape="poly" title=" " alt="" coords="1263,280,1277,327,1285,387,1280,388,1272,329,1258,281"/>
-<area shape="poly" title=" " alt="" coords="1344,353,882,410,882,405,1344,348"/>
-<area shape="rect" title=" " alt="" coords="1585,401,1660,427"/>
-<area shape="poly" title=" " alt="" coords="1447,351,1577,394,1575,399,1445,356"/>
-<area shape="rect" title=" " alt="" coords="1375,401,1449,427"/>
-<area shape="poly" title=" " alt="" coords="1415,354,1415,388,1409,388,1409,354"/>
-<area shape="rect" title=" " alt="" coords="1474,401,1561,427"/>
-<area shape="poly" title=" " alt="" coords="1430,351,1490,391,1488,396,1427,356"/>
-<area shape="poly" title=" " alt="" coords="1393,356,1318,397,1316,392,1390,351"/>
-<area shape="poly" title=" " alt="" coords="919,281,906,315,886,355,860,392,856,389,882,352,901,313,914,279"/>
-<area shape="poly" title=" " alt="" coords="909,282,864,321,860,317,905,278"/>
-<area shape="poly" title=" " alt="" coords="930,279,998,388,994,391,925,282"/>
+<area shape="rect" title=" " alt="" coords="1711,5,1849,60"/>
+<area shape="rect" href="UndoBet_8h.html" title=" " alt="" coords="1510,108,1666,133"/>
+<area shape="poly" title=" " alt="" coords="1722,63,1627,105,1625,100,1720,58"/>
+<area shape="rect" href="CrapsTypes_8h.html" title=" " alt="" coords="1571,255,1717,280"/>
+<area shape="poly" title=" " alt="" coords="1767,62,1660,244,1656,241,1762,59"/>
+<area shape="rect" title=" " alt="" coords="1251,401,1309,427"/>
+<area shape="poly" title=" " alt="" coords="1710,39,1472,53,1317,67,1154,88,997,116,857,153,796,175,745,199,704,226,676,256,669,270,669,284,673,298,681,311,704,335,725,351,767,368,825,382,970,399,1120,408,1237,410,1237,415,1120,413,969,405,824,387,765,373,723,356,700,339,677,315,668,300,663,285,664,269,671,253,701,222,743,195,794,170,855,147,996,110,1154,82,1316,62,1471,47,1710,33"/>
+<area shape="rect" title=" " alt="" coords="1900,328,1977,353"/>
+<area shape="poly" title=" " alt="" coords="1796,59,1929,314,1924,317,1791,61"/>
+<area shape="rect" title=" " alt="" coords="1813,328,1875,353"/>
+<area shape="poly" title=" " alt="" coords="1788,59,1841,314,1836,315,1783,61"/>
+<area shape="rect" href="ErrorPass_8h.html" title=" " alt="" coords="685,255,808,280"/>
+<area shape="poly" title=" " alt="" coords="1711,45,1575,65,1392,94,1185,134,978,184,874,218,787,252,785,247,872,213,977,179,1184,129,1391,89,1574,59,1710,40"/>
+<area shape="rect" title=" " alt="" coords="1944,108,1995,133"/>
+<area shape="poly" title=" " alt="" coords="1839,58,1933,100,1931,105,1837,62"/>
+<area shape="rect" title=" " alt="" coords="2019,108,2083,133"/>
+<area shape="poly" title=" " alt="" coords="1850,53,2006,102,2005,108,1849,58"/>
+<area shape="poly" title=" " alt="" coords="1595,133,1637,241,1632,243,1590,135"/>
+<area shape="poly" title=" " alt="" coords="1590,134,1583,176,1568,235,1540,300,1520,329,1496,355,1456,382,1410,400,1364,410,1324,414,1323,409,1363,405,1408,395,1453,378,1493,351,1516,326,1535,297,1563,234,1578,175,1584,133"/>
+<area shape="poly" title=" " alt="" coords="1610,131,1693,179,1911,318,1908,322,1691,184,1608,136"/>
+<area shape="poly" title=" " alt="" coords="1603,131,1821,316,1818,320,1600,135"/>
+<area shape="rect" href="CrapsBet_8h.html" title=" " alt="" coords="1113,181,1245,207"/>
+<area shape="poly" title=" " alt="" coords="1523,136,1258,182,1258,176,1522,131"/>
+<area shape="poly" title=" " alt="" coords="1510,131,1323,151,1100,184,937,219,801,254,800,248,935,214,1100,179,1322,146,1510,126"/>
+<area shape="poly" title=" " alt="" coords="1654,279,1670,315,1672,336,1663,355,1639,373,1604,386,1560,397,1510,404,1408,413,1323,415,1323,410,1408,407,1510,399,1559,391,1602,381,1637,368,1659,352,1666,335,1665,316,1649,281"/>
+<area shape="poly" title=" " alt="" coords="1692,277,1888,324,1886,330,1691,283"/>
+<area shape="rect" title=" " alt="" coords="1726,328,1789,353"/>
+<area shape="poly" title=" " alt="" coords="1664,278,1729,318,1726,323,1661,282"/>
+<area shape="poly" title=" " alt="" coords="1677,278,1800,321,1799,326,1675,283"/>
+<area shape="rect" title=" " alt="" coords="1368,328,1483,353"/>
+<area shape="poly" title=" " alt="" coords="1610,283,1475,326,1473,321,1608,277"/>
+<area shape="rect" href="Uuid_8h.html" title=" " alt="" coords="1558,328,1650,353"/>
+<area shape="poly" title=" " alt="" coords="1640,282,1620,317,1615,315,1635,279"/>
+<area shape="poly" title=" " alt="" coords="1558,355,1323,406,1322,401,1557,349"/>
+<area shape="poly" title=" " alt="" coords="1245,203,1557,250,1556,255,1244,208"/>
+<area shape="poly" title=" " alt="" coords="1245,196,1276,203,1307,214,1335,230,1358,253,1367,272,1369,291,1365,310,1356,330,1332,365,1305,394,1301,390,1328,362,1352,327,1360,309,1363,291,1362,273,1354,256,1332,234,1304,218,1274,208,1244,202"/>
+<area shape="poly" title=" " alt="" coords="1245,194,1285,199,1326,210,1367,227,1402,253,1412,266,1420,282,1427,314,1422,315,1415,284,1408,269,1398,257,1364,232,1325,215,1284,204,1245,199"/>
+<area shape="poly" title=" " alt="" coords="1243,204,1331,224,1428,252,1507,286,1573,319,1571,324,1505,290,1426,257,1330,229,1242,209"/>
+<area shape="rect" title=" " alt="" coords="1125,328,1192,353"/>
+<area shape="poly" title=" " alt="" coords="1180,207,1165,315,1160,314,1174,207"/>
+<area shape="rect" title=" " alt="" coords="706,401,782,427"/>
+<area shape="poly" title=" " alt="" coords="1113,201,993,208,855,219,736,236,696,246,675,257,666,272,663,289,666,307,674,325,697,361,723,390,719,393,693,364,669,328,661,308,658,289,661,270,672,253,694,241,735,231,855,214,993,203,1112,196"/>
+<area shape="rect" href="EnumBetName_8h.html" title=" " alt="" coords="440,328,611,353"/>
+<area shape="poly" title=" " alt="" coords="1112,200,996,207,856,218,724,234,670,245,630,257,606,270,583,286,547,319,543,315,580,282,603,265,628,252,669,240,723,229,855,212,995,201,1112,195"/>
+<area shape="rect" href="OddsTables_8h.html" title=" " alt="" coords="832,255,979,280"/>
+<area shape="poly" title=" " alt="" coords="1135,209,963,254,962,249,1134,204"/>
+<area shape="rect" href="TableRules_8h.html" title=" " alt="" coords="331,255,474,280"/>
+<area shape="poly" title=" " alt="" coords="1113,204,488,261,488,256,1112,199"/>
+<area shape="rect" href="MoneyUtils_8h.html" title=" " alt="" coords="179,328,315,353"/>
+<area shape="poly" title=" " alt="" coords="1113,200,919,206,671,217,446,234,366,245,320,257,302,269,286,284,262,317,257,314,282,281,298,265,318,252,365,240,445,229,671,212,918,200,1112,194"/>
+<area shape="rect" href="ReturnCode_8h.html" title=" " alt="" coords="1003,255,1141,280"/>
+<area shape="poly" title=" " alt="" coords="1163,209,1102,249,1099,245,1160,204"/>
+<area shape="rect" href="Timepoint_8h.html" title=" " alt="" coords="1216,255,1344,280"/>
+<area shape="poly" title=" " alt="" coords="1196,204,1254,244,1251,249,1193,209"/>
+<area shape="poly" title=" " alt="" coords="611,347,1237,406,1237,411,611,353"/>
+<area shape="poly" title=" " alt="" coords="561,351,696,394,695,400,560,356"/>
+<area shape="rect" title=" " alt="" coords="484,401,540,427"/>
+<area shape="poly" title=" " alt="" coords="526,354,519,388,514,387,521,353"/>
+<area shape="poly" title=" " alt="" coords="424,278,495,319,492,323,421,282"/>
+<area shape="poly" title=" " alt="" coords="406,280,413,314,420,334,430,352,452,375,477,392,474,397,449,379,426,355,415,336,408,315,401,281"/>
+<area shape="poly" title=" " alt="" coords="379,282,286,325,284,320,377,278"/>
+<area shape="rect" title=" " alt="" coords="314,401,446,427"/>
+<area shape="poly" title=" " alt="" coords="401,281,387,328,382,388,377,387,381,328,395,280"/>
+<area shape="poly" title=" " alt="" coords="315,344,1237,407,1237,412,315,349"/>
+<area shape="rect" title=" " alt="" coords="5,401,80,427"/>
+<area shape="poly" title=" " alt="" coords="215,356,89,399,88,394,213,351"/>
+<area shape="rect" title=" " alt="" coords="104,401,179,427"/>
+<area shape="poly" title=" " alt="" coords="231,356,171,396,168,391,228,351"/>
+<area shape="rect" title=" " alt="" coords="203,401,290,427"/>
+<area shape="poly" title=" " alt="" coords="249,354,249,388,244,388,244,354"/>
+<area shape="poly" title=" " alt="" coords="269,351,347,392,345,397,267,356"/>
+<area shape="poly" title=" " alt="" coords="1283,280,1283,388,1277,388,1277,280"/>
+<area shape="poly" title=" " alt="" coords="1262,282,1191,323,1189,319,1259,278"/>
+<area shape="poly" title=" " alt="" coords="1276,282,1249,319,1229,339,1205,356,1171,369,1126,380,1013,396,894,407,796,413,796,408,894,402,1013,391,1125,374,1170,364,1203,351,1225,335,1245,316,1271,279"/>
+<area shape="poly" title=" " alt="" coords="790,278,1238,398,1236,404,788,283"/>
+<area shape="poly" title=" " alt="" coords="809,276,820,277,968,289,1093,294,1308,294,1412,294,1524,297,1651,307,1799,326,1799,331,1650,312,1524,302,1412,299,1308,299,1093,300,967,295,820,283,808,281"/>
+<area shape="poly" title=" " alt="" coords="809,277,1112,329,1111,334,808,282"/>
+<area shape="poly" title=" " alt="" coords="769,278,789,292,808,310,819,331,820,342,817,354,801,378,779,396,776,392,797,374,812,352,815,342,814,332,803,313,785,296,766,282"/>
+<area shape="rect" title=" " alt="" coords="736,328,803,353"/>
+<area shape="poly" title=" " alt="" coords="753,280,764,314,759,316,748,281"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -173,15 +196,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="UndoManager_8h__dep__incl.png" border="0" usemap="#asrc_2lib-controller_2include_2controller_2UndoManager_8hdep" alt=""/></div>
 <map name="asrc_2lib-controller_2include_2controller_2UndoManager_8hdep" id="asrc_2lib-controller_2include_2controller_2UndoManager_8hdep">
-<area shape="rect" title=" " alt="" coords="277,5,415,60"/>
+<area shape="rect" title=" " alt="" coords="465,5,603,60"/>
 <area shape="rect" href="CrapsReaders_8cpp.html" title=" " alt="" coords="5,108,172,148"/>
-<area shape="poly" title=" " alt="" coords="264,66,142,110,140,105,263,61"/>
-<area shape="rect" href="Globals_8cpp.html" title=" " alt="" coords="197,108,325,148"/>
-<area shape="poly" title=" " alt="" coords="315,72,280,110,276,106,311,69"/>
-<area shape="rect" href="TableManager_8cpp.html" title=" " alt="" coords="349,108,516,148"/>
-<area shape="poly" title=" " alt="" coords="382,68,417,106,413,110,378,72"/>
-<area shape="rect" href="UndoManager_8cpp.html" title=" " alt="" coords="540,108,707,148"/>
-<area shape="poly" title=" " alt="" coords="429,59,568,105,566,110,428,64"/>
+<area shape="poly" title=" " alt="" coords="452,54,173,112,172,107,450,49"/>
+<area shape="rect" href="EventHandler_8cpp.html" title=" " alt="" coords="197,108,359,148"/>
+<area shape="poly" title=" " alt="" coords="453,66,331,110,329,105,451,61"/>
+<area shape="rect" href="Globals_8cpp.html" title=" " alt="" coords="383,108,511,148"/>
+<area shape="poly" title=" " alt="" coords="502,72,467,110,463,106,498,68"/>
+<area shape="rect" href="PlayerManager_8cpp.html" title=" " alt="" coords="535,108,709,148"/>
+<area shape="poly" title=" " alt="" coords="570,68,606,106,602,110,567,72"/>
+<area shape="rect" href="TableManager_8cpp.html" title=" " alt="" coords="733,108,900,148"/>
+<area shape="poly" title=" " alt="" coords="618,59,760,105,758,110,616,64"/>
+<area shape="rect" href="UndoManager_8cpp.html" title=" " alt="" coords="924,108,1091,148"/>
+<area shape="poly" title=" " alt="" coords="617,48,913,105,924,108,923,113,912,111,616,53"/>
 </map>
 </div>
 </div>
@@ -190,7 +217,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoManager.html">Ctrl::UndoManager</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages undo operations on bets.  <a href="classCtrl_1_1UndoManager.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Undo of bet changes, a stack for each player.  <a href="classCtrl_1_1UndoManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -202,7 +229,7 @@ Namespaces</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

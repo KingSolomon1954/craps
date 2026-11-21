@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="15901484302988384506">
+<analyzerinfo hash="6971800201094974059">
   <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="KeyAnimationSpeed"/>
     <functioncall functionName="KeyAppPath"/>
     <functioncall functionName="KeyDebugLogging"/>
     <functioncall functionName="KeyDirsSysAudio"/>
@@ -31,8 +32,10 @@
     <functioncall functionName="getLayer"/>
     <functioncall functionName="getString"/>
     <functioncall functionName="help"/>
+    <functioncall functionName="invalid_argument"/>
     <functioncall functionName="options"/>
     <functioncall functionName="parse"/>
+    <functioncall functionName="parseAnimationSpeed"/>
     <functioncall functionName="set"/>
     <functioncall functionName="setAppPath"/>
     <functioncall functionName="setSysConfigDir"/>

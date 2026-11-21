@@ -121,6 +121,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a416d7f6c911a9b05f3c27c0cbca2f0f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b04ea85f578241f606e6faf7d8747fa" id="r_a8b04ea85f578241f606e6faf7d8747fa"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b04ea85f578241f606e6faf7d8747fa">buddies</a></td></tr>
 <tr class="separator:a8b04ea85f578241f606e6faf7d8747fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46ea60a8ba7e6a13ba726ff982770795" id="r_a46ea60a8ba7e6a13ba726ff982770795"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespaceCtrl.html#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46ea60a8ba7e6a13ba726ff982770795">animationSpeed</a></td></tr>
+<tr class="separator:a46ea60a8ba7e6a13ba726ff982770795"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50a00dd9a1fcf7bd93ebfb7c5f7e4c26" id="r_a50a00dd9a1fcf7bd93ebfb7c5f7e4c26"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespaceCtrl.html#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50a00dd9a1fcf7bd93ebfb7c5f7e4c26">rollHistoryFormat</a></td></tr>
+<tr class="separator:a50a00dd9a1fcf7bd93ebfb7c5f7e4c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -148,9 +152,15 @@ Static Public Attributes</h2></td></tr>
 <div class="line">  buddyPlayers:</div>
 <div class="line">    - paige.yaml</div>
 <div class="line">    - nathan.yaml</div>
-<div class="ttc" id="aclassCtrl_1_1UserState_html_a416d7f6c911a9b05f3c27c0cbca2f0f5"><div class="ttname"><a href="#a416d7f6c911a9b05f3c27c0cbca2f0f5">Ctrl::UserState::userPlayer</a></div><div class="ttdeci">std::string userPlayer</div><div class="ttdef"><b>Definition</b> UserState.h:29</div></div>
-<div class="ttc" id="aclassCtrl_1_1UserState_html_a769e57ea37fb2c37cb93894a0ee3432b"><div class="ttname"><a href="#a769e57ea37fb2c37cb93894a0ee3432b">Ctrl::UserState::table</a></div><div class="ttdeci">std::string table</div><div class="ttdef"><b>Definition</b> UserState.h:28</div></div>
-</div><!-- fragment --><p>state.yaml is only a memory. It says what happened last time and it does not override anything the user wrote in config.yaml; see <a class="el" href="classCtrl_1_1StartChoices.html" title="Decides which table and players the game starts with.">StartChoices</a> for how the two combine. This class only reads and writes the file. It does not check that the files named exist, which is <a class="el" href="classCtrl_1_1StartChoices.html" title="Decides which table and players the game starts with.">StartChoices</a>' job, because what to do about a missing file depends on where the name came from.</p>
+<div class="line">settings:</div>
+<div class="line">  <a class="code hl_variable" href="#a46ea60a8ba7e6a13ba726ff982770795">animationSpeed</a>: fast</div>
+<div class="line">  <a class="code hl_variable" href="#a50a00dd9a1fcf7bd93ebfb7c5f7e4c26">rollHistoryFormat</a>: 2</div>
+<div class="ttc" id="aclassCtrl_1_1UserState_html_a416d7f6c911a9b05f3c27c0cbca2f0f5"><div class="ttname"><a href="#a416d7f6c911a9b05f3c27c0cbca2f0f5">Ctrl::UserState::userPlayer</a></div><div class="ttdeci">std::string userPlayer</div><div class="ttdef"><b>Definition</b> UserState.h:31</div></div>
+<div class="ttc" id="aclassCtrl_1_1UserState_html_a46ea60a8ba7e6a13ba726ff982770795"><div class="ttname"><a href="#a46ea60a8ba7e6a13ba726ff982770795">Ctrl::UserState::animationSpeed</a></div><div class="ttdeci">std::optional&lt; AnimationSpeed &gt; animationSpeed</div><div class="ttdef"><b>Definition</b> UserState.h:35</div></div>
+<div class="ttc" id="aclassCtrl_1_1UserState_html_a50a00dd9a1fcf7bd93ebfb7c5f7e4c26"><div class="ttname"><a href="#a50a00dd9a1fcf7bd93ebfb7c5f7e4c26">Ctrl::UserState::rollHistoryFormat</a></div><div class="ttdeci">std::optional&lt; RollHistoryFormat &gt; rollHistoryFormat</div><div class="ttdef"><b>Definition</b> UserState.h:36</div></div>
+<div class="ttc" id="aclassCtrl_1_1UserState_html_a769e57ea37fb2c37cb93894a0ee3432b"><div class="ttname"><a href="#a769e57ea37fb2c37cb93894a0ee3432b">Ctrl::UserState::table</a></div><div class="ttdeci">std::string table</div><div class="ttdef"><b>Definition</b> UserState.h:30</div></div>
+</div><!-- fragment --><p>The settings section is optional. A setting in it is only used when config.yaml does not state that setting.</p>
+<p>state.yaml is only a memory. It says what happened last time and it does not override anything the user wrote in config.yaml; see <a class="el" href="classCtrl_1_1StartChoices.html" title="Decides which table and players the game starts with.">StartChoices</a> for how the two combine. This class only reads and writes the file. It does not check that the files named exist, which is <a class="el" href="classCtrl_1_1StartChoices.html" title="Decides which table and players the game starts with.">StartChoices</a>' job, because what to do about a missing file depends on where the name came from.</p>
 <p><a class="el" href="#a1303915141ce547ff7272579627e69a0">load()</a> never throws. A state file that can't be parsed or is missing its sections is reported in the log and treated as absent. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a1303915141ce547ff7272579627e69a0" name="a1303915141ce547ff7272579627e69a0"></a>
@@ -255,6 +265,20 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a46ea60a8ba7e6a13ba726ff982770795" name="a46ea60a8ba7e6a13ba726ff982770795"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46ea60a8ba7e6a13ba726ff982770795">&#9670;&#160;</a></span>animationSpeed</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="namespaceCtrl.html#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a>&gt; Ctrl::UserState::animationSpeed</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8b04ea85f578241f606e6faf7d8747fa" name="a8b04ea85f578241f606e6faf7d8747fa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8b04ea85f578241f606e6faf7d8747fa">&#9670;&#160;</a></span>buddies</h2>
 
@@ -335,6 +359,20 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a50a00dd9a1fcf7bd93ebfb7c5f7e4c26" name="a50a00dd9a1fcf7bd93ebfb7c5f7e4c26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50a00dd9a1fcf7bd93ebfb7c5f7e4c26">&#9670;&#160;</a></span>rollHistoryFormat</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="namespaceCtrl.html#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a>&gt; Ctrl::UserState::rollHistoryFormat</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a769e57ea37fb2c37cb93894a0ee3432b" name="a769e57ea37fb2c37cb93894a0ee3432b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a769e57ea37fb2c37cb93894a0ee3432b">&#9670;&#160;</a></span>table</h2>
 
@@ -370,7 +408,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

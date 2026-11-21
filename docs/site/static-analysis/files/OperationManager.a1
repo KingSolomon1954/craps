@@ -1,24 +1,29 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="13366328147599060028">
+<analyzerinfo hash="1812020227242656642">
   <FileInfo check="Uninitialized variables">
-    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:29:1" my-argnr="1" my-argname="s" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="31" col="28" value="0"/>
-    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:38:1" my-argnr="1" my-argname="a" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="40" col="12" value="0"/>
-    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:38:1" my-argnr="2" my-argname="b" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="40" col="24" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:35:1" my-argnr="1" my-argname="s" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="37" col="28" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:44:1" my-argnr="1" my-argname="a" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="46" col="12" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-cui/src/managers/OperationManager.cpp:44:1" my-argnr="2" my-argname="b" file="/work/src/lib-cui/src/managers/OperationManager.cpp" line="46" col="24" value="0"/>
   </FileInfo>
   <FileInfo check="CheckUnusedFunctions">
-    <functiondecl functionName="trimmed" lineNumber="29"/>
-    <functiondecl functionName="sameIgnoringCase" lineNumber="38"/>
+    <functiondecl functionName="trimmed" lineNumber="35"/>
+    <functiondecl functionName="sameIgnoringCase" lineNumber="44"/>
+    <functioncall functionName="AllAnimationSpeeds"/>
+    <functioncall functionName="AllRollHistoryFormats"/>
+    <functioncall functionName="AnimationSpeed"/>
     <functioncall functionName="AwaitingConfirmation"/>
     <functioncall functionName="AwaitingErrorAcknowledgement"/>
     <functioncall functionName="AwaitingPick"/>
     <functioncall functionName="AwaitingResponse"/>
     <functioncall functionName="AwaitingText"/>
+    <functioncall functionName="BetId"/>
     <functioncall functionName="BuddyJoins"/>
     <functioncall functionName="BuddyLeaves"/>
     <functioncall functionName="Create"/>
     <functioncall functionName="Delete"/>
     <functioncall functionName="Idle"/>
     <functioncall functionName="Info"/>
+    <functioncall functionName="Invalid"/>
     <functioncall functionName="Item"/>
     <functioncall functionName="LOG_ERROR"/>
     <functioncall functionName="LOG_TRACE"/>
@@ -31,18 +36,24 @@
     <functioncall functionName="Player"/>
     <functioncall functionName="PlayerId"/>
     <functioncall functionName="Quit"/>
+    <functioncall functionName="Removal"/>
+    <functioncall functionName="RemoveBet"/>
     <functioncall functionName="Rename"/>
+    <functioncall functionName="RollHistoryFormat"/>
     <functioncall functionName="Show"/>
+    <functioncall functionName="UndoBet"/>
     <functioncall functionName="askConfirmation"/>
     <functioncall functionName="askForDescription"/>
     <functioncall functionName="askForName"/>
     <functioncall functionName="askingDescription_"/>
+    <functioncall functionName="assign"/>
     <functioncall functionName="begin"/>
     <functioncall functionName="checkDescription"/>
     <functioncall functionName="checkName"/>
     <functioncall functionName="clear"/>
     <functioncall functionName="configure"/>
     <functioncall functionName="correlationId_"/>
+    <functioncall functionName="describe"/>
     <functioncall functionName="description"/>
     <functioncall functionName="description_"/>
     <functioncall functionName="doContractBet"/>
@@ -50,10 +61,12 @@
     <functioncall functionName="empty"/>
     <functioncall functionName="end"/>
     <functioncall functionName="equal"/>
+    <functioncall functionName="erase"/>
     <functioncall functionName="errorNameStr"/>
     <functioncall functionName="errorTypeStr"/>
     <functioncall functionName="false"/>
     <functioncall functionName="finish"/>
+    <functioncall functionName="front"/>
     <functioncall functionName="getBetId"/>
     <functioncall functionName="getBetName"/>
     <functioncall functionName="getContractAmount"/>
@@ -61,30 +74,50 @@
     <functioncall functionName="getPivot"/>
     <functioncall functionName="getPlayerId"/>
     <functioncall functionName="getUserPlayerId"/>
+    <functioncall functionName="greater"/>
     <functioncall functionName="instance"/>
     <functioncall functionName="isActive"/>
     <functioncall functionName="isBuddyKind"/>
     <functioncall functionName="isOddsBet"/>
     <functioncall functionName="isUserKind"/>
     <functioncall functionName="isspace"/>
+    <functioncall functionName="label"/>
+    <functioncall functionName="money"/>
     <functioncall functionName="move"/>
     <functioncall functionName="noteFor"/>
+    <functioncall functionName="onRemovalResult"/>
     <functioncall functionName="pickable"/>
     <functioncall functionName="playerOpVerb"/>
     <functioncall functionName="playerOp_"/>
     <functioncall functionName="popToRoot"/>
     <functioncall functionName="pushSurface"/>
     <functioncall functionName="push_back"/>
+    <functioncall functionName="readAnimationSpeed"/>
+    <functioncall functionName="readBetContractAmount"/>
+    <functioncall functionName="readBetIsRemovable"/>
+    <functioncall functionName="readBetName"/>
+    <functioncall functionName="readBetOddsAmount"/>
+    <functioncall functionName="readBetPivot"/>
+    <functioncall functionName="readPlayerGetBets"/>
     <functioncall functionName="readPlayerNumBetsOnTable"/>
     <functioncall functionName="readPlayerRoster"/>
+    <functioncall functionName="readRollHistoryFormat"/>
+    <functioncall functionName="removalChoices_"/>
+    <functioncall functionName="removalStarted_"/>
     <functioncall functionName="reqAutoFill"/>
     <functioncall functionName="reqMakeBet"/>
     <functioncall functionName="reqManagePlayer"/>
     <functioncall functionName="reqOddsBet"/>
     <functioncall functionName="reqQuickBet"/>
+    <functioncall functionName="reqRemoveBet"/>
+    <functioncall functionName="reqSetAnimationSpeed"/>
+    <functioncall functionName="reqSetRollHistoryFormat"/>
     <functioncall functionName="reqSwitchPlayer"/>
     <functioncall functionName="reqTerminate"/>
+    <functioncall functionName="reqUndoBet"/>
     <functioncall functionName="sameIgnoringCase"/>
+    <functioncall functionName="sample"/>
+    <functioncall functionName="sendNextRemoval"/>
     <functioncall functionName="sendPlayerRequest"/>
     <functioncall functionName="setDescription"/>
     <functioncall functionName="setErrorName"/>
@@ -92,13 +125,17 @@
     <functioncall functionName="showError"/>
     <functioncall functionName="showNotice"/>
     <functioncall functionName="size"/>
+    <functioncall functionName="sort"/>
     <functioncall functionName="string"/>
     <functioncall functionName="substr"/>
     <functioncall functionName="targetId_"/>
     <functioncall functionName="targetName_"/>
     <functioncall functionName="text_"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="toStringNoCommas"/>
     <functioncall functionName="to_string"/>
     <functioncall functionName="tolower"/>
+    <functioncall functionName="toupper"/>
     <functioncall functionName="trimmed"/>
     <functioncall functionName="true"/>
     <functioncall functionName="wanted"/>

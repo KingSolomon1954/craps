@@ -38,11 +38,16 @@ public:
                                    BetName betName,
                                    Gen::Money contractAmount,
                                    unsigned pivot);
+    /// undoJoinsPrevious: part of the same undo step as the request
+    /// before it, such as the 2nd and later removals of Remove All.
     Ctrl::CorrelationId reqRemoveBet(const Craps::PlayerId& playerId,
-                                     Craps::BetId betId);
+                                     Craps::BetId betId,
+                                     bool undoJoinsPrevious = false);
     Ctrl::CorrelationId reqOddsBet(const Craps::PlayerId& playerId,
                                    Craps::BetId betId,
-                                   Gen::Money oddsAmount);
+                                   Gen::Money oddsAmount,
+                                   bool undoJoinsPrevious = false);
+    Ctrl::CorrelationId reqUndoBet(const Craps::PlayerId& playerId);
     void reqAutoFill(BetName betName,
                      unsigned pivot,
                      bool isOddsBet,

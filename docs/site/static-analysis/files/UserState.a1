@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="4069825609461330927">
+<analyzerinfo hash="14809106980287003452">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="Comment"/>
     <functioncall functionName="FileName"/>
@@ -11,6 +11,7 @@
     <functioncall functionName="LoadFile"/>
     <functioncall functionName="Sequence"/>
     <functioncall functionName="UserState"/>
+    <functioncall functionName="animationSpeed"/>
     <functioncall functionName="as"/>
     <functioncall functionName="buddies"/>
     <functioncall functionName="c_str"/>
@@ -23,13 +24,17 @@
     <functioncall functionName="message"/>
     <functioncall functionName="move"/>
     <functioncall functionName="nullopt"/>
+    <functioncall functionName="parseAnimationSpeed"/>
+    <functioncall functionName="parseRollHistoryFormat"/>
     <functioncall functionName="path"/>
     <functioncall functionName="push_back"/>
     <functioncall functionName="read"/>
     <functioncall functionName="rename"/>
+    <functioncall functionName="rollHistoryFormat"/>
     <functioncall functionName="runtime_error"/>
     <functioncall functionName="string"/>
     <functioncall functionName="table"/>
+    <functioncall functionName="toString"/>
     <functioncall functionName="true"/>
     <functioncall functionName="userPlayer"/>
     <functioncall functionName="value"/>

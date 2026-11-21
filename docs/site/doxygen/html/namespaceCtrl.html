@@ -90,7 +90,8 @@ $(function(){ initResizable(false); });
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Ctrl Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -170,12 +171,22 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqQuickBet.html">ReqQuickBet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqRemoveBet.html">ReqRemoveBet</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take a bet off the table. Funds (contract and odds) return to the player.  <a href="structCtrl_1_1ReqRemoveBet.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqRollDice.html">ReqRollDice</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqSetAnimationSpeed.html">ReqSetAnimationSpeed</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqSetRollHistoryFormat.html">ReqSetRollHistoryFormat</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqSwitchPlayer.html">ReqSwitchPlayer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The person wants to play as a different player.  <a href="structCtrl_1_1ReqSwitchPlayer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqTerminate.html">ReqTerminate</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1ReqUndoBet.html">ReqUndoBet</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take back the player's most recent bet change since the last roll.  <a href="structCtrl_1_1ReqUndoBet.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspMakeBet.html">RspMakeBet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,7 +194,11 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspOddsBet.html">RspOddsBet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspRemoveBet.html">RspRemoveBet</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspSwitchPlayer.html">RspSwitchPlayer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1RspUndoBet.html">RspUndoBet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1SessionSummary.html">SessionSummary</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A record about a player or table session.  <a href="classCtrl_1_1SessionSummary.html#details">More...</a><br /></td></tr>
@@ -200,18 +215,20 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads in table.yaml, populates tables_ vector.  <a href="classCtrl_1_1TableManifest.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoBet.html">UndoBet</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for undo bet capability.  <a href="classCtrl_1_1UndoBet.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">One undoable change to a bet, and how to take it back.  <a href="classCtrl_1_1UndoBet.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoBetAdded.html">UndoBetAdded</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bet was made. Undo takes it down.  <a href="classCtrl_1_1UndoBetAdded.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html">UndoBetModifiedAmount</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoBetModifiedFlags.html">UndoBetModifiedFlags</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoBetRemoved.html">UndoBetRemoved</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bet was taken down. Undo puts it back with its amounts.  <a href="classCtrl_1_1UndoBetRemoved.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoGroup.html">UndoGroup</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoManager.html">UndoManager</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages undo operations on bets.  <a href="classCtrl_1_1UndoManager.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Undo of bet changes, a stack for each player.  <a href="classCtrl_1_1UndoManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UserState.html">UserState</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">What the game remembers between runs: last table and players.  <a href="classCtrl_1_1UserState.html#details">More...</a><br /></td></tr>
@@ -263,6 +280,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslResolveBetsStart.html">UslResolveBetsStart</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslRollHistoryFormatChanged.html">UslRollHistoryFormatChanged</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The roll history format is now as given. The View redraws.  <a href="structCtrl_1_1UslRollHistoryFormatChanged.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslSevenOut.html">UslSevenOut</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1UslTableBalanceChanged.html">UslTableBalanceChanged</a></td></tr>
@@ -299,6 +319,13 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:a93fe16d4cffeb6d0f078fae61957ff1c" id="r_a93fe16d4cffeb6d0f078fae61957ff1c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a> { <a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1cad15305d7a4e34e02489c74a5ef542f36">Off</a>
+, <a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1cae16b5b7f26f54214445cbe38d72c2828">Fast</a>
+, <a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1ca960b44c579bc2f6818d2daaf9e4c16f0">Normal</a>
+, <a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1caefa5397985b8609a5dbeb430a4bcadd3">Slow</a>
+ }</td></tr>
+<tr class="memdesc:a93fe16d4cffeb6d0f078fae61957ff1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">How fast the dice roll animation plays, or Off for none.  <a href="#a93fe16d4cffeb6d0f078fae61957ff1c">More...</a><br /></td></tr>
+<tr class="separator:a93fe16d4cffeb6d0f078fae61957ff1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba82d930285c670ac7c9f2feaa2759d8" id="r_aba82d930285c670ac7c9f2feaa2759d8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8">EventSource</a> { <a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8ac9f88e098f6fe4e4e112eeb05ccb9671">Unset</a>
 , <a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8aa559b87068921eec05086ce5485e9784">Model</a>
 , <a class="el" href="#aba82d930285c670ac7c9f2feaa2759d8a4351cfebe4b61d8aa5efa1d020710005">View</a>
@@ -313,16 +340,21 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3af9c0b6acb5f71a2e971e0f6c3f821e97">ReqOddsBet</a>
 , <br />
 &#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aad9e3b3cce846f95775e43083db749e3">ReqRemoveBet</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a390a39d7a6fe90a87574716be07bbddb">ReqAutoFill</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a93d6f0ba7e1e9b7a6f4ad29a80abc88b">ReqUndoBet</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a81e3f2caf81442275d399b74bdd57bbc">ReqSetAnimationSpeed</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ac4e61c82fc491abe53951c897140df6f">ReqSetRollHistoryFormat</a>
+, <br />
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a390a39d7a6fe90a87574716be07bbddb">ReqAutoFill</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a0660637cac012be8263a6dce5886d759">ReqQuickBet</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a6b5741383d3e1a8ef09c25af0608e122">ReqSwitchPlayer</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a0009c9943a5c315fe884624814d59af6">ReqManagePlayer</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a0009c9943a5c315fe884624814d59af6">ReqManagePlayer</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884">ReqTerminate</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ad9d38f7878dc4f66894d3f1b94d86884">ReqTerminate</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004">RspMakeBet</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a4d78add73a3e2c2e1337307f18eae78c">RspOddsBet</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52">RspRemoveBet</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52">RspRemoveBet</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a5967b67c5ef236bd25c2a832488056a1">RspUndoBet</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80">RspChangeBet</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a163a00ecc524dfbdee6da1cff60d2513">RspSwitchPlayer</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab0ad955f8420c77f9abddce003a84e83">RspManagePlayer</a>
@@ -352,17 +384,18 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd">UslUserPlayerSwitched</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3adb714c17e1d51eaf46ca2c289191a3d4">UslPlayerRenamed</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42">UslTableBetsChanged</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a5c464d2e20a4edd9ce7c29a50f854d05">UslRollHistoryFormatChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42">UslTableBetsChanged</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587">UslTableSessionStatsChanged</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6">UslTableLastRollStatsChanged</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05">UslTableBalanceChanged</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aaecd0f64c2b8f4251e066b805b587bb8">UslPlayerBetsChanged</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05">UslTableBalanceChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aaecd0f64c2b8f4251e066b805b587bb8">UslPlayerBetsChanged</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab66219ca5de591ccbb4d9f188673f0d6">UslPlayerSessionStatsChanged</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a21009eb28cb667ad9c2cef8e7386ab79">UslPlayerLastRollStatsChanged</a>
-, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79">UslPlayerBalanceChanged</a>
 , <br />
-&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5">UslPlayerJoinedTable</a>
+&#160;&#160;<a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3a98cdfdca73418a3cc40590276fc0be79">UslPlayerBalanceChanged</a>
+, <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3ab38fce48963b2f78b2fdf450fa6b0be5">UslPlayerJoinedTable</a>
 , <a class="el" href="#a080339ce20c437b0d9a51542a36ee3e3aec8d24f370b0e606012aa12be2233d98">UslPlayerLeftTable</a>
 <br />
  }</td></tr>
@@ -383,9 +416,20 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a483aaf9a60e115516178a101bbf49782a8fb645e200b5986d7cdfb4a5d2542a7f">Buddy</a>
  }</td></tr>
 <tr class="separator:a483aaf9a60e115516178a101bbf49782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a044334600efb410fde6f7e11e6ebdcad" id="r_a044334600efb410fde6f7e11e6ebdcad"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a> { <a class="el" href="#a044334600efb410fde6f7e11e6ebdcada8121dd7d0929083bf4371426df9688d0">Spaced</a> = 1
+, <a class="el" href="#a044334600efb410fde6f7e11e6ebdcadae129c27928712de0ab184d0b4605a9de">Commas</a> = 2
+, <a class="el" href="#a044334600efb410fde6f7e11e6ebdcadad35b4ea64eccefcea025d5c0485f5044">DiceJoined</a> = 3
+, <a class="el" href="#a044334600efb410fde6f7e11e6ebdcada87791214a287d256afdb99d83d010160">DiceComma</a> = 4
+ }</td></tr>
+<tr class="separator:a044334600efb410fde6f7e11e6ebdcad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a7009891644dc90d2e88bf1d9967cfbbb" id="r_a7009891644dc90d2e88bf1d9967cfbbb"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7009891644dc90d2e88bf1d9967cfbbb">toString</a> (<a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a> s)</td></tr>
+<tr class="memdesc:a7009891644dc90d2e88bf1d9967cfbbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The word used in config.yaml, state.yaml and on the command line.  <br /></td></tr>
+<tr class="separator:a7009891644dc90d2e88bf1d9967cfbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ef5958f5b46d283cb2bf512d471ef79" id="r_a8ef5958f5b46d283cb2bf512d471ef79"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ef5958f5b46d283cb2bf512d471ef79">parseAnimationSpeed</a> (std::string_view v)</td></tr>
+<tr class="separator:a8ef5958f5b46d283cb2bf512d471ef79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1941944c6dc2ee41de7be66fdb94407f" id="r_a1941944c6dc2ee41de7be66fdb94407f"><td class="memTemplParams" colspan="2">template&lt;class Container &gt; </td></tr>
 <tr class="memitem:a1941944c6dc2ee41de7be66fdb94407f"><td class="memTemplItemLeft" align="right" valign="top">YAML::Node&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1941944c6dc2ee41de7be66fdb94407f">betEntriesToYAML</a> (const Container &amp;entries)</td></tr>
 <tr class="memdesc:a1941944c6dc2ee41de7be66fdb94407f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Entries as a YAML sequence, in the order they are in the container.  <br /></td></tr>
@@ -404,6 +448,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a0fd24f0ee7dc1d790dee4684ea7501d7" id="r_a0fd24f0ee7dc1d790dee4684ea7501d7"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fd24f0ee7dc1d790dee4684ea7501d7">operator&lt;&lt;</a> (std::ostream &amp;os, <a class="el" href="#a483aaf9a60e115516178a101bbf49782">PlayerKind</a> kind)</td></tr>
 <tr class="memdesc:a0fd24f0ee7dc1d790dee4684ea7501d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lets doctest show a PlayerKind when a check fails.  <br /></td></tr>
 <tr class="separator:a0fd24f0ee7dc1d790dee4684ea7501d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6156728316baa3896e6a24e1593788fc" id="r_a6156728316baa3896e6a24e1593788fc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6156728316baa3896e6a24e1593788fc">toString</a> (<a class="el" href="#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a> f)</td></tr>
+<tr class="separator:a6156728316baa3896e6a24e1593788fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d7124db76ae4245f6de2b43509d507b" id="r_a8d7124db76ae4245f6de2b43509d507b"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d7124db76ae4245f6de2b43509d507b">parseRollHistoryFormat</a> (std::string_view v)</td></tr>
+<tr class="memdesc:a8d7124db76ae4245f6de2b43509d507b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accepts "1" to "4", with surrounding blanks.  <br /></td></tr>
+<tr class="separator:a8d7124db76ae4245f6de2b43509d507b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a691ad4ebea4849f2180bcc7c03cab426" id="r_a691ad4ebea4849f2180bcc7c03cab426"><td class="memItemLeft" align="right" valign="top">constexpr std::array&lt; <a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a>, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a691ad4ebea4849f2180bcc7c03cab426">AllAnimationSpeeds</a></td></tr>
+<tr class="separator:a691ad4ebea4849f2180bcc7c03cab426"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cd08d9593f62841f5af00ff8a5deec0" id="r_a4cd08d9593f62841f5af00ff8a5deec0"><td class="memItemLeft" align="right" valign="top">constexpr std::array&lt; <a class="el" href="#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a>, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cd08d9593f62841f5af00ff8a5deec0">AllRollHistoryFormats</a></td></tr>
+<tr class="separator:a4cd08d9593f62841f5af00ff8a5deec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Controller Library (lib-controller) </p>
@@ -449,6 +505,37 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a93fe16d4cffeb6d0f078fae61957ff1c" name="a93fe16d4cffeb6d0f078fae61957ff1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93fe16d4cffeb6d0f078fae61957ff1c">&#9670;&#160;</a></span>AnimationSpeed</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1c">Ctrl::AnimationSpeed</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>How fast the dice roll animation plays, or Off for none. </p>
+<p>The View decides what each speed means in time. Off means the roll is shown at once, with no animation. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a93fe16d4cffeb6d0f078fae61957ff1cad15305d7a4e34e02489c74a5ef542f36" name="a93fe16d4cffeb6d0f078fae61957ff1cad15305d7a4e34e02489c74a5ef542f36"></a>Off&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a93fe16d4cffeb6d0f078fae61957ff1cae16b5b7f26f54214445cbe38d72c2828" name="a93fe16d4cffeb6d0f078fae61957ff1cae16b5b7f26f54214445cbe38d72c2828"></a>Fast&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a93fe16d4cffeb6d0f078fae61957ff1ca960b44c579bc2f6818d2daaf9e4c16f0" name="a93fe16d4cffeb6d0f078fae61957ff1ca960b44c579bc2f6818d2daaf9e4c16f0"></a>Normal&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a93fe16d4cffeb6d0f078fae61957ff1caefa5397985b8609a5dbeb430a4bcadd3" name="a93fe16d4cffeb6d0f078fae61957ff1caefa5397985b8609a5dbeb430a4bcadd3"></a>Slow&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <a id="aba82d930285c670ac7c9f2feaa2759d8" name="aba82d930285c670ac7c9f2feaa2759d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba82d930285c670ac7c9f2feaa2759d8">&#9670;&#160;</a></span>EventSource</h2>
 
@@ -517,6 +604,9 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a4e226028069555ba3251c970e1e551de" name="a080339ce20c437b0d9a51542a36ee3e3a4e226028069555ba3251c970e1e551de"></a>ReqMakeBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3af9c0b6acb5f71a2e971e0f6c3f821e97" name="a080339ce20c437b0d9a51542a36ee3e3af9c0b6acb5f71a2e971e0f6c3f821e97"></a>ReqOddsBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3aad9e3b3cce846f95775e43083db749e3" name="a080339ce20c437b0d9a51542a36ee3e3aad9e3b3cce846f95775e43083db749e3"></a>ReqRemoveBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a93d6f0ba7e1e9b7a6f4ad29a80abc88b" name="a080339ce20c437b0d9a51542a36ee3e3a93d6f0ba7e1e9b7a6f4ad29a80abc88b"></a>ReqUndoBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a81e3f2caf81442275d399b74bdd57bbc" name="a080339ce20c437b0d9a51542a36ee3e3a81e3f2caf81442275d399b74bdd57bbc"></a>ReqSetAnimationSpeed&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ac4e61c82fc491abe53951c897140df6f" name="a080339ce20c437b0d9a51542a36ee3e3ac4e61c82fc491abe53951c897140df6f"></a>ReqSetRollHistoryFormat&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a390a39d7a6fe90a87574716be07bbddb" name="a080339ce20c437b0d9a51542a36ee3e3a390a39d7a6fe90a87574716be07bbddb"></a>ReqAutoFill&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a0660637cac012be8263a6dce5886d759" name="a080339ce20c437b0d9a51542a36ee3e3a0660637cac012be8263a6dce5886d759"></a>ReqQuickBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a6b5741383d3e1a8ef09c25af0608e122" name="a080339ce20c437b0d9a51542a36ee3e3a6b5741383d3e1a8ef09c25af0608e122"></a>ReqSwitchPlayer&#160;</td><td class="fielddoc"></td></tr>
@@ -525,6 +615,7 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004" name="a080339ce20c437b0d9a51542a36ee3e3a28de06f340b378e3132af514ed11c004"></a>RspMakeBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a4d78add73a3e2c2e1337307f18eae78c" name="a080339ce20c437b0d9a51542a36ee3e3a4d78add73a3e2c2e1337307f18eae78c"></a>RspOddsBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52" name="a080339ce20c437b0d9a51542a36ee3e3a46ac8d99457c6e882388540052b5fe52"></a>RspRemoveBet&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a5967b67c5ef236bd25c2a832488056a1" name="a080339ce20c437b0d9a51542a36ee3e3a5967b67c5ef236bd25c2a832488056a1"></a>RspUndoBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80" name="a080339ce20c437b0d9a51542a36ee3e3a682553fc128636547132b5058ca1de80"></a>RspChangeBet&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a163a00ecc524dfbdee6da1cff60d2513" name="a080339ce20c437b0d9a51542a36ee3e3a163a00ecc524dfbdee6da1cff60d2513"></a>RspSwitchPlayer&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3ab0ad955f8420c77f9abddce003a84e83" name="a080339ce20c437b0d9a51542a36ee3e3ab0ad955f8420c77f9abddce003a84e83"></a>RspManagePlayer&#160;</td><td class="fielddoc"></td></tr>
@@ -548,6 +639,7 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a8f0895a9006f69f4419b8b7bc4570c59" name="a080339ce20c437b0d9a51542a36ee3e3a8f0895a9006f69f4419b8b7bc4570c59"></a>UslQuickBetChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd" name="a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd"></a>UslUserPlayerSwitched&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3adb714c17e1d51eaf46ca2c289191a3d4" name="a080339ce20c437b0d9a51542a36ee3e3adb714c17e1d51eaf46ca2c289191a3d4"></a>UslPlayerRenamed&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a5c464d2e20a4edd9ce7c29a50f854d05" name="a080339ce20c437b0d9a51542a36ee3e3a5c464d2e20a4edd9ce7c29a50f854d05"></a>UslRollHistoryFormatChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42" name="a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42"></a>UslTableBetsChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587" name="a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587"></a>UslTableSessionStatsChanged&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6" name="a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6"></a>UslTableLastRollStatsChanged&#160;</td><td class="fielddoc"></td></tr>
@@ -621,6 +713,39 @@ Functions</h2></td></tr>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a483aaf9a60e115516178a101bbf49782a8f9bfe9d1345237cb3b2b205864da075" name="a483aaf9a60e115516178a101bbf49782a8f9bfe9d1345237cb3b2b205864da075"></a>User&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a483aaf9a60e115516178a101bbf49782a8fb645e200b5986d7cdfb4a5d2542a7f" name="a483aaf9a60e115516178a101bbf49782a8fb645e200b5986d7cdfb4a5d2542a7f"></a>Buddy&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="a044334600efb410fde6f7e11e6ebdcad" name="a044334600efb410fde6f7e11e6ebdcad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a044334600efb410fde6f7e11e6ebdcad">&#9670;&#160;</a></span>RollHistoryFormat</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a044334600efb410fde6f7e11e6ebdcad">Ctrl::RollHistoryFormat</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>How the roll history shows each roll, most compact first. The numbers are what config.yaml and state.yaml use. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a044334600efb410fde6f7e11e6ebdcada8121dd7d0929083bf4371426df9688d0" name="a044334600efb410fde6f7e11e6ebdcada8121dd7d0929083bf4371426df9688d0"></a>Spaced&#160;</td><td class="fielddoc"><p>7 8 6 10 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a044334600efb410fde6f7e11e6ebdcadae129c27928712de0ab184d0b4605a9de" name="a044334600efb410fde6f7e11e6ebdcadae129c27928712de0ab184d0b4605a9de"></a>Commas&#160;</td><td class="fielddoc"><p>7,8,6,10 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a044334600efb410fde6f7e11e6ebdcadad35b4ea64eccefcea025d5c0485f5044" name="a044334600efb410fde6f7e11e6ebdcadad35b4ea64eccefcea025d5c0485f5044"></a>DiceJoined&#160;</td><td class="fielddoc"><p>7(34) 8(44) 6(33) 10(65) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a044334600efb410fde6f7e11e6ebdcada87791214a287d256afdb99d83d010160" name="a044334600efb410fde6f7e11e6ebdcada87791214a287d256afdb99d83d010160"></a>DiceComma&#160;</td><td class="fielddoc"><p>7(3,4) 8(4,4) 6(3,3) 10(6,5) </p>
+</td></tr>
 </table>
 
 </div>
@@ -741,6 +866,59 @@ template&lt;class Container &gt; </div>
 
 </div>
 </div>
+<a id="a8ef5958f5b46d283cb2bf512d471ef79" name="a8ef5958f5b46d283cb2bf512d471ef79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ef5958f5b46d283cb2bf512d471ef79">&#9670;&#160;</a></span>parseAnimationSpeed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a> &gt; Ctrl::parseAnimationSpeed </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Accepts the words above in any case, with surrounding blanks. Also accepts "false" for off and "true" for normal, as YAML turns an unquoted off or on into a boolean. </p>
+
+</div>
+</div>
+<a id="a8d7124db76ae4245f6de2b43509d507b" name="a8d7124db76ae4245f6de2b43509d507b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d7124db76ae4245f6de2b43509d507b">&#9670;&#160;</a></span>parseRollHistoryFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a> &gt; Ctrl::parseRollHistoryFormat </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Accepts "1" to "4", with surrounding blanks. </p>
+
+</div>
+</div>
 <a id="a4e85144da34dba2eaec96f62d919ddd0" name="a4e85144da34dba2eaec96f62d919ddd0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e85144da34dba2eaec96f62d919ddd0">&#9670;&#160;</a></span>playerKindFromString()</h2>
 
@@ -758,8 +936,35 @@ template&lt;class Container &gt; </div>
 
 </div>
 </div>
+<a id="a7009891644dc90d2e88bf1d9967cfbbb" name="a7009891644dc90d2e88bf1d9967cfbbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7009891644dc90d2e88bf1d9967cfbbb">&#9670;&#160;</a></span>toString() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * Ctrl::toString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a></td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The word used in config.yaml, state.yaml and on the command line. </p>
+
+</div>
+</div>
 <a id="a78f14faef002f92481b92cb9f0e0f505" name="a78f14faef002f92481b92cb9f0e0f505"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78f14faef002f92481b92cb9f0e0f505">&#9670;&#160;</a></span>toString()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a78f14faef002f92481b92cb9f0e0f505">&#9670;&#160;</a></span>toString() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -775,10 +980,90 @@ template&lt;class Container &gt; </div>
 
 </div>
 </div>
+<a id="a6156728316baa3896e6a24e1593788fc" name="a6156728316baa3896e6a24e1593788fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6156728316baa3896e6a24e1593788fc">&#9670;&#160;</a></span>toString() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Ctrl::toString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a691ad4ebea4849f2180bcc7c03cab426" name="a691ad4ebea4849f2180bcc7c03cab426"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a691ad4ebea4849f2180bcc7c03cab426">&#9670;&#160;</a></span>AllAnimationSpeeds</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;<a class="el" href="#a93fe16d4cffeb6d0f078fae61957ff1c">AnimationSpeed</a>, 4&gt; Ctrl::AllAnimationSpeeds</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">{</div>
+<div class="line">    AnimationSpeed::Off,  AnimationSpeed::Fast,</div>
+<div class="line">    AnimationSpeed::Normal, AnimationSpeed::Slow</div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a4cd08d9593f62841f5af00ff8a5deec0" name="a4cd08d9593f62841f5af00ff8a5deec0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cd08d9593f62841f5af00ff8a5deec0">&#9670;&#160;</a></span>AllRollHistoryFormats</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;<a class="el" href="#a044334600efb410fde6f7e11e6ebdcad">RollHistoryFormat</a>, 4&gt; Ctrl::AllRollHistoryFormats</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">{</div>
+<div class="line">    RollHistoryFormat::Spaced,     RollHistoryFormat::Commas,</div>
+<div class="line">    RollHistoryFormat::DiceJoined, RollHistoryFormat::DiceComma</div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

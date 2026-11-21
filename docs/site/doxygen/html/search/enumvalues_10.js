@@ -8,8 +8,10 @@ var searchData=
   ['showdollar_5',['ShowDollar',['../namespaceGen.html#ac7c1cfa97e866d52be3c47eecfce6a84ac9100054c6aa268caf2feb3e3869e52a',1,'Gen']]],
   ['signalerror_6',['SignalError',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cdaae59a7e47aa9040264a28a3c50d0071e',1,'Gen::ErrorPass']]],
   ['six_7',['Six',['../namespaceCui.html#aa6cf8f19070f6835163cf3bd900d82ecae6fbc0b9673f8c86726688d7607fc8f5',1,'Cui']]],
-  ['success_8',['Success',['../classCui_1_1SurfaceBase.html#a7f75a3772a01583c63e4a264d0ad3666a505a83f220c02df2f85c3810cd9ceb38',1,'Cui::SurfaceBase::Success'],['../namespaceGen.html#a07398fc4efb326972c1462a5903a5114a96a8dafec407ed55c9f343cb861a2fd0',1,'Gen::Success']]],
-  ['surface_9',['Surface',['../namespaceCui.html#a3a71759d42aa022ca9749a83b570f89caaa0d528ba11ea1485d466dfe1ea40819',1,'Cui']]],
-  ['switch_10',['Switch',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8abbc155fb2b111bf61c4f5ff892915e6b',1,'Cui::OperationManager']]],
-  ['systemcallerror_11',['SystemCallError',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cda144aa9cc862e33323ec3b16592a851f0',1,'Gen::ErrorPass']]]
+  ['slow_8',['Slow',['../namespaceCtrl.html#a93fe16d4cffeb6d0f078fae61957ff1caefa5397985b8609a5dbeb430a4bcadd3',1,'Ctrl']]],
+  ['spaced_9',['Spaced',['../namespaceCtrl.html#a044334600efb410fde6f7e11e6ebdcada8121dd7d0929083bf4371426df9688d0',1,'Ctrl']]],
+  ['success_10',['Success',['../classCui_1_1SurfaceBase.html#a7f75a3772a01583c63e4a264d0ad3666a505a83f220c02df2f85c3810cd9ceb38',1,'Cui::SurfaceBase::Success'],['../namespaceGen.html#a07398fc4efb326972c1462a5903a5114a96a8dafec407ed55c9f343cb861a2fd0',1,'Gen::Success']]],
+  ['surface_11',['Surface',['../namespaceCui.html#a3a71759d42aa022ca9749a83b570f89caaa0d528ba11ea1485d466dfe1ea40819',1,'Cui']]],
+  ['switch_12',['Switch',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8abbc155fb2b111bf61c4f5ff892915e6b',1,'Cui::OperationManager']]],
+  ['systemcallerror_13',['SystemCallError',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cda144aa9cc862e33323ec3b16592a851f0',1,'Gen::ErrorPass']]]
 ];

@@ -171,6 +171,11 @@ Event Handling
 
 TBS
 
+Undo of Bet Changes
+-------------------
+
+.. include:: Undo.inc
+
 Configuration
 -------------
 

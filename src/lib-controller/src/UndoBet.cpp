@@ -5,82 +5,152 @@
 //----------------------------------------------------------------
 
 #include <controller/UndoBet.h>
+#include <craps/EnumBetName.h>
 #include <craps/Player.h>
-#include <craps/CrapsBet.h>
-#include <gen/ErrorPass.h>
+#include <gen/MoneyUtils.h>
 
 using namespace Ctrl;
+
+namespace {
+
+//----------------------------------------------------------------
+//
+// "$10 Place 6 bet", "$10 PassLine bet with $20 odds"
+//
+std::string
+betText(const Craps::CrapsBet& bet)
+{
+    std::string s = Gen::MoneyUtils::toString(bet.contractAmount()) + " " +
+                    EnumBetName::toString(bet.betName());
+    if (bet.pivot() != 0)
+    {
+        s += " " + std::to_string(bet.pivot());
+    }
+    s += " bet";
+    if (bet.oddsAmount() > 0)
+    {
+        s += " with " + Gen::MoneyUtils::toString(bet.oddsAmount()) + " odds";
+    }
+    return s;
+}
+
+} // namespace
 
 //----------------------------------------------------------------
 
 UndoBetAdded::UndoBetAdded(Craps::BetPtr pBet)
+    : pBet_(std::move(pBet))
 {
-    pBet_ = pBet;
 }
 
 //----------------------------------------------------------------
 
-void
-UndoBetAdded::undo()
+Gen::ReturnCode
+UndoBetAdded::undo(Gen::ErrorPass& ep)
 {
-    // We're undoing a bet that was added.
-    // We use removeBet() to undo it.
-    (void) pBet_->player().removeBet(pBet_->betId());
+    // The bet was added, so take it down the normal way. That returns
+    // its money and sends the events that clear it from the screens.
+    auto result = pBet_->player().removeBet(pBet_->betId());
+    if (!result)
+    {
+        ep = std::move(result).error();
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+std::string
+UndoBetAdded::describe() const
+{
+    return "Took down your " + betText(*pBet_);
 }
 
 //----------------------------------------------------------------
 
 UndoBetRemoved::UndoBetRemoved(Craps::BetPtr pBet)
-{
-    pBet_ = pBet;
-}
-
-//----------------------------------------------------------------
-
-void
-UndoBetRemoved::undo()
-{
-    // We're undoing a bet that was removed.
-    // We add it back in using restoreBet() pathway.
-    Gen::ErrorPass ep;
-    pBet_->player().restoreBet(pBet_, ep);
-}
-
-//----------------------------------------------------------------
-
-UndoBetModifiedFlags::UndoBetModifiedFlags(Craps::BetPtr pBet)
-    : pBet_(pBet)
-    , prevState_(*pBet_)
+    : pBet_(std::move(pBet))
 {
 }
 
 //----------------------------------------------------------------
 
-void
-UndoBetModifiedFlags::undo()
+Gen::ReturnCode
+UndoBetRemoved::undo(Gen::ErrorPass& ep)
 {
-    // Just restore the prior bet state
-    *pBet_ = prevState_;
+    return pBet_->player().restoreBet(pBet_, ep);
+}
+
+//----------------------------------------------------------------
+
+std::string
+UndoBetRemoved::describe() const
+{
+    return "Put back your " + betText(*pBet_);
 }
 
 //----------------------------------------------------------------
 
 UndoBetModifiedAmount::UndoBetModifiedAmount(Craps::BetPtr pBet)
-    : pBet_(pBet)
+    : pBet_(std::move(pBet))
     , prevState_(*pBet_)
 {
 }
 
 //----------------------------------------------------------------
 
-void
-UndoBetModifiedAmount::undo()
+Gen::ReturnCode
+UndoBetModifiedAmount::undo(Gen::ErrorPass& ep)
 {
-    // We're undoing a change amount that was made to a bet.
-    pBet_->player().restoreAmounts(pBet_, prevState_);
-    // For all cases we just restore the prior bet state
-    *pBet_ = prevState_;
-     
+    return pBet_->player().restoreAmounts(pBet_, prevState_, ep);
+}
+
+//----------------------------------------------------------------
+
+std::string
+UndoBetModifiedAmount::describe() const
+{
+    return "Changed your bet back to " + betText(prevState_);
+}
+
+//----------------------------------------------------------------
+
+void
+UndoGroup::add(std::unique_ptr<UndoBet> change)
+{
+    changes_.push_back(std::move(change));
+}
+
+//----------------------------------------------------------------
+//
+// Last change first. Stops at the first one that fails. The ones undone
+// before it stay undone; the caller reports the failure.
+//
+Gen::ReturnCode
+UndoGroup::undo(Gen::ErrorPass& ep)
+{
+    while (!changes_.empty())
+    {
+        if (changes_.back()->undo(ep) == Gen::ReturnCode::Fail)
+        {
+            return Gen::ReturnCode::Fail;
+        }
+        changes_.pop_back();
+    }
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+
+std::string
+UndoGroup::describe() const
+{
+    if (changes_.size() == 1)
+    {
+        return changes_.front()->describe();
+    }
+    return "Undid " + std::to_string(changes_.size()) + " bet changes";
 }
 
 //----------------------------------------------------------------

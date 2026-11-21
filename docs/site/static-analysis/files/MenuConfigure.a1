@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="3325308255516279439">
+<analyzerinfo hash="8243323642201249034">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_HLINE"/>
     <functioncall functionName="ACS_LTEE"/>
@@ -12,6 +12,8 @@
     <functioncall functionName="Right"/>
     <functioncall functionName="back"/>
     <functioncall functionName="box"/>
+    <functioncall functionName="chooseAnimationSpeed"/>
+    <functioncall functionName="chooseRollHistoryFormat"/>
     <functioncall functionName="col"/>
     <functioncall functionName="cols"/>
     <functioncall functionName="doAnimationSpeed"/>
@@ -32,6 +34,7 @@
     <functioncall functionName="row"/>
     <functioncall functionName="rows"/>
     <functioncall functionName="setOperationResult"/>
+    <functioncall functionName="touchwin"/>
     <functioncall functionName="transfer"/>
     <functioncall functionName="true"/>
     <functioncall functionName="winPos_"/>

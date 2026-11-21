@@ -63,6 +63,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#buddy-players">Buddy Players</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#undoing-bets">Undoing Bets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-can-be-undone">What can be undone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-cannot-be-undone">What cannot be undone</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#configuring-appname">Configuring Royal Craps</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#where-the-files-are">Where the Files Are</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#the-config-yaml-file">The <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> File</a></li>
@@ -71,6 +76,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#other-settings">Other Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dice-roll-animation-speed">Dice Roll Animation Speed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#roll-history-format">Roll History Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#overriding-settings-temporarily">Overriding Settings Temporarily</a></li>
 </ul>
 </li>
@@ -178,30 +185,38 @@ features:</p>
 <li><p><a class="reference internal" href="#buddy-players" id="id10">Buddy Players</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#configuring-appname" id="id11">Configuring Royal Craps</a></p>
+<li><p><a class="reference internal" href="#undoing-bets" id="id11">Undoing Bets</a></p>
 <ul>
-<li><p><a class="reference internal" href="#where-the-files-are" id="id12">Where the Files Are</a></p></li>
-<li><p><a class="reference internal" href="#the-config-yaml-file" id="id13">The <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> File</a></p></li>
-<li><p><a class="reference internal" href="#choosing-the-table-and-players" id="id14">Choosing the Table and Players</a></p></li>
-<li><p><a class="reference internal" href="#other-settings" id="id15">Other Settings</a></p></li>
-<li><p><a class="reference internal" href="#overriding-settings-temporarily" id="id16">Overriding Settings Temporarily</a></p></li>
+<li><p><a class="reference internal" href="#what-can-be-undone" id="id12">What can be undone</a></p></li>
+<li><p><a class="reference internal" href="#what-cannot-be-undone" id="id13">What cannot be undone</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#understanding-appname-statistics" id="id17">Understanding Royal Craps Statistics</a></p>
+<li><p><a class="reference internal" href="#configuring-appname" id="id14">Configuring Royal Craps</a></p>
 <ul>
-<li><p><a class="reference internal" href="#where-statistics-are-kept" id="id18">Where statistics are kept</a></p></li>
-<li><p><a class="reference internal" href="#roll-counters-and-streaks" id="id19">Roll counters and streaks</a></p></li>
-<li><p><a class="reference internal" href="#bet-statistics" id="id20">Bet statistics</a></p></li>
-<li><p><a class="reference internal" href="#repeaters" id="id21">Repeaters</a></p></li>
-<li><p><a class="reference internal" href="#bank-statistics" id="id22">Bank statistics</a></p></li>
-<li><p><a class="reference internal" href="#session-history" id="id23">Session history</a></p></li>
-<li><p><a class="reference internal" href="#reading-the-numbers" id="id24">Reading the numbers</a></p></li>
+<li><p><a class="reference internal" href="#where-the-files-are" id="id15">Where the Files Are</a></p></li>
+<li><p><a class="reference internal" href="#the-config-yaml-file" id="id16">The <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> File</a></p></li>
+<li><p><a class="reference internal" href="#choosing-the-table-and-players" id="id17">Choosing the Table and Players</a></p></li>
+<li><p><a class="reference internal" href="#other-settings" id="id18">Other Settings</a></p></li>
+<li><p><a class="reference internal" href="#dice-roll-animation-speed" id="id19">Dice Roll Animation Speed</a></p></li>
+<li><p><a class="reference internal" href="#roll-history-format" id="id20">Roll History Format</a></p></li>
+<li><p><a class="reference internal" href="#overriding-settings-temporarily" id="id21">Overriding Settings Temporarily</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#frequently-asked-questions" id="id25">Frequently Asked Questions</a></p></li>
-<li><p><a class="reference internal" href="#troubleshooting" id="id26">Troubleshooting</a></p></li>
-<li><p><a class="reference internal" href="#glossary" id="id27">Glossary</a></p></li>
-<li><p><a class="reference internal" href="#support-contact-details" id="id28">Support Contact Details</a></p></li>
+<li><p><a class="reference internal" href="#understanding-appname-statistics" id="id22">Understanding Royal Craps Statistics</a></p>
+<ul>
+<li><p><a class="reference internal" href="#where-statistics-are-kept" id="id23">Where statistics are kept</a></p></li>
+<li><p><a class="reference internal" href="#roll-counters-and-streaks" id="id24">Roll counters and streaks</a></p></li>
+<li><p><a class="reference internal" href="#bet-statistics" id="id25">Bet statistics</a></p></li>
+<li><p><a class="reference internal" href="#repeaters" id="id26">Repeaters</a></p></li>
+<li><p><a class="reference internal" href="#bank-statistics" id="id27">Bank statistics</a></p></li>
+<li><p><a class="reference internal" href="#session-history" id="id28">Session history</a></p></li>
+<li><p><a class="reference internal" href="#reading-the-numbers" id="id29">Reading the numbers</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#frequently-asked-questions" id="id30">Frequently Asked Questions</a></p></li>
+<li><p><a class="reference internal" href="#troubleshooting" id="id31">Troubleshooting</a></p></li>
+<li><p><a class="reference internal" href="#glossary" id="id32">Glossary</a></p></li>
+<li><p><a class="reference internal" href="#support-contact-details" id="id33">Support Contact Details</a></p></li>
 </ul>
 </nav>
 <section id="introduction">
@@ -346,15 +361,71 @@ player you can control, use Create New Player.</p>
 Royal Craps.</p>
 </section>
 </section>
+<section id="undoing-bets">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Undoing Bets</a><a class="headerlink" href="#undoing-bets" title="Link to this heading"></a></h2>
+<p>Changed your mind? Press <code class="docutils literal notranslate"><span class="pre">u</span></code> on the Betting menu to take back the last
+change you made to your bets. Press <code class="docutils literal notranslate"><span class="pre">u</span></code> again to take back the one before
+that, and so on, until you run out of changes to take back.</p>
+<p>Undo is on the <em>Betting Menu</em>. Press <code class="docutils literal notranslate"><span class="pre">b</span></code> for the Betting menu, then <code class="docutils literal notranslate"><span class="pre">u</span></code>.
+From the table screen you can also press <code class="docutils literal notranslate"><span class="pre">u</span></code> by itself.</p>
+<section id="what-can-be-undone">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">What can be undone</a><a class="headerlink" href="#what-can-be-undone" title="Link to this heading"></a></h3>
+<p>Each of these is one step that <code class="docutils literal notranslate"><span class="pre">u</span></code> takes back:</p>
+<ul class="simple">
+<li><p>Placing a bet. Undo takes the bet down and returns its money.</p></li>
+<li><p>Changing a bet’s amount. Undo puts back the amount the bet had before.</p></li>
+<li><p>Setting or changing odds. Undo puts back the previous odds, or takes the
+odds down if there were none.</p></li>
+<li><p>Taking a bet down. Undo puts the bet back on the table, with its odds, and
+takes its money again.</p></li>
+<li><p>Taking down all your removable bets at once, with the <em>all</em> choice of Remove
+Bets (<code class="docutils literal notranslate"><span class="pre">x</span></code>). All of them are put back together by a single undo.</p></li>
+</ul>
+<p>Money always follows the bets. Undoing a bet you placed returns your money,
+and undoing a bet you took down takes it again. If you have since spent the
+money, so that it can no longer be put back, the undo is refused with a
+message and nothing is changed.</p>
+<p>Undo puts a bet back the way it was, even where the rules would not let you
+make that change by hand. For example, you can take down a <code class="docutils literal notranslate"><span class="pre">DontPass</span></code> bet
+after the point is set, and undo will put it back.</p>
+</section>
+<section id="what-cannot-be-undone">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">What cannot be undone</a><a class="headerlink" href="#what-cannot-be-undone" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Anything before the last roll.</strong> Rolling the dice decides your bets, so
+the list of things you can undo starts empty after every roll. Undo is
+only for the betting you have done since the dice last landed.</p></li>
+<li><p><strong>While the dice are rolling.</strong> Betting is closed then. Wait until betting
+reopens and the steps are still there.</p></li>
+<li><p><strong>Other players’ bets.</strong> Undo only takes back the bets of the player you
+are playing as. A buddy’s bets are never touched. Each player has their
+own list, so switching players and back does not lose your steps, as long
+as you do not roll in between.</p></li>
+<li><p><strong>Changing tables.</strong> Your list starts empty at a new table.</p></li>
+<li><p><strong>Redo.</strong> There is no way to undo an undo. Place the bet again.</p></li>
+<li><p><strong>Things that are not bets.</strong> Settings, such as Animation Speed, are not
+affected.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If there is nothing to undo, you get a message that says so. If an undo
+is refused for another reason, you get a message with the reason, and
+the list of steps that you could undo is cleared, because your bets may
+no longer match it. Your bets and your money are left as they were.</p>
+</div>
+<p>Undo does not change your Last Fill or your Quick Bet and Auto Fill amounts.
+Those still remember the last amount you entered, even if you undid that bet.</p>
+</section>
+</section>
 <section id="configuring-appname">
-<h2><a class="toc-backref" href="#id11" role="doc-backlink">Configuring Royal Craps</a><a class="headerlink" href="#configuring-appname" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Configuring Royal Craps</a><a class="headerlink" href="#configuring-appname" title="Link to this heading"></a></h2>
 <p>Royal Craps needs no configuration. The first time it runs it creates what
 it needs and puts you at a table, ready to play. This section is for when
 you want something different: always starting as a particular player, for
 example, or starting without the other players.</p>
 <p>Everything you can set lives in one small text file named <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.</p>
 <section id="where-the-files-are">
-<h3><a class="toc-backref" href="#id12" role="doc-backlink">Where the Files Are</a><a class="headerlink" href="#where-the-files-are" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Where the Files Are</a><a class="headerlink" href="#where-the-files-are" title="Link to this heading"></a></h3>
 <p>Royal Craps keeps your files in your own home directory. The locations follow
 the usual Linux (XDG) conventions, and each can be moved by setting the
 environment variable shown.</p>
@@ -394,7 +465,7 @@ you want to experiment.</p>
 </div>
 </section>
 <section id="the-config-yaml-file">
-<h3><a class="toc-backref" href="#id13" role="doc-backlink">The <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> File</a><a class="headerlink" href="#the-config-yaml-file" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">The <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> File</a><a class="headerlink" href="#the-config-yaml-file" title="Link to this heading"></a></h3>
 <p>When Royal Craps first runs it creates <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> for you. Every setting
 in it is <em>commented out</em>, so out of the box the file changes nothing. To
 use a setting, remove the <code class="docutils literal notranslate"><span class="pre">#</span></code> at the start of its line and change the
@@ -416,7 +487,7 @@ which file and why when it starts. To get a fresh copy, delete
 players and tables are not touched.</p>
 </section>
 <section id="choosing-the-table-and-players">
-<h3><a class="toc-backref" href="#id14" role="doc-backlink">Choosing the Table and Players</a><a class="headerlink" href="#choosing-the-table-and-players" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">Choosing the Table and Players</a><a class="headerlink" href="#choosing-the-table-and-players" title="Link to this heading"></a></h3>
 <p>By default Royal Craps starts where you last left off: the same table, you
 playing as the same player, and with the same other players seated. These
 four settings let you override that. Each one is independent of the others,
@@ -456,8 +527,9 @@ with the buddies from your last game.</p>
 </dl>
 <section id="how-appname-remembers">
 <h4>How Royal Craps Remembers<a class="headerlink" href="#how-appname-remembers" title="Link to this heading"></a></h4>
-<p>When you quit, Royal Craps writes down your table, your player and your
-buddies in <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code>. Next time, any setting you did not make in
+<p>When you quit, Royal Craps writes down your table, your player, your
+buddies, your dice animation speed and your roll history format in
+<code class="docutils literal notranslate"><span class="pre">state.yaml</span></code>. Next time, any setting you did not make in
 <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> is taken from there. Your own settings always take
 priority over it. If you quit with nobody else at the table, the next
 game starts that way too.</p>
@@ -478,15 +550,12 @@ defaults). Check the log if the game does not start as you expected.</p>
 </section>
 </section>
 <section id="other-settings">
-<h3><a class="toc-backref" href="#id15" role="doc-backlink">Other Settings</a><a class="headerlink" href="#other-settings" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">Other Settings</a><a class="headerlink" href="#other-settings" title="Link to this heading"></a></h3>
 <p>These settings are in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> too. They are shown commented out with
 their default values.</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">table:</span> <span class="pre">maxSessions</span></code></dt><dd><p>How many past sessions each table keeps in its history, for the statistics
 across all sessions. When there are more, the oldest are dropped. The
-default is 50.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">table:</span> <span class="pre">maxRecentRolls</span></code></dt><dd><p>How many of the most recent dice rolls the table remembers. The
 default is 50.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">log:</span> <span class="pre">debug</span></code> and <code class="docutils literal notranslate"><span class="pre">log:</span> <span class="pre">trace</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> turns on more detailed messages in the log file. This is useful
@@ -496,13 +565,92 @@ file grow quickly, so leave both <code class="docutils literal notranslate"><spa
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The file also lists <code class="docutils literal notranslate"><span class="pre">rollHistory</span></code>, <code class="docutils literal notranslate"><span class="pre">sound</span></code> and <code class="docutils literal notranslate"><span class="pre">player:</span> <span class="pre">maxSessions</span></code>
+<p>The file also lists <code class="docutils literal notranslate"><span class="pre">rollHistory:</span> <span class="pre">scroll</span></code>, <code class="docutils literal notranslate"><span class="pre">sound</span></code> and
+<code class="docutils literal notranslate"><span class="pre">player:</span> <span class="pre">maxSessions</span></code>
 settings. These are reserved for features that are not in the game yet,
 and changing them has no effect in this version.</p>
 </div>
 </section>
+<section id="dice-roll-animation-speed">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">Dice Roll Animation Speed</a><a class="headerlink" href="#dice-roll-animation-speed" title="Link to this heading"></a></h3>
+<p>The dice tumble across the table before the roll is shown. The bets are not
+settled until the dice land, so you never see a result before the roll. If
+you would rather not wait, you can speed the animation up or turn it off.</p>
+<p>The speeds are:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">off</span></code></dt><dd><p>No animation. The roll shows at once.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fast</span></code></dt><dd><p>Twice as fast as normal.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">normal</span></code></dt><dd><p>The usual pace. This is the default.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">slow</span></code></dt><dd><p>One and a half times slower than normal.</p>
+</dd>
+</dl>
+<p>To change the speed while you play, open the Control menu, choose
+Configuration, then Animation Speed (press <code class="docutils literal notranslate"><span class="pre">s</span></code>). Pick a speed from the
+list. It takes effect on the next roll. The current speed is marked.</p>
+<p>The speed you pick is remembered in <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> when you quit, so the next
+game starts at the same speed. To always start at a particular speed, no
+matter what you chose last time, put it in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">animation</span><span class="p">:</span>
+  <span class="n">speed</span><span class="p">:</span> <span class="n">fast</span>
+</pre></div>
+</div>
+<p>A speed in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> is used at the start of every game, and you can
+still change it during a game with the menu. The command line option
+<code class="docutils literal notranslate"><span class="pre">--animation-speed</span></code> (see below) overrides <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> for one run.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the speed is not one of the four words above, the game writes a
+warning to the log file and uses <code class="docutils literal notranslate"><span class="pre">normal</span></code>. Unquoted <code class="docutils literal notranslate"><span class="pre">off</span></code> is also
+understood in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.</p>
+</div>
+</section>
+<section id="roll-history-format">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Roll History Format</a><a class="headerlink" href="#roll-history-format" title="Link to this heading"></a></h3>
+<p>The roll history under the title bar lists the most recent rolls, newest
+first. You can choose how each roll is written. The formats run from the most
+compact, which fits the most rolls, to the most detailed:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Format</p></th>
+<th class="head"><p>Looks like</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">7</span> <span class="pre">8</span> <span class="pre">6</span> <span class="pre">10</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">7,8,6,10</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">7(34)</span> <span class="pre">8(44)</span> <span class="pre">6(33)</span> <span class="pre">10(65)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">7(3,4)</span> <span class="pre">8(4,4)</span> <span class="pre">6(3,3)</span> <span class="pre">10(6,5)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The numbers in parentheses are the two dice. Format 1 is the default.</p>
+<p>To change the format while you play, open the Control menu, choose
+Configuration, then Format Roll History (press <code class="docutils literal notranslate"><span class="pre">f</span></code>). Press <code class="docutils literal notranslate"><span class="pre">1</span></code> to <code class="docutils literal notranslate"><span class="pre">4</span></code>,
+or move to a line and press Enter. The current format is marked. The whole
+history is redrawn at once in the new format and keeps its colors for seven
+outs, pass line winners and points.</p>
+<p>Like the animation speed, the format you pick is remembered in
+<code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> when you quit. To always start with a particular format, put it
+in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rollHistory</span><span class="p">:</span>
+  <span class="nb">format</span><span class="p">:</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>A format in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> is used at the start of every game, and you can
+still change it during a game with the menu.</p>
+</section>
 <section id="overriding-settings-temporarily">
-<h3><a class="toc-backref" href="#id16" role="doc-backlink">Overriding Settings Temporarily</a><a class="headerlink" href="#overriding-settings-temporarily" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">Overriding Settings Temporarily</a><a class="headerlink" href="#overriding-settings-temporarily" title="Link to this heading"></a></h3>
 <p>Settings come from several places. When the same setting is given in more
 than one, the later one in this list wins:</p>
 <ol class="arabic simple">
@@ -515,6 +663,10 @@ than one, the later one in this list wins:</p>
 any file. These options are available:</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">--debug</span></code> and <code class="docutils literal notranslate"><span class="pre">--trace</span></code></dt><dd><p>Turn on the detailed logging described above for this run only.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--animation-speed</span></code></dt><dd><p>Set the dice roll animation speed for this run: <code class="docutils literal notranslate"><span class="pre">off</span></code>, <code class="docutils literal notranslate"><span class="pre">fast</span></code>,
+<code class="docutils literal notranslate"><span class="pre">normal</span></code> or <code class="docutils literal notranslate"><span class="pre">slow</span></code>. Anything else stops the game with a message
+listing the choices.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">--usr-config-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--usr-data-dir</span></code> and <code class="docutils literal notranslate"><span class="pre">--usr-state-dir</span></code></dt><dd><p>Use another directory in place of the config, data or state locations
 above. Pointing all three at a new, empty directory gives you a brand new
@@ -529,7 +681,7 @@ a run, taking priority over <code class="docutils literal notranslate"><span cla
 </section>
 </section>
 <section id="understanding-appname-statistics">
-<h2><a class="toc-backref" href="#id17" role="doc-backlink">Understanding Royal Craps Statistics</a><a class="headerlink" href="#understanding-appname-statistics" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id22" role="doc-backlink">Understanding Royal Craps Statistics</a><a class="headerlink" href="#understanding-appname-statistics" title="Link to this heading"></a></h2>
 <p>Royal Craps records a large number of statistics while you play. This section
 describes what is recorded, how each statistic is counted, and the nuances
 that matter when you interpret the numbers. It assumes you already know
@@ -547,7 +699,7 @@ none of them predicts the next roll. Streaks, repeaters and
 likely to appear after a long absence than after a recent hit.</p>
 </div>
 <section id="where-statistics-are-kept">
-<h3><a class="toc-backref" href="#id18" role="doc-backlink">Where statistics are kept</a><a class="headerlink" href="#where-statistics-are-kept" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">Where statistics are kept</a><a class="headerlink" href="#where-statistics-are-kept" title="Link to this heading"></a></h3>
 <p>Every statistic belongs to one of two owners and covers one of two time
 spans.</p>
 <p><strong>Table statistics</strong> describe the dice and the table: every roll made at
@@ -569,7 +721,7 @@ on) are the maximum over all sessions, not the sum of the session maximums.</p>
 </div>
 </section>
 <section id="roll-counters-and-streaks">
-<h3><a class="toc-backref" href="#id19" role="doc-backlink">Roll counters and streaks</a><a class="headerlink" href="#roll-counters-and-streaks" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">Roll counters and streaks</a><a class="headerlink" href="#roll-counters-and-streaks" title="Link to this heading"></a></h3>
 <p>Most dice statistics are kept as a <strong>counter</strong>. A counter records two
 things:</p>
 <ul class="simple">
@@ -668,7 +820,7 @@ come out rolls.</p>
 </section>
 </section>
 <section id="bet-statistics">
-<h3><a class="toc-backref" href="#id20" role="doc-backlink">Bet statistics</a><a class="headerlink" href="#bet-statistics" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">Bet statistics</a><a class="headerlink" href="#bet-statistics" title="Link to this heading"></a></h3>
 <p>Each player has bet statistics. These record every bet that reached a
 decision: win, lose, or neither (a bet that was taken down or that stayed up
 and was <strong>kept</strong>).</p>
@@ -787,7 +939,7 @@ before the roll, and the dollars and bets won and lost on it.</p>
 </section>
 </section>
 <section id="repeaters">
-<h3><a class="toc-backref" href="#id21" role="doc-backlink">Repeaters</a><a class="headerlink" href="#repeaters" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">Repeaters</a><a class="headerlink" href="#repeaters" title="Link to this heading"></a></h3>
 <p>A <strong>repeater</strong> statistic answers the question serious players ask most
 often: <em>how many times does a number show up before a 7 ends the run?</em></p>
 <p>Royal Craps records this as a <strong>histogram</strong>. For a given number, the game
@@ -868,7 +1020,7 @@ being added to the histogram.</p>
 </section>
 </section>
 <section id="bank-statistics">
-<h3><a class="toc-backref" href="#id22" role="doc-backlink">Bank statistics</a><a class="headerlink" href="#bank-statistics" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">Bank statistics</a><a class="headerlink" href="#bank-statistics" title="Link to this heading"></a></h3>
 <p>Each player keeps a record of bank activity:</p>
 <ul class="simple">
 <li><p>the number and total amount of <strong>deposits</strong>,</p></li>
@@ -886,7 +1038,7 @@ refills show how often the bank ran low.</p>
 </div>
 </section>
 <section id="session-history">
-<h3><a class="toc-backref" href="#id23" role="doc-backlink">Session history</a><a class="headerlink" href="#session-history" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">Session history</a><a class="headerlink" href="#session-history" title="Link to this heading"></a></h3>
 <p>The game keeps a summary for each past session: its date and duration, how
 many players took part, how many bets were made, and the total intake and
 payout. From these it reports the number of sessions, the date of the first
@@ -897,7 +1049,7 @@ so <code class="docutils literal notranslate"><span class="pre">intake</span> <s
 long enough shows the house edge in these figures.</p>
 </section>
 <section id="reading-the-numbers">
-<h3><a class="toc-backref" href="#id24" role="doc-backlink">Reading the numbers</a><a class="headerlink" href="#reading-the-numbers" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id29" role="doc-backlink">Reading the numbers</a><a class="headerlink" href="#reading-the-numbers" title="Link to this heading"></a></h3>
 <p>A few cautions that apply to every statistic above.</p>
 <p><strong>Sample size.</strong> Craps results swing widely over short samples. A few hundred
 rolls is too few to say anything about a bet’s performance. Expect numbers
@@ -922,19 +1074,19 @@ as the full-screen statistics windows are completed.</p>
 </section>
 </section>
 <section id="frequently-asked-questions">
-<h2><a class="toc-backref" href="#id25" role="doc-backlink">Frequently Asked Questions</a><a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id30" role="doc-backlink">Frequently Asked Questions</a><a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h2>
 <p>&lt;cover some common questions a user might have&gt;</p>
 </section>
 <section id="troubleshooting">
-<h2><a class="toc-backref" href="#id26" role="doc-backlink">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id31" role="doc-backlink">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
 <p>&lt;share troubleshooting advice&gt;</p>
 </section>
 <section id="glossary">
-<h2><a class="toc-backref" href="#id27" role="doc-backlink">Glossary</a><a class="headerlink" href="#glossary" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id32" role="doc-backlink">Glossary</a><a class="headerlink" href="#glossary" title="Link to this heading"></a></h2>
 <p>&lt;terminology specific to your software&gt;</p>
 </section>
 <section id="support-contact-details">
-<h2><a class="toc-backref" href="#id28" role="doc-backlink">Support Contact Details</a><a class="headerlink" href="#support-contact-details" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id33" role="doc-backlink">Support Contact Details</a><a class="headerlink" href="#support-contact-details" title="Link to this heading"></a></h2>
 <p>&lt;how users can contact support&gt;</p>
 </section>
 </section>

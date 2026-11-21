@@ -33,6 +33,7 @@ enum class EventType
     ReqMakeBet,
     ReqOddsBet,
     ReqRemoveBet,
+    ReqUndoBet,
     ReqSetAnimationSpeed,
     ReqSetRollHistoryFormat,
     ReqAutoFill,
@@ -45,6 +46,7 @@ enum class EventType
     RspMakeBet,
     RspOddsBet,
     RspRemoveBet,
+    RspUndoBet,
     RspChangeBet,              // not yet implemented
     RspSwitchPlayer,
     RspManagePlayer,
@@ -612,6 +614,8 @@ struct ReqOddsBet : public GameEvent
     Craps::PlayerId playerId;
     Craps::BetId    betId = 0;
     Gen::Money      oddsAmount = 0;
+    /// Count this change as part of the previous undo step, not a new one
+    bool            undoJoinsPrevious = false;
 
     ReqOddsBet()
         : GameEvent{EventSource::View, EventType::ReqOddsBet}
@@ -678,6 +682,9 @@ struct ReqRemoveBet : public GameEvent
 {
     Craps::PlayerId playerId;
     Craps::BetId    betId = 0;
+    /// Count this removal as part of the previous undo step, not a new
+    /// one. Set for every removal after the first in a batch.
+    bool            undoJoinsPrevious = false;
 
     ReqRemoveBet()
         : GameEvent{EventSource::View, EventType::ReqRemoveBet}
@@ -700,6 +707,35 @@ struct RspRemoveBet : public GameEvent
 
     RspRemoveBet()
         : GameEvent{EventSource::Controller, EventType::RspRemoveBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Take back the player's most recent bet change since the last roll.
+struct ReqUndoBet : public GameEvent
+{
+    Craps::PlayerId playerId;
+
+    ReqUndoBet()
+        : GameEvent{EventSource::View, EventType::ReqUndoBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqUndoBet. When accepted, description says what was done,
+/// e.g. "Took down your $10 Place 6 bet". Otherwise error says why, such
+/// as nothing to undo or betting being closed.
+struct RspUndoBet : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    std::string     description;
+    Gen::ErrorPass  error;
+
+    RspUndoBet()
+        : GameEvent{EventSource::Controller, EventType::RspUndoBet}
     {}
 };
 

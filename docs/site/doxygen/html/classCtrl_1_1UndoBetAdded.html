@@ -97,14 +97,17 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
+<p>A bet was made. Undo takes it down.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="UndoBet_8h_source.html">UndoBet.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Ctrl::UndoBetAdded:</div>
 <div class="dyncontent">
 <div class="center"><img src="classCtrl_1_1UndoBetAdded__inherit__graph.png" border="0" usemap="#aCtrl_1_1UndoBetAdded_inherit__map" alt="Inheritance graph"/></div>
 <map name="aCtrl_1_1UndoBetAdded_inherit__map" id="aCtrl_1_1UndoBetAdded_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,79,156,104"/>
-<area shape="rect" href="classCtrl_1_1UndoBet.html" title="Base class for undo bet capability." alt="" coords="26,5,135,31"/>
+<area shape="rect" title="A bet was made. Undo takes it down." alt="" coords="5,79,156,104"/>
+<area shape="rect" href="classCtrl_1_1UndoBet.html" title="One undoable change to a bet, and how to take it back." alt="" coords="26,5,135,31"/>
 <area shape="poly" title=" " alt="" coords="83,44,83,79,78,79,78,44"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -113,8 +116,8 @@ Collaboration diagram for Ctrl::UndoBetAdded:</div>
 <div class="dyncontent">
 <div class="center"><img src="classCtrl_1_1UndoBetAdded__coll__graph.png" border="0" usemap="#aCtrl_1_1UndoBetAdded_coll__map" alt="Collaboration graph"/></div>
 <map name="aCtrl_1_1UndoBetAdded_coll__map" id="aCtrl_1_1UndoBetAdded_coll__map">
-<area shape="rect" title=" " alt="" coords="5,79,156,104"/>
-<area shape="rect" href="classCtrl_1_1UndoBet.html" title="Base class for undo bet capability." alt="" coords="26,5,135,31"/>
+<area shape="rect" title="A bet was made. Undo takes it down." alt="" coords="5,79,156,104"/>
+<area shape="rect" href="classCtrl_1_1UndoBet.html" title="One undoable change to a bet, and how to take it back." alt="" coords="26,5,135,31"/>
 <area shape="poly" title=" " alt="" coords="83,44,83,79,78,79,78,44"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -123,33 +126,20 @@ Collaboration diagram for Ctrl::UndoBetAdded:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a048ac2e03f02c9624888d141ac6c5787" id="r_a048ac2e03f02c9624888d141ac6c5787"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a048ac2e03f02c9624888d141ac6c5787">UndoBetAdded</a> (<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">Craps::BetPtr</a> pBet)</td></tr>
 <tr class="separator:a048ac2e03f02c9624888d141ac6c5787"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf6230060794bb0a88a9a16edff296a7" id="r_adf6230060794bb0a88a9a16edff296a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf6230060794bb0a88a9a16edff296a7">undo</a> () override</td></tr>
-<tr class="separator:adf6230060794bb0a88a9a16edff296a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadaf752c58f7e3490d73db6a82dda9fe" id="r_aadaf752c58f7e3490d73db6a82dda9fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadaf752c58f7e3490d73db6a82dda9fe">undo</a> (<a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep) override</td></tr>
+<tr class="separator:aadaf752c58f7e3490d73db6a82dda9fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa235e285d1405065605fa9267d86e99b" id="r_aa235e285d1405065605fa9267d86e99b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa235e285d1405065605fa9267d86e99b">describe</a> () const override</td></tr>
+<tr class="memdesc:aa235e285d1405065605fa9267d86e99b"><td class="mdescLeft">&#160;</td><td class="mdescRight">What undoing does, in words, e.g. "Took down your $10 Place 6 bet".  <br /></td></tr>
+<tr class="separator:aa235e285d1405065605fa9267d86e99b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classCtrl_1_1UndoBet"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classCtrl_1_1UndoBet')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCtrl_1_1UndoBet.html">Ctrl::UndoBet</a></td></tr>
 <tr class="memitem:a6948f13aec3204ca2ebdf9e116001780 inherit pub_methods_classCtrl_1_1UndoBet" id="r_a6948f13aec3204ca2ebdf9e116001780"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCtrl_1_1UndoBet.html#a6948f13aec3204ca2ebdf9e116001780">~UndoBet</a> ()=default</td></tr>
 <tr class="separator:a6948f13aec3204ca2ebdf9e116001780 inherit pub_methods_classCtrl_1_1UndoBet"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A bet was made. Undo takes it down. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a048ac2e03f02c9624888d141ac6c5787" name="a048ac2e03f02c9624888d141ac6c5787"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a048ac2e03f02c9624888d141ac6c5787">&#9670;&#160;</a></span>UndoBetAdded()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">UndoBetAdded::UndoBetAdded </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">Craps::BetPtr</a></td>          <td class="paramname"><span class="paramname"><em>pBet</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="adf6230060794bb0a88a9a16edff296a7" name="adf6230060794bb0a88a9a16edff296a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf6230060794bb0a88a9a16edff296a7">&#9670;&#160;</a></span>undo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -158,10 +148,36 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void UndoBetAdded::undo </td>
+          <td class="memname">UndoBetAdded::UndoBetAdded </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">Craps::BetPtr</a></td>          <td class="paramname"><span class="paramname"><em>pBet</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa235e285d1405065605fa9267d86e99b" name="aa235e285d1405065605fa9267d86e99b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa235e285d1405065605fa9267d86e99b">&#9670;&#160;</a></span>describe()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string UndoBetAdded::describe </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -171,7 +187,37 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classCtrl_1_1UndoBet.html#a96761ac5b2f67af7d756463ac817ae56">Ctrl::UndoBet</a>.</p>
+<p>What undoing does, in words, e.g. "Took down your $10 Place 6 bet". </p>
+
+<p>Implements <a class="el" href="classCtrl_1_1UndoBet.html#ac877f3a5fc32e5415ea63dd226ea53d9">Ctrl::UndoBet</a>.</p>
+
+</div>
+</div>
+<a id="aadaf752c58f7e3490d73db6a82dda9fe" name="aadaf752c58f7e3490d73db6a82dda9fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadaf752c58f7e3490d73db6a82dda9fe">&#9670;&#160;</a></span>undo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> UndoBetAdded::undo </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Puts things back as they were before the change. Success, or Fail and ep has the reason. A failure changes nothing. </p>
+
+<p>Implements <a class="el" href="classCtrl_1_1UndoBet.html#a34d50982ee67d7e2a15c627fa3c51785">Ctrl::UndoBet</a>.</p>
 
 </div>
 </div>
@@ -182,7 +228,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

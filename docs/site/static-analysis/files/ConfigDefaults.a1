@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="9291772558034435778">
+<analyzerinfo hash="12566822528289877869">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="KeyDebugLogging"/>
     <functioncall functionName="KeyDirsAdmConfig"/>
@@ -23,7 +23,6 @@
     <functioncall functionName="KeySessionStartTime"/>
     <functioncall functionName="KeySoundEnabled"/>
     <functioncall functionName="KeySoundVolume"/>
-    <functioncall functionName="KeyTableMaxRecentRolls"/>
     <functioncall functionName="KeyTableMaxSessions"/>
     <functioncall functionName="KeyTablePlayer1"/>
     <functioncall functionName="KeyTablePlayer2"/>

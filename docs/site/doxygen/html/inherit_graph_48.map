@@ -1,85 +1,99 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structCtrl_1_1GameEvent.html" title="Base class for all Events." alt="" coords="5,992,135,1017"/>
+<area shape="rect" id="Node000000" href="$structCtrl_1_1GameEvent.html" title="Base class for all Events." alt="" coords="5,1165,135,1191"/>
 <area shape="rect" id="Node000001" href="$structCtrl_1_1ReqAutoFill.html" title=" " alt="" coords="231,5,358,31"/>
-<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="70,978,81,780,103,482,119,331,136,197,157,96,168,62,181,40,203,24,230,16,232,21,206,29,185,44,173,64,162,97,142,198,124,331,109,482,86,780,75,979"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="69,1152,78,922,98,568,113,388,131,228,154,107,166,66,181,40,204,24,230,16,232,21,206,28,185,44,171,68,159,108,136,229,118,388,103,568,83,922,75,1152"/>
 <area shape="rect" id="Node000002" href="$structCtrl_1_1ReqMakeBet.html" title=" " alt="" coords="227,55,362,80"/>
-<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="70,978,82,789,105,507,120,364,138,238,158,142,169,110,181,90,202,74,226,66,228,71,204,79,185,93,174,112,163,144,143,239,126,364,110,507,87,789,75,979"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="70,1151,79,930,99,592,114,420,133,269,155,153,167,114,181,90,202,74,226,66,228,71,204,79,185,93,172,116,160,154,138,269,120,421,105,593,84,930,75,1151"/>
 <area shape="rect" id="Node000003" href="$structCtrl_1_1ReqManagePlayer.html" title=" " alt="" coords="209,104,380,129"/>
-<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="68,978,68,809,72,688,80,557,93,426,113,306,127,253,142,206,160,168,181,139,208,121,211,125,185,143,165,171,147,208,132,254,119,307,98,427,85,557,77,689,74,809,73,978"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="70,1152,80,939,101,617,116,454,134,309,156,199,168,162,181,139,193,128,208,121,210,125,196,133,185,142,172,164,161,201,139,310,121,454,106,618,85,940,75,1152"/>
 <area shape="rect" id="Node000004" href="$structCtrl_1_1ReqOddsBet.html" title=" " alt="" coords="228,153,361,179"/>
-<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="68,978,70,818,75,704,83,580,96,457,116,344,144,252,161,216,181,188,202,173,227,165,228,170,204,178,185,192,166,218,149,254,122,346,102,458,88,581,80,704,75,818,74,978"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="70,1151,81,948,103,642,118,487,136,350,157,246,168,210,181,188,202,173,227,164,229,169,204,177,185,192,173,212,162,247,141,351,123,487,108,642,86,949,75,1152"/>
 <area shape="rect" id="Node000005" href="$structCtrl_1_1ReqQuickBet.html" title=" " alt="" coords="226,203,363,228"/>
-<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="69,978,72,827,86,604,100,489,119,384,146,297,162,263,181,237,201,223,225,214,227,219,204,227,185,241,167,266,151,299,124,385,105,490,91,605,77,827,74,978"/>
-<area shape="rect" id="Node000006" href="$structCtrl_1_1ReqRollDice.html" title=" " alt="" coords="229,252,361,277"/>
-<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="69,978,73,835,89,627,103,520,122,422,148,342,163,311,181,287,202,271,227,263,229,268,205,276,185,291,168,313,153,344,127,424,108,521,94,628,79,835,74,978"/>
-<area shape="rect" id="Node000007" href="$structCtrl_1_1ReqSwitchPlayer.html" title="The person wants to play as a different player." alt="" coords="213,301,376,327"/>
-<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="69,978,75,844,92,651,106,552,125,462,150,387,164,358,181,336,195,325,212,317,214,322,198,329,185,340,169,361,155,389,130,463,111,553,97,652,81,845,75,978"/>
-<area shape="rect" id="Node000008" href="$structCtrl_1_1ReqTerminate.html" title=" " alt="" coords="223,351,366,376"/>
-<area shape="poly" id="edge8_Node000000_Node000008" title=" " alt="" coords="70,978,77,853,95,675,110,584,128,500,152,432,165,406,181,385,200,371,222,363,224,368,203,376,185,389,170,408,157,434,133,502,115,585,100,676,82,853,75,978"/>
-<area shape="rect" id="Node000009" href="$structCtrl_1_1RspMakeBet.html" title=" " alt="" coords="227,400,362,425"/>
-<area shape="poly" id="edge9_Node000000_Node000009" title=" " alt="" coords="70,978,79,862,98,699,113,616,131,540,154,477,167,453,181,435,202,420,226,412,228,417,204,425,185,439,171,456,158,480,136,541,118,617,104,700,84,863,75,979"/>
-<area shape="rect" id="Node000010" href="$structCtrl_1_1RspManagePlayer.html" title=" " alt="" coords="209,449,380,475"/>
-<area shape="poly" id="edge10_Node000000_Node000010" title=" " alt="" coords="71,977,81,870,102,722,116,647,134,578,156,522,181,484,207,467,210,472,185,488,160,525,139,580,122,648,107,723,86,871,76,978"/>
-<area shape="rect" id="Node000011" href="$structCtrl_1_1RspOddsBet.html" title=" " alt="" coords="229,499,361,524"/>
-<area shape="poly" id="edge11_Node000000_Node000011" title=" " alt="" coords="71,978,83,880,105,747,120,679,137,618,157,568,181,533,203,519,227,511,229,516,205,524,185,537,162,570,142,620,125,681,110,748,88,881,77,979"/>
-<area shape="rect" id="Node000012" href="$structCtrl_1_1RspSwitchPlayer.html" title=" " alt="" coords="214,548,375,573"/>
-<area shape="poly" id="edge12_Node000000_Node000012" title=" " alt="" coords="72,978,85,889,108,771,140,657,159,613,181,583,196,572,213,564,215,569,198,576,185,587,164,615,145,659,114,772,91,890,77,979"/>
-<area shape="rect" id="Node000013" href="$structCtrl_1_1UslAutoFillChanged.html" title=" " alt="" coords="205,597,385,623"/>
-<area shape="poly" id="edge13_Node000000_Node000013" title=" " alt="" coords="68,978,71,909,86,815,100,766,120,717,147,671,181,632,203,618,206,622,184,636,151,675,125,719,105,767,91,817,77,909,73,979"/>
-<area shape="rect" id="Node000014" href="$structCtrl_1_1UslBetChanged.html" title=" " alt="" coords="218,647,371,672"/>
-<area shape="poly" id="edge14_Node000000_Node000014" title=" " alt="" coords="70,978,76,917,93,837,107,794,126,753,150,715,181,681,198,670,217,662,219,667,200,675,184,685,155,718,131,755,112,796,98,838,81,918,75,979"/>
-<area shape="rect" id="Node000015" href="$structCtrl_1_1UslBetEvaluationFailed.html" title=" " alt="" coords="193,696,396,721"/>
-<area shape="poly" id="edge15_Node000000_Node000015" title=" " alt="" coords="72,977,81,925,100,858,114,823,132,789,154,758,181,731,199,719,202,724,184,735,158,761,137,792,119,825,105,860,86,926,77,978"/>
-<area shape="rect" id="Node000016" href="$structCtrl_1_1UslBetMade.html" title=" " alt="" coords="229,745,361,771"/>
-<area shape="poly" id="edge16_Node000000_Node000016" title=" " alt="" coords="74,978,86,934,107,880,138,826,158,801,181,780,203,767,227,760,229,765,205,772,184,784,162,805,142,829,112,882,91,936,79,979"/>
-<area shape="rect" id="Node000017" href="$structCtrl_1_1UslBetRemoved.html" title=" " alt="" coords="215,795,374,820"/>
-<area shape="poly" id="edge17_Node000000_Node000017" title=" " alt="" coords="78,978,93,944,115,903,144,863,181,829,214,814,216,819,184,834,148,866,119,906,98,946,83,980"/>
-<area shape="rect" id="Node000018" href="$structCtrl_1_1UslBetResolved.html" title=" " alt="" coords="217,844,373,869"/>
-<area shape="poly" id="edge18_Node000000_Node000018" title=" " alt="" coords="84,979,124,927,151,901,181,878,216,864,218,869,184,883,154,905,128,931,88,982"/>
-<area shape="rect" id="Node000019" href="$structCtrl_1_1UslBettingClosed.html" title=" " alt="" coords="212,893,377,919"/>
-<area shape="poly" id="edge19_Node000000_Node000019" title=" " alt="" coords="96,981,135,953,182,928,216,916,217,921,184,932,138,958,99,985"/>
-<area shape="rect" id="Node000020" href="$structCtrl_1_1UslBettingOpened.html" title=" " alt="" coords="209,943,380,968"/>
-<area shape="poly" id="edge20_Node000000_Node000020" title=" " alt="" coords="139,986,182,977,234,965,235,971,183,982,141,992"/>
-<area shape="rect" id="Node000021" href="$structCtrl_1_1UslDiceNewValue.html" title=" " alt="" coords="211,992,379,1017"/>
-<area shape="poly" id="edge21_Node000000_Node000021" title=" " alt="" coords="149,1002,211,1002,211,1007,149,1007"/>
-<area shape="rect" id="Node000022" href="$structCtrl_1_1UslDiceThrowStart.html" title=" " alt="" coords="207,1041,382,1067"/>
-<area shape="poly" id="edge22_Node000000_Node000022" title=" " alt="" coords="142,1018,237,1039,235,1044,141,1023"/>
-<area shape="rect" id="Node000023" href="$structCtrl_1_1UslNewShooter.html" title=" " alt="" coords="218,1091,371,1116"/>
-<area shape="poly" id="edge23_Node000000_Node000023" title=" " alt="" coords="99,1024,138,1051,184,1076,222,1088,220,1093,182,1080,135,1055,96,1028"/>
-<area shape="rect" id="Node000024" href="$structCtrl_1_1UslPassLineWinner.html" title=" " alt="" coords="207,1140,383,1165"/>
-<area shape="poly" id="edge24_Node000000_Node000024" title=" " alt="" coords="88,1027,128,1077,154,1103,184,1125,212,1137,210,1142,181,1130,151,1107,124,1081,84,1030"/>
-<area shape="rect" id="Node000025" href="$structCtrl_1_1UslPlayerBalanceChanged.html" title=" " alt="" coords="183,1189,407,1215"/>
-<area shape="poly" id="edge25_Node000000_Node000025" title=" " alt="" coords="83,1029,98,1063,120,1102,148,1142,184,1174,208,1187,206,1192,181,1179,145,1145,115,1105,93,1065,78,1031"/>
-<area shape="rect" id="Node000026" href="$structCtrl_1_1UslPlayerBetsChanged.html" title=" " alt="" coords="194,1239,395,1264"/>
-<area shape="poly" id="edge26_Node000000_Node000026" title=" " alt="" coords="79,1030,92,1073,112,1126,143,1179,162,1203,184,1224,206,1236,203,1241,181,1228,158,1207,138,1182,107,1128,87,1075,74,1032"/>
-<area shape="rect" id="Node000027" href="$structCtrl_1_1UslPlayerJoinedTable.html" title=" " alt="" coords="200,1288,389,1313"/>
-<area shape="poly" id="edge27_Node000000_Node000027" title=" " alt="" coords="77,1031,86,1083,105,1149,119,1183,137,1216,158,1247,184,1273,204,1286,201,1290,181,1277,154,1250,132,1219,114,1185,100,1150,81,1084,72,1032"/>
-<area shape="rect" id="Node000028" href="$structCtrl_1_1UslPlayerLastRollStatsChanged.html" title=" " alt="" coords="195,1338,395,1378"/>
-<area shape="poly" id="edge28_Node000000_Node000028" title=" " alt="" coords="75,1031,82,1091,100,1169,114,1211,132,1252,156,1289,184,1323,202,1336,199,1340,181,1327,151,1293,128,1254,109,1213,95,1171,77,1092,70,1032"/>
-<area shape="rect" id="Node000029" href="$structCtrl_1_1UslPlayerLeftTable.html" title=" " alt="" coords="208,1403,381,1428"/>
-<area shape="poly" id="edge29_Node000000_Node000029" title=" " alt="" coords="73,1031,76,1103,90,1199,104,1251,123,1301,150,1348,184,1388,209,1403,206,1408,181,1392,146,1351,119,1303,99,1252,85,1200,70,1103,68,1031"/>
-<area shape="rect" id="Node000030" href="$structCtrl_1_1UslPlayerRenamed.html" title="A player&#39;s name changed. Names the View has kept are stale." alt="" coords="206,1452,383,1477"/>
-<area shape="poly" id="edge30_Node000000_Node000030" title=" " alt="" coords="77,1031,90,1122,113,1245,128,1306,145,1362,164,1407,185,1437,207,1452,204,1457,181,1441,159,1410,140,1364,122,1308,108,1246,85,1123,72,1031"/>
-<area shape="rect" id="Node000031" href="$structCtrl_1_1UslPlayerSessionStatsChanged.html" title=" " alt="" coords="195,1502,394,1542"/>
-<area shape="poly" id="edge31_Node000000_Node000031" title=" " alt="" coords="77,1031,89,1132,111,1268,125,1338,143,1401,163,1452,185,1487,201,1500,197,1504,181,1490,158,1454,138,1402,120,1339,105,1269,83,1132,71,1032"/>
-<area shape="rect" id="Node000032" href="$structCtrl_1_1UslPointEstablished.html" title=" " alt="" coords="203,1567,386,1592"/>
-<area shape="poly" id="edge32_Node000000_Node000032" title=" " alt="" coords="76,1031,85,1144,105,1301,120,1381,138,1453,159,1513,171,1535,185,1552,205,1566,202,1571,181,1556,167,1538,154,1515,133,1455,114,1382,100,1302,80,1144,70,1031"/>
-<area shape="rect" id="Node000033" href="$structCtrl_1_1UslQuickBetChanged.html" title=" " alt="" coords="199,1616,390,1641"/>
-<area shape="poly" id="edge33_Node000000_Node000033" title=" " alt="" coords="75,1031,83,1153,102,1325,116,1413,135,1493,157,1558,170,1583,185,1601,201,1614,197,1618,181,1605,166,1586,153,1560,130,1494,111,1414,97,1326,78,1154,70,1032"/>
-<area shape="rect" id="Node000034" href="$structCtrl_1_1UslResolveBetsEnd.html" title=" " alt="" coords="205,1665,384,1691"/>
-<area shape="poly" id="edge34_Node000000_Node000034" title=" " alt="" coords="75,1031,81,1161,99,1348,113,1444,132,1531,156,1603,169,1630,185,1651,207,1666,204,1671,181,1655,165,1633,151,1605,127,1533,108,1445,93,1349,76,1162,69,1031"/>
-<area shape="rect" id="Node000035" href="$structCtrl_1_1UslResolveBetsStart.html" title=" " alt="" coords="201,1715,388,1740"/>
-<area shape="poly" id="edge35_Node000000_Node000035" title=" " alt="" coords="74,1031,80,1170,96,1372,110,1476,129,1571,154,1648,168,1678,185,1700,203,1714,199,1718,181,1704,164,1681,149,1650,124,1572,104,1477,90,1373,74,1171,69,1031"/>
-<area shape="rect" id="Node000036" href="$structCtrl_1_1UslSevenOut.html" title=" " alt="" coords="226,1764,363,1789"/>
-<area shape="poly" id="edge36_Node000000_Node000036" title=" " alt="" coords="74,1031,78,1179,93,1396,107,1508,126,1610,152,1693,167,1725,185,1749,204,1764,227,1772,225,1777,201,1768,181,1753,163,1728,147,1695,121,1611,101,1508,87,1396,73,1180,69,1031"/>
-<area shape="rect" id="Node000037" href="$structCtrl_1_1UslTableBalanceChanged.html" title=" " alt="" coords="186,1813,403,1839"/>
-<area shape="poly" id="edge37_Node000000_Node000037" title=" " alt="" coords="74,1031,76,1187,90,1419,103,1538,123,1648,150,1738,166,1773,185,1799,200,1811,197,1815,181,1803,162,1776,145,1740,118,1650,98,1539,84,1419,71,1187,69,1031"/>
-<area shape="rect" id="Node000038" href="$structCtrl_1_1UslTableBetsChanged.html" title=" " alt="" coords="197,1863,392,1888"/>
-<area shape="poly" id="edge38_Node000000_Node000038" title=" " alt="" coords="74,1031,75,1196,79,1314,87,1442,100,1570,120,1687,133,1739,148,1784,165,1820,185,1848,200,1860,197,1864,181,1852,161,1823,143,1786,128,1740,115,1689,95,1571,81,1443,73,1315,69,1196,68,1031"/>
-<area shape="rect" id="Node000039" href="$structCtrl_1_1UslTableLastRollStatsChanged.html" title=" " alt="" coords="198,1913,391,1953"/>
-<area shape="poly" id="edge39_Node000000_Node000039" title=" " alt="" coords="74,1031,74,1204,78,1329,86,1464,99,1600,119,1725,132,1780,147,1828,165,1867,185,1898,200,1911,196,1915,181,1901,160,1870,142,1829,127,1781,114,1726,94,1601,81,1465,73,1329,69,1204,68,1031"/>
-<area shape="rect" id="Node000040" href="$structCtrl_1_1UslTableSessionStatsChanged.html" title=" " alt="" coords="199,1977,390,2017"/>
-<area shape="poly" id="edge40_Node000000_Node000040" title=" " alt="" coords="75,1031,87,1228,110,1525,125,1675,143,1808,163,1909,174,1943,185,1963,201,1977,197,1981,181,1966,169,1945,158,1910,138,1809,120,1676,105,1525,82,1228,70,1031"/>
-<area shape="rect" id="Node000041" href="$structCtrl_1_1UslUserPlayerSwitched.html" title=" " alt="" coords="193,2041,397,2067"/>
-<area shape="poly" id="edge41_Node000000_Node000041" title=" " alt="" coords="75,1031,85,1241,107,1558,122,1719,140,1861,161,1969,173,2005,185,2027,200,2039,196,2043,181,2030,168,2008,156,1971,135,1862,117,1720,102,1559,80,1241,70,1031"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="70,1151,81,957,104,667,119,520,137,390,158,292,169,258,181,238,201,222,225,214,227,219,204,227,185,241,174,261,163,293,142,391,125,520,109,667,87,958,75,1152"/>
+<area shape="rect" id="Node000006" href="$structCtrl_1_1ReqRemoveBet.html" title="Take a bet off the table. Funds (contract and odds) return to the player." alt="" coords="217,252,372,277"/>
+<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="70,1151,82,966,106,692,121,553,139,431,158,338,169,307,181,287,197,274,216,266,218,271,200,279,185,290,174,309,164,340,144,432,126,554,111,692,88,967,76,1152"/>
+<area shape="rect" id="Node000007" href="$structCtrl_1_1ReqRollDice.html" title=" " alt="" coords="229,301,361,327"/>
+<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="68,1152,69,987,73,870,81,742,95,615,115,498,128,447,143,402,161,365,181,336,202,321,228,312,229,317,205,325,185,340,165,367,148,404,133,448,120,499,100,616,87,743,79,870,75,987,74,1152"/>
+<area shape="rect" id="Node000008" href="$structCtrl_1_1ReqSetAnimationSpeed.html" title=" " alt="" coords="191,351,398,376"/>
+<area shape="poly" id="edge8_Node000000_Node000008" title=" " alt="" coords="69,1152,71,996,84,766,98,646,118,537,145,447,162,412,181,385,195,374,198,378,185,389,166,415,150,449,123,538,103,647,90,766,76,996,74,1152"/>
+<area shape="rect" id="Node000009" href="$structCtrl_1_1ReqSetRollHistoryFormat.html" title=" " alt="" coords="186,400,403,425"/>
+<area shape="poly" id="edge9_Node000000_Node000009" title=" " alt="" coords="69,1151,73,1004,87,789,101,678,121,576,147,492,163,460,181,435,195,423,198,427,185,439,167,462,152,494,126,577,107,678,93,789,78,1004,74,1151"/>
+<area shape="rect" id="Node000010" href="$structCtrl_1_1ReqSwitchPlayer.html" title="The person wants to play as a different player." alt="" coords="213,449,376,475"/>
+<area shape="poly" id="edge10_Node000000_Node000010" title=" " alt="" coords="69,1152,74,1013,90,813,105,709,124,615,149,537,164,507,181,484,195,473,212,465,214,470,198,477,185,488,168,510,154,539,129,616,110,710,96,813,80,1014,74,1152"/>
+<area shape="rect" id="Node000011" href="$structCtrl_1_1ReqTerminate.html" title=" " alt="" coords="223,499,366,524"/>
+<area shape="poly" id="edge11_Node000000_Node000011" title=" " alt="" coords="69,1151,76,1021,94,836,108,741,127,654,151,582,165,555,181,533,200,519,222,511,224,516,203,524,185,537,169,557,156,584,132,655,113,741,99,836,81,1022,75,1151"/>
+<area shape="rect" id="Node000012" href="$structCtrl_1_1ReqUndoBet.html" title="Take back the player&#39;s most recent bet change since the last roll." alt="" coords="227,548,362,573"/>
+<area shape="poly" id="edge12_Node000000_Node000012" title=" " alt="" coords="70,1151,78,1030,97,859,111,772,130,693,153,627,166,602,181,583,202,568,226,560,228,565,204,573,185,587,170,605,157,630,135,694,116,773,102,860,83,1031,75,1151"/>
+<area shape="rect" id="Node000013" href="$structCtrl_1_1RspMakeBet.html" title=" " alt="" coords="227,597,362,623"/>
+<area shape="poly" id="edge13_Node000000_Node000013" title=" " alt="" coords="70,1151,80,1039,100,884,115,804,133,732,155,673,167,650,181,632,202,617,226,609,228,614,204,622,184,636,172,653,159,675,138,733,120,805,105,884,85,1040,76,1152"/>
+<area shape="rect" id="Node000014" href="$structCtrl_1_1RspManagePlayer.html" title=" " alt="" coords="209,647,380,672"/>
+<area shape="poly" id="edge14_Node000000_Node000014" title=" " alt="" coords="71,1151,82,1049,103,908,118,836,136,771,157,718,181,681,207,665,210,669,185,685,161,720,141,773,123,837,109,908,87,1049,76,1152"/>
+<area shape="rect" id="Node000015" href="$structCtrl_1_1RspOddsBet.html" title=" " alt="" coords="229,696,361,721"/>
+<area shape="poly" id="edge15_Node000000_Node000015" title=" " alt="" coords="72,1151,84,1057,107,931,122,868,139,810,158,763,181,731,203,716,228,708,229,713,205,721,185,735,163,765,144,812,127,869,112,932,90,1058,77,1152"/>
+<area shape="rect" id="Node000016" href="$structCtrl_1_1RspRemoveBet.html" title=" " alt="" coords="218,745,371,771"/>
+<area shape="poly" id="edge16_Node000000_Node000016" title=" " alt="" coords="68,1151,69,1078,83,978,97,924,117,871,145,823,181,780,198,768,217,761,219,765,200,773,184,784,149,826,122,874,102,926,88,979,75,1078,73,1152"/>
+<area shape="rect" id="Node000017" href="$structCtrl_1_1RspSwitchPlayer.html" title=" " alt="" coords="214,795,375,820"/>
+<area shape="poly" id="edge17_Node000000_Node000017" title=" " alt="" coords="69,1152,73,1086,89,999,103,953,123,908,148,866,181,829,196,819,213,811,215,816,199,823,184,833,153,869,128,910,108,955,94,1000,79,1087,74,1152"/>
+<area shape="rect" id="Node000018" href="$structCtrl_1_1RspUndoBet.html" title=" " alt="" coords="228,844,361,869"/>
+<area shape="poly" id="edge18_Node000000_Node000018" title=" " alt="" coords="70,1151,78,1094,96,1020,110,981,129,944,152,909,181,879,203,865,227,857,228,863,205,870,184,883,156,912,134,946,115,983,101,1022,83,1095,76,1152"/>
+<area shape="rect" id="Node000019" href="$structCtrl_1_1UslAutoFillChanged.html" title=" " alt="" coords="205,893,385,919"/>
+<area shape="poly" id="edge19_Node000000_Node000019" title=" " alt="" coords="73,1151,83,1103,103,1042,135,980,156,952,181,928,203,915,206,919,184,932,160,956,139,983,108,1044,88,1104,78,1152"/>
+<area shape="rect" id="Node000020" href="$structCtrl_1_1UslBetChanged.html" title=" " alt="" coords="218,943,371,968"/>
+<area shape="poly" id="edge20_Node000000_Node000020" title=" " alt="" coords="76,1151,89,1112,111,1065,141,1017,160,996,181,977,216,960,219,965,184,982,164,999,145,1020,115,1067,94,1114,81,1153"/>
+<area shape="rect" id="Node000021" href="$structCtrl_1_1UslBetEvaluationFailed.html" title=" " alt="" coords="193,992,396,1017"/>
+<area shape="poly" id="edge21_Node000000_Node000021" title=" " alt="" coords="81,1151,119,1088,147,1054,181,1026,205,1015,207,1020,184,1031,151,1058,123,1091,85,1154"/>
+<area shape="rect" id="Node000022" href="$structCtrl_1_1UslBetMade.html" title=" " alt="" coords="229,1041,361,1067"/>
+<area shape="poly" id="edge22_Node000000_Node000022" title=" " alt="" coords="88,1153,128,1113,154,1093,182,1076,227,1060,229,1065,184,1080,157,1097,132,1117,92,1157"/>
+<area shape="rect" id="Node000023" href="$structCtrl_1_1UslBetRemoved.html" title=" " alt="" coords="215,1091,374,1116"/>
+<area shape="poly" id="edge23_Node000000_Node000023" title=" " alt="" coords="107,1157,182,1125,223,1113,224,1119,184,1130,109,1161"/>
+<area shape="rect" id="Node000024" href="$structCtrl_1_1UslBetResolved.html" title=" " alt="" coords="217,1140,373,1165"/>
+<area shape="poly" id="edge24_Node000000_Node000024" title=" " alt="" coords="148,1167,216,1159,217,1164,149,1172"/>
+<area shape="rect" id="Node000025" href="$structCtrl_1_1UslBettingClosed.html" title=" " alt="" coords="212,1189,377,1215"/>
+<area shape="poly" id="edge25_Node000000_Node000025" title=" " alt="" coords="149,1184,212,1191,212,1196,148,1189"/>
+<area shape="rect" id="Node000026" href="$structCtrl_1_1UslBettingOpened.html" title=" " alt="" coords="209,1239,380,1264"/>
+<area shape="poly" id="edge26_Node000000_Node000026" title=" " alt="" coords="111,1194,184,1223,229,1236,228,1241,182,1229,109,1199"/>
+<area shape="rect" id="Node000027" href="$structCtrl_1_1UslDiceNewValue.html" title=" " alt="" coords="211,1288,379,1313"/>
+<area shape="poly" id="edge27_Node000000_Node000027" title=" " alt="" coords="93,1199,133,1238,157,1257,184,1273,216,1285,214,1290,181,1278,154,1261,129,1242,89,1203"/>
+<area shape="rect" id="Node000028" href="$structCtrl_1_1UslDiceThrowStart.html" title=" " alt="" coords="207,1337,382,1363"/>
+<area shape="poly" id="edge28_Node000000_Node000028" title=" " alt="" coords="86,1202,124,1263,152,1296,184,1322,210,1335,207,1340,181,1327,148,1299,120,1267,81,1205"/>
+<area shape="rect" id="Node000029" href="$structCtrl_1_1UslNewShooter.html" title=" " alt="" coords="218,1387,371,1412"/>
+<area shape="poly" id="edge29_Node000000_Node000029" title=" " alt="" coords="81,1203,95,1242,116,1287,146,1333,184,1372,219,1388,216,1393,181,1376,142,1337,111,1290,90,1244,76,1205"/>
+<area shape="rect" id="Node000030" href="$structCtrl_1_1UslPassLineWinner.html" title=" " alt="" coords="207,1436,383,1461"/>
+<area shape="poly" id="edge30_Node000000_Node000030" title=" " alt="" coords="78,1204,89,1252,109,1311,140,1371,160,1398,184,1421,208,1435,205,1439,181,1425,156,1401,135,1374,104,1313,84,1253,73,1205"/>
+<area shape="rect" id="Node000031" href="$structCtrl_1_1UslPlayerBalanceChanged.html" title=" " alt="" coords="183,1485,407,1511"/>
+<area shape="poly" id="edge31_Node000000_Node000031" title=" " alt="" coords="76,1204,84,1260,102,1333,116,1371,134,1407,157,1441,184,1471,204,1483,201,1487,181,1475,153,1445,129,1410,111,1373,97,1334,79,1261,71,1205"/>
+<area shape="rect" id="Node000032" href="$structCtrl_1_1UslPlayerBetsChanged.html" title=" " alt="" coords="194,1535,395,1560"/>
+<area shape="poly" id="edge32_Node000000_Node000032" title=" " alt="" coords="74,1204,79,1269,95,1354,109,1400,128,1444,153,1485,184,1520,203,1532,200,1537,181,1524,149,1488,123,1446,104,1402,90,1356,74,1269,69,1205"/>
+<area shape="rect" id="Node000033" href="$structCtrl_1_1UslPlayerJoinedTable.html" title=" " alt="" coords="200,1584,389,1609"/>
+<area shape="poly" id="edge33_Node000000_Node000033" title=" " alt="" coords="73,1204,75,1277,89,1376,102,1428,122,1480,149,1528,184,1569,202,1582,199,1586,181,1573,145,1531,118,1482,97,1430,83,1377,70,1277,68,1204"/>
+<area shape="rect" id="Node000034" href="$structCtrl_1_1UslPlayerLastRollStatsChanged.html" title=" " alt="" coords="195,1634,395,1674"/>
+<area shape="poly" id="edge34_Node000000_Node000034" title=" " alt="" coords="77,1204,90,1296,113,1421,145,1541,164,1587,185,1619,201,1632,197,1636,181,1622,159,1590,140,1543,108,1422,85,1297,72,1205"/>
+<area shape="rect" id="Node000035" href="$structCtrl_1_1UslPlayerLeftTable.html" title=" " alt="" coords="208,1699,381,1724"/>
+<area shape="poly" id="edge35_Node000000_Node000035" title=" " alt="" coords="76,1204,87,1309,108,1454,122,1527,140,1594,161,1648,185,1684,209,1700,206,1705,181,1688,156,1650,135,1595,117,1528,103,1455,82,1310,71,1205"/>
+<area shape="rect" id="Node000036" href="$structCtrl_1_1UslPlayerRenamed.html" title="A player&#39;s name changed. Names the View has kept are stale." alt="" coords="206,1748,383,1773"/>
+<area shape="poly" id="edge36_Node000000_Node000036" title=" " alt="" coords="76,1204,85,1318,105,1478,119,1559,137,1633,159,1693,171,1716,184,1733,207,1749,204,1753,181,1737,167,1719,154,1695,132,1634,114,1560,99,1479,80,1319,70,1205"/>
+<area shape="rect" id="Node000037" href="$structCtrl_1_1UslPlayerSessionStatsChanged.html" title=" " alt="" coords="195,1798,394,1838"/>
+<area shape="poly" id="edge37_Node000000_Node000037" title=" " alt="" coords="75,1204,84,1327,103,1501,117,1590,136,1671,158,1738,171,1763,185,1783,200,1796,197,1800,181,1786,166,1766,153,1740,130,1672,112,1591,98,1501,78,1327,70,1205"/>
+<area shape="rect" id="Node000038" href="$structCtrl_1_1UslPointEstablished.html" title=" " alt="" coords="203,1863,386,1888"/>
+<area shape="poly" id="edge38_Node000000_Node000038" title=" " alt="" coords="75,1204,80,1339,97,1533,111,1633,130,1724,155,1798,169,1827,185,1848,205,1863,201,1867,181,1852,164,1830,150,1800,125,1725,106,1634,92,1534,75,1340,69,1205"/>
+<area shape="rect" id="Node000039" href="$structCtrl_1_1UslQuickBetChanged.html" title=" " alt="" coords="199,1912,390,1937"/>
+<area shape="poly" id="edge39_Node000000_Node000039" title=" " alt="" coords="74,1205,79,1348,94,1557,108,1665,127,1763,153,1844,168,1874,185,1897,201,1910,198,1914,181,1901,163,1877,148,1846,122,1764,103,1665,89,1557,73,1348,69,1205"/>
+<area shape="rect" id="Node000040" href="$structCtrl_1_1UslResolveBetsEnd.html" title=" " alt="" coords="205,1961,384,1987"/>
+<area shape="poly" id="edge40_Node000000_Node000040" title=" " alt="" coords="74,1204,77,1357,91,1580,105,1696,124,1802,151,1889,167,1922,185,1947,207,1962,203,1967,181,1951,162,1925,146,1891,119,1803,100,1697,86,1581,72,1357,69,1204"/>
+<area shape="rect" id="Node000041" href="$structCtrl_1_1UslResolveBetsStart.html" title=" " alt="" coords="201,2011,388,2036"/>
+<area shape="poly" id="edge41_Node000000_Node000041" title=" " alt="" coords="74,1204,75,1365,80,1480,88,1604,102,1727,122,1841,149,1934,166,1969,185,1996,203,2010,200,2014,181,2000,161,1972,144,1936,116,1842,96,1728,83,1604,74,1480,70,1365,68,1205"/>
+<area shape="rect" id="Node000042" href="$structCtrl_1_1UslRollHistoryFormatChanged.html" title="The roll history format is now as given. The View redraws." alt="" coords="199,2061,391,2101"/>
+<area shape="poly" id="edge42_Node000000_Node000042" title=" " alt="" coords="74,1205,75,1373,79,1494,87,1626,101,1757,121,1878,148,1978,165,2016,185,2046,200,2059,197,2063,181,2049,161,2019,143,1980,115,1879,95,1758,82,1626,74,1495,70,1373,68,1205"/>
+<area shape="rect" id="Node000043" href="$structCtrl_1_1UslSevenOut.html" title=" " alt="" coords="226,2125,363,2151"/>
+<area shape="poly" id="edge43_Node000000_Node000043" title=" " alt="" coords="75,1204,87,1397,110,1686,125,1833,143,1961,163,2059,174,2091,185,2111,203,2125,226,2133,225,2138,201,2130,181,2114,169,2094,158,2060,138,1962,120,1833,104,1687,82,1398,70,1205"/>
+<area shape="rect" id="Node000044" href="$structCtrl_1_1UslTableBalanceChanged.html" title=" " alt="" coords="186,2175,403,2200"/>
+<area shape="poly" id="edge44_Node000000_Node000044" title=" " alt="" coords="75,1204,86,1406,108,1711,123,1866,141,2002,162,2105,173,2140,185,2160,200,2172,196,2177,181,2164,168,2142,157,2106,136,2003,118,1866,103,1712,81,1407,70,1205"/>
+<area shape="rect" id="Node000045" href="$structCtrl_1_1UslTableBetsChanged.html" title=" " alt="" coords="197,2224,392,2249"/>
+<area shape="poly" id="edge45_Node000000_Node000045" title=" " alt="" coords="75,1204,85,1415,107,1736,122,1899,140,2042,161,2151,173,2188,185,2210,200,2222,196,2226,181,2213,168,2190,156,2153,135,2043,116,1899,101,1736,80,1416,70,1204"/>
+<area shape="rect" id="Node000046" href="$structCtrl_1_1UslTableLastRollStatsChanged.html" title=" " alt="" coords="198,2274,391,2314"/>
+<area shape="poly" id="edge46_Node000000_Node000046" title=" " alt="" coords="75,1204,85,1424,106,1760,121,1931,140,2082,161,2197,173,2236,185,2259,200,2272,196,2276,181,2262,168,2238,156,2198,134,2083,116,1931,101,1760,80,1424,70,1205"/>
+<area shape="rect" id="Node000047" href="$structCtrl_1_1UslTableSessionStatsChanged.html" title=" " alt="" coords="199,2338,390,2378"/>
+<area shape="poly" id="edge47_Node000000_Node000047" title=" " alt="" coords="75,1204,84,1436,104,1793,119,1975,138,2136,159,2258,172,2299,185,2324,201,2338,198,2342,181,2328,167,2301,154,2260,132,2137,114,1975,99,1793,79,1436,69,1205"/>
+<area shape="rect" id="Node000048" href="$structCtrl_1_1UslUserPlayerSwitched.html" title=" " alt="" coords="193,2403,397,2428"/>
+<area shape="poly" id="edge48_Node000000_Node000048" title=" " alt="" coords="75,1204,82,1448,101,1826,116,2019,134,2189,157,2319,171,2362,185,2388,200,2401,196,2405,181,2392,166,2364,152,2320,129,2190,111,2019,96,1826,77,1448,69,1205"/>
 </map>

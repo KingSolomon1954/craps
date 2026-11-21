@@ -190,6 +190,12 @@ CrapsTable::diagPrefix(size_t idx, const CrapsBet& bet) const
     } else if (idx == 4)
     {
         diag += "removtBet(): Unable to remove bet for ";
+    } else if (idx == 5)
+    {
+        diag += "restoreBet(): Unable to restore ";
+    } else if (idx == 6)
+    {
+        diag += "restoreBetAmounts(): Unable to restore amounts for ";
     } else
     {
         assert(false && "diag bad index");

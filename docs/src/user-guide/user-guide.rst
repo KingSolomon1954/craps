@@ -33,6 +33,8 @@ User Interface Overview
 
 .. include:: players.inc
 
+.. include:: undo.inc
+
 .. include:: configuration.inc
 
 .. include:: statistics.inc

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="9653965124234915007">
+<analyzerinfo hash="2840272975487553863">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="CaughtException"/>
     <functioncall functionName="CrapsTable"/>
@@ -7,10 +7,10 @@
     <functioncall functionName="Fail"/>
     <functioncall functionName="Indeterminate"/>
     <functioncall functionName="KeyDirsUsrTables"/>
-    <functioncall functionName="KeyTableMaxRecentRolls"/>
     <functioncall functionName="KeyTableMaxSessions"/>
     <functioncall functionName="KeyTableStart"/>
     <functioncall functionName="LOG_ERROR"/>
+    <functioncall functionName="MaxRecentRolls"/>
     <functioncall functionName="ProcessingError"/>
     <functioncall functionName="Success"/>
     <functioncall functionName="TableManager"/>
@@ -40,7 +40,6 @@
     <functioncall functionName="path"/>
     <functioncall functionName="push_back"/>
     <functioncall functionName="release"/>
-    <functioncall functionName="retrieveMaxRecentRolls"/>
     <functioncall functionName="retrieveMaxSessions"/>
     <functioncall functionName="runtime_error"/>
     <functioncall functionName="save"/>

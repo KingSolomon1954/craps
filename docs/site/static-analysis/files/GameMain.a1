@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="18289095010837345889">
+<analyzerinfo hash="2353764324749795745">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="BuildInfo"/>
     <functioncall functionName="ConfigManager"/>
@@ -14,6 +14,7 @@
     <functioncall functionName="MaxBuddies"/>
     <functioncall functionName="PlayerManager"/>
     <functioncall functionName="TableManager"/>
+    <functioncall functionName="animationSpeedToRemember"/>
     <functioncall functionName="appNameScreen"/>
     <functioncall functionName="assert"/>
     <functioncall functionName="disableConsoleLogging"/>
@@ -44,6 +45,7 @@
     <functioncall functionName="pTablerMgr"/>
     <functioncall functionName="push_back"/>
     <functioncall functionName="resize"/>
+    <functioncall functionName="rollHistoryFormatToRemember"/>
     <functioncall functionName="save"/>
     <functioncall functionName="saveUserState"/>
     <functioncall functionName="setDebugLevel"/>

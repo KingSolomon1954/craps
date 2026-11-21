@@ -63,6 +63,7 @@ LineInput.a1::/work/src/lib-cui/src/core/LineInput.cpp
 WorkOrderDispatcher.a1::/work/src/lib-cui/src/core/WorkOrderDispatcher.cpp
 DialogBetAmount.a1::/work/src/lib-cui/src/dialogs/DialogBetAmount.cpp
 DialogConfirm.a1::/work/src/lib-cui/src/dialogs/DialogConfirm.cpp
+DialogDeepRollHistory.a1::/work/src/lib-cui/src/dialogs/DialogDeepRollHistory.cpp
 DialogError.a1::/work/src/lib-cui/src/dialogs/DialogError.cpp
 DialogMessage.a1::/work/src/lib-cui/src/dialogs/DialogMessage.cpp
 DialogPickPlayer.a1::/work/src/lib-cui/src/dialogs/DialogPickPlayer.cpp

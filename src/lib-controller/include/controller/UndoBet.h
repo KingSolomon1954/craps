@@ -8,87 +8,105 @@
 
 #include <craps/CrapsTypes.h>
 #include <craps/CrapsBet.h>
+#include <gen/ErrorPass.h>
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace Ctrl {
 
 class UndoBet
 {
 public:
-    virtual void undo() = 0;
     virtual ~UndoBet() = default;
+
+    /// Puts things back as they were before the change. Success, or Fail
+    /// and ep has the reason. A failure changes nothing.
+    virtual Gen::ReturnCode undo(Gen::ErrorPass& ep) = 0;
+
+    /// What undoing does, in words, e.g. "Took down your $10 Place 6 bet"
+    virtual std::string describe() const = 0;
 };
 
+//----------------------------------------------------------------
+
+/// A bet was made. Undo takes it down.
 class UndoBetAdded : public UndoBet
 {
 public:
-    UndoBetAdded(Craps::BetPtr pBet);
-    void undo() override;
-    
+    explicit UndoBetAdded(Craps::BetPtr pBet);
+    Gen::ReturnCode undo(Gen::ErrorPass& ep) override;
+    std::string describe() const override;
+
 private:
-    Craps::BetPtr pBet_ = nullptr;
+    Craps::BetPtr pBet_;
 };
 
+//----------------------------------------------------------------
+
+/// A bet was taken down. Undo puts it back with its amounts.
 class UndoBetRemoved : public UndoBet
 {
 public:
-    UndoBetRemoved(Craps::BetPtr pBet);
-    void undo() override;
-    
+    explicit UndoBetRemoved(Craps::BetPtr pBet);
+    Gen::ReturnCode undo(Gen::ErrorPass& ep) override;
+    std::string describe() const override;
+
 private:
-    Craps::BetPtr pBet_ = nullptr;
+    Craps::BetPtr pBet_;
 };
 
-class UndoBetModifiedFlags : public UndoBet
-{
-public:
-    UndoBetModifiedFlags(Craps::BetPtr pBet);
-    void undo() override;
-    
-private:
-    Craps::BetPtr pBet_ = nullptr;
-    Craps::CrapsBet prevState_;
-};
+//----------------------------------------------------------------
 
+/// The contract amount or the odds amount of a bet changed. Undo puts
+/// both back. Make this before making the change.
 class UndoBetModifiedAmount : public UndoBet
 {
 public:
-    UndoBetModifiedAmount(Craps::BetPtr pBet);
-    void undo() override;
-    
+    explicit UndoBetModifiedAmount(Craps::BetPtr pBet);
+    Gen::ReturnCode undo(Gen::ErrorPass& ep) override;
+    std::string describe() const override;
+
 private:
-    Craps::BetPtr pBet_ = nullptr;
+    Craps::BetPtr pBet_;
     Craps::CrapsBet prevState_;
+};
+
+//----------------------------------------------------------------
+
+/// Several changes that are one step to the player, such as taking down
+/// all removable bets. Undone together, last change first.
+class UndoGroup : public UndoBet
+{
+public:
+    void add(std::unique_ptr<UndoBet> change);
+    std::size_t size() const { return changes_.size(); }
+    Gen::ReturnCode undo(Gen::ErrorPass& ep) override;
+    std::string describe() const override;
+
+private:
+    std::vector<std::unique_ptr<UndoBet>> changes_;
 };
 
 /*-----------------------------------------------------------*//**
 
 @class UndoBet
 
-@brief Base class for undo bet capability
+@brief One undoable change to a bet, and how to take it back
 
-Remembers previous bet before change so it can be
-restored.
+Each remembers what is needed to put things back and does that through
+the same Player and table paths as any other change, so the money,
+the house bank, the player's bets and the events that update the screens
+all follow. Undo does not repeat the rules for making or changing a bet:
+the change was allowed once and undo restores the earlier, allowed,
+state. It only needs betting to be open and the money to be there.
 
-Undo Capability
+@li UndoBetAdded:          a new bet was placed
+@li UndoBetModifiedAmount: contract or odds amount changed
+@li UndoBetRemoved:        a bet was taken down
+@li UndoGroup:             several of these as one step
 
-Supported (stack-based undo, limited to bets)
-
-@li Scope: only bet state (no configuration, no gameplay state, no rolls).
-@li Granularity: one atomic bet change = one undo step.
-@li Kinds of changes:
-
-  @li new bet placed
-  @li existing bet modified (amount, odds, flags)
-  @li bet removed
-
-@li Ordering: last-in, first-out (classic undo stack).
-@li Lifetime: undo history is cleared after each roll (so you can only undo the current betting decisions before the dice are rolled).
-
-Not supported (explicit exclusions)
-
-@li Undoing out of order changes (no random-access undo).
-@li Redo.
-@li Anything outside of bets (like table config, game options).
+See UndoManager for the stack, who owns it and when it is cleared.
 
 */
 

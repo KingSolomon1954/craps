@@ -82,6 +82,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#controller">Controller</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#interfaces">Interfaces</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#event-handling">Event Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#undo-of-bet-changes">Undo of Bet Changes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#undo-purpose">Undo Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#undo-participants">Undo Participants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#undo-recording-steps">Undo Recording Steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#undo-restore-paths">Undo Restore Paths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#undo-rules-and-limits">Undo Rules and Limits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#undo-workflow">Undo Workflow</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
 </ul>
 </li>
@@ -92,6 +101,22 @@
 <li class="toctree-l4"><a class="reference internal" href="#responsibilities">Responsibilities</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#operating-constraints">Operating Constraints</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#completion">Completion</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dice-roll-animation-synchronization">Dice Roll Animation Synchronization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#roll-animation-purpose">Roll Animation Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#participants">Participants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#event-ordering">Event Ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#holding-and-releasing">Holding and Releasing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rules">Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#animation-speed">Animation Speed</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#roll-history-and-roll-log">Roll History and Roll Log</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#roll-log-purpose">Roll Log Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#roll-log-participants">Roll Log Participants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#roll-log-rules">Roll Log Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#roll-history-format-setting">Roll History Format Setting</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#cuimain-crc-card">CuiMain CRC Card</a></li>
@@ -545,6 +570,117 @@ its own paragraph. See <a class="reference external" href="http://www.extremepro
 <h3>Event Handling<a class="headerlink" href="#event-handling" title="Link to this heading"></a></h3>
 <p>TBS</p>
 </section>
+<section id="undo-of-bet-changes">
+<h3>Undo of Bet Changes<a class="headerlink" href="#undo-of-bet-changes" title="Link to this heading"></a></h3>
+<section id="undo-purpose">
+<h4>Undo Purpose<a class="headerlink" href="#undo-purpose" title="Link to this heading"></a></h4>
+<p>A player can take back bet changes made since the last roll: a bet placed,
+a bet’s amount or odds changed, or a bet taken down. Undo is limited to
+bets. Settings, rolls and the state of the game are never undone.</p>
+</section>
+<section id="undo-participants">
+<h4>Undo Participants<a class="headerlink" href="#undo-participants" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">UndoBet</span></code> is one recorded change that knows how to take itself back
+and how to describe that in words. Its subclasses are <code class="docutils literal notranslate"><span class="pre">UndoBetAdded</span></code>,
+<code class="docutils literal notranslate"><span class="pre">UndoBetRemoved</span></code> and <code class="docutils literal notranslate"><span class="pre">UndoBetModifiedAmount</span></code>. <code class="docutils literal notranslate"><span class="pre">UndoGroup</span></code> holds
+several as one step.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UndoManager</span></code> is a singleton holding a stack of steps for each player.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EventHandler</span></code> records a step after every bet request that succeeds,
+answers <code class="docutils literal notranslate"><span class="pre">ReqUndoBet</span></code> with <code class="docutils literal notranslate"><span class="pre">RspUndoBet</span></code>, and clears the stacks when a
+roll is requested.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Player</span></code> and <code class="docutils literal notranslate"><span class="pre">CrapsTable</span></code> provide the restore paths that undo uses:
+<code class="docutils literal notranslate"><span class="pre">Player::restoreBet()</span></code>, <code class="docutils literal notranslate"><span class="pre">Player::restoreAmounts()</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">CrapsTable::restoreBet()</span></code> and <code class="docutils literal notranslate"><span class="pre">CrapsTable::restoreBetAmounts()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> runs the Undo operation for <code class="docutils literal notranslate"><span class="pre">MenuBetting</span></code>.</p></li>
+</ul>
+</section>
+<section id="undo-recording-steps">
+<h4>Undo Recording Steps<a class="headerlink" href="#undo-recording-steps" title="Link to this heading"></a></h4>
+<p>The View knows nothing of the stack. The recording happens entirely in the
+Controller, so any View, and later any automation that goes through the
+same requests, is undoable the same way.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ReqMakeBet</span></code> for a spot with no bet records <code class="docutils literal notranslate"><span class="pre">UndoBetAdded</span></code>. For a
+spot that already has a bet the request changes the bet’s amount, which
+records <code class="docutils literal notranslate"><span class="pre">UndoBetModifiedAmount</span></code> if the amount really changed. A
+<code class="docutils literal notranslate"><span class="pre">UndoBetModifiedAmount</span></code> is built before the change, because it copies
+the bet’s state as it is then.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ReqOddsBet</span></code> records <code class="docutils literal notranslate"><span class="pre">UndoBetModifiedAmount</span></code>, whether it sets, changes
+or takes down odds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ReqRemoveBet</span></code> records <code class="docutils literal notranslate"><span class="pre">UndoBetRemoved</span></code>. The stack keeps a shared
+pointer to the removed bet, which is what lets it be put back.</p></li>
+<li><p>A change that is refused records nothing.</p></li>
+<li><p>Taking down several bets at once sends one request per bet. All but the
+first carry <code class="docutils literal notranslate"><span class="pre">undoJoinsPrevious</span></code>, which makes <code class="docutils literal notranslate"><span class="pre">UndoManager</span></code> merge the
+change into the step on top of the stack, wrapping that step in an
+<code class="docutils literal notranslate"><span class="pre">UndoGroup</span></code> first if it is not one already. The batch is then undone
+in one step, last removal first.</p></li>
+</ul>
+</section>
+<section id="undo-restore-paths">
+<h4>Undo Restore Paths<a class="headerlink" href="#undo-restore-paths" title="Link to this heading"></a></h4>
+<p>Undo does not run a change backward through the normal bet functions. The
+change being undone was allowed, and undoing it can look like a change that
+is not: reducing a <code class="docutils literal notranslate"><span class="pre">PassLine</span></code> bet after the point, increasing a
+<code class="docutils literal notranslate"><span class="pre">DontPass</span></code> bet, or putting back a <code class="docutils literal notranslate"><span class="pre">DontPass</span></code> bet after the point. The
+normal rules would refuse these.</p>
+<p>The restore paths therefore skip the rules for making or changing a bet,
+and check only what must be true for undo to be safe: betting is open, the
+bet is on the table (or, for a restore, is not already there) and the player
+has the money. They go through the table, so the player’s wallet, the house
+bank, placement commission and the bet, balance and table events all update
+as for a normal change. Without those events the screens would not follow
+the undo. The bet’s original id is kept, so the screens treat a restored
+bet as the same bet.</p>
+<p>A bet placed by the player is taken down the normal way by
+<code class="docutils literal notranslate"><span class="pre">UndoBetAdded</span></code>, through <code class="docutils literal notranslate"><span class="pre">Player::removeBet()</span></code>, since that is what it is.</p>
+</section>
+<section id="undo-rules-and-limits">
+<h4>Undo Rules and Limits<a class="headerlink" href="#undo-rules-and-limits" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Last in, first out. There is no random access and no redo.</p></li>
+<li><p>Each player has a stack, and an undo request applies to its own player.
+The View asks for the user player. This keeps the bets of a buddy
+safe from the user’s undo, and a player who switches away and back keeps
+their steps.</p></li>
+<li><p>The stacks are cleared when a roll is requested, because the roll decides
+the bets, when the table is switched, and when a buddy leaves the table.
+They are cleared before the roll, in the request handler, so the clearing
+is ordered with the bet requests and no timing between threads is
+involved.</p></li>
+<li><p>Undo is refused while betting is closed. The refusal keeps the steps.</p></li>
+<li><p>A failed undo drops that player’s whole history and reports the reason.
+The step that failed is no longer known to match the table, so undoing
+the steps below it would be unsafe. Nothing is changed by the failed step
+itself.</p></li>
+<li><p>A mutex protects the stacks, since requests and tests may use them from
+different threads.</p></li>
+</ul>
+</section>
+<section id="undo-workflow">
+<h4>Undo Workflow<a class="headerlink" href="#undo-workflow" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">MenuBetting</span></code> calls <code class="docutils literal notranslate"><span class="pre">OperationManager::undoLastBet()</span></code> for <code class="docutils literal notranslate"><span class="pre">u</span></code>. The
+operation sends one <code class="docutils literal notranslate"><span class="pre">ReqUndoBet</span></code> for the user player and waits for the
+<code class="docutils literal notranslate"><span class="pre">RspUndoBet</span></code> with the matching correlation id.</p>
+<ul class="simple">
+<li><p><strong>Success:</strong> the betting menus unwind to the table screen, as after any
+bet. The bet and balance events that the undo caused have already been
+sent, and redraw the player areas and the balances as they do for any bet
+change. The response carries a description such as “Took down your $10
+Place 6 bet”, which is logged.</p></li>
+<li><p><strong>Failure:</strong> an error dialog shows the reason. Nothing to undo and betting
+closed are the common ones. After the player acknowledges it, the menus
+unwind.</p></li>
+</ul>
+<p>Changes to a bet’s flags, such as a hardway being off, are not recorded,
+because nothing changes those flags yet; the Bet Flags menu entry is
+still a stub. The earlier <code class="docutils literal notranslate"><span class="pre">UndoBetModifiedFlags</span></code> class was removed
+because it was never used and restored a bet by overwriting it, which skipped
+the table and its events. When flag changes are implemented, they need their
+own <code class="docutils literal notranslate"><span class="pre">UndoBet</span></code> subclass that restores through the table.</p>
+</section>
+</section>
 <section id="configuration">
 <h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
 <p>Command Line</p>
@@ -615,6 +751,193 @@ its own paragraph. See <a class="reference external" href="http://www.extremepro
 <p>An operation is complete when its intended outcome has been reached and all required user interaction and CUI cleanup have finished.</p>
 <p>Depending on the operation, completion may follow a successful response, cancellation of a confirmation, or acknowledgement of an error.</p>
 <p>Once complete, the manager releases the operation’s state and becomes available to coordinate the next operation.</p>
+</section>
+</section>
+<section id="dice-roll-animation-synchronization">
+<h3>Dice Roll Animation Synchronization<a class="headerlink" href="#dice-roll-animation-synchronization" title="Link to this heading"></a></h3>
+<section id="roll-animation-purpose">
+<h4>Roll Animation Purpose<a class="headerlink" href="#roll-animation-purpose" title="Link to this heading"></a></h4>
+<p>The Craps Engine resolves a dice roll in a single synchronous burst: it
+picks the dice, evaluates every bet, updates balances and statistics, and
+publishes the resulting events, all within one call. The CUI, on the
+other hand, shows the dice tumbling on screen for a second or two. If the
+CUI simply handled each event as it arrived, bets would be cleared and
+balances would change while the dice were still in the air, and the
+player would see the outcome before the roll is known.</p>
+<p>The CUI therefore holds back the results of a roll until the animation
+shows the dice landing, then reveals all of them together. The Craps
+Engine and the Controller know nothing about this. The synchronization
+lives entirely in the CUI.</p>
+</section>
+<section id="participants">
+<h4>Participants<a class="headerlink" href="#participants" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CuiReceiver</span></code> subscribes to the engine’s events and converts each
+into a work order placed on the <code class="docutils literal notranslate"><span class="pre">CuiThread</span></code> queue, in the order the
+engine published them.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CuiThread</span></code> processes the queue on the CUI thread and hands every
+work order to <code class="docutils literal notranslate"><span class="pre">WorkOrderDispatcher</span></code>. Its loop also gives the
+dispatcher a regular <code class="docutils literal notranslate"><span class="pre">tick()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WorkOrderDispatcher</span></code> decides whether an event is handled now or held,
+and replays held events when released.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WindowAnimation</span></code> renders the dice frames from a timer. It alone knows
+when the dice have landed.</p></li>
+</ul>
+</section>
+<section id="event-ordering">
+<h4>Event Ordering<a class="headerlink" href="#event-ordering" title="Link to this heading"></a></h4>
+<p>For one roll the engine publishes, in this order:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">UslBettingClosed</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UslDiceThrowStart</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UslDiceNewValue</span></code></p></li>
+<li><p>The results: bets resolved, bets removed or changed, balances, session
+and last-roll statistics, point established, seven out, new shooter,
+and <code class="docutils literal notranslate"><span class="pre">UslResolveBetsEnd</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UslBettingOpened</span></code></p></li>
+</ol>
+<p>Because the queue is first-in first-out, <code class="docutils literal notranslate"><span class="pre">UslDiceThrowStart</span></code> is always
+handled before any of the results.</p>
+</section>
+<section id="holding-and-releasing">
+<h4>Holding and Releasing<a class="headerlink" href="#holding-and-releasing" title="Link to this heading"></a></h4>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Engine            CuiThread / Dispatcher           WindowAnimation
+------            ----------------------           ---------------
+ThrowStart  ---&gt;  onDiceThrowStart()  ----------&gt;  start frame timer
+                  holding = true                   (frame every ~90 ms)
+NewValue    ---&gt;  dice to animation (now)
+                  roll history, title bar (held)
+results     ---&gt;  queued, in order (held)
+                                                   ... frames ...
+                                                   dice land
+                  &lt;-- ReleaseHeldEvents work order
+                  replay held events in order
+                  holding = false, one full redraw
+</pre></div>
+</div>
+<p>While holding:</p>
+<ul class="simple">
+<li><p><strong>Held</strong> are the results of the roll: all bet, balance and statistics
+events, point and seven-out events, shooter changes, roster changes, and
+the roll history and title bar portions of <code class="docutils literal notranslate"><span class="pre">UslDiceNewValue</span></code>.</p></li>
+<li><p><strong>Not held</strong> are <code class="docutils literal notranslate"><span class="pre">UslDiceThrowStart</span></code>, the animation’s own portion of
+<code class="docutils literal notranslate"><span class="pre">UslDiceNewValue</span></code> (it must have the dice to draw them),
+<code class="docutils literal notranslate"><span class="pre">UslBettingClosed</span></code>, and every <code class="docutils literal notranslate"><span class="pre">Rsp</span></code> response event. Responses
+answer requests the player made and must reach <code class="docutils literal notranslate"><span class="pre">OperationManager</span></code>
+without delay.</p></li>
+</ul>
+<p>Held events are stored as closures and replayed in their original order,
+so each panel sees the same sequence of calls it would have seen without
+holding. Panels need no knowledge of the mechanism. In particular, panels
+that re-read the model after a roll, such as the player area when it
+handles <code class="docutils literal notranslate"><span class="pre">UslResolveBetsEnd</span></code>, do so at release time and therefore never
+show post-roll data early.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">WindowAnimation</span></code> draws its final frame it enqueues a
+<code class="docutils literal notranslate"><span class="pre">ReleaseHeldEvents</span></code> work order rather than calling the dispatcher
+directly. The release is then handled like any other work order, in
+sequence, on the CUI thread, so no locking is needed.</p>
+</section>
+<section id="rules">
+<h4>Rules<a class="headerlink" href="#rules" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>The animation always plays out.</strong> A key press does not skip or
+shorten it.</p></li>
+<li><p><strong>Safety net.</strong> If the animation never reports that the dice landed,
+the dispatcher’s <code class="docutils literal notranslate"><span class="pre">tick()</span></code> releases the held events after <code class="docutils literal notranslate"><span class="pre">MaxHold</span></code>
+(ten seconds) and logs a warning, so the screen cannot stay frozen.</p></li>
+<li><p><strong>No animation, no hold.</strong> <code class="docutils literal notranslate"><span class="pre">WindowAnimation::onDiceThrowStart()</span></code>
+returns whether the dice will be animated. If it returns false, nothing
+is held. The dice show immediately and results are handled as they
+arrive.</p></li>
+</ul>
+</section>
+<section id="animation-speed">
+<h4>Animation Speed<a class="headerlink" href="#animation-speed" title="Link to this heading"></a></h4>
+<p>The Animation Speed option on the Control, Configuration menu drives this
+mechanism through two small functions in <code class="docutils literal notranslate"><span class="pre">WindowAnimation</span></code>. Both read
+the setting from <code class="docutils literal notranslate"><span class="pre">CrapsReaders::readAnimationSpeed()</span></code> at each throw, so a
+change applies to the next roll:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">animationEnabled()</span></code> is false for Off, so there is no animation and no
+hold. <code class="docutils literal notranslate"><span class="pre">onDiceThrowStart()</span></code> returns false and the dispatcher passes the
+roll’s results straight through.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">frameInterval()</span></code> sets the timer period: 45 ms for Fast, 90 ms for
+Normal and 135 ms for Slow. The length of the animation scales with it.</p></li>
+</ul>
+<p>Slow is about two seconds, well under <code class="docutils literal notranslate"><span class="pre">MaxHold</span></code>. If an animation can ever
+become much slower than that, <code class="docutils literal notranslate"><span class="pre">MaxHold</span></code> must be raised to stay above the
+longest animation.</p>
+<p>The setting lives in the configuration as <code class="docutils literal notranslate"><span class="pre">animation.speed</span></code>. The session
+layer, the highest priority, holds a choice made in the menu, which sends
+<code class="docutils literal notranslate"><span class="pre">ReqSetAnimationSpeed</span></code>. Below it are the command line
+(<code class="docutils literal notranslate"><span class="pre">--animation-speed</span></code>), config.yaml, and what <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> remembered.
+At quit the session choice, or else the remembered value, is written back to
+<code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> under <code class="docutils literal notranslate"><span class="pre">settings</span></code>. A config.yaml value is never written
+there, so removing it from config.yaml restores the remembered speed.</p>
+</section>
+</section>
+<section id="roll-history-and-roll-log">
+<h3>Roll History and Roll Log<a class="headerlink" href="#roll-history-and-roll-log" title="Link to this heading"></a></h3>
+<section id="roll-log-purpose">
+<h4>Roll Log Purpose<a class="headerlink" href="#roll-log-purpose" title="Link to this heading"></a></h4>
+<p>Two parts of the CUI show past rolls: the one-line roll history under the
+title bar, and the Deep Roll History popup. Both need the same facts about
+each roll, including whether it was a seven out, a pass line winner or
+established a point, because those pick the roll’s color. The Craps Engine
+remembers the dice of recent rolls but not what each roll meant, and those
+facts arrive as separate events after the roll.</p>
+<p>The CUI therefore keeps its own memory of rolls, <code class="docutils literal notranslate"><span class="pre">RollLog</span></code>, and both
+displays draw from it.</p>
+</section>
+<section id="roll-log-participants">
+<h4>Roll Log Participants<a class="headerlink" href="#roll-log-participants" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RollLog</span></code> is a small singleton holding <code class="docutils literal notranslate"><span class="pre">RollEntry</span></code> values, newest
+first. An entry has the two dice and three flags: <code class="docutils literal notranslate"><span class="pre">sevenOut</span></code>,
+<code class="docutils literal notranslate"><span class="pre">passLineWinner</span></code> and <code class="docutils literal notranslate"><span class="pre">point</span></code>. It keeps at most <code class="docutils literal notranslate"><span class="pre">Capacity</span></code> entries
+(120) and drops the oldest.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WindowRollHistory</span></code> adds an entry for each new dice value, then marks
+the newest entry as the seven out, pass line winner and point events
+arrive. It formats and draws the entries in the format the person chose.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DialogDeepRollHistory</span></code> is a fixed-size popup showing the whole log as
+20 rows of 6 columns, newest at the top of the first column, reading down
+each column in turn. It always uses the most detailed format. It keeps
+nothing of its own and has no dependency on any menu: whatever offers it
+calls <code class="docutils literal notranslate"><span class="pre">show()</span></code>.</p></li>
+</ul>
+</section>
+<section id="roll-log-rules">
+<h4>Roll Log Rules<a class="headerlink" href="#roll-log-rules" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>The log is the View’s memory only. It holds what the CUI has seen since
+it started and is not saved. The engine’s own recent rolls are not used,
+because they carry no flags.</p></li>
+<li><p>Entries are created and marked by the same work orders as every other
+roll result. They are therefore held and released with the dice
+animation (see Dice Roll Animation Synchronization), and the history
+never shows a roll before the dice have landed.</p></li>
+<li><p>The marks apply to the newest entry only and do nothing when the log is
+empty.</p></li>
+<li><p>Because the flags are stored per roll, changing the format redraws the
+entire history with its colors intact. Nothing has to be recomputed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Capacity</span></code> is the number of cells in the popup. It is a fixed
+constant, not a user setting. The engine’s <code class="docutils literal notranslate"><span class="pre">TableManager::MaxRecentRolls</span></code>
+is kept at the same value.</p></li>
+</ul>
+</section>
+<section id="roll-history-format-setting">
+<h4>Roll History Format Setting<a class="headerlink" href="#roll-history-format-setting" title="Link to this heading"></a></h4>
+<p>The format is a number from 1, the most compact, to 4, the most detailed:
+<code class="docutils literal notranslate"><span class="pre">7</span> <span class="pre">8</span> <span class="pre">6</span></code>, <code class="docutils literal notranslate"><span class="pre">7,8,6</span></code>, <code class="docutils literal notranslate"><span class="pre">7(34)</span> <span class="pre">8(44)</span> <span class="pre">6(33)</span></code> and <code class="docutils literal notranslate"><span class="pre">7(3,4)</span> <span class="pre">8(4,4)</span> <span class="pre">6(3,3)</span></code>.
+It follows the same path as the animation speed. The configuration key is
+<code class="docutils literal notranslate"><span class="pre">rollHistory.format</span></code>. A choice made in the Control, Configure menu is sent
+as <code class="docutils literal notranslate"><span class="pre">ReqSetRollHistoryFormat</span></code> and stored in the highest priority
+configuration layer. The Controller answers with
+<code class="docutils literal notranslate"><span class="pre">UslRollHistoryFormatChanged</span></code>, and the dispatcher redraws the screen. The
+answer is needed because the request is handled on another thread, so
+redrawing when the picker closes could happen before the new format is set.
+<code class="docutils literal notranslate"><span class="pre">WindowRollHistory</span></code> reads the setting each time it draws. The choice is
+remembered in <code class="docutils literal notranslate"><span class="pre">state.yaml</span></code> at quit unless <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> states it.</p>
 </section>
 </section>
 <section id="cuimain-crc-card">

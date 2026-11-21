@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <controller/PlayerManager.h>
+#include <controller/UndoManager.h>
 #include <cassert>
 #include <stdexcept>
 #include <fstream>
@@ -1155,6 +1156,7 @@ PlayerManager::buddyLeavesTable(const Craps::PlayerId& playerId,
         }
 
         e->player->endSession();     // Leaves the table, returns bets
+        UndoManager::instance().clear(playerId);   // Its bets are gone
         try
         {
             saveEntry(*e);

@@ -171,6 +171,11 @@ Event Handling
 
 TBS
 
+Undo of Bet Changes
+-------------------
+
+.. include:: Undo.inc
+
 Configuration
 -------------
 
@@ -192,6 +197,16 @@ OperationManager CRC Card
 
 .. include:: OperationManager.inc
 
+
+Dice Roll Animation Synchronization
+-----------------------------------
+
+.. include:: RollAnimationSync.inc
+
+Roll History and Roll Log
+-------------------------
+
+.. include:: RollHistory.inc
 
 CuiMain CRC Card
 ----------------

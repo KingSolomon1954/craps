@@ -1,0 +1,8 @@
+<map id="Cui::DialogDeepRollHistory" name="Cui::DialogDeepRollHistory">
+<area shape="rect" id="Node000001" title="Popup listing the last 120 rolls, most detailed format only." alt="" coords="5,155,204,180"/>
+<area shape="rect" id="Node000002" href="$classCui_1_1DialogBase.html" title="Specialized surface type for dialog boxes." alt="" coords="42,80,167,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,120,107,154,102,154,102,120"/>
+<area shape="rect" id="Node000003" href="$classCui_1_1SurfaceBase.html" title="Common abstraction for anything occupying a visible/input surface." alt="" coords="39,5,171,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,45,107,80,102,80,102,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="186,10,197,18,189,25,171,27,171,22,187,20,192,18,183,15"/>
+</map>

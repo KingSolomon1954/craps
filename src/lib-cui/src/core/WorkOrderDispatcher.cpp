@@ -97,6 +97,7 @@ WorkOrderDispatcher::passesThrough(const WorkOrderEvent& woe)
                    std::is_same_v<T, Ctrl::RspMakeBet>        ||
                    std::is_same_v<T, Ctrl::RspOddsBet>        ||
                    std::is_same_v<T, Ctrl::RspRemoveBet>      ||
+                   std::is_same_v<T, Ctrl::RspUndoBet>        ||
                    std::is_same_v<T, Ctrl::RspSwitchPlayer>   ||
                    std::is_same_v<T, Ctrl::RspManagePlayer>;
         },
@@ -484,6 +485,15 @@ WorkOrderDispatcher::process(const Ctrl::RspMakeBet& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(RspMakeBet)");
     OperationManager::instance().onRspMakeBet(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspUndoBet& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspUndoBet)");
+    OperationManager::instance().onRspUndoBet(ev);
 }
 
 //----------------------------------------------------------------

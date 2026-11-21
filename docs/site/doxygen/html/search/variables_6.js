@@ -1,16 +1,5 @@
 var searchData=
 [
-  ['hardwaycounts_0',['hardwayCounts',['../classCraps_1_1RollStats.html#a6f8a6754977d898e1cb6b5f167bd47b6',1,'Craps::RollStats']]],
-  ['hardwayeasy_1',['hardwayEasy',['../classCraps_1_1RollStats.html#a6e531540ede9afc7c9dedd93c967c2a2',1,'Craps::RollStats']]],
-  ['hardwaynums_2',['HardwayNums',['../namespaceCraps.html#a5ff6c9d5529bddf3ec732e64b7fe3811',1,'Craps']]],
-  ['hardwayseven_3',['hardwaySeven',['../classCraps_1_1RollStats.html#afe52a655be3a71833a90497a4952a27e',1,'Craps::RollStats']]],
-  ['hardwaystr_4',['HardwayStr',['../EnumBetName_8cpp.html#a6be2f7f4dbc952108693e7c7bcb34b2b',1,'EnumBetName.cpp']]],
-  ['height_5',['height',['../structCui_1_1LayoutConsole.html#af90c227bbc25b50fe25e7a01000ef141',1,'Cui::LayoutConsole::height'],['../classCui_1_1LayoutCrapsScreen.html#ad0055f9119892c073610ec13f5eebf79',1,'Cui::LayoutCrapsScreen::height']]],
-  ['hornstr_6',['HornStr',['../EnumBetName_8cpp.html#a61efb5f0f3dbea3db58ca354fd2fbd6c',1,'EnumBetName.cpp']]],
-  ['housebriefborderbotrow_7',['houseBriefBorderBotRow',['../classCui_1_1LayoutCrapsScreen.html#ac2c80d19ccec0fd725c6a0beb3d95d0b',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefborderheight_8',['houseBriefBorderHeight',['../classCui_1_1LayoutCrapsScreen.html#a25297d4be29eab55cfbc2ecdd5af7ef9',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefborderleftcol_9',['houseBriefBorderLeftCol',['../classCui_1_1LayoutCrapsScreen.html#affccca34fd61e159f9090ae4bcba61cd',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefborderrightcol_10',['houseBriefBorderRightCol',['../classCui_1_1LayoutCrapsScreen.html#a3d192297a88e504da1bb768a617e456f',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefbordertoprow_11',['houseBriefBorderTopRow',['../classCui_1_1LayoutCrapsScreen.html#ab4e2b1b8efb968d91c902db79c851f80',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefborderwidth_12',['houseBriefBorderWidth',['../classCui_1_1LayoutCrapsScreen.html#a39922413b0ce74d28ffa9ab1cc9bda54',1,'Cui::LayoutCrapsScreen']]]
+  ['gridcols_0',['GridCols',['../classCui_1_1DialogDeepRollHistory.html#a6fefe9aa72f6be2c4eb6374e9e92c49c',1,'Cui::DialogDeepRollHistory']]],
+  ['gridrows_1',['GridRows',['../classCui_1_1DialogDeepRollHistory.html#a24aa44992d490dd23dd5ec13e24f245c',1,'Cui::DialogDeepRollHistory']]]
 ];

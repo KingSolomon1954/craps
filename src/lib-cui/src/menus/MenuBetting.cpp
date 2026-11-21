@@ -321,7 +321,7 @@ MenuBetting::doRemoveBets()
 void
 MenuBetting::doUndoLastBet()
 {
-    // TODO
+    OperationManager::instance().undoLastBet();
 }
 
 //----------------------------------------------------------------

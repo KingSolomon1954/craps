@@ -97,7 +97,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Base class for undo bet capability.  
+<p>One undoable change to a bet, and how to take it back.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="UndoBet_8h_source.html">UndoBet.h</a>&gt;</code></p>
@@ -106,50 +106,38 @@ Inheritance diagram for Ctrl::UndoBet:</div>
 <div class="dyncontent">
 <div class="center"><img src="classCtrl_1_1UndoBet__inherit__graph.png" border="0" usemap="#aCtrl_1_1UndoBet_inherit__map" alt="Inheritance graph"/></div>
 <map name="aCtrl_1_1UndoBet_inherit__map" id="aCtrl_1_1UndoBet_inherit__map">
-<area shape="rect" title="Base class for undo bet capability." alt="" coords="5,80,115,105"/>
-<area shape="rect" href="classCtrl_1_1UndoBetAdded.html" title=" " alt="" coords="195,5,346,31"/>
-<area shape="poly" title=" " alt="" coords="94,71,162,40,201,28,202,33,164,44,96,76"/>
-<area shape="rect" href="classCtrl_1_1UndoBetModifiedAmount.html" title=" " alt="" coords="163,55,379,80"/>
-<area shape="poly" title=" " alt="" coords="128,82,165,77,165,83,129,87"/>
-<area shape="rect" href="classCtrl_1_1UndoBetModifiedFlags.html" title=" " alt="" coords="171,104,371,129"/>
-<area shape="poly" title=" " alt="" coords="129,98,171,103,170,108,128,103"/>
-<area shape="rect" href="classCtrl_1_1UndoBetRemoved.html" title=" " alt="" coords="185,153,356,179"/>
-<area shape="poly" title=" " alt="" coords="98,109,164,138,207,151,205,156,162,143,96,114"/>
+<area shape="rect" title="One undoable change to a bet, and how to take it back." alt="" coords="342,5,451,31"/>
+<area shape="rect" href="classCtrl_1_1UndoBetAdded.html" title="A bet was made. Undo takes it down." alt="" coords="5,79,156,104"/>
+<area shape="poly" title=" " alt="" coords="333,36,132,81,131,76,332,31"/>
+<area shape="rect" href="classCtrl_1_1UndoBetModifiedAmount.html" title=" " alt="" coords="181,79,397,104"/>
+<area shape="poly" title=" " alt="" coords="369,40,308,81,305,76,367,36"/>
+<area shape="rect" href="classCtrl_1_1UndoBetRemoved.html" title="A bet was taken down. Undo puts it back with its amounts." alt="" coords="421,79,591,104"/>
+<area shape="poly" title=" " alt="" coords="427,36,490,76,487,81,424,40"/>
+<area shape="rect" href="classCtrl_1_1UndoGroup.html" title=" " alt="" coords="616,79,743,104"/>
+<area shape="poly" title=" " alt="" coords="456,31,634,76,633,81,455,37"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a96761ac5b2f67af7d756463ac817ae56" id="r_a96761ac5b2f67af7d756463ac817ae56"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96761ac5b2f67af7d756463ac817ae56">undo</a> ()=0</td></tr>
-<tr class="separator:a96761ac5b2f67af7d756463ac817ae56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6948f13aec3204ca2ebdf9e116001780" id="r_a6948f13aec3204ca2ebdf9e116001780"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6948f13aec3204ca2ebdf9e116001780">~UndoBet</a> ()=default</td></tr>
 <tr class="separator:a6948f13aec3204ca2ebdf9e116001780"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34d50982ee67d7e2a15c627fa3c51785" id="r_a34d50982ee67d7e2a15c627fa3c51785"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34d50982ee67d7e2a15c627fa3c51785">undo</a> (<a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)=0</td></tr>
+<tr class="separator:a34d50982ee67d7e2a15c627fa3c51785"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac877f3a5fc32e5415ea63dd226ea53d9" id="r_ac877f3a5fc32e5415ea63dd226ea53d9"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac877f3a5fc32e5415ea63dd226ea53d9">describe</a> () const =0</td></tr>
+<tr class="memdesc:ac877f3a5fc32e5415ea63dd226ea53d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">What undoing does, in words, e.g. "Took down your $10 Place 6 bet".  <br /></td></tr>
+<tr class="separator:ac877f3a5fc32e5415ea63dd226ea53d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Base class for undo bet capability. </p>
-<p>Remembers previous bet before change so it can be restored.</p>
-<p>Undo Capability</p>
-<p>Supported (stack-based undo, limited to bets)</p>
+<div class="textblock"><p>One undoable change to a bet, and how to take it back. </p>
+<p>Each remembers what is needed to put things back and does that through the same Player and table paths as any other change, so the money, the house bank, the player's bets and the events that update the screens all follow. Undo does not repeat the rules for making or changing a bet: the change was allowed once and undo restores the earlier, allowed, state. It only needs betting to be open and the money to be there.</p>
 <ul>
-<li>Scope: only bet state (no configuration, no gameplay state, no rolls). </li>
-<li>Granularity: one atomic bet change = one undo step. </li>
-<li>Kinds of changes:</li>
+<li><a class="el" href="classCtrl_1_1UndoBetAdded.html" title="A bet was made. Undo takes it down.">UndoBetAdded</a>: a new bet was placed </li>
+<li><a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html">UndoBetModifiedAmount</a>: contract or odds amount changed </li>
+<li><a class="el" href="classCtrl_1_1UndoBetRemoved.html" title="A bet was taken down. Undo puts it back with its amounts.">UndoBetRemoved</a>: a bet was taken down </li>
+<li><a class="el" href="classCtrl_1_1UndoGroup.html">UndoGroup</a>: several of these as one step</li>
 </ul>
-<ul>
-<li>new bet placed </li>
-<li>existing bet modified (amount, odds, flags) </li>
-<li>bet removed</li>
-</ul>
-<ul>
-<li>Ordering: last-in, first-out (classic undo stack). </li>
-<li>Lifetime: undo history is cleared after each roll (so you can only undo the current betting decisions before the dice are rolled).</li>
-</ul>
-<p>Not supported (explicit exclusions)</p>
-<ul>
-<li>Undoing out of order changes (no random-access undo). </li>
-<li>Redo. </li>
-<li>Anything outside of bets (like table config, game options). </li>
-</ul>
+<p>See <a class="el" href="classCtrl_1_1UndoManager.html" title="Undo of bet changes, a stack for each player.">UndoManager</a> for the stack, who owns it and when it is cleared. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6948f13aec3204ca2ebdf9e116001780" name="a6948f13aec3204ca2ebdf9e116001780"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6948f13aec3204ca2ebdf9e116001780">&#9670;&#160;</a></span>~UndoBet()</h2>
@@ -177,8 +165,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a96761ac5b2f67af7d756463ac817ae56" name="a96761ac5b2f67af7d756463ac817ae56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96761ac5b2f67af7d756463ac817ae56">&#9670;&#160;</a></span>undo()</h2>
+<a id="ac877f3a5fc32e5415ea63dd226ea53d9" name="ac877f3a5fc32e5415ea63dd226ea53d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac877f3a5fc32e5415ea63dd226ea53d9">&#9670;&#160;</a></span>describe()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -187,10 +175,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void Ctrl::UndoBet::undo </td>
+          <td class="memname">virtual std::string Ctrl::UndoBet::describe </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -200,7 +188,37 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classCtrl_1_1UndoBetAdded.html#adf6230060794bb0a88a9a16edff296a7">Ctrl::UndoBetAdded</a>, <a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html#a9f9f9d401bad886624dc955dcf5c4ef9">Ctrl::UndoBetModifiedAmount</a>, <a class="el" href="classCtrl_1_1UndoBetModifiedFlags.html#ab59dd5071285a7b8a178e5eb20bed1d9">Ctrl::UndoBetModifiedFlags</a>, and <a class="el" href="classCtrl_1_1UndoBetRemoved.html#a6ace3569b6ca064390ca3992c38e45dc">Ctrl::UndoBetRemoved</a>.</p>
+<p>What undoing does, in words, e.g. "Took down your $10 Place 6 bet". </p>
+
+<p>Implemented in <a class="el" href="classCtrl_1_1UndoBetAdded.html#aa235e285d1405065605fa9267d86e99b">Ctrl::UndoBetAdded</a>, <a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html#ae1854053e710ce9e9d27e742405197af">Ctrl::UndoBetModifiedAmount</a>, <a class="el" href="classCtrl_1_1UndoBetRemoved.html#a52c45eb38944320ddd150437f5797aa4">Ctrl::UndoBetRemoved</a>, and <a class="el" href="classCtrl_1_1UndoGroup.html#aba5b81bc029a2f65a72d73377832537c">Ctrl::UndoGroup</a>.</p>
+
+</div>
+</div>
+<a id="a34d50982ee67d7e2a15c627fa3c51785" name="a34d50982ee67d7e2a15c627fa3c51785"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34d50982ee67d7e2a15c627fa3c51785">&#9670;&#160;</a></span>undo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> Ctrl::UndoBet::undo </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Puts things back as they were before the change. Success, or Fail and ep has the reason. A failure changes nothing. </p>
+
+<p>Implemented in <a class="el" href="classCtrl_1_1UndoBetAdded.html#aadaf752c58f7e3490d73db6a82dda9fe">Ctrl::UndoBetAdded</a>, <a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html#ace9c395a48816ef2c0d98d87bbe77da0">Ctrl::UndoBetModifiedAmount</a>, <a class="el" href="classCtrl_1_1UndoBetRemoved.html#a66116f4bfa9b023a1183746a4a664d6b">Ctrl::UndoBetRemoved</a>, and <a class="el" href="classCtrl_1_1UndoGroup.html#a7bc09d08e68abd57e0c0354c3b5ad906">Ctrl::UndoGroup</a>.</p>
 
 </div>
 </div>
@@ -210,7 +228,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

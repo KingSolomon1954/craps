@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="3753008979161020336">
+<analyzerinfo hash="15367086786345528453">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_HLINE"/>
     <functioncall functionName="ACS_LTEE"/>
@@ -16,6 +16,7 @@
     <functioncall functionName="Unset"/>
     <functioncall functionName="assert"/>
     <functioncall functionName="beep"/>
+    <functioncall functionName="betId"/>
     <functioncall functionName="box"/>
     <functioncall functionName="c_str"/>
     <functioncall functionName="calcSize"/>
@@ -58,6 +59,7 @@
     <functioncall functionName="size"/>
     <functioncall functionName="string"/>
     <functioncall functionName="substr"/>
+    <functioncall functionName="tag"/>
     <functioncall functionName="textWidth_"/>
     <functioncall functionName="to_string"/>
     <functioncall functionName="transfer"/>

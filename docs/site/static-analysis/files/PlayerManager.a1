@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="3519277368134574247">
+<analyzerinfo hash="6323524366733890236">
   <FileInfo check="Uninitialized variables">
-    <unsafe-usage my-id="/work/src/lib-controller/src/PlayerManager.cpp:46:1" my-argnr="3" my-argname="op" file="/work/src/lib-controller/src/PlayerManager.cpp" line="51" col="16" value="0"/>
-    <unsafe-usage my-id="/work/src/lib-controller/src/PlayerManager.cpp:75:1" my-argnr="1" my-argname="s" file="/work/src/lib-controller/src/PlayerManager.cpp" line="77" col="23" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-controller/src/PlayerManager.cpp:47:1" my-argnr="3" my-argname="op" file="/work/src/lib-controller/src/PlayerManager.cpp" line="52" col="16" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-controller/src/PlayerManager.cpp:76:1" my-argnr="1" my-argname="s" file="/work/src/lib-controller/src/PlayerManager.cpp" line="78" col="23" value="0"/>
   </FileInfo>
   <FileInfo check="CheckUnusedFunctions">
-    <functiondecl functionName="guarded" lineNumber="46"/>
-    <functiondecl functionName="fail" lineNumber="68"/>
-    <functiondecl functionName="trim" lineNumber="75"/>
+    <functiondecl functionName="guarded" lineNumber="47"/>
+    <functiondecl functionName="fail" lineNumber="69"/>
+    <functiondecl functionName="trim" lineNumber="76"/>
     <functioncall functionName="CaughtException"/>
     <functioncall functionName="Dump"/>
     <functioncall functionName="EP_SET"/>
@@ -46,6 +46,7 @@
     <functioncall functionName="checkDescription"/>
     <functioncall functionName="checkName"/>
     <functioncall functionName="chooseStartingUser"/>
+    <functioncall functionName="clear"/>
     <functioncall functionName="compare"/>
     <functioncall functionName="createPlayer"/>
     <functioncall functionName="create_directories"/>
@@ -84,6 +85,7 @@
     <functioncall functionName="getString"/>
     <functioncall functionName="guarded"/>
     <functioncall functionName="havePlayer"/>
+    <functioncall functionName="instance"/>
     <functioncall functionName="isspace"/>
     <functioncall functionName="joinTable"/>
     <functioncall functionName="load"/>

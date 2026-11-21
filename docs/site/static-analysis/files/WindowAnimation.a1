@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="14416989706981811034">
+<analyzerinfo hash="10059373724511923130">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_HLINE"/>
     <functioncall functionName="ACS_LLCORNER"/>
@@ -18,9 +18,11 @@
     <functioncall functionName="Falling"/>
     <functioncall functionName="LandingY"/>
     <functioncall functionName="PanelBase"/>
+    <functioncall functionName="ReleaseHeldEvents"/>
     <functioncall functionName="Settling"/>
     <functioncall functionName="ShowingRoll"/>
     <functioncall functionName="WindowAnimation"/>
+    <functioncall functionName="animationEnabled"/>
     <functioncall functionName="animationHeight"/>
     <functioncall functionName="animationLeftCol"/>
     <functioncall functionName="animationPhase_"/>
@@ -46,6 +48,8 @@
     <functioncall functionName="drawZeroRoll"/>
     <functioncall functionName="enqueueDraw"/>
     <functioncall functionName="enqueueWork"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="frameInterval"/>
     <functioncall functionName="getActiveCrapsTable"/>
     <functioncall functionName="getPlayerColor"/>
     <functioncall functionName="has_value"/>
@@ -67,6 +71,7 @@
     <functioncall functionName="rand"/>
     <functioncall functionName="randomDieValue"/>
     <functioncall functionName="randomJitter"/>
+    <functioncall functionName="readAnimationSpeed"/>
     <functioncall functionName="readPlayerName"/>
     <functioncall functionName="readTableCurrentShooter"/>
     <functioncall functionName="renderFallingFrame"/>
