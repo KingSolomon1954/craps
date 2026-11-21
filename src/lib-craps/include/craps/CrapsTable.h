@@ -64,6 +64,15 @@ public:
                                   Gen::Money oddsAmount,
                                   Gen::ErrorPass& ep);
 
+    // Undo support. Put things back as they were, without applying the
+    // rules for making or changing a bet, which the original change
+    // already satisfied. Betting must be open.
+    Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
+    Gen::ReturnCode restoreBetAmounts(BetPtr pBet,
+                                      Gen::Money contractAmount,
+                                      Gen::Money oddsAmount,
+                                      Gen::ErrorPass& ep);
+
     // Table
     void rollDice();
     void resetStats();

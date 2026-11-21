@@ -70,13 +70,15 @@ CuiSender::reqSetAnimationSpeed(Ctrl::AnimationSpeed speed)
 
 Ctrl::CorrelationId
 CuiSender::reqRemoveBet(const Craps::PlayerId& playerId,
-                        Craps::BetId betId)
+                        Craps::BetId betId,
+                        bool undoJoinsPrevious)
 {
     LOG_TRACE("CuiSender::reqRemoveBet()");
 
     Ctrl::ReqRemoveBet ev;
     ev.playerId = playerId;
     ev.betId    = betId;
+    ev.undoJoinsPrevious = undoJoinsPrevious;
     const auto correlationId = ev.correlationId;
     Gen::EventManager::instance().publish(ev);
 
@@ -89,9 +91,28 @@ CuiSender::reqRemoveBet(const Craps::PlayerId& playerId,
 //----------------------------------------------------------------
 
 Ctrl::CorrelationId
+CuiSender::reqUndoBet(const Craps::PlayerId& playerId)
+{
+    LOG_TRACE("CuiSender::reqUndoBet()");
+
+    Ctrl::ReqUndoBet ev;
+    ev.playerId = playerId;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+
+    LOG_DEBUG("CuiSender::reqUndoBet() correlationId = " +
+              std::to_string(correlationId));
+
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
 CuiSender::reqOddsBet(const Craps::PlayerId& playerId,
                       Craps::BetId betId,
-                      Gen::Money oddsAmount)
+                      Gen::Money oddsAmount,
+                      bool undoJoinsPrevious)
 {
     LOG_TRACE("CuiSender::reqOddsBet()");
 
@@ -99,6 +120,7 @@ CuiSender::reqOddsBet(const Craps::PlayerId& playerId,
     ev.playerId       = playerId;
     ev.betId          = betId;
     ev.oddsAmount     = oddsAmount;
+    ev.undoJoinsPrevious = undoJoinsPrevious;
     const auto correlationId = ev.correlationId;
     Gen::EventManager::instance().publish(ev);
     

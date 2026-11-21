@@ -74,7 +74,8 @@ public:
     zeus::expected<void, Gen::ErrorPass> removeBet(const BetId& betId);
 
     Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
-    void restoreAmounts(BetPtr pBet, const CrapsBet& prevState);
+    Gen::ReturnCode restoreAmounts(BetPtr pBet, const CrapsBet& prevState,
+                                   Gen::ErrorPass& ep);
     void bettingClosed();
     void disburseDone();
     void recordRepeaters(unsigned point, unsigned roll,

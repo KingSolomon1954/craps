@@ -362,6 +362,62 @@ CrapsTable::addBet(BetPtr pBet, Gen::ErrorPass& ep)
 }
 
 //----------------------------------------------------------------
+//
+// Puts a bet that was taken down back on the table, as it was.
+//
+// Only for undo. The bet was valid when it was first made and taken
+// down, so the rules for making a bet are not applied again. They
+// would wrongly refuse, for example, a DontPass bet taken down after
+// the point. Only these are checked: betting is open and the bet is not
+// already on the table.
+//
+Gen::ReturnCode
+CrapsTable::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
+{
+    if (fifBetPtrNull(pBet, "restoreBet()", ep)) return Gen::ReturnCode::Fail;
+    if (fifBettingClosed(*pBet, 5, ep))          return Gen::ReturnCode::Fail;
+    if (haveBet(pBet->betId()))
+    {
+        ep.setDescription(diagPrefix(5, *pBet) + "It is already on the table.");
+        ep.setErrorName(Gen::ErrorPass::ErrorName::ExistsError);
+        return Gen::ReturnCode::Fail;
+    }
+
+    tableBets_[static_cast<size_t>(pBet->betName())].push_back(pBet);
+
+    D(pBet->logBet("CrapsTable::restoreBet()");)
+
+    sendEventBetMade(*pBet);
+    sendEventTableBetsChanged();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+//
+// Puts the amounts of a bet on the table back to what they were.
+// Only for undo; see restoreBet().
+//
+Gen::ReturnCode
+CrapsTable::restoreBetAmounts(BetPtr pBet,
+                              Gen::Money contractAmount,
+                              Gen::Money oddsAmount,
+                              Gen::ErrorPass& ep)
+{
+    if (fifBetPtrNull(pBet, "restoreBetAmounts()", ep)) return Gen::ReturnCode::Fail;
+    if (fifBettingClosed(*pBet, 6, ep))                 return Gen::ReturnCode::Fail;
+    if (fifMissingBet   (*pBet, 6, ep))                 return Gen::ReturnCode::Fail;
+
+    pBet->setContractAmountInternal(contractAmount);
+    pBet->setOddsAmountInternal(oddsAmount);
+
+    D(pBet->logBet("CrapsTable::restoreBetAmounts()");)
+
+    sendEventBetChanged(*pBet);
+    sendEventTableBetsChanged();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
 
 bool
 CrapsTable::betAllowed(CrapsBet& bet, Gen::ErrorPass& ep) const

@@ -6,25 +6,10 @@
 - zero stats and other values 
 - for table and players
 
-### Refund on quit - unresolved bets back to player's bank
-- show a message like: “You left the table with active bets.
-- Your chips have been returned to your bank.”
-- When switching tables:
-- Add a warning like: “You have active bets. Are you sure
-- you want to quit and abandon them?”
-
 ### Inform Player in message area of changed bets
 - RspMakeBet now has changed and previousAmount. Tell the player when a
 - bet made again changed the amount of the one already on the table
 - (e.g. Pass Line $10 -> $20)
-
-### Switch player: View (CUI and GUI)
-- Menu to pick a player from PlayerManager::getPlayerList(), leaving out
-- players already at the table (buddies)
-- Confirm first if the user has bets on the table. Switching takes them
-- off the table and returns the money
-- Send ReqSwitchPlayer. Handle RspSwitchPlayer (error text if not
-- switched) and UslUserPlayerSwitched (refresh everything about the user)
 
 ### Write player.YAML files only if "dirty"
 
@@ -35,8 +20,6 @@
 - maybe should be a user prefence how to behave
 
 ### Need unit test for initial bank money
-
-### Need unit test for undo bet capability
 
 ### Need unit test ConfigManagerTest
 
@@ -51,8 +34,6 @@
 ### Implement MenuQuickBet
 
 ### Implement doQuickBet in MenuBetting
-
-### Implement UndoLastBet in MenuBetting
 
 ### Implement doBetFlags in MenuBetting
 
@@ -70,6 +51,7 @@
 
 ## Done
 
+(Done) Complete implementation of Undo LastBet workflow\
 (Done) Created DeepRollHistory dialog for future integration\
 (Done) Implemented Roll History Format and configuration\
 (Done) Implemente Animation Speed adjustments and configuration\

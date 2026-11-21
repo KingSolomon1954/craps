@@ -47,6 +47,7 @@ public:
     bool playerOperation(PlayerOp op);  // Workflow: Player menu operations
     void makeBet();      // Workflow: Asynchronous bet operation
     bool removeBets();   // Workflow: Pick one of your bets to take down
+    bool undoLastBet();  // Workflow: Take back your latest bet change
     bool chooseAnimationSpeed(); // Workflow: Pick the dice animation speed
     bool chooseRollHistoryFormat(); // Workflow: Pick how rolls are listed
     bool confirmQuit();  // Workflow: Confirmation to quit application
@@ -57,6 +58,7 @@ public:
     void onRspMakeBet(const Ctrl::RspMakeBet& response);
     void onRspOddsBet(const Ctrl::RspOddsBet& response);
     void onRspRemoveBet(const Ctrl::RspRemoveBet& response);
+    void onRspUndoBet(const Ctrl::RspUndoBet& response);
     void onConfirmationResult(SurfaceBase::OperationResult result);
     void onPickResult(bool accepted, const Craps::PlayerId& playerId,
                       Craps::BetId betId = 0, std::size_t tag = 0);
@@ -77,6 +79,7 @@ private:
         None,
         MakeBet,
         RemoveBet,
+        UndoBet,
         Quit,
         Player,
         AnimationSpeed,
@@ -101,6 +104,7 @@ private:
     };
     std::vector<Removal> removalChoices_;
     std::vector<Removal> removalQueue_;   // Sent one at a time
+    bool removalStarted_ = false;         // Later removals join the first's undo step
 
     OperationType type_                = OperationType::None;
     Stage stage_                       = Stage::Idle;

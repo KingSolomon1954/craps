@@ -692,6 +692,109 @@ TEST_CASE_FIXTURE(PlayerFixture, "Player:setOddsAmount")
 
 //----------------------------------------------------------------
 
+TEST_CASE_FIXTURE(PlayerFixture, "Player:restore (undo support)")
+{
+    std::unique_ptr<Player> p1(Player::createPlayer(p1Id));
+    REQUIRE(p1->joinTable(*t));
+    const Gen::Money bal = p1->getBalance();
+    Gen::ErrorPass ep;
+
+    SUBCASE("restoreAmounts puts a changed contract amount back")
+    {
+        auto made = p1->testMakeBet(BetName::Place, 100, 6); REQUIRE(made);
+        BetPtr b = made.value();
+        const CrapsBet before(*b);
+
+        REQUIRE(p1->setContractAmount(b, 250));
+        CHECK(p1->getBalance() == bal - 250);
+
+        CHECK(p1->restoreAmounts(b, before, ep) == Gen::ReturnCode::Success);
+        CHECK(b->contractAmount() == 100);
+        CHECK(p1->getBalance() == bal - 100);
+        CHECK(t->getNumBetsOnTable() == 1);
+    }
+
+    SUBCASE("restoreAmounts takes odds back down, and up")
+    {
+        auto made = p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(made);
+        BetPtr b = made.value();
+        t->testRollDice(5, 5);                       // Point is 10
+        const CrapsBet noOdds(*b);
+
+        REQUIRE(p1->setOddsAmount(b, 200));
+        const CrapsBet withOdds(*b);
+        CHECK(p1->getBalance() == bal - 300);
+
+        CHECK(p1->restoreAmounts(b, noOdds, ep) == Gen::ReturnCode::Success);
+        CHECK(b->oddsAmount() == 0);
+        CHECK(p1->getBalance() == bal - 100);
+
+        // And back the other way: undoing a removal of odds
+        CHECK(p1->restoreAmounts(b, withOdds, ep) == Gen::ReturnCode::Success);
+        CHECK(b->oddsAmount() == 200);
+        CHECK(p1->getBalance() == bal - 300);
+    }
+
+    SUBCASE("restoreAmounts may reduce a PassLine bet the rules would not")
+    {
+        auto made = p1->testMakeBet(BetName::PassLine, 100, 0); REQUIRE(made);
+        BetPtr b = made.value();
+        t->testRollDice(5, 5);                       // Point is 10
+        const CrapsBet before(*b);
+
+        REQUIRE(p1->setContractAmount(b, 120));      // Increase is allowed
+        CHECK(!p1->setContractAmount(b, 100));       // Reducing is not
+        CHECK(p1->restoreAmounts(b, before, ep) == Gen::ReturnCode::Success);
+        CHECK(b->contractAmount() == 100);
+        CHECK(p1->getBalance() == bal - 100);
+    }
+
+    SUBCASE("restoreAmounts is refused while betting is closed")
+    {
+        auto made = p1->testMakeBet(BetName::Place, 100, 6); REQUIRE(made);
+        BetPtr b = made.value();
+        const CrapsBet before(*b);
+        REQUIRE(p1->setContractAmount(b, 250));
+
+        t->testSetBettingOpen(false);
+        CHECK(p1->restoreAmounts(b, before, ep) == Gen::ReturnCode::Fail);
+        CHECK(b->contractAmount() == 250);           // Nothing changed
+        CHECK(p1->getBalance() == bal - 250);
+    }
+
+    SUBCASE("restoreBet puts a DontPass bet back after the point")
+    {
+        auto made = p1->testMakeBet(BetName::DontPass, 100, 0); REQUIRE(made);
+        BetPtr b = made.value();
+        t->testRollDice(5, 5);                       // Point is 10
+
+        REQUIRE(p1->removeBet(b->betId()));
+        CHECK(p1->getBalance() == bal);
+        CHECK(t->getNumBetsOnTable() == 0);
+
+        CHECK(p1->restoreBet(b, ep) == Gen::ReturnCode::Success);
+        CHECK(p1->getBalance() == bal - 100);
+        CHECK(p1->getNumBetsOnTable() == 1);
+        CHECK(t->getNumBetsOnTable() == 1);
+    }
+
+    SUBCASE("restoreBet refuses when betting is closed or already on the table")
+    {
+        auto made = p1->testMakeBet(BetName::Place, 100, 6); REQUIRE(made);
+        BetPtr b = made.value();
+        CHECK(p1->restoreBet(b, ep) == Gen::ReturnCode::Fail);   // Still there
+        CHECK(p1->getNumBetsOnTable() == 1);
+
+        REQUIRE(p1->removeBet(b->betId()));
+        t->testSetBettingOpen(false);
+        CHECK(p1->restoreBet(b, ep) == Gen::ReturnCode::Fail);
+        CHECK(p1->getNumBetsOnTable() == 0);
+        CHECK(p1->getBalance() == bal);
+    }
+}
+
+//----------------------------------------------------------------
+
 TEST_CASE_FIXTURE(PlayerFixture, "Player:decisions")
 {
     SUBCASE("processWin")

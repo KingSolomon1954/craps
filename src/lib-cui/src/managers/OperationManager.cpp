@@ -395,11 +395,15 @@ OperationManager::sendNextRemoval()
     const Removal r = removalQueue_.front();
     removalQueue_.erase(removalQueue_.begin());
 
+    // Taking down several bets at once is one step for undo
+    const bool joinsPrevious = removalStarted_;
+    removalStarted_ = true;
+
     const auto playerId = Ctrl::CrapsReaders::getUserPlayerId();
     stage_ = Stage::AwaitingResponse;
     correlationId_ = r.oddsOnly
-        ? CuiSender::instance().reqOddsBet(playerId, r.betId, 0)
-        : CuiSender::instance().reqRemoveBet(playerId, r.betId);
+        ? CuiSender::instance().reqOddsBet(playerId, r.betId, 0, joinsPrevious)
+        : CuiSender::instance().reqRemoveBet(playerId, r.betId, joinsPrevious);
 }
 
 //----------------------------------------------------------------
@@ -421,6 +425,51 @@ OperationManager::onRemovalResult(bool accepted, const Gen::ErrorPass& error)
 
     removalQueue_.clear();     // Stop at the first failure
     showError(error, "Betting Error", "Unable to Remove Bet");
+}
+
+//----------------------------------------------------------------
+//
+// Take back the player's latest bet change. One request. The bet and
+// balance events that follow redraw the screens as for any bet change.
+// On success the betting menus unwind, as after any bet.
+//
+bool
+OperationManager::undoLastBet()
+{
+    if (isActive()) return false;
+
+    type_  = OperationType::UndoBet;
+    stage_ = Stage::AwaitingResponse;
+    correlationId_ = CuiSender::instance().reqUndoBet(
+        Ctrl::CrapsReaders::getUserPlayerId());
+    return true;
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRspUndoBet(const Ctrl::RspUndoBet& ev)
+{
+    LOG_TRACE("OperationManager::onRspUndoBet() "
+              "correlationId = " + std::to_string(correlationId_));
+
+    if (stage_ != Stage::AwaitingResponse ||
+        type_  != OperationType::UndoBet  ||
+        ev.correlationId != correlationId_)
+    {
+        LOG_WARN("OperationManager::onRspUndoBet(): ignoring "
+                 "unmatched RspUndoBet: rsp.correlationId = " +
+                 std::to_string(ev.correlationId));
+        return;
+    }
+
+    if (ev.accepted)
+    {
+        SurfaceManager::instance().popToRoot();
+        finish();
+        return;
+    }
+    showError(ev.error, "Betting Error", "Unable to Undo");
 }
 
 //----------------------------------------------------------------
@@ -616,6 +665,7 @@ OperationManager::finish()
     correlationId_ = 0;
     removalChoices_.clear();
     removalQueue_.clear();
+    removalStarted_ = false;
     targetId_.clear();
     text_.clear();
     description_.clear();

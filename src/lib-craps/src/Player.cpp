@@ -314,15 +314,17 @@ Player::makeBet(BetName betName, Gen::Money contractAmount, unsigned pivot)
 
 //----------------------------------------------------------------
 //
-// Restores a previouly removed bet.
+// Restores a previously removed bet.
 //
 // This participates in the undo facility.
 //
-// Adds the saved previously removed bet back in, bypassing
-// validity checks and avoiding double stats counters.
-// This only works as part of the undo manager unstacking.
-// It does not work for restoring arbitrary bets as no checks
-// are made for sufficient funds, duplicates, etc.
+// Puts the saved, previously removed bet back on the table as it was,
+// without applying the rules for making a bet again, and takes its
+// money from the player. It does not count the bet again in the stats.
+// This only works as part of the undo manager unstacking. It does not
+// work for restoring arbitrary bets: it only checks that betting is
+// open, that the bet is not already on the table and that the player
+// has the money.
 //
 Gen::ReturnCode
 Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
@@ -343,12 +345,17 @@ Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
     const Gen::Money placementFee = feeAlreadyCollected
         ? pBet->placementCommission()
         : (pBet->hasDecision() ? 0 : pTable_->placementCommission(*pBet, pBet->contractAmount()));
-    if (pTable_->addBet(pBet, ep) == Gen::ReturnCode::Fail)
+    const Gen::Money total = pBet->contractAmount() + pBet->oddsAmount() +
+                             (feeAlreadyCollected ? 0 : placementFee);
+    if (fifInsufficientFunds(nullptr, total, 0, ep))
     {
         return Gen::ReturnCode::Fail;
     }
-    wallet_.withdraw(pBet->contractAmount() + pBet->oddsAmount() +
-                     (feeAlreadyCollected ? 0 : placementFee));
+    if (pTable_->restoreBet(pBet, ep) == Gen::ReturnCode::Fail)
+    {
+        return Gen::ReturnCode::Fail;
+    }
+    wallet_.withdraw(total);
     if (!feeAlreadyCollected && placementFee > 0)
         pTable_->collectPlacementCommission(*pBet, placementFee);
     bets_.push_back(pBet);
@@ -360,52 +367,65 @@ Player::restoreBet(BetPtr pBet, Gen::ErrorPass& ep)
 
 //----------------------------------------------------------------
 //
-// Restores a previouly changed bet amount.
+// Restores the previous amounts of a bet that is on the table.
 //
 // This participates in the undo facility.
 //
-// Adjusts player's wallet due to an undo of a change in bet amount.
+// Puts the contract amount, odds amount and placement commission back
+// to what prevState has, and settles the difference with the player's
+// wallet and the house. The table's own rules for changing an amount
+// are not applied: the change being undone was allowed, and undoing it
+// can look like one that is not (reducing a PassLine bet after the
+// point, increasing a DontPass bet). Fails, changing nothing, if
+// betting is closed or the player lacks the money to go back.
 //
-void
-Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState)
+Gen::ReturnCode
+Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState,
+                       Gen::ErrorPass& ep)
 {
     if (pBet == nullptr)
     {
-        LOG_ERROR("Player::restoreAmounts(): pBet is nullptr.");
-        return;
+        EP_SET(ep, En::NullPointerError, Et::ProcessingError,
+               Es::Indeterminate, "Player::restoreAmounts(): pBet is nullptr.");
+        return Gen::ReturnCode::Fail;
+    }
+    if (fifNoTable(ep))
+    {
+        return Gen::ReturnCode::Fail;
     }
 
-    auto applyDelta = [this](int delta)
-    {
-        if (delta > 0)
-        {
-            // Undoing an increase → get money back
-            wallet_.deposit(delta);
-        }
-        else if (delta < 0)
-        {
-            // Undoing a decrease → costs us money
-            wallet_.withdraw(-delta); // must negate since withdraw expects positive
-        }
-    };
-
-    int deltaContract = pBet->contractAmount() - prevState.contractAmount();
-    applyDelta(deltaContract);
-
-    int deltaOdds = pBet->oddsAmount() - prevState.oddsAmount();
-    applyDelta(deltaOdds);
-
-    const Gen::Money currentFee = pBet->placementCommission();
+    const Gen::Money currentFee  = pBet->placementCommission();
     const Gen::Money previousFee = prevState.placementCommission();
-    applyDelta(static_cast<int>(currentFee) - static_cast<int>(previousFee));
-    if (currentFee != previousFee && pTable_)
+    const Gen::Money currentTotal = pBet->contractAmount() +
+                                    pBet->oddsAmount() + currentFee;
+    const Gen::Money previousTotal = prevState.contractAmount() +
+                                     prevState.oddsAmount() + previousFee;
+
+    if (fifInsufficientFunds(pBet, previousTotal, currentTotal, ep))
+    {
+        return Gen::ReturnCode::Fail;
+    }
+    if (pTable_->restoreBetAmounts(pBet, prevState.contractAmount(),
+                                   prevState.oddsAmount(), ep) ==
+        Gen::ReturnCode::Fail)
+    {
+        return Gen::ReturnCode::Fail;
+    }
+
+    wallet_.deposit(currentTotal);
+    wallet_.withdraw(previousTotal);
+
+    if (currentFee != previousFee)
     {
         pTable_->refundPlacementCommission(*pBet);
         if (previousFee > 0)
             pTable_->collectPlacementCommission(*pBet, previousFee);
     }
 
+    sendEventPlayerBetsChanged();
     sendEventPlayerBalanceChanged();
+    pBet->logBet("Player::restoreAmounts() Restored");
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

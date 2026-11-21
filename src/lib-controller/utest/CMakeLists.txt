@@ -16,6 +16,7 @@ add_executable(controller-ut
     PlayerPrefsTest.cpp
     QuickBetTest.cpp
     TableManifestTest.cpp
+    UndoManagerTest.cpp
     UserStateTest.cpp
     YamlFileTest.cpp
 )

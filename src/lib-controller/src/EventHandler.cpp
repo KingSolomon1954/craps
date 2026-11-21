@@ -13,6 +13,8 @@
 #include <controller/AutoFill.h>
 #include <controller/LastFill.h>
 #include <controller/QuickBet.h>
+#include <controller/UndoBet.h>
+#include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
 #include <gen/EventManager.h>
@@ -42,6 +44,12 @@ EventHandler::EventHandler()
         [this](const Ctrl::ReqRemoveBet& ev)
         {
             this->onReqRemoveBet(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::ReqUndoBet>(
+        [this](const Ctrl::ReqUndoBet& ev)
+        {
+            this->onReqUndoBet(ev);
         });
 
     Gen::EventManager::instance().subscribe<Ctrl::ReqSetRollHistoryFormat>(
@@ -122,6 +130,13 @@ EventHandler::onReqMakeBet(const Ctrl::ReqMakeBet& ev) const
     {
         // The same bet again changes the amount of the one already on the
         // table; it does not make a second bet. See Player::makeOrChangeBet().
+        // For undo, remember how an existing bet was before it changes.
+        std::unique_ptr<UndoBet> undoChange;
+        if (auto existing = pPlayer->findBet(ev.betName, ev.pivot))
+        {
+            undoChange = std::make_unique<UndoBetModifiedAmount>(existing);
+        }
+
         auto result = pPlayer->makeOrChangeBet(ev.betName,
                                                ev.contractAmount,
                                                ev.pivot);
@@ -138,6 +153,16 @@ EventHandler::onReqMakeBet(const Ctrl::ReqMakeBet& ev) const
             rsp.previousAmount = placed.previousAmount;
 
             setLastFill(ev.playerId, *placed.bet, false); // Set/replace last fill
+
+            if (!placed.changed)
+            {
+                UndoManager::instance().push(
+                    ev.playerId, std::make_unique<UndoBetAdded>(placed.bet));
+            }
+            else if (undoChange && placed.previousAmount != ev.contractAmount)
+            {
+                UndoManager::instance().push(ev.playerId, std::move(undoChange));
+            }
         }
     }
 
@@ -177,6 +202,12 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
         }
         else
         {
+            std::unique_ptr<UndoBet> undoChange;
+            if (betPtr->oddsAmount() != ev.oddsAmount)
+            {
+                undoChange = std::make_unique<UndoBetModifiedAmount>(betPtr);
+            }
+
             auto result = pPlayer->setOddsAmount(betPtr, ev.oddsAmount);
             if (!result)
             {
@@ -185,6 +216,11 @@ EventHandler::onReqOddsBet(const Ctrl::ReqOddsBet& ev) const
             else
             {
                 rsp.accepted = true;
+                if (undoChange)
+                {
+                    UndoManager::instance().push(ev.playerId,
+                        std::move(undoChange), ev.undoJoinsPrevious);
+                }
                 if (ev.oddsAmount > 0)   // Zero takes odds down; not a fill
                 {
                     setLastFill(ev.playerId, *betPtr, true);
@@ -263,7 +299,55 @@ EventHandler::onReqRemoveBet(const Ctrl::ReqRemoveBet& ev) const
             else
             {
                 rsp.accepted = true;
+                UndoManager::instance().push(ev.playerId,
+                    std::make_unique<UndoBetRemoved>(betPtr),
+                    ev.undoJoinsPrevious);
             }
+        }
+    }
+    Gen::EventManager::instance().publish(rsp);
+}
+
+//----------------------------------------------------------------
+//
+// Takes back the player's latest bet change since the last roll.
+// Always answers with RspUndoBet. The screens follow from the bet and
+// balance events the undo causes, as for any bet change.
+//
+void
+EventHandler::onReqUndoBet(const Ctrl::ReqUndoBet& ev) const
+{
+    const std::string fname("EventHandler::onReqUndoBet(): ");
+    LOG_TRACE("Entered " + fname);
+
+    Ctrl::RspUndoBet rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.playerId      = ev.playerId;
+
+    if (Gbl::pTable != nullptr && !Gbl::pTable->isBettingOpen())
+    {
+        // Keep the step; the player can undo once betting reopens
+        Gen::ErrorPass ep;
+        EP_SET(ep, Gen::ErrorPass::ErrorName::NoPermissionError,
+                   Gen::ErrorPass::ErrorType::ProcessingError,
+                   Gen::ErrorPass::Severity::Indeterminate,
+               "Betting is closed while the dice are rolling. "
+               "Try again when betting reopens.");
+        ep.setErrorName("Betting Closed");
+        rsp.error = std::move(ep);
+    }
+    else
+    {
+        Gen::ErrorPass ep;
+        if (UndoManager::instance().undo(ev.playerId, rsp.description, ep) ==
+            Gen::ReturnCode::Success)
+        {
+            rsp.accepted = true;
+            LOG_INFO(fname + rsp.description);
+        }
+        else
+        {
+            rsp.error = std::move(ep);
         }
     }
     Gen::EventManager::instance().publish(rsp);
@@ -297,6 +381,7 @@ void
 EventHandler::onReqRollDice(const Ctrl::ReqRollDice& ev) const
 {
     LOG_TRACE("Entered Controller::EventHandler::onReqRollDice()");
+    UndoManager::instance().clear();        // Bets are about to be decided
     Gbl::pTable->rollDice();
     
     // No response event
