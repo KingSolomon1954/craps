@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="5685751385823460268">
+<analyzerinfo hash="18016515794746282539">
   <FileInfo check="Uninitialized variables">
     <unsafe-usage my-id="/work/src/lib-controller/src/StartChoices.cpp:20:1" my-argnr="2" my-argname="name" file="/work/src/lib-controller/src/StartChoices.cpp" line="23" col="13" value="0"/>
     <unsafe-usage my-id="/work/src/lib-controller/src/StartChoices.cpp:29:1" my-argnr="1" my-argname="kinds" file="/work/src/lib-controller/src/StartChoices.cpp" line="32" col="9" value="0"/>
@@ -16,8 +16,12 @@
     <functiondecl functionName="readBool" lineNumber="113"/>
     <functiondecl functionName="readKinds" lineNumber="130"/>
     <functioncall functionName="Buddy"/>
+    <functioncall functionName="KeyAnimationSpeed"/>
+    <functioncall functionName="KeyAnimationSpeedRemembered"/>
     <functioncall functionName="KeyDirsUsrPlayers"/>
     <functioncall functionName="KeyDirsUsrTables"/>
+    <functioncall functionName="KeyRollHistoryFormat"/>
+    <functioncall functionName="KeyRollHistoryFormatRemembered"/>
     <functioncall functionName="KeyTableDefaultBuddies"/>
     <functioncall functionName="KeyTableDefaultTable"/>
     <functioncall functionName="KeyTableDefaultUser"/>

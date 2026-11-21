@@ -96,7 +96,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Manages undo operations on bets.  
+<p>Undo of bet changes, a stack for each player.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="UndoManager_8h_source.html">UndoManager.h</a>&gt;</code></p>
@@ -104,14 +104,21 @@ $(function(){ initResizable(false); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
-<tr class="memitem:a19824d7a6e52abd561ff8148b6128adb" id="r_a19824d7a6e52abd561ff8148b6128adb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19824d7a6e52abd561ff8148b6128adb">push</a> (std::unique_ptr&lt; <a class="el" href="classCtrl_1_1UndoBet.html">UndoBet</a> &gt; ubet)</td></tr>
-<tr class="separator:a19824d7a6e52abd561ff8148b6128adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf46dec69113fb83723471171e9b14de" id="r_abf46dec69113fb83723471171e9b14de"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf46dec69113fb83723471171e9b14de">canUndo</a> () const</td></tr>
-<tr class="separator:abf46dec69113fb83723471171e9b14de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae14096735d539276885e77c5bd28c830" id="r_ae14096735d539276885e77c5bd28c830"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae14096735d539276885e77c5bd28c830">undo</a> ()</td></tr>
-<tr class="separator:ae14096735d539276885e77c5bd28c830"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9aef088f97303a42e65e02b6c4e1fdad" id="r_a9aef088f97303a42e65e02b6c4e1fdad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9aef088f97303a42e65e02b6c4e1fdad">push</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, std::unique_ptr&lt; <a class="el" href="classCtrl_1_1UndoBet.html">UndoBet</a> &gt; change, bool joinPrevious=false)</td></tr>
+<tr class="separator:a9aef088f97303a42e65e02b6c4e1fdad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17df910714d642f3babb0f9adf7ae39d" id="r_a17df910714d642f3babb0f9adf7ae39d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17df910714d642f3babb0f9adf7ae39d">undo</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId, std::string &amp;description, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:a17df910714d642f3babb0f9adf7ae39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2775827dd1e35a5b24ca09acc84983b" id="r_ae2775827dd1e35a5b24ca09acc84983b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2775827dd1e35a5b24ca09acc84983b">clear</a> ()</td></tr>
+<tr class="memdesc:ae2775827dd1e35a5b24ca09acc84983b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Everybody.  <br /></td></tr>
 <tr class="separator:ae2775827dd1e35a5b24ca09acc84983b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c7b059e52455b7d1ad98d0094aeb6d7" id="r_a3c7b059e52455b7d1ad98d0094aeb6d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c7b059e52455b7d1ad98d0094aeb6d7">clear</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId)</td></tr>
+<tr class="memdesc:a3c7b059e52455b7d1ad98d0094aeb6d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">One player.  <br /></td></tr>
+<tr class="separator:a3c7b059e52455b7d1ad98d0094aeb6d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Observers</div></td></tr>
+<tr class="memitem:a8b5887470ac778d6eb69dd025a0bc1f7" id="r_a8b5887470ac778d6eb69dd025a0bc1f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b5887470ac778d6eb69dd025a0bc1f7">canUndo</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId) const</td></tr>
+<tr class="separator:a8b5887470ac778d6eb69dd025a0bc1f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a904c82a106caa65a05cdc2de56410c84" id="r_a904c82a106caa65a05cdc2de56410c84"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a904c82a106caa65a05cdc2de56410c84">depth</a> (const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;playerId) const</td></tr>
+<tr class="separator:a904c82a106caa65a05cdc2de56410c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Lifecycle</h2></td></tr>
 <tr class="memitem:aa6b223568832091620f576be6777d48d" id="r_aa6b223568832091620f576be6777d48d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6b223568832091620f576be6777d48d">~UndoManager</a> ()=default</td></tr>
@@ -120,21 +127,24 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a17e4270d4864ee801357f925efb4aa32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Manages undo operations on bets. </p>
+<div class="textblock"><p>Undo of bet changes, a stack for each player. </p>
 <p>Supported (stack-based undo, limited to bets)</p>
 <ul>
 <li>Scope: only bet state (no configuration, no gameplay state, no rolls). </li>
-<li>Granularity: one atomic bet change = one undo step. </li>
+<li>Per player: each player has their own stack, so undo only ever touches the bets of the player who asked. The View asks for the user player. </li>
+<li>Granularity: one bet change = one undo step. A batch can be made one step with push(..., joinPrevious=true). </li>
 <li>Kinds of changes:</li>
 </ul>
 <ul>
 <li>new bet placed </li>
-<li>existing bet modified (amount, odds, flags) </li>
+<li>existing bet changed (contract or odds amount) </li>
 <li>bet removed</li>
 </ul>
 <ul>
 <li>Ordering: last-in, first-out (classic undo stack). </li>
-<li>Lifetime: undo history is cleared after each roll (so you can only undo the current betting decisions before the dice are rolled).</li>
+<li>Lifetime: cleared when the dice are rolled, so only decisions made since the last roll can be undone, and when the table changes. A player whose session ends loses their stack too. </li>
+<li>Betting must be open. While the dice are rolling there is no undo, and a refused undo keeps its step. </li>
+<li>A failed undo drops that player's history (see <a class="el" href="#a17df910714d642f3babb0f9adf7ae39d">undo()</a>).</li>
 </ul>
 <p>Not supported (explicit exclusions)</p>
 <ul>
@@ -169,8 +179,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="abf46dec69113fb83723471171e9b14de" name="abf46dec69113fb83723471171e9b14de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf46dec69113fb83723471171e9b14de">&#9670;&#160;</a></span>canUndo()</h2>
+<a id="a8b5887470ac778d6eb69dd025a0bc1f7" name="a8b5887470ac778d6eb69dd025a0bc1f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b5887470ac778d6eb69dd025a0bc1f7">&#9670;&#160;</a></span>canUndo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -178,7 +188,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool UndoManager::canUndo </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -187,7 +197,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="ae2775827dd1e35a5b24ca09acc84983b" name="ae2775827dd1e35a5b24ca09acc84983b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2775827dd1e35a5b24ca09acc84983b">&#9670;&#160;</a></span>clear()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2775827dd1e35a5b24ca09acc84983b">&#9670;&#160;</a></span>clear() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -197,6 +207,44 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Everybody. </p>
+
+</div>
+</div>
+<a id="a3c7b059e52455b7d1ad98d0094aeb6d7" name="a3c7b059e52455b7d1ad98d0094aeb6d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c7b059e52455b7d1ad98d0094aeb6d7">&#9670;&#160;</a></span>clear() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UndoManager::clear </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>One player. </p>
+
+</div>
+</div>
+<a id="a904c82a106caa65a05cdc2de56410c84" name="a904c82a106caa65a05cdc2de56410c84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a904c82a106caa65a05cdc2de56410c84">&#9670;&#160;</a></span>depth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t UndoManager::depth </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -228,8 +276,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a19824d7a6e52abd561ff8148b6128adb" name="a19824d7a6e52abd561ff8148b6128adb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19824d7a6e52abd561ff8148b6128adb">&#9670;&#160;</a></span>push()</h2>
+<a id="a9aef088f97303a42e65e02b6c4e1fdad" name="a9aef088f97303a42e65e02b6c4e1fdad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9aef088f97303a42e65e02b6c4e1fdad">&#9670;&#160;</a></span>push()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,28 +285,48 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void UndoManager::push </td>
           <td>(</td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classCtrl_1_1UndoBet.html">UndoBet</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>ubet</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classCtrl_1_1UndoBet.html">UndoBet</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>change</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>joinPrevious</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Records a change the player just made. Call after the change succeeded. With joinPrevious the change becomes part of the step on top of the stack instead of a new step, so a batch such as taking down every removable bet is one undo. </p>
 
 </div>
 </div>
-<a id="ae14096735d539276885e77c5bd28c830" name="ae14096735d539276885e77c5bd28c830"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae14096735d539276885e77c5bd28c830">&#9670;&#160;</a></span>undo()</h2>
+<a id="a17df910714d642f3babb0f9adf7ae39d" name="a17df910714d642f3babb0f9adf7ae39d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17df910714d642f3babb0f9adf7ae39d">&#9670;&#160;</a></span>undo()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void UndoManager::undo </td>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> UndoManager::undo </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespaceCraps.html#a9efd0f28587bc0010ce60ab037e08a8d">Craps::PlayerId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>playerId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>description</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Undoes the player's most recent step. On success description says what was done. On failure ep has the reason, and since the player's bets may no longer match what was recorded, that player's whole history is dropped. Nothing is undone if there is nothing to undo. </p>
 
 </div>
 </div>
@@ -269,7 +337,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

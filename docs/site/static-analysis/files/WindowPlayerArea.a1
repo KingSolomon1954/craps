@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="13856044266615585026">
+<analyzerinfo hash="3278332080391069593">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="AllPlayers"/>
     <functioncall functionName="OnePlayer"/>
@@ -22,7 +22,9 @@
     <functioncall functionName="newWindow"/>
     <functioncall functionName="onBetChanged"/>
     <functioncall functionName="onBetMade"/>
+    <functioncall functionName="onBetRemoved"/>
     <functioncall functionName="onBetResolved"/>
+    <functioncall functionName="onResolveBetsEnd"/>
     <functioncall functionName="onePlayerView_"/>
     <functioncall functionName="pWin_"/>
     <functioncall functionName="playerAreaHeight"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="6999915537412292156">
+<analyzerinfo hash="7365848866582800292">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="BetPlaced"/>
     <functioncall functionName="BetPtr"/>
@@ -31,7 +31,6 @@
     <functioncall functionName="addPlayer"/>
     <functioncall functionName="addSessionSummary"/>
     <functioncall functionName="alltimeStats_"/>
-    <functioncall functionName="applyDelta"/>
     <functioncall functionName="as"/>
     <functioncall functionName="assert"/>
     <functioncall functionName="begin"/>
@@ -121,10 +120,11 @@
     <functioncall functionName="removeBetByPtr"/>
     <functioncall functionName="removeBetForce"/>
     <functioncall functionName="removePlayer"/>
-    <functioncall functionName="remove_if"/>
     <functioncall functionName="reset"/>
     <functioncall functionName="resetRollCounts"/>
     <functioncall functionName="resetStats"/>
+    <functioncall functionName="restoreBet"/>
+    <functioncall functionName="restoreBetAmounts"/>
     <functioncall functionName="running"/>
     <functioncall functionName="runtime_error"/>
     <functioncall functionName="s"/>

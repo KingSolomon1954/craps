@@ -29,10 +29,11 @@ var searchData=
   ['uslquickbetchanged_26',['UslQuickBetChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a8f0895a9006f69f4419b8b7bc4570c59',1,'Ctrl']]],
   ['uslresolvebetsend_27',['UslResolveBetsEnd',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a114b77429783dcc326d4460b2ca1fab4',1,'Ctrl']]],
   ['uslresolvebetsstart_28',['UslResolveBetsStart',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a5e4356c27e7a2603c194550df8d2ebf0',1,'Ctrl']]],
-  ['uslsevenout_29',['UslSevenOut',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb',1,'Ctrl']]],
-  ['usltablebalancechanged_30',['UslTableBalanceChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05',1,'Ctrl']]],
-  ['usltablebetschanged_31',['UslTableBetsChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42',1,'Ctrl']]],
-  ['usltablelastrollstatschanged_32',['UslTableLastRollStatsChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6',1,'Ctrl']]],
-  ['usltablesessionstatschanged_33',['UslTableSessionStatsChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587',1,'Ctrl']]],
-  ['usluserplayerswitched_34',['UslUserPlayerSwitched',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd',1,'Ctrl']]]
+  ['uslrollhistoryformatchanged_29',['UslRollHistoryFormatChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a5c464d2e20a4edd9ce7c29a50f854d05',1,'Ctrl']]],
+  ['uslsevenout_30',['UslSevenOut',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3af26982c6cdc798b3e73c78ac424832fb',1,'Ctrl']]],
+  ['usltablebalancechanged_31',['UslTableBalanceChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3aeac4b1376e5e6bb93057feaa8e04dd05',1,'Ctrl']]],
+  ['usltablebetschanged_32',['UslTableBetsChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a633db4ca369ac7d727bab2bfe92bdc42',1,'Ctrl']]],
+  ['usltablelastrollstatschanged_33',['UslTableLastRollStatsChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a5b129f8adf8bf0e9786e3dae7b08cad6',1,'Ctrl']]],
+  ['usltablesessionstatschanged_34',['UslTableSessionStatsChanged',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a78ef90d633fc2fecbaf87b15f25c3587',1,'Ctrl']]],
+  ['usluserplayerswitched_35',['UslUserPlayerSwitched',['../namespaceCtrl.html#a080339ce20c437b0d9a51542a36ee3e3a985ddc7cd3dad0da2739d4515fc919bd',1,'Ctrl']]]
 ];

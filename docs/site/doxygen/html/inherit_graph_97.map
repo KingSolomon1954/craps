@@ -1,3 +1,57 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structCui_1_1WindowPosition.html" title=" " alt="" coords="5,5,160,31"/>
+<area shape="rect" id="Node000000" href="$classCui_1_1SurfaceBase.html" title="Common abstraction for anything occupying a visible/input surface." alt="" coords="5,720,137,745"/>
+<area shape="rect" id="Node000001" href="$classCui_1_1DialogBase.html" title="Specialized surface type for dialog boxes." alt="" coords="186,179,311,204"/>
+<area shape="poly" id="edge53_Node000000_Node000001" title=" " alt="" coords="78,706,241,203,246,205,83,708"/>
+<area shape="rect" id="Node000009" href="$classCui_1_1MenuBase.html" title="Specialized surface type for menus." alt="" coords="189,548,308,573"/>
+<area shape="poly" id="edge61_Node000000_Node000009" title=" " alt="" coords="94,708,232,572,236,576,98,712"/>
+<area shape="rect" id="Node000018" href="$classCui_1_1PanelBase.html" title="A Window physically contained within a full screen Surface." alt="" coords="189,868,308,893"/>
+<area shape="poly" id="edge70_Node000000_Node000018" title=" " alt="" coords="100,753,234,866,230,870,97,757"/>
+<area shape="rect" id="Node000026" href="$classCui_1_1ScreenBase.html" title="Specialized surface type for full screens." alt="" coords="185,1016,312,1041"/>
+<area shape="poly" id="edge78_Node000000_Node000026" title=" " alt="" coords="89,756,242,1015,238,1017,85,758"/>
+<area shape="rect" id="Node000002" href="$classCui_1_1DialogBetAmount.html" title="Obtains bet amount from user." alt="" coords="376,5,543,31"/>
+<area shape="poly" id="edge54_Node000001_Node000002" title=" " alt="" coords="259,165,297,102,325,68,359,40,381,28,384,33,361,44,329,72,301,105,264,168"/>
+<area shape="rect" id="Node000003" href="$classCui_1_1DialogConfirm.html" title="Confirmation dialog for yes/no/cancel operations." alt="" coords="387,55,531,80"/>
+<area shape="poly" id="edge55_Node000001_Node000003" title=" " alt="" coords="267,166,307,126,332,106,359,89,386,78,388,83,361,94,335,110,310,130,271,170"/>
+<area shape="rect" id="Node000004" href="$classCui_1_1DialogDeepRollHistory.html" title="Popup listing the last 120 rolls, most detailed format only." alt="" coords="360,104,559,129"/>
+<area shape="poly" id="edge56_Node000001_Node000004" title=" " alt="" coords="286,170,359,138,397,127,399,132,361,143,288,175"/>
+<area shape="rect" id="Node000005" href="$classCui_1_1DialogError.html" title="Display diagnostic in a pop up, user must acknowledege." alt="" coords="397,153,521,179"/>
+<area shape="poly" id="edge57_Node000001_Node000005" title=" " alt="" coords="325,179,397,171,397,176,326,185"/>
+<area shape="rect" id="Node000006" href="$classCui_1_1DialogMessage.html" title="Present a message that the user must acknowledge." alt="" coords="384,203,535,228"/>
+<area shape="poly" id="edge58_Node000001_Node000006" title=" " alt="" coords="326,197,384,204,384,209,325,203"/>
+<area shape="rect" id="Node000007" href="$classCui_1_1DialogPickPlayer.html" title="Shows a short list of players, optionally to pick one." alt="" coords="379,252,540,277"/>
+<area shape="poly" id="edge59_Node000001_Node000007" title=" " alt="" coords="289,207,361,237,403,249,402,255,359,242,287,212"/>
+<area shape="rect" id="Node000008" href="$classCui_1_1DialogTextInput.html" title="Asks the person to type one line of text, such as a name." alt="" coords="383,301,536,327"/>
+<area shape="poly" id="edge60_Node000001_Node000008" title=" " alt="" coords="272,213,311,251,361,286,392,299,390,304,359,291,308,255,268,217"/>
+<area shape="rect" id="Node000010" href="$classCui_1_1MenuBetting.html" title="Menu for full ScreenCrapsTable." alt="" coords="392,351,527,376"/>
+<area shape="poly" id="edge62_Node000009_Node000010" title=" " alt="" coords="257,534,271,500,293,460,322,419,358,385,391,370,393,375,362,390,326,423,298,462,276,502,262,536"/>
+<area shape="rect" id="Node000011" href="$classCui_1_1MenuConfigure.html" title="Display choices for game control and configuration." alt="" coords="385,400,534,425"/>
+<area shape="poly" id="edge63_Node000009_Node000011" title=" " alt="" coords="263,535,302,484,328,457,359,434,383,423,385,428,361,439,332,461,306,487,267,538"/>
+<area shape="rect" id="Node000012" href="$classCui_1_1MenuControl.html" title="Display choices for game control and configuration." alt="" coords="392,449,527,475"/>
+<area shape="poly" id="edge64_Node000009_Node000012" title=" " alt="" coords="274,537,313,509,359,484,391,472,393,477,361,488,316,514,277,541"/>
+<area shape="rect" id="Node000013" href="$classCui_1_1MenuNavBarViews.html" title="Display choices for switching Player Views." alt="" coords="372,499,547,524"/>
+<area shape="poly" id="edge65_Node000009_Node000013" title=" " alt="" coords="316,542,404,521,405,527,317,547"/>
+<area shape="rect" id="Node000014" href="$classCui_1_1MenuOddsBet.html" title="Display choices for making odds bets." alt="" coords="388,548,531,573"/>
+<area shape="poly" id="edge66_Node000009_Node000014" title=" " alt="" coords="322,558,388,558,388,563,322,563"/>
+<area shape="rect" id="Node000015" href="$classCui_1_1MenuPivot.html" title="Display choices for Place Bets." alt="" coords="399,597,519,623"/>
+<area shape="poly" id="edge67_Node000009_Node000015" title=" " alt="" coords="317,574,405,595,404,600,316,579"/>
+<area shape="rect" id="Node000016" href="$classCui_1_1MenuPlaceBet.html" title="Display choices for Place Bets." alt="" coords="387,647,531,672"/>
+<area shape="poly" id="edge68_Node000009_Node000016" title=" " alt="" coords="278,580,316,607,361,632,397,644,395,649,359,636,313,611,275,584"/>
+<area shape="rect" id="Node000017" href="$classCui_1_1MenuPlayers.html" title="Display choices for game control and configuration." alt="" coords="392,696,527,721"/>
+<area shape="poly" id="edge69_Node000009_Node000017" title=" " alt="" coords="268,584,306,634,332,659,361,681,393,695,390,700,359,686,329,663,302,637,263,587"/>
+<area shape="rect" id="Node000019" href="$classCui_1_1WindowAnimation.html" title=" " alt="" coords="374,745,545,771"/>
+<area shape="poly" id="edge71_Node000018_Node000019" title=" " alt="" coords="267,856,307,817,332,797,359,780,387,768,389,773,361,784,335,801,310,821,271,860"/>
+<area shape="rect" id="Node000020" href="$classCui_1_1WindowHouseBrief.html" title=" " alt="" coords="372,795,547,820"/>
+<area shape="poly" id="edge72_Node000018_Node000020" title=" " alt="" coords="286,860,359,829,398,818,399,823,361,834,288,864"/>
+<area shape="rect" id="Node000021" href="$classCui_1_1WindowNavBar.html" title=" " alt="" coords="384,844,535,869"/>
+<area shape="poly" id="edge73_Node000018_Node000021" title=" " alt="" coords="322,870,384,863,384,868,322,875"/>
+<area shape="rect" id="Node000022" href="$classCui_1_1WindowPlayerArea.html" title=" " alt="" coords="372,893,547,919"/>
+<area shape="poly" id="edge74_Node000018_Node000022" title=" " alt="" coords="322,887,372,893,372,898,321,892"/>
+<area shape="rect" id="Node000023" href="$classCui_1_1WindowPlayerBrief.html" title=" " alt="" coords="372,943,547,968"/>
+<area shape="poly" id="edge75_Node000018_Node000023" title=" " alt="" coords="289,897,361,927,403,940,401,945,359,933,286,902"/>
+<area shape="rect" id="Node000024" href="$classCui_1_1WindowRollHistory.html" title=" " alt="" coords="372,992,547,1017"/>
+<area shape="poly" id="edge76_Node000018_Node000024" title=" " alt="" coords="271,902,310,941,335,960,361,977,392,989,390,994,359,982,332,965,307,945,267,905"/>
+<area shape="rect" id="Node000025" href="$classCui_1_1WindowTitleBar.html" title=" " alt="" coords="382,1041,537,1067"/>
+<area shape="poly" id="edge77_Node000018_Node000025" title=" " alt="" coords="264,905,302,966,329,999,361,1026,387,1039,384,1044,359,1031,325,1003,298,970,260,907"/>
+<area shape="rect" id="Node000027" href="$classCui_1_1ScreenCrapsTable.html" title="Craps Table Screen." alt="" coords="376,1091,543,1116"/>
+<area shape="poly" id="edge79_Node000026_Node000027" title=" " alt="" coords="289,1045,361,1075,403,1088,401,1093,359,1081,286,1050"/>
 </map>

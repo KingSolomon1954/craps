@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="6686399752352770870">
+<analyzerinfo hash="3490452030551840888">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_BTEE"/>
     <functioncall functionName="ACS_HLINE"/>
@@ -19,7 +19,6 @@
     <functioncall functionName="col4"/>
     <functioncall functionName="col5"/>
     <functioncall functionName="col6"/>
-    <functioncall functionName="colComeDont1"/>
     <functioncall functionName="houseBriefBorderHeight"/>
     <functioncall functionName="houseBriefBorderLeftCol"/>
     <functioncall functionName="houseBriefBorderRightCol"/>

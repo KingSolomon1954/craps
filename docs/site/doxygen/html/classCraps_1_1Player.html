@@ -131,8 +131,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5b4e1f2f7c147a2d6f72d01a77cb148d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6e7d3c576edb92c9dc562abe114fbaf" id="r_ad6e7d3c576edb92c9dc562abe114fbaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6e7d3c576edb92c9dc562abe114fbaf">restoreBet</a> (<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a> pBet, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:ad6e7d3c576edb92c9dc562abe114fbaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4077c328bf4c0a6fc9a73dd06c655fdd" id="r_a4077c328bf4c0a6fc9a73dd06c655fdd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4077c328bf4c0a6fc9a73dd06c655fdd">restoreAmounts</a> (<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a> pBet, const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;prevState)</td></tr>
-<tr class="separator:a4077c328bf4c0a6fc9a73dd06c655fdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a827a03f6dc8d146d59ef0cd0fc891917" id="r_a827a03f6dc8d146d59ef0cd0fc891917"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a827a03f6dc8d146d59ef0cd0fc891917">restoreAmounts</a> (<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a> pBet, const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;prevState, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:a827a03f6dc8d146d59ef0cd0fc891917"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad480e920dbce7e92a1c6a8a78d41cd8" id="r_aad480e920dbce7e92a1c6a8a78d41cd8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad480e920dbce7e92a1c6a8a78d41cd8">bettingClosed</a> ()</td></tr>
 <tr class="separator:aad480e920dbce7e92a1c6a8a78d41cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9d48219bd7f51275eb67883dd903dcd" id="r_ab9d48219bd7f51275eb67883dd903dcd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9d48219bd7f51275eb67883dd903dcd">disburseDone</a> ()</td></tr>
@@ -987,21 +987,26 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4077c328bf4c0a6fc9a73dd06c655fdd" name="a4077c328bf4c0a6fc9a73dd06c655fdd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4077c328bf4c0a6fc9a73dd06c655fdd">&#9670;&#160;</a></span>restoreAmounts()</h2>
+<a id="a827a03f6dc8d146d59ef0cd0fc891917" name="a827a03f6dc8d146d59ef0cd0fc891917"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a827a03f6dc8d146d59ef0cd0fc891917">&#9670;&#160;</a></span>restoreAmounts()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Player::restoreAmounts </td>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> Player::restoreAmounts </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a></td>          <td class="paramname"><span class="paramname"><em>pBet</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>prevState</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="classCraps_1_1CrapsBet.html">CrapsBet</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>prevState</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1145,7 +1150,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

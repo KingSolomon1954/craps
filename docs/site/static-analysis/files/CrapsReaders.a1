@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="2408190367493115142">
+<analyzerinfo hash="6847633693005319586">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="Critical"/>
     <functioncall functionName="EP_SET"/>
@@ -8,6 +8,7 @@
     <functioncall functionName="PlayerInfo"/>
     <functioncall functionName="ProgrammingError"/>
     <functioncall functionName="Success"/>
+    <functioncall functionName="animationSpeed"/>
     <functioncall functionName="assert"/>
     <functioncall functionName="autoFill"/>
     <functioncall functionName="betId"/>
@@ -73,6 +74,7 @@
     <functioncall functionName="prepend"/>
     <functioncall functionName="push_back"/>
     <functioncall functionName="quickBet"/>
+    <functioncall functionName="rollHistoryFormat"/>
     <functioncall functionName="setDescription"/>
     <functioncall functionName="userPrefs"/>
     <functioncall functionName="whenCreated"/>

@@ -147,15 +147,15 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">void</span> saveCurrentTable() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> retrieveMaxSessions();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> retrieveMaxRecentRolls();</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keyword">static</span> std::filesystem::path formTablePath(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a>&amp; tableId);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> MaxRecentRolls = 120;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">static</span> std::filesystem::path formTablePath(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a>&amp; tableId);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>};</div>
 </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">/*-----------------------------------------------------------*/</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}  <span class="comment">// namespace Ctrl</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">//----------------------------------------------------------------</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">/*-----------------------------------------------------------*/</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>}  <span class="comment">// namespace Ctrl</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">//----------------------------------------------------------------</span></div>
 <div class="ttc" id="aCrapsTypes_8h_html"><div class="ttname"><a href="CrapsTypes_8h.html">CrapsTypes.h</a></div></div>
 <div class="ttc" id="aErrorPass_8h_html"><div class="ttname"><a href="ErrorPass_8h.html">ErrorPass.h</a></div></div>
 <div class="ttc" id="aReturnCode_8h_html"><div class="ttname"><a href="ReturnCode_8h.html">ReturnCode.h</a></div></div>
@@ -175,14 +175,14 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclassCtrl_1_1TableManifest_html"><div class="ttname"><a href="classCtrl_1_1TableManifest.html">Ctrl::TableManifest</a></div><div class="ttdoc">Reads in table.yaml, populates tables_ vector.</div><div class="ttdef"><b>Definition</b> TableManifest.h:16</div></div>
 <div class="ttc" id="aclassCtrl_1_1TableManifest_html_a4e5f1e35c174ecb7fc0f035d6af40deb"><div class="ttname"><a href="classCtrl_1_1TableManifest.html#a4e5f1e35c174ecb7fc0f035d6af40deb">Ctrl::TableManifest::TableList</a></div><div class="ttdeci">std::vector&lt; TableManifest::TableDescription &gt; TableList</div><div class="ttdef"><b>Definition</b> TableManifest.h:30</div></div>
 <div class="ttc" id="aclassGen_1_1ErrorPass_html"><div class="ttname"><a href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a></div><div class="ttdoc">A generic error payload for value-based error handling.</div><div class="ttdef"><b>Definition</b> ErrorPass.h:20</div></div>
-<div class="ttc" id="anamespaceCraps_html"><div class="ttname"><a href="namespaceCraps.html">Craps</a></div><div class="ttdoc">Craps Library (lib-craps)</div><div class="ttdef"><b>Definition</b> CrapsReaders.h:27</div></div>
+<div class="ttc" id="anamespaceCraps_html"><div class="ttname"><a href="namespaceCraps.html">Craps</a></div><div class="ttdoc">Craps Library (lib-craps)</div><div class="ttdef"><b>Definition</b> CrapsReaders.h:29</div></div>
 <div class="ttc" id="anamespaceCraps_html_a2d6cc59e8ed3ada470393b645849a7e5"><div class="ttname"><a href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a></div><div class="ttdeci">std::string TableId</div><div class="ttdef"><b>Definition</b> CrapsTypes.h:22</div></div>
-<div class="ttc" id="anamespaceCtrl_html"><div class="ttname"><a href="namespaceCtrl.html">Ctrl</a></div><div class="ttdoc">Controller Library (lib-controller)</div><div class="ttdef"><b>Definition</b> AutoFill.h:15</div></div>
+<div class="ttc" id="anamespaceCtrl_html"><div class="ttname"><a href="namespaceCtrl.html">Ctrl</a></div><div class="ttdoc">Controller Library (lib-controller)</div><div class="ttdef"><b>Definition</b> AnimationSpeed.h:17</div></div>
 <div class="ttc" id="anamespaceGen_html_a07398fc4efb326972c1462a5903a5114"><div class="ttname"><a href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a></div><div class="ttdeci">ReturnCode</div><div class="ttdef"><b>Definition</b> ReturnCode.h:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

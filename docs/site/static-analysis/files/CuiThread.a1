@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="6980972677276612898">
+<analyzerinfo hash="12766662182268489943">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="CuiThread"/>
     <functioncall functionName="TRUE"/>
@@ -27,6 +27,7 @@
     <functioncall functionName="signal"/>
     <functioncall functionName="stdscr"/>
     <functioncall functionName="thread"/>
+    <functioncall functionName="tick"/>
     <functioncall functionName="true"/>
     <functioncall functionName="wait"/>
     <functioncall functionName="wait_for"/>

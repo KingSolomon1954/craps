@@ -1,13 +1,36 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="5604929147102915766">
+<analyzerinfo hash="3173139361014539146">
   <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="EP_SET"/>
+    <functioncall functionName="Fail"/>
+    <functioncall functionName="Indeterminate"/>
+    <functioncall functionName="LOG_ERROR"/>
+    <functioncall functionName="NotFoundError"/>
+    <functioncall functionName="ProcessingError"/>
+    <functioncall functionName="Success"/>
     <functioncall functionName="UndoBet"/>
+    <functioncall functionName="UndoGroup"/>
+    <functioncall functionName="add"/>
     <functioncall functionName="back"/>
     <functioncall functionName="clear"/>
+    <functioncall functionName="depth"/>
+    <functioncall functionName="describe"/>
     <functioncall functionName="empty"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="fullDesc"/>
+    <functioncall functionName="get"/>
+    <functioncall functionName="lock"/>
+    <functioncall functionName="make_unique"/>
     <functioncall functionName="move"/>
+    <functioncall functionName="mutex"/>
+    <functioncall functionName="mutex_"/>
     <functioncall functionName="pop_back"/>
+    <functioncall functionName="prepend"/>
     <functioncall functionName="push_back"/>
+    <functioncall functionName="setErrorName"/>
+    <functioncall functionName="size"/>
     <functioncall functionName="undo"/>
   </FileInfo>
 </analyzerinfo>

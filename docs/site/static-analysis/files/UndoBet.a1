@@ -1,16 +1,39 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="7961729519146044158">
+<analyzerinfo hash="15809920334260543678">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-controller/src/UndoBet.cpp:21:1" my-argnr="1" my-argname="bet" file="/work/src/lib-controller/src/UndoBet.cpp" line="23" col="47" value="0"/>
+  </FileInfo>
   <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="betText" lineNumber="21"/>
+    <functioncall functionName="Fail"/>
+    <functioncall functionName="Success"/>
+    <functioncall functionName="UndoBet"/>
     <functioncall functionName="UndoBetAdded"/>
     <functioncall functionName="UndoBetModifiedAmount"/>
-    <functioncall functionName="UndoBetModifiedFlags"/>
     <functioncall functionName="UndoBetRemoved"/>
+    <functioncall functionName="back"/>
     <functioncall functionName="betId"/>
+    <functioncall functionName="betName"/>
+    <functioncall functionName="betText"/>
+    <functioncall functionName="contractAmount"/>
+    <functioncall functionName="describe"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="error"/>
+    <functioncall functionName="front"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="oddsAmount"/>
     <functioncall functionName="pBet_"/>
+    <functioncall functionName="pivot"/>
     <functioncall functionName="player"/>
+    <functioncall functionName="pop_back"/>
     <functioncall functionName="prevState_"/>
+    <functioncall functionName="push_back"/>
     <functioncall functionName="removeBet"/>
     <functioncall functionName="restoreAmounts"/>
     <functioncall functionName="restoreBet"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="undo"/>
   </FileInfo>
 </analyzerinfo>

@@ -1,15 +1,20 @@
 <map id="src/lib&#45;controller/include/controller/UndoBet.h" name="src/lib&#45;controller/include/controller/UndoBet.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="357,5,495,60"/>
-<area shape="rect" id="Node000002" href="$UndoManager_8h.html" title=" " alt="" coords="277,108,415,163"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="399,72,369,110,365,106,395,69"/>
-<area shape="rect" id="Node000007" href="$UndoBet_8cpp.html" title=" " alt="" coords="440,115,572,155"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="458,69,493,113,489,117,453,72"/>
-<area shape="rect" id="Node000003" href="$CrapsReaders_8cpp.html" title=" " alt="" coords="5,211,172,251"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="264,169,142,213,140,208,263,164"/>
-<area shape="rect" id="Node000004" href="$Globals_8cpp.html" title=" " alt="" coords="197,211,325,251"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="315,175,280,212,276,209,311,171"/>
-<area shape="rect" id="Node000005" href="$TableManager_8cpp.html" title=" " alt="" coords="349,211,516,251"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="382,171,417,209,413,212,378,175"/>
-<area shape="rect" id="Node000006" href="$UndoManager_8cpp.html" title=" " alt="" coords="540,211,707,251"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="429,162,568,208,566,213,428,167"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="379,5,517,60"/>
+<area shape="rect" id="Node000002" href="$UndoManager_8h.html" title=" " alt="" coords="379,108,517,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="451,74,451,108,445,108,445,74"/>
+<area shape="rect" id="Node000004" href="$EventHandler_8cpp.html" title=" " alt="" coords="5,211,168,251"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="389,69,122,213,120,208,387,64"/>
+<area shape="rect" id="Node000009" href="$UndoBet_8cpp.html" title=" " alt="" coords="542,115,674,155"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="502,65,579,113,576,117,500,69"/>
+<area shape="rect" id="Node000003" href="$CrapsReaders_8cpp.html" title=" " alt="" coords="193,211,359,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="389,171,312,213,310,208,386,167"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="366,161,161,213,159,208,364,155"/>
+<area shape="rect" id="Node000005" href="$Globals_8cpp.html" title=" " alt="" coords="384,211,512,251"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="451,176,451,211,445,211,445,176"/>
+<area shape="rect" id="Node000006" href="$PlayerManager_8cpp.html" title=" " alt="" coords="536,211,709,251"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="510,167,588,208,586,213,508,171"/>
+<area shape="rect" id="Node000007" href="$TableManager_8cpp.html" title=" " alt="" coords="734,211,901,251"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="531,160,531,160,734,209,733,214,530,165,530,165"/>
+<area shape="rect" id="Node000008" href="$UndoManager_8cpp.html" title=" " alt="" coords="925,211,1091,251"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="531,160,531,160,638,179,722,187,806,194,914,208,925,210,924,215,913,213,805,199,721,193,637,184,530,165,530,165"/>
 </map>

@@ -18,11 +18,12 @@ var searchData=
   ['comeodds8_15',['ComeOdds8',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3ead94fb0e0dd90d4a58af6966e660ab2da',1,'Cui::CuiUtils']]],
   ['comeodds9_16',['ComeOdds9',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3ea139d1c9e87c4ad706ca221a26263e31f',1,'Cui::CuiUtils']]],
   ['comeout_17',['ComeOut',['../namespaceCraps.html#aa74ed49d9a578c14749b1b2dd65286e5a5a5dc7c7691f08345f83c1a4bdb18c08',1,'Craps']]],
-  ['communicationserror_18',['CommunicationsError',['../classGen_1_1ErrorPass.html#a92d05e8dcc6565618e5dbd175578ac15aeeb4e792b7143949945b675165da512a',1,'Gen::ErrorPass']]],
-  ['configurationerror_19',['ConfigurationError',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cda05f6ffa53682f5ecd6164f8a3524733a',1,'Gen::ErrorPass::ConfigurationError'],['../classGen_1_1ErrorPass.html#a92d05e8dcc6565618e5dbd175578ac15a05f6ffa53682f5ecd6164f8a3524733a',1,'Gen::ErrorPass::ConfigurationError']]],
-  ['controller_20',['Controller',['../namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8a9bbf373797bf7cf7ba62c80023682e25',1,'Ctrl']]],
-  ['count_21',['Count',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84ae93f994f01c537c4e2f7d8528c3eb5e9',1,'EnumBetName.h']]],
-  ['create_22',['Create',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8a686e697538050e4664636337cc3b834f',1,'Cui::OperationManager::Create'],['../namespaceCtrl.html#aca8b99acad6a0265b926e92ea37fa516a686e697538050e4664636337cc3b834f',1,'Ctrl::Create']]],
-  ['critical_23',['Critical',['../classGen_1_1ErrorPass.html#a69dd9e9c301b6e8a0aed1d961ad68e7aa278d01e5af56273bae1bb99a98b370cd',1,'Gen::ErrorPass']]],
-  ['custom_24',['Custom',['../classCui_1_1DialogMessage.html#af5b787ee277db064a60404f63c0d6e74a90589c47f06eb971d548591f23c285af',1,'Cui::DialogMessage']]]
+  ['commas_18',['Commas',['../namespaceCtrl.html#a044334600efb410fde6f7e11e6ebdcadae129c27928712de0ab184d0b4605a9de',1,'Ctrl']]],
+  ['communicationserror_19',['CommunicationsError',['../classGen_1_1ErrorPass.html#a92d05e8dcc6565618e5dbd175578ac15aeeb4e792b7143949945b675165da512a',1,'Gen::ErrorPass']]],
+  ['configurationerror_20',['ConfigurationError',['../classGen_1_1ErrorPass.html#a94cc1b9a40f0b9f1ef54dcef8ec267cda05f6ffa53682f5ecd6164f8a3524733a',1,'Gen::ErrorPass::ConfigurationError'],['../classGen_1_1ErrorPass.html#a92d05e8dcc6565618e5dbd175578ac15a05f6ffa53682f5ecd6164f8a3524733a',1,'Gen::ErrorPass::ConfigurationError']]],
+  ['controller_21',['Controller',['../namespaceCtrl.html#aba82d930285c670ac7c9f2feaa2759d8a9bbf373797bf7cf7ba62c80023682e25',1,'Ctrl']]],
+  ['count_22',['Count',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84ae93f994f01c537c4e2f7d8528c3eb5e9',1,'EnumBetName.h']]],
+  ['create_23',['Create',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8a686e697538050e4664636337cc3b834f',1,'Cui::OperationManager::Create'],['../namespaceCtrl.html#aca8b99acad6a0265b926e92ea37fa516a686e697538050e4664636337cc3b834f',1,'Ctrl::Create']]],
+  ['critical_24',['Critical',['../classGen_1_1ErrorPass.html#a69dd9e9c301b6e8a0aed1d961ad68e7aa278d01e5af56273bae1bb99a98b370cd',1,'Gen::ErrorPass']]],
+  ['custom_25',['Custom',['../classCui_1_1DialogMessage.html#af5b787ee277db064a60404f63c0d6e74a90589c47f06eb971d548591f23c285af',1,'Cui::DialogMessage']]]
 ];

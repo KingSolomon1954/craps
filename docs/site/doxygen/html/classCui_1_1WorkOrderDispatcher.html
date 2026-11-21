@@ -118,10 +118,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aba5caaa896de6132649f6e193e587e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a863340d30e86f97579eda52521854d2c" id="r_a863340d30e86f97579eda52521854d2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a863340d30e86f97579eda52521854d2c">dispatch</a> (const <a class="el" href="namespaceCui.html#a008bb3ffc4abfd0f634da79eab14c465">WorkOrder</a> &amp;wo)</td></tr>
 <tr class="separator:a863340d30e86f97579eda52521854d2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad85bf03b82239bcc9149146f6f0937cf" id="r_ad85bf03b82239bcc9149146f6f0937cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad85bf03b82239bcc9149146f6f0937cf">tick</a> ()</td></tr>
+<tr class="separator:ad85bf03b82239bcc9149146f6f0937cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad73ab24b995b9ec6ffcfdf77241558c9" id="r_ad73ab24b995b9ec6ffcfdf77241558c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad73ab24b995b9ec6ffcfdf77241558c9">releaseHeldEvents</a> ()</td></tr>
+<tr class="separator:ad73ab24b995b9ec6ffcfdf77241558c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Dispatches work orders to the many CUI presentation classes. </p>
-<p>Receives all WorkOrders coming off the <a class="el" href="classCui_1_1CuiThread.html" title="CuiThread processes CUI work orders and also obtains keypresses and manipulates surfaces.">CuiThread</a>. Translates work orders and GameEvents into primitive data types, then calls into various windows using hard coded knowledge of which window wants what information. </p>
+<p>Receives all WorkOrders coming off the <a class="el" href="classCui_1_1CuiThread.html" title="CuiThread processes CUI work orders and also obtains keypresses and manipulates surfaces.">CuiThread</a>.</p>
+<p>The model resolves a roll in one burst, but the person should first watch the dice land. From UslDiceThrowStart until the animation reports it is done, result events are queued here and then replayed in their original order. Events that must not wait (the animation's own dice values, responses to requests) pass straight through.</p>
+<p>Translates work orders and GameEvents into primitive data types, then calls into various windows using hard coded knowledge of which window wants what information. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a25aa6a457a9c5cb7741c3cb90e9e944d" name="a25aa6a457a9c5cb7741c3cb90e9e944d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a25aa6a457a9c5cb7741c3cb90e9e944d">&#9670;&#160;</a></span>WorkOrderDispatcher() <span class="overload">[1/3]</span></h2>
@@ -291,6 +297,40 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ad73ab24b995b9ec6ffcfdf77241558c9" name="ad73ab24b995b9ec6ffcfdf77241558c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad73ab24b995b9ec6ffcfdf77241558c9">&#9670;&#160;</a></span>releaseHeldEvents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WorkOrderDispatcher::releaseHeldEvents </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad85bf03b82239bcc9149146f6f0937cf" name="ad85bf03b82239bcc9149146f6f0937cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad85bf03b82239bcc9149146f6f0937cf">&#9670;&#160;</a></span>tick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WorkOrderDispatcher::tick </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/lib-cui/include/cui/core/<a class="el" href="WorkOrderDispatcher_8h_source.html">WorkOrderDispatcher.h</a></li>
 <li>src/lib-cui/src/core/<a class="el" href="WorkOrderDispatcher_8cpp.html">WorkOrderDispatcher.cpp</a></li>
@@ -298,7 +338,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 19 2026 03:38:33 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>
