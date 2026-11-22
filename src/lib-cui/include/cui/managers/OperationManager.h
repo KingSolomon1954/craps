@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <controller/BetSpec.h>
 #include <controller/GameEvents.h>
 #include <cui/bases/SurfaceBase.h>
 #include <cui/managers/CarrierBet.h>
@@ -49,6 +50,7 @@ public:
     bool removeBets();   // Workflow: Pick one of your bets to take down
     bool undoLastBet();  // Workflow: Take back your latest bet change
     bool applyQuickBets(); // Workflow: Pick a QuickBets entry and apply it
+    bool quickBetsSetOrAdd(); // Workflow: Save the bet being entered
     bool chooseAnimationSpeed(); // Workflow: Pick the dice animation speed
     bool chooseRollHistoryFormat(); // Workflow: Pick how rolls are listed
     bool confirmQuit();  // Workflow: Confirmation to quit application
@@ -59,6 +61,8 @@ public:
     void onRspRemoveBet(const Ctrl::RspRemoveBet& response);
     void onRspUndoBet(const Ctrl::RspUndoBet& response);
     void onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& response);
+    void onRspEditQuickBets(const Ctrl::RspEditQuickBets& response);
+    void onQuickBetsChoice(bool accepted, std::size_t index);
     void onConfirmationResult(SurfaceBase::OperationResult result);
     void onPickResult(bool accepted, const Craps::PlayerId& playerId,
                       Craps::BetId betId = 0, std::size_t tag = 0);
@@ -81,6 +85,7 @@ private:
         RemoveBet,
         UndoBet,
         QuickBets,
+        QuickBetsEdit,
         Quit,
         Player,
         AnimationSpeed,
@@ -108,6 +113,8 @@ private:
     bool removalStarted_ = false;         // Later removals join the first's undo step
 
     std::vector<std::string> quickBetNames_;   // What the pick list offered
+    Ctrl::BetSpec            quickBetSpec_;    // The bet being saved
+    std::string              quickBetTarget_;  // Entry to add to, or new name
 
     OperationType type_                = OperationType::None;
     Stage stage_                       = Stage::Idle;
@@ -130,6 +137,8 @@ private:
     void showNotice(const std::string& brief, const std::string& detail);
     void askConfirmation(const std::string& question);
     void askForDescription();
+    void askForQuickBetsName();
+    void sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action action);
     void askForName(const std::string& title,
                     const std::string& initial,
                     const Craps::PlayerId& exceptId);

@@ -47,9 +47,10 @@ private:
     WindowPosition winPos_{};
     static constexpr WindowSize winSize_ = {24, 59};  // rows, cols, fixed size
 
-    static constexpr std::array<std::string_view, 3> Prompts
+    static constexpr std::array<std::string_view, 4> Prompts
     {
         "[enter] Submit Bet",
+        "[q] QuickBets - Set or Add",
         "[?] Help",
         "[. or esc] Back"
     };
@@ -85,6 +86,7 @@ private:
     bool readInputAmount();
     void back();
     void doEnter();
+    void doQuickBets();
     void doHelp();
     void processAmount();
 };
@@ -102,8 +104,8 @@ to SurfaceManager, similar to other menus and dialogs.
 The amount field starts with the amount last used for this bet (see
 LastFill). Since the dialog is already focused on a particular bet and
 amount, it is the natural place to offer QuickBets and AutoOdds; see
-the Bet Automation section of the design document. Those entries are
-not here yet.
+the Bet Automation section of the design document. The q key saves the
+bet and amount into a QuickBets entry. The AutoOdds entry is not here yet.
 
 
 Responsibilities:

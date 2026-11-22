@@ -51,6 +51,12 @@ EventHandler::EventHandler()
             this->onReqApplyQuickBets(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::ReqEditQuickBets>(
+        [this](const Ctrl::ReqEditQuickBets& ev)
+        {
+            this->onReqEditQuickBets(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::ReqUndoBet>(
         [this](const Ctrl::ReqUndoBet& ev)
         {
@@ -421,7 +427,7 @@ EventHandler::onReqApplyQuickBets(const Ctrl::ReqApplyQuickBets& ev) const
     else
     {
         const auto result = BetExecutor::apply(*pPlayer, plan->specs,
-            UndoManager::instance(), &prefs->lastFill());
+                                               &prefs->lastFill());
 
         rsp.accepted       = true;
         rsp.placed         = static_cast<unsigned>(result.count(BetExecutor::Status::Placed));
@@ -434,6 +440,70 @@ EventHandler::onReqApplyQuickBets(const Ctrl::ReqApplyQuickBets& ev) const
         LOG_INFO("QuickBets \"" + ev.name + "\" applied for " + ev.playerId +
                  ": " + rsp.headline +
                  (rsp.skippedDetail.empty() ? "" : "\n" + rsp.skippedDetail));
+    }
+
+    Gen::EventManager::instance().publish(rsp);
+}
+
+//----------------------------------------------------------------
+
+//----------------------------------------------------------------
+//
+// Saves a bet into the player's QuickBets, as a new entry or into an
+// existing one. Always answers with RspEditQuickBets. Nothing here
+// touches the table, so it works whether or not betting is open.
+//
+void
+EventHandler::onReqEditQuickBets(const Ctrl::ReqEditQuickBets& ev) const
+{
+    const std::string fname("EventHandler::onReqEditQuickBets(): ");
+    LOG_TRACE("Entered " + fname);
+
+    Ctrl::RspEditQuickBets rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.playerId      = ev.playerId;
+    rsp.name          = ev.name;
+
+    PlayerPrefs* prefs = Gbl::pPlayerMgr->getPrefs(ev.playerId);
+    std::string why;
+    if (prefs == nullptr)
+    {
+        why = "That player could not be found.";
+    }
+    else if (ev.action == Ctrl::ReqEditQuickBets::Action::Create)
+    {
+        why = prefs->quickBets().create(ev.name, ev.spec);
+        if (why.empty())
+        {
+            rsp.message = "Saved " + describe(ev.spec) +
+                          " as the new QuickBets entry \"" + ev.name + "\".";
+        }
+    }
+    else
+    {
+        bool replaced = false;
+        why = prefs->quickBets().addBet(ev.name, ev.spec, replaced);
+        if (why.empty())
+        {
+            rsp.message = (replaced ? "Changed to " : "Added ") +
+                          describe(ev.spec) +
+                          (replaced ? " in \"" : " to \"") + ev.name + "\".";
+        }
+    }
+
+    if (why.empty())
+    {
+        rsp.accepted = true;
+        LOG_INFO("QuickBets edited for " + ev.playerId + ": " + rsp.message);
+    }
+    else
+    {
+        Gen::ErrorPass ep;
+        EP_SET(ep, Gen::ErrorPass::ErrorName::InvalidArgumentError,
+                   Gen::ErrorPass::ErrorType::ProcessingError,
+                   Gen::ErrorPass::Severity::Indeterminate, why);
+        ep.setErrorName("Unable to Save QuickBets");
+        rsp.error = std::move(ep);
     }
 
     Gen::EventManager::instance().publish(rsp);

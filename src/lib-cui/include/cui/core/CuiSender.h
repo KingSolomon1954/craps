@@ -50,6 +50,10 @@ public:
     Ctrl::CorrelationId reqUndoBet(const Craps::PlayerId& playerId);
     Ctrl::CorrelationId reqApplyQuickBets(const Craps::PlayerId& playerId,
                                           const std::string& name);
+    Ctrl::CorrelationId reqEditQuickBets(const Craps::PlayerId& playerId,
+                                         Ctrl::ReqEditQuickBets::Action action,
+                                         const std::string& name,
+                                         const Ctrl::BetSpec& spec);
     /// @}
 
     /// @name Observers

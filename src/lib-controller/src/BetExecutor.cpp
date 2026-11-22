@@ -5,7 +5,10 @@
 //----------------------------------------------------------------
 
 #include <controller/BetExecutor.h>
+#include <controller/LastFill.h>
 #include <controller/UndoBet.h>
+#include <controller/UndoManager.h>
+#include <craps/Player.h>
 #include <algorithm>
 #include <memory>
 
@@ -68,10 +71,10 @@ BetExecutor::Result::skippedDetail() const
 BetExecutor::Result
 BetExecutor::apply(Craps::Player& player,
                    const std::vector<BetSpec>& specs,
-                   UndoManager& undo,
                    LastFill* lastFill)
 {
     Result result;
+    UndoManager& undo = UndoManager::instance();
     const Craps::PlayerId playerId = player.getPlayerId();
 
     // Contract bets first so that odds have something to sit on

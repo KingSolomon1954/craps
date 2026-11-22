@@ -41,12 +41,40 @@ Applying an entry is a single step for Undo. Press ``u`` once and every bet
 that the entry placed or changed is put back the way it was. See
 :ref:`Undoing Bets`.
 
-Setting up entries
-------------------
+Saving a bet as a QuickBets entry
+---------------------------------
 
-The Configuration menu does not yet have pages to create or change
-QuickBets. For now, an entry is written in your player file, in the
-``Prefs`` section, while |AppName| is not running:
+The easiest way to build an entry is while you are entering a bet. In the
+dialog where you type the amount, press ``q`` for *QuickBets - Set or Add*.
+The dialog shows the bet and the amount you have typed, for example
+*Place bet 6 $24*, and offers these choices:
+
+* ``1`` *Set as new QuickBets entry* asks for a name and makes a new entry
+  that holds this one bet.
+* ``a``, ``b``, ``c`` and so on, one for each entry you already have, add the
+  bet to that entry. If the entry already has a bet on that spot, its amount is
+  changed to the amount you typed.
+
+Esc leaves without saving. After a choice, a message says what was saved and
+you are back at the amount dialog, where you can still place the bet.
+
+The bet is saved as it is: you do not have to place it first. Press ``q``
+again with a different bet to keep building the entry.
+
+Some rules:
+
+* An entry's name can be up to 24 characters and must not match another
+  entry's name, whatever the capital letters.
+* You can have up to 20 entries, and an entry can hold up to 12 bets. If more
+  entries than fit on the screen exist, the Up and Down keys show the rest.
+* Entries can hold odds only for Pass Line and Don't Pass bets. For other
+  odds bets the message says so.
+
+Writing entries in the player file
+----------------------------------
+
+Entries can also be written in your player file, in the ``Prefs`` section,
+while |AppName| is not running:
 
 .. code-block:: yaml
 

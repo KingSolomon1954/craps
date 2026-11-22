@@ -5,6 +5,8 @@
 //----------------------------------------------------------------
 
 #include <controller/BetExecutor.h>
+#include <controller/LastFill.h>
+#include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
 #include <craps/Player.h>
 #include <craps/TableConfig.h>
@@ -50,7 +52,7 @@ struct ExecutorFixture
     BetExecutor::Result apply(const std::vector<BetSpec>& specs,
                               LastFill* lf = nullptr)
     {
-        return BetExecutor::apply(*player, specs, undo, lf);
+        return BetExecutor::apply(*player, specs, lf);
     }
 };
 

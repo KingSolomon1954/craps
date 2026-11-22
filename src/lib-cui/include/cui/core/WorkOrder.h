@@ -80,6 +80,7 @@ using GameEvent = std::variant<
     Ctrl::RspRemoveBet,
     Ctrl::RspUndoBet,
     Ctrl::RspApplyQuickBets,
+    Ctrl::RspEditQuickBets,
     Ctrl::RspSwitchPlayer,
     Ctrl::RspManagePlayer
     >;

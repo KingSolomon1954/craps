@@ -237,3 +237,105 @@ TEST_CASE("BetSpec:describe")
 }
 
 //----------------------------------------------------------------
+
+TEST_CASE("QuickBets:checkName and checkSpec")
+{
+    CHECK(QuickBets::checkName("Place Hi").empty());
+    CHECK_FALSE(QuickBets::checkName("").empty());
+    CHECK_FALSE(QuickBets::checkName(std::string(QuickBets::MaxNameLength + 1, 'x')).empty());
+    CHECK(QuickBets::checkName(std::string(QuickBets::MaxNameLength, 'x')).empty());
+
+    CHECK(QuickBets::checkSpec(spec(BetName::Place, 6, 24)).empty());
+    CHECK(QuickBets::checkSpec(spec(BetName::PassLine, 0, 30, true)).empty());
+    CHECK_FALSE(QuickBets::checkSpec(spec(BetName::Place, 6, 0)).empty());
+    CHECK_FALSE(QuickBets::checkSpec(spec(BetName::Invalid, 0, 5)).empty());
+    CHECK_FALSE(QuickBets::checkSpec(spec(BetName::DontCome, 5, 30, true)).empty());
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("QuickBets:create")
+{
+    QuickBets qb;
+    CHECK(qb.create("Place Hi", spec(BetName::Place, 8, 24)).empty());
+    REQUIRE(qb.plans().size() == 1);
+    CHECK(qb.plans()[0].specs.size() == 1);
+
+    SUBCASE("a name already used is refused, ignoring case")
+    {
+        CHECK_FALSE(qb.create("place hi", spec(BetName::Place, 9, 20)).empty());
+        CHECK(qb.plans().size() == 1);
+    }
+
+    SUBCASE("a bad name or bet is refused")
+    {
+        CHECK_FALSE(qb.create("", spec(BetName::Place, 9, 20)).empty());
+        CHECK_FALSE(qb.create("Odds", spec(BetName::Come, 6, 20, true)).empty());
+        CHECK(qb.plans().size() == 1);
+    }
+
+    SUBCASE("refused when the list is full")
+    {
+        for (std::size_t i = 1; i < QuickBets::MaxEntries; ++i)
+        {
+            REQUIRE(qb.create("E" + std::to_string(i), spec(BetName::Field, 0, 5)).empty());
+        }
+        CHECK_FALSE(qb.create("One too many", spec(BetName::Field, 0, 5)).empty());
+        CHECK(qb.plans().size() == QuickBets::MaxEntries);
+    }
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("QuickBets:addBet")
+{
+    QuickBets qb;
+    REQUIRE(qb.create("Hi", spec(BetName::Place, 8, 24)).empty());
+    bool replaced = true;
+
+    SUBCASE("a new spot is added")
+    {
+        CHECK(qb.addBet("Hi", spec(BetName::Place, 9, 20), replaced).empty());
+        CHECK_FALSE(replaced);
+        REQUIRE(qb.plans()[0].specs.size() == 2);
+        CHECK(qb.plans()[0].specs[1].pivot == 9u);
+    }
+
+    SUBCASE("the same spot changes the amount")
+    {
+        CHECK(qb.addBet("Hi", spec(BetName::Place, 8, 30), replaced).empty());
+        CHECK(replaced);
+        REQUIRE(qb.plans()[0].specs.size() == 1);
+        CHECK(qb.plans()[0].specs[0].amount == 30u);
+    }
+
+    SUBCASE("odds are kept after the contract bets")
+    {
+        CHECK(qb.addBet("Hi", spec(BetName::PassLine, 0, 30, true), replaced).empty());
+        CHECK(qb.addBet("Hi", spec(BetName::PassLine, 0, 10), replaced).empty());
+        REQUIRE(qb.plans()[0].specs.size() == 3);
+        CHECK_FALSE(qb.plans()[0].specs[1].isOdds);
+        CHECK(qb.plans()[0].specs[2].isOdds);
+    }
+
+    SUBCASE("no such entry, or an unusable bet, is refused")
+    {
+        CHECK_FALSE(qb.addBet("Nope", spec(BetName::Field, 0, 5), replaced).empty());
+        CHECK_FALSE(qb.addBet("Hi", spec(BetName::Field, 0, 0), replaced).empty());
+        CHECK(qb.plans()[0].specs.size() == 1);
+    }
+
+    SUBCASE("a full entry refuses a new spot but still changes an old one")
+    {
+        for (unsigned i = 1; i < QuickBets::MaxSpecsPerEntry; ++i)
+        {
+            REQUIRE(qb.addBet("Hi", spec(BetName::Hardway, 4 + i, 5), replaced).empty());
+        }
+        REQUIRE(qb.plans()[0].specs.size() == QuickBets::MaxSpecsPerEntry);
+        CHECK_FALSE(qb.addBet("Hi", spec(BetName::Field, 0, 5), replaced).empty());
+        CHECK(qb.addBet("Hi", spec(BetName::Place, 8, 36), replaced).empty());
+        CHECK(replaced);
+    }
+}
+
+//----------------------------------------------------------------

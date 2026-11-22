@@ -7,6 +7,7 @@
 #include <controller/QuickBets.h>
 #include <gen/Logger.h>
 #include <algorithm>
+#include <cctype>
 #include <exception>
 
 using namespace Ctrl;
@@ -78,6 +79,120 @@ QuickBets::set(BetPlan plan)
     }
     plans_.push_back(std::move(plan));
     return true;
+}
+
+//----------------------------------------------------------------
+
+std::string
+QuickBets::checkName(const std::string& name)
+{
+    if (name.empty())
+    {
+        return "Give the entry a name.";
+    }
+    if (name.size() > MaxNameLength)
+    {
+        return "The name can have at most " + std::to_string(MaxNameLength) +
+               " characters.";
+    }
+    return std::string();
+}
+
+//----------------------------------------------------------------
+
+std::string
+QuickBets::checkSpec(const BetSpec& spec)
+{
+    if (spec.betName == BetName::Invalid || spec.betName == BetName::Count)
+    {
+        return "That is not a bet.";
+    }
+    if (spec.amount == 0)
+    {
+        return "The amount must be more than zero.";
+    }
+    if (spec.isOdds && !isPlanOddsBet(spec.betName))
+    {
+        return "A QuickBets entry can hold odds only for Pass Line and "
+               "Don't Pass bets.";
+    }
+    return std::string();
+}
+
+//----------------------------------------------------------------
+
+namespace {
+
+bool
+sameNameIgnoringCase(const std::string& a, const std::string& b)
+{
+    return a.size() == b.size() &&
+           std::equal(a.begin(), a.end(), b.begin(),
+                      [](unsigned char x, unsigned char y)
+                      { return std::tolower(x) == std::tolower(y); });
+}
+
+} // namespace
+
+//----------------------------------------------------------------
+
+std::string
+QuickBets::create(const std::string& name, const BetSpec& spec)
+{
+    if (auto why = checkName(name); !why.empty())  return why;
+    if (auto why = checkSpec(spec); !why.empty())  return why;
+
+    for (const auto& p : plans_)
+    {
+        if (sameNameIgnoringCase(p.name, name))
+        {
+            return "A QuickBets entry named " + p.name + " already exists.";
+        }
+    }
+    if (plans_.size() >= MaxEntries)
+    {
+        return "You already have " + std::to_string(MaxEntries) +
+               " QuickBets entries. Delete one first.";
+    }
+
+    BetPlan plan;
+    plan.name = name;
+    plan.specs.push_back(spec);
+    plans_.push_back(std::move(plan));
+    return std::string();
+}
+
+//----------------------------------------------------------------
+
+std::string
+QuickBets::addBet(const std::string& name, const BetSpec& spec, bool& replaced)
+{
+    replaced = false;
+    if (auto why = checkSpec(spec); !why.empty())  return why;
+
+    auto it = std::find_if(plans_.begin(), plans_.end(),
+        [&](const BetPlan& p) { return p.name == name; });
+    if (it == plans_.end())
+    {
+        return "There is no QuickBets entry named " + name + ".";
+    }
+
+    auto same = std::find_if(it->specs.begin(), it->specs.end(),
+        [&](const BetSpec& s) { return s.sameSpot(spec); });
+    if (same != it->specs.end())
+    {
+        same->amount = spec.amount;
+        replaced = true;
+        return std::string();
+    }
+    if (it->specs.size() >= MaxSpecsPerEntry)
+    {
+        return "The entry " + name + " already holds " +
+               std::to_string(MaxSpecsPerEntry) + " bets, the most it can.";
+    }
+    it->specs.push_back(spec);
+    *it = tidy(std::move(*it));        // Contract bets stay before odds
+    return std::string();
 }
 
 //----------------------------------------------------------------

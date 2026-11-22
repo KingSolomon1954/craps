@@ -7,14 +7,15 @@
 #pragma once
 
 #include <controller/BetSpec.h>
-#include <controller/LastFill.h>
-#include <controller/UndoManager.h>
-#include <craps/Player.h>
 #include <cstddef>
 #include <string>
 #include <vector>
 
+namespace Craps { class Player; }
+
 namespace Ctrl {
+
+class LastFill;
 
 class BetExecutor
 {
@@ -47,11 +48,10 @@ public:
     /// Applies the specs for the player, best effort: a spec that cannot
     /// be placed is skipped and the rest go on. Contract bets are applied
     /// before odds bets, whatever the order given. Everything applied is
-    /// one step for undo. lastFill, if given, is updated as for a bet the
-    /// player placed by hand.
+    /// one step for undo, recorded with UndoManager::instance(). lastFill, if
+    /// given, is updated as for a bet the player placed by hand.
     static Result apply(Craps::Player& player,
                         const std::vector<BetSpec>& specs,
-                        UndoManager& undo,
                         LastFill* lastFill = nullptr);
 };
 
@@ -75,7 +75,8 @@ are a single undo step.
 The caller checks that betting is open; if it is not, every spec is
 refused by the table and comes back skipped with the table's reason.
 
-Not a singleton and holds no state. Tests give it a Player directly.
+Not a singleton and holds no state of its own. It records undo steps with
+UndoManager::instance(). Tests give it a Player directly.
 
 */
 

@@ -129,6 +129,30 @@ CuiSender::reqApplyQuickBets(const Craps::PlayerId& playerId,
 //----------------------------------------------------------------
 
 Ctrl::CorrelationId
+CuiSender::reqEditQuickBets(const Craps::PlayerId& playerId,
+                            Ctrl::ReqEditQuickBets::Action action,
+                            const std::string& name,
+                            const Ctrl::BetSpec& spec)
+{
+    LOG_TRACE("CuiSender::reqEditQuickBets()");
+
+    Ctrl::ReqEditQuickBets ev;
+    ev.playerId = playerId;
+    ev.action   = action;
+    ev.name     = name;
+    ev.spec     = spec;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+
+    LOG_DEBUG("CuiSender::reqEditQuickBets() correlationId = " +
+              std::to_string(correlationId));
+
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
 CuiSender::reqOddsBet(const Craps::PlayerId& playerId,
                       Craps::BetId betId,
                       Gen::Money oddsAmount,

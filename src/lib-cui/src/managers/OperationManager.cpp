@@ -13,9 +13,11 @@
 #include <cui/dialogs/DialogError.h>
 #include <cui/dialogs/DialogMessage.h>
 #include <cui/dialogs/DialogPickPlayer.h>
+#include <cui/dialogs/DialogQuickBetsSetAdd.h>
 #include <cui/dialogs/DialogTextInput.h>
 #include <controller/AnimationSpeed.h>
 #include <controller/BetSpec.h>
+#include <controller/QuickBets.h>
 #include <controller/CrapsReaders.h>
 #include <controller/RollHistoryFormat.h>
 #include <controller/PlayerManager.h>
@@ -514,6 +516,166 @@ OperationManager::applyQuickBets()
 }
 
 //----------------------------------------------------------------
+//
+// Save the bet being entered into a QuickBets entry. DialogBetAmount
+// calls this with the amount already in CarrierBet. The player picks a
+// new entry or an existing one to add to. A new entry asks for a name.
+// Afterwards the player is back at DialogBetAmount, with a notice saying
+// what happened, so the bet can still be placed.
+//
+bool
+OperationManager::quickBetsSetOrAdd()
+{
+    if (isActive()) return false;
+
+    const auto& cb = CarrierBet::instance();
+    Ctrl::BetSpec spec;
+    spec.betName = cb.getBetName();
+    spec.isOdds  = cb.isOddsBet();
+    spec.pivot   = cb.getPivot();
+    spec.amount  = spec.isOdds ? cb.getOddsAmount() : cb.getContractAmount();
+    if (spec.isOdds && Ctrl::isPlanOddsBet(spec.betName))
+    {
+        spec.pivot = 0;          // Line odds sit on the line bet
+    }
+
+    if (const auto why = Ctrl::QuickBets::checkSpec(spec); !why.empty())
+    {
+        showNotice("Can't save to QuickBets", why);
+        return true;
+    }
+
+    std::string betText = EnumBetName::toString(spec.betName) + " bet";
+    if (spec.pivot != 0) betText += " " + std::to_string(spec.pivot);
+    if (spec.isOdds)     betText += " odds";
+    betText += " " + Gen::MoneyUtils::toString(spec.amount);
+
+    quickBetSpec_ = spec;
+    quickBetNames_.clear();
+    std::vector<DialogQuickBetsSetAdd::Entry> entries;
+    for (const auto& plan : Ctrl::CrapsReaders::readQuickBets())
+    {
+        entries.push_back({plan.name, Ctrl::describe(plan)});
+        quickBetNames_.push_back(plan.name);
+    }
+
+    type_  = OperationType::QuickBetsEdit;
+    stage_ = Stage::AwaitingPick;
+    DialogQuickBetsSetAdd::instance().configure(betText, std::move(entries));
+    SurfaceManager::instance().pushSurface(&DialogQuickBetsSetAdd::instance());
+    return true;
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onQuickBetsChoice(bool accepted, std::size_t index)
+{
+    if (stage_ != Stage::AwaitingPick || type_ != OperationType::QuickBetsEdit)
+        return;
+
+    if (!accepted)
+    {
+        finish();
+        return;
+    }
+
+    if (index == DialogQuickBetsSetAdd::NewEntry)
+    {
+        askForQuickBetsName();
+        return;
+    }
+    if (index >= quickBetNames_.size())
+    {
+        finish();
+        return;
+    }
+
+    quickBetTarget_ = quickBetNames_[index];
+    sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action::AddBet);
+}
+
+//----------------------------------------------------------------
+//
+// Name for a new QuickBets entry. The dialog says why a name is refused,
+// so it can be fixed without leaving.
+//
+void
+OperationManager::askForQuickBetsName()
+{
+    const auto plans = Ctrl::CrapsReaders::readQuickBets();
+
+    auto validator = [plans](const std::string& raw) -> std::string
+    {
+        const std::string name = trimmed(raw);
+        if (auto why = Ctrl::QuickBets::checkName(name); !why.empty())
+        {
+            return why;
+        }
+        for (const auto& p : plans)
+        {
+            if (sameIgnoringCase(p.name, name))
+            {
+                return "An entry named " + p.name + " already exists.";
+            }
+        }
+        if (plans.size() >= Ctrl::QuickBets::MaxEntries)
+        {
+            return "You already have " +
+                   std::to_string(Ctrl::QuickBets::MaxEntries) +
+                   " entries. Delete one first.";
+        }
+        return std::string();
+    };
+
+    stage_ = Stage::AwaitingText;
+    DialogTextInput::instance().configure(
+        "New QuickBets Entry", "Name: ", "",
+        Ctrl::QuickBets::MaxNameLength, std::move(validator));
+    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action action)
+{
+    stage_ = Stage::AwaitingResponse;
+    correlationId_ = CuiSender::instance().reqEditQuickBets(
+        Ctrl::CrapsReaders::getUserPlayerId(), action,
+        quickBetTarget_, quickBetSpec_);
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRspEditQuickBets(const Ctrl::RspEditQuickBets& ev)
+{
+    LOG_TRACE("OperationManager::onRspEditQuickBets() "
+              "correlationId = " + std::to_string(correlationId_));
+
+    if (stage_ != Stage::AwaitingResponse      ||
+        type_  != OperationType::QuickBetsEdit ||
+        ev.correlationId != correlationId_)
+    {
+        LOG_WARN("OperationManager::onRspEditQuickBets(): ignoring "
+                 "unmatched RspEditQuickBets: rsp.correlationId = " +
+                 std::to_string(ev.correlationId));
+        return;
+    }
+
+    if (!ev.accepted)
+    {
+        showError(ev.error, "QuickBets Error", "Unable to Save QuickBets");
+        return;
+    }
+
+    // Stay where we are, at the bet amount dialog
+    showNotice("Saved to QuickBets", ev.message);
+    finish();
+}
+
+//----------------------------------------------------------------
 
 void
 OperationManager::onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& ev)
@@ -645,6 +807,13 @@ OperationManager::onErrorAcknowledged()
         return;
     }
 
+    if (type_ == OperationType::QuickBetsEdit)
+    {
+        // Back to the bet amount dialog, which is still on the stack.
+        finish();
+        return;
+    }
+
     // DialogError has already popped itself. Now unwind the operation's
     // menus/dialogs to the root screen and release the operation state.
     SurfaceManager::instance().popToRoot();
@@ -706,6 +875,7 @@ OperationManager::finish()
     removalQueue_.clear();
     removalStarted_ = false;
     quickBetNames_.clear();
+    quickBetTarget_.clear();
     targetId_.clear();
     text_.clear();
     description_.clear();
@@ -1051,6 +1221,18 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
 void
 OperationManager::onTextResult(bool accepted, const std::string& text)
 {
+    if (stage_ == Stage::AwaitingText && type_ == OperationType::QuickBetsEdit)
+    {
+        if (!accepted)
+        {
+            finish();
+            return;
+        }
+        quickBetTarget_ = trimmed(text);
+        sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action::Create);
+        return;
+    }
+
     if (stage_ != Stage::AwaitingText || type_ != OperationType::Player)
         return;
 

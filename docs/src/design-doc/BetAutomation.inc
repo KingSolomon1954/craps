@@ -113,6 +113,30 @@ For QuickBets, as built:
 The bet and balance events that the placements cause redraw the screens in
 the usual way. The View does not need to know which bets were placed.
 
+Saving a bet into QuickBets, as built:
+
+#. ``DialogBetAmount`` ``q`` puts the typed amount into ``CarrierBet`` and
+   calls ``OperationManager::quickBetsSetOrAdd()``. That makes a ``BetSpec``
+   from the carrier. Line odds get pivot 0, because they sit on the line bet.
+   A bet that cannot be saved, such as Come odds, is refused with a notice.
+#. ``DialogQuickBetsSetAdd`` offers a new entry (``1``) or the existing
+   entries (``a``, ``b``, ...). It reports with
+   ``OperationManager::onQuickBetsChoice()``. A new entry asks for a name in
+   ``DialogTextInput``, whose validator uses ``QuickBets::checkName()`` and
+   refuses duplicates ignoring case.
+#. ``ReqEditQuickBets`` carries the action (create or add), the name and the
+   spec. ``EventHandler::onReqEditQuickBets()`` calls ``QuickBets::create()``
+   or ``QuickBets::addBet()``, which return "" or the reason, and always
+   answers with ``RspEditQuickBets``.
+#. On success the View shows the response's message in a notice. The player is
+   back at ``DialogBetAmount``, since the operation has no menus to unwind.
+
+The entries live in ``PlayerPrefs`` and are written to the player file when
+the players are saved, as for Last Fill. No lock guards them. They change
+only in answer to the View's own request, and the View reads them only before
+or after that request, so the two do not overlap until buddy automation
+reads them from another thread.
+
 QuickBets Rules
 ^^^^^^^^^^^^^^^
 

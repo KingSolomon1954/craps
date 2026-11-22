@@ -547,9 +547,9 @@ DialogBetAmount::setLocation(WindowPosition pos)
 // 5  │ Enter amount: 25                                        │
 // 6  │                                                         │
 // 7  │ [enter] Submit Bet                                      │
-// 8  │ [?] Help                                                │
-// 9  │ [. or esc] Back                                         │
-// 10 │                                                         │
+// 8  │ [q] QuickBets - Set or Add                              │
+// 9  │ [?] Help                                                │
+// 10 │ [. or esc] Back                                         │
 // 11 │                                                         │
 // 12 ├─────────────────────────────────────────────────────────┤
 // 13 │ Pays 1:2 True Odds 1:2 House Edge 0%                    │
@@ -567,6 +567,13 @@ DialogBetAmount::setLocation(WindowPosition pos)
 void
 DialogBetAmount::draw()
 {
+    // The borders and prompts are drawn once, and the fields below are
+    // redrawn over them. When another dialog above this one closes, the
+    // table behind is redrawn and ncurses would copy only the changed
+    // lines of this window, leaving remnants. touchwin() marks the whole
+    // window changed so that all of it is copied.
+    touchwin(pWin_);
+
     drawTitle();
     drawAmountLimits();
     drawReference();
@@ -799,6 +806,7 @@ DialogBetAmount::handleKey(int ch)
     case '\r':
     case '\n':
     case KEY_ENTER: doEnter(); return true;
+    case 'q' : doQuickBets();  return true;
     case '?' : doHelp();       return true;
     case '.' :
     case 27  : back();         return true;
@@ -907,6 +915,21 @@ DialogBetAmount::doEnter()
     }
 
     processAmount();
+}
+
+//----------------------------------------------------------------
+
+void
+DialogBetAmount::doQuickBets()
+{
+    if (!readInputAmount())
+    {
+        beep();
+        return;
+    }
+
+    CarrierBet::instance().setAmount(inputAmount_);
+    OperationManager::instance().quickBetsSetOrAdd();
 }
 
 //----------------------------------------------------------------

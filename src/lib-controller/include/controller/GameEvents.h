@@ -6,6 +6,7 @@
 
 #pragma once
 #include <controller/AnimationSpeed.h>
+#include <controller/BetSpec.h>
 #include <controller/RollHistoryFormat.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
@@ -35,6 +36,7 @@ enum class EventType
     ReqRemoveBet,
     ReqUndoBet,
     ReqApplyQuickBets,
+    ReqEditQuickBets,
     ReqSetAnimationSpeed,
     ReqSetRollHistoryFormat,
     ReqSwitchPlayer,
@@ -47,6 +49,7 @@ enum class EventType
     RspRemoveBet,
     RspUndoBet,
     RspApplyQuickBets,
+    RspEditQuickBets,
     RspChangeBet,              // not yet implemented
     RspSwitchPlayer,
     RspManagePlayer,
@@ -741,6 +744,41 @@ struct RspApplyQuickBets : public GameEvent
 
     RspApplyQuickBets()
         : GameEvent{EventSource::Controller, EventType::RspApplyQuickBets}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Save one bet into the player's QuickBets: as a new entry (Create), or
+/// into an existing one (AddBet). Always answers with RspEditQuickBets.
+struct ReqEditQuickBets : public GameEvent
+{
+    enum class Action { Create, AddBet };
+
+    Craps::PlayerId playerId;
+    Action          action = Action::Create;
+    std::string     name;           ///< New entry's name, or the entry to add to
+    BetSpec         spec;           ///< The bet to save
+
+    ReqEditQuickBets()
+        : GameEvent{EventSource::View, EventType::ReqEditQuickBets}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqEditQuickBets. When accepted, message says what was done,
+/// e.g. Added Place 6 $24 to "Place Hi". Otherwise error says why not.
+struct RspEditQuickBets : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    std::string     name;
+    std::string     message;
+    Gen::ErrorPass  error;
+
+    RspEditQuickBets()
+        : GameEvent{EventSource::Controller, EventType::RspEditQuickBets}
     {}
 };
 
