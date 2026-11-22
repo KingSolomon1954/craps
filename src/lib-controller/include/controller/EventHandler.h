@@ -36,8 +36,6 @@ private:
     void onReqRollDice (const Ctrl::ReqRollDice& ev)      const;
     void onReqSetAnimationSpeed(const Ctrl::ReqSetAnimationSpeed& ev) const;
     void onReqSetRollHistoryFormat(const Ctrl::ReqSetRollHistoryFormat& ev) const;
-    void onReqAutoFill (const Ctrl::ReqAutoFill& ev)      const;
-    void onReqQuickBet (const Ctrl::ReqQuickBet& ev)      const;
     void onReqSwitchPlayer(const Ctrl::ReqSwitchPlayer& ev) const;
     void onReqManagePlayer(const Ctrl::ReqManagePlayer& ev) const;
     void onReqTerminate(const Ctrl::ReqTerminate& ev)     const;

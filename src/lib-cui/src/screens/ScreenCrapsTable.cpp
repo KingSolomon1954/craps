@@ -265,14 +265,6 @@ ScreenCrapsTable::handleAmountInput(int ch)
         lineBuffer_.clear();
         drawInputPrompt();
     }
-    else if (ch == 'q')
-    {
-        setupQuickBet();
-    }
-    else if (ch == 'a')
-    {
-        setupAutoFill();
-    }
     else if (ch == KEY_BACKSPACE || ch == 127)
     {
         if (!lineBuffer_.empty())

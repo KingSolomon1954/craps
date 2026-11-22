@@ -57,5 +57,5 @@ What cannot be undone
    the list of steps that you could undo is cleared, because your bets may
    no longer match it. Your bets and your money are left as they were.
 
-Undo does not change your Last Fill or your Quick Bet and Auto Fill amounts.
-Those still remember the last amount you entered, even if you undid that bet.
+Undo does not change your Last Fill amounts.
+That still remembers the last amount you entered, even if you undid that bet.

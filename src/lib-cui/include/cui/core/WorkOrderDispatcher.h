@@ -54,8 +54,6 @@ private:
     void process(const Ctrl::UslBetRemoved& ev);
     void process(const Ctrl::UslRollHistoryFormatChanged& ev);
     void process(const Ctrl::UslBetChanged& ev);
-    void process(const Ctrl::UslAutoFillChanged& ev);
-    void process(const Ctrl::UslQuickBetChanged& ev);
     
     void process(const Ctrl::UslTableBetsChanged& ev);
     void process(const Ctrl::UslTableSessionStatsChanged& ev);

@@ -9,12 +9,10 @@ add_executable(controller-ut
     ConfigManagerTest.cpp
     ConfigSeedTest.cpp
     StartChoicesTest.cpp
-    AutoFillTest.cpp
     LastFillTest.cpp
     PlayerManagerNameTest.cpp
     PlayerManifestTest.cpp
     PlayerPrefsTest.cpp
-    QuickBetTest.cpp
     TableManifestTest.cpp
     UndoManagerTest.cpp
     UserStateTest.cpp

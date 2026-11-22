@@ -217,18 +217,6 @@ CuiReceiver::CuiReceiver()
         {
             this->onPlayerBalanceChanged(ev);
         });
-    
-    Gen::EventManager::instance().subscribe<Ctrl::UslAutoFillChanged>(
-        [this](const Ctrl::UslAutoFillChanged& ev)
-        {
-            this->onAutoFillChanged(ev);
-        });
-
-    Gen::EventManager::instance().subscribe<Ctrl::UslQuickBetChanged>(
-        [this](const Ctrl::UslQuickBetChanged& ev)
-        {
-            this->onQuickBetChanged(ev);
-        });
 }
 
 //----------------------------------------------------------------
@@ -520,26 +508,6 @@ CuiReceiver::onPlayerBalanceChanged(const Ctrl::UslPlayerBalanceChanged& ev) con
 }
 
 //----------------------------------------------------------------
-
-void
-CuiReceiver::onAutoFillChanged(const Ctrl::UslAutoFillChanged& ev) const
-{
-    LOG_TRACE("CuiReceiver()::onAutoFillChanged()");
-
-    WorkOrderEvent wo{.event = ev};
-    CuiThread::instance().enqueueWork(wo);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiReceiver::onQuickBetChanged(const Ctrl::UslQuickBetChanged& ev) const
-{
-    LOG_TRACE("CuiReceiver()::onQuickBetChanged()");
-
-    WorkOrderEvent wo{.event = ev};
-    CuiThread::instance().enqueueWork(wo);
-}
 
 //----------------------------------------------------------------
 

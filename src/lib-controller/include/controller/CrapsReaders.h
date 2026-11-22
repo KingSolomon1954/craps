@@ -15,9 +15,7 @@
 #include <controller/PlayerManager.h>
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
-#include <controller/AutoFill.h>
 #include <controller/LastFill.h>
-#include <controller/QuickBet.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
 #include <craps/TableRules.h>
@@ -272,17 +270,6 @@ public:
         LastFill::LastFillEntry& entry,
         Gen::ErrorPass& ep);
 
-    static Gen::ReturnCode getAutoFill(
-        AutoFill::AutoFillEntry& entry,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode getAutoFills(
-        AutoFill::AutoFills& autoFills,  // return arg
-        Gen::ErrorPass& ep);
-
-    // Quick Bet
-    static Gen::ReturnCode getQuickBets(
-        QuickBet::QuickBets& quickBets,  // return arg
-        Gen::ErrorPass& ep);
 
 private:
     // Private helpers

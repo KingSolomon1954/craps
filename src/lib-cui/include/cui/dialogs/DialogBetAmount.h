@@ -47,11 +47,9 @@ private:
     WindowPosition winPos_{};
     static constexpr WindowSize winSize_ = {24, 59};  // rows, cols, fixed size
 
-    static constexpr std::array<std::string_view, 5> Prompts
+    static constexpr std::array<std::string_view, 3> Prompts
     {
         "[enter] Submit Bet",
-        "[a] Save as AutoFill",
-        "[q] Save as Quick Bet",
         "[?] Help",
         "[. or esc] Back"
     };
@@ -80,7 +78,6 @@ private:
     void drawInput();
     std::string prepTitle(const std::string& title);
     Gen::Money getPrefillAmount() const;
-    Gen::Money getAutoFill() const;
     Gen::Money getLastFill() const;
 
     // Input processing
@@ -88,8 +85,6 @@ private:
     bool readInputAmount();
     void back();
     void doEnter();
-    void doAutoFill();
-    void doQuickBet();
     void doHelp();
     void processAmount();
 };
@@ -104,22 +99,11 @@ DialogBetAmount prompts the player to enter an amount for
 a given bet. The dialog is first "configured" before pushing
 to SurfaceManager, similar to other menus and dialogs.
 
-DialogBetAmount has some special behaviors. Since it is already focused
-on a particular bet and amount, it is natural to use it to help 
-configure some automatic behaviors.
-
-DialogBetAmount will support two menu entries such that if selected it 
-uses the current entry value for:
-
-@li Setting the auto fill value for the current bet type, to be used for
-    default filling future bets of this type with the given amount.
-
-@li Using the current bet type and amount to configure a Quick Bet. A
-    quick bet is shortcut that is assigned to a particular bet and
-    amount, and is given a fixed menu entry on the QuickBet menu.  So
-    for example, the user presses 'q' (quick bet menu) followed by 'a'
-    (the first configured quick bet) could mean make a Place Bet on the
-    6 for 100.
+The amount field starts with the amount last used for this bet (see
+LastFill). Since the dialog is already focused on a particular bet and
+amount, it is the natural place to offer QuickBets and AutoOdds; see
+the Bet Automation section of the design document. Those entries are
+not here yet.
 
 
 Responsibilities:

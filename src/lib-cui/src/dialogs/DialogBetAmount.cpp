@@ -10,7 +10,6 @@
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
-#include <controller/AutoFill.h>
 #include <controller/LastFill.h>
 #include <controller/CrapsReaders.h>
 #include <craps/CrapsTypes.h>
@@ -548,10 +547,10 @@ DialogBetAmount::setLocation(WindowPosition pos)
 // 5  │ Enter amount: 25                                        │
 // 6  │                                                         │
 // 7  │ [enter] Submit Bet                                      │
-// 8  │ [a] Save as AutoFill                                    │
-// 9  │ [q] Save as Quick Bet                                   │
-// 10 │ [?] Help                                                │
-// 11 │ [. or esc] Back                                         │
+// 8  │ [?] Help                                                │
+// 9  │ [. or esc] Back                                         │
+// 10 │                                                         │
+// 11 │                                                         │
 // 12 ├─────────────────────────────────────────────────────────┤
 // 13 │ Pays 1:2 True Odds 1:2 House Edge 0%                    │
 // 14 │ Loses on 4 or 10 respectively. Wins on 7                │
@@ -800,8 +799,6 @@ DialogBetAmount::handleKey(int ch)
     case '\r':
     case '\n':
     case KEY_ENTER: doEnter(); return true;
-    case 'a' : doAutoFill();   return true;
-    case 'q' : doQuickBet();   return true;
     case '?' : doHelp();       return true;
     case '.' :
     case 27  : back();         return true;
@@ -915,36 +912,6 @@ DialogBetAmount::doEnter()
 //----------------------------------------------------------------
 
 void
-DialogBetAmount::doAutoFill()
-{
-    if (!readInputAmount())
-    {
-        beep();
-        return;
-    }
-
-    CarrierBet::instance().setAmount(inputAmount_);
-    OperationManager::instance().autoFill();
-}
-
-//----------------------------------------------------------------
-
-void
-DialogBetAmount::doQuickBet()
-{
-    if (!readInputAmount())
-    {
-        beep();
-        return;
-    }
-
-    CarrierBet::instance().setAmount(inputAmount_);
-    OperationManager::instance().quickBet();
-}
-
-//----------------------------------------------------------------
-
-void
 DialogBetAmount::doHelp()
 {
     // TODO
@@ -965,30 +932,7 @@ DialogBetAmount::prepLineInput()
 Gen::Money
 DialogBetAmount::getPrefillAmount() const
 {
-    auto fill = getAutoFill();
-    if (fill == 0) fill = getLastFill();
-    return fill;
-}
-
-//----------------------------------------------------------------
-
-Gen::Money
-DialogBetAmount::getAutoFill() const
-{
-    const auto& cb = CarrierBet::instance();
-
-    Ctrl::AutoFill::AutoFillEntry afe
-    {
-        cb.getBetName(),
-        cb.getPivot(),
-        cb.isOddsBet(),
-        0                  // AutoFill returns preFillAmount here
-    };
-
-    Gen::ErrorPass ep;
-    (void) Ctrl::CrapsReaders::getAutoFill(afe, ep);
-
-    return afe.amount;
+    return getLastFill();
 }
 
 //----------------------------------------------------------------

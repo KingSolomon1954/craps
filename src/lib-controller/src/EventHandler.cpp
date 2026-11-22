@@ -10,9 +10,7 @@
 #include <controller/GameMain.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
-#include <controller/AutoFill.h>
 #include <controller/LastFill.h>
-#include <controller/QuickBet.h>
 #include <controller/UndoBet.h>
 #include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
@@ -68,18 +66,6 @@ EventHandler::EventHandler()
         [this](const Ctrl::ReqRollDice& ev)
         {
             this->onReqRollDice(ev);
-        });
-
-    Gen::EventManager::instance().subscribe<Ctrl::ReqAutoFill>(
-        [this](const Ctrl::ReqAutoFill& ev)
-        {
-            this->onReqAutoFill(ev);
-        });
-
-    Gen::EventManager::instance().subscribe<Ctrl::ReqQuickBet>(
-        [this](const Ctrl::ReqQuickBet& ev)
-        {
-            this->onReqQuickBet(ev);
         });
 
     Gen::EventManager::instance().subscribe<Ctrl::ReqSwitchPlayer>(
@@ -388,72 +374,6 @@ EventHandler::onReqRollDice(const Ctrl::ReqRollDice& ev) const
 }
 
 //----------------------------------------------------------------
-
-void
-EventHandler::onReqAutoFill(const Ctrl::ReqAutoFill& ev) const
-{
-    LOG_TRACE("Entered Controller::EventHandler::onReqAutoFill()");
-    
-    AutoFill::AutoFillEntry afe
-    {
-        ev.betName,
-        ev.pivot,
-        ev.isOddsBet,
-        ev.amount
-    };
-    Gbl::pPlayerMgr->userPrefs().autoFill().setAutoFill(afe);
-
-    Ctrl::UslAutoFillChanged changed;
-    changed.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
-    changed.betName   = ev.betName;
-    changed.pivot     = ev.pivot;
-    changed.isOddsBet = ev.isOddsBet;
-    changed.amount    = ev.amount;
-    Gen::EventManager::instance().publish(changed);
-
-    LOG_INFO(std::string("AutoFill Configured") +
-        "\n    playerId: " + changed.playerId                    +
-        "\n     betName: " + EnumBetName::toString(ev.betName)    +
-        "\n       pivot: " + std::to_string(ev.pivot)             +
-        "\n   isOddsBet: " + (ev.isOddsBet ? "true" : "false")    +
-        "\n      amount: " + std::to_string(ev.amount));
-
-    // No response event
-}
-
-//----------------------------------------------------------------
-
-void
-EventHandler::onReqQuickBet(const Ctrl::ReqQuickBet& ev) const
-{
-    LOG_TRACE("Entered Controller::EventHandler::onReqQuickBet()");
-
-    QuickBet::QuickBetEntry qbe
-    {
-        ev.betName,
-        ev.pivot,
-        ev.isOddsBet,
-        ev.amount
-    };
-    Gbl::pPlayerMgr->userPrefs().quickBet().setQuickBet(qbe);
-
-    Ctrl::UslQuickBetChanged changed;
-    changed.playerId  = Gbl::pPlayerMgr->getUserPlayer()->getPlayerId();
-    changed.betName   = ev.betName;
-    changed.pivot     = ev.pivot;
-    changed.isOddsBet = ev.isOddsBet;
-    changed.amount    = ev.amount;
-    Gen::EventManager::instance().publish(changed);
-
-    LOG_INFO(std::string("QuickBet Configured") +
-        "\n    playerId: " + changed.playerId                    +
-        "\n     betName: " + EnumBetName::toString(ev.betName)    +
-        "\n       pivot: " + std::to_string(ev.pivot)             +
-        "\n   isOddsBet: " + (ev.isOddsBet ? "true" : "false")    +
-        "\n      amount: " + std::to_string(ev.amount));
-
-    // No response event
-}
 
 //----------------------------------------------------------------
 //

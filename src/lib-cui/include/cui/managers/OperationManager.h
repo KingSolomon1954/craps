@@ -51,8 +51,6 @@ public:
     bool chooseAnimationSpeed(); // Workflow: Pick the dice animation speed
     bool chooseRollHistoryFormat(); // Workflow: Pick how rolls are listed
     bool confirmQuit();  // Workflow: Confirmation to quit application
-    void autoFill();     // Workflow: Set up an AutoFill entry
-    void quickBet();     // Workflow: Set up an QuickBet entry
 
     // Called only on the CUI thread by WorkOrderDispatcher / dialogs.
     void onRspMakeBet(const Ctrl::RspMakeBet& response);

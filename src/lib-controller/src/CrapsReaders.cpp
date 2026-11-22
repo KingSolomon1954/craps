@@ -1027,52 +1027,6 @@ CrapsReaders::getLastFill(
 
 //----------------------------------------------------------------
 //
-// Auto Fills
-//
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsReaders::getAutoFill(
-    AutoFill::AutoFillEntry& afe,
-    Gen::ErrorPass& ep)
-{
-    if (Gbl::pPlayerMgr->userPrefs().autoFill().getAutoFill(afe)
-        == Gen::ReturnCode::Fail)
-    {
-        ep.setDescription("No such auto fill entry exists.");
-        return Gen::ReturnCode::Fail;
-    }
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsReaders::getAutoFills(
-    AutoFill::AutoFills& autoFills,  // return arg
-    Gen::ErrorPass& ep)
-{
-    autoFills = Gbl::pPlayerMgr->userPrefs().autoFill().getAutoFills();
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-//
-// Quick Bets
-//
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsReaders::getQuickBets(
-    QuickBet::QuickBets& quickBets,  // return arg
-    Gen::ErrorPass& ep)
-{
-    quickBets = Gbl::pPlayerMgr->userPrefs().quickBet().getQuickBets();
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-//
 // Program related
 //
 //----------------------------------------------------------------
