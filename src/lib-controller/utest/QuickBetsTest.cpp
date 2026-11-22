@@ -339,3 +339,72 @@ TEST_CASE("QuickBets:addBet")
 }
 
 //----------------------------------------------------------------
+
+TEST_CASE("QuickBets:rename")
+{
+    QuickBets qb;
+    REQUIRE(qb.create("Hi", spec(BetName::Place, 8, 24)).empty());
+    REQUIRE(qb.create("Lo", spec(BetName::Place, 6, 12)).empty());
+
+    CHECK(qb.rename("Hi", "Place Hi").empty());
+    CHECK(qb.plans()[0].name == "Place Hi");
+    CHECK(qb.find("Hi") == nullptr);
+
+    CHECK(qb.rename("Lo", "LO").empty());               // Only the case changes
+    CHECK(qb.plans()[1].name == "LO");
+
+    CHECK_FALSE(qb.rename("LO", "place hi").empty());   // Another entry's name
+    CHECK_FALSE(qb.rename("LO", "").empty());           // No name
+    CHECK_FALSE(qb.rename("Nope", "X").empty());        // No such entry
+    CHECK(qb.plans()[1].name == "LO");
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("QuickBets:setAmount")
+{
+    QuickBets qb;
+    REQUIRE(qb.create("Hi", spec(BetName::Place, 8, 24)).empty());
+    bool replaced = false;
+    REQUIRE(qb.addBet("Hi", spec(BetName::Place, 9, 20), replaced).empty());
+
+    BetSpec changed;
+    CHECK(qb.setAmount("Hi", 1, 30, changed).empty());
+    CHECK(changed.pivot == 9u);
+    CHECK(changed.amount == 30u);
+    CHECK(qb.plans()[0].specs[1].amount == 30u);
+    CHECK(qb.plans()[0].specs[0].amount == 24u);
+
+    CHECK_FALSE(qb.setAmount("Hi", 5, 30, changed).empty());     // No such bet
+    CHECK_FALSE(qb.setAmount("Hi", 0, 0, changed).empty());      // Zero
+    CHECK_FALSE(qb.setAmount("Nope", 0, 30, changed).empty());   // No such entry
+    CHECK(qb.plans()[0].specs[0].amount == 24u);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("QuickBets:removeBet and removeEntry")
+{
+    QuickBets qb;
+    REQUIRE(qb.create("Hi", spec(BetName::Place, 8, 24)).empty());
+    bool replaced = false;
+    REQUIRE(qb.addBet("Hi", spec(BetName::Place, 9, 20), replaced).empty());
+
+    BetSpec removed;
+    CHECK(qb.removeBet("Hi", 0, removed).empty());
+    CHECK(removed.pivot == 8u);
+    REQUIRE(qb.plans()[0].specs.size() == 1);
+    CHECK(qb.plans()[0].specs[0].pivot == 9u);
+
+    // The last bet stays; the entry has to be deleted instead
+    CHECK_FALSE(qb.removeBet("Hi", 0, removed).empty());
+    CHECK(qb.plans()[0].specs.size() == 1);
+    CHECK_FALSE(qb.removeBet("Hi", 4, removed).empty());
+    CHECK_FALSE(qb.removeBet("Nope", 0, removed).empty());
+
+    CHECK_FALSE(qb.removeEntry("Nope").empty());
+    CHECK(qb.removeEntry("Hi").empty());
+    CHECK(qb.plans().empty());
+}
+
+//----------------------------------------------------------------

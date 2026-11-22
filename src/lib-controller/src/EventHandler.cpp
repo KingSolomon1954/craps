@@ -449,9 +449,10 @@ EventHandler::onReqApplyQuickBets(const Ctrl::ReqApplyQuickBets& ev) const
 
 //----------------------------------------------------------------
 //
-// Saves a bet into the player's QuickBets, as a new entry or into an
-// existing one. Always answers with RspEditQuickBets. Nothing here
-// touches the table, so it works whether or not betting is open.
+// Changes the player's QuickBets: saves a bet, renames, changes an
+// amount, removes a bet or deletes an entry. Always answers with
+// RspEditQuickBets. Nothing here touches the table, so it works whether
+// or not betting is open.
 //
 void
 EventHandler::onReqEditQuickBets(const Ctrl::ReqEditQuickBets& ev) const
@@ -470,24 +471,57 @@ EventHandler::onReqEditQuickBets(const Ctrl::ReqEditQuickBets& ev) const
     {
         why = "That player could not be found.";
     }
-    else if (ev.action == Ctrl::ReqEditQuickBets::Action::Create)
-    {
-        why = prefs->quickBets().create(ev.name, ev.spec);
-        if (why.empty())
-        {
-            rsp.message = "Saved " + describe(ev.spec) +
-                          " as the new QuickBets entry \"" + ev.name + "\".";
-        }
-    }
     else
     {
+        QuickBets& qb = prefs->quickBets();
+        using Action = Ctrl::ReqEditQuickBets::Action;
+        const std::string quoted = "\"" + ev.name + "\"";
+        BetSpec changed;
         bool replaced = false;
-        why = prefs->quickBets().addBet(ev.name, ev.spec, replaced);
-        if (why.empty())
+
+        switch (ev.action)
         {
-            rsp.message = (replaced ? "Changed to " : "Added ") +
-                          describe(ev.spec) +
-                          (replaced ? " in \"" : " to \"") + ev.name + "\".";
+        case Action::Create:
+            why = qb.create(ev.name, ev.spec);
+            if (why.empty())
+                rsp.message = "Saved " + describe(ev.spec) +
+                              " as the new QuickBets entry " + quoted + ".";
+            break;
+
+        case Action::AddBet:
+            why = qb.addBet(ev.name, ev.spec, replaced);
+            if (why.empty())
+                rsp.message = (replaced ? "Changed to " : "Added ") +
+                              describe(ev.spec) +
+                              (replaced ? " in " : " to ") + quoted + ".";
+            break;
+
+        case Action::Rename:
+            why = qb.rename(ev.name, ev.newName);
+            if (why.empty())
+            {
+                rsp.name    = ev.newName;
+                rsp.message = "Renamed " + quoted + " to \"" + ev.newName + "\".";
+            }
+            break;
+
+        case Action::SetAmount:
+            why = qb.setAmount(ev.name, ev.index, ev.amount, changed);
+            if (why.empty())
+                rsp.message = "Changed " + describe(changed) + " in " + quoted + ".";
+            break;
+
+        case Action::RemoveBet:
+            why = qb.removeBet(ev.name, ev.index, changed);
+            if (why.empty())
+                rsp.message = "Removed " + describe(changed) + " from " + quoted + ".";
+            break;
+
+        case Action::Delete:
+            why = qb.removeEntry(ev.name);
+            if (why.empty())
+                rsp.message = "Deleted the QuickBets entry " + quoted + ".";
+            break;
         }
     }
 

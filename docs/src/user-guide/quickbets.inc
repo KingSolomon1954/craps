@@ -70,6 +70,29 @@ Some rules:
 * Entries can hold odds only for Pass Line and Don't Pass bets. For other
   odds bets the message says so.
 
+Changing your QuickBets entries
+-------------------------------
+
+Press ``c`` for the *Control Menu*, then ``c`` for *Configure*, then ``q``
+for *QuickBets*. A list shows your entries. Pick one, then pick what to do
+with it:
+
+* **Rename** asks for a new name, starting with the old one.
+* **Change an amount** lists the bets in the entry. Pick one and type its new
+  amount.
+* **Remove a bet** lists the bets in the entry. Pick one to take it out. An
+  entry always keeps at least one bet, so to get rid of the last one,
+  delete the entry.
+* **Delete** asks you to confirm and then deletes the whole entry.
+
+A message tells you what changed, and you are back at the Configure menu. Esc
+leaves any list or question without changing anything.
+
+New entries, and more bets for an entry, are made from the bet amount
+dialog as described above, since that is where the bet is already chosen.
+
+Changes are saved with your player when you leave the game.
+
 Writing entries in the player file
 ----------------------------------
 

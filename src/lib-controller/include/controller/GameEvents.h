@@ -749,16 +749,27 @@ struct RspApplyQuickBets : public GameEvent
 
 //----------------------------------------------------------------
 
-/// Save one bet into the player's QuickBets: as a new entry (Create), or
-/// into an existing one (AddBet). Always answers with RspEditQuickBets.
+/// Change the player's QuickBets. Always answers with RspEditQuickBets.
+///
+/// | Action    | Uses                                                    |
+/// | --------- | ------------------------------------------------------- |
+/// | Create    | name (the new entry), spec                              |
+/// | AddBet    | name (existing entry), spec                             |
+/// | Rename    | name (existing entry), newName                          |
+/// | SetAmount | name, index (of the bet in the entry), amount           |
+/// | RemoveBet | name, index                                             |
+/// | Delete    | name                                                    |
 struct ReqEditQuickBets : public GameEvent
 {
-    enum class Action { Create, AddBet };
+    enum class Action { Create, AddBet, Rename, SetAmount, RemoveBet, Delete };
 
     Craps::PlayerId playerId;
     Action          action = Action::Create;
-    std::string     name;           ///< New entry's name, or the entry to add to
-    BetSpec         spec;           ///< The bet to save
+    std::string     name;           ///< New entry's name, or the entry to change
+    BetSpec         spec;           ///< The bet to save (Create, AddBet)
+    std::string     newName;        ///< Rename
+    std::size_t     index  = 0;     ///< SetAmount, RemoveBet: which bet
+    Gen::Money      amount = 0;     ///< SetAmount
 
     ReqEditQuickBets()
         : GameEvent{EventSource::View, EventType::ReqEditQuickBets}
@@ -769,6 +780,7 @@ struct ReqEditQuickBets : public GameEvent
 
 /// Answer to ReqEditQuickBets. When accepted, message says what was done,
 /// e.g. Added Place 6 $24 to "Place Hi". Otherwise error says why not.
+/// Changes are kept in the player's prefs and saved with the players.
 struct RspEditQuickBets : public GameEvent
 {
     bool            accepted = false;

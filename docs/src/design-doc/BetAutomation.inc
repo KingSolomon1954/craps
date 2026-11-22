@@ -131,6 +131,27 @@ Saving a bet into QuickBets, as built:
 #. On success the View shows the response's message in a notice. The player is
    back at ``DialogBetAmount``, since the operation has no menus to unwind.
 
+Managing entries, as built. ``MenuConfigure`` ``q`` calls
+``OperationManager::manageQuickBets()``. It is a chain of steps, each of which
+pops itself and reports back, so ``manageStep_`` says which one answered:
+
+#. Pick the entry in ``DialogPickPlayer``.
+#. Pick the action: rename, change an amount, remove a bet or delete.
+#. Depending on the action: a name in ``DialogTextInput``, a bet in
+   ``DialogPickPlayer`` and then an amount in ``DialogTextInput``, a bet to
+   remove in ``DialogPickPlayer``, or a confirmation in ``DialogConfirm``.
+#. One ``ReqEditQuickBets`` with the action's fields (``newName``, ``index``
+   and ``amount``). ``QuickBets::rename()``, ``setAmount()``, ``removeBet()``
+   and ``removeEntry()`` each return "" or the reason, and the response
+   carries the message.
+
+The entry is named in the request, and the bet by its position in the entry.
+Nothing else changes entries between the pick and the request, so the
+position is still right. If it is not, the controller refuses with "That bet is
+no longer in the entry". An entry keeps at least one bet. Creating an entry
+and adding bets stay in the bet amount dialog, where the bet is already
+chosen.
+
 The entries live in ``PlayerPrefs`` and are written to the player file when
 the players are saved, as for Last Fill. No lock guards them. They change
 only in answer to the View's own request, and the View reads them only before
@@ -259,10 +280,10 @@ Automation Staging
    dialog entries, YAML and documentation.
 #. ``BetSpec``, bet plans and ``BetExecutor``, with the single undo step,
    the summary event, ``QuickBets`` data and persistence, and the Betting
-   menu key to apply an entry. Done. Entries are written in the player
-   file until step 3 gives the Configuration menu pages for them.
+   menu key to apply an entry. Done.
 #. The Set or Add dialog in ``DialogBetAmount`` and the Configuration menu
-   pages for QuickBets.
+   pages for QuickBets. Done. Entries are made in the bet amount dialog and
+   changed in the Configuration menu.
 #. AutoOdds: settings and persistence, the pass on ``UslBettingOpened``,
    the ``DialogBetAmount`` entry, the Configuration menu pages, the master
    switch and its indicator.

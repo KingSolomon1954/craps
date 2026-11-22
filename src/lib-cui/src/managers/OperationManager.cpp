@@ -641,9 +641,318 @@ void
 OperationManager::sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action action)
 {
     stage_ = Stage::AwaitingResponse;
-    correlationId_ = CuiSender::instance().reqEditQuickBets(
-        Ctrl::CrapsReaders::getUserPlayerId(), action,
-        quickBetTarget_, quickBetSpec_);
+
+    Ctrl::ReqEditQuickBets req;
+    req.playerId = Ctrl::CrapsReaders::getUserPlayerId();
+    req.action   = action;
+    req.name     = quickBetTarget_;
+    req.spec     = quickBetSpec_;
+    correlationId_ = CuiSender::instance().reqEditQuickBets(std::move(req));
+}
+
+//----------------------------------------------------------------
+//
+// Managing QuickBets, from the Configuration menu.
+//
+// Pick an entry, then pick what to do with it: rename it, change the
+// amount of one of its bets, remove one of its bets, or delete it. Each
+// action asks what it needs (a name, a bet, an amount, a confirmation)
+// and then sends one ReqEditQuickBets. New entries are made from the bet
+// amount dialog, where the bet is already chosen.
+//
+// The pick lists and prompts each pop themselves and report here, so
+// manageStep_ says which one just answered.
+//
+bool
+OperationManager::manageQuickBets()
+{
+    if (isActive()) return false;
+
+    const auto plans = Ctrl::CrapsReaders::readQuickBets();
+    if (plans.empty())
+    {
+        showNotice("No QuickBets",
+                   "You have not set up any QuickBets yet. While you enter "
+                   "a bet, press q to save it into one.");
+        return true;
+    }
+
+    quickBetNames_.clear();
+    std::vector<DialogPickPlayer::Item> items;
+    for (const auto& plan : plans)
+    {
+        DialogPickPlayer::Item item;
+        item.tag         = quickBetNames_.size();
+        item.text        = plan.name;
+        item.description = Ctrl::describe(plan);
+        items.push_back(std::move(item));
+        quickBetNames_.push_back(plan.name);
+    }
+
+    type_       = OperationType::QuickBetsManage;
+    stage_      = Stage::AwaitingPick;
+    manageStep_ = ManageStep::PickEntry;
+    DialogPickPlayer::instance().configure("QuickBets - Change which entry?",
+                                           std::move(items),
+                                           DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+    return true;
+}
+
+//----------------------------------------------------------------
+
+namespace {
+
+const Ctrl::BetPlan*
+findPlan(const std::vector<Ctrl::BetPlan>& plans, const std::string& name)
+{
+    for (const auto& p : plans)
+    {
+        if (p.name == name) return &p;
+    }
+    return nullptr;
+}
+
+} // namespace
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onManagePick(bool accepted, std::size_t tag)
+{
+    using Action = Ctrl::ReqEditQuickBets::Action;
+
+    if (!accepted)
+    {
+        finish();       // Cancelled; stay on the Configure menu
+        return;
+    }
+
+    switch (manageStep_)
+    {
+    case ManageStep::PickEntry:
+        if (tag >= quickBetNames_.size())
+        {
+            finish();
+            return;
+        }
+        manageEntry_ = quickBetNames_[tag];
+        pickManageAction();
+        return;
+
+    case ManageStep::PickAction:
+        switch (tag)
+        {
+        case 0:
+            askManageName();
+            return;
+        case 1:
+            pickManageBet(Action::SetAmount);
+            return;
+        case 2:
+        {
+            const auto plans = Ctrl::CrapsReaders::readQuickBets();
+            const auto* plan = findPlan(plans, manageEntry_);
+            if (plan != nullptr && plan->specs.size() <= 1)
+            {
+                finish();
+                showNotice("Can't remove the bet",
+                           manageEntry_ + " has only one bet. Delete the "
+                           "entry instead.");
+                return;
+            }
+            pickManageBet(Action::RemoveBet);
+            return;
+        }
+        case 3:
+            manageStep_ = ManageStep::ConfirmDelete;
+            askConfirmation("Delete the QuickBets entry " + manageEntry_ + "?");
+            return;
+        default:
+            finish();
+            return;
+        }
+
+    case ManageStep::PickBet:
+        manageBetIndex_ = tag;
+        if (manageAction_ == Action::SetAmount)
+        {
+            askManageAmount();
+        }
+        else
+        {
+            sendManageRequest();
+        }
+        return;
+
+    default:
+        finish();
+        return;
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::pickManageAction()
+{
+    std::vector<DialogPickPlayer::Item> items;
+    auto add = [&](std::size_t tag, const char* text, const char* desc)
+    {
+        DialogPickPlayer::Item item;
+        item.tag         = tag;
+        item.text        = text;
+        item.description = desc;
+        items.push_back(std::move(item));
+    };
+    add(0, "Rename",           "give the entry another name");
+    add(1, "Change an amount", "set a different amount for one bet");
+    add(2, "Remove a bet",     "take one bet out of the entry");
+    add(3, "Delete",           "delete the whole entry");
+
+    stage_      = Stage::AwaitingPick;
+    manageStep_ = ManageStep::PickAction;
+    DialogPickPlayer::instance().configure("QuickBets - " + manageEntry_,
+                                           std::move(items),
+                                           DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::pickManageBet(Ctrl::ReqEditQuickBets::Action action)
+{
+    const auto plans = Ctrl::CrapsReaders::readQuickBets();
+    const auto* plan = findPlan(plans, manageEntry_);
+    if (plan == nullptr || plan->specs.empty())
+    {
+        finish();
+        showNotice("QuickBets", "That entry is no longer there.");
+        return;
+    }
+
+    std::vector<DialogPickPlayer::Item> items;
+    for (std::size_t i = 0; i < plan->specs.size(); ++i)
+    {
+        DialogPickPlayer::Item item;
+        item.tag  = i;
+        item.text = Ctrl::describe(plan->specs[i]);
+        items.push_back(std::move(item));
+    }
+
+    manageAction_ = action;
+    stage_        = Stage::AwaitingPick;
+    manageStep_   = ManageStep::PickBet;
+    DialogPickPlayer::instance().configure(
+        (action == Ctrl::ReqEditQuickBets::Action::SetAmount
+             ? "Change the amount of which bet?" : "Remove which bet?"),
+        std::move(items), DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::askManageName()
+{
+    const auto plans = Ctrl::CrapsReaders::readQuickBets();
+    const std::string current = manageEntry_;
+
+    auto validator = [plans, current](const std::string& raw) -> std::string
+    {
+        const std::string name = trimmed(raw);
+        if (auto why = Ctrl::QuickBets::checkName(name); !why.empty())
+        {
+            return why;
+        }
+        for (const auto& p : plans)
+        {
+            if (p.name != current && sameIgnoringCase(p.name, name))
+            {
+                return "An entry named " + p.name + " already exists.";
+            }
+        }
+        return std::string();
+    };
+
+    manageAction_ = Ctrl::ReqEditQuickBets::Action::Rename;
+    stage_        = Stage::AwaitingText;
+    manageStep_   = ManageStep::AskName;
+    DialogTextInput::instance().configure(
+        "Rename " + manageEntry_, "Name: ", manageEntry_,
+        Ctrl::QuickBets::MaxNameLength, std::move(validator));
+    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::askManageAmount()
+{
+    const auto plans = Ctrl::CrapsReaders::readQuickBets();
+    const auto* plan = findPlan(plans, manageEntry_);
+    if (plan == nullptr || manageBetIndex_ >= plan->specs.size())
+    {
+        finish();
+        showNotice("QuickBets", "That bet is no longer in the entry.");
+        return;
+    }
+    const Ctrl::BetSpec& spec = plan->specs[manageBetIndex_];
+
+    auto validator = [](const std::string& raw) -> std::string
+    {
+        const std::string text = trimmed(raw);
+        if (text.empty())
+        {
+            return "Enter an amount.";
+        }
+        if (!std::all_of(text.begin(), text.end(),
+                         [](unsigned char c) { return std::isdigit(c); }))
+        {
+            return "Use digits only.";
+        }
+        if (text.size() > 7 || std::stoul(text) == 0)
+        {
+            return "Enter an amount more than zero.";
+        }
+        return std::string();
+    };
+
+    stage_      = Stage::AwaitingText;
+    manageStep_ = ManageStep::AskAmount;
+    DialogTextInput::instance().configure(
+        "Amount for " + Ctrl::describe(spec), "Amount: $",
+        std::to_string(spec.amount), 7, std::move(validator));
+    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
+}
+
+//----------------------------------------------------------------
+//
+// Sends the request for the action chosen. text is the new name or the
+// typed amount, when the action has one.
+//
+void
+OperationManager::sendManageRequest(const std::string& text)
+{
+    using Action = Ctrl::ReqEditQuickBets::Action;
+
+    Ctrl::ReqEditQuickBets req;
+    req.playerId = Ctrl::CrapsReaders::getUserPlayerId();
+    req.action   = manageAction_;
+    req.name     = manageEntry_;
+    req.index    = manageBetIndex_;
+    if (manageAction_ == Action::Rename)
+    {
+        req.newName = text;
+    }
+    else if (manageAction_ == Action::SetAmount)
+    {
+        req.amount = static_cast<Gen::Money>(std::stoul(text));
+    }
+
+    stage_         = Stage::AwaitingResponse;
+    correlationId_ = CuiSender::instance().reqEditQuickBets(std::move(req));
 }
 
 //----------------------------------------------------------------
@@ -654,8 +963,9 @@ OperationManager::onRspEditQuickBets(const Ctrl::RspEditQuickBets& ev)
     LOG_TRACE("OperationManager::onRspEditQuickBets() "
               "correlationId = " + std::to_string(correlationId_));
 
-    if (stage_ != Stage::AwaitingResponse      ||
-        type_  != OperationType::QuickBetsEdit ||
+    const bool ours = type_ == OperationType::QuickBetsEdit ||
+                      type_ == OperationType::QuickBetsManage;
+    if (stage_ != Stage::AwaitingResponse || !ours ||
         ev.correlationId != correlationId_)
     {
         LOG_WARN("OperationManager::onRspEditQuickBets(): ignoring "
@@ -670,9 +980,10 @@ OperationManager::onRspEditQuickBets(const Ctrl::RspEditQuickBets& ev)
         return;
     }
 
-    // Stay where we are, at the bet amount dialog
-    showNotice("Saved to QuickBets", ev.message);
+    // Stay where we are: the bet amount dialog or the Configure menu
+    const bool managing = (type_ == OperationType::QuickBetsManage);
     finish();
+    showNotice(managing ? "QuickBets changed" : "Saved to QuickBets", ev.message);
 }
 
 //----------------------------------------------------------------
@@ -807,9 +1118,11 @@ OperationManager::onErrorAcknowledged()
         return;
     }
 
-    if (type_ == OperationType::QuickBetsEdit)
+    if (type_ == OperationType::QuickBetsEdit ||
+        type_ == OperationType::QuickBetsManage)
     {
-        // Back to the bet amount dialog, which is still on the stack.
+        // Back to where the person was: the bet amount dialog, or the
+        // Configure menu. Both are still on the stack.
         finish();
         return;
     }
@@ -854,6 +1167,20 @@ OperationManager::onConfirmationResult(SurfaceBase::OperationResult result)
         return;
     }
 
+    if (type_ == OperationType::QuickBetsManage)
+    {
+        if (result == SurfaceBase::OperationResult::Yes)
+        {
+            manageAction_ = Ctrl::ReqEditQuickBets::Action::Delete;
+            sendManageRequest();
+        }
+        else
+        {
+            finish();
+        }
+        return;
+    }
+
     if (type_ != OperationType::Quit) return;
 
     if (result == SurfaceBase::OperationResult::Yes)
@@ -876,6 +1203,8 @@ OperationManager::finish()
     removalStarted_ = false;
     quickBetNames_.clear();
     quickBetTarget_.clear();
+    manageEntry_.clear();
+    manageBetIndex_ = 0;
     targetId_.clear();
     text_.clear();
     description_.clear();
@@ -1087,6 +1416,13 @@ void
 OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
                                Craps::BetId betId, std::size_t tag)
 {
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::QuickBetsManage)
+    {
+        (void)playerId; (void)betId;
+        onManagePick(accepted, tag);
+        return;
+    }
+
     if (stage_ == Stage::AwaitingPick && type_ == OperationType::RemoveBet)
     {
         (void)playerId; (void)betId;
@@ -1230,6 +1566,17 @@ OperationManager::onTextResult(bool accepted, const std::string& text)
         }
         quickBetTarget_ = trimmed(text);
         sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action::Create);
+        return;
+    }
+
+    if (stage_ == Stage::AwaitingText && type_ == OperationType::QuickBetsManage)
+    {
+        if (!accepted)
+        {
+            finish();
+            return;
+        }
+        sendManageRequest(trimmed(text));
         return;
     }
 

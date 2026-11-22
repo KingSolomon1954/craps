@@ -51,6 +51,7 @@ public:
     bool undoLastBet();  // Workflow: Take back your latest bet change
     bool applyQuickBets(); // Workflow: Pick a QuickBets entry and apply it
     bool quickBetsSetOrAdd(); // Workflow: Save the bet being entered
+    bool manageQuickBets();   // Workflow: Rename, change, trim, delete entries
     bool chooseAnimationSpeed(); // Workflow: Pick the dice animation speed
     bool chooseRollHistoryFormat(); // Workflow: Pick how rolls are listed
     bool confirmQuit();  // Workflow: Confirmation to quit application
@@ -86,6 +87,7 @@ private:
         UndoBet,
         QuickBets,
         QuickBetsEdit,
+        QuickBetsManage,
         Quit,
         Player,
         AnimationSpeed,
@@ -116,6 +118,14 @@ private:
     Ctrl::BetSpec            quickBetSpec_;    // The bet being saved
     std::string              quickBetTarget_;  // Entry to add to, or new name
 
+    // Managing QuickBets: one pick list or prompt per step
+    enum class ManageStep { PickEntry, PickAction, PickBet, AskName, AskAmount,
+                            ConfirmDelete };
+    ManageStep               manageStep_ = ManageStep::PickEntry;
+    Ctrl::ReqEditQuickBets::Action manageAction_ = Ctrl::ReqEditQuickBets::Action::Rename;
+    std::string              manageEntry_;     // Entry being managed
+    std::size_t              manageBetIndex_ = 0;
+
     OperationType type_                = OperationType::None;
     Stage stage_                       = Stage::Idle;
     Ctrl::CorrelationId correlationId_ = 0;
@@ -139,6 +149,12 @@ private:
     void askForDescription();
     void askForQuickBetsName();
     void sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action action);
+    void sendManageRequest(const std::string& text = std::string());
+    void onManagePick(bool accepted, std::size_t tag);
+    void pickManageAction();
+    void pickManageBet(Ctrl::ReqEditQuickBets::Action action);
+    void askManageName();
+    void askManageAmount();
     void askForName(const std::string& title,
                     const std::string& initial,
                     const Craps::PlayerId& exceptId);

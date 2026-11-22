@@ -197,6 +197,96 @@ QuickBets::addBet(const std::string& name, const BetSpec& spec, bool& replaced)
 
 //----------------------------------------------------------------
 
+std::string
+QuickBets::rename(const std::string& name, const std::string& newName)
+{
+    auto it = std::find_if(plans_.begin(), plans_.end(),
+        [&](const BetPlan& p) { return p.name == name; });
+    if (it == plans_.end())
+    {
+        return "There is no QuickBets entry named " + name + ".";
+    }
+    if (auto why = checkName(newName); !why.empty())  return why;
+
+    for (const auto& p : plans_)
+    {
+        if (&p != &*it && sameNameIgnoringCase(p.name, newName))
+        {
+            return "A QuickBets entry named " + p.name + " already exists.";
+        }
+    }
+    it->name = newName;
+    return std::string();
+}
+
+//----------------------------------------------------------------
+
+std::string
+QuickBets::setAmount(const std::string& name, std::size_t index,
+                     Gen::Money amount, BetSpec& changed)
+{
+    auto it = std::find_if(plans_.begin(), plans_.end(),
+        [&](const BetPlan& p) { return p.name == name; });
+    if (it == plans_.end())
+    {
+        return "There is no QuickBets entry named " + name + ".";
+    }
+    if (index >= it->specs.size())
+    {
+        return "That bet is no longer in the entry.";
+    }
+    if (amount == 0)
+    {
+        return "The amount must be more than zero.";
+    }
+    it->specs[index].amount = amount;
+    changed = it->specs[index];
+    return std::string();
+}
+
+//----------------------------------------------------------------
+
+std::string
+QuickBets::removeBet(const std::string& name, std::size_t index,
+                     BetSpec& removed)
+{
+    auto it = std::find_if(plans_.begin(), plans_.end(),
+        [&](const BetPlan& p) { return p.name == name; });
+    if (it == plans_.end())
+    {
+        return "There is no QuickBets entry named " + name + ".";
+    }
+    if (index >= it->specs.size())
+    {
+        return "That bet is no longer in the entry.";
+    }
+    if (it->specs.size() == 1)
+    {
+        return "That is the only bet in " + name +
+               ". Delete the entry instead.";
+    }
+    removed = it->specs[index];
+    it->specs.erase(it->specs.begin() + static_cast<std::ptrdiff_t>(index));
+    return std::string();
+}
+
+//----------------------------------------------------------------
+
+std::string
+QuickBets::removeEntry(const std::string& name)
+{
+    auto it = std::find_if(plans_.begin(), plans_.end(),
+        [&](const BetPlan& p) { return p.name == name; });
+    if (it == plans_.end())
+    {
+        return "There is no QuickBets entry named " + name + ".";
+    }
+    plans_.erase(it);
+    return std::string();
+}
+
+//----------------------------------------------------------------
+
 bool
 QuickBets::remove(std::size_t index)
 {

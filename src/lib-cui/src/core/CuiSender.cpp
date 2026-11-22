@@ -129,18 +129,10 @@ CuiSender::reqApplyQuickBets(const Craps::PlayerId& playerId,
 //----------------------------------------------------------------
 
 Ctrl::CorrelationId
-CuiSender::reqEditQuickBets(const Craps::PlayerId& playerId,
-                            Ctrl::ReqEditQuickBets::Action action,
-                            const std::string& name,
-                            const Ctrl::BetSpec& spec)
+CuiSender::reqEditQuickBets(Ctrl::ReqEditQuickBets ev)
 {
     LOG_TRACE("CuiSender::reqEditQuickBets()");
 
-    Ctrl::ReqEditQuickBets ev;
-    ev.playerId = playerId;
-    ev.action   = action;
-    ev.name     = name;
-    ev.spec     = spec;
     const auto correlationId = ev.correlationId;
     Gen::EventManager::instance().publish(ev);
 

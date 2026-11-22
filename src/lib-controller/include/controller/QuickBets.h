@@ -41,6 +41,24 @@ public:
     std::string addBet(const std::string& name, const BetSpec& spec,
                        bool& replaced);
 
+    /// Gives the entry a new name. The name must pass checkName() and not
+    /// be another entry's name, ignoring case. Returns "" or why not.
+    std::string rename(const std::string& name, const std::string& newName);
+
+    /// Sets the amount of the bet at index in the named entry. changed
+    /// returns the bet as it is now. Returns "" or why not.
+    std::string setAmount(const std::string& name, std::size_t index,
+                          Gen::Money amount, BetSpec& changed);
+
+    /// Takes the bet at index out of the named entry. removed returns it.
+    /// An entry keeps at least one bet; delete the entry instead.
+    /// Returns "" or why not.
+    std::string removeBet(const std::string& name, std::size_t index,
+                          BetSpec& removed);
+
+    /// Deletes the named entry. Returns "" or why not.
+    std::string removeEntry(const std::string& name);
+
     /// Removes the entry at index. Returns false if there is none.
     bool remove(std::size_t index);
 
