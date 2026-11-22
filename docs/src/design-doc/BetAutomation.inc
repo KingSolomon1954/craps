@@ -87,7 +87,31 @@ Applying a Plan
 * **Summary.** The result lists, for each spec, placed, changed, already in
   place or skipped with the reason. It goes to the View as an event. The
   View puts a short line in the Message area when there is one, and the
-  executor always writes it to the log.
+  handler always writes it to the log.
+
+Automation Request Flow
+^^^^^^^^^^^^^^^^^^^^^^^
+
+For QuickBets, as built:
+
+#. ``MenuBetting`` ``q`` calls ``OperationManager::applyQuickBets()``, which
+   reads the entries with ``CrapsReaders::readQuickBets()`` and shows
+   them in ``DialogPickPlayer``. The pick list carries each entry's name, so
+   the request still names the right entry if the list changes.
+#. The pick sends ``ReqApplyQuickBets`` (player id and entry name).
+#. ``EventHandler::onReqApplyQuickBets()`` refuses when betting is closed or
+   the entry is not found. Otherwise it calls ``BetExecutor::apply()`` with the
+   player, the entry's specs, ``UndoManager`` and the player's ``LastFill``,
+   and always answers with ``RspApplyQuickBets``.
+#. The response carries the counts, a headline such as "3 placed, 1 skipped"
+   and one line for each skipped bet. ``accepted`` means the entry was
+   applied, even if some bets were skipped. A refused request has an error
+   instead.
+#. ``OperationManager::onRspApplyQuickBets()`` unwinds the menus, and shows a
+   notice only when something was skipped.
+
+The bet and balance events that the placements cause redraw the screens in
+the usual way. The View does not need to know which bets were placed.
 
 QuickBets Rules
 ^^^^^^^^^^^^^^^
@@ -171,8 +195,9 @@ Not built yet. This is what the other parts are shaped for.
 Automation Persistence
 ^^^^^^^^^^^^^^^^^^^^^^
 
-In the player file under ``Prefs``, replacing ``AutoFills`` and
-``QuickBets`` in their present form:
+In the player file under ``Prefs``. ``QuickBets`` replaces the old
+one-bet form of the same name, and ``AutoFills`` is gone. ``pivot`` and
+``isOdds`` may be left out, and default to 0 and false:
 
 .. code-block:: yaml
 
@@ -182,6 +207,10 @@ In the player file under ``Prefs``, replacing ``AutoFills`` and
          - { betName: Place, pivot: 8,  amount: 24 }
          - { betName: Place, pivot: 9,  amount: 20 }
          - { betName: Place, pivot: 10, amount: 20 }
+     - name: Line with odds
+       bets:
+         - { betName: PassLine, amount: 10 }
+         - { betName: PassLine, isOdds: true, amount: 30 }
    AutoOdds:
      enabled: true
      multiples:
@@ -191,7 +220,13 @@ In the player file under ``Prefs``, replacing ``AutoFills`` and
          6: 5
 
 Loading follows the Prefs rules already in force: an entry that cannot be
-read is logged and skipped, and loading never throws.
+read is logged and skipped, and loading never throws. A loaded plan is
+made valid by ``QuickBets::tidy()``: bets with no usable bet name or a zero
+amount are dropped, odds on bets other than PassLine and DontPass are
+dropped, a later bet for the same spot replaces the earlier, contract bets
+are moved before odds, and a plan is cut to 12 bets. A plan with no name or
+no bets left is skipped. Old-form entries, which have no ``name``, are
+skipped the same way.
 
 Automation Staging
 ^^^^^^^^^^^^^^^^^^
@@ -200,7 +235,8 @@ Automation Staging
    dialog entries, YAML and documentation.
 #. ``BetSpec``, bet plans and ``BetExecutor``, with the single undo step,
    the summary event, ``QuickBets`` data and persistence, and the Betting
-   menu key to apply an entry.
+   menu key to apply an entry. Done. Entries are written in the player
+   file until step 3 gives the Configuration menu pages for them.
 #. The Set or Add dialog in ``DialogBetAmount`` and the Configuration menu
    pages for QuickBets.
 #. AutoOdds: settings and persistence, the pass on ``UslBettingOpened``,
@@ -214,6 +250,8 @@ Automation Open Items
 * Whether AutoOdds should also offer a "maximum the table allows" setting
   in place of a multiple.
 * A place for the Message area to show summaries before the Message area
-  exists. Until then the summary is only logged.
+  exists. Until then the summary of an application that skipped bets is
+  shown in a notice dialog, and a clean application shows nothing. The
+  executor logs every application.
 * Whether QuickBets entries should be shared between a user and the buddies,
   or only per player.

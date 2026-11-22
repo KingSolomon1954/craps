@@ -4,6 +4,7 @@
 //
 //----------------------------------------------------------------
 
+#include <controller/BetExecutor.h>
 #include <controller/ConfigManager.h>
 #include <controller/EventHandler.h>
 #include <controller/GameEvents.h>
@@ -42,6 +43,12 @@ EventHandler::EventHandler()
         [this](const Ctrl::ReqRemoveBet& ev)
         {
             this->onReqRemoveBet(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::ReqApplyQuickBets>(
+        [this](const Ctrl::ReqApplyQuickBets& ev)
+        {
+            this->onReqApplyQuickBets(ev);
         });
 
     Gen::EventManager::instance().subscribe<Ctrl::ReqUndoBet>(
@@ -359,6 +366,77 @@ EventHandler::setLastFill(const Craps::PlayerId& playerId,
     lfe.isOddsBet = isOddsBet;
     lfe.amount    = (isOddsBet ? bet.oddsAmount() : bet.contractAmount());
     prefs->lastFill().setLastFill(lfe);
+}
+
+//----------------------------------------------------------------
+
+//----------------------------------------------------------------
+//
+// Applies one of the player's QuickBets entries. Always answers with
+// RspApplyQuickBets. Applying is best effort: bets that cannot be placed
+// are skipped and reported, not treated as a failure of the request.
+//
+void
+EventHandler::onReqApplyQuickBets(const Ctrl::ReqApplyQuickBets& ev) const
+{
+    const std::string fname("EventHandler::onReqApplyQuickBets(): ");
+    LOG_TRACE("Entered " + fname);
+
+    Ctrl::RspApplyQuickBets rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.playerId      = ev.playerId;
+    rsp.name          = ev.name;
+
+    Gen::ErrorPass ep;
+    Craps::Player* pPlayer = Gbl::pPlayerMgr->getPlayer(ev.playerId, ep);
+    PlayerPrefs*   prefs   = Gbl::pPlayerMgr->getPrefs(ev.playerId);
+    const BetPlan* plan    = (prefs != nullptr) ? prefs->quickBets().find(ev.name)
+                                                : nullptr;
+
+    if (pPlayer == nullptr || prefs == nullptr)
+    {
+        ep.prepend(fname);
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        rsp.error = std::move(ep);
+    }
+    else if (Gbl::pTable != nullptr && !Gbl::pTable->isBettingOpen())
+    {
+        EP_SET(ep, Gen::ErrorPass::ErrorName::NoPermissionError,
+                   Gen::ErrorPass::ErrorType::ProcessingError,
+                   Gen::ErrorPass::Severity::Indeterminate,
+               "Betting is closed while the dice are rolling. "
+               "Try again when betting reopens.");
+        ep.setErrorName("Betting Closed");
+        rsp.error = std::move(ep);
+    }
+    else if (plan == nullptr)
+    {
+        EP_SET(ep, Gen::ErrorPass::ErrorName::NotFoundError,
+                   Gen::ErrorPass::ErrorType::ProcessingError,
+                   Gen::ErrorPass::Severity::Indeterminate,
+               "There is no QuickBets entry named \"" + ev.name + "\".");
+        ep.setErrorName("No Such QuickBets Entry");
+        rsp.error = std::move(ep);
+    }
+    else
+    {
+        const auto result = BetExecutor::apply(*pPlayer, plan->specs,
+            UndoManager::instance(), &prefs->lastFill());
+
+        rsp.accepted       = true;
+        rsp.placed         = static_cast<unsigned>(result.count(BetExecutor::Status::Placed));
+        rsp.changed        = static_cast<unsigned>(result.count(BetExecutor::Status::Changed));
+        rsp.alreadyInPlace = static_cast<unsigned>(result.count(BetExecutor::Status::AlreadyInPlace));
+        rsp.skipped        = static_cast<unsigned>(result.count(BetExecutor::Status::Skipped));
+        rsp.headline       = result.headline();
+        rsp.skippedDetail  = result.skippedDetail();
+
+        LOG_INFO("QuickBets \"" + ev.name + "\" applied for " + ev.playerId +
+                 ": " + rsp.headline +
+                 (rsp.skippedDetail.empty() ? "" : "\n" + rsp.skippedDetail));
+    }
+
+    Gen::EventManager::instance().publish(rsp);
 }
 
 //----------------------------------------------------------------

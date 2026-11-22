@@ -26,11 +26,28 @@ PlayerPrefs::lastFill() const
 
 //----------------------------------------------------------------
 
+QuickBets&
+PlayerPrefs::quickBets()
+{
+    return quickBets_;
+}
+
+//----------------------------------------------------------------
+
+const QuickBets&
+PlayerPrefs::quickBets() const
+{
+    return quickBets_;
+}
+
+//----------------------------------------------------------------
+
 YAML::Node
 PlayerPrefs::toYAML() const
 {
     YAML::Node node(YAML::NodeType::Map);
     node["LastFills"] = lastFill_.toYAML();
+    node["QuickBets"] = quickBets_.toYAML();
     return node;
 }
 
@@ -45,10 +62,12 @@ PlayerPrefs::fromYAML(const YAML::Node& node)
     if (node.IsDefined() && node.IsMap())
     {
         lastFill_.fromYAML(node["LastFills"]);
+        quickBets_.fromYAML(node["QuickBets"]);
     }
     else
     {
         lastFill_.clear();
+        quickBets_.clear();
     }
 }
 

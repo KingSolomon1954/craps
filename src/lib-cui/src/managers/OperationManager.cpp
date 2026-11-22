@@ -15,6 +15,7 @@
 #include <cui/dialogs/DialogPickPlayer.h>
 #include <cui/dialogs/DialogTextInput.h>
 #include <controller/AnimationSpeed.h>
+#include <controller/BetSpec.h>
 #include <controller/CrapsReaders.h>
 #include <controller/RollHistoryFormat.h>
 #include <controller/PlayerManager.h>
@@ -473,6 +474,81 @@ OperationManager::onRspUndoBet(const Ctrl::RspUndoBet& ev)
 }
 
 //----------------------------------------------------------------
+//
+// Pick one of the user's QuickBets entries and apply it. The pick list
+// shows each entry's name and a short description of its bets. Applying
+// is one request; the answer says what was placed and what was skipped.
+//
+bool
+OperationManager::applyQuickBets()
+{
+    if (isActive()) return false;
+
+    const auto plans = Ctrl::CrapsReaders::readQuickBets();
+    if (plans.empty())
+    {
+        showNotice("No QuickBets",
+                   "You have not set up any QuickBets yet.");
+        return true;
+    }
+
+    quickBetNames_.clear();
+    std::vector<DialogPickPlayer::Item> items;
+    for (const auto& plan : plans)
+    {
+        DialogPickPlayer::Item item;
+        item.tag         = quickBetNames_.size();
+        item.text        = plan.name;
+        item.description = Ctrl::describe(plan);
+        items.push_back(std::move(item));
+        quickBetNames_.push_back(plan.name);
+    }
+
+    type_  = OperationType::QuickBets;
+    stage_ = Stage::AwaitingPick;
+    DialogPickPlayer::instance().configure("QuickBets - Apply",
+                                           std::move(items),
+                                           DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+    return true;
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& ev)
+{
+    LOG_TRACE("OperationManager::onRspApplyQuickBets() "
+              "correlationId = " + std::to_string(correlationId_));
+
+    if (stage_ != Stage::AwaitingResponse   ||
+        type_  != OperationType::QuickBets  ||
+        ev.correlationId != correlationId_)
+    {
+        LOG_WARN("OperationManager::onRspApplyQuickBets(): ignoring "
+                 "unmatched RspApplyQuickBets: rsp.correlationId = " +
+                 std::to_string(ev.correlationId));
+        return;
+    }
+
+    if (!ev.accepted)
+    {
+        showError(ev.error, "Betting Error", "Unable to Apply QuickBets");
+        return;
+    }
+
+    // Unwind to the table as after any bet. Say so if some bets were
+    // not placed; a clean result needs no message.
+    SurfaceManager::instance().popToRoot();
+    if (ev.skipped > 0)
+    {
+        showNotice("QuickBets \"" + ev.name + "\": " + ev.headline,
+                   ev.skippedDetail);
+    }
+    finish();
+}
+
+//----------------------------------------------------------------
 
 void
 OperationManager::onRspRemoveBet(const Ctrl::RspRemoveBet& ev)
@@ -629,6 +705,7 @@ OperationManager::finish()
     removalChoices_.clear();
     removalQueue_.clear();
     removalStarted_ = false;
+    quickBetNames_.clear();
     targetId_.clear();
     text_.clear();
     description_.clear();
@@ -877,6 +954,21 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
             removalQueue_.assign(1, removalChoices_[tag]);
         }
         sendNextRemoval();
+        return;
+    }
+
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::QuickBets)
+    {
+        (void)playerId; (void)betId;
+        if (!accepted || tag >= quickBetNames_.size())
+        {
+            quickBetNames_.clear();
+            finish();       // Cancelled; stay on the betting menu
+            return;
+        }
+        stage_ = Stage::AwaitingResponse;
+        correlationId_ = CuiSender::instance().reqApplyQuickBets(
+            Ctrl::CrapsReaders::getUserPlayerId(), quickBetNames_[tag]);
         return;
     }
 

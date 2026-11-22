@@ -16,6 +16,8 @@ add_library(controller STATIC
     src/ConfigFiles.cpp
     src/ConfigSeed.cpp
     src/StartChoices.cpp
+    src/BetExecutor.cpp
+    src/BetSpec.cpp
     src/CrapsReaders.cpp
     src/EventHandler.cpp
     src/GameEvents.cpp
@@ -24,6 +26,7 @@ add_library(controller STATIC
     src/PlayerManager.cpp
     src/PlayerManifest.cpp
     src/PlayerPrefs.cpp
+    src/QuickBets.cpp
     src/Properties.cpp
     src/LastFill.cpp
     src/TableManager.cpp

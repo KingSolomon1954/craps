@@ -35,6 +35,8 @@ User Interface Overview
 
 .. include:: undo.inc
 
+.. include:: quickbets.inc
+
 .. include:: configuration.inc
 
 .. include:: statistics.inc

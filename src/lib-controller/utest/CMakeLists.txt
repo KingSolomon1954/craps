@@ -6,6 +6,7 @@
 
 add_executable(controller-ut
     utest-controller-main.cpp
+    BetExecutorTest.cpp
     ConfigManagerTest.cpp
     ConfigSeedTest.cpp
     StartChoicesTest.cpp
@@ -13,6 +14,7 @@ add_executable(controller-ut
     PlayerManagerNameTest.cpp
     PlayerManifestTest.cpp
     PlayerPrefsTest.cpp
+    QuickBetsTest.cpp
     TableManifestTest.cpp
     UndoManagerTest.cpp
     UserStateTest.cpp

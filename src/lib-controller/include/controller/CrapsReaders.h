@@ -15,6 +15,7 @@
 #include <controller/PlayerManager.h>
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
+#include <controller/BetSpec.h>
 #include <controller/LastFill.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
@@ -265,6 +266,9 @@ public:
     static AnimationSpeed readAnimationSpeed();
     static RollHistoryFormat readRollHistoryFormat();
     
+    // QuickBets of the user player, in order. A copy.
+    static std::vector<BetPlan> readQuickBets();
+
     // Last Fill
     static Gen::ReturnCode getLastFill(
         LastFill::LastFillEntry& entry,

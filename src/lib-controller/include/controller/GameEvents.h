@@ -34,6 +34,7 @@ enum class EventType
     ReqOddsBet,
     ReqRemoveBet,
     ReqUndoBet,
+    ReqApplyQuickBets,
     ReqSetAnimationSpeed,
     ReqSetRollHistoryFormat,
     ReqSwitchPlayer,
@@ -45,6 +46,7 @@ enum class EventType
     RspOddsBet,
     RspRemoveBet,
     RspUndoBet,
+    RspApplyQuickBets,
     RspChangeBet,              // not yet implemented
     RspSwitchPlayer,
     RspManagePlayer,
@@ -702,6 +704,43 @@ struct RspUndoBet : public GameEvent
 
     RspUndoBet()
         : GameEvent{EventSource::Controller, EventType::RspUndoBet}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Apply the named QuickBets entry for a player. Always answers with
+/// RspApplyQuickBets. The bet and balance events follow as for any bet.
+struct ReqApplyQuickBets : public GameEvent
+{
+    Craps::PlayerId playerId;
+    std::string     name;           ///< Name of the entry to apply
+
+    ReqApplyQuickBets()
+        : GameEvent{EventSource::View, EventType::ReqApplyQuickBets}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqApplyQuickBets. accepted means the entry was applied, even
+/// if some of its bets were skipped; see the counts. Otherwise error says
+/// why nothing was tried, such as betting being closed or no such entry.
+struct RspApplyQuickBets : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    std::string     name;
+    unsigned        placed         = 0;
+    unsigned        changed        = 0;
+    unsigned        alreadyInPlace = 0;
+    unsigned        skipped        = 0;
+    std::string     headline;       ///< e.g. "3 placed, 1 skipped"
+    std::string     skippedDetail;  ///< One line per skipped bet
+    Gen::ErrorPass  error;
+
+    RspApplyQuickBets()
+        : GameEvent{EventSource::Controller, EventType::RspApplyQuickBets}
     {}
 };
 
