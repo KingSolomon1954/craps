@@ -16,6 +16,7 @@ add_library(controller STATIC
     src/ConfigFiles.cpp
     src/ConfigSeed.cpp
     src/StartChoices.cpp
+    src/AutoOdds.cpp
     src/BetExecutor.cpp
     src/BetSpec.cpp
     src/CrapsReaders.cpp

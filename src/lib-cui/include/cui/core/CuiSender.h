@@ -51,6 +51,7 @@ public:
     Ctrl::CorrelationId reqApplyQuickBets(const Craps::PlayerId& playerId,
                                           const std::string& name);
     Ctrl::CorrelationId reqEditQuickBets(Ctrl::ReqEditQuickBets request);
+    Ctrl::CorrelationId reqEditAutoOdds(Ctrl::ReqEditAutoOdds request);
     /// @}
 
     /// @name Observers

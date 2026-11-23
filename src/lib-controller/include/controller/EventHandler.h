@@ -35,6 +35,8 @@ private:
     void onReqUndoBet(const Ctrl::ReqUndoBet& ev)         const;
     void onReqApplyQuickBets(const Ctrl::ReqApplyQuickBets& ev) const;
     void onReqEditQuickBets(const Ctrl::ReqEditQuickBets& ev) const;
+    void onReqEditAutoOdds(const Ctrl::ReqEditAutoOdds& ev) const;
+    void onUslBettingOpened(const Ctrl::UslBettingOpened& ev) const;
     void onReqRollDice (const Ctrl::ReqRollDice& ev)      const;
     void onReqSetAnimationSpeed(const Ctrl::ReqSetAnimationSpeed& ev) const;
     void onReqSetRollHistoryFormat(const Ctrl::ReqSetRollHistoryFormat& ev) const;

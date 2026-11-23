@@ -87,6 +87,7 @@ private:
     void logBetInfo(const BetInfo& bi);
 
     bool shortCircuit();
+    bool shortCircuited_ = false;   // The amount dialog was pushed for us
 
     // Window creation and drawing
     void calcSize();

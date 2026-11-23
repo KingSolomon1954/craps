@@ -4,6 +4,7 @@
 //
 //----------------------------------------------------------------
 
+#include <controller/AutoOdds.h>
 #include <controller/BetExecutor.h>
 #include <controller/ConfigManager.h>
 #include <controller/EventHandler.h>
@@ -55,6 +56,18 @@ EventHandler::EventHandler()
         [this](const Ctrl::ReqEditQuickBets& ev)
         {
             this->onReqEditQuickBets(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::ReqEditAutoOdds>(
+        [this](const Ctrl::ReqEditAutoOdds& ev)
+        {
+            this->onReqEditAutoOdds(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::UslBettingOpened>(
+        [this](const Ctrl::UslBettingOpened& ev)
+        {
+            this->onUslBettingOpened(ev);
         });
 
     Gen::EventManager::instance().subscribe<Ctrl::ReqUndoBet>(
@@ -306,6 +319,173 @@ EventHandler::onReqRemoveBet(const Ctrl::ReqRemoveBet& ev) const
     }
     Gen::EventManager::instance().publish(rsp);
 }
+
+//----------------------------------------------------------------
+//
+// Changes the player's AutoOdds settings. Always answers with
+// RspEditAutoOdds. Nothing here touches the table, so it works whether
+// or not betting is open.
+//
+void
+EventHandler::onReqEditAutoOdds(const Ctrl::ReqEditAutoOdds& ev) const
+{
+    const std::string fname("EventHandler::onReqEditAutoOdds(): ");
+    LOG_TRACE("Entered " + fname);
+
+    Ctrl::RspEditAutoOdds rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.playerId      = ev.playerId;
+
+    PlayerPrefs* prefs = Gbl::pPlayerMgr->getPrefs(ev.playerId);
+    std::string why;
+    if (prefs == nullptr)
+    {
+        why = "That player could not be found.";
+    }
+    else
+    {
+        AutoOdds& ao = prefs->autoOdds();
+        using Action = Ctrl::ReqEditAutoOdds::Action;
+        const std::string type = EnumBetName::toString(ev.betName);
+
+        switch (ev.action)
+        {
+        case Action::SetEnabled:
+            ao.setEnabled(ev.enabled);
+            rsp.message = ev.enabled ? "AutoOdds is on." : "AutoOdds is off.";
+            break;
+
+        case Action::Set:
+        {
+            AutoOdds::Setting st;
+            st.multiple = ev.multiple;
+            st.amount   = ev.amount;
+            why = ao.set(ev.betName, ev.point, st);
+            if (why.empty())
+            {
+                const std::string where = (ev.point == 0)
+                    ? type + ", all points" : type + " " + std::to_string(ev.point);
+                rsp.message = "AutoOdds for " + where + ": " +
+                              (st.isSet() ? "set to " + st.toString() : "unset");
+                if (st.isSet() && !ao.enabled())
+                    rsp.message += "\nAutoOdds is off; turn it on in Configure.";
+            }
+            break;
+        }
+
+        case Action::Preset345:
+            ao.setPreset345();
+            rsp.message = "AutoOdds set to 3-4-5x for all bet types.";
+            break;
+
+        case Action::Clear:
+            ao.clearAll();
+            rsp.message = "AutoOdds cleared.";
+            break;
+
+        }
+    }
+
+    if (why.empty())
+    {
+        rsp.accepted = true;
+        LOG_INFO("AutoOdds edited for " + ev.playerId + ": " + rsp.message);
+    }
+    else
+    {
+        Gen::ErrorPass ep;
+        EP_SET(ep, Gen::ErrorPass::ErrorName::InvalidArgumentError,
+                   Gen::ErrorPass::ErrorType::ProcessingError,
+                   Gen::ErrorPass::Severity::Indeterminate, why);
+        ep.setErrorName("Unable to Save AutoOdds");
+        rsp.error = std::move(ep);
+    }
+
+    Gen::EventManager::instance().publish(rsp);
+}
+
+//----------------------------------------------------------------
+//
+// Betting has reopened, so the point and Come bets are settled. If the
+// user player has AutoOdds on, put odds on the bets that have a point and
+// no odds yet. Bets are tried once; see AutoOdds::plan(). One undo group.
+//
+void
+EventHandler::onUslBettingOpened(const Ctrl::UslBettingOpened& ev) const
+{
+    (void)ev;
+    const std::string fname("EventHandler::onUslBettingOpened(): ");
+    LOG_TRACE("Entered " + fname);
+
+    if (Gbl::pTable == nullptr || !Gbl::pTable->isBettingOpen())
+    {
+        return;
+    }
+
+    Gen::ErrorPass ep;
+    Craps::Player* pPlayer = Gbl::pPlayerMgr->getUserPlayer();
+    if (pPlayer == nullptr)
+    {
+        return;
+    }
+    const Craps::PlayerId playerId = pPlayer->getPlayerId();
+    PlayerPrefs* prefs = Gbl::pPlayerMgr->getPrefs(playerId);
+    if (prefs == nullptr || !prefs->autoOdds().enabled())
+    {
+        return;
+    }
+
+    std::vector<AutoOdds::Candidate> candidates;
+    for (const auto& bet : pPlayer->getBets())
+    {
+        if (!AutoOdds::isOddsBetName(bet->betName()))
+        {
+            continue;
+        }
+        AutoOdds::Candidate c;
+        c.betId    = bet->betId();
+        c.betName  = bet->betName();
+        c.pivot    = bet->pivot();
+        c.contract = bet->contractAmount();
+        c.odds     = bet->oddsAmount();
+        c.limits   = Gbl::pTable->getBetAmountLimits(
+                         c.betName, c.pivot, true, c.contract);
+        candidates.push_back(c);
+    }
+
+    const auto plan = prefs->autoOdds().plan(candidates);
+    if (plan.specs.empty() && plan.skipped.empty())
+    {
+        return;
+    }
+
+    // Not LastFill: AutoOdds is not the player's own choice of bet
+    const auto result = BetExecutor::apply(*pPlayer, plan.specs, nullptr);
+
+    Ctrl::UslAutoOddsApplied usl;
+    usl.playerId = playerId;
+    usl.placed   = static_cast<unsigned>(result.count(BetExecutor::Status::Placed) +
+                                         result.count(BetExecutor::Status::Changed));
+    usl.skipped  = static_cast<unsigned>(result.count(BetExecutor::Status::Skipped) +
+                                         plan.skipped.size());
+    usl.headline = "AutoOdds: " + std::to_string(usl.placed) + " placed" +
+                   (usl.skipped ? ", " + std::to_string(usl.skipped) + " skipped" : "");
+
+    for (const auto& line : plan.skipped)
+    {
+        usl.skippedDetail += (usl.skippedDetail.empty() ? "" : "\n") + line;
+    }
+    const auto detail = result.skippedDetail();
+    if (!detail.empty())
+    {
+        usl.skippedDetail += (usl.skippedDetail.empty() ? "" : "\n") + detail;
+    }
+
+    LOG_INFO(usl.headline + (usl.skippedDetail.empty() ? "" : "\n" + usl.skippedDetail));
+    Gen::EventManager::instance().publish(usl);
+}
+
+//----------------------------------------------------------------
 
 //----------------------------------------------------------------
 //

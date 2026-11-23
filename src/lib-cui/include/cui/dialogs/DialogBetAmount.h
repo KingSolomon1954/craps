@@ -47,10 +47,12 @@ private:
     WindowPosition winPos_{};
     static constexpr WindowSize winSize_ = {24, 59};  // rows, cols, fixed size
 
-    static constexpr std::array<std::string_view, 4> Prompts
+    static constexpr std::size_t AutoOddsPrompt = 2;   // Odds bets only
+    static constexpr std::array<std::string_view, 5> Prompts
     {
         "[enter] Submit Bet",
         "[q] QuickBets - Set or Add",
+        "[a] AutoOdds - Set or Unset",
         "[?] Help",
         "[. or esc] Back"
     };
@@ -75,6 +77,7 @@ private:
     void drawReference();
     void drawStatistics();
     void drawPrompts();
+    void drawAutoOddsPrompt();
     void drawTitle();
     void drawInput();
     std::string prepTitle(const std::string& title);
@@ -87,6 +90,7 @@ private:
     void back();
     void doEnter();
     void doQuickBets();
+    void doAutoOdds();
     void doHelp();
     void processAmount();
 };

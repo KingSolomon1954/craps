@@ -74,6 +74,7 @@ using GameEvent = std::variant<
     Ctrl::UslUserPlayerSwitched,
     Ctrl::UslPlayerRenamed,
     Ctrl::UslRollHistoryFormatChanged,
+    Ctrl::UslAutoOddsApplied,
     
     Ctrl::RspMakeBet,
     Ctrl::RspOddsBet,
@@ -81,6 +82,7 @@ using GameEvent = std::variant<
     Ctrl::RspUndoBet,
     Ctrl::RspApplyQuickBets,
     Ctrl::RspEditQuickBets,
+    Ctrl::RspEditAutoOdds,
     Ctrl::RspSwitchPlayer,
     Ctrl::RspManagePlayer
     >;

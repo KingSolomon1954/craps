@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <controller/AutoOdds.h>
 #include <controller/BetSpec.h>
 #include <controller/GameEvents.h>
 #include <cui/bases/SurfaceBase.h>
@@ -52,6 +53,8 @@ public:
     bool applyQuickBets(); // Workflow: Pick a QuickBets entry and apply it
     bool quickBetsSetOrAdd(); // Workflow: Save the bet being entered
     bool manageQuickBets();   // Workflow: Rename, change, trim, delete entries
+    bool manageAutoOdds();    // Workflow: Turn on or off, set, clear AutoOdds
+    bool autoOddsSetOrUnset(); // Workflow: AutoOdds for the odds being entered
     bool chooseAnimationSpeed(); // Workflow: Pick the dice animation speed
     bool chooseRollHistoryFormat(); // Workflow: Pick how rolls are listed
     bool confirmQuit();  // Workflow: Confirmation to quit application
@@ -63,6 +66,9 @@ public:
     void onRspUndoBet(const Ctrl::RspUndoBet& response);
     void onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& response);
     void onRspEditQuickBets(const Ctrl::RspEditQuickBets& response);
+    void onRspEditAutoOdds(const Ctrl::RspEditAutoOdds& response);
+    void onAutoOddsApplied(const Ctrl::UslAutoOddsApplied& response);
+    void clearAutoOddsStatus();
     void onQuickBetsChoice(bool accepted, std::size_t index);
     void onConfirmationResult(SurfaceBase::OperationResult result);
     void onPickResult(bool accepted, const Craps::PlayerId& playerId,
@@ -76,6 +82,10 @@ public:
     /// @name Observers
     /// @{
     bool isActive() const;
+
+    /// What AutoOdds just did, in a few words for the status line; empty
+    /// if nothing yet this roll.
+    const std::string& autoOddsStatus() const;
     /// @}
 
 private:
@@ -88,6 +98,7 @@ private:
         QuickBets,
         QuickBetsEdit,
         QuickBetsManage,
+        AutoOdds,
         Quit,
         Player,
         AnimationSpeed,
@@ -126,6 +137,15 @@ private:
     std::string              manageEntry_;     // Entry being managed
     std::size_t              manageBetIndex_ = 0;
 
+    // AutoOdds, from the Configuration menu: one pick list or prompt per step
+    enum class AutoStep { PickAction, PickType, PickPoint, AskMultiple,
+                          ConfirmClear };
+    AutoStep                 autoStep_ = AutoStep::PickAction;
+    BetName                  autoBetName_ = BetName::Invalid;
+    unsigned                 autoPoint_   = 0;       // 0 means all points
+    bool                     autoTurnOn_  = false;
+    std::string              autoOddsStatus_;
+
     OperationType type_                = OperationType::None;
     Stage stage_                       = Stage::Idle;
     Ctrl::CorrelationId correlationId_ = 0;
@@ -153,6 +173,12 @@ private:
     void onManagePick(bool accepted, std::size_t tag);
     void pickManageAction();
     void pickManageBet(Ctrl::ReqEditQuickBets::Action action);
+    void onAutoPick(bool accepted, std::size_t tag);
+    void pickAutoAction();
+    void pickAutoType();
+    void pickAutoPoint();
+    void askAutoMultiple();
+    void sendAutoRequest(Ctrl::ReqEditAutoOdds request);
     void askManageName();
     void askManageAmount();
     void askForName(const std::string& title,

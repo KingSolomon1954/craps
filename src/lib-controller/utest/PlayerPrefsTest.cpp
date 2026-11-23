@@ -53,6 +53,8 @@ TEST_CASE("PlayerPrefs:YAML round trip")
     plan.name = "Place Hi";
     plan.specs.push_back(Ctrl::BetSpec{BetName::Place, 8, false, 24});
     REQUIRE(src.quickBets().set(plan));
+    src.autoOdds().setEnabled(true);
+    src.autoOdds().setMultiple(BetName::PassLine, 6, 5);
 
     PlayerPrefs dst;
     dst.lastFill().setLastFill(makeEntry(BetName::Field, 0, false, 5));
@@ -68,6 +70,9 @@ TEST_CASE("PlayerPrefs:YAML round trip")
     REQUIRE(dst.quickBets().plans().size() == 1);
     CHECK(dst.quickBets().plans()[0].name == "Place Hi");
     CHECK(dst.quickBets().plans()[0].specs[0].amount == 24u);
+
+    CHECK(dst.autoOdds().enabled());
+    CHECK(dst.autoOdds().multiple(BetName::PassLine, 6) == 5u);
 }
 
 //----------------------------------------------------------------

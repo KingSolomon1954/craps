@@ -16,6 +16,7 @@
 #include <cui/dialogs/DialogQuickBetsSetAdd.h>
 #include <cui/dialogs/DialogTextInput.h>
 #include <controller/AnimationSpeed.h>
+#include <controller/AutoOdds.h>
 #include <controller/BetSpec.h>
 #include <controller/QuickBets.h>
 #include <controller/CrapsReaders.h>
@@ -652,6 +653,380 @@ OperationManager::sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action action)
 
 //----------------------------------------------------------------
 //
+// AutoOdds, from the Configuration menu.
+//
+// One pick list of things to do:
+//
+//   turn on / turn off   one request
+//   show multiples       a notice, no request
+//   set a multiple       pick bet type, pick point (or all), type the
+//                        multiple (0 clears), one request
+//   3-4-5 preset         one request
+//   clear all            confirm, one request
+//
+// The pick lists and prompts each pop themselves and report here, so
+// autoStep_ says which one just answered.
+//
+bool
+OperationManager::manageAutoOdds()
+{
+    if (isActive()) return false;
+
+    type_ = OperationType::AutoOdds;
+    pickAutoAction();
+    return true;
+}
+
+//----------------------------------------------------------------
+
+namespace {
+
+const char*
+typeWords(BetName b)
+{
+    switch (b)
+    {
+    case BetName::PassLine: return "Pass Line";
+    case BetName::DontPass: return "Don't Pass";
+    case BetName::Come:     return "Come";
+    case BetName::DontCome: return "Don't Come";
+    default:                return "?";
+    }
+}
+
+} // namespace
+
+//----------------------------------------------------------------
+
+void
+OperationManager::pickAutoAction()
+{
+    const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
+    autoTurnOn_ = !ao.enabled();
+
+    std::vector<DialogPickPlayer::Item> items;
+    auto add = [&](std::size_t tag, const std::string& text, const char* desc)
+    {
+        DialogPickPlayer::Item item;
+        item.tag         = tag;
+        item.text        = text;
+        item.description = desc;
+        items.push_back(std::move(item));
+    };
+    add(0, autoTurnOn_ ? "Turn on" : "Turn off",
+        autoTurnOn_ ? "AutoOdds is off now" : "AutoOdds is on now");
+    add(1, "List Bets",        "what is set for each bet type");
+    add(2, "Set AutoOdds Bet", "pick a bet type and point");
+    add(3, "3-4-5 preset",     "3x on 4 and 10, 4x on 5 and 9, 5x on 6 and 8");
+    add(4, "Clear all",        "remove every bet");
+
+    stage_    = Stage::AwaitingPick;
+    autoStep_ = AutoStep::PickAction;
+    DialogPickPlayer::instance().configure("AutoOdds - Configure",
+                                           std::move(items),
+                                           DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::pickAutoType()
+{
+    const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
+
+    std::vector<DialogPickPlayer::Item> items;
+    std::size_t tag = 0;
+    for (BetName b : Ctrl::AutoOdds::oddsBetNames())
+    {
+        DialogPickPlayer::Item item;
+        item.tag         = tag++;
+        item.text        = typeWords(b);
+        item.description = ao.summary(b);
+        items.push_back(std::move(item));
+    }
+
+    stage_    = Stage::AwaitingPick;
+    autoStep_ = AutoStep::PickType;
+    DialogPickPlayer::instance().configure("AutoOdds - Which bet?",
+                                           std::move(items),
+                                           DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::pickAutoPoint()
+{
+    const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
+
+    std::vector<DialogPickPlayer::Item> items;
+    std::size_t tag = 0;
+    for (unsigned point : Ctrl::AutoOdds::points())
+    {
+        DialogPickPlayer::Item item;
+        item.tag  = tag++;
+        item.text = "Point " + std::to_string(point);
+        item.description = ao.setting(autoBetName_, point).toString();
+        items.push_back(std::move(item));
+    }
+    DialogPickPlayer::Item all;
+    all.tag         = tag;
+    all.text        = "All points";
+    all.description = "the same setting for every point";
+    items.push_back(std::move(all));
+
+    stage_    = Stage::AwaitingPick;
+    autoStep_ = AutoStep::PickPoint;
+    DialogPickPlayer::instance().configure(
+        std::string("AutoOdds - ") + typeWords(autoBetName_) + ", which point?",
+        std::move(items), DialogPickPlayer::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::askAutoMultiple()
+{
+    auto validator = [](const std::string& raw) -> std::string
+    {
+        Ctrl::AutoOdds::Setting setting;
+        return Ctrl::AutoOdds::parseSetting(raw, setting);
+    };
+
+    const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
+    const auto current = (autoPoint_ == 0) ? Ctrl::AutoOdds::Setting{}
+                       : ao.setting(autoBetName_, autoPoint_);
+
+    stage_    = Stage::AwaitingText;
+    autoStep_ = AutoStep::AskMultiple;
+    DialogTextInput::instance().configure(
+        std::string("AutoOdds ") + typeWords(autoBetName_) +
+            (autoPoint_ == 0 ? ", all points" : " " + std::to_string(autoPoint_)),
+        "Amount like 50, or 3x the bet (0 clears): ",
+        current.isSet() ? current.toString() : std::string(),
+        10, std::move(validator));
+    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onAutoPick(bool accepted, std::size_t tag)
+{
+    if (!accepted)
+    {
+        finish();       // Cancelled; stay on the Configure menu
+        return;
+    }
+
+    switch (autoStep_)
+    {
+    case AutoStep::PickAction:
+        switch (tag)
+        {
+        case 0:
+        {
+            Ctrl::ReqEditAutoOdds req;
+            req.action  = Ctrl::ReqEditAutoOdds::Action::SetEnabled;
+            req.enabled = autoTurnOn_;
+            sendAutoRequest(std::move(req));
+            return;
+        }
+        case 1:
+        {
+            const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
+            std::string detail;
+            for (BetName b : Ctrl::AutoOdds::oddsBetNames())
+            {
+                std::string label = std::string(typeWords(b)) + ":";
+                label.resize(12, ' ');
+                detail += label + ao.summary(b) + "\n";
+            }
+            detail += "\nAutoOdds is ";
+            detail += ao.enabled() ? "on." : "off.";
+            finish();
+            showNotice("AutoOdds - List Bets", detail);
+            return;
+        }
+        case 2:
+            pickAutoType();
+            return;
+        case 3:
+        {
+            Ctrl::ReqEditAutoOdds req;
+            req.action = Ctrl::ReqEditAutoOdds::Action::Preset345;
+            sendAutoRequest(std::move(req));
+            return;
+        }
+        case 4:
+            autoStep_ = AutoStep::ConfirmClear;
+            askConfirmation("Clear every AutoOdds multiple?");
+            return;
+        default:
+            finish();
+            return;
+        }
+
+    case AutoStep::PickType:
+    {
+        const auto& names = Ctrl::AutoOdds::oddsBetNames();
+        if (tag >= names.size())
+        {
+            finish();
+            return;
+        }
+        autoBetName_ = names[tag];
+        pickAutoPoint();
+        return;
+    }
+
+    case AutoStep::PickPoint:
+    {
+        const auto& points = Ctrl::AutoOdds::points();
+        if (tag > points.size())
+        {
+            finish();
+            return;
+        }
+        autoPoint_ = (tag == points.size()) ? 0u : points[tag];
+        askAutoMultiple();
+        return;
+    }
+
+    default:
+        finish();
+        return;
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::sendAutoRequest(Ctrl::ReqEditAutoOdds request)
+{
+    request.playerId = Ctrl::CrapsReaders::getUserPlayerId();
+    stage_           = Stage::AwaitingResponse;
+    correlationId_   = CuiSender::instance().reqEditAutoOdds(std::move(request));
+}
+
+//----------------------------------------------------------------
+//
+// From the bet amount dialog while entering odds: set AutoOdds for this
+// bet type and point to exactly the amount entered. An amount of zero
+// unsets it. One request, and the player stays in the amount dialog, with
+// a notice.
+//
+bool
+OperationManager::autoOddsSetOrUnset()
+{
+    if (isActive()) return false;
+
+    const auto& cb = CarrierBet::instance();
+    if (!cb.isOddsBet() || !Ctrl::AutoOdds::isOddsBetName(cb.getBetName()))
+    {
+        return true;
+    }
+
+    unsigned point = cb.getPivot();
+    if (point == 0)
+    {
+        Craps::TableId tableId;
+        Gen::ErrorPass ep;
+        if (Ctrl::CrapsReaders::getActiveCrapsTable(tableId, ep) ==
+                Gen::ReturnCode::Success)
+        {
+            Ctrl::CrapsReaders::readTablePoint(tableId, point, ep);
+        }
+    }
+    if (!Ctrl::AutoOdds::isPoint(point))
+    {
+        showNotice("AutoOdds", "There is no point yet, so there is no "
+                   "point to set AutoOdds for.");
+        return true;
+    }
+
+    Ctrl::ReqEditAutoOdds req;
+    req.action  = Ctrl::ReqEditAutoOdds::Action::Set;
+    req.betName = cb.getBetName();
+    req.point   = point;
+    req.amount  = cb.getOddsAmount();       // Zero unsets
+
+    type_ = OperationType::AutoOdds;
+    sendAutoRequest(std::move(req));
+    return true;
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRspEditAutoOdds(const Ctrl::RspEditAutoOdds& ev)
+{
+    LOG_TRACE("OperationManager::onRspEditAutoOdds() "
+              "correlationId = " + std::to_string(correlationId_));
+
+    if (stage_ != Stage::AwaitingResponse ||
+        type_  != OperationType::AutoOdds ||
+        ev.correlationId != correlationId_)
+    {
+        LOG_WARN("OperationManager::onRspEditAutoOdds(): ignoring "
+                 "unmatched RspEditAutoOdds: rsp.correlationId = " +
+                 std::to_string(ev.correlationId));
+        return;
+    }
+
+    if (!ev.accepted)
+    {
+        showError(ev.error, "AutoOdds Error", "Unable to Save AutoOdds");
+        return;
+    }
+
+    finish();
+    SurfaceManager::instance().draw();      // The status line may have changed
+    showNotice("AutoOdds", ev.message);
+}
+
+//----------------------------------------------------------------
+//
+// AutoOdds acted after betting reopened. The status line says how many
+// were placed; a notice lists what could not be, unless the player is in
+// the middle of something else.
+//
+void
+OperationManager::onAutoOddsApplied(const Ctrl::UslAutoOddsApplied& ev)
+{
+    LOG_TRACE("OperationManager::onAutoOddsApplied()");
+
+    autoOddsStatus_ = "AutoOdds: " + std::to_string(ev.placed) + " placed";
+    SurfaceManager::instance().draw();
+    if (!ev.skippedDetail.empty() && !isActive())
+    {
+        showNotice(ev.headline, ev.skippedDetail);
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::clearAutoOddsStatus()
+{
+    autoOddsStatus_.clear();
+}
+
+//----------------------------------------------------------------
+
+const std::string&
+OperationManager::autoOddsStatus() const
+{
+    return autoOddsStatus_;
+}
+
+//----------------------------------------------------------------
+
+//----------------------------------------------------------------
+//
 // Managing QuickBets, from the Configuration menu.
 //
 // Pick an entry, then pick what to do with it: rename it, change the
@@ -1119,7 +1494,8 @@ OperationManager::onErrorAcknowledged()
     }
 
     if (type_ == OperationType::QuickBetsEdit ||
-        type_ == OperationType::QuickBetsManage)
+        type_ == OperationType::QuickBetsManage ||
+        type_ == OperationType::AutoOdds)
     {
         // Back to where the person was: the bet amount dialog, or the
         // Configure menu. Both are still on the stack.
@@ -1181,6 +1557,21 @@ OperationManager::onConfirmationResult(SurfaceBase::OperationResult result)
         return;
     }
 
+    if (type_ == OperationType::AutoOdds)
+    {
+        if (result == SurfaceBase::OperationResult::Yes)
+        {
+            Ctrl::ReqEditAutoOdds req;
+            req.action = Ctrl::ReqEditAutoOdds::Action::Clear;
+            sendAutoRequest(std::move(req));
+        }
+        else
+        {
+            finish();
+        }
+        return;
+    }
+
     if (type_ != OperationType::Quit) return;
 
     if (result == SurfaceBase::OperationResult::Yes)
@@ -1205,6 +1596,8 @@ OperationManager::finish()
     quickBetTarget_.clear();
     manageEntry_.clear();
     manageBetIndex_ = 0;
+    autoBetName_ = BetName::Invalid;
+    autoPoint_   = 0;
     targetId_.clear();
     text_.clear();
     description_.clear();
@@ -1423,6 +1816,13 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
         return;
     }
 
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::AutoOdds)
+    {
+        (void)playerId; (void)betId;
+        onAutoPick(accepted, tag);
+        return;
+    }
+
     if (stage_ == Stage::AwaitingPick && type_ == OperationType::RemoveBet)
     {
         (void)playerId; (void)betId;
@@ -1577,6 +1977,25 @@ OperationManager::onTextResult(bool accepted, const std::string& text)
             return;
         }
         sendManageRequest(trimmed(text));
+        return;
+    }
+
+    if (stage_ == Stage::AwaitingText && type_ == OperationType::AutoOdds)
+    {
+        if (!accepted)
+        {
+            finish();
+            return;
+        }
+        Ctrl::ReqEditAutoOdds req;
+        req.betName  = autoBetName_;
+        req.point    = autoPoint_;
+        Ctrl::AutoOdds::Setting setting;
+        Ctrl::AutoOdds::parseSetting(text, setting);    // Validated already
+        req.multiple = setting.multiple;
+        req.amount   = setting.amount;
+        req.action   = Ctrl::ReqEditAutoOdds::Action::Set;
+        sendAutoRequest(std::move(req));
         return;
     }
 

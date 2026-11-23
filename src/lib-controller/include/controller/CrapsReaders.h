@@ -11,6 +11,7 @@
 #pragma once
 
 #include <controller/AnimationSpeed.h>
+#include <controller/AutoOdds.h>
 #include <controller/RollHistoryFormat.h>
 #include <controller/PlayerManager.h>
 #include <controller/PlayerManifest.h>
@@ -268,6 +269,9 @@ public:
     
     // QuickBets of the user player, in order. A copy.
     static std::vector<BetPlan> readQuickBets();
+
+    // AutoOdds settings of the user player. A copy.
+    static AutoOdds readAutoOdds();
 
     // Last Fill
     static Gen::ReturnCode getLastFill(

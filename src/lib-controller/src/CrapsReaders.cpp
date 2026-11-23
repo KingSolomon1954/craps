@@ -1038,6 +1038,14 @@ CrapsReaders::readQuickBets()
 }
 
 //----------------------------------------------------------------
+
+AutoOdds
+CrapsReaders::readAutoOdds()
+{
+    return Gbl::pPlayerMgr->userPrefs().autoOdds();
+}
+
+//----------------------------------------------------------------
 //
 // Program related
 //

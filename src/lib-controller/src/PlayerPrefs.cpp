@@ -42,12 +42,29 @@ PlayerPrefs::quickBets() const
 
 //----------------------------------------------------------------
 
+AutoOdds&
+PlayerPrefs::autoOdds()
+{
+    return autoOdds_;
+}
+
+//----------------------------------------------------------------
+
+const AutoOdds&
+PlayerPrefs::autoOdds() const
+{
+    return autoOdds_;
+}
+
+//----------------------------------------------------------------
+
 YAML::Node
 PlayerPrefs::toYAML() const
 {
     YAML::Node node(YAML::NodeType::Map);
     node["LastFills"] = lastFill_.toYAML();
     node["QuickBets"] = quickBets_.toYAML();
+    node["AutoOdds"]  = autoOdds_.toYAML();
     return node;
 }
 
@@ -63,11 +80,13 @@ PlayerPrefs::fromYAML(const YAML::Node& node)
     {
         lastFill_.fromYAML(node["LastFills"]);
         quickBets_.fromYAML(node["QuickBets"]);
+        autoOdds_.fromYAML(node["AutoOdds"]);
     }
     else
     {
         lastFill_.clear();
         quickBets_.clear();
+        autoOdds_.fromYAML(YAML::Node());
     }
 }
 

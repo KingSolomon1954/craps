@@ -5,7 +5,10 @@
 //----------------------------------------------------------------
 
 #include <cui/screens/ScreenCrapsTable.h>
+#include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
+#include <controller/CrapsReaders.h>
+#include <string>
 #include <cui/layouts/LayoutCrapsScreen.h>
 #include <cui/menus/MenuBetting.h>
 #include <cui/menus/MenuNavBarViews.h>
@@ -77,10 +80,27 @@ void
 ScreenCrapsTable::drawNavBar()
 {
     auto nav = WindowNavBar::instance();
-    
-    nav.configure(
+
+    // The middle of the bar, between the menu keys and the "|", says
+    // whether AutoOdds is on, or what it just did.
+    constexpr std::size_t MiddleWidth = 19;
+    std::string middle = OperationManager::instance().autoOddsStatus();
+    const bool haveStatus = !middle.empty();
+    if (middle.empty() && Ctrl::CrapsReaders::readAutoOdds().enabled())
+    {
+        middle = "AutoOdds on";
+    }
+    if (haveStatus || !middle.empty())
+    {
+        middle.insert(0, " ");     // Keep clear of the Stats label
+    }
+    middle.resize(MiddleWidth, ' ');
+
+    const std::string line =
 //  0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 
-    " [C] Control   [B] BETTING   [V] View   [S] Stats                   |         [H] Help   [Q] Quit");
+    " [C] Control   [B] BETTING   [V] View   [S] Stats" + middle +
+    "|         [H] Help   [Q] Quit";
+    nav.configure(line);
     nav.draw();
 }
 

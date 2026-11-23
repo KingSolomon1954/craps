@@ -37,6 +37,8 @@ User Interface Overview
 
 .. include:: quickbets.inc
 
+.. include:: autoodds.inc
+
 .. include:: configuration.inc
 
 .. include:: statistics.inc

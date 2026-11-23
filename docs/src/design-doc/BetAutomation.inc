@@ -182,9 +182,10 @@ AutoOdds Rules
 AutoOdds places odds on a contract bet for the user, in a size that depends
 on the kind of bet and the point it is on.
 
-* **Settings.** A table of multiples *n* for each of PassLine, DontPass,
-  Come and DontCome and each of the points 4, 5, 6, 8, 9 and 10. The odds
-  amount is *n* times the contract amount. A missing entry or zero means no
+* **Settings.** A table with an entry for each of PassLine, DontPass,
+  Come and DontCome and each of the points 4, 5, 6, 8, 9 and 10. An entry is
+  either a multiple *n*, so the odds amount is *n* times the contract amount,
+  or an exact dollar amount. A missing entry means no
   automatic odds for that bet type and point. This is needed because odds
   size depends on the point as well as on the bet. A player may want much
   more behind a DontPass bet on the 10 than on the 6. Typical examples are
@@ -205,19 +206,40 @@ on the kind of bet and the point it is on.
   of the bets it has handled. This is needed so that odds the player takes
   down by hand stay down. Without it AutoOdds would put them back after the
   next roll. The set is pruned of ids that are no longer on the table.
-* **Amount.** *n* times the contract, rounded down to the table's required
+* **Amount.** The exact amount, or *n* times the contract, rounded down to the table's required
   odds multiple and not above the table's maximum odds for that bet. The
   table already knows both, from its odds limit rules. If the result is
   below one odds increment, the bet is skipped and the reason is reported.
 * **Failures.** Insufficient funds or a refusal from the table skips the
   bet. AutoOdds does not retry within the same pass. It has already marked
   the bet as handled.
-* **From DialogBetAmount.** ``a`` sets or unsets the multiple for the bet
-  type and point of the odds bet being entered. The multiple is the entered
-  odds amount divided by the contract amount, rounded down, and the Message
-  area states the multiple that was stored. A zero amount removes it. The
+* **From DialogBetAmount.** ``a`` sets the entry for the bet type and point
+  of the odds bet being entered to the exact amount entered, and reports it.
+  A zero amount removes the entry. The
   line is shown only when the dialog is for an odds bet and is blank
   otherwise, so that the dialog does not change shape.
+
+As built:
+
+* ``AutoOdds`` holds the multiples, the on and off switch and the handled
+  ids. ``AutoOdds::plan()`` is the pass. It takes candidate bets, each with
+  the table's odds limits already looked up, so it is tested without a
+  table. ``EventHandler::onUslBettingOpened`` makes the candidates from the
+  user player's bets, applies the plan with ``BetExecutor::apply`` and
+  publishes ``UslAutoOddsApplied``.
+* A bet is marked handled as soon as the pass has a multiple for it, whether
+  or not the odds could be placed. A bet that already has odds is also
+  marked, so odds the player later takes down stay down.
+* AutoOdds is applied for the user player only. Odds are not LastFill
+  entries, since the player did not choose them.
+* ``ReqEditAutoOdds`` and ``RspEditAutoOdds`` carry every change: the
+  switch, one entry or all points of a bet type (a point of 0), the 3-4-5
+  preset and clearing. The Set or Unset of ``DialogBetAmount`` is a ``Set``
+  with the entered amount.
+* Until the Message area exists, the middle of the bottom bar shows
+  *AutoOdds on* while it is on, and *AutoOdds: n placed* after a pass until
+  the next roll. Odds that could not be placed are listed in a notice, unless
+  the player is in the middle of another dialog; the log has them all.
 
 Buddy Automation
 ^^^^^^^^^^^^^^^^
@@ -260,9 +282,9 @@ one-bet form of the same name, and ``AutoFills`` is gone. ``pivot`` and
      enabled: true
      multiples:
        PassLine:
-         4: 3
-         5: 4
-         6: 5
+         4: 3x
+         5: 4x
+         6: $50
 
 Loading follows the Prefs rules already in force: an entry that cannot be
 read is logged and skipped, and loading never throws. A loaded plan is
@@ -286,7 +308,7 @@ Automation Staging
    changed in the Configuration menu.
 #. AutoOdds: settings and persistence, the pass on ``UslBettingOpened``,
    the ``DialogBetAmount`` entry, the Configuration menu pages, the master
-   switch and its indicator.
+   switch and its indicator. Done. Only the user player is automated.
 #. Buddy automation rules and their triggers.
 
 Automation Open Items
@@ -297,6 +319,7 @@ Automation Open Items
 * A place for the Message area to show summaries before the Message area
   exists. Until then the summary of an application that skipped bets is
   shown in a notice dialog, and a clean application shows nothing. The
-  executor logs every application.
+  executor logs every application. AutoOdds shows a short status in the
+  middle of the bottom bar.
 * Whether QuickBets entries should be shared between a user and the buddies,
   or only per player.

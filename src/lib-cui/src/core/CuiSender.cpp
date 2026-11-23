@@ -145,6 +145,22 @@ CuiSender::reqEditQuickBets(Ctrl::ReqEditQuickBets ev)
 //----------------------------------------------------------------
 
 Ctrl::CorrelationId
+CuiSender::reqEditAutoOdds(Ctrl::ReqEditAutoOdds ev)
+{
+    LOG_TRACE("CuiSender::reqEditAutoOdds()");
+
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+
+    LOG_DEBUG("CuiSender::reqEditAutoOdds() correlationId = " +
+              std::to_string(correlationId));
+
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
 CuiSender::reqOddsBet(const Craps::PlayerId& playerId,
                       Craps::BetId betId,
                       Gen::Money oddsAmount,

@@ -206,6 +206,7 @@ void
 MenuOddsBet::onAttach(SurfaceBase* pParent)
 {
     SurfaceBase::onAttach(pParent);
+    shortCircuited_ = false;
     gatherBets();
     buildMenuEntries();
     calcSize();           // Determine our height/width
@@ -312,7 +313,14 @@ MenuOddsBet::shortCircuit()
     if (activeOddsBets_.size() == 1)
     {
         shouldSkip_ = true;
-        processSelection(activeOddsBets_[0].betId);
+
+        // Only once. We are redrawn whenever a dialog above us closes,
+        // and must not push another amount dialog then.
+        if (!shortCircuited_)
+        {
+            shortCircuited_ = true;
+            processSelection(activeOddsBets_[0].betId);
+        }
         return true;
     }
     return false;
@@ -431,6 +439,7 @@ MenuOddsBet::populateCarrier(const BetInfo& bet)
     cb.setBetName(bet.betName);
     cb.setBetId(bet.betId);
     cb.setPivot(bet.pivot);
+    cb.setContractAmount(bet.contractAmount);   // Odds are a multiple of it
     cb.setDesireOdds();
 
     LOG_DEBUG("\nMenuOddsBet::populateCarrier() "

@@ -575,6 +575,7 @@ DialogBetAmount::draw()
     touchwin(pWin_);
 
     drawTitle();
+    drawAutoOddsPrompt();
     drawAmountLimits();
     drawReference();
     drawStatistics();
@@ -751,10 +752,30 @@ DialogBetAmount::drawPrompts()
 {
     mvwaddstr(pWin_, inputRow_, 2, "Enter amount:");
     int row = 7;
+    std::size_t i = 0;
     for (const std::string_view s : Prompts)
     {
-        mvwaddstr(pWin_, row++, 2, s.data());
+        if (i++ != AutoOddsPrompt)      // Drawn by drawAutoOddsPrompt()
+        {
+            mvwaddstr(pWin_, row, 2, s.data());
+        }
+        row++;
     }
+}
+
+//----------------------------------------------------------------
+//
+// The AutoOdds line depends on the bet, so it is drawn each time, or
+// blanked for bets that are not odds.
+//
+void
+DialogBetAmount::drawAutoOddsPrompt()
+{
+    const int row = 7 + static_cast<int>(AutoOddsPrompt);
+    std::string text(CarrierBet::instance().isOddsBet()
+                         ? Prompts[AutoOddsPrompt] : std::string_view());
+    text.resize(winSize_.cols - 4, ' ');
+    mvwaddstr(pWin_, row, 2, text.c_str());
 }
 
 //----------------------------------------------------------------
@@ -807,6 +828,7 @@ DialogBetAmount::handleKey(int ch)
     case '\n':
     case KEY_ENTER: doEnter(); return true;
     case 'q' : doQuickBets();  return true;
+    case 'a' : doAutoOdds();   return true;
     case '?' : doHelp();       return true;
     case '.' :
     case 27  : back();         return true;
@@ -930,6 +952,22 @@ DialogBetAmount::doQuickBets()
 
     CarrierBet::instance().setAmount(inputAmount_);
     OperationManager::instance().quickBetsSetOrAdd();
+}
+
+//----------------------------------------------------------------
+
+void
+DialogBetAmount::doAutoOdds()
+{
+    if (!CarrierBet::instance().isOddsBet())
+    {
+        beep();
+        return;
+    }
+    readInputAmount();      // Nothing or bad input is zero, which unsets
+
+    CarrierBet::instance().setAmount(inputAmount_);
+    OperationManager::instance().autoOddsSetOrUnset();
 }
 
 //----------------------------------------------------------------

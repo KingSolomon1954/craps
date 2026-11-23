@@ -37,6 +37,7 @@ enum class EventType
     ReqUndoBet,
     ReqApplyQuickBets,
     ReqEditQuickBets,
+    ReqEditAutoOdds,
     ReqSetAnimationSpeed,
     ReqSetRollHistoryFormat,
     ReqSwitchPlayer,
@@ -50,6 +51,7 @@ enum class EventType
     RspUndoBet,
     RspApplyQuickBets,
     RspEditQuickBets,
+    RspEditAutoOdds,
     RspChangeBet,              // not yet implemented
     RspSwitchPlayer,
     RspManagePlayer,
@@ -65,6 +67,7 @@ enum class EventType
     UslPassLineWinner,
     UslNewShooter,
     UslBettingOpened,
+    UslAutoOddsApplied,
     UslCountdownRollDice,      // not yet implemented
 
     UslBetMade,
@@ -791,6 +794,72 @@ struct RspEditQuickBets : public GameEvent
 
     RspEditQuickBets()
         : GameEvent{EventSource::Controller, EventType::RspEditQuickBets}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Change the player's AutoOdds settings. Always answers with
+/// RspEditAutoOdds. Nothing here touches the table.
+///
+/// | Action     | Uses                                                   |
+/// | ---------- | ------------------------------------------------------ |
+/// | SetEnabled | enabled                                                |
+/// | Set        | betName, point (0 = all points), and multiple or       |
+/// |            | amount. An amount is exact dollars; otherwise multiple |
+/// |            | is times the contract. Both zero unsets.               |
+/// | Preset345  | nothing; 3x on 4 and 10, 4x on 5 and 9, 5x on 6 and 8  |
+/// | Clear      | nothing; clears every setting                          |
+struct ReqEditAutoOdds : public GameEvent
+{
+    enum class Action { SetEnabled, Set, Preset345, Clear };
+
+    Craps::PlayerId playerId;
+    Action          action   = Action::SetEnabled;
+    bool            enabled  = false;
+    BetName         betName  = BetName::Invalid;
+    unsigned        point    = 0;
+    unsigned        multiple = 0;
+    Gen::Money      amount   = 0;
+
+    ReqEditAutoOdds()
+        : GameEvent{EventSource::View, EventType::ReqEditAutoOdds}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqEditAutoOdds. When accepted, message says what was done,
+/// e.g. "AutoOdds for PassLine 6: set to 5x". Otherwise error says why not.
+/// Changes are kept in the player's prefs and saved with the players.
+struct RspEditAutoOdds : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    std::string     message;
+    Gen::ErrorPass  error;
+
+    RspEditAutoOdds()
+        : GameEvent{EventSource::Controller, EventType::RspEditAutoOdds}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Sent after betting reopens when AutoOdds put odds on, or wanted to and
+/// could not. The odds bets themselves are announced by the usual bet
+/// events. headline is e.g. "AutoOdds: 2 placed", skippedDetail has one
+/// line per odds not placed.
+struct UslAutoOddsApplied : public GameEvent
+{
+    Craps::PlayerId playerId;
+    unsigned        placed  = 0;
+    unsigned        skipped = 0;
+    std::string     headline;
+    std::string     skippedDetail;
+
+    UslAutoOddsApplied()
+        : GameEvent{EventSource::Controller, EventType::UslAutoOddsApplied}
     {}
 };
 
