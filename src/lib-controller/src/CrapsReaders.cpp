@@ -1027,48 +1027,22 @@ CrapsReaders::getLastFill(
 
 //----------------------------------------------------------------
 //
-// Auto Fills
+// QuickBets
 //
 //----------------------------------------------------------------
 
-Gen::ReturnCode
-CrapsReaders::getAutoFill(
-    AutoFill::AutoFillEntry& afe,
-    Gen::ErrorPass& ep)
+std::vector<BetPlan>
+CrapsReaders::readQuickBets()
 {
-    if (Gbl::pPlayerMgr->userPrefs().autoFill().getAutoFill(afe)
-        == Gen::ReturnCode::Fail)
-    {
-        ep.setDescription("No such auto fill entry exists.");
-        return Gen::ReturnCode::Fail;
-    }
-    return Gen::ReturnCode::Success;
+    return Gbl::pPlayerMgr->userPrefs().quickBets().plans();
 }
 
 //----------------------------------------------------------------
 
-Gen::ReturnCode
-CrapsReaders::getAutoFills(
-    AutoFill::AutoFills& autoFills,  // return arg
-    Gen::ErrorPass& ep)
+AutoOdds
+CrapsReaders::readAutoOdds()
 {
-    autoFills = Gbl::pPlayerMgr->userPrefs().autoFill().getAutoFills();
-    return Gen::ReturnCode::Success;
-}
-
-//----------------------------------------------------------------
-//
-// Quick Bets
-//
-//----------------------------------------------------------------
-
-Gen::ReturnCode
-CrapsReaders::getQuickBets(
-    QuickBet::QuickBets& quickBets,  // return arg
-    Gen::ErrorPass& ep)
-{
-    quickBets = Gbl::pPlayerMgr->userPrefs().quickBet().getQuickBets();
-    return Gen::ReturnCode::Success;
+    return Gbl::pPlayerMgr->userPrefs().autoOdds();
 }
 
 //----------------------------------------------------------------

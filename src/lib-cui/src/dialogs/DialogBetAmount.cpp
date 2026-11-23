@@ -10,7 +10,6 @@
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
-#include <controller/AutoFill.h>
 #include <controller/LastFill.h>
 #include <controller/CrapsReaders.h>
 #include <craps/CrapsTypes.h>
@@ -548,10 +547,10 @@ DialogBetAmount::setLocation(WindowPosition pos)
 // 5  │ Enter amount: 25                                        │
 // 6  │                                                         │
 // 7  │ [enter] Submit Bet                                      │
-// 8  │ [a] Save as AutoFill                                    │
-// 9  │ [q] Save as Quick Bet                                   │
-// 10 │ [?] Help                                                │
-// 11 │ [. or esc] Back                                         │
+// 8  │ [q] QuickBets - Set or Add                              │
+// 9  │ [?] Help                                                │
+// 10 │ [. or esc] Back                                         │
+// 11 │                                                         │
 // 12 ├─────────────────────────────────────────────────────────┤
 // 13 │ Pays 1:2 True Odds 1:2 House Edge 0%                    │
 // 14 │ Loses on 4 or 10 respectively. Wins on 7                │
@@ -568,7 +567,15 @@ DialogBetAmount::setLocation(WindowPosition pos)
 void
 DialogBetAmount::draw()
 {
+    // The borders and prompts are drawn once, and the fields below are
+    // redrawn over them. When another dialog above this one closes, the
+    // table behind is redrawn and ncurses would copy only the changed
+    // lines of this window, leaving remnants. touchwin() marks the whole
+    // window changed so that all of it is copied.
+    touchwin(pWin_);
+
     drawTitle();
+    drawAutoOddsPrompt();
     drawAmountLimits();
     drawReference();
     drawStatistics();
@@ -745,10 +752,30 @@ DialogBetAmount::drawPrompts()
 {
     mvwaddstr(pWin_, inputRow_, 2, "Enter amount:");
     int row = 7;
+    std::size_t i = 0;
     for (const std::string_view s : Prompts)
     {
-        mvwaddstr(pWin_, row++, 2, s.data());
+        if (i++ != AutoOddsPrompt)      // Drawn by drawAutoOddsPrompt()
+        {
+            mvwaddstr(pWin_, row, 2, s.data());
+        }
+        row++;
     }
+}
+
+//----------------------------------------------------------------
+//
+// The AutoOdds line depends on the bet, so it is drawn each time, or
+// blanked for bets that are not odds.
+//
+void
+DialogBetAmount::drawAutoOddsPrompt()
+{
+    const int row = 7 + static_cast<int>(AutoOddsPrompt);
+    std::string text(CarrierBet::instance().isOddsBet()
+                         ? Prompts[AutoOddsPrompt] : std::string_view());
+    text.resize(winSize_.cols - 4, ' ');
+    mvwaddstr(pWin_, row, 2, text.c_str());
 }
 
 //----------------------------------------------------------------
@@ -800,8 +827,8 @@ DialogBetAmount::handleKey(int ch)
     case '\r':
     case '\n':
     case KEY_ENTER: doEnter(); return true;
-    case 'a' : doAutoFill();   return true;
-    case 'q' : doQuickBet();   return true;
+    case 'q' : doQuickBets();  return true;
+    case 'a' : doAutoOdds();   return true;
     case '?' : doHelp();       return true;
     case '.' :
     case 27  : back();         return true;
@@ -915,7 +942,7 @@ DialogBetAmount::doEnter()
 //----------------------------------------------------------------
 
 void
-DialogBetAmount::doAutoFill()
+DialogBetAmount::doQuickBets()
 {
     if (!readInputAmount())
     {
@@ -924,22 +951,23 @@ DialogBetAmount::doAutoFill()
     }
 
     CarrierBet::instance().setAmount(inputAmount_);
-    OperationManager::instance().autoFill();
+    OperationManager::instance().quickBetsSetOrAdd();
 }
 
 //----------------------------------------------------------------
 
 void
-DialogBetAmount::doQuickBet()
+DialogBetAmount::doAutoOdds()
 {
-    if (!readInputAmount())
+    if (!CarrierBet::instance().isOddsBet())
     {
         beep();
         return;
     }
+    readInputAmount();      // Nothing or bad input is zero, which unsets
 
     CarrierBet::instance().setAmount(inputAmount_);
-    OperationManager::instance().quickBet();
+    OperationManager::instance().autoOddsSetOrUnset();
 }
 
 //----------------------------------------------------------------
@@ -965,30 +993,7 @@ DialogBetAmount::prepLineInput()
 Gen::Money
 DialogBetAmount::getPrefillAmount() const
 {
-    auto fill = getAutoFill();
-    if (fill == 0) fill = getLastFill();
-    return fill;
-}
-
-//----------------------------------------------------------------
-
-Gen::Money
-DialogBetAmount::getAutoFill() const
-{
-    const auto& cb = CarrierBet::instance();
-
-    Ctrl::AutoFill::AutoFillEntry afe
-    {
-        cb.getBetName(),
-        cb.getPivot(),
-        cb.isOddsBet(),
-        0                  // AutoFill returns preFillAmount here
-    };
-
-    Gen::ErrorPass ep;
-    (void) Ctrl::CrapsReaders::getAutoFill(afe, ep);
-
-    return afe.amount;
+    return getLastFill();
 }
 
 //----------------------------------------------------------------

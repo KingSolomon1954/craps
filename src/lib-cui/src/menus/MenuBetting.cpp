@@ -68,7 +68,7 @@ MenuBetting::instance()
 // 17 │ [n] Horn Bet          │
 // 18 │ [w] World Bet         │
 // 19 │ [g] Bet Flags         │
-// 20 │ [q] Quick Bet         │
+// 20 │ [q] QuickBets         │
 // 21 │ [x] Remove Bets       │
 // 22 │ [u] Undo Last         │
 // 23 │ [r] Roll Dice         │
@@ -104,7 +104,7 @@ MenuBetting::fillWindow()
     mvwaddstr(pWin_, 17, 2, "[n] Horn Bet");
     mvwaddstr(pWin_, 18, 2, "[w] World Bet");
     mvwaddstr(pWin_, 19, 2, "[g] Bet Flags");
-    mvwaddstr(pWin_, 20, 2, "[q] Quick Bet");
+    mvwaddstr(pWin_, 20, 2, "[q] QuickBets");
     mvwaddstr(pWin_, 21, 2, "[x] Remove Bets");
     mvwaddstr(pWin_, 22, 2, "[u] Undo Last");
     mvwaddstr(pWin_, 23, 2, "[r] Roll Dice");
@@ -329,7 +329,7 @@ MenuBetting::doUndoLastBet()
 void
 MenuBetting::doQuickBet()
 {
-    // TODO
+    OperationManager::instance().applyQuickBets();
 }
 
 //----------------------------------------------------------------

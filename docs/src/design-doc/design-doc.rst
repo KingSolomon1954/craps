@@ -176,6 +176,11 @@ Undo of Bet Changes
 
 .. include:: Undo.inc
 
+Bet Automation
+--------------
+
+.. include:: BetAutomation.inc
+
 Configuration
 -------------
 

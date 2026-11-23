@@ -152,6 +152,30 @@ CuiReceiver::CuiReceiver()
             this->onRspUndoBet(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::RspApplyQuickBets>(
+        [this](const Ctrl::RspApplyQuickBets& ev)
+        {
+            this->onRspApplyQuickBets(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::RspEditQuickBets>(
+        [this](const Ctrl::RspEditQuickBets& ev)
+        {
+            this->onRspEditQuickBets(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::RspEditAutoOdds>(
+        [this](const Ctrl::RspEditAutoOdds& ev)
+        {
+            this->onRspEditAutoOdds(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::UslAutoOddsApplied>(
+        [this](const Ctrl::UslAutoOddsApplied& ev)
+        {
+            this->onAutoOddsApplied(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::UslRollHistoryFormatChanged>(
         [this](const Ctrl::UslRollHistoryFormatChanged& ev)
         {
@@ -216,18 +240,6 @@ CuiReceiver::CuiReceiver()
         [this](const Ctrl::UslPlayerBalanceChanged& ev)
         {
             this->onPlayerBalanceChanged(ev);
-        });
-    
-    Gen::EventManager::instance().subscribe<Ctrl::UslAutoFillChanged>(
-        [this](const Ctrl::UslAutoFillChanged& ev)
-        {
-            this->onAutoFillChanged(ev);
-        });
-
-    Gen::EventManager::instance().subscribe<Ctrl::UslQuickBetChanged>(
-        [this](const Ctrl::UslQuickBetChanged& ev)
-        {
-            this->onQuickBetChanged(ev);
         });
 }
 
@@ -392,6 +404,46 @@ CuiReceiver::onRspUndoBet(const Ctrl::RspUndoBet& ev) const
 //----------------------------------------------------------------
 
 void
+CuiReceiver::onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& ev) const
+{
+    LOG_TRACE("CuiReceiver::onRspApplyQuickBets()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onRspEditQuickBets(const Ctrl::RspEditQuickBets& ev) const
+{
+    LOG_TRACE("CuiReceiver::onRspEditQuickBets()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onRspEditAutoOdds(const Ctrl::RspEditAutoOdds& ev) const
+{
+    LOG_TRACE("CuiReceiver::onRspEditAutoOdds()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onAutoOddsApplied(const Ctrl::UslAutoOddsApplied& ev) const
+{
+    LOG_TRACE("CuiReceiver::onAutoOddsApplied()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
+}
+
+//----------------------------------------------------------------
+
+void
 CuiReceiver::onRspRemoveBet(const Ctrl::RspRemoveBet& ev) const
 {
     LOG_TRACE("CuiReceiver::onRspRemoveBet()");
@@ -520,26 +572,6 @@ CuiReceiver::onPlayerBalanceChanged(const Ctrl::UslPlayerBalanceChanged& ev) con
 }
 
 //----------------------------------------------------------------
-
-void
-CuiReceiver::onAutoFillChanged(const Ctrl::UslAutoFillChanged& ev) const
-{
-    LOG_TRACE("CuiReceiver()::onAutoFillChanged()");
-
-    WorkOrderEvent wo{.event = ev};
-    CuiThread::instance().enqueueWork(wo);
-}
-
-//----------------------------------------------------------------
-
-void
-CuiReceiver::onQuickBetChanged(const Ctrl::UslQuickBetChanged& ev) const
-{
-    LOG_TRACE("CuiReceiver()::onQuickBetChanged()");
-
-    WorkOrderEvent wo{.event = ev};
-    CuiThread::instance().enqueueWork(wo);
-}
 
 //----------------------------------------------------------------
 

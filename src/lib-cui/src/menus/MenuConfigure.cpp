@@ -43,8 +43,8 @@ MenuConfigure::instance()
 // 1  │ Configure               │
 // 2  ├─────────────────────────┤
 // 3  │ [f] Format Roll History │
-// 4  │ [q] Quick Bets          │
-// 5  │ [a] Auto Bets           │
+// 4  │ [q] QuickBets           │
+// 5  │ [a] AutoOdds            │
 // 6  │ [t] Timed Rolls         │
 // 7  │ [s] Animation Speed     │
 // 8  │ [. or esc] Back         │
@@ -62,8 +62,8 @@ MenuConfigure::fillWindow()
 
     mvwaddstr(pWin_, 1, 2, "Configure");
     mvwaddstr(pWin_, 3, 2, "[f] Format Roll History");
-    mvwaddstr(pWin_, 4, 2, "[q] Quick Bets");
-    mvwaddstr(pWin_, 5, 2, "[a] Auto Bets");
+    mvwaddstr(pWin_, 4, 2, "[q] QuickBets");
+    mvwaddstr(pWin_, 5, 2, "[a] AutoOdds");
     mvwaddstr(pWin_, 6, 2, "[t] Timed Rolls");
     mvwaddstr(pWin_, 7, 2, "[s] Animation Speed");
     mvwaddstr(pWin_, 8, 2, "[. or esc] Back");
@@ -150,7 +150,7 @@ MenuConfigure::doFormatRollHistory()
 void
 MenuConfigure::doQuickBets()
 {
-    // TODO
+    OperationManager::instance().manageQuickBets();
 }
 
 //----------------------------------------------------------------
@@ -158,7 +158,7 @@ MenuConfigure::doQuickBets()
 void
 MenuConfigure::doAutoBets()
 {
-    // TODO
+    OperationManager::instance().manageAutoOdds();
 }
 
 //----------------------------------------------------------------

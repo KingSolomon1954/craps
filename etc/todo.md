@@ -13,44 +13,38 @@
 
 ### Write player.YAML files only if "dirty"
 
-### Switch table:
-
-- needs to carry forward buddy players to the newly switched to table
-- maybe a dialog box should prompt the user to carry forward buddies
-- maybe should be a user prefence how to behave
-
 ### Need unit test for initial bank money
 
 ### Need unit test ConfigManagerTest
 
 ### LocationManager needs smarter options for window placement
 
-### Need More MenuBetting implementation
-
-### Implement the many MenuConfiguration options
-
-### Implement QuickBet::applyQuickBet for new CUI design
-
-### Implement MenuQuickBet
-
-### Implement doQuickBet in MenuBetting
-
-### Implement doBetFlags in MenuBetting
-
-### Implement WindowMessageArea
-
-### Implement ReqMakeBet, to include UndoManager
+### Implement a Timed Roll option
 
 ### Want DialogBetAmount to show whether off-on-comeout
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
-### Add AutoOdds capability
-- maybe add AutoOdds menu selection to DialogBetAmount
-- just for pass/come/dontpass/dontcome
+### Implement Buddy Automation
+
+### Update Readme.md for GitHub consumption
+
+### OperationManager needs refactor
+
+### Implement WindowMessageArea
+
+### Complete Switch Table feature:
+
+- needs to carry forward buddy players to the newly switched to table
+- maybe a dialog box should prompt the user to carry forward buddies
+- maybe should be a user prefence how to behave
+
+### Implement doBetFlags in MenuBetting
 
 ## Done
 
+(Done) Implemented AutoOdds capability\
+(Done) Implemented newly re-defined QuickBets capability\
 (Done) Complete implementation of Undo LastBet workflow\
 (Done) Created DeepRollHistory dialog for future integration\
 (Done) Implemented Roll History Format and configuration\

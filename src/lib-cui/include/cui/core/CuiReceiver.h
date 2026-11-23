@@ -45,12 +45,14 @@ private:
     void onBetMade                   (const Ctrl::UslBetMade& ev)                   const;
     void onRspRemoveBet              (const Ctrl::RspRemoveBet& ev)                 const;
     void onRspUndoBet                (const Ctrl::RspUndoBet& ev)                   const;
+    void onRspApplyQuickBets         (const Ctrl::RspApplyQuickBets& ev)            const;
+    void onRspEditQuickBets          (const Ctrl::RspEditQuickBets& ev)             const;
+    void onRspEditAutoOdds           (const Ctrl::RspEditAutoOdds& ev)              const;
+    void onAutoOddsApplied           (const Ctrl::UslAutoOddsApplied& ev)           const;
     void onBetRemoved                (const Ctrl::UslBetRemoved& ev)                const;
     void onRollHistoryFormatChanged  (const Ctrl::UslRollHistoryFormatChanged& ev) const;
     void onBetChanged                (const Ctrl::UslBetChanged& ev)                const;
     void onBetResolved               (const Ctrl::UslBetResolved& ev)               const;
-    void onAutoFillChanged           (const Ctrl::UslAutoFillChanged& ev)           const;
-    void onQuickBetChanged           (const Ctrl::UslQuickBetChanged& ev)           const;
 
     void onTableBetsChanged          (const Ctrl::UslTableBetsChanged& ev)          const;
     void onTableLastRollStatsChanged (const Ctrl::UslTableLastRollStatsChanged& ev) const;

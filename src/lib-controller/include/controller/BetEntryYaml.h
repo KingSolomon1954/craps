@@ -72,11 +72,10 @@ betEntriesFromYAML(const YAML::Node& node, const std::string& who, AddFn add)
 
 @file BetEntryYaml.h
 
-@brief Shared YAML form of LastFill, AutoFill and QuickBet entries
+@brief Shared YAML form of a list of bet entries (LastFill today)
 
-Those three classes each hold a list of entries with the same four
-fields. This is the one place that knows how such a list looks in a
-player file, so the three cannot drift apart:
+Classes that hold a list of entries with these four fields use this, so
+there is one place that knows how such a list looks in a player file:
 
 @code
 - betName: PassLine

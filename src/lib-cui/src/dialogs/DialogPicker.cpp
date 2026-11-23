@@ -1,29 +1,30 @@
 //----------------------------------------------------------------
 //
-// File: DialogPickPlayer.cpp
+// File: DialogPicker.cpp
 //
 //----------------------------------------------------------------
 
-#include <cui/dialogs/DialogPickPlayer.h>
+#include <cui/dialogs/DialogPicker.h>
 #include <cui/managers/OperationManager.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiUtils.h>
 #include <algorithm>
 #include <cassert>
+#include <cctype>
 
 using namespace Cui;
 
 namespace {
-constexpr const char* PickHint = "Up/Down, Enter or 1-9. Esc cancels";
 constexpr const char* ShowHint = "[. or enter or esc] Back";
-constexpr std::size_t NumberCols = 3;    // "1  " in front of each line
+constexpr std::size_t KeyCols = 4;       // "[a] " in front of each line
+constexpr std::size_t MaxKeys = 26;      // a-z; later lines have no key
 const std::string Separator(" | ");
 } // namespace
 
 //----------------------------------------------------------------
 
-DialogPickPlayer::DialogPickPlayer()
-    : DialogBase("DialogPickPlayer")
+DialogPicker::DialogPicker()
+    : DialogBase("DialogPicker")
 {
     // Create an initial WINDOW at location 0,0. Gets resized later.
     newWindow(winSize_.rows, winSize_.cols, winPos_.row, winPos_.col);
@@ -31,17 +32,40 @@ DialogPickPlayer::DialogPickPlayer()
 
 //----------------------------------------------------------------
 
-DialogPickPlayer&
-DialogPickPlayer::instance()
+DialogPicker&
+DialogPicker::instance()
 {
-    static DialogPickPlayer dialog;
+    static DialogPicker dialog;
     return dialog;
+}
+
+//----------------------------------------------------------------
+//
+// "Up/Down, Enter or a-f. Esc cancels", the letters being the ones
+// that are in use.
+//
+std::string
+DialogPicker::hint() const
+{
+    if (mode_ == Mode::Show)
+    {
+        return ShowHint;
+    }
+
+    const std::size_t keys = std::min(items_.size(), MaxKeys);
+    std::string letters(1, 'a');
+    if (keys > 1)
+    {
+        letters += "-";
+        letters += static_cast<char>('a' + keys - 1);
+    }
+    return "Up/Down, Enter or " + letters + ". Esc cancels";
 }
 
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::configure(std::string_view title,
+DialogPicker::configure(std::string_view title,
                             std::vector<Item> items,
                             Mode mode)
 {
@@ -56,7 +80,7 @@ DialogPickPlayer::configure(std::string_view title,
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::onAttach(SurfaceBase* pParent)
+DialogPicker::onAttach(SurfaceBase* pParent)
 {
     assert(configured_ && !items_.empty());
 
@@ -68,7 +92,7 @@ DialogPickPlayer::onAttach(SurfaceBase* pParent)
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::onDetach()
+DialogPicker::onDetach()
 {
     SurfaceBase::onDetach();
     configured_ = false;          // Detect fresh configuration
@@ -77,7 +101,7 @@ DialogPickPlayer::onDetach()
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::calcSize()
+DialogPicker::calcSize()
 {
     textWidth_ = 0;
     noteWidth_ = 0;
@@ -89,9 +113,8 @@ DialogPickPlayer::calcSize()
         longestDesc = std::max(longestDesc, i.description.size());
     }
 
-    const std::size_t numberCols = (mode_ == Mode::Pick) ? NumberCols : 0;
-    const std::size_t hintCols   = std::string(
-        mode_ == Mode::Pick ? PickHint : ShowHint).size();
+    const std::size_t numberCols = (mode_ == Mode::Pick) ? KeyCols : 0;
+    const std::size_t hintCols   = hint().size();
     const std::size_t leftCols   = numberCols + textWidth_ +
                                    (noteWidth_ ? 1 + noteWidth_ : 0);
 
@@ -114,7 +137,7 @@ DialogPickPlayer::calcSize()
 //----------------------------------------------------------------
 
 LocationRequest
-DialogPickPlayer::getLocationRequest() const
+DialogPicker::getLocationRequest() const
 {
     LocationRequest req;
     req.kind      = LocationKind::Dialog;
@@ -127,7 +150,7 @@ DialogPickPlayer::getLocationRequest() const
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::setLocation(WindowPosition pos)
+DialogPicker::setLocation(WindowPosition pos)
 {
     winPos_ = pos;
     resize(winSize_);
@@ -139,14 +162,14 @@ DialogPickPlayer::setLocation(WindowPosition pos)
 // 0   ┌────────────────────────────────────────┐
 // 1   │ Switch to Player                       │
 // 2   ├────────────────────────────────────────┤
-// 3   │ 1  Nathan        | Primary player      │   selected is reversed
-// 4   │ 2  Howie  (you)  | Left-handed thrower │
+// 3   │ [a] Nathan       | Primary player      │   selected is reversed
+// 4   │ [b] Howie  (you) | Left-handed thrower │
 // 5   ├────────────────────────────────────────┤
-// 6   │ Up/Down, Enter or 1-9. Esc cancels     │
+// 6   │ Up/Down, Enter or a-b. Esc cancels     │
 // 7   └────────────────────────────────────────┘
 //
 void
-DialogPickPlayer::drawFrame()
+DialogPicker::drawFrame()
 {
     box(pWin_, 0, 0);
     mvwhline(pWin_, 2, 1, ACS_HLINE, winSize_.cols - 2);
@@ -160,14 +183,13 @@ DialogPickPlayer::drawFrame()
     mvwaddch(pWin_, hintSepRow, 0, ACS_LTEE);
     mvwaddch(pWin_, hintSepRow, winSize_.cols - 1, ACS_RTEE);
 
-    mvwaddstr(pWin_, winSize_.rows - 2, 2,
-              mode_ == Mode::Pick ? PickHint : ShowHint);
+    mvwaddstr(pWin_, winSize_.rows - 2, 2, hint().c_str());
 }
 
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::drawItems()
+DialogPicker::drawItems()
 {
     const std::size_t visible = std::min(items_.size(), maxVisible_);
     const int innerCols = winSize_.cols - 4;
@@ -181,7 +203,9 @@ DialogPickPlayer::drawItems()
         std::string text;
         if (mode_ == Mode::Pick)
         {
-            text = (idx < 9) ? std::to_string(idx + 1) + "  " : "   ";
+            text = (idx < MaxKeys)
+                 ? "[" + std::string(1, static_cast<char>('a' + idx)) + "] "
+                 : "    ";
         }
         std::string name = item.text;
         name.resize(textWidth_, ' ');
@@ -215,7 +239,7 @@ DialogPickPlayer::drawItems()
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::draw()
+DialogPicker::draw()
 {
     werase(pWin_);
     drawFrame();
@@ -226,7 +250,7 @@ DialogPickPlayer::draw()
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::moveSelection(int delta)
+DialogPicker::moveSelection(int delta)
 {
     const int last = static_cast<int>(items_.size()) - 1;
     int next = static_cast<int>(selected_) + delta;
@@ -244,7 +268,7 @@ DialogPickPlayer::moveSelection(int delta)
 //----------------------------------------------------------------
 
 bool
-DialogPickPlayer::handleKey(int ch)
+DialogPicker::handleKey(int ch)
 {
     switch (ch)
     {
@@ -265,9 +289,10 @@ DialogPickPlayer::handleKey(int ch)
         closeWithoutChoice();
         return true;
     default:
-        if (mode_ == Mode::Pick && ch >= '1' && ch <= '9')
+        if (mode_ == Mode::Pick && std::isalpha(ch) && ch < 128)
         {
-            const std::size_t idx = static_cast<std::size_t>(ch - '1');
+            const std::size_t idx =
+                static_cast<std::size_t>(std::tolower(ch) - 'a');
             if (idx < items_.size()) choose(idx);
             else                     beep();
             return true;
@@ -279,7 +304,7 @@ DialogPickPlayer::handleKey(int ch)
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::choose(std::size_t index)
+DialogPicker::choose(std::size_t index)
 {
     const Craps::PlayerId id    = items_[index].playerId;
     const Craps::BetId    betId = items_[index].betId;
@@ -292,7 +317,7 @@ DialogPickPlayer::choose(std::size_t index)
 //----------------------------------------------------------------
 
 void
-DialogPickPlayer::closeWithoutChoice()
+DialogPicker::closeWithoutChoice()
 {
     setOperationResult(OperationResult::Cancel);
     SurfaceManager::instance().popSurface();

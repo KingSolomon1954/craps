@@ -18,7 +18,8 @@ add_library(cui STATIC
     src/dialogs/DialogDeepRollHistory.cpp
     src/dialogs/DialogError.cpp
     src/dialogs/DialogMessage.cpp
-    src/dialogs/DialogPickPlayer.cpp
+    src/dialogs/DialogPicker.cpp
+    src/dialogs/DialogQuickBetsSetAdd.cpp
     src/dialogs/DialogTextInput.cpp
     src/layouts/LayoutCrapsScreen.cpp
     src/managers/CarrierBet.cpp

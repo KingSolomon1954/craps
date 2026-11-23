@@ -9,7 +9,6 @@ find_package(rang REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
 add_library(controller STATIC
-    src/AutoFill.cpp
     src/ConfigManager.cpp
     src/ConfigCommandLine.cpp
     src/ConfigDefaults.cpp
@@ -17,6 +16,9 @@ add_library(controller STATIC
     src/ConfigFiles.cpp
     src/ConfigSeed.cpp
     src/StartChoices.cpp
+    src/AutoOdds.cpp
+    src/BetExecutor.cpp
+    src/BetSpec.cpp
     src/CrapsReaders.cpp
     src/EventHandler.cpp
     src/GameEvents.cpp
@@ -25,9 +27,9 @@ add_library(controller STATIC
     src/PlayerManager.cpp
     src/PlayerManifest.cpp
     src/PlayerPrefs.cpp
+    src/QuickBets.cpp
     src/Properties.cpp
     src/LastFill.cpp
-    src/QuickBet.cpp
     src/TableManager.cpp
     src/TableManifest.cpp
     src/UndoBet.cpp

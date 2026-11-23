@@ -109,6 +109,58 @@ CuiSender::reqUndoBet(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 Ctrl::CorrelationId
+CuiSender::reqApplyQuickBets(const Craps::PlayerId& playerId,
+                             const std::string& name)
+{
+    LOG_TRACE("CuiSender::reqApplyQuickBets()");
+
+    Ctrl::ReqApplyQuickBets ev;
+    ev.playerId = playerId;
+    ev.name     = name;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+
+    LOG_DEBUG("CuiSender::reqApplyQuickBets() correlationId = " +
+              std::to_string(correlationId));
+
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
+CuiSender::reqEditQuickBets(Ctrl::ReqEditQuickBets ev)
+{
+    LOG_TRACE("CuiSender::reqEditQuickBets()");
+
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+
+    LOG_DEBUG("CuiSender::reqEditQuickBets() correlationId = " +
+              std::to_string(correlationId));
+
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
+CuiSender::reqEditAutoOdds(Ctrl::ReqEditAutoOdds ev)
+{
+    LOG_TRACE("CuiSender::reqEditAutoOdds()");
+
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+
+    LOG_DEBUG("CuiSender::reqEditAutoOdds() correlationId = " +
+              std::to_string(correlationId));
+
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
 CuiSender::reqOddsBet(const Craps::PlayerId& playerId,
                       Craps::BetId betId,
                       Gen::Money oddsAmount,
@@ -182,48 +234,6 @@ CuiSender::reqRollDice()
     LOG_TRACE("CuiSender::reqRollDice()");
     
     Gen::EventManager::instance().publish(Ctrl::ReqRollDice{});
-}
-
-//----------------------------------------------------------------
-
-void
-CuiSender::reqAutoFill(BetName    betName,
-                       unsigned   pivot,
-                       bool       isOddsBet,
-                       Gen::Money amount)
-{
-    LOG_TRACE("CuiSender::reqAutoFill()");
-
-    Ctrl::ReqAutoFill ev;           // No response to this
-    ev.betName   = betName;         // So no setting correlationId
-    ev.pivot     = pivot;
-    ev.isOddsBet = isOddsBet;
-    ev.amount    = amount;
-    Gen::EventManager::instance().publish(ev);
-
-LOG_TRACE("CuiSender::reqAutoFill()"
-          " betName:" + EnumBetName::toString(betName)    +
-          " pivot:"   + std::to_string(pivot)             +
-          " isOdds:"  + (isOddsBet ? "true" : "false" ) +
-          " amount:"  + std::to_string(amount));
-}
-
-//----------------------------------------------------------------
-
-void
-CuiSender::reqQuickBet(BetName    betName,
-                       unsigned   pivot,
-                       bool       isOddsBet,
-                       Gen::Money amount)
-{
-    LOG_TRACE("CuiSender::reqQuickBet()");
-
-    Ctrl::ReqQuickBet ev;           // No response to this
-    ev.betName   = betName;         // So no setting correlationId
-    ev.pivot     = pivot;
-    ev.isOddsBet = isOddsBet;
-    ev.amount    = amount;
-    Gen::EventManager::instance().publish(ev);
 }
 
 //----------------------------------------------------------------

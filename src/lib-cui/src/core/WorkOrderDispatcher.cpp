@@ -98,6 +98,9 @@ WorkOrderDispatcher::passesThrough(const WorkOrderEvent& woe)
                    std::is_same_v<T, Ctrl::RspOddsBet>        ||
                    std::is_same_v<T, Ctrl::RspRemoveBet>      ||
                    std::is_same_v<T, Ctrl::RspUndoBet>        ||
+                   std::is_same_v<T, Ctrl::RspApplyQuickBets> ||
+                   std::is_same_v<T, Ctrl::RspEditQuickBets>  ||
+                   std::is_same_v<T, Ctrl::RspEditAutoOdds>   ||
                    std::is_same_v<T, Ctrl::RspSwitchPlayer>   ||
                    std::is_same_v<T, Ctrl::RspManagePlayer>;
         },
@@ -188,6 +191,8 @@ void
 WorkOrderDispatcher::process(const Ctrl::UslDiceThrowStart& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslDiceThrowStart)");
+
+    OperationManager::instance().clearAutoOddsStatus();
 
     // If the dice are animated, hold the results until they land.
     if (WindowAnimation::instance().onDiceThrowStart())
@@ -449,38 +454,6 @@ WorkOrderDispatcher::process(const Ctrl::UslPlayerBalanceChanged& ev)
 //----------------------------------------------------------------
 
 void
-WorkOrderDispatcher::process(const Ctrl::UslAutoFillChanged& ev)
-{
-    LOG_TRACE("WorkOrderDispatcher::process(UslAutoFillChanged)");
-
-    // TODO
-    // WindowMessageArea::instance().onAutoFillChanged(
-    //         Craps::PlayerId playerId;
-    //         BetName         betName;
-    //         unsigned        pivot;
-    //         bool            forOdds;
-    //         Gen::Money      amount;
-}
-
-//----------------------------------------------------------------
-
-void
-WorkOrderDispatcher::process(const Ctrl::UslQuickBetChanged& ev)
-{
-    LOG_TRACE("WorkOrderDispatcher::process(UslQuickBetChanged)");
-
-    // TODO
-    // WindowMessageArea::instance().onQuickBetChanged(
-    //         Craps::PlayerId playerId;
-    //         BetName         betName;
-    //         unsigned        pivot;
-    //         bool            forOdds;
-    //         Gen::Money      amount;
-}
-
-//----------------------------------------------------------------
-
-void
 WorkOrderDispatcher::process(const Ctrl::RspMakeBet& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(RspMakeBet)");
@@ -494,6 +467,42 @@ WorkOrderDispatcher::process(const Ctrl::RspUndoBet& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(RspUndoBet)");
     OperationManager::instance().onRspUndoBet(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspApplyQuickBets& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspApplyQuickBets)");
+    OperationManager::instance().onRspApplyQuickBets(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspEditQuickBets& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspEditQuickBets)");
+    OperationManager::instance().onRspEditQuickBets(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspEditAutoOdds& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspEditAutoOdds)");
+    OperationManager::instance().onRspEditAutoOdds(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::UslAutoOddsApplied& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslAutoOddsApplied)");
+    OperationManager::instance().onAutoOddsApplied(ev);
 }
 
 //----------------------------------------------------------------

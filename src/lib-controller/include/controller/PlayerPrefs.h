@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include <controller/AutoFill.h>
+#include <controller/AutoOdds.h>
 #include <controller/LastFill.h>
-#include <controller/QuickBet.h>
+#include <controller/QuickBets.h>
 #include <yaml-cpp/yaml.h>
 
 namespace Ctrl {
@@ -19,23 +19,23 @@ public:
     /// @name Modifiers
     /// @{
     LastFill& lastFill();
-    AutoFill& autoFill();
-    QuickBet& quickBet();
+    QuickBets& quickBets();
+    AutoOdds& autoOdds();
     void fromYAML(const YAML::Node& node);
     /// @}
 
     /// @name Observers
     /// @{
     const LastFill& lastFill() const;
-    const AutoFill& autoFill() const;
-    const QuickBet& quickBet() const;
+    const QuickBets& quickBets() const;
+    const AutoOdds& autoOdds() const;
     YAML::Node toYAML() const;
     /// @}
 
 private:
     LastFill lastFill_;
-    AutoFill autoFill_;
-    QuickBet quickBet_;
+    QuickBets quickBets_;
+    AutoOdds autoOdds_;
 };
 
 /*-----------------------------------------------------------*//**
@@ -45,7 +45,7 @@ private:
 @brief One player's controller-level preferences
 
 Things the controller remembers for a player that the Craps model knows
-nothing about: LastFill, AutoFill and QuickBet. Each is plain data. To
+nothing about: LastFill, QuickBets and AutoOdds, which are plain data. To
 add another, add a member here and a key in toYAML() and fromYAML().
 
 PlayerManager owns one PlayerPrefs per player. Observers reach the
@@ -63,12 +63,13 @@ Prefs:
       pivot: 0
       isOddsBet: false
       amount: 50
-  AutoFills: [...]    # same shape as LastFills
-  QuickBets: [...]    # same shape; order matters
+  QuickBets: [...]    # see QuickBets.h
+  AutoOdds: {...}     # see AutoOdds.h
 @endcode
 
-Each of the three lists is read on its own, so a bad or missing list
-only empties that list.
+Each list is read on its own, so a bad or missing list only empties
+that list. Keys it does not know, such as the AutoFills of older player files,
+are ignored and are not written back.
 
 */
 

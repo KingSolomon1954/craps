@@ -26,34 +26,34 @@ PlayerPrefs::lastFill() const
 
 //----------------------------------------------------------------
 
-AutoFill&
-PlayerPrefs::autoFill()
+QuickBets&
+PlayerPrefs::quickBets()
 {
-    return autoFill_;
+    return quickBets_;
 }
 
 //----------------------------------------------------------------
 
-const AutoFill&
-PlayerPrefs::autoFill() const
+const QuickBets&
+PlayerPrefs::quickBets() const
 {
-    return autoFill_;
+    return quickBets_;
 }
 
 //----------------------------------------------------------------
 
-QuickBet&
-PlayerPrefs::quickBet()
+AutoOdds&
+PlayerPrefs::autoOdds()
 {
-    return quickBet_;
+    return autoOdds_;
 }
 
 //----------------------------------------------------------------
 
-const QuickBet&
-PlayerPrefs::quickBet() const
+const AutoOdds&
+PlayerPrefs::autoOdds() const
 {
-    return quickBet_;
+    return autoOdds_;
 }
 
 //----------------------------------------------------------------
@@ -63,8 +63,8 @@ PlayerPrefs::toYAML() const
 {
     YAML::Node node(YAML::NodeType::Map);
     node["LastFills"] = lastFill_.toYAML();
-    node["AutoFills"] = autoFill_.toYAML();
-    node["QuickBets"] = quickBet_.toYAML();
+    node["QuickBets"] = quickBets_.toYAML();
+    node["AutoOdds"]  = autoOdds_.toYAML();
     return node;
 }
 
@@ -79,14 +79,14 @@ PlayerPrefs::fromYAML(const YAML::Node& node)
     if (node.IsDefined() && node.IsMap())
     {
         lastFill_.fromYAML(node["LastFills"]);
-        autoFill_.fromYAML(node["AutoFills"]);
-        quickBet_.fromYAML(node["QuickBets"]);
+        quickBets_.fromYAML(node["QuickBets"]);
+        autoOdds_.fromYAML(node["AutoOdds"]);
     }
     else
     {
         lastFill_.clear();
-        autoFill_.clear();
-        quickBet_.clear();
+        quickBets_.clear();
+        autoOdds_.fromYAML(YAML::Node());
     }
 }
 

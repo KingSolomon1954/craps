@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <controller/AutoOdds.h>
+#include <controller/BetSpec.h>
 #include <controller/GameEvents.h>
 #include <cui/bases/SurfaceBase.h>
 #include <cui/managers/CarrierBet.h>
@@ -48,17 +50,26 @@ public:
     void makeBet();      // Workflow: Asynchronous bet operation
     bool removeBets();   // Workflow: Pick one of your bets to take down
     bool undoLastBet();  // Workflow: Take back your latest bet change
+    bool applyQuickBets(); // Workflow: Pick a QuickBets entry and apply it
+    bool quickBetsSetOrAdd(); // Workflow: Save the bet being entered
+    bool manageQuickBets();   // Workflow: Rename, change, trim, delete entries
+    bool manageAutoOdds();    // Workflow: Turn on or off, set, clear AutoOdds
+    bool autoOddsSetOrUnset(); // Workflow: AutoOdds for the odds being entered
     bool chooseAnimationSpeed(); // Workflow: Pick the dice animation speed
     bool chooseRollHistoryFormat(); // Workflow: Pick how rolls are listed
     bool confirmQuit();  // Workflow: Confirmation to quit application
-    void autoFill();     // Workflow: Set up an AutoFill entry
-    void quickBet();     // Workflow: Set up an QuickBet entry
 
     // Called only on the CUI thread by WorkOrderDispatcher / dialogs.
     void onRspMakeBet(const Ctrl::RspMakeBet& response);
     void onRspOddsBet(const Ctrl::RspOddsBet& response);
     void onRspRemoveBet(const Ctrl::RspRemoveBet& response);
     void onRspUndoBet(const Ctrl::RspUndoBet& response);
+    void onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& response);
+    void onRspEditQuickBets(const Ctrl::RspEditQuickBets& response);
+    void onRspEditAutoOdds(const Ctrl::RspEditAutoOdds& response);
+    void onAutoOddsApplied(const Ctrl::UslAutoOddsApplied& response);
+    void clearAutoOddsStatus();
+    void onQuickBetsChoice(bool accepted, std::size_t index);
     void onConfirmationResult(SurfaceBase::OperationResult result);
     void onPickResult(bool accepted, const Craps::PlayerId& playerId,
                       Craps::BetId betId = 0, std::size_t tag = 0);
@@ -71,6 +82,10 @@ public:
     /// @name Observers
     /// @{
     bool isActive() const;
+
+    /// What AutoOdds just did, in a few words for the status line; empty
+    /// if nothing yet this roll.
+    const std::string& autoOddsStatus() const;
     /// @}
 
 private:
@@ -80,6 +95,10 @@ private:
         MakeBet,
         RemoveBet,
         UndoBet,
+        QuickBets,
+        QuickBetsEdit,
+        QuickBetsManage,
+        AutoOdds,
         Quit,
         Player,
         AnimationSpeed,
@@ -106,6 +125,27 @@ private:
     std::vector<Removal> removalQueue_;   // Sent one at a time
     bool removalStarted_ = false;         // Later removals join the first's undo step
 
+    std::vector<std::string> quickBetNames_;   // What the pick list offered
+    Ctrl::BetSpec            quickBetSpec_;    // The bet being saved
+    std::string              quickBetTarget_;  // Entry to add to, or new name
+
+    // Managing QuickBets: one pick list or prompt per step
+    enum class ManageStep { PickEntry, PickAction, PickBet, AskName, AskAmount,
+                            ConfirmDelete };
+    ManageStep               manageStep_ = ManageStep::PickEntry;
+    Ctrl::ReqEditQuickBets::Action manageAction_ = Ctrl::ReqEditQuickBets::Action::Rename;
+    std::string              manageEntry_;     // Entry being managed
+    std::size_t              manageBetIndex_ = 0;
+
+    // AutoOdds, from the Configuration menu: one pick list or prompt per step
+    enum class AutoStep { PickAction, PickType, PickPoint, AskMultiple,
+                          ConfirmClear };
+    AutoStep                 autoStep_ = AutoStep::PickAction;
+    BetName                  autoBetName_ = BetName::Invalid;
+    unsigned                 autoPoint_   = 0;       // 0 means all points
+    bool                     autoTurnOn_  = false;
+    std::string              autoOddsStatus_;
+
     OperationType type_                = OperationType::None;
     Stage stage_                       = Stage::Idle;
     Ctrl::CorrelationId correlationId_ = 0;
@@ -127,6 +167,20 @@ private:
     void showNotice(const std::string& brief, const std::string& detail);
     void askConfirmation(const std::string& question);
     void askForDescription();
+    void askForQuickBetsName();
+    void sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action action);
+    void sendManageRequest(const std::string& text = std::string());
+    void onManagePick(bool accepted, std::size_t tag);
+    void pickManageAction();
+    void pickManageBet(Ctrl::ReqEditQuickBets::Action action);
+    void onAutoPick(bool accepted, std::size_t tag);
+    void pickAutoAction();
+    void pickAutoType();
+    void pickAutoPoint();
+    void askAutoMultiple();
+    void sendAutoRequest(Ctrl::ReqEditAutoOdds request);
+    void askManageName();
+    void askManageAmount();
     void askForName(const std::string& title,
                     const std::string& initial,
                     const Craps::PlayerId& exceptId);

@@ -11,13 +11,13 @@
 #pragma once
 
 #include <controller/AnimationSpeed.h>
+#include <controller/AutoOdds.h>
 #include <controller/RollHistoryFormat.h>
 #include <controller/PlayerManager.h>
 #include <controller/PlayerManifest.h>
 #include <controller/TableManifest.h>
-#include <controller/AutoFill.h>
+#include <controller/BetSpec.h>
 #include <controller/LastFill.h>
-#include <controller/QuickBet.h>
 #include <craps/EnumBetName.h>
 #include <craps/CrapsTypes.h>
 #include <craps/TableRules.h>
@@ -267,22 +267,17 @@ public:
     static AnimationSpeed readAnimationSpeed();
     static RollHistoryFormat readRollHistoryFormat();
     
+    // QuickBets of the user player, in order. A copy.
+    static std::vector<BetPlan> readQuickBets();
+
+    // AutoOdds settings of the user player. A copy.
+    static AutoOdds readAutoOdds();
+
     // Last Fill
     static Gen::ReturnCode getLastFill(
         LastFill::LastFillEntry& entry,
         Gen::ErrorPass& ep);
 
-    static Gen::ReturnCode getAutoFill(
-        AutoFill::AutoFillEntry& entry,
-        Gen::ErrorPass& ep);
-    static Gen::ReturnCode getAutoFills(
-        AutoFill::AutoFills& autoFills,  // return arg
-        Gen::ErrorPass& ep);
-
-    // Quick Bet
-    static Gen::ReturnCode getQuickBets(
-        QuickBet::QuickBets& quickBets,  // return arg
-        Gen::ErrorPass& ep);
 
 private:
     // Private helpers
