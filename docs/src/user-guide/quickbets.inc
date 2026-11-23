@@ -12,7 +12,7 @@ Applying a QuickBets entry
 
 Press ``b`` for the *Betting Menu*, then ``q``. A list shows your entries,
 each with its name and the bets it holds. Pick one with the arrow keys and
-Enter, or press its number, and the bets are placed. Esc leaves the list
+Enter, or press the letter shown next to it, and the bets are placed. Esc leaves the list
 without placing anything.
 
 You can apply an entry whenever betting is open.

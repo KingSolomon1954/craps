@@ -21,9 +21,17 @@
 
 ### Implement a Timed Roll option
 
+### Want DialogBetAmount to show whether off-on-comeout
+
+### Want illegal bets to be unselectable in menus (grayed-out)
+
+### Implement Buddy Automation
+
 ### Update Readme.md for GitHub consumption
 
-### OperationMangage needs refactor
+### OperationManager needs refactor
+
+### Implement WindowMessageArea
 
 ### Complete Switch Table feature:
 
@@ -32,12 +40,6 @@
 - maybe should be a user prefence how to behave
 
 ### Implement doBetFlags in MenuBetting
-
-### Implement WindowMessageArea
-
-### Want DialogBetAmount to show whether off-on-comeout
-
-### Want illegal bets to be unselectable in menus (grayed-out)
 
 ## Done
 

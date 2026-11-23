@@ -96,7 +96,7 @@ For QuickBets, as built:
 
 #. ``MenuBetting`` ``q`` calls ``OperationManager::applyQuickBets()``, which
    reads the entries with ``CrapsReaders::readQuickBets()`` and shows
-   them in ``DialogPickPlayer``. The pick list carries each entry's name, so
+   them in ``DialogPicker``. The pick list carries each entry's name, so
    the request still names the right entry if the list changes.
 #. The pick sends ``ReqApplyQuickBets`` (player id and entry name).
 #. ``EventHandler::onReqApplyQuickBets()`` refuses when betting is closed or
@@ -135,11 +135,11 @@ Managing entries, as built. ``MenuConfigure`` ``q`` calls
 ``OperationManager::manageQuickBets()``. It is a chain of steps, each of which
 pops itself and reports back, so ``manageStep_`` says which one answered:
 
-#. Pick the entry in ``DialogPickPlayer``.
+#. Pick the entry in ``DialogPicker``.
 #. Pick the action: rename, change an amount, remove a bet or delete.
 #. Depending on the action: a name in ``DialogTextInput``, a bet in
-   ``DialogPickPlayer`` and then an amount in ``DialogTextInput``, a bet to
-   remove in ``DialogPickPlayer``, or a confirmation in ``DialogConfirm``.
+   ``DialogPicker`` and then an amount in ``DialogTextInput``, a bet to
+   remove in ``DialogPicker``, or a confirmation in ``DialogConfirm``.
 #. One ``ReqEditQuickBets`` with the action's fields (``newName``, ``index``
    and ``amount``). ``QuickBets::rename()``, ``setAmount()``, ``removeBet()``
    and ``removeEntry()`` each return "" or the reason, and the response

@@ -63,7 +63,7 @@ A description that is too long for the screen is cut short with three
 dots.
 
 Where you pick a player from a list, use the up and down arrow keys and
-press ``Enter``, or press the number shown next to the name. ``Esc`` backs
+press ``Enter``, or press the letter shown next to the name. ``Esc`` backs
 out without doing anything.
 
 Your First Player

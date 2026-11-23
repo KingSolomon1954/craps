@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-// File: DialogPickPlayer.h
+// File: DialogPicker.h
 //
 //----------------------------------------------------------------
 
@@ -16,7 +16,7 @@
 
 namespace Cui {
 
-class DialogPickPlayer : public DialogBase
+class DialogPicker : public DialogBase
 {
 public:
     enum class Mode
@@ -37,11 +37,11 @@ public:
 
     /// @name Lifecycle
     /// @{
-    static DialogPickPlayer& instance();
-    DialogPickPlayer(const DialogPickPlayer&)            = delete;
-    DialogPickPlayer& operator=(const DialogPickPlayer&) = delete;
-    DialogPickPlayer(DialogPickPlayer&&)                 = delete;
-    DialogPickPlayer& operator=(DialogPickPlayer&&)      = delete;
+    static DialogPicker& instance();
+    DialogPicker(const DialogPicker&)            = delete;
+    DialogPicker& operator=(const DialogPicker&) = delete;
+    DialogPicker(DialogPicker&&)                 = delete;
+    DialogPicker& operator=(DialogPicker&&)      = delete;
     /// @}
 
     /// @name Modifiers
@@ -64,8 +64,9 @@ private:
     static constexpr std::size_t maxVisible_ = 8;
     static constexpr std::size_t maxInnerCols_ = 76;   // 80 column dialog
 
-    DialogPickPlayer();
+    DialogPicker();
 
+    std::string hint() const;
     void calcSize();
     void drawFrame();
     void drawItems();
@@ -89,20 +90,21 @@ private:
 
 /*-----------------------------------------------------------*//**
 
-@class DialogPickPlayer
+@class DialogPicker
 
-@brief Shows a short list of players, optionally to pick one
+@brief Shows a short list, usually to pick one
 
 Each line is the name, an optional note, then a vertical bar and the
 short description, aligned on the bar and clipped to keep the dialog
 within 80 columns.
 
-Pick mode: Up/Down move, Enter chooses, 1-9 chooses that line, Esc
-cancels. Show mode: the same list for looking only; Enter or Esc
-closes it.
+Pick mode: Up/Down move, Enter chooses, a letter chooses that line (a to
+z, so up to 26 lines have a key), Esc cancels. Show mode: the same
+list for looking only; Enter or Esc closes it.
 
 The dialog pops itself and reports to OperationManager::onPickResult().
-The list scrolls when there are more than eight players.
+The list scrolls when there are more than eight lines. Used for
+players, bets and any other short list the caller describes with Item.
 
 */
 

@@ -12,7 +12,7 @@
 #include <cui/dialogs/DialogConfirm.h>
 #include <cui/dialogs/DialogError.h>
 #include <cui/dialogs/DialogMessage.h>
-#include <cui/dialogs/DialogPickPlayer.h>
+#include <cui/dialogs/DialogPicker.h>
 #include <cui/dialogs/DialogQuickBetsSetAdd.h>
 #include <cui/dialogs/DialogTextInput.h>
 #include <controller/AnimationSpeed.h>
@@ -183,7 +183,7 @@ OperationManager::removeBets()
     // Newest first; ids grow as bets are made
     std::sort(betIds.begin(), betIds.end(), std::greater<Craps::BetId>());
 
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     std::vector<Removal> choices;
     std::size_t numBets = 0, numOddsOnly = 0, numLocked = 0;
 
@@ -217,7 +217,7 @@ OperationManager::removeBets()
 
         if (removable)
         {
-            DialogPickPlayer::Item item;
+            DialogPicker::Item item;
             item.playerId    = playerId;
             item.betId       = betId;
             item.tag         = choices.size();
@@ -235,7 +235,7 @@ OperationManager::removeBets()
 
         if (odds > 0)
         {
-            DialogPickPlayer::Item item;
+            DialogPicker::Item item;
             item.playerId    = playerId;
             item.betId       = betId;
             item.tag         = choices.size();
@@ -267,7 +267,7 @@ OperationManager::removeBets()
     // Last, so that pressing Enter on the first line can't do it by accident
     if (numBets + numOddsOnly > 1)
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.playerId = playerId;
         item.tag      = choices.size();            // One past the end: all
         item.text     = "All removable";
@@ -284,9 +284,9 @@ OperationManager::removeBets()
     removalChoices_ = std::move(choices);
     type_  = OperationType::RemoveBet;
     stage_ = Stage::AwaitingPick;
-    DialogPickPlayer::instance().configure("Remove Bets", std::move(items),
-                                           DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+    DialogPicker::instance().configure("Remove Bets", std::move(items),
+                                           DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
     return true;
 }
 
@@ -322,11 +322,11 @@ OperationManager::chooseAnimationSpeed()
         return t;
     };
 
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     std::size_t index = 0;
     for (auto s : Ctrl::AllAnimationSpeeds)
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag         = index++;
         item.text        = label(s);
         item.note        = (s == current) ? "(current)" : "";
@@ -336,9 +336,9 @@ OperationManager::chooseAnimationSpeed()
 
     type_  = OperationType::AnimationSpeed;
     stage_ = Stage::AwaitingPick;
-    DialogPickPlayer::instance().configure("Animation Speed", std::move(items),
-                                           DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+    DialogPicker::instance().configure("Animation Speed", std::move(items),
+                                           DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
     return true;
 }
 
@@ -367,11 +367,11 @@ OperationManager::chooseRollHistoryFormat()
         return "";
     };
 
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     std::size_t index = 0;
     for (auto f : Ctrl::AllRollHistoryFormats)
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag         = index++;
         item.text        = sample(f);
         item.description = (f == current) ? "current" : "";
@@ -380,10 +380,10 @@ OperationManager::chooseRollHistoryFormat()
 
     type_  = OperationType::RollHistoryFormat;
     stage_ = Stage::AwaitingPick;
-    DialogPickPlayer::instance().configure("Format Roll History",
+    DialogPicker::instance().configure("Format Roll History",
                                            std::move(items),
-                                           DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+                                           DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
     return true;
 }
 
@@ -496,10 +496,10 @@ OperationManager::applyQuickBets()
     }
 
     quickBetNames_.clear();
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     for (const auto& plan : plans)
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag         = quickBetNames_.size();
         item.text        = plan.name;
         item.description = Ctrl::describe(plan);
@@ -509,10 +509,10 @@ OperationManager::applyQuickBets()
 
     type_  = OperationType::QuickBets;
     stage_ = Stage::AwaitingPick;
-    DialogPickPlayer::instance().configure("QuickBets - Apply",
+    DialogPicker::instance().configure("QuickBets - Apply",
                                            std::move(items),
-                                           DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+                                           DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
     return true;
 }
 
@@ -704,10 +704,10 @@ OperationManager::pickAutoAction()
     const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
     autoTurnOn_ = !ao.enabled();
 
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     auto add = [&](std::size_t tag, const std::string& text, const char* desc)
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag         = tag;
         item.text        = text;
         item.description = desc;
@@ -722,10 +722,10 @@ OperationManager::pickAutoAction()
 
     stage_    = Stage::AwaitingPick;
     autoStep_ = AutoStep::PickAction;
-    DialogPickPlayer::instance().configure("AutoOdds - Configure",
+    DialogPicker::instance().configure("AutoOdds - Configure",
                                            std::move(items),
-                                           DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+                                           DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
 }
 
 //----------------------------------------------------------------
@@ -735,11 +735,11 @@ OperationManager::pickAutoType()
 {
     const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
 
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     std::size_t tag = 0;
     for (BetName b : Ctrl::AutoOdds::oddsBetNames())
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag         = tag++;
         item.text        = typeWords(b);
         item.description = ao.summary(b);
@@ -748,10 +748,10 @@ OperationManager::pickAutoType()
 
     stage_    = Stage::AwaitingPick;
     autoStep_ = AutoStep::PickType;
-    DialogPickPlayer::instance().configure("AutoOdds - Which bet?",
+    DialogPicker::instance().configure("AutoOdds - Which bet?",
                                            std::move(items),
-                                           DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+                                           DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
 }
 
 //----------------------------------------------------------------
@@ -761,17 +761,17 @@ OperationManager::pickAutoPoint()
 {
     const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
 
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     std::size_t tag = 0;
     for (unsigned point : Ctrl::AutoOdds::points())
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag  = tag++;
         item.text = "Point " + std::to_string(point);
         item.description = ao.setting(autoBetName_, point).toString();
         items.push_back(std::move(item));
     }
-    DialogPickPlayer::Item all;
+    DialogPicker::Item all;
     all.tag         = tag;
     all.text        = "All points";
     all.description = "the same setting for every point";
@@ -779,10 +779,10 @@ OperationManager::pickAutoPoint()
 
     stage_    = Stage::AwaitingPick;
     autoStep_ = AutoStep::PickPoint;
-    DialogPickPlayer::instance().configure(
+    DialogPicker::instance().configure(
         std::string("AutoOdds - ") + typeWords(autoBetName_) + ", which point?",
-        std::move(items), DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+        std::move(items), DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
 }
 
 //----------------------------------------------------------------
@@ -1053,10 +1053,10 @@ OperationManager::manageQuickBets()
     }
 
     quickBetNames_.clear();
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     for (const auto& plan : plans)
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag         = quickBetNames_.size();
         item.text        = plan.name;
         item.description = Ctrl::describe(plan);
@@ -1067,10 +1067,10 @@ OperationManager::manageQuickBets()
     type_       = OperationType::QuickBetsManage;
     stage_      = Stage::AwaitingPick;
     manageStep_ = ManageStep::PickEntry;
-    DialogPickPlayer::instance().configure("QuickBets - Change which entry?",
+    DialogPicker::instance().configure("QuickBets - Change which entry?",
                                            std::move(items),
-                                           DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+                                           DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
     return true;
 }
 
@@ -1171,10 +1171,10 @@ OperationManager::onManagePick(bool accepted, std::size_t tag)
 void
 OperationManager::pickManageAction()
 {
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     auto add = [&](std::size_t tag, const char* text, const char* desc)
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag         = tag;
         item.text        = text;
         item.description = desc;
@@ -1187,10 +1187,10 @@ OperationManager::pickManageAction()
 
     stage_      = Stage::AwaitingPick;
     manageStep_ = ManageStep::PickAction;
-    DialogPickPlayer::instance().configure("QuickBets - " + manageEntry_,
+    DialogPicker::instance().configure("QuickBets - " + manageEntry_,
                                            std::move(items),
-                                           DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+                                           DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
 }
 
 //----------------------------------------------------------------
@@ -1207,10 +1207,10 @@ OperationManager::pickManageBet(Ctrl::ReqEditQuickBets::Action action)
         return;
     }
 
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     for (std::size_t i = 0; i < plan->specs.size(); ++i)
     {
-        DialogPickPlayer::Item item;
+        DialogPicker::Item item;
         item.tag  = i;
         item.text = Ctrl::describe(plan->specs[i]);
         items.push_back(std::move(item));
@@ -1219,11 +1219,11 @@ OperationManager::pickManageBet(Ctrl::ReqEditQuickBets::Action action)
     manageAction_ = action;
     stage_        = Stage::AwaitingPick;
     manageStep_   = ManageStep::PickBet;
-    DialogPickPlayer::instance().configure(
+    DialogPicker::instance().configure(
         (action == Ctrl::ReqEditQuickBets::Action::SetAmount
              ? "Change the amount of which bet?" : "Remove which bet?"),
-        std::move(items), DialogPickPlayer::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+        std::move(items), DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
 }
 
 //----------------------------------------------------------------
@@ -1633,7 +1633,7 @@ OperationManager::playerOperation(PlayerOp op)
 
     auto pickable = [&](auto wanted, auto noteFor)
     {
-        std::vector<DialogPickPlayer::Item> items;
+        std::vector<DialogPicker::Item> items;
         for (const Info& p : roster)
         {
             if (wanted(p))
@@ -1653,21 +1653,21 @@ OperationManager::playerOperation(PlayerOp op)
     auto isBuddyKind = [](const Info& p)
         { return p.kind == Ctrl::PlayerKind::Buddy; };
 
-    std::vector<DialogPickPlayer::Item> items;
+    std::vector<DialogPicker::Item> items;
     std::string title;
-    auto mode = DialogPickPlayer::Mode::Pick;
+    auto mode = DialogPicker::Mode::Pick;
 
     switch (op)
     {
     case PlayerOp::List:
         title = "Your Players";
-        mode  = DialogPickPlayer::Mode::Show;
+        mode  = DialogPicker::Mode::Show;
         items = pickable(isUserKind, userNote);
         break;
 
     case PlayerOp::ListBuddies:
         title = "Buddy Players";
-        mode  = DialogPickPlayer::Mode::Show;
+        mode  = DialogPicker::Mode::Show;
         items = pickable(isBuddyKind, buddyNote);
         if (items.empty())
         {
@@ -1760,8 +1760,8 @@ OperationManager::playerOperation(PlayerOp op)
     }
 
     stage_ = Stage::AwaitingPick;
-    DialogPickPlayer::instance().configure(title, std::move(items), mode);
-    SurfaceManager::instance().pushSurface(&DialogPickPlayer::instance());
+    DialogPicker::instance().configure(title, std::move(items), mode);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
     return true;
 }
 
