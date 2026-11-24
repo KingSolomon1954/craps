@@ -656,9 +656,44 @@ CrapsTable::setOddsAmount(BetPtr pBet,
     if (fifBadMinMaxForOdds (*pBet, oddsAmount, ep)) return Gen::ReturnCode::Fail;
 
     pBet->setOddsAmountInternal(oddsAmount);
+    if (oddsAmount == 0)
+    {
+        // Odds that are gone take their flags with them
+        pBet->setFlagStanding(FlagStanding::Default);
+        pBet->clearFlagOneRoll();
+    }
 
     D(pBet->logBet("CrapsTable::setOddsAmount()");)
         
+    sendEventBetChanged(*pBet);
+    sendEventTableBetsChanged();
+
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+//
+// Sets the flags of a bet: its standing state and its one roll override.
+//
+// A PassLine, DontPass, Come or DontCome bet can take them for its odds
+// only. Place, Buy, Lay and Hardway can take them. Nothing else can.
+//
+Gen::ReturnCode
+CrapsTable::setBetFlags(BetPtr pBet,
+                        FlagStanding standing,
+                        FlagOneRoll oneRoll,
+                        Gen::ErrorPass& ep)
+{
+    if (fifBetPtrNull   (pBet, "setBetFlags()", ep)) return Gen::ReturnCode::Fail;
+    if (fifBettingClosed(*pBet, 3, ep))              return Gen::ReturnCode::Fail;
+    if (fifMissingBet   (*pBet, 3, ep))              return Gen::ReturnCode::Fail;
+    if (fifBadBetForFlag(*pBet, ep))                 return Gen::ReturnCode::Fail;
+
+    pBet->setFlagStanding(standing);
+    pBet->setFlagOneRoll(oneRoll);
+
+    D(pBet->logBet("CrapsTable::setBetFlags()");)
+
     sendEventBetChanged(*pBet);
     sendEventTableBetsChanged();
 
@@ -852,7 +887,8 @@ CrapsTable::resolveBets()
     dispenseResults();
     trimTableBets();
     clearDrl();
-    
+    clearOneRollFlags();    // They were for the roll that just happened
+
     sendEventTableResolveBetsEnd();
     sendEventTableBetsChanged();
     sendEventTableLastRollStatsChanged();
@@ -866,6 +902,20 @@ CrapsTable::resolveBets()
 //
 // Upon returning, the decision results list (DRL) is populated.
 //
+void
+CrapsTable::clearOneRollFlags()
+{
+    for (auto& bets : tableBets_)
+    {
+        for (auto& b : bets)
+        {
+            b->clearFlagOneRoll();
+        }
+    }
+}
+
+//----------------------------------------------------------------
+
 bool
 CrapsTable::evaluateBets()
 {

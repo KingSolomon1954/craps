@@ -520,6 +520,36 @@ CrapsTable::fifBadBetTypeForOdds(const CrapsBet& bet, Gen::ErrorPass& ep) const
 //----------------------------------------------------------------
 
 bool
+CrapsTable::fifBadBetForFlag(const CrapsBet& bet, Gen::ErrorPass& ep) const
+{
+    // fault if the bet cannot be called off or on, sets up error diag
+    if (bet.canTakeFlag())
+    {
+        return false;
+    }
+
+    std::string s;
+    switch (bet.betName())
+    {
+    case BetName::PassLine:
+    case BetName::DontPass:
+    case BetName::Come:
+    case BetName::DontCome:
+        s = "Only the odds of this bet can be turned off or on, and "
+            "there are no odds.";
+        break;
+    default:
+        s = "This bet cannot be turned off or on.";
+        break;
+    }
+    ep.setDescription(diagPrefix(3, bet) + s);
+    ep.setErrorName(Gen::ErrorPass::ErrorName::InvalidArgumentError);
+    return true;
+}
+
+//----------------------------------------------------------------
+
+bool
 CrapsTable::fifZeroPivotForOdds(const CrapsBet& bet, Gen::ErrorPass& ep) const
 {
     // fault if zero pivot and sets ep error diag

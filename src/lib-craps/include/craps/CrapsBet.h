@@ -29,6 +29,16 @@ class Dice;            // fwd
 class DecisionRecord;  // fwd
 class Player;          // fwd
     
+/// How a bet is flagged. See "Bet Flags" in the design document.
+///
+/// Standing: lasts until changed. Default is the house rule: Place, Buy,
+/// Lay and odds are live except on a come out roll, Hardways are always
+/// live. Working is live on every roll, Off is never live.
+enum class FlagStanding { Default, Working, Off };
+
+/// Applies to the next roll only; cleared after every roll.
+enum class FlagOneRoll { None, Off, Working };
+
 class CrapsBet
 {
 public:
@@ -46,6 +56,9 @@ public:
     void setOnComeOutRoll();
     void setHardwayOff();
     void setHardwayOn();
+    void setFlagStanding(FlagStanding standing);
+    void setFlagOneRoll(FlagOneRoll oneRoll);
+    void clearFlagOneRoll();
     /// @}
 
     /// @name Observers
@@ -60,6 +73,12 @@ public:
     bool           hasDecision() const;           // A roll has resolved this bet at least once
     bool           offComeOutRoll()  const;
     bool           hardwayWorking()  const;
+    FlagStanding   flagStanding()    const;
+    FlagOneRoll    flagOneRoll()     const;
+    bool           isLive(unsigned point) const;
+    bool           isLiveNextRoll(unsigned point) const;
+    bool           canTakeFlag()     const;
+    bool           flagsAreDefault() const;
     unsigned       distance()        const;
     Gen::Timepoint whenCreated()     const;
     Gen::Timepoint whenDecided()     const;
@@ -80,7 +99,8 @@ private:
     Gen::Money oddsAmount_     = 0;
     Gen::Money placementCommission_ = 0; // retained after a winning Buy/Lay decision
     bool hasDecision_ = false;
-    bool offComeOutRoll_       = true;
+    FlagStanding flagStanding_ = FlagStanding::Default;
+    FlagOneRoll  flagOneRoll_  = FlagOneRoll::None;
     unsigned distance_         = 0;  // num rolls until decision
     Gen::Timepoint whenCreated_;
     Gen::Timepoint whenDecided_;
@@ -163,6 +183,7 @@ private:
     Gen::Money calculateCommission(Gen::Money grossWin,
                                    Gen::Money wager,
                                    const TableRules::Commission& rules) const;
+    bool standingLive(unsigned point) const;
     void calcWinPointBet(unsigned diceVal,
                          DecisionRecord& dr,
                          bool returnOdds,
