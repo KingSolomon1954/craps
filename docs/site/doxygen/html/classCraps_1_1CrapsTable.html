@@ -123,6 +123,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a16951671ac275075188222f1f4b5afbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf15195abd05f8556adf4811759ae5e5" id="r_acf15195abd05f8556adf4811759ae5e5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf15195abd05f8556adf4811759ae5e5">setOddsAmount</a> (<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a> pBet, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> oddsAmount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:acf15195abd05f8556adf4811759ae5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab69e2a4d316fbf38319c0fae761a743a" id="r_ab69e2a4d316fbf38319c0fae761a743a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab69e2a4d316fbf38319c0fae761a743a">setBetFlags</a> (<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a> pBet, <a class="el" href="namespaceCraps.html#a2f607422a099333d9d1c5509a1169067">FlagStanding</a> standing, <a class="el" href="namespaceCraps.html#a8225908f296dc4dc081658ef9978ca06">FlagOneRoll</a> oneRoll, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:ab69e2a4d316fbf38319c0fae761a743a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11a196ea15114c893dd0f2bcd642d750" id="r_a11a196ea15114c893dd0f2bcd642d750"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11a196ea15114c893dd0f2bcd642d750">restoreBet</a> (<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a> pBet, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
 <tr class="separator:a11a196ea15114c893dd0f2bcd642d750"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08bfb7bb9e7281a6dba3809d6fbb5c8b" id="r_a08bfb7bb9e7281a6dba3809d6fbb5c8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08bfb7bb9e7281a6dba3809d6fbb5c8b">restoreBetAmounts</a> (<a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a> pBet, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> contractAmount, <a class="el" href="classGen_1_1Money.html">Gen::Money</a> oddsAmount, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
@@ -1143,6 +1145,37 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="ab69e2a4d316fbf38319c0fae761a743a" name="ab69e2a4d316fbf38319c0fae761a743a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab69e2a4d316fbf38319c0fae761a743a">&#9670;&#160;</a></span>setBetFlags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> CrapsTable::setBetFlags </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#aee667f3a06e065896d76fd5f7e911192">BetPtr</a></td>          <td class="paramname"><span class="paramname"><em>pBet</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a2f607422a099333d9d1c5509a1169067">FlagStanding</a></td>          <td class="paramname"><span class="paramname"><em>standing</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceCraps.html#a8225908f296dc4dc081658ef9978ca06">FlagOneRoll</a></td>          <td class="paramname"><span class="paramname"><em>oneRoll</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ep</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a16951671ac275075188222f1f4b5afbd" name="a16951671ac275075188222f1f4b5afbd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16951671ac275075188222f1f4b5afbd">&#9670;&#160;</a></span>setContractAmount()</h2>
 
@@ -1310,7 +1343,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Nov 24 2026 15:16:03 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

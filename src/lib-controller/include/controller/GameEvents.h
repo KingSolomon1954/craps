@@ -6,6 +6,7 @@
 
 #pragma once
 #include <controller/AnimationSpeed.h>
+#include <controller/BetFlags.h>
 #include <controller/BetSpec.h>
 #include <controller/RollHistoryFormat.h>
 #include <craps/CrapsTypes.h>
@@ -38,6 +39,7 @@ enum class EventType
     ReqApplyQuickBets,
     ReqEditQuickBets,
     ReqEditAutoOdds,
+    ReqSetBetFlags,
     ReqSetAnimationSpeed,
     ReqSetRollHistoryFormat,
     ReqSwitchPlayer,
@@ -52,6 +54,7 @@ enum class EventType
     RspApplyQuickBets,
     RspEditQuickBets,
     RspEditAutoOdds,
+    RspSetBetFlags,
     RspChangeBet,              // not yet implemented
     RspSwitchPlayer,
     RspManagePlayer,
@@ -860,6 +863,46 @@ struct UslAutoOddsApplied : public GameEvent
 
     UslAutoOddsApplied()
         : GameEvent{EventSource::Controller, EventType::UslAutoOddsApplied}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Turn bets off or on. Always answers with RspSetBetFlags. Betting must
+/// be open.
+///
+/// scope says which bets: Bet is the one named by betId, the others are
+/// every bet of the player that can take a flag in that category. change
+/// says what to do; see BetFlags::newState().
+struct ReqSetBetFlags : public GameEvent
+{
+    Craps::PlayerId     playerId;
+    BetFlags::Scope     scope  = BetFlags::Scope::Bet;
+    Craps::BetId        betId  = 0;
+    BetFlags::Change    change = BetFlags::Change::NotWorking;
+
+    ReqSetBetFlags()
+        : GameEvent{EventSource::View, EventType::ReqSetBetFlags}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqSetBetFlags. When accepted, message says what was done,
+/// e.g. "Odds bets set to Not-Working: 2 changed"; changed and unchanged
+/// count the bets, unchanged being those that already had that state.
+/// Otherwise error says why not. A change is one undo step.
+struct RspSetBetFlags : public GameEvent
+{
+    bool            accepted = false;
+    Craps::PlayerId playerId;
+    std::string     message;
+    unsigned        changed   = 0;
+    unsigned        unchanged = 0;
+    Gen::ErrorPass  error;
+
+    RspSetBetFlags()
+        : GameEvent{EventSource::Controller, EventType::RspSetBetFlags}
     {}
 };
 

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['odds_0',['odds',['../structCraps_1_1TableRules.html#a3d31a3f4689772c6bc686d63820c1cac',1,'Craps::TableRules']]],
+  ['odds_0',['odds',['../structCtrl_1_1AutoOdds_1_1Candidate.html#a70c1a702296f589e8da82a611198896b',1,'Ctrl::AutoOdds::Candidate::odds'],['../structCraps_1_1TableRules.html#a3d31a3f4689772c6bc686d63820c1cac',1,'Craps::TableRules::odds']]],
   ['oddsamount_1',['oddsAmount',['../structCtrl_1_1UslBetMade.html#a05a7e0dab787f4b7c48637d4648dc4b1',1,'Ctrl::UslBetMade::oddsAmount'],['../structCtrl_1_1UslBetChanged.html#a9a88522e1b341372b8e4fd4fa4e56d1c',1,'Ctrl::UslBetChanged::oddsAmount'],['../structCtrl_1_1ReqOddsBet.html#a2783a81eb17e2415d83ef207dc2e5d40',1,'Ctrl::ReqOddsBet::oddsAmount'],['../structCraps_1_1BetStat.html#a22666153371af6b2d979ee17228bfdb0',1,'Craps::BetStat::oddsAmount']]],
   ['oddsbet_2',['oddsBet',['../structCraps_1_1BetStat.html#a4b79901eb50395358d80d06fba285402',1,'Craps::BetStat']]],
   ['oddsdont_3',['oddsDont',['../classCraps_1_1OddsTables.html#a63c2a6380d75c6d36fbd7c085d4b8935',1,'Craps::OddsTables']]],
@@ -12,5 +12,6 @@ var searchData=
   ['oddswin_9',['oddsWin',['../structCraps_1_1DecisionRecord.html#a35c2a5a8e2a62f7e15e946c60b15268c',1,'Craps::DecisionRecord']]],
   ['oddsworld_10',['oddsWorld',['../classCraps_1_1OddsTables.html#ac26773038f1c652b5711a2b55032f9d3',1,'Craps::OddsTables']]],
   ['ok_11',['ok',['../structCtrl_1_1RspManagePlayer.html#a5e3e8fc30354fd441e271a7e1cef1c36',1,'Ctrl::RspManagePlayer']]],
-  ['operationresult_5f_12',['operationResult_',['../classCui_1_1SurfaceBase.html#a22d107ae7ed1f35a1c958ffe57a8d19f',1,'Cui::SurfaceBase']]]
+  ['operationresult_5f_12',['operationResult_',['../classCui_1_1SurfaceBase.html#a22d107ae7ed1f35a1c958ffe57a8d19f',1,'Cui::SurfaceBase']]],
+  ['outcomes_13',['outcomes',['../structCtrl_1_1BetExecutor_1_1Result.html#a08acdcf448ebbe7d9f8411c4cfffd4d0',1,'Ctrl::BetExecutor::Result']]]
 ];

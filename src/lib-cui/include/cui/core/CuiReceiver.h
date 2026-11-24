@@ -45,6 +45,7 @@ private:
     void onBetMade                   (const Ctrl::UslBetMade& ev)                   const;
     void onRspRemoveBet              (const Ctrl::RspRemoveBet& ev)                 const;
     void onRspUndoBet                (const Ctrl::RspUndoBet& ev)                   const;
+    void onRspSetBetFlags            (const Ctrl::RspSetBetFlags& ev)               const;
     void onRspApplyQuickBets         (const Ctrl::RspApplyQuickBets& ev)            const;
     void onRspEditQuickBets          (const Ctrl::RspEditQuickBets& ev)             const;
     void onRspEditAutoOdds           (const Ctrl::RspEditAutoOdds& ev)              const;

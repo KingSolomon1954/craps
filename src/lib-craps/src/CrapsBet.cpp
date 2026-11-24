@@ -185,7 +185,6 @@ CrapsBet::checkHardwayPivot()
 {
     if (betName_ == BetName::Hardway)
     {
-        offComeOutRoll_ = false;  // For hardways, default is  always working
         if (!HardwayNums.contains(pivot_))
         {
             std::string diag = "Bad \"pivot\":" + std::to_string(pivot_) +
@@ -224,7 +223,8 @@ CrapsBet::operator==(const CrapsBet& other) const
            oddsAmount_          == other.oddsAmount_          &&
            placementCommission_ == other.placementCommission_ &&
            hasDecision_         == other.hasDecision_         &&
-           offComeOutRoll_      == other.offComeOutRoll_      &&
+           flagStanding_        == other.flagStanding_        &&
+           flagOneRoll_         == other.flagOneRoll_         &&
            distance_            == other.distance_            &&
            whenCreated_         == other.whenCreated_         &&
            whenDecided_         == other.whenDecided_;
@@ -515,7 +515,7 @@ CrapsBet::calcWinPointBet(
 
     if (oddsAmount_ == 0) return;
 
-    if (offComeOutRoll_ && returnOdds)
+    if (returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
         return;  // Skip odds payout calculation
@@ -536,7 +536,7 @@ CrapsBet::calcLossPointBet(DecisionRecord& dr, bool returnOdds) const
 {
     dr.lose = contractAmount_;
     if (oddsAmount_ == 0) return;
-    if (offComeOutRoll_ && returnOdds)
+    if (returnOdds)
     {
         dr.returnToPlayer = oddsAmount_;
     }
@@ -600,7 +600,7 @@ CrapsBet::evalPassLine(
         // else dcn = Keep;
     }
 
-    const bool returnOdds = false;
+    const bool returnOdds = !isLive(point);   // odds not live: returned
     if (dcn == Win)  calcWinPointBet(d, dr, returnOdds, OddsTables::oddsPass, rules);
     if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
@@ -630,7 +630,7 @@ CrapsBet::evalCome(
     }
 
     Decision dcn = Keep;
-    bool returnOdds = false;
+    const bool returnOdds = !isLive(point);   // odds not live: returned
     unsigned d = dice.value(); // Cache value once
 
     if (point == 0)  // Come out roll (for the table)
@@ -638,7 +638,6 @@ CrapsBet::evalCome(
         if (d == 7)
         {
             dcn = Lose;
-            returnOdds = true;
         }
         else if (BookEnds.contains(d))
         {
@@ -647,7 +646,6 @@ CrapsBet::evalCome(
         else if (pivot_ == d)
         {
             dcn = Win;
-            returnOdds = true;
         }
         // else dcn = Keep;
     }
@@ -751,7 +749,7 @@ CrapsBet::evalDontPass(
         // else dcn = Keep;
     }
 
-    const bool returnOdds = false;
+    const bool returnOdds = !isLive(point);   // odds not live: returned
     if (dcn == Win) calcWinPointBet(pivot_, dr, returnOdds, OddsTables::oddsDont, rules);
     if (dcn == Lose) calcLossPointBet (dr, returnOdds);
     dr.decision = (dcn != Keep);
@@ -781,7 +779,7 @@ CrapsBet::evalDontCome(
     }
 
     Decision dcn = Keep;
-    bool returnOdds = false;
+    const bool returnOdds = !isLive(point);   // odds not live: returned
     unsigned d = dice.value(); // Cache value once
 
     if (point == 0)  // Come out roll (for the table)
@@ -789,7 +787,6 @@ CrapsBet::evalDontCome(
         if (d == 7)
         {
             dcn = Win;
-            returnOdds = true;
         }
         else if (BookEnds.contains(d))
         {
@@ -798,7 +795,6 @@ CrapsBet::evalDontCome(
         else if (pivot_ == d)
         {
             dcn = Lose;
-            returnOdds = true;
         }
         // else dcn = Keep;
     }
@@ -858,7 +854,7 @@ CrapsBet::evalPlace(
     (void) ep;
     Decision dcn = Keep;
 
-    if (point == 0 && offComeOutRoll_)
+    if (!isLive(point))
     {
         dcn = Keep;
     }
@@ -904,7 +900,7 @@ CrapsBet::evalLay(
     (void) ep;
     Decision dcn = Keep;
 
-    if (point == 0 && offComeOutRoll_)
+    if (!isLive(point))
     {
         dcn = Keep;
     }
@@ -952,7 +948,7 @@ CrapsBet::evalBuy(
     (void) ep;
     Decision dcn = Keep;
 
-    if (point == 0 && offComeOutRoll_)
+    if (!isLive(point))
     {
         dcn = Keep;
     }
@@ -997,7 +993,7 @@ CrapsBet::evalField(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
-    (void) ep; (void) point;  // unused, quiet the compiler
+    (void) ep;
     Decision dcn = Keep;
     unsigned d = dice.value();  // cache value once
 
@@ -1048,10 +1044,10 @@ CrapsBet::evalHardway(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
-    (void) ep; (void) point;  // unused, quiet the compiler
+    (void) ep;
     Decision dcn = Keep;
 
-    if (offComeOutRoll_)
+    if (!isLive(point))
     {
         dcn = Keep;
     }
@@ -1094,7 +1090,7 @@ CrapsBet::evalAnyCraps(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
-    (void) ep; (void) point;  // unused, quiet the compiler
+    (void) ep;
 
     if (CrapsNums.contains(dice.value()))
     {
@@ -1117,7 +1113,7 @@ CrapsBet::evalAnySeven(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
-    (void) ep; (void) point;  // unused, quiet the compiler
+    (void) ep;
 
     if (dice.value() == 7)
     {
@@ -1140,7 +1136,7 @@ CrapsBet::evalAny711(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
-    (void) ep; (void) point;  // unused, quiet the compiler
+    (void) ep;
 
     // Non-standard "naturals" bet: one roll, pays 3:1 on a 7 or 11.
     if (NaturalNums.contains(dice.value()))
@@ -1164,7 +1160,7 @@ CrapsBet::evalCandE(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
-    (void) ep; (void) point;  // unused, quiet the compiler
+    (void) ep;
 
     // The wager is two equal halves: C (craps) pays 7:1 on 2, 3 or 12 and
     // E (eleven) pays 15:1 on 11. When one half wins the other half loses,
@@ -1197,7 +1193,7 @@ CrapsBet::evalHorn(
     DecisionRecord& dr,
     Gen::ErrorPass& ep)
 {
-    (void) ep; (void) point;  // unused, quiet the compiler
+    (void) ep;
 
     // The wager is four equal units, one each on 2, 3, 11 and 12. The
     // winning unit pays 30:1 (2, 12) or 15:1 (3, 11) and the other three
@@ -1367,63 +1363,148 @@ CrapsBet::hasDecision() const
 
 /*-----------------------------------------------------------*//**
 
-Returns whether the bet is "working/on" or "not-working/off" on a
-come out roll.
+Is this bet off during a come out roll, by its standing state?
 
-For point bets (PassLine|Come|DontPass|DontCome), this refers to the
-odds amount.
-
-@return
-    true if "off" on come out roll, false otherwise.
+True for Default (except Hardway) and Off, false for Working. The one
+roll override is not considered. See isLive().
 */
 bool
 CrapsBet::offComeOutRoll() const
 {
-    return offComeOutRoll_;
+    return !standingLive(0);
 }
 
 /*-----------------------------------------------------------*//**
 
-Returns whether Hardway bet is "working/on" or "not-working/off".
-
-@return
-    true if "working", false otherwise.
+Is this Hardway bet working, by its standing state? The one roll override
+is not considered.
 */
 bool
 CrapsBet::hardwayWorking() const
 {
-    return !offComeOutRoll_;
+    return flagStanding_ != FlagStanding::Off;
 }
 
 /*-----------------------------------------------------------*//**
 
-Set this bet to be off on come out rolls.
+The standing state is live at the point? No override considered.
+*/
+bool
+CrapsBet::standingLive(unsigned point) const
+{
+    switch (flagStanding_)
+    {
+    case FlagStanding::Working: return true;
+    case FlagStanding::Off:     return false;
+    case FlagStanding::Default: break;
+    }
+    return (betName_ == BetName::Hardway) || (point != 0);
+}
 
-Off is the default,
+/*-----------------------------------------------------------*//**
+
+Is this bet live on a roll, given the table point (zero on a come out)?
+
+The one roll override decides if there is one, otherwise the standing
+state. For a PassLine, DontPass, Come or DontCome bet, this is about its
+odds only; the contract bet is always live.
+*/
+bool
+CrapsBet::isLive(unsigned point) const
+{
+    switch (flagOneRoll_)
+    {
+    case FlagOneRoll::Working: return true;
+    case FlagOneRoll::Off:     return false;
+    case FlagOneRoll::None:    break;
+    }
+    return standingLive(point);
+}
+
+/*-----------------------------------------------------------*//**
+
+Will this bet be live on the next roll? Same as isLive(), for the
+callers that ask between rolls.
+*/
+bool
+CrapsBet::isLiveNextRoll(unsigned point) const
+{
+    return isLive(point);
+}
+
+/*-----------------------------------------------------------*//**
+
+Can this bet be flagged?
+
+Place, Buy, Lay and Hardway can. PassLine, DontPass, Come and DontCome can
+only for their odds, so only when they have odds. Anything else cannot.
+*/
+bool
+CrapsBet::canTakeFlag() const
+{
+    switch (betName_)
+    {
+    case BetName::Place:
+    case BetName::Buy:
+    case BetName::Lay:
+    case BetName::Hardway:
+        return true;
+    case BetName::PassLine:
+    case BetName::DontPass:
+    case BetName::Come:
+    case BetName::DontCome:
+        return oddsAmount_ != 0;
+    default:
+        return false;
+    }
+}
+
+/*-----------------------------------------------------------*//**
+
+True if the standing state is Default and there is no override.
+*/
+bool
+CrapsBet::flagsAreDefault() const
+{
+    return flagStanding_ == FlagStanding::Default &&
+           flagOneRoll_  == FlagOneRoll::None;
+}
+
+FlagStanding
+CrapsBet::flagStanding() const
+{
+    return flagStanding_;
+}
+
+FlagOneRoll
+CrapsBet::flagOneRoll() const
+{
+    return flagOneRoll_;
+}
+
+/*-----------------------------------------------------------*//**
+
+Set this bet to be off on come out rolls: the Default standing state.
 */
 void
 CrapsBet::setOffComeOutRoll()
 {
-    offComeOutRoll_ = true;
+    flagStanding_ = FlagStanding::Default;
 }
 
 /*-----------------------------------------------------------*//**
 
-Set this bet to be working on come out rolls.
-
-Off is the default.
+Set this bet to be working on come out rolls: the Working standing state.
 */
 void
 CrapsBet::setOnComeOutRoll()
 {
-    offComeOutRoll_ = false;
+    flagStanding_ = FlagStanding::Working;
 }
 
 /*-----------------------------------------------------------*//**
 
-Set this Hardway bet to "working".
-
-Working is the default for a Hardway bet.
+Set this Hardway bet to "working", which is the Default for a Hardway bet.
 
 If this bet is not a Hardway bet, then just silently returns.
 */
@@ -1431,14 +1512,12 @@ void
 CrapsBet::setHardwayOn()
 {
     if (betName_ != BetName::Hardway) return;
-    offComeOutRoll_ = false;
+    flagStanding_ = FlagStanding::Default;
 }
 
 /*-----------------------------------------------------------*//**
 
 Set this Hardway bet to "off".
-
-Working is the default for a Hardway bet.
 
 If this bet is not a Hardway bet, then just silently returns.
 */
@@ -1446,7 +1525,38 @@ void
 CrapsBet::setHardwayOff()
 {
     if (betName_ != BetName::Hardway) return;
-    offComeOutRoll_ = true;
+    flagStanding_ = FlagStanding::Off;
+}
+
+/*-----------------------------------------------------------*//**
+
+Set the standing state. The table checks that the bet can take a flag;
+see CrapsTable::setBetFlags().
+*/
+void
+CrapsBet::setFlagStanding(FlagStanding standing)
+{
+    flagStanding_ = standing;
+}
+
+/*-----------------------------------------------------------*//**
+
+Set the one roll override.
+*/
+void
+CrapsBet::setFlagOneRoll(FlagOneRoll oneRoll)
+{
+    flagOneRoll_ = oneRoll;
+}
+
+/*-----------------------------------------------------------*//**
+
+Remove the one roll override. Done by the table after every roll.
+*/
+void
+CrapsBet::clearFlagOneRoll()
+{
+    flagOneRoll_ = FlagOneRoll::None;
 }
 
 /*-----------------------------------------------------------*//**
@@ -1514,6 +1624,8 @@ operator<< (std::ostream& out, const CrapsBet& b)
     "contractAmount: " << b.contractAmount()   << std::endl <<
     "    oddsAmount: " << b.oddsAmount()       << std::endl <<
     "offComeOutRoll: " << b.offComeOutRoll()   << std::endl <<
+    "flagStanding: "   << static_cast<int>(b.flagStanding()) << std::endl <<
+    "flagOneRoll: "    << static_cast<int>(b.flagOneRoll())  << std::endl <<
     "      distance: " << b.distance()         << std::endl <<
     "   whenCreated: " << b.whenCreated()      << std::endl <<
     "   whenDecided: " << b.whenDecided()      << std::endl;

@@ -106,15 +106,17 @@ Inheritance diagram for Ctrl::UndoBet:</div>
 <div class="dyncontent">
 <div class="center"><img src="classCtrl_1_1UndoBet__inherit__graph.png" border="0" usemap="#aCtrl_1_1UndoBet_inherit__map" alt="Inheritance graph"/></div>
 <map name="aCtrl_1_1UndoBet_inherit__map" id="aCtrl_1_1UndoBet_inherit__map">
-<area shape="rect" title="One undoable change to a bet, and how to take it back." alt="" coords="342,5,451,31"/>
-<area shape="rect" href="classCtrl_1_1UndoBetAdded.html" title="A bet was made. Undo takes it down." alt="" coords="5,79,156,104"/>
-<area shape="poly" title=" " alt="" coords="333,36,132,81,131,76,332,31"/>
-<area shape="rect" href="classCtrl_1_1UndoBetModifiedAmount.html" title=" " alt="" coords="181,79,397,104"/>
-<area shape="poly" title=" " alt="" coords="369,40,308,81,305,76,367,36"/>
-<area shape="rect" href="classCtrl_1_1UndoBetRemoved.html" title="A bet was taken down. Undo puts it back with its amounts." alt="" coords="421,79,591,104"/>
-<area shape="poly" title=" " alt="" coords="427,36,490,76,487,81,424,40"/>
-<area shape="rect" href="classCtrl_1_1UndoGroup.html" title=" " alt="" coords="616,79,743,104"/>
-<area shape="poly" title=" " alt="" coords="456,31,634,76,633,81,455,37"/>
+<area shape="rect" title="One undoable change to a bet, and how to take it back." alt="" coords="5,104,115,129"/>
+<area shape="rect" href="classCtrl_1_1UndoBetAdded.html" title="A bet was made. Undo takes it down." alt="" coords="195,5,346,31"/>
+<area shape="poly" title=" " alt="" coords="84,92,119,65,162,40,194,28,196,33,164,44,122,69,87,96"/>
+<area shape="rect" href="classCtrl_1_1UndoBetFlagsChanged.html" title=" " alt="" coords="170,55,371,80"/>
+<area shape="poly" title=" " alt="" coords="124,98,162,89,211,77,212,83,163,94,125,103"/>
+<area shape="rect" href="classCtrl_1_1UndoBetModifiedAmount.html" title=" " alt="" coords="163,104,379,129"/>
+<area shape="poly" title=" " alt="" coords="128,114,163,114,163,119,128,119"/>
+<area shape="rect" href="classCtrl_1_1UndoBetRemoved.html" title="A bet was taken down. Undo puts it back with its amounts." alt="" coords="185,153,356,179"/>
+<area shape="poly" title=" " alt="" coords="129,130,216,151,215,156,127,135"/>
+<area shape="rect" href="classCtrl_1_1UndoGroup.html" title=" " alt="" coords="207,203,334,228"/>
+<area shape="poly" title=" " alt="" coords="87,136,122,163,164,188,208,202,206,207,162,192,119,168,84,141"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -135,6 +137,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="classCtrl_1_1UndoBetAdded.html" title="A bet was made. Undo takes it down.">UndoBetAdded</a>: a new bet was placed </li>
 <li><a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html">UndoBetModifiedAmount</a>: contract or odds amount changed </li>
 <li><a class="el" href="classCtrl_1_1UndoBetRemoved.html" title="A bet was taken down. Undo puts it back with its amounts.">UndoBetRemoved</a>: a bet was taken down </li>
+<li><a class="el" href="classCtrl_1_1UndoBetFlagsChanged.html">UndoBetFlagsChanged</a>: the flags of a bet changed </li>
 <li><a class="el" href="classCtrl_1_1UndoGroup.html">UndoGroup</a>: several of these as one step</li>
 </ul>
 <p>See <a class="el" href="classCtrl_1_1UndoManager.html" title="Undo of bet changes, a stack for each player.">UndoManager</a> for the stack, who owns it and when it is cleared. </p>
@@ -190,7 +193,7 @@ Public Member Functions</h2></td></tr>
 
 <p>What undoing does, in words, e.g. "Took down your $10 Place 6 bet". </p>
 
-<p>Implemented in <a class="el" href="classCtrl_1_1UndoBetAdded.html#aa235e285d1405065605fa9267d86e99b">Ctrl::UndoBetAdded</a>, <a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html#ae1854053e710ce9e9d27e742405197af">Ctrl::UndoBetModifiedAmount</a>, <a class="el" href="classCtrl_1_1UndoBetRemoved.html#a52c45eb38944320ddd150437f5797aa4">Ctrl::UndoBetRemoved</a>, and <a class="el" href="classCtrl_1_1UndoGroup.html#aba5b81bc029a2f65a72d73377832537c">Ctrl::UndoGroup</a>.</p>
+<p>Implemented in <a class="el" href="classCtrl_1_1UndoBetAdded.html#aa235e285d1405065605fa9267d86e99b">Ctrl::UndoBetAdded</a>, <a class="el" href="classCtrl_1_1UndoBetFlagsChanged.html#aeac87446be977a0a536dc212024eaf7f">Ctrl::UndoBetFlagsChanged</a>, <a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html#ae1854053e710ce9e9d27e742405197af">Ctrl::UndoBetModifiedAmount</a>, <a class="el" href="classCtrl_1_1UndoBetRemoved.html#a52c45eb38944320ddd150437f5797aa4">Ctrl::UndoBetRemoved</a>, and <a class="el" href="classCtrl_1_1UndoGroup.html#aba5b81bc029a2f65a72d73377832537c">Ctrl::UndoGroup</a>.</p>
 
 </div>
 </div>
@@ -218,7 +221,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Puts things back as they were before the change. Success, or Fail and ep has the reason. A failure changes nothing. </p>
 
-<p>Implemented in <a class="el" href="classCtrl_1_1UndoBetAdded.html#aadaf752c58f7e3490d73db6a82dda9fe">Ctrl::UndoBetAdded</a>, <a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html#ace9c395a48816ef2c0d98d87bbe77da0">Ctrl::UndoBetModifiedAmount</a>, <a class="el" href="classCtrl_1_1UndoBetRemoved.html#a66116f4bfa9b023a1183746a4a664d6b">Ctrl::UndoBetRemoved</a>, and <a class="el" href="classCtrl_1_1UndoGroup.html#a7bc09d08e68abd57e0c0354c3b5ad906">Ctrl::UndoGroup</a>.</p>
+<p>Implemented in <a class="el" href="classCtrl_1_1UndoBetAdded.html#aadaf752c58f7e3490d73db6a82dda9fe">Ctrl::UndoBetAdded</a>, <a class="el" href="classCtrl_1_1UndoBetFlagsChanged.html#ae0826a03a0450f50efa1daccc348bbc8">Ctrl::UndoBetFlagsChanged</a>, <a class="el" href="classCtrl_1_1UndoBetModifiedAmount.html#ace9c395a48816ef2c0d98d87bbe77da0">Ctrl::UndoBetModifiedAmount</a>, <a class="el" href="classCtrl_1_1UndoBetRemoved.html#a66116f4bfa9b023a1183746a4a664d6b">Ctrl::UndoBetRemoved</a>, and <a class="el" href="classCtrl_1_1UndoGroup.html#a7bc09d08e68abd57e0c0354c3b5ad906">Ctrl::UndoGroup</a>.</p>
 
 </div>
 </div>
@@ -228,7 +231,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Nov 24 2026 15:16:03 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -151,6 +151,14 @@ private:
         Gen::Money amount = 0;
     };
 
+    // Bet Flags look of each entry of bets_, same index. Kept apart so
+    // bets_ can keep its flat initializer.
+    struct BetLook
+    {
+        bool dim       = false;   ///< Not live on the next roll
+        bool underline = false;   ///< Has a flag or override set
+    };
+
     std::array<Bet, 59> bets_{
         0, CuiUtils::CuiBetName::Place4,        1, 10, 0,
         0, CuiUtils::CuiBetName::Place5,        1, 20, 0,
@@ -213,6 +221,8 @@ private:
         0, CuiUtils::CuiBetName::DontPassOdds, 10, 60, 0
     };
 
+    std::array<BetLook, 59> looks_{};
+
 private:
     WINDOW* pWin_    = nullptr;
     int winHeight_   = 0;
@@ -228,6 +238,7 @@ private:
     void drawLabels();
     void drawBets();
     void drawOneBet(const Bet& b);
+    BetLook& lookOf(const Bet& b) { return looks_[&b - bets_.data()]; }
 
     struct Slot
     {

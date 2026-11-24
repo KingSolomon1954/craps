@@ -25,9 +25,12 @@
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
-### Implement Buddy Automation
+### Design-doc and user-guide include files
+- Change case on include files, differs between folders
 
 ### Update Readme.md for GitHub consumption
+
+### Implement Buddy Automation
 
 ### OperationManager needs refactor
 
@@ -39,10 +42,9 @@
 - maybe a dialog box should prompt the user to carry forward buddies
 - maybe should be a user prefence how to behave
 
-### Implement doBetFlags in MenuBetting
-
 ## Done
 
+(Done) Implemented doBetFlags in MenuBetting\
 (Done) Implemented AutoOdds capability\
 (Done) Implemented newly re-defined QuickBets capability\
 (Done) Complete implementation of Undo LastBet workflow\

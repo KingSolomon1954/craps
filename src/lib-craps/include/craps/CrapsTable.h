@@ -64,6 +64,13 @@ public:
                                   Gen::Money oddsAmount,
                                   Gen::ErrorPass& ep);
 
+    // Bet flags. Sets both the standing state and the one roll override.
+    // Betting must be open and the bet must be able to take a flag.
+    Gen::ReturnCode setBetFlags(BetPtr pBet,
+                                FlagStanding standing,
+                                FlagOneRoll oneRoll,
+                                Gen::ErrorPass& ep);
+
     // Undo support. Put things back as they were, without applying the
     // rules for making or changing a bet, which the original change
     // already satisfied. Betting must be open.
@@ -254,6 +261,8 @@ private:
     bool fifDontPassDisallowed(const CrapsBet& bet, Gen::ErrorPass& ep)                             const;
     bool fifBetMustRemain     (BetPtr pBet,         Gen::ErrorPass& ep)                             const;
     bool fifBadBetTypeForOdds (const CrapsBet& bet, Gen::ErrorPass& ep)                             const;
+    void clearOneRollFlags();
+    bool fifBadBetForFlag     (const CrapsBet& bet, Gen::ErrorPass& ep)                             const;
     bool fifZeroPivotForOdds  (const CrapsBet& bet, Gen::ErrorPass& ep)                             const;
     bool fifBadMinMaxLineBets (const CrapsBet& bet, Gen::Money amt, size_t idx, Gen::ErrorPass& ep) const;
     bool fifBadMinMaxSideBets (const CrapsBet& bet, Gen::Money amt, size_t idx, Gen::ErrorPass& ep) const;

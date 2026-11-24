@@ -91,6 +91,33 @@
 <li class="toctree-l4"><a class="reference internal" href="#undo-workflow">Undo Workflow</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#bet-automation">Bet Automation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#automation-purpose">Automation Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automation-vocabulary">Automation Vocabulary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automation-participants">Automation Participants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#applying-a-plan">Applying a Plan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automation-request-flow">Automation Request Flow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quickbets-rules">QuickBets Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#autoodds-rules">AutoOdds Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buddy-automation">Buddy Automation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automation-persistence">Automation Persistence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automation-staging">Automation Staging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automation-open-items">Automation Open Items</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bet-flags">Bet Flags</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flags-purpose">Bet Flags Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-vocabulary">Bet Flag Vocabulary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-legality">Bet Flag Legality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-rules-in-the-model">Bet Flag Rules in the Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-menus">Bet Flag Menus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-workflow">Bet Flag Workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-undo">Bet Flag Undo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-display">Bet Flag Display</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-staging">Bet Flag Staging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bet-flag-open-items">Bet Flag Open Items</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
 </ul>
 </li>
@@ -673,12 +700,555 @@ Place 6 bet”, which is logged.</p></li>
 closed are the common ones. After the player acknowledges it, the menus
 unwind.</p></li>
 </ul>
-<p>Changes to a bet’s flags, such as a hardway being off, are not recorded,
-because nothing changes those flags yet; the Bet Flags menu entry is
-still a stub. The earlier <code class="docutils literal notranslate"><span class="pre">UndoBetModifiedFlags</span></code> class was removed
-because it was never used and restored a bet by overwriting it, which skipped
-the table and its events. When flag changes are implemented, they need their
-own <code class="docutils literal notranslate"><span class="pre">UndoBet</span></code> subclass that restores through the table.</p>
+<p>Changes to a bet’s flags are recorded. One flag request is one undo group,
+made of one <code class="docutils literal notranslate"><span class="pre">UndoBetFlagsChanged</span></code> for each bet that changed. It keeps the
+bet’s previous standing state and one roll override, and restores them with
+<code class="docutils literal notranslate"><span class="pre">Player::setBetFlags</span></code>, which goes through the table so the checks and events
+happen. See “Bet Flags”. The earlier <code class="docutils literal notranslate"><span class="pre">UndoBetModifiedFlags</span></code> class was
+removed because it restored a bet by overwriting it, which skipped the table
+and its events.</p>
+</section>
+</section>
+<section id="bet-automation">
+<h3>Bet Automation<a class="headerlink" href="#bet-automation" title="Link to this heading"></a></h3>
+<section id="automation-purpose">
+<h4>Automation Purpose<a class="headerlink" href="#automation-purpose" title="Link to this heading"></a></h4>
+<p>Three features place bets for a player without the player entering each
+bet by hand:</p>
+<ul class="simple">
+<li><p><strong>QuickBets</strong>: a named bundle of bets that the user applies with a key.</p></li>
+<li><p><strong>AutoOdds</strong>: odds that are placed automatically on a contract bet when it
+becomes eligible for them.</p></li>
+<li><p><strong>Automated bets</strong>: bets that a buddy player places on its own, according
+to a plan. Buddies are the main reason for this feature, and it is not
+built yet.</p></li>
+</ul>
+<p>They differ in when they act, not in what they do. All of them turn a list of
+bets into bet requests for a player. This section describes the one mechanism
+they share, so that the parts built first, QuickBets and AutoOdds, are the
+parts that buddy automation will need.</p>
+<p>The earlier AutoFill and single QuickBet features are removed. LastFill
+covers what AutoFill did, and a QuickBets entry holding one bet covers what a
+single QuickBet did.</p>
+</section>
+<section id="automation-vocabulary">
+<h4>Automation Vocabulary<a class="headerlink" href="#automation-vocabulary" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>Bet spec</dt><dd><p>One bet to place: the bet name, the pivot if the bet has one, whether it
+is an odds bet, and an amount. This is what <code class="docutils literal notranslate"><span class="pre">QuickBetEntry</span></code> and
+<code class="docutils literal notranslate"><span class="pre">AutoFillEntry</span></code> already were, as two copies of one struct.</p>
+</dd>
+<dt>Bet plan</dt><dd><p>A named, ordered list of bet specs. A QuickBets entry is a bet plan.</p>
+</dd>
+<dt>Trigger</dt><dd><p>The moment something is applied. Manual (the user presses a key), betting
+opened after a roll, come-out, point established, and so on.</p>
+</dd>
+<dt>Rule</dt><dd><p>A trigger joined to an action: apply a bet plan, or apply the AutoOdds
+settings. Only rules for buddies need a general form.</p>
+</dd>
+</dl>
+</section>
+<section id="automation-participants">
+<h4>Automation Participants<a class="headerlink" href="#automation-participants" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">BetExecutor</span></code> (Controller) applies a list of bet specs for a player and
+reports what happened. It is the only place that turns specs into bets.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QuickBets</span></code> (Controller) holds a player’s bet plans. Plain data, one per
+player, held in <code class="docutils literal notranslate"><span class="pre">PlayerPrefs</span></code>, as the older classes were.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AutoOdds</span></code> (Controller) holds a player’s odds multiples and the master
+switch, also in <code class="docutils literal notranslate"><span class="pre">PlayerPrefs</span></code>, and decides which bets need odds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EventHandler</span></code> receives the requests from the View, calls the executor,
+and watches for the trigger events for AutoOdds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UndoManager</span></code> records each application as one undo step.</p></li>
+<li><p>The View has the dialogs: a picker to apply a QuickBets entry, the Set or
+Add dialog and an AutoOdds entry in <code class="docutils literal notranslate"><span class="pre">DialogBetAmount</span></code>, and management
+dialogs on the Configuration menu.</p></li>
+</ul>
+</section>
+<section id="applying-a-plan">
+<h4>Applying a Plan<a class="headerlink" href="#applying-a-plan" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">BetExecutor</span></code> applies the specs of a plan, or of an AutoOdds pass, in order:</p>
+<ul class="simple">
+<li><p><strong>Best effort.</strong> A bet that cannot be placed is skipped and the rest go
+on. The player is told what was placed and what was skipped and why, in
+one summary, rather than an error dialog per bet. This is chosen over
+refusing the whole plan because a plan made for one table may not fit
+another table’s limits and multiples, and a plan that places most of its
+bets is more useful than one that does nothing.</p></li>
+<li><p><strong>Set, not add.</strong> A player has at most one bet per spot. A spec for a spot
+that already has a bet sets that bet to the spec’s amount. A spec whose
+amount equals the bet’s amount changes nothing and is counted as already
+in place.</p></li>
+<li><p><strong>Order.</strong> In a plan, a contract bet is placed before the odds on it.
+Odds specs are limited to PassLine and DontPass odds, whose point is
+implied. Odds on a Come or DontCome bet exist only after the bet has
+moved to a number, so they are handled by AutoOdds and cannot be saved in
+a plan.</p></li>
+<li><p><strong>Same paths as the View.</strong> Each placement goes through the same
+<code class="docutils literal notranslate"><span class="pre">Player::makeOrChangeBet</span></code> and <code class="docutils literal notranslate"><span class="pre">setOddsAmount</span></code> that bet requests use,
+so all the table’s rules, limits, funds checks and events apply
+unchanged. The player’s balance and the screens follow from the usual
+events.</p></li>
+<li><p><strong>One undo step.</strong> The placements of one application are recorded with
+<code class="docutils literal notranslate"><span class="pre">undoJoinsPrevious</span></code>, so a single undo takes back the whole application.
+This holds for automation too: pressing undo right after a roll takes
+back what AutoOdds did for that roll.</p></li>
+<li><p><strong>Summary.</strong> The result lists, for each spec, placed, changed, already in
+place or skipped with the reason. It goes to the View as an event. The
+View puts a short line in the Message area when there is one, and the
+handler always writes it to the log.</p></li>
+</ul>
+</section>
+<section id="automation-request-flow">
+<h4>Automation Request Flow<a class="headerlink" href="#automation-request-flow" title="Link to this heading"></a></h4>
+<p>For QuickBets, as built:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MenuBetting</span></code> <code class="docutils literal notranslate"><span class="pre">q</span></code> calls <code class="docutils literal notranslate"><span class="pre">OperationManager::applyQuickBets()</span></code>, which
+reads the entries with <code class="docutils literal notranslate"><span class="pre">CrapsReaders::readQuickBets()</span></code> and shows
+them in <code class="docutils literal notranslate"><span class="pre">DialogPicker</span></code>. The pick list carries each entry’s name, so
+the request still names the right entry if the list changes.</p></li>
+<li><p>The pick sends <code class="docutils literal notranslate"><span class="pre">ReqApplyQuickBets</span></code> (player id and entry name).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EventHandler::onReqApplyQuickBets()</span></code> refuses when betting is closed or
+the entry is not found. Otherwise it calls <code class="docutils literal notranslate"><span class="pre">BetExecutor::apply()</span></code> with the
+player, the entry’s specs, <code class="docutils literal notranslate"><span class="pre">UndoManager</span></code> and the player’s <code class="docutils literal notranslate"><span class="pre">LastFill</span></code>,
+and always answers with <code class="docutils literal notranslate"><span class="pre">RspApplyQuickBets</span></code>.</p></li>
+<li><p>The response carries the counts, a headline such as “3 placed, 1 skipped”
+and one line for each skipped bet. <code class="docutils literal notranslate"><span class="pre">accepted</span></code> means the entry was
+applied, even if some bets were skipped. A refused request has an error
+instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OperationManager::onRspApplyQuickBets()</span></code> unwinds the menus, and shows a
+notice only when something was skipped.</p></li>
+</ol>
+<p>The bet and balance events that the placements cause redraw the screens in
+the usual way. The View does not need to know which bets were placed.</p>
+<p>Saving a bet into QuickBets, as built:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DialogBetAmount</span></code> <code class="docutils literal notranslate"><span class="pre">q</span></code> puts the typed amount into <code class="docutils literal notranslate"><span class="pre">CarrierBet</span></code> and
+calls <code class="docutils literal notranslate"><span class="pre">OperationManager::quickBetsSetOrAdd()</span></code>. That makes a <code class="docutils literal notranslate"><span class="pre">BetSpec</span></code>
+from the carrier. Line odds get pivot 0, because they sit on the line bet.
+A bet that cannot be saved, such as Come odds, is refused with a notice.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DialogQuickBetsSetAdd</span></code> offers a new entry (<code class="docutils literal notranslate"><span class="pre">1</span></code>) or the existing
+entries (<code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, …). It reports with
+<code class="docutils literal notranslate"><span class="pre">OperationManager::onQuickBetsChoice()</span></code>. A new entry asks for a name in
+<code class="docutils literal notranslate"><span class="pre">DialogTextInput</span></code>, whose validator uses <code class="docutils literal notranslate"><span class="pre">QuickBets::checkName()</span></code> and
+refuses duplicates ignoring case.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ReqEditQuickBets</span></code> carries the action (create or add), the name and the
+spec. <code class="docutils literal notranslate"><span class="pre">EventHandler::onReqEditQuickBets()</span></code> calls <code class="docutils literal notranslate"><span class="pre">QuickBets::create()</span></code>
+or <code class="docutils literal notranslate"><span class="pre">QuickBets::addBet()</span></code>, which return “” or the reason, and always
+answers with <code class="docutils literal notranslate"><span class="pre">RspEditQuickBets</span></code>.</p></li>
+<li><p>On success the View shows the response’s message in a notice. The player is
+back at <code class="docutils literal notranslate"><span class="pre">DialogBetAmount</span></code>, since the operation has no menus to unwind.</p></li>
+</ol>
+<p>Managing entries, as built. <code class="docutils literal notranslate"><span class="pre">MenuConfigure</span></code> <code class="docutils literal notranslate"><span class="pre">q</span></code> calls
+<code class="docutils literal notranslate"><span class="pre">OperationManager::manageQuickBets()</span></code>. It is a chain of steps, each of which
+pops itself and reports back, so <code class="docutils literal notranslate"><span class="pre">manageStep_</span></code> says which one answered:</p>
+<ol class="arabic simple">
+<li><p>Pick the entry in <code class="docutils literal notranslate"><span class="pre">DialogPicker</span></code>.</p></li>
+<li><p>Pick the action: rename, change an amount, remove a bet or delete.</p></li>
+<li><p>Depending on the action: a name in <code class="docutils literal notranslate"><span class="pre">DialogTextInput</span></code>, a bet in
+<code class="docutils literal notranslate"><span class="pre">DialogPicker</span></code> and then an amount in <code class="docutils literal notranslate"><span class="pre">DialogTextInput</span></code>, a bet to
+remove in <code class="docutils literal notranslate"><span class="pre">DialogPicker</span></code>, or a confirmation in <code class="docutils literal notranslate"><span class="pre">DialogConfirm</span></code>.</p></li>
+<li><p>One <code class="docutils literal notranslate"><span class="pre">ReqEditQuickBets</span></code> with the action’s fields (<code class="docutils literal notranslate"><span class="pre">newName</span></code>, <code class="docutils literal notranslate"><span class="pre">index</span></code>
+and <code class="docutils literal notranslate"><span class="pre">amount</span></code>). <code class="docutils literal notranslate"><span class="pre">QuickBets::rename()</span></code>, <code class="docutils literal notranslate"><span class="pre">setAmount()</span></code>, <code class="docutils literal notranslate"><span class="pre">removeBet()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">removeEntry()</span></code> each return “” or the reason, and the response
+carries the message.</p></li>
+</ol>
+<p>The entry is named in the request, and the bet by its position in the entry.
+Nothing else changes entries between the pick and the request, so the
+position is still right. If it is not, the controller refuses with “That bet is
+no longer in the entry”. An entry keeps at least one bet. Creating an entry
+and adding bets stay in the bet amount dialog, where the bet is already
+chosen.</p>
+<p>The entries live in <code class="docutils literal notranslate"><span class="pre">PlayerPrefs</span></code> and are written to the player file when
+the players are saved, as for Last Fill. No lock guards them. They change
+only in answer to the View’s own request, and the View reads them only before
+or after that request, so the two do not overlap until buddy automation
+reads them from another thread.</p>
+</section>
+<section id="quickbets-rules">
+<h4>QuickBets Rules<a class="headerlink" href="#quickbets-rules" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>A QuickBets entry has a name chosen by the user and a list of bet specs.
+The View shows the name and a generated description of the bets.</p></li>
+<li><p>At most 20 entries and 12 specs in an entry, so that the lists fit the
+screen and each entry can have a letter key.</p></li>
+<li><p>The Betting menu key <code class="docutils literal notranslate"><span class="pre">q</span></code> shows the entries to apply. The Configuration
+menu lists, creates, renames, adds to, trims, changes the amounts of and
+deletes entries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DialogBetAmount</span></code> has <code class="docutils literal notranslate"><span class="pre">q</span></code> for “QuickBets, set or add”. The dialog
+then offers “Set as new QuickBets entry”, which asks for a name, or “Add
+to an existing entry”. Adding a spec whose spot is already in the entry
+replaces the amount, which matches one bet per spot.</p></li>
+<li><p>Amounts are fixed dollar amounts, validated when applied. They are not
+converted when the table changes.</p></li>
+<li><p>Order of the entries matters and is kept in the player file.</p></li>
+</ul>
+</section>
+<section id="autoodds-rules">
+<h4>AutoOdds Rules<a class="headerlink" href="#autoodds-rules" title="Link to this heading"></a></h4>
+<p>AutoOdds places odds on a contract bet for the user, in a size that depends
+on the kind of bet and the point it is on.</p>
+<ul class="simple">
+<li><p><strong>Settings.</strong> A table with an entry for each of PassLine, DontPass,
+Come and DontCome and each of the points 4, 5, 6, 8, 9 and 10. An entry is
+either a multiple <em>n</em>, so the odds amount is <em>n</em> times the contract amount,
+or an exact dollar amount. A missing entry means no
+automatic odds for that bet type and point. This is needed because odds
+size depends on the point as well as on the bet. A player may want much
+more behind a DontPass bet on the 10 than on the 6. Typical examples are
+3, 4 and 5 times for the 4 and 10, the 5 and 9 and the 6 and 8. The
+Configuration menu offers that as a preset and can also set one multiple
+for every point of a bet type.</p></li>
+<li><p><strong>Master switch.</strong> There is one on and off switch for each player, so
+AutoOdds can be paused without losing the table of multiples. When it is on,
+the View shows a visible indicator, and each automatic placement is
+reported in the Message area, since the feature spends the player’s money
+unprompted.</p></li>
+<li><p><strong>When.</strong> AutoOdds runs on <code class="docutils literal notranslate"><span class="pre">UslBettingOpened</span></code>, after the roll’s results
+are settled. It looks at the player’s bets rather than following events,
+so it does not matter whether the bet became eligible because the point
+was set, a Come bet traveled to a number, or the table was switched.</p></li>
+<li><p><strong>Which bets.</strong> A contract bet that has a point or pivot, has no odds, and
+has not been handled by AutoOdds before. The controller remembers the ids
+of the bets it has handled. This is needed so that odds the player takes
+down by hand stay down. Without it AutoOdds would put them back after the
+next roll. The set is pruned of ids that are no longer on the table.</p></li>
+<li><p><strong>Amount.</strong> The exact amount, or <em>n</em> times the contract, rounded down to the table’s required
+odds multiple and not above the table’s maximum odds for that bet. The
+table already knows both, from its odds limit rules. If the result is
+below one odds increment, the bet is skipped and the reason is reported.</p></li>
+<li><p><strong>Failures.</strong> Insufficient funds or a refusal from the table skips the
+bet. AutoOdds does not retry within the same pass. It has already marked
+the bet as handled.</p></li>
+<li><p><strong>From DialogBetAmount.</strong> <code class="docutils literal notranslate"><span class="pre">a</span></code> sets the entry for the bet type and point
+of the odds bet being entered to the exact amount entered, and reports it.
+A zero amount removes the entry. The
+line is shown only when the dialog is for an odds bet and is blank
+otherwise, so that the dialog does not change shape.</p></li>
+</ul>
+<p>As built:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AutoOdds</span></code> holds the multiples, the on and off switch and the handled
+ids. <code class="docutils literal notranslate"><span class="pre">AutoOdds::plan()</span></code> is the pass. It takes candidate bets, each with
+the table’s odds limits already looked up, so it is tested without a
+table. <code class="docutils literal notranslate"><span class="pre">EventHandler::onUslBettingOpened</span></code> makes the candidates from the
+user player’s bets, applies the plan with <code class="docutils literal notranslate"><span class="pre">BetExecutor::apply</span></code> and
+publishes <code class="docutils literal notranslate"><span class="pre">UslAutoOddsApplied</span></code>.</p></li>
+<li><p>A bet is marked handled as soon as the pass has a multiple for it, whether
+or not the odds could be placed. A bet that already has odds is also
+marked, so odds the player later takes down stay down.</p></li>
+<li><p>AutoOdds is applied for the user player only. Odds are not LastFill
+entries, since the player did not choose them.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ReqEditAutoOdds</span></code> and <code class="docutils literal notranslate"><span class="pre">RspEditAutoOdds</span></code> carry every change: the
+switch, one entry or all points of a bet type (a point of 0), the 3-4-5
+preset and clearing. The Set or Unset of <code class="docutils literal notranslate"><span class="pre">DialogBetAmount</span></code> is a <code class="docutils literal notranslate"><span class="pre">Set</span></code>
+with the entered amount.</p></li>
+<li><p>Until the Message area exists, the middle of the bottom bar shows
+<em>AutoOdds on</em> while it is on, and <em>AutoOdds: n placed</em> after a pass until
+the next roll. Odds that could not be placed are listed in a notice, unless
+the player is in the middle of another dialog; the log has them all.</p></li>
+</ul>
+</section>
+<section id="buddy-automation">
+<h4>Buddy Automation<a class="headerlink" href="#buddy-automation" title="Link to this heading"></a></h4>
+<p>Not built yet. This is what the other parts are shaped for.</p>
+<ul class="simple">
+<li><p>A buddy is an ordinary player with its own <code class="docutils literal notranslate"><span class="pre">PlayerPrefs</span></code>. Its plans,
+AutoOdds and rules are kept in that file, as the user’s are.</p></li>
+<li><p>A rule is a trigger and an action. The first triggers are betting opened
+with no point (come-out), betting opened with a point, and betting opened
+after any roll. The actions are to apply a named plan, or to apply AutoOdds.
+Conditions such as the player’s balance and progressions that change
+amounts after wins and losses come later and fit between the trigger and
+the action.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EventHandler</span></code> runs the rules for every player that has them at the
+same <code class="docutils literal notranslate"><span class="pre">UslBettingOpened</span></code>, through the same executor.</p></li>
+<li><p>A buddy’s undo stack is never used. It is cleared at each roll as every
+stack is, so it cannot grow.</p></li>
+</ul>
+</section>
+<section id="automation-persistence">
+<h4>Automation Persistence<a class="headerlink" href="#automation-persistence" title="Link to this heading"></a></h4>
+<p>In the player file under <code class="docutils literal notranslate"><span class="pre">Prefs</span></code>. <code class="docutils literal notranslate"><span class="pre">QuickBets</span></code> replaces the old
+one-bet form of the same name, and <code class="docutils literal notranslate"><span class="pre">AutoFills</span></code> is gone. <code class="docutils literal notranslate"><span class="pre">pivot</span></code> and
+<code class="docutils literal notranslate"><span class="pre">isOdds</span></code> may be left out, and default to 0 and false:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">QuickBets</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Place Hi</span>
+<span class="w">    </span><span class="nt">bets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> betName</span><span class="p">:</span><span class="w"> </span><span class="nv">Place</span><span class="p p-Indicator">,</span><span class="nt"> pivot</span><span class="p">:</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="nt">  amount</span><span class="p">:</span><span class="w"> </span><span class="nv">24</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> betName</span><span class="p">:</span><span class="w"> </span><span class="nv">Place</span><span class="p p-Indicator">,</span><span class="nt"> pivot</span><span class="p">:</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">,</span><span class="nt">  amount</span><span class="p">:</span><span class="w"> </span><span class="nv">20</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> betName</span><span class="p">:</span><span class="w"> </span><span class="nv">Place</span><span class="p p-Indicator">,</span><span class="nt"> pivot</span><span class="p">:</span><span class="w"> </span><span class="nv">10</span><span class="p p-Indicator">,</span><span class="nt"> amount</span><span class="p">:</span><span class="w"> </span><span class="nv">20</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Line with odds</span>
+<span class="w">    </span><span class="nt">bets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> betName</span><span class="p">:</span><span class="w"> </span><span class="nv">PassLine</span><span class="p p-Indicator">,</span><span class="nt"> amount</span><span class="p">:</span><span class="w"> </span><span class="nv">10</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> betName</span><span class="p">:</span><span class="w"> </span><span class="nv">PassLine</span><span class="p p-Indicator">,</span><span class="nt"> isOdds</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span><span class="nt"> amount</span><span class="p">:</span><span class="w"> </span><span class="nv">30</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="nt">AutoOdds</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">multiples</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">PassLine</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3x</span>
+<span class="w">      </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4x</span>
+<span class="w">      </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$50</span>
+</pre></div>
+</div>
+<p>Loading follows the Prefs rules already in force: an entry that cannot be
+read is logged and skipped, and loading never throws. A loaded plan is
+made valid by <code class="docutils literal notranslate"><span class="pre">QuickBets::tidy()</span></code>: bets with no usable bet name or a zero
+amount are dropped, odds on bets other than PassLine and DontPass are
+dropped, a later bet for the same spot replaces the earlier, contract bets
+are moved before odds, and a plan is cut to 12 bets. A plan with no name or
+no bets left is skipped. Old-form entries, which have no <code class="docutils literal notranslate"><span class="pre">name</span></code>, are
+skipped the same way.</p>
+</section>
+<section id="automation-staging">
+<h4>Automation Staging<a class="headerlink" href="#automation-staging" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p>Remove AutoFill and the single QuickBet, with their tests, events,
+dialog entries, YAML and documentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BetSpec</span></code>, bet plans and <code class="docutils literal notranslate"><span class="pre">BetExecutor</span></code>, with the single undo step,
+the summary event, <code class="docutils literal notranslate"><span class="pre">QuickBets</span></code> data and persistence, and the Betting
+menu key to apply an entry. Done.</p></li>
+<li><p>The Set or Add dialog in <code class="docutils literal notranslate"><span class="pre">DialogBetAmount</span></code> and the Configuration menu
+pages for QuickBets. Done. Entries are made in the bet amount dialog and
+changed in the Configuration menu.</p></li>
+<li><p>AutoOdds: settings and persistence, the pass on <code class="docutils literal notranslate"><span class="pre">UslBettingOpened</span></code>,
+the <code class="docutils literal notranslate"><span class="pre">DialogBetAmount</span></code> entry, the Configuration menu pages, the master
+switch and its indicator. Done. Only the user player is automated.</p></li>
+<li><p>Buddy automation rules and their triggers.</p></li>
+</ol>
+</section>
+<section id="automation-open-items">
+<h4>Automation Open Items<a class="headerlink" href="#automation-open-items" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Whether AutoOdds should also offer a “maximum the table allows” setting
+in place of a multiple.</p></li>
+<li><p>A place for the Message area to show summaries before the Message area
+exists. Until then the summary of an application that skipped bets is
+shown in a notice dialog, and a clean application shows nothing. The
+executor logs every application. AutoOdds shows a short status in the
+middle of the bottom bar.</p></li>
+<li><p>Whether QuickBets entries should be shared between a user and the buddies,
+or only per player.</p></li>
+</ul>
+</section>
+</section>
+<section id="bet-flags">
+<h3>Bet Flags<a class="headerlink" href="#bet-flags" title="Link to this heading"></a></h3>
+<section id="bet-flags-purpose">
+<h4>Bet Flags Purpose<a class="headerlink" href="#bet-flags-purpose" title="Link to this heading"></a></h4>
+<p>A bet flag says whether a wager is live for the next roll. A live bet can
+win or lose on the roll. A bet that is not live stays on the table and
+neither wins nor loses. Casinos let a player call certain bets off and on
+at any time, and the flags give the player the same control.</p>
+<p>Two things are controlled, for one bet or for a category of bets:</p>
+<ul class="simple">
+<li><p>A <strong>standing</strong> state, which lasts until the player changes it.</p></li>
+<li><p>A <strong>one-roll override</strong>, which applies to the next roll only and then
+goes away, leaving the standing state as it was.</p></li>
+</ul>
+</section>
+<section id="bet-flag-vocabulary">
+<h4>Bet Flag Vocabulary<a class="headerlink" href="#bet-flag-vocabulary" title="Link to this heading"></a></h4>
+<dl>
+<dt>Standing state</dt><dd><p>One of <em>Default</em>, <em>Working</em> and <em>Off</em>.</p>
+<p><em>Default</em> is the house rule that is in force today. Place, Buy, Lay and
+odds bets are not live on a come-out roll and are live on every other
+roll. Hardway bets are live on every roll. A bet starts as Default.</p>
+<p><em>Working</em> means live on every roll, including come-out rolls. <em>Off</em> means
+not live on any roll until the player changes it.</p>
+</dd>
+<dt>One-roll override</dt><dd><p>One of <em>None</em>, <em>Off next roll</em> and <em>Working next roll</em>. Off next roll
+makes the bet not live on the next roll whatever its standing state is.
+Working next roll makes it live on the next roll, for example a Place bet
+that the player wants working on the coming come-out. The override is
+cleared after every roll, and a bet starts with None.</p>
+</dd>
+<dt>Live</dt><dd><p>A bet is live on a roll when the override says so. With no override,
+Working is live, Off is not, and Default follows the house rule above.</p>
+</dd>
+<dt>Category</dt><dd><p>A group of bets that a flag change can be applied to together: <em>All</em>,
+<em>Odds</em>, <em>Place</em>, <em>Buy</em>, <em>Lay</em> and <em>Hardways</em>.</p>
+</dd>
+</dl>
+</section>
+<section id="bet-flag-legality">
+<h4>Bet Flag Legality<a class="headerlink" href="#bet-flag-legality" title="Link to this heading"></a></h4>
+<p>Flags follow casino practice, so they are accepted only for bets that a
+player may legally call off and on:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 20.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bet</p></th>
+<th class="head"><p>Flag allowed</p></th>
+<th class="head"><p>What the flag controls</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Odds on Pass Line, Don’t Pass, Come, Don’t Come</p></td>
+<td><p>Yes, when there are odds</p></td>
+<td><p>Only the odds. The contract bet is always live.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Place, Buy, Lay</p></td>
+<td><p>Yes</p></td>
+<td><p>The whole bet.</p></td>
+</tr>
+<tr class="row-even"><td><p>Hardway</p></td>
+<td><p>Yes</p></td>
+<td><p>The whole bet.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Pass Line, Don’t Pass, Come, Don’t Come contract bets</p></td>
+<td><p>No</p></td>
+<td><p>Not applicable; a player cannot call these off.</p></td>
+</tr>
+<tr class="row-even"><td><p>Field, Any Craps, Any Seven, Any 7 or 11, C and E, Horn, World</p></td>
+<td><p>No</p></td>
+<td><p>They are decided on the next roll, so there is nothing to call off.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The table refuses a flag change that is not legal, and refuses any change
+when betting is closed, with the same errors it gives for other illegal bet
+changes. Changes that apply to a category skip the bets that cannot take a
+flag, and the response says how many were changed and how many skipped.</p>
+</section>
+<section id="bet-flag-rules-in-the-model">
+<h4>Bet Flag Rules in the Model<a class="headerlink" href="#bet-flag-rules-in-the-model" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">CrapsBet</span></code> holds the standing state and the one-roll override in place of
+the single <code class="docutils literal notranslate"><span class="pre">offComeOutRoll_</span></code> flag. It answers one question, whether it is
+live on a roll given the point, and the evaluation functions use that
+answer in place of testing <code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">==</span> <span class="pre">0</span> <span class="pre">&amp;&amp;</span> <span class="pre">offComeOutRoll_</span></code>.</p>
+<ul class="simple">
+<li><p><strong>Place, Buy, Lay and Hardway</strong> are Keep when not live, and are decided as
+they are today when live.</p></li>
+<li><p><strong>Odds</strong> on a contract bet follow the same answer. Today the odds are
+returned when they are off on a come-out roll that decides the bet. The
+same happens whenever the odds are not live on the roll that decides the
+bet: the contract bet wins or loses as usual and the odds go back to the
+player without a win or loss.</p></li>
+<li><p>The existing <code class="docutils literal notranslate"><span class="pre">setOffComeOutRoll</span></code>, <code class="docutils literal notranslate"><span class="pre">setOnComeOutRoll</span></code>, <code class="docutils literal notranslate"><span class="pre">setHardwayOff</span></code>
+and <code class="docutils literal notranslate"><span class="pre">setHardwayOn</span></code> stay, so existing code and tests keep working. They
+set the standing state: Default for the first and the fourth (a Hardway
+that is Default is working), Working for the second, Off for the third. <code class="docutils literal notranslate"><span class="pre">offComeOutRoll()</span></code> and <code class="docutils literal notranslate"><span class="pre">hardwayWorking()</span></code>
+remain as observers and answer for the standing state with no override.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CrapsTable</span></code> clears every bet’s one-roll override after it resolves the
+roll, before betting opens again.</p></li>
+<li><p>A change to a standing state replaces the bet’s one-roll override: the
+Controller sends both together, so “Set Working” leaves no override behind.
+A “Next Roll” change leaves the standing state alone. Taking the odds off
+a bet takes its flags with it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CrapsTable::setBetFlags</span></code> is the only way to change flags in the
+running game. It checks legality and that betting is open, then publishes
+the same bet changed notification that an odds change does, so the
+screens redraw. Flags are not saved with the player, since bets are not.</p></li>
+</ul>
+</section>
+<section id="bet-flag-menus">
+<h4>Bet Flag Menus<a class="headerlink" href="#bet-flag-menus" title="Link to this heading"></a></h4>
+<p>The <em>Bet Flags</em> entry of the Betting menu (<code class="docutils literal notranslate"><span class="pre">g</span></code>) opens a menu of
+categories. A category appears only if the player has bets on the table that
+can take a flag in it, and the whole menu is refused with a notice if there
+are none.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌──────────────────────┐
+│ Bet Flags            │
+├──────────────────────┤
+│ [i] Individual Bet   │
+│ [a] All Bets         │
+│ [o] Odds Bets        │
+│ [p] Place Bets       │
+│ [b] Buy Bets         │
+│ [l] Lay Bets         │
+│ [h] Hardway Bets     │
+│ [. or esc] Back      │
+└──────────────────────┘
+</pre></div>
+</div>
+<p>A category opens a pick list with the same prompts for every category, for
+example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────┐
+│ Bet Flags - Odds Bets                   │
+├─────────────────────────────────────────┤
+│ [a] Set Odds Bets Not-Working           │
+│ [b] Set Odds Bets Not-Working Next Roll │
+│ [c] Set Odds Bets Working               │
+│ [d] Set Odds Bets Working Next Roll     │
+│ [e] Set Odds Bets To Table Default      │
+│ [. or esc] Back                         │
+└─────────────────────────────────────────┘
+</pre></div>
+</div>
+<p><em>Individual Bet</em> opens a pick list of the bets that can take a flag, such as
+<em>Pass Line 6 odds $30</em>, <em>Place 9 $20</em> and <em>Hardway 4 $5</em>, with each bet’s
+current flags in the description. Picking one opens the same five prompts
+for that bet. The fifth prompt returns a bet to the Default standing state,
+because Working and Not-Working would otherwise replace the house rule for
+good.</p>
+<p>The category pages and the bet pages are <code class="docutils literal notranslate"><span class="pre">DialogPicker</span></code> lists, so they
+use letters in order. Every pick list ends with the line <code class="docutils literal notranslate"><span class="pre">[.</span> <span class="pre">or</span> <span class="pre">esc]</span> <span class="pre">Back</span></code>
+like the menus do. The hint of every pick list now reads
+<code class="docutils literal notranslate"><span class="pre">Up/Down,</span> <span class="pre">Enter</span> <span class="pre">or</span> <span class="pre">a-e.</span> <span class="pre">[.</span> <span class="pre">or</span> <span class="pre">esc]</span> <span class="pre">Back</span></code>, replacing <code class="docutils literal notranslate"><span class="pre">Esc</span> <span class="pre">cancels</span></code>;
+the arrow keys and Enter still work. The category menu has mnemonic keys,
+like the other menus, and shows only the kinds of bets the player has.</p>
+</section>
+<section id="bet-flag-workflow">
+<h4>Bet Flag Workflow<a class="headerlink" href="#bet-flag-workflow" title="Link to this heading"></a></h4>
+<p>Every choice sends one request and shows the answer:</p>
+<ol class="arabic simple">
+<li><p>The View sends <code class="docutils literal notranslate"><span class="pre">ReqSetBetFlags</span></code> with the player, a scope (one bet, All,
+Odds, Place, Buy, Lay or Hardways), the bet id when the scope is one bet, and
+the change (Not-Working, Not-Working Next Roll, Working, Working Next
+Roll or Table Default).</p></li>
+<li><p>The Controller applies it through <code class="docutils literal notranslate"><span class="pre">CrapsTable::setBetFlags</span></code> for each bet
+in scope that can take it, as one undo group, and answers with
+<code class="docutils literal notranslate"><span class="pre">RspSetBetFlags</span></code>: accepted or an error, a message such as
+“Odds bets set Not-Working: 2 changed”, and the counts.</p></li>
+<li><p>On success the View unwinds the menus and shows the message in a notice.
+On failure an error dialog says why, as for other bet requests.</p></li>
+</ol>
+</section>
+<section id="bet-flag-undo">
+<h4>Bet Flag Undo<a class="headerlink" href="#bet-flag-undo" title="Link to this heading"></a></h4>
+<p>A flag change is undoable with the Undo key. <code class="docutils literal notranslate"><span class="pre">UndoBetFlagsChanged</span></code> keeps
+each bet’s previous standing state and override, and restores them through
+<code class="docutils literal notranslate"><span class="pre">CrapsTable::setBetFlags</span></code>, so the table checks the bet and the events are
+published. The undo stack and its rules are unchanged: it is cleared when
+the dice are rolled.</p>
+</section>
+<section id="bet-flag-display">
+<h4>Bet Flag Display<a class="headerlink" href="#bet-flag-display" title="Link to this heading"></a></h4>
+<p>The amounts in the player’s bet area are bold, in the player’s color. A bet
+that is <strong>not live on the next roll</strong> is drawn dim instead, and a bet that
+has a standing state other than Default or has an override is <strong>underlined</strong>.
+So a Place bet that is Off shows dim and underlined; a Place bet set to
+Working next roll shows bold and underlined until the roll, and a Place bet
+with no flags shows dim on the come-out, by the house rule, and bold
+otherwise. No room is taken, so large amounts are not affected. The bet
+dialogs already say that a bet is off on the come-out roll by default, and
+that text is kept. If a terminal cannot dim, the bet is shown without bold.</p>
+</section>
+<section id="bet-flag-staging">
+<h4>Bet Flag Staging<a class="headerlink" href="#bet-flag-staging" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p>The model: the states, the live test, the evaluation changes, clearing
+after a roll, <code class="docutils literal notranslate"><span class="pre">CrapsTable::setBetFlags</span></code> and unit tests for all of them.</p></li>
+<li><p>The Controller: <code class="docutils literal notranslate"><span class="pre">ReqSetBetFlags</span></code> and <code class="docutils literal notranslate"><span class="pre">RspSetBetFlags</span></code>, the handler,
+<code class="docutils literal notranslate"><span class="pre">UndoBetFlagsChanged</span></code> and readers for the View.</p></li>
+<li><p>The CUI: the category menu (<code class="docutils literal notranslate"><span class="pre">MenuBetFlags</span></code>), the pick lists and
+their flow in <code class="docutils literal notranslate"><span class="pre">OperationManager::betFlags()</span></code>, the bet area display
+(<code class="docutils literal notranslate"><span class="pre">PlayerAreaOnePlayer</span></code>, through <code class="docutils literal notranslate"><span class="pre">CrapsReaders::readBetFlagLook()</span></code>) and
+the user guide page.</p></li>
+</ol>
+</section>
+<section id="bet-flag-open-items">
+<h4>Bet Flag Open Items<a class="headerlink" href="#bet-flag-open-items" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>How the dim and underline look on the terminals the game is played on. They
+are one place in <code class="docutils literal notranslate"><span class="pre">PlayerAreaOnePlayer::drawOneBet</span></code> to change.</p></li>
+<li><p>Flags in QuickBets entries and for buddies. Neither exists yet.</p></li>
+</ul>
 </section>
 </section>
 <section id="configuration">

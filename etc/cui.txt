@@ -697,71 +697,78 @@ Betting Menu
     [g] Bet Flags
         pop-up "Bet Flags" menu
 
-        ┌──────────────────────────┐
-        │ Bet Flags                │
-        ├──────────────────────────┤
-        │ [1] Set Odds Not-Working │
-        │ [2] Set Odds Working     │
-        │ [3] Set Bets Not-Working │
-        │ [4] Set Bets Working     │
-        │ [esc] Back               │
-        └──────────────────────────┘
-
-        Dynamic built menu of qualifying bets
-        ┌───────────────────────┐
-        │ Set Odds Not-Working  │
-        │ Which Bets            │
-        ├───────────────────────┤
-        │ [a] All               │
-        │ [1] Pass Line 6       │
-        │ [2] Come Bet 8        │
-        │ [3] Don't Pass 10     │
-        │ [esc] Back            │
-        └───────────────────────┘
-
-        Dynamic built menu of qualifying bets
-        ┌───────────────────┐
-        │ Set Odds Working  │
-        │ Which Bets        │
-        ├───────────────────┤
-        │ [a] All           │
-        │ [1] Pass Line 6   │
-        │ [2] Come Bet 8    │
-        │ [3] Don't Pass 10 │
-        │ [esc] Back        │
-        └───────────────────┘
-
-        Dynamic built menu of qualifying bets
         ┌──────────────────────┐
-        │ Set Bets Not Working │
-        │ Which Bets           │
+        │ Bet Flags            │
         ├──────────────────────┤
-        │ [a] All              │
-        │ [1] Come Bet 8       │
-        │ [2] Come Bet 4       │
-        │ [3] Come Bet 10      │
-        │ [4] Place 6          │
-        │ [5] Place 8          │
-        │ [esc] Back           │
+        │ [i] Individual Bet   │
+        │ [a] All Bets         │
+        │ [o] Odds Bets        │
+        │ [p] Place Bets       │
+        │ [h] Hardway Bets     │
+        │ [. or esc] Back      │
         └──────────────────────┘
 
-        Dynamic built menu of qualifying bets
-        ┌──────────────────┐
-        │ Set Bets Working │
-        │ Which Bets       │
-        ├──────────────────┤
-        │ [a] All          │
-        │ [1] Come Bet 8   │
-        │ [2] Come Bet 4   │
-        │ [3] Come Bet 10  │
-        │ [4] Place 6      │
-        │ [5] Place 8      │
-        │ [esc] Back       │
-        └──────────────────┘
+        ┌───────────────────────────────┐
+        │ Choose Individual Bet to Flag │
+        ├───────────────────────────────┤
+        │ [a] Pass Line 6 odds $30      │
+        │ [b] Place 9 $20               │
+        │ [c] Come 10 odds $20          │
+        │ [d] Hardway 4 $5              │
+        │ [e] Hardway 10 $5             │
+        │ [. or esc] Back               │
+        └───────────────────────────────┘
 
-        All the Set Flag Bet menus are not sticky, so after selection
-        return is to the Betting menu, not the Bet Flags menu.
-        
+        ┌────────────────────────────────┐
+        │ Bet Flag: Pass Line 6 odds $30 │
+        ├────────────────────────────────┤
+        │ [a] Set Not-Working            │
+        │ [b] Set Not-Working Next Roll  │
+        │ [b] Set Working                │
+        │ [b] Set Working Next Roll      │
+        │ [. or esc] Back                │
+        └────────────────────────────────┘
+
+        ┌────────────────────────────────────────┐
+        │ Bet Flags All Bets                     │
+        ├────────────────────────────────────────┤
+        │ [a] Set All Bets Not-Working           │
+        │ [b] Set All Bets Not-working Next Roll │
+        │ [c] Set All Bets Working               │
+        │ [d] Set All Bets Working Next Roll     │
+        │ [. or esc] Back                        │
+        └────────────────────────────────────────┘
+
+        ┌─────────────────────────────────────────┐
+        │ Bet Flags Odds Bets                     │
+        ├─────────────────────────────────────────┤
+        │ [a] Set Odds Bets Not-Workng            │
+        │ [b] Set Odds Bets Not-working Next Roll │
+        │ [c] Set Odds Bets Working               │
+        │ [d] Set Odds Bets Working Next Roll     │
+        │ [. or esc] Back                         │
+        └─────────────────────────────────────────┘
+
+        ┌──────────────────────────────────────────┐
+        │ Bet Flags Place Bets                     │
+        ├──────────────────────────────────────────┤
+        │ [a] Set Place Bets Not-Workng            │
+        │ [b] Set Place Bets Not-working Next Roll │
+        │ [c] Set Place Bets Working               │
+        │ [d] Set Place Bets Working Next Roll     │
+        │ [. or esc] Back                          │
+        └──────────────────────────────────────────┘
+
+        ┌───────────────────────────────────────────┐
+        │ Bet Flags Hardway Bets                    │
+        ├───────────────────────────────────────────┤
+        │ [a] Set Harday Bets Not-Workng            │
+        │ [b] Set Harday Bets Not-working Next Roll │
+        │ [c] Set Harday Bets Working               │
+        │ [d] Set Harday Bets Working Next Roll     │
+        │ [. or esc] Back                           │
+        └───────────────────────────────────────────┘
+
     [x] Remove Bets
         Dynamic built menu of player's qualifying bets
 

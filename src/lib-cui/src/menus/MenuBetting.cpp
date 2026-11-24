@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/menus/MenuBetting.h>
+#include <cui/menus/MenuBetFlags.h>
 #include <cui/menus/MenuPivot.h>
 #include <cui/menus/MenuOddsBet.h>
 #include <cui/dialogs/DialogBetAmount.h>
@@ -305,7 +306,19 @@ MenuBetting::doOddsBets()
 void
 MenuBetting::doBetFlags()
 {
-    // TODO
+    if (Ctrl::CrapsReaders::readFlagBets().empty())
+    {
+        DialogMessage::MessageText m;
+        m.label  = DialogMessage::MessageLabel::Info;
+        m.brief  = "No Bets to Flag";
+        m.detail = "You have no bets that can be turned off or on. "
+                   "Place, Buy, Lay and Hardway bets can, and so can the "
+                   "odds on a Pass Line, Don't Pass, Come or Don't Come bet.";
+        DialogMessage::instance().configure(m);
+        SurfaceManager::instance().pushSurface(&DialogMessage::instance());
+        return;
+    }
+    SurfaceManager::instance().pushSurface(&MenuBetFlags::instance());
 }
 
 //----------------------------------------------------------------

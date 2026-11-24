@@ -152,6 +152,12 @@ CuiReceiver::CuiReceiver()
             this->onRspUndoBet(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::RspSetBetFlags>(
+        [this](const Ctrl::RspSetBetFlags& ev)
+        {
+            this->onRspSetBetFlags(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::RspApplyQuickBets>(
         [this](const Ctrl::RspApplyQuickBets& ev)
         {
@@ -397,6 +403,16 @@ void
 CuiReceiver::onRspUndoBet(const Ctrl::RspUndoBet& ev) const
 {
     LOG_TRACE("CuiReceiver::onRspUndoBet()");
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(std::move(wo));
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onRspSetBetFlags(const Ctrl::RspSetBetFlags& ev) const
+{
+    LOG_TRACE("CuiReceiver::onRspSetBetFlags()");
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(std::move(wo));
 }

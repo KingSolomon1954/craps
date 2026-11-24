@@ -13,11 +13,13 @@ var searchData=
   ['dialogerror_2eh_10',['DialogError.h',['../DialogError_8h.html',1,'']]],
   ['dialogmessage_2ecpp_11',['DialogMessage.cpp',['../DialogMessage_8cpp.html',1,'']]],
   ['dialogmessage_2eh_12',['DialogMessage.h',['../DialogMessage_8h.html',1,'']]],
-  ['dialogpickplayer_2ecpp_13',['DialogPickPlayer.cpp',['../DialogPickPlayer_8cpp.html',1,'']]],
-  ['dialogpickplayer_2eh_14',['DialogPickPlayer.h',['../DialogPickPlayer_8h.html',1,'']]],
-  ['dialogtextinput_2ecpp_15',['DialogTextInput.cpp',['../DialogTextInput_8cpp.html',1,'']]],
-  ['dialogtextinput_2eh_16',['DialogTextInput.h',['../DialogTextInput_8h.html',1,'']]],
-  ['dice_2ecpp_17',['Dice.cpp',['../Dice_8cpp.html',1,'']]],
-  ['dice_2eh_18',['Dice.h',['../Dice_8h.html',1,'']]],
-  ['doxygen_2eh_19',['Doxygen.h',['../lib-controller_2include_2controller_2Doxygen_8h.html',1,'(Global Namespace)'],['../lib-craps_2include_2craps_2Doxygen_8h.html',1,'(Global Namespace)'],['../lib-cui_2include_2cui_2Doxygen_8h.html',1,'(Global Namespace)'],['../lib-gen_2include_2gen_2Doxygen_8h.html',1,'(Global Namespace)'],['../lib-gui_2include_2gui_2Doxygen_8h.html',1,'(Global Namespace)'],['../main_2include_2Doxygen_8h.html',1,'(Global Namespace)']]]
+  ['dialogpicker_2ecpp_13',['DialogPicker.cpp',['../DialogPicker_8cpp.html',1,'']]],
+  ['dialogpicker_2eh_14',['DialogPicker.h',['../DialogPicker_8h.html',1,'']]],
+  ['dialogquickbetssetadd_2ecpp_15',['DialogQuickBetsSetAdd.cpp',['../DialogQuickBetsSetAdd_8cpp.html',1,'']]],
+  ['dialogquickbetssetadd_2eh_16',['DialogQuickBetsSetAdd.h',['../DialogQuickBetsSetAdd_8h.html',1,'']]],
+  ['dialogtextinput_2ecpp_17',['DialogTextInput.cpp',['../DialogTextInput_8cpp.html',1,'']]],
+  ['dialogtextinput_2eh_18',['DialogTextInput.h',['../DialogTextInput_8h.html',1,'']]],
+  ['dice_2ecpp_19',['Dice.cpp',['../Dice_8cpp.html',1,'']]],
+  ['dice_2eh_20',['Dice.h',['../Dice_8h.html',1,'']]],
+  ['doxygen_2eh_21',['Doxygen.h',['../lib-controller_2include_2controller_2Doxygen_8h.html',1,'(Global Namespace)'],['../lib-craps_2include_2craps_2Doxygen_8h.html',1,'(Global Namespace)'],['../lib-cui_2include_2cui_2Doxygen_8h.html',1,'(Global Namespace)'],['../lib-gen_2include_2gen_2Doxygen_8h.html',1,'(Global Namespace)'],['../lib-gui_2include_2gui_2Doxygen_8h.html',1,'(Global Namespace)'],['../main_2include_2Doxygen_8h.html',1,'(Global Namespace)']]]
 ];

@@ -12,6 +12,7 @@
 
 #include <controller/AnimationSpeed.h>
 #include <controller/AutoOdds.h>
+#include <controller/BetFlags.h>
 #include <controller/RollHistoryFormat.h>
 #include <controller/PlayerManager.h>
 #include <controller/PlayerManifest.h>
@@ -272,6 +273,28 @@ public:
 
     // AutoOdds settings of the user player. A copy.
     static AutoOdds readAutoOdds();
+
+    // The user player's bets that can take a flag now, in table order,
+    // with the words the menus show. Empty if there are none.
+    struct FlagBet
+    {
+        Craps::BetId         betId = 0;
+        BetFlags::Category   category = BetFlags::Category::None;
+        std::string          label;      // "Pass Line 6 odds $30"
+        std::string          flags;      // "Working, Not-Working Next Roll"
+    };
+    static std::vector<FlagBet> readFlagBets();
+
+    // How a bet is to be drawn: can it take a flag at all, will it be
+    // live on the next roll, and does it have any flag or override set.
+    // Returns false if the bet is not on the table.
+    struct FlagLook
+    {
+        bool flaggable    = false;
+        bool liveNextRoll = true;
+        bool nonDefault   = false;
+    };
+    static bool readBetFlagLook(const Craps::BetId& betId, FlagLook& look);
 
     // Last Fill
     static Gen::ReturnCode getLastFill(

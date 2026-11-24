@@ -7,6 +7,7 @@
 #pragma once
 
 #include <controller/AutoOdds.h>
+#include <controller/BetFlags.h>
 #include <controller/BetSpec.h>
 #include <controller/GameEvents.h>
 #include <cui/bases/SurfaceBase.h>
@@ -50,6 +51,7 @@ public:
     void makeBet();      // Workflow: Asynchronous bet operation
     bool removeBets();   // Workflow: Pick one of your bets to take down
     bool undoLastBet();  // Workflow: Take back your latest bet change
+    bool betFlags(Ctrl::BetFlags::Scope scope); // Workflow: Turn bets off or on
     bool applyQuickBets(); // Workflow: Pick a QuickBets entry and apply it
     bool quickBetsSetOrAdd(); // Workflow: Save the bet being entered
     bool manageQuickBets();   // Workflow: Rename, change, trim, delete entries
@@ -64,6 +66,7 @@ public:
     void onRspOddsBet(const Ctrl::RspOddsBet& response);
     void onRspRemoveBet(const Ctrl::RspRemoveBet& response);
     void onRspUndoBet(const Ctrl::RspUndoBet& response);
+    void onRspSetBetFlags(const Ctrl::RspSetBetFlags& response);
     void onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& response);
     void onRspEditQuickBets(const Ctrl::RspEditQuickBets& response);
     void onRspEditAutoOdds(const Ctrl::RspEditAutoOdds& response);
@@ -95,6 +98,7 @@ private:
         MakeBet,
         RemoveBet,
         UndoBet,
+        BetFlags,
         QuickBets,
         QuickBetsEdit,
         QuickBetsManage,
@@ -124,6 +128,15 @@ private:
     std::vector<Removal> removalChoices_;
     std::vector<Removal> removalQueue_;   // Sent one at a time
     bool removalStarted_ = false;         // Later removals join the first's undo step
+
+    // Bet Flags: pick a bet (Individual only), then pick the change
+    enum class FlagStep { PickBet, PickChange };
+    FlagStep               flagStep_  = FlagStep::PickChange;
+    Ctrl::BetFlags::Scope  flagScope_ = Ctrl::BetFlags::Scope::All;
+    Craps::BetId           flagBetId_ = 0;
+    void pickFlagBet();
+    void pickFlagChange();
+    void onFlagPick(bool accepted, std::size_t tag);
 
     std::vector<std::string> quickBetNames_;   // What the pick list offered
     Ctrl::BetSpec            quickBetSpec_;    // The bet being saved

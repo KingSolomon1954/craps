@@ -181,6 +181,11 @@ Bet Automation
 
 .. include:: BetAutomation.inc
 
+Bet Flags
+---------
+
+.. include:: BetFlags.inc
+
 Configuration
 -------------
 

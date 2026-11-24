@@ -5,12 +5,13 @@ var searchData=
   ['hardwaynums_2',['HardwayNums',['../namespaceCraps.html#a5ff6c9d5529bddf3ec732e64b7fe3811',1,'Craps']]],
   ['hardwayseven_3',['hardwaySeven',['../classCraps_1_1RollStats.html#afe52a655be3a71833a90497a4952a27e',1,'Craps::RollStats']]],
   ['hardwaystr_4',['HardwayStr',['../EnumBetName_8cpp.html#a6be2f7f4dbc952108693e7c7bcb34b2b',1,'EnumBetName.cpp']]],
-  ['height_5',['height',['../structCui_1_1LayoutConsole.html#af90c227bbc25b50fe25e7a01000ef141',1,'Cui::LayoutConsole::height'],['../classCui_1_1LayoutCrapsScreen.html#ad0055f9119892c073610ec13f5eebf79',1,'Cui::LayoutCrapsScreen::height']]],
-  ['hornstr_6',['HornStr',['../EnumBetName_8cpp.html#a61efb5f0f3dbea3db58ca354fd2fbd6c',1,'EnumBetName.cpp']]],
-  ['housebriefborderbotrow_7',['houseBriefBorderBotRow',['../classCui_1_1LayoutCrapsScreen.html#ac2c80d19ccec0fd725c6a0beb3d95d0b',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefborderheight_8',['houseBriefBorderHeight',['../classCui_1_1LayoutCrapsScreen.html#a25297d4be29eab55cfbc2ecdd5af7ef9',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefborderleftcol_9',['houseBriefBorderLeftCol',['../classCui_1_1LayoutCrapsScreen.html#affccca34fd61e159f9090ae4bcba61cd',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefborderrightcol_10',['houseBriefBorderRightCol',['../classCui_1_1LayoutCrapsScreen.html#a3d192297a88e504da1bb768a617e456f',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefbordertoprow_11',['houseBriefBorderTopRow',['../classCui_1_1LayoutCrapsScreen.html#ab4e2b1b8efb968d91c902db79c851f80',1,'Cui::LayoutCrapsScreen']]],
-  ['housebriefborderwidth_12',['houseBriefBorderWidth',['../classCui_1_1LayoutCrapsScreen.html#a39922413b0ce74d28ffa9ab1cc9bda54',1,'Cui::LayoutCrapsScreen']]]
+  ['headline_5',['headline',['../structCtrl_1_1RspApplyQuickBets.html#abaa40723ebbb122c0aec96c99f98ae7e',1,'Ctrl::RspApplyQuickBets::headline'],['../structCtrl_1_1UslAutoOddsApplied.html#a90021b4cb356c4266bf8edb0c0491d53',1,'Ctrl::UslAutoOddsApplied::headline']]],
+  ['height_6',['height',['../structCui_1_1LayoutConsole.html#af90c227bbc25b50fe25e7a01000ef141',1,'Cui::LayoutConsole::height'],['../classCui_1_1LayoutCrapsScreen.html#ad0055f9119892c073610ec13f5eebf79',1,'Cui::LayoutCrapsScreen::height']]],
+  ['hornstr_7',['HornStr',['../EnumBetName_8cpp.html#a61efb5f0f3dbea3db58ca354fd2fbd6c',1,'EnumBetName.cpp']]],
+  ['housebriefborderbotrow_8',['houseBriefBorderBotRow',['../classCui_1_1LayoutCrapsScreen.html#ac2c80d19ccec0fd725c6a0beb3d95d0b',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefborderheight_9',['houseBriefBorderHeight',['../classCui_1_1LayoutCrapsScreen.html#a25297d4be29eab55cfbc2ecdd5af7ef9',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefborderleftcol_10',['houseBriefBorderLeftCol',['../classCui_1_1LayoutCrapsScreen.html#affccca34fd61e159f9090ae4bcba61cd',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefborderrightcol_11',['houseBriefBorderRightCol',['../classCui_1_1LayoutCrapsScreen.html#a3d192297a88e504da1bb768a617e456f',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefbordertoprow_12',['houseBriefBorderTopRow',['../classCui_1_1LayoutCrapsScreen.html#ab4e2b1b8efb968d91c902db79c851f80',1,'Cui::LayoutCrapsScreen']]],
+  ['housebriefborderwidth_13',['houseBriefBorderWidth',['../classCui_1_1LayoutCrapsScreen.html#a39922413b0ce74d28ffa9ab1cc9bda54',1,'Cui::LayoutCrapsScreen']]]
 ];

@@ -215,14 +215,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Obtains bet amount from user. </p>
 <p><a class="el" href="classCui_1_1DialogBetAmount.html" title="Obtains bet amount from user.">DialogBetAmount</a> prompts the player to enter an amount for a given bet. The dialog is first "configured" before pushing to <a class="el" href="classCui_1_1SurfaceManager.html" title="Manages the active CUI surface stack and surface lifecycle.">SurfaceManager</a>, similar to other menus and dialogs.</p>
-<p><a class="el" href="classCui_1_1DialogBetAmount.html" title="Obtains bet amount from user.">DialogBetAmount</a> has some special behaviors. Since it is already focused on a particular bet and amount, it is natural to use it to help configure some automatic behaviors.</p>
-<p><a class="el" href="classCui_1_1DialogBetAmount.html" title="Obtains bet amount from user.">DialogBetAmount</a> will support two menu entries such that if selected it uses the current entry value for:</p>
-<ul>
-<li>Setting the auto fill value for the current bet type, to be used for default filling future bets of this type with the given amount.</li>
-</ul>
-<ul>
-<li>Using the current bet type and amount to configure a Quick Bet. A quick bet is shortcut that is assigned to a particular bet and amount, and is given a fixed menu entry on the QuickBet menu. So for example, the user presses 'q' (quick bet menu) followed by 'a' (the first configured quick bet) could mean make a Place Bet on the 6 for 100.</li>
-</ul>
+<p>The amount field starts with the amount last used for this bet (see LastFill). Since the dialog is already focused on a particular bet and amount, it is the natural place to offer QuickBets and AutoOdds; see the Bet Automation section of the design document. The q key saves the bet and amount into a QuickBets entry. The AutoOdds entry is not here yet.</p>
 <p>Responsibilities:</p>
 <ul>
 <li>Key bindings for the menu </li>
@@ -552,7 +545,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Nov 24 2026 15:16:03 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -430,6 +430,42 @@ Player::restoreAmounts(BetPtr pBet, const CrapsBet& prevState,
 
 //----------------------------------------------------------------
 //
+// Sets the flags of one of our bets. No money moves; the table checks
+// that the bet can take flags and that betting is open.
+//
+Gen::ReturnCode
+Player::setBetFlags(BetPtr pBet, FlagStanding standing,
+                    FlagOneRoll oneRoll, Gen::ErrorPass& ep)
+{
+    if (pBet == nullptr)
+    {
+        EP_SET(ep, En::NullPointerError, Et::ProcessingError,
+               Es::Indeterminate, "Player::setBetFlags(): pBet is nullptr.");
+        return Gen::ReturnCode::Fail;
+    }
+    if (fifNoTable(ep))
+    {
+        return Gen::ReturnCode::Fail;
+    }
+    if (findBetById(pBet->betId()) == nullptr)
+    {
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError,
+               Es::Indeterminate,
+               "Player::setBetFlags(): the bet is not one of this player's bets.");
+        return Gen::ReturnCode::Fail;
+    }
+    if (pTable_->setBetFlags(pBet, standing, oneRoll, ep) ==
+        Gen::ReturnCode::Fail)
+    {
+        return Gen::ReturnCode::Fail;
+    }
+
+    sendEventPlayerBetsChanged();
+    return Gen::ReturnCode::Success;
+}
+
+//----------------------------------------------------------------
+//
 // Purpose of this is to issue std::make_shared in try/catch block.
 // Convert exception to ErrorPass.
 //

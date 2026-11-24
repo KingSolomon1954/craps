@@ -48,6 +48,10 @@ public:
                                    Gen::Money oddsAmount,
                                    bool undoJoinsPrevious = false);
     Ctrl::CorrelationId reqUndoBet(const Craps::PlayerId& playerId);
+    Ctrl::CorrelationId reqSetBetFlags(const Craps::PlayerId& playerId,
+                                       Ctrl::BetFlags::Scope scope,
+                                       Craps::BetId betId,
+                                       Ctrl::BetFlags::Change change);
     Ctrl::CorrelationId reqApplyQuickBets(const Craps::PlayerId& playerId,
                                           const std::string& name);
     Ctrl::CorrelationId reqEditQuickBets(Ctrl::ReqEditQuickBets request);

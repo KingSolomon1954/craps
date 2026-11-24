@@ -70,6 +70,12 @@ EventHandler::EventHandler()
             this->onUslBettingOpened(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::ReqSetBetFlags>(
+        [this](const Ctrl::ReqSetBetFlags& ev)
+        {
+            this->onReqSetBetFlags(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::ReqUndoBet>(
         [this](const Ctrl::ReqUndoBet& ev)
         {
@@ -493,6 +499,131 @@ EventHandler::onUslBettingOpened(const Ctrl::UslBettingOpened& ev) const
 // Always answers with RspUndoBet. The screens follow from the bet and
 // balance events the undo causes, as for any bet change.
 //
+void
+EventHandler::onReqSetBetFlags(const Ctrl::ReqSetBetFlags& ev) const
+{
+    const std::string fname("EventHandler::onReqSetBetFlags(): ");
+    LOG_TRACE("Entered " + fname);
+
+    using Gen::ErrorPass;
+    Ctrl::RspSetBetFlags rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.playerId      = ev.playerId;
+
+    auto fail = [&](ErrorPass::ErrorName name, const std::string& title,
+                    const std::string& why)
+    {
+        ErrorPass e;
+        EP_SET(e, name, ErrorPass::ErrorType::ProcessingError,
+                  ErrorPass::Severity::Indeterminate, why);
+        e.setErrorName(title);
+        rsp.error = std::move(e);
+        Gen::EventManager::instance().publish(rsp);
+    };
+
+    ErrorPass ep;
+    Craps::Player* pPlayer = Gbl::pPlayerMgr->getPlayer(ev.playerId, ep);
+    if (pPlayer == nullptr)
+    {
+        ep.prepend(fname);
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        rsp.error = std::move(ep);
+        Gen::EventManager::instance().publish(rsp);
+        return;
+    }
+    if (Gbl::pTable != nullptr && !Gbl::pTable->isBettingOpen())
+    {
+        fail(ErrorPass::ErrorName::NoPermissionError, "Betting Closed",
+             "Betting is closed while the dice are rolling. "
+             "Try again when betting reopens.");
+        return;
+    }
+
+    // The bets the request is about
+    std::vector<Craps::BetPtr> targets;
+    for (const auto& bet : pPlayer->getBets())
+    {
+        if (ev.scope == BetFlags::Scope::Bet)
+        {
+            if (bet->betId() == ev.betId) targets.push_back(bet);
+        }
+        else if (BetFlags::inScope(ev.scope, *bet))
+        {
+            targets.push_back(bet);
+        }
+    }
+
+    if (targets.empty())
+    {
+        fail(ErrorPass::ErrorName::NotFoundError, "No Bets to Flag",
+             ev.scope == BetFlags::Scope::Bet
+                 ? "That bet is no longer on the table."
+                 : "There are no " + BetFlags::scopeText(ev.scope) +
+                   " on the table that can be turned off or on.");
+        return;
+    }
+
+    UndoGroup group;
+    for (const auto& bet : targets)
+    {
+        const auto [standing, oneRoll] = BetFlags::newState(ev.change, *bet);
+        if (standing == bet->flagStanding() && oneRoll == bet->flagOneRoll())
+        {
+            ++rsp.unchanged;
+            continue;
+        }
+
+        auto undoChange = std::make_unique<UndoBetFlagsChanged>(bet);
+        ErrorPass e;
+        if (pPlayer->setBetFlags(bet, standing, oneRoll, e) ==
+            Gen::ReturnCode::Fail)
+        {
+            // Keep what was done so far undoable, then report
+            if (group.size() > 0)
+            {
+                UndoManager::instance().push(
+                    ev.playerId, std::make_unique<UndoGroup>(std::move(group)));
+            }
+            e.prepend(fname);
+            LOG_ERROR(fname + " Error" + e.fullDesc());
+            rsp.error = std::move(e);
+            Gen::EventManager::instance().publish(rsp);
+            return;
+        }
+        group.add(std::move(undoChange));
+        ++rsp.changed;
+    }
+
+    if (group.size() > 0)
+    {
+        UndoManager::instance().push(
+            ev.playerId, std::make_unique<UndoGroup>(std::move(group)));
+    }
+
+    const std::string what = (ev.scope == BetFlags::Scope::Bet)
+        ? BetFlags::betLabel(*targets[0])
+        : BetFlags::scopeText(ev.scope);
+    rsp.accepted = true;
+    rsp.message  = "Set " + what + " to " + BetFlags::changeText(ev.change) + ": ";
+    if (rsp.changed == 0)
+    {
+        rsp.message += "already set";
+    }
+    else
+    {
+        rsp.message += std::to_string(rsp.changed) +
+                       (rsp.changed == 1 ? " bet changed" : " bets changed");
+        if (rsp.unchanged > 0)
+        {
+            rsp.message += ", " + std::to_string(rsp.unchanged) + " already set";
+        }
+    }
+    LOG_INFO("Bet flags for " + ev.playerId + ": " + rsp.message);
+    Gen::EventManager::instance().publish(rsp);
+}
+
+//----------------------------------------------------------------
+
 void
 EventHandler::onReqUndoBet(const Ctrl::ReqUndoBet& ev) const
 {

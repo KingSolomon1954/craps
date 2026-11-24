@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['callback_0',['Callback',['../classCtrl_1_1EventLoop.html#a1b30fb2faf3a912d743e5cb70eddc30a',1,'Ctrl::EventLoop']]],
-  ['clock_1',['Clock',['../classGen_1_1Timepoint.html#a00ce4109b2af30315f09cbc500709703',1,'Gen::Timepoint']]],
-  ['correlationid_2',['CorrelationId',['../namespaceCtrl.html#a469de83a5b91f8ca630e556d9bcf9f46',1,'Ctrl']]]
+  ['dicenums_0',['DiceNums',['../namespaceCraps.html#a498b67521cac8718be3578c8a3c48744',1,'Craps']]],
+  ['duration_1',['Duration',['../classGen_1_1Timepoint.html#a91baba79ae1b1cfab9ac67fc958e1845',1,'Gen::Timepoint']]]
 ];

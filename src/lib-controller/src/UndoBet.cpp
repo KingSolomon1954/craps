@@ -4,6 +4,7 @@
 //
 //----------------------------------------------------------------
 
+#include <controller/BetFlags.h>
 #include <controller/UndoBet.h>
 #include <craps/EnumBetName.h>
 #include <craps/Player.h>
@@ -112,6 +113,31 @@ std::string
 UndoBetModifiedAmount::describe() const
 {
     return "Changed your bet back to " + betText(prevState_);
+}
+
+//----------------------------------------------------------------
+
+UndoBetFlagsChanged::UndoBetFlagsChanged(Craps::BetPtr pBet)
+    : pBet_(std::move(pBet))
+    , standing_(pBet_->flagStanding())
+    , oneRoll_(pBet_->flagOneRoll())
+{
+}
+
+//----------------------------------------------------------------
+
+Gen::ReturnCode
+UndoBetFlagsChanged::undo(Gen::ErrorPass& ep)
+{
+    return pBet_->player().setBetFlags(pBet_, standing_, oneRoll_, ep);
+}
+
+//----------------------------------------------------------------
+
+std::string
+UndoBetFlagsChanged::describe() const
+{
+    return "Put back the flags of your " + BetFlags::betLabel(*pBet_) + " bet";
 }
 
 //----------------------------------------------------------------
