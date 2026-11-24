@@ -11,9 +11,6 @@
 - bet made again changed the amount of the one already on the table
 - (e.g. Pass Line $10 -> $20)
 
-### Design-doc and user-guide include files
-- Change case on include files, differs between folders
-
 ### Write player.YAML files only if "dirty"
 
 ### Need unit test for initial bank money
@@ -28,9 +25,12 @@
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
-### Implement Buddy Automation
+### Design-doc and user-guide include files
+- Change case on include files, differs between folders
 
 ### Update Readme.md for GitHub consumption
+
+### Implement Buddy Automation
 
 ### OperationManager needs refactor
 
