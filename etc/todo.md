@@ -11,6 +11,9 @@
 - bet made again changed the amount of the one already on the table
 - (e.g. Pass Line $10 -> $20)
 
+### Design-doc and user-guide include files
+- Change case on include files, differs between folders
+
 ### Write player.YAML files only if "dirty"
 
 ### Need unit test for initial bank money
@@ -39,10 +42,9 @@
 - maybe a dialog box should prompt the user to carry forward buddies
 - maybe should be a user prefence how to behave
 
-### Implement doBetFlags in MenuBetting
-
 ## Done
 
+(Done) Implemented doBetFlags in MenuBetting\
 (Done) Implemented AutoOdds capability\
 (Done) Implemented newly re-defined QuickBets capability\
 (Done) Complete implementation of Undo LastBet workflow\

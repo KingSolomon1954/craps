@@ -77,6 +77,7 @@ private:
     void process(const Ctrl::RspApplyQuickBets& ev);
     void process(const Ctrl::RspEditQuickBets& ev);
     void process(const Ctrl::RspEditAutoOdds& ev);
+    void process(const Ctrl::RspSetBetFlags& ev);
     void process(const Ctrl::UslAutoOddsApplied& ev);
     void process(const Ctrl::RspSwitchPlayer& ev);
     void process(const Ctrl::RspManagePlayer& ev);

@@ -21,7 +21,7 @@ class DialogPicker : public DialogBase
 public:
     enum class Mode
     {
-        Pick,   ///< Choose one; Esc cancels
+        Pick,   ///< Choose one; Esc or . goes back
         Show    ///< Only look at the list; Enter or Esc closes
     };
 
@@ -99,7 +99,7 @@ short description, aligned on the bar and clipped to keep the dialog
 within 80 columns.
 
 Pick mode: Up/Down move, Enter chooses, a letter chooses that line (a to
-z, so up to 26 lines have a key), Esc cancels. Show mode: the same
+z, so up to 26 lines have a key), Esc or . goes back. Show mode: the same
 list for looking only; Enter or Esc closes it.
 
 The dialog pops itself and reports to OperationManager::onPickResult().

@@ -285,6 +285,17 @@ public:
     };
     static std::vector<FlagBet> readFlagBets();
 
+    // How a bet is to be drawn: can it take a flag at all, will it be
+    // live on the next roll, and does it have any flag or override set.
+    // Returns false if the bet is not on the table.
+    struct FlagLook
+    {
+        bool flaggable    = false;
+        bool liveNextRoll = true;
+        bool nonDefault   = false;
+    };
+    static bool readBetFlagLook(const Craps::BetId& betId, FlagLook& look);
+
     // Last Fill
     static Gen::ReturnCode getLastFill(
         LastFill::LastFillEntry& entry,

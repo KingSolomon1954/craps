@@ -207,7 +207,13 @@ PlayerAreaOnePlayer::drawOneBet(const Bet& b)
     }
     // Amounts stand out from the labels: the player's color and bold.
     // Swap the attributes below to taste (e.g. A_REVERSE).
-    const attr_t  attrs = A_BOLD;
+    //
+    // Bet Flags: a bet that is not live on the next roll is dim (not
+    // bold, since terminals draw bold and dim badly together), and one
+    // with any flag or override set is underlined.
+    const BetLook& bl = lookOf(b);
+    attr_t attrs = bl.dim ? A_DIM : A_BOLD;
+    if (bl.underline) attrs |= A_UNDERLINE;
     const short   pair  = players_.empty()
                               ? short(0)
                               : players_[playerIndex_].colorPair;
@@ -251,6 +257,7 @@ PlayerAreaOnePlayer::clearBets()
     {
         b.betId  = 0;
         b.amount = 0;
+        lookOf(b) = BetLook{};
     }
 }
 
@@ -425,6 +432,16 @@ PlayerAreaOnePlayer::applyBet(Craps::BetId betId,
     const int n = slotsFor(betName, pivot,
                            contractAmount, oddsAmount, slots);
 
+    // Flags are on the odds of a line or Come bet, and on the whole of
+    // Place, Buy, Lay and Hardway bets.
+    Ctrl::CrapsReaders::FlagLook look;
+    const bool haveLook = Ctrl::CrapsReaders::readBetFlagLook(betId, look) &&
+                          look.flaggable;
+    const bool lineBet = betName == BetName::PassLine ||
+                         betName == BetName::DontPass ||
+                         betName == BetName::Come     ||
+                         betName == BetName::DontCome;
+
     for (int i = 0; i < n; ++i)
     {
         if (slots[i].amount == 0) continue;
@@ -435,6 +452,10 @@ PlayerAreaOnePlayer::applyBet(Craps::BetId betId,
             {
                 b.betId  = betId;
                 b.amount = slots[i].amount;
+                const bool flagged = haveLook && (lineBet ? i == 1 : i == 0);
+                BetLook& bl = lookOf(b);
+                bl.dim       = flagged && !look.liveNextRoll;
+                bl.underline = flagged && look.nonDefault;
                 break;
             }
         }
@@ -452,6 +473,7 @@ PlayerAreaOnePlayer::clearBetId(Craps::BetId betId)
         {
             b.betId  = 0;
             b.amount = 0;
+            lookOf(b) = BetLook{};
         }
     }
 }

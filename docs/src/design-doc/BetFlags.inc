@@ -153,9 +153,10 @@ good.
 
 The category pages and the bet pages are ``DialogPicker`` lists, so they
 use letters in order. Every pick list ends with the line ``[. or esc] Back``
-like the menus do, in place of the Up/Down hint that the pick lists have had;
+like the menus do. The hint of every pick list now reads
+``Up/Down, Enter or a-e. [. or esc] Back``, replacing ``Esc cancels``;
 the arrow keys and Enter still work. The category menu has mnemonic keys,
-like the other menus.
+like the other menus, and shows only the kinds of bets the player has.
 
 Bet Flag Workflow
 ^^^^^^^^^^^^^^^^^
@@ -202,8 +203,10 @@ Bet Flag Staging
    after a roll, ``CrapsTable::setBetFlags`` and unit tests for all of them.
 #. The Controller: ``ReqSetBetFlags`` and ``RspSetBetFlags``, the handler,
    ``UndoBetFlagsChanged`` and readers for the View.
-#. The CUI: the category menu, the pick lists, the bet area display and the
-   user guide page.
+#. The CUI: the category menu (``MenuBetFlags``), the pick lists and
+   their flow in ``OperationManager::betFlags()``, the bet area display
+   (``PlayerAreaOnePlayer``, through ``CrapsReaders::readBetFlagLook()``) and
+   the user guide page.
 
 Bet Flag Open Items
 ^^^^^^^^^^^^^^^^^^^

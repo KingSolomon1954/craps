@@ -41,7 +41,7 @@ DialogPicker::instance()
 
 //----------------------------------------------------------------
 //
-// "Up/Down, Enter or a-f. Esc cancels", the letters being the ones
+// "Up/Down, Enter or a-f. [. or esc] Back", the letters being the ones
 // that are in use.
 //
 std::string
@@ -59,7 +59,7 @@ DialogPicker::hint() const
         letters += "-";
         letters += static_cast<char>('a' + keys - 1);
     }
-    return "Up/Down, Enter or " + letters + ". Esc cancels";
+    return "Up/Down, Enter or " + letters + ". [. or esc] Back";
 }
 
 //----------------------------------------------------------------
@@ -165,7 +165,7 @@ DialogPicker::setLocation(WindowPosition pos)
 // 3   │ [a] Nathan       | Primary player      │   selected is reversed
 // 4   │ [b] Howie  (you) | Left-handed thrower │
 // 5   ├────────────────────────────────────────┤
-// 6   │ Up/Down, Enter or a-b. Esc cancels     │
+// 6   │ Up/Down, Enter or a-b. [. or esc] Back │
 // 7   └────────────────────────────────────────┘
 //
 void

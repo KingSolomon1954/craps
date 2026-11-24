@@ -27,6 +27,7 @@ add_library(cui STATIC
     src/managers/LocationManager.cpp
     src/managers/OperationManager.cpp
     src/managers/SurfaceManager.cpp
+    src/menus/MenuBetFlags.cpp
     src/menus/MenuBetting.cpp
     src/menus/MenuControl.cpp
     src/menus/MenuConfigure.cpp

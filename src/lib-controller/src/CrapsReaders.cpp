@@ -1039,6 +1039,21 @@ CrapsReaders::readQuickBets()
 
 //----------------------------------------------------------------
 
+bool
+CrapsReaders::readBetFlagLook(const Craps::BetId& betId, FlagLook& look)
+{
+    Gen::ErrorPass ep;
+    auto pBet = Gbl::pTable->getBet(betId, ep);
+    if (pBet == nullptr) return false;
+
+    look.flaggable    = pBet->canTakeFlag();
+    look.liveNextRoll = pBet->isLiveNextRoll(Gbl::pTable->getPoint());
+    look.nonDefault   = !pBet->flagsAreDefault();
+    return true;
+}
+
+//----------------------------------------------------------------
+
 std::vector<CrapsReaders::FlagBet>
 CrapsReaders::readFlagBets()
 {

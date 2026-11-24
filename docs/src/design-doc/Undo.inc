@@ -102,9 +102,10 @@ operation sends one ``ReqUndoBet`` for the user player and waits for the
   closed are the common ones. After the player acknowledges it, the menus
   unwind.
 
-Changes to a bet's flags, such as a hardway being off, are not recorded,
-because nothing changes those flags yet; the Bet Flags menu entry is
-still a stub. The earlier ``UndoBetModifiedFlags`` class was removed
-because it was never used and restored a bet by overwriting it, which skipped
-the table and its events. When flag changes are implemented, they need their
-own ``UndoBet`` subclass that restores through the table.
+Changes to a bet's flags are recorded. One flag request is one undo group,
+made of one ``UndoBetFlagsChanged`` for each bet that changed. It keeps the
+bet's previous standing state and one roll override, and restores them with
+``Player::setBetFlags``, which goes through the table so the checks and events
+happen. See "Bet Flags". The earlier ``UndoBetModifiedFlags`` class was
+removed because it restored a bet by overwriting it, which skipped the table
+and its events.

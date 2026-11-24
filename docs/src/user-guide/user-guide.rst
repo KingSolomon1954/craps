@@ -39,6 +39,8 @@ User Interface Overview
 
 .. include:: autoodds.inc
 
+.. include:: betflags.inc
+
 .. include:: configuration.inc
 
 .. include:: statistics.inc

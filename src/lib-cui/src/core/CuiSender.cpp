@@ -109,6 +109,30 @@ CuiSender::reqUndoBet(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 Ctrl::CorrelationId
+CuiSender::reqSetBetFlags(const Craps::PlayerId& playerId,
+                          Ctrl::BetFlags::Scope scope,
+                          Craps::BetId betId,
+                          Ctrl::BetFlags::Change change)
+{
+    LOG_TRACE("CuiSender::reqSetBetFlags()");
+
+    Ctrl::ReqSetBetFlags ev;
+    ev.playerId = playerId;
+    ev.scope    = scope;
+    ev.betId    = betId;
+    ev.change   = change;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+
+    LOG_DEBUG("CuiSender::reqSetBetFlags() correlationId = " +
+              std::to_string(correlationId));
+
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
 CuiSender::reqApplyQuickBets(const Craps::PlayerId& playerId,
                              const std::string& name)
 {

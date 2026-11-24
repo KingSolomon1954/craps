@@ -478,6 +478,175 @@ OperationManager::onRspUndoBet(const Ctrl::RspUndoBet& ev)
 
 //----------------------------------------------------------------
 //
+// Bet Flags, from the Bet Flags menu. The scope is what the menu key
+// meant: a category, all bets, or one bet (Scope::Bet).
+//
+// A category or all bets goes straight to the list of five changes. One
+// bet first asks which bet. Each list pops itself; backing out of either
+// returns to the Bet Flags menu, which is still on the stack. The change
+// is one request. See "Bet Flags" in the design document.
+//
+bool
+OperationManager::betFlags(Ctrl::BetFlags::Scope scope)
+{
+    if (isActive()) return false;
+
+    type_      = OperationType::BetFlags;
+    flagScope_ = scope;
+    flagBetId_ = 0;
+
+    if (scope == Ctrl::BetFlags::Scope::Bet) pickFlagBet();
+    else                                     pickFlagChange();
+    return true;
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::pickFlagBet()
+{
+    const auto flagBets = Ctrl::CrapsReaders::readFlagBets();
+    if (flagBets.empty())
+    {
+        showNotice("No Bets to Flag",
+                   "You have no bets that can be turned off or on.");
+        finish();
+        return;
+    }
+
+    std::vector<DialogPicker::Item> items;
+    for (const auto& fb : flagBets)
+    {
+        DialogPicker::Item item;
+        item.playerId    = Ctrl::CrapsReaders::getUserPlayerId();
+        item.betId       = fb.betId;
+        item.tag         = items.size();
+        item.text        = fb.label;
+        item.description = fb.flags;
+        items.push_back(std::move(item));
+    }
+
+    flagStep_ = FlagStep::PickBet;
+    stage_    = Stage::AwaitingPick;
+    DialogPicker::instance().configure("Bet Flags - Which Bet",
+                                       std::move(items),
+                                       DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
+}
+
+//----------------------------------------------------------------
+//
+// The five changes, in the order of the design document. The tag is the
+// Change.
+//
+void
+OperationManager::pickFlagChange()
+{
+    using Ctrl::BetFlags::Change;
+
+    // "odds bets" -> "Odds Bets"; one bet is just "Bet"
+    std::string what = Ctrl::BetFlags::scopeText(flagScope_);
+    bool start = true;
+    for (auto& ch : what)
+    {
+        if (start) ch = static_cast<char>(
+            std::toupper(static_cast<unsigned char>(ch)));
+        start = (ch == ' ');
+    }
+
+    std::string title = "Bet Flags - ";
+    if (flagScope_ == Ctrl::BetFlags::Scope::Bet)
+    {
+        for (const auto& fb : Ctrl::CrapsReaders::readFlagBets())
+        {
+            if (fb.betId == flagBetId_) title += fb.label;
+        }
+    }
+    else
+    {
+        title += what;
+    }
+
+    const Change changes[] = {
+        Change::NotWorking, Change::NotWorkingNextRoll,
+        Change::Working,    Change::WorkingNextRoll,
+        Change::TableDefault };
+
+    std::vector<DialogPicker::Item> items;
+    for (auto change : changes)
+    {
+        DialogPicker::Item item;
+        item.playerId = Ctrl::CrapsReaders::getUserPlayerId();
+        item.tag      = static_cast<std::size_t>(change);
+        item.text     = "Set " + what +
+            (change == Change::TableDefault ? " To " : " ") +
+            Ctrl::BetFlags::changeText(change);
+        items.push_back(std::move(item));
+    }
+
+    flagStep_ = FlagStep::PickChange;
+    stage_    = Stage::AwaitingPick;
+    DialogPicker::instance().configure(title, std::move(items),
+                                       DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onFlagPick(bool accepted, std::size_t tag)
+{
+    if (!accepted)
+    {
+        finish();           // Back to the Bet Flags menu
+        return;
+    }
+
+    if (flagStep_ == FlagStep::PickBet)
+    {
+        flagBetId_ = static_cast<Craps::BetId>(tag);   // see onPickResult
+        pickFlagChange();
+        return;
+    }
+
+    stage_ = Stage::AwaitingResponse;
+    correlationId_ = CuiSender::instance().reqSetBetFlags(
+        Ctrl::CrapsReaders::getUserPlayerId(), flagScope_, flagBetId_,
+        static_cast<Ctrl::BetFlags::Change>(tag));
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRspSetBetFlags(const Ctrl::RspSetBetFlags& ev)
+{
+    LOG_TRACE("OperationManager::onRspSetBetFlags() "
+              "correlationId = " + std::to_string(correlationId_));
+
+    if (stage_ != Stage::AwaitingResponse ||
+        type_  != OperationType::BetFlags ||
+        ev.correlationId != correlationId_)
+    {
+        LOG_WARN("OperationManager::onRspSetBetFlags(): ignoring "
+                 "unmatched RspSetBetFlags: rsp.correlationId = " +
+                 std::to_string(ev.correlationId));
+        return;
+    }
+
+    if (!ev.accepted)
+    {
+        showError(ev.error, "Betting Error", "Unable to Set Bet Flags");
+        return;
+    }
+
+    // Unwind to the table as after any bet, then say what was done.
+    SurfaceManager::instance().popToRoot();
+    showNotice("Bet Flags", ev.message);
+    finish();
+}
+
+//----------------------------------------------------------------
+//
 // Pick one of the user's QuickBets entries and apply it. The pick list
 // shows each entry's name and a short description of its bets. Applying
 // is one request; the answer says what was placed and what was skipped.
@@ -1596,6 +1765,7 @@ OperationManager::finish()
     quickBetTarget_.clear();
     manageEntry_.clear();
     manageBetIndex_ = 0;
+    flagBetId_ = 0;
     autoBetName_ = BetName::Invalid;
     autoPoint_   = 0;
     targetId_.clear();
@@ -1813,6 +1983,14 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
     {
         (void)playerId; (void)betId;
         onManagePick(accepted, tag);
+        return;
+    }
+
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::BetFlags)
+    {
+        (void)playerId;
+        // The bet list hands back the bet id; the change list the tag.
+        onFlagPick(accepted, flagStep_ == FlagStep::PickBet ? betId : tag);
         return;
     }
 
