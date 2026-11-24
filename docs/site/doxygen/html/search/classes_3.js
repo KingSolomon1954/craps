@@ -7,7 +7,8 @@ var searchData=
   ['dialogdeeprollhistory_4',['DialogDeepRollHistory',['../classCui_1_1DialogDeepRollHistory.html',1,'Cui']]],
   ['dialogerror_5',['DialogError',['../classCui_1_1DialogError.html',1,'Cui']]],
   ['dialogmessage_6',['DialogMessage',['../classCui_1_1DialogMessage.html',1,'Cui']]],
-  ['dialogpickplayer_7',['DialogPickPlayer',['../classCui_1_1DialogPickPlayer.html',1,'Cui']]],
-  ['dialogtextinput_8',['DialogTextInput',['../classCui_1_1DialogTextInput.html',1,'Cui']]],
-  ['dice_9',['Dice',['../classCraps_1_1Dice.html',1,'Craps']]]
+  ['dialogpicker_7',['DialogPicker',['../classCui_1_1DialogPicker.html',1,'Cui']]],
+  ['dialogquickbetssetadd_8',['DialogQuickBetsSetAdd',['../classCui_1_1DialogQuickBetsSetAdd.html',1,'Cui']]],
+  ['dialogtextinput_9',['DialogTextInput',['../classCui_1_1DialogTextInput.html',1,'Cui']]],
+  ['dice_10',['Dice',['../classCraps_1_1Dice.html',1,'Craps']]]
 ];

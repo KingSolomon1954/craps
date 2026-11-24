@@ -1,0 +1,9 @@
+<map id="Ctrl::RspApplyQuickBets" name="Ctrl::RspApplyQuickBets">
+<area shape="rect" id="Node000001" title=" " alt="" coords="99,123,279,148"/>
+<area shape="rect" id="Node000002" href="$structCtrl_1_1GameEvent.html" title="Base class for all Events." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,38,179,121,175,125,90,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="159,5,218,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,44,191,123,186,123,186,44"/>
+<area shape="rect" id="Node000004" href="$classGen_1_1ErrorPass.html" title="A generic error payload for value&#45;based error handling." alt="" coords="252,5,368,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="309,46,300,74,283,100,263,115,242,125,240,120,261,110,279,97,295,72,304,44"/>
+</map>

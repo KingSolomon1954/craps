@@ -97,7 +97,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Shared YAML form of LastFill, AutoFill and QuickBet entries.  
+<p>Shared YAML form of a list of bet entries (LastFill today)  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="EnumBetName_8h_source.html">craps/EnumBetName.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="Logger_8h_source.html">gen/Logger.h</a>&gt;</code><br />
@@ -109,7 +109,7 @@ Include dependency graph for BetEntryYaml.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="BetEntryYaml_8h__incl.png" border="0" usemap="#asrc_2lib-controller_2include_2controller_2BetEntryYaml_8h" alt=""/></div>
 <map name="asrc_2lib-controller_2include_2controller_2BetEntryYaml_8h" id="asrc_2lib-controller_2include_2controller_2BetEntryYaml_8h">
-<area shape="rect" title="Shared YAML form of LastFill, AutoFill and QuickBet entries." alt="" coords="278,5,417,60"/>
+<area shape="rect" title="Shared YAML form of a list of bet entries (LastFill today)" alt="" coords="278,5,417,60"/>
 <area shape="rect" href="EnumBetName_8h.html" title=" " alt="" coords="49,108,219,133"/>
 <area shape="poly" title=" " alt="" coords="283,63,176,105,174,100,281,58"/>
 <area shape="rect" title=" " alt="" coords="186,181,245,207"/>
@@ -141,13 +141,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="BetEntryYaml_8h__dep__incl.png" border="0" usemap="#asrc_2lib-controller_2include_2controller_2BetEntryYaml_8hdep" alt=""/></div>
 <map name="asrc_2lib-controller_2include_2controller_2BetEntryYaml_8hdep" id="asrc_2lib-controller_2include_2controller_2BetEntryYaml_8hdep">
-<area shape="rect" title="Shared YAML form of LastFill, AutoFill and QuickBet entries." alt="" coords="152,5,291,60"/>
-<area shape="rect" href="AutoFill_8cpp.html" title=" " alt="" coords="5,108,133,148"/>
-<area shape="poly" title=" " alt="" coords="169,69,102,110,99,106,166,65"/>
-<area shape="rect" href="LastFill_8cpp.html" title=" " alt="" coords="157,108,285,148"/>
-<area shape="poly" title=" " alt="" coords="224,74,224,108,219,108,219,74"/>
-<area shape="rect" href="QuickBet_8cpp.html" title=" " alt="" coords="310,108,445,148"/>
-<area shape="poly" title=" " alt="" coords="278,65,347,106,344,110,276,69"/>
+<area shape="rect" title="Shared YAML form of a list of bet entries (LastFill today)" alt="" coords="5,5,144,60"/>
+<area shape="rect" href="LastFill_8cpp.html" title=" " alt="" coords="11,108,139,148"/>
+<area shape="poly" title=" " alt="" coords="77,74,77,108,72,108,72,74"/>
 </map>
 </div>
 </div>
@@ -170,8 +166,8 @@ Functions</h2></td></tr>
 <tr class="separator:a95b0ba806e8ef7afc394ab6b079faa02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Shared YAML form of LastFill, AutoFill and QuickBet entries. </p>
-<p>Those three classes each hold a list of entries with the same four fields. This is the one place that knows how such a list looks in a player file, so the three cannot drift apart:</p>
+<div class="textblock"><p>Shared YAML form of a list of bet entries (LastFill today) </p>
+<p>Classes that hold a list of entries with these four fields use this, so there is one place that knows how such a list looks in a player file:</p>
 <div class="fragment"><div class="line">- betName: <a class="code hl_enumvalue" href="group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a0094bd807d373137d31ff198a8e8b721">PassLine</a></div>
 <div class="line">  pivot: 0</div>
 <div class="line">  isOddsBet: <span class="keyword">false</span></div>
@@ -180,7 +176,7 @@ Functions</h2></td></tr>
 </div><!-- fragment --> </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 21 2026 16:25:00 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Nov 24 2026 15:16:03 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

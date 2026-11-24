@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['label_0',['label',['../structCui_1_1DialogMessage_1_1MessageText.html#a6436b4fd068229fb64490b4409579cee',1,'Cui::DialogMessage::MessageText']]],
+  ['label_0',['label',['../structCtrl_1_1CrapsReaders_1_1FlagBet.html#a41578bb95c8a5de95aa181cd3ad191f1',1,'Ctrl::CrapsReaders::FlagBet::label'],['../structCui_1_1DialogMessage_1_1MessageText.html#a6436b4fd068229fb64490b4409579cee',1,'Cui::DialogMessage::MessageText::label']]],
   ['last_1',['last',['../structCtrl_1_1StartChoices_1_1Request.html#a62818dd76795d01cd6e05e5ae5388e72',1,'Ctrl::StartChoices::Request']]],
   ['laycommission_2',['layCommission',['../structCraps_1_1TableRules.html#a47168e28e503898644101013cd139814',1,'Craps::TableRules']]],
   ['layercfgfile_3',['LayerCfgFile',['../classGen_1_1MultiLayerConfig.html#a690a2789351c299604196a8dc02a645b',1,'Gen::MultiLayerConfig']]],
@@ -15,6 +15,8 @@ var searchData=
   ['layernamesession_12',['LayerNameSession',['../classCtrl_1_1ConfigManager.html#acb76bdc1f99bd30e6749567a638deca9',1,'Ctrl::ConfigManager']]],
   ['laystr_13',['LayStr',['../EnumBetName_8cpp.html#a25a1646ad6f101d4b93cc6d47b34abca',1,'EnumBetName.cpp']]],
   ['leftcol_14',['leftCol',['../structCui_1_1LayoutConsole.html#ad33a593afa13e0b80635897d5668edf1',1,'Cui::LayoutConsole::leftCol'],['../classCui_1_1LayoutCrapsScreen.html#a647f83d20449bb11f933a2a46b19d42c',1,'Cui::LayoutCrapsScreen::leftCol']]],
-  ['lose_15',['lose',['../structCraps_1_1DecisionRecord.html#ac0fe2134c0417dc8b32a15d1df040d30',1,'Craps::DecisionRecord::lose'],['../structCraps_1_1PointCounts.html#a5949d8bd76635410574e06a45a006ea8',1,'Craps::PointCounts::lose']]],
-  ['losses_16',['losses',['../structCraps_1_1BetOutcomeStats.html#a11c25222a671b38241a8acec31209251',1,'Craps::BetOutcomeStats::losses'],['../structCraps_1_1WinLossCounts.html#aa78f94de8dc5f08726b3cc11ef68c3ed',1,'Craps::WinLossCounts::losses']]]
+  ['limits_15',['limits',['../structCtrl_1_1AutoOdds_1_1Candidate.html#a6595a0f9151cb2da824d7c027ee3de31',1,'Ctrl::AutoOdds::Candidate']]],
+  ['livenextroll_16',['liveNextRoll',['../structCtrl_1_1CrapsReaders_1_1FlagLook.html#aa760c50affbeb26721334737a83d65c2',1,'Ctrl::CrapsReaders::FlagLook']]],
+  ['lose_17',['lose',['../structCraps_1_1DecisionRecord.html#ac0fe2134c0417dc8b32a15d1df040d30',1,'Craps::DecisionRecord::lose'],['../structCraps_1_1PointCounts.html#a5949d8bd76635410574e06a45a006ea8',1,'Craps::PointCounts::lose']]],
+  ['losses_18',['losses',['../structCraps_1_1BetOutcomeStats.html#a11c25222a671b38241a8acec31209251',1,'Craps::BetOutcomeStats::losses'],['../structCraps_1_1WinLossCounts.html#aa78f94de8dc5f08726b3cc11ef68c3ed',1,'Craps::WinLossCounts::losses']]]
 ];

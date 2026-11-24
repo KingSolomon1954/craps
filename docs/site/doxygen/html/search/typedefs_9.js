@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quickbets_0',['QuickBets',['../classCtrl_1_1QuickBet.html#ac9a9a0054c3642f0accefa3af0068517',1,'Ctrl::QuickBet']]]
+  ['sessions_0',['Sessions',['../classCraps_1_1SessionHistory.html#ae95c30374abf79a3e8df509983df9594',1,'Craps::SessionHistory']]]
 ];

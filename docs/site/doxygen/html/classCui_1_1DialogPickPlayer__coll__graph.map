@@ -1,8 +1,0 @@
-<map id="Cui::DialogPickPlayer" name="Cui::DialogPickPlayer">
-<area shape="rect" id="Node000001" title="Shows a short list of players, optionally to pick one." alt="" coords="5,155,167,180"/>
-<area shape="rect" id="Node000002" href="$classCui_1_1DialogBase.html" title="Specialized surface type for dialog boxes." alt="" coords="23,80,149,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,120,89,154,83,154,83,120"/>
-<area shape="rect" id="Node000003" href="$classCui_1_1SurfaceBase.html" title="Common abstraction for anything occupying a visible/input surface." alt="" coords="20,5,152,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,45,89,80,83,80,83,45"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="167,10,179,18,170,25,153,27,152,22,168,20,173,18,165,15"/>
-</map>

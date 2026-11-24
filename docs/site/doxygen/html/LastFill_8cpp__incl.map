@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="866,41,565,94,565,88,865,35"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="901,240,959,265"/>
 <area shape="poly" id="edge37_Node000001_Node000005" title=" " alt="" coords="933,45,933,226,927,226,927,45"/>
-<area shape="rect" id="Node000014" href="$BetEntryYaml_8h.html" title="Shared YAML form of LastFill, AutoFill and QuickBet entries." alt="" coords="655,93,842,119"/>
+<area shape="rect" id="Node000014" href="$BetEntryYaml_8h.html" title="Shared YAML form of a list of bet entries (LastFill today)" alt="" coords="655,93,842,119"/>
 <area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="888,48,789,90,787,85,886,43"/>
 <area shape="rect" id="Node000015" href="$Logger_8h.html" title=" " alt="" coords="1135,167,1240,192"/>
 <area shape="poly" id="edge34_Node000001_Node000015" title=" " alt="" coords="963,43,1157,157,1154,161,961,48"/>

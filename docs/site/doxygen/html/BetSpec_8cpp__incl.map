@@ -1,0 +1,27 @@
+<map id="src/lib&#45;controller/src/BetSpec.cpp" name="src/lib&#45;controller/src/BetSpec.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="244,5,373,45"/>
+<area shape="rect" id="Node000002" href="$BetSpec_8h.html" title="BetSpec and BetPlan, the common currency of bet automation." alt="" coords="232,93,385,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="311,46,311,79,306,79,306,46"/>
+<area shape="rect" id="Node000003" href="$EnumBetName_8h.html" title=" " alt="" coords="49,167,219,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="282,121,176,164,174,159,280,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="186,240,245,265"/>
+<area shape="poly" id="edge12_Node000002_Node000004" title=" " alt="" coords="303,121,232,230,228,227,299,118"/>
+<area shape="rect" id="Node000007" href="$MoneyUtils_8h.html" title=" " alt="" coords="294,167,430,192"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="320,117,347,154,343,157,315,121"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="455,167,517,192"/>
+<area shape="poly" id="edge13_Node000002_Node000012" title=" " alt="" coords="338,116,446,159,444,164,336,121"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="149,190,194,229,190,233,145,194"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,240,81,265"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="121,194,71,233,67,229,118,190"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="106,240,162,265"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="137,192,137,226,131,226,131,192"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="340,194,253,236,250,232,337,190"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="426,240,501,265"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="380,190,437,230,434,234,377,194"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="525,240,599,265"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="395,190,517,233,515,238,393,195"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="624,240,711,265"/>
+<area shape="poly" id="edge10_Node000007_Node000010" title=" " alt="" coords="412,189,611,236,610,241,410,195"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="269,240,401,265"/>
+<area shape="poly" id="edge11_Node000007_Node000011" title=" " alt="" coords="360,193,347,228,342,226,355,191"/>
+</map>

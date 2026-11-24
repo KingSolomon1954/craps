@@ -1,11 +1,13 @@
 <map id="Ctrl::UndoBet" name="Ctrl::UndoBet">
-<area shape="rect" id="Node000001" title="One undoable change to a bet, and how to take it back." alt="" coords="342,5,451,31"/>
-<area shape="rect" id="Node000002" href="$classCtrl_1_1UndoBetAdded.html" title="A bet was made. Undo takes it down." alt="" coords="5,79,156,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="333,36,132,81,131,76,332,31"/>
-<area shape="rect" id="Node000003" href="$classCtrl_1_1UndoBetModifiedAmount.html" title=" " alt="" coords="181,79,397,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="369,40,308,81,305,76,367,36"/>
-<area shape="rect" id="Node000004" href="$classCtrl_1_1UndoBetRemoved.html" title="A bet was taken down. Undo puts it back with its amounts." alt="" coords="421,79,591,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="427,36,490,76,487,81,424,40"/>
-<area shape="rect" id="Node000005" href="$classCtrl_1_1UndoGroup.html" title=" " alt="" coords="616,79,743,104"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="456,31,634,76,633,81,455,37"/>
+<area shape="rect" id="Node000001" title="One undoable change to a bet, and how to take it back." alt="" coords="5,104,115,129"/>
+<area shape="rect" id="Node000002" href="$classCtrl_1_1UndoBetAdded.html" title="A bet was made. Undo takes it down." alt="" coords="195,5,346,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,92,119,65,162,40,194,28,196,33,164,44,122,69,87,96"/>
+<area shape="rect" id="Node000003" href="$classCtrl_1_1UndoBetFlagsChanged.html" title=" " alt="" coords="170,55,371,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="124,98,162,89,211,77,212,83,163,94,125,103"/>
+<area shape="rect" id="Node000004" href="$classCtrl_1_1UndoBetModifiedAmount.html" title=" " alt="" coords="163,104,379,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="128,114,163,114,163,119,128,119"/>
+<area shape="rect" id="Node000005" href="$classCtrl_1_1UndoBetRemoved.html" title="A bet was taken down. Undo puts it back with its amounts." alt="" coords="185,153,356,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="129,130,216,151,215,156,127,135"/>
+<area shape="rect" id="Node000006" href="$classCtrl_1_1UndoGroup.html" title=" " alt="" coords="207,203,334,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="87,136,122,163,164,188,208,202,206,207,162,192,119,168,84,141"/>
 </map>

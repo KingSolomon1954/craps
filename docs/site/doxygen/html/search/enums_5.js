@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['limitbasis_0',['LimitBasis',['../structCraps_1_1TableRules.html#ad1604993420495ab6af00961bfa53c8c',1,'Craps::TableRules']]],
-  ['locationkind_1',['LocationKind',['../namespaceCui.html#a51c160f309688c51ff594f45a456406f',1,'Cui']]]
+  ['flagoneroll_0',['FlagOneRoll',['../namespaceCraps.html#a8225908f296dc4dc081658ef9978ca06',1,'Craps']]],
+  ['flagstanding_1',['FlagStanding',['../namespaceCraps.html#a2f607422a099333d9d1c5509a1169067',1,'Craps']]]
 ];

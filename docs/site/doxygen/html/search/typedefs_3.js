@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['dicenums_0',['DiceNums',['../namespaceCraps.html#a498b67521cac8718be3578c8a3c48744',1,'Craps']]],
-  ['duration_1',['Duration',['../classGen_1_1Timepoint.html#a91baba79ae1b1cfab9ac67fc958e1845',1,'Gen::Timepoint']]]
+  ['errorname_0',['ErrorName',['../ErrorPass_8cpp.html#ae1326325659c7d13561b60b263b9754e',1,'ErrorPass.cpp']]],
+  ['eventid_1',['EventId',['../namespaceCtrl.html#a45de7de396e69e49884327ced79b5d01',1,'Ctrl']]]
 ];
