@@ -74,6 +74,23 @@ private:
 
 //----------------------------------------------------------------
 
+/// The flags of a bet changed. Undo puts back the standing state and the
+/// one roll override. Make this before making the change.
+class UndoBetFlagsChanged : public UndoBet
+{
+public:
+    explicit UndoBetFlagsChanged(Craps::BetPtr pBet);
+    Gen::ReturnCode undo(Gen::ErrorPass& ep) override;
+    std::string describe() const override;
+
+private:
+    Craps::BetPtr         pBet_;
+    Craps::FlagStanding   standing_;
+    Craps::FlagOneRoll    oneRoll_;
+};
+
+//----------------------------------------------------------------
+
 /// Several changes that are one step to the player, such as taking down
 /// all removable bets. Undone together, last change first.
 class UndoGroup : public UndoBet
@@ -104,6 +121,7 @@ state. It only needs betting to be open and the money to be there.
 @li UndoBetAdded:          a new bet was placed
 @li UndoBetModifiedAmount: contract or odds amount changed
 @li UndoBetRemoved:        a bet was taken down
+@li UndoBetFlagsChanged:   the flags of a bet changed
 @li UndoGroup:             several of these as one step
 
 See UndoManager for the stack, who owns it and when it is cleared.

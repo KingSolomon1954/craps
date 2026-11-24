@@ -74,6 +74,9 @@ public:
     zeus::expected<void, Gen::ErrorPass> removeBet(const BetId& betId);
 
     Gen::ReturnCode restoreBet(BetPtr pBet, Gen::ErrorPass& ep);
+    // Flags of a bet; see CrapsTable::setBetFlags(). Money is not involved.
+    Gen::ReturnCode setBetFlags(BetPtr pBet, FlagStanding standing,
+                                FlagOneRoll oneRoll, Gen::ErrorPass& ep);
     Gen::ReturnCode restoreAmounts(BetPtr pBet, const CrapsBet& prevState,
                                    Gen::ErrorPass& ep);
     void bettingClosed();

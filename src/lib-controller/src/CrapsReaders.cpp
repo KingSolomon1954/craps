@@ -1039,6 +1039,30 @@ CrapsReaders::readQuickBets()
 
 //----------------------------------------------------------------
 
+std::vector<CrapsReaders::FlagBet>
+CrapsReaders::readFlagBets()
+{
+    std::vector<FlagBet> result;
+    Craps::Player* pPlayer = Gbl::pPlayerMgr->getUserPlayer();
+    if (pPlayer == nullptr)
+    {
+        return result;
+    }
+    for (const auto& bet : pPlayer->getBets())
+    {
+        if (!bet->canTakeFlag()) continue;
+        FlagBet fb;
+        fb.betId    = bet->betId();
+        fb.category = BetFlags::categoryOf(bet->betName());
+        fb.label    = BetFlags::betLabel(*bet);
+        fb.flags    = BetFlags::flagText(*bet);
+        result.push_back(std::move(fb));
+    }
+    return result;
+}
+
+//----------------------------------------------------------------
+
 AutoOdds
 CrapsReaders::readAutoOdds()
 {
