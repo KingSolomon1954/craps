@@ -68,6 +68,7 @@ private:
     void process(const Ctrl::UslPlayerJoinedTable& ev);
     void process(const Ctrl::UslPlayerLeftTable& ev);
     void process(const Ctrl::UslUserPlayerSwitched& ev);
+    void process(const Ctrl::UslTableSwitched& ev);
     void process(const Ctrl::UslPlayerRenamed& ev);
     
     void process(const Ctrl::RspMakeBet& ev);
@@ -80,6 +81,7 @@ private:
     void process(const Ctrl::RspSetBetFlags& ev);
     void process(const Ctrl::UslAutoOddsApplied& ev);
     void process(const Ctrl::RspSwitchPlayer& ev);
+    void process(const Ctrl::RspSwitchTable& ev);
     void process(const Ctrl::RspManagePlayer& ev);
 
 private:

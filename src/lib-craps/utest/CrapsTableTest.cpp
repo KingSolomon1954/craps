@@ -3263,3 +3263,40 @@ TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:player with no bets records no 
     CHECK(cs.placeRepeaters.buckets(4).empty());
     CHECK(cs.buyRepeaters.buckets(4).empty());
 }
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:shutdown records the players the session had")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    REQUIRE(p2->joinTable(t));
+
+    t.shutdown();                  // Players leave first, then the table closes
+    CHECK(t.getNumPlayers() == 0);
+
+    const YAML::Node history = t.toYAML()["SessionStats"]["history"];
+    REQUIRE(history.IsSequence());
+    REQUIRE(history.size() >= 1);
+    CHECK(history[history.size() - 1]["numPlayers"].as<unsigned>() == 2);
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE_FIXTURE(CrapsTableFixture, "CrapsTable:close counts the players seated or the number given")
+{
+    CrapsTable t("Table-1", config);
+    REQUIRE(p1->joinTable(t));
+    REQUIRE(p2->joinTable(t));
+    REQUIRE(p3->joinTable(t));
+
+    t.close();                     // Counts who is seated
+    t.close(5u);                   // Counts what it is told
+
+    const YAML::Node history = t.toYAML()["SessionStats"]["history"];
+    REQUIRE(history.size() >= 2);
+    CHECK(history[history.size() - 2]["numPlayers"].as<unsigned>() == 3);
+    CHECK(history[history.size() - 1]["numPlayers"].as<unsigned>() == 5);
+}
+
+//----------------------------------------------------------------

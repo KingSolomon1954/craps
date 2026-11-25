@@ -13,6 +13,7 @@
 #include <controller/AnimationSpeed.h>
 #include <controller/AutoOdds.h>
 #include <controller/BetFlags.h>
+#include <controller/BuddyFollow.h>
 #include <controller/RollHistoryFormat.h>
 #include <controller/PlayerManager.h>
 #include <controller/PlayerManifest.h>
@@ -163,6 +164,7 @@ public:
     
     // Table related
     static std::string readTableName();
+    static BuddyFollow readBuddyFollow();
 
     struct TableMinMaxRules
     {

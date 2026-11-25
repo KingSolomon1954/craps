@@ -33,6 +33,8 @@ User Interface Overview
 
 .. include:: players.inc
 
+.. include:: tables.inc
+
 .. include:: undo.inc
 
 .. include:: quickbets.inc

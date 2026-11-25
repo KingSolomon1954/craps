@@ -12,6 +12,7 @@
 #include <controller/GameMain.h>
 #include <controller/Globals.h>
 #include <controller/PlayerManager.h>
+#include <controller/TableManager.h>
 #include <controller/LastFill.h>
 #include <controller/UndoBet.h>
 #include <controller/UndoManager.h>
@@ -104,6 +105,18 @@ EventHandler::EventHandler()
         [this](const Ctrl::ReqSwitchPlayer& ev)
         {
             this->onReqSwitchPlayer(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::ReqSwitchTable>(
+        [this](const Ctrl::ReqSwitchTable& ev)
+        {
+            this->onReqSwitchTable(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::ReqSetBuddyFollow>(
+        [this](const Ctrl::ReqSetBuddyFollow& ev)
+        {
+            this->onReqSetBuddyFollow(ev);
         });
 
     Gen::EventManager::instance().subscribe<Ctrl::ReqManagePlayer>(
@@ -908,6 +921,70 @@ EventHandler::onReqSwitchPlayer(const Ctrl::ReqSwitchPlayer& ev) const
         usl.toPlayerId   = rsp.toPlayerId;
         Gen::EventManager::instance().publish(usl);
     }
+}
+
+//----------------------------------------------------------------
+//
+// Moves the user player, and the buddies who follow, to another table.
+// Always answers with RspSwitchTable. Only when the switch happened,
+// follows with UslTableSwitched, then publishes the new table's state so
+// the View's displays start from the right numbers.
+//
+void
+EventHandler::onReqSwitchTable(const Ctrl::ReqSwitchTable& ev) const
+{
+    const std::string fname("EventHandler::onReqSwitchTable(): ");
+    LOG_TRACE("Entered " + fname);
+
+    Ctrl::RspSwitchTable rsp;
+    rsp.correlationId = ev.correlationId;
+    rsp.toTableId     = ev.tableId;
+    if (Gbl::pTable)
+    {
+        rsp.fromTableId = Gbl::pTable->getTableId();
+    }
+
+    TableManager::SwitchResult result;
+    Gen::ErrorPass ep;
+    if (Gbl::pTableMgr->switchCrapsTable(ev.tableId, ev.buddiesFollow,
+                                         result, ep) == Gen::ReturnCode::Success)
+    {
+        rsp.switched           = true;
+        rsp.fromTableId        = result.fromTableId;
+        rsp.toTableName        = result.toTableName;
+        rsp.numBuddiesFollowed = result.buddiesFollowed;
+        rsp.numBuddiesLeft     = result.buddiesLeft;
+        rsp.numBetsReturned    = result.betsReturned;
+    }
+    else
+    {
+        ep.prepend(fname);
+        LOG_ERROR(fname + " Error" + ep.fullDesc());
+        rsp.error = std::move(ep);
+    }
+    Gen::EventManager::instance().publish(rsp);
+
+    if (rsp.switched)
+    {
+        Ctrl::UslTableSwitched usl;
+        usl.fromTableId = rsp.fromTableId;
+        usl.toTableId   = rsp.toTableId;
+        Gen::EventManager::instance().publish(usl);
+        Gbl::pTable->publishSnapshot();
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Keeps the user's choice of what the buddies do on a table switch.
+//
+void
+EventHandler::onReqSetBuddyFollow(const Ctrl::ReqSetBuddyFollow& ev) const
+{
+    LOG_TRACE("Entered EventHandler::onReqSetBuddyFollow()");
+    Gbl::pPlayerMgr->userPrefs().setBuddyFollow(ev.value);
+    Gbl::pPlayerMgr->savePlayers();
+    // No response event
 }
 
 //----------------------------------------------------------------

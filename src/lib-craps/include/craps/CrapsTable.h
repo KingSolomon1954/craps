@@ -24,6 +24,7 @@
 #include <zeus/expected.hpp>
 #include <array>
 #include <list>
+#include <optional>
 
 namespace Craps {
 
@@ -83,7 +84,14 @@ public:
     // Table
     void rollDice();
     void resetStats();
-    void close();               // Shutdown table, switching to different table
+    // Ends the table's session: records it and merges the stats. The
+    // number of players is what the session had; leave it out to count
+    // the players seated right now. See shutdown() and TableManager.
+    void close(std::optional<unsigned> numPlayers = std::nullopt);
+    // Sends the events a View needs to show the table's own numbers
+    // (house balance, bets, session stats). For a table that has just
+    // become the active one.
+    void publishSnapshot() const;
     /// @}
 
     /// @name Observers

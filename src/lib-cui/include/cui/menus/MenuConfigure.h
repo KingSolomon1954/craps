@@ -34,7 +34,7 @@ public:
     
 private:
     WindowPosition   winPos_{};
-    const WindowSize winSize_ = {10, 37};  // rows, cols
+    const WindowSize winSize_ = {11, 37};  // rows, cols
 
 private:
     MenuConfigure();  // Private ctor
@@ -44,6 +44,7 @@ private:
     void doAutoBets();
     void doTimedRolls();
     void doAnimationSpeed();
+    void doBuddiesFollow();
     void back();
 };
 

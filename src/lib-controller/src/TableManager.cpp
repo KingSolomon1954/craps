@@ -8,8 +8,10 @@
 #include <controller/TableManager.h>
 #include <controller/ConfigManager.h>
 #include <controller/Globals.h>
+#include <controller/PlayerManager.h>
 #include <controller/UndoManager.h>
 #include <craps/CrapsTable.h>
+#include <craps/Player.h>
 #include <gen/Logger.h>
 #include <memory>
 #include <stdexcept>
@@ -17,6 +19,10 @@
 using namespace Ctrl;
 
 namespace {
+
+using En = Gen::ErrorPass::ErrorName;
+using Et = Gen::ErrorPass::ErrorType;
+using Es = Gen::ErrorPass::Severity;
 
 // Top-level section of a table file
 constexpr const char* KeyTable = "Table";
@@ -170,34 +176,145 @@ TableManager::saveCurrentTable() const
 //----------------------------------------------------------------
 
 Gen::ReturnCode
-TableManager::switchCrapsTable(
-    const Craps::TableId& toTableId, Gen::ErrorPass& ep)
+TableManager::switchCrapsTable(const Craps::TableId& toTableId,
+                               bool                  buddiesFollow,
+                               SwitchResult&         result,
+                               Gen::ErrorPass&       ep)
 {
-    try
+    const std::string fname("TableManager::switchCrapsTable(): ");
+
+    // ---- Check and load, change nothing -------------------------
+
+    if (pCurrentCrapsTable_ == nullptr || Gbl::pPlayerMgr == nullptr)
     {
-        std::unique_ptr<YamlFile> newFile;
-        auto p = loadCrapsTable(toTableId, newFile);  // New table, throws
-        Gbl::pTable->close();                // Close current table
-        saveCurrentTable();                  // Save the table we are leaving.
-                                             // A failure is logged and must
-                                             // not block the switch.
-        delete pCurrentCrapsTable_;          // Clean up its memory
-        Gbl::pTable = p;                     // New table accssible in globals
-        pCurrentCrapsTable_ = p;             // Manage it's memory
-        pCurrentFile_ = std::move(newFile);  // and its file
-        tables_[0] = p;                      // replace table in container
-        UndoManager::instance().clear();     // Start with zero undo's
-        return Gen::ReturnCode::Success;
-    }
-    catch (const std::runtime_error& e)
-    {
-        EP_SET(ep, Gen::ErrorPass::ErrorName::CaughtException,
-                   Gen::ErrorPass::ErrorType::ProcessingError,
-                   Gen::ErrorPass::Severity::Indeterminate, 
-                   "TableManager::switchCrapsTable(): ");
-        ep.append(e.what());
+        EP_SET(ep, En::IllegalStateError, Et::ProcessingError,
+               Es::Indeterminate, fname + "there is no table or no player "
+               "manager.");
         return Gen::ReturnCode::Fail;
     }
+
+    const std::string fileName = manifest_.getFileName(toTableId);
+    if (fileName.empty())
+    {
+        EP_SET(ep, En::NotFoundError, Et::ProcessingError,
+               Es::Indeterminate, fname + "no such table: \"" + toTableId +
+               "\".");
+        return Gen::ReturnCode::Fail;
+    }
+    if (pCurrentCrapsTable_->getTableId() == toTableId)
+    {
+        EP_SET(ep, En::ExistsError, Et::ProcessingError,
+               Es::Indeterminate, fname + "you are already at " +
+               pCurrentCrapsTable_->getTableName() + ".");
+        return Gen::ReturnCode::Fail;
+    }
+    if (!pCurrentCrapsTable_->isBettingOpen())
+    {
+        EP_SET(ep, En::IllegalStateError, Et::ProcessingError,
+               Es::Indeterminate, fname + "betting is closed. Try again "
+               "when the roll is over.");
+        return Gen::ReturnCode::Fail;
+    }
+
+    std::unique_ptr<YamlFile>        newFile;
+    std::unique_ptr<Craps::CrapsTable> newTable;
+    try
+    {
+        newTable.reset(loadCrapsTable(fileName, newFile));     // throws
+    }
+    catch (const std::exception& e)
+    {
+        EP_SET(ep, En::CaughtException, Et::ProcessingError,
+               Es::Indeterminate, fname + e.what());
+        return Gen::ReturnCode::Fail;
+    }
+
+    // ---- Leave the old table -------------------------------------
+
+    Craps::CrapsTable* pOld = pCurrentCrapsTable_;
+    Craps::Player* pUser = Gbl::pPlayerMgr->getUserPlayer();
+    const std::vector<Craps::Player*> seated = pOld->getPlayers();  // a copy
+
+    result = SwitchResult{};
+    result.fromTableId = pOld->getTableId();
+    result.toTableId   = toTableId;
+    result.toTableName = newTable->getTableName();
+    for (auto* p : seated)
+    {
+        result.betsReturned += p->getNumBetsOnTable();
+    }
+
+    for (auto* p : seated)
+    {
+        p->endSession();      // Bets come down, money back, stats merged
+    }
+    UndoManager::instance().clear();     // Their bets are gone
+    pOld->close(static_cast<unsigned>(seated.size()));
+    saveCurrentTable();      // A failure is logged and must not block us
+
+    // ---- Take the new table --------------------------------------
+
+    retired_.emplace_back(pOld);         // Not deleted, see the class notes
+    pCurrentCrapsTable_ = newTable.release();
+    pCurrentFile_       = std::move(newFile);
+    tables_[0]          = pCurrentCrapsTable_;
+    Gbl::pTable         = pCurrentCrapsTable_;
+
+    bool userSeated = false;
+    for (auto* p : seated)
+    {
+        const bool isUser = (p == pUser);
+        if (!isUser && !buddiesFollow)
+        {
+            ++result.buddiesLeft;
+            continue;
+        }
+        auto joined = p->joinTable(*pCurrentCrapsTable_);
+        if (!joined)
+        {
+            LOG_ERROR(fname + joined.error().fullDesc());
+            if (isUser)
+            {
+                ep = std::move(joined).error();
+                ep.prepend(fname);
+            }
+            else
+            {
+                ++result.buddiesLeft;
+            }
+            continue;
+        }
+        if (isUser) userSeated = true;
+        else        ++result.buddiesFollowed;
+    }
+    if (userSeated)
+    {
+        pCurrentCrapsTable_->setShooter(*pUser);
+    }
+
+    // ---- Tidy up ---------------------------------------------------
+
+    Gbl::pPlayerMgr->savePlayers();      // Their sessions have ended
+    Gbl::pPlayerMgr->userPrefs().autoOdds().forgetHandled();
+
+    LOG_INFO(fname + "now at " + result.toTableName + " (was " +
+             result.fromTableId + "); " +
+             std::to_string(result.buddiesFollowed) + " buddies followed, " +
+             std::to_string(result.buddiesLeft) + " left");
+
+    if (!userSeated)
+    {
+        // Cannot happen with an empty table, but never claim success if
+        // the user is not at the table.
+        if (ep.description().empty())
+        {
+            EP_SET(ep, En::IllegalStateError, Et::ProcessingError,
+                   Es::Indeterminate, fname + "the user player is not "
+                   "seated at the new table.");
+        }
+        return Gen::ReturnCode::Fail;
+    }
+    return Gen::ReturnCode::Success;
 }
 
 //----------------------------------------------------------------

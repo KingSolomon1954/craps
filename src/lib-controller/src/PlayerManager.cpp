@@ -321,6 +321,17 @@ PlayerManager::shutdown()
 
 //----------------------------------------------------------------
 //
+// Writes every loaded player's file now, e.g. after the table changed.
+//
+void
+PlayerManager::savePlayers()
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    saveAll();
+}
+
+//----------------------------------------------------------------
+//
 // Writes every player's file from a fresh snapshot of the player and
 // its preferences. One player failing does not stop the others.
 // Failures are logged. Caller holds the mutex.

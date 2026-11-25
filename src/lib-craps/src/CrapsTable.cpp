@@ -122,13 +122,13 @@ CrapsTable::rulesToYAML() const
 // Called when exiting program.
 //
 void
-CrapsTable::close()
+CrapsTable::close(std::optional<unsigned> numPlayers)
 {
     // Create an entry for today's session. CrapsTable is the only class
     // with visibility to alltimeStats_, players and currentStats_.
     //
     alltimeStats_.sessionHistory.addSessionSummary(
-        players_.size(),
+        numPlayers.value_or(static_cast<unsigned>(players_.size())),
         currentStats_.betStats.totNumBetsAllBets,
         houseBank_.getAmtDeposited(),
         houseBank_.getAmtWithdrawn());
@@ -146,7 +146,8 @@ CrapsTable::close()
 void
 CrapsTable::shutdown()
 {
-    // First, clear out players
+    // First, clear out players. The session counts the players it had.
+    const auto numPlayers = static_cast<unsigned>(players_.size());
     auto playersCopy = players_;      // copy of player list
     for (auto& player : playersCopy)
     {
@@ -155,7 +156,22 @@ CrapsTable::shutdown()
     }
 
     assert(getNumBetsOnTable() == 0);  // boo boo problem
-    close();  // merges stats, creates session entry
+    close(numPlayers);  // merges stats, creates session entry
+}
+
+//----------------------------------------------------------------
+//
+// Tells the View the table's numbers, as if they had just changed.
+// The table has just become the active one, and the View has only
+// what it knew about the table before.
+//
+void
+CrapsTable::publishSnapshot() const
+{
+    sendEventTableLastRollStatsChanged();
+    sendEventTableSessionStatsChanged();
+    sendEventTableBetsChanged();
+    sendEventTableBalanceChanged();
 }
 
 //----------------------------------------------------------------

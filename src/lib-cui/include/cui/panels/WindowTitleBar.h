@@ -26,6 +26,7 @@ public:
     void onDiceNewValue(unsigned d1, unsigned d2, unsigned rollCount);
     void onPointEstablished(unsigned point);
     void onSevenOut();
+    void onTableSwitched();   // New name and rules; no point, no rolls
     void onPassLineWinner();
     /// @}
 
@@ -67,6 +68,7 @@ private:
         static constexpr int f3Row = 0;
         static constexpr int f3Col = 23;
         static constexpr std::string_view f3Fmt = "%16s";
+        static constexpr std::size_t f3Cols = 16;   // Leaves the separator
 
         // Field: Table Rules
         static constexpr int f4Row  = 0;

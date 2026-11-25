@@ -62,6 +62,18 @@ CuiReceiver::CuiReceiver()
             this->onPlayerLeftTable(ev);
         });
 
+    Gen::EventManager::instance().subscribe<Ctrl::RspSwitchTable>(
+        [this](const Ctrl::RspSwitchTable& ev)
+        {
+            this->onRspSwitchTable(ev);
+        });
+
+    Gen::EventManager::instance().subscribe<Ctrl::UslTableSwitched>(
+        [this](const Ctrl::UslTableSwitched& ev)
+        {
+            this->onTableSwitched(ev);
+        });
+
     Gen::EventManager::instance().subscribe<Ctrl::UslUserPlayerSwitched>(
         [this](const Ctrl::UslUserPlayerSwitched& ev)
         {
@@ -597,6 +609,28 @@ void
 CuiReceiver::onRspSwitchPlayer(const Ctrl::RspSwitchPlayer& ev) const
 {
     LOG_TRACE("CuiReceiver()::onRspSwitchPlayer()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onRspSwitchTable(const Ctrl::RspSwitchTable& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onRspSwitchTable()");
+
+    WorkOrderEvent wo{.event = ev};
+    CuiThread::instance().enqueueWork(wo);
+}
+
+//----------------------------------------------------------------
+
+void
+CuiReceiver::onTableSwitched(const Ctrl::UslTableSwitched& ev) const
+{
+    LOG_TRACE("CuiReceiver()::onTableSwitched()");
 
     WorkOrderEvent wo{.event = ev};
     CuiThread::instance().enqueueWork(wo);

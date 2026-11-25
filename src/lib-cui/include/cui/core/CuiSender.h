@@ -27,6 +27,9 @@ public:
     /// @{
     void reqTerminate();
     Ctrl::CorrelationId reqSwitchPlayer(const Craps::PlayerId& playerId);
+    Ctrl::CorrelationId reqSwitchTable(const Craps::TableId& tableId,
+                                       bool buddiesFollow);
+    void reqSetBuddyFollow(Ctrl::BuddyFollow value);
     Ctrl::CorrelationId reqManagePlayer(Ctrl::PlayerAction action,
                                         const Craps::PlayerId& playerId,
                                         const std::string& name,

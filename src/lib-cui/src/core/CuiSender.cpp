@@ -233,6 +233,33 @@ CuiSender::reqSwitchPlayer(const Craps::PlayerId& playerId)
 //----------------------------------------------------------------
 
 Ctrl::CorrelationId
+CuiSender::reqSwitchTable(const Craps::TableId& tableId, bool buddiesFollow)
+{
+    LOG_TRACE("CuiSender::reqSwitchTable()");
+
+    Ctrl::ReqSwitchTable ev;
+    ev.tableId       = tableId;
+    ev.buddiesFollow = buddiesFollow;
+    const auto correlationId = ev.correlationId;
+    Gen::EventManager::instance().publish(ev);
+    return correlationId;
+}
+
+//----------------------------------------------------------------
+
+void
+CuiSender::reqSetBuddyFollow(Ctrl::BuddyFollow value)
+{
+    LOG_TRACE("CuiSender::reqSetBuddyFollow()");
+
+    Ctrl::ReqSetBuddyFollow ev;
+    ev.value = value;
+    Gen::EventManager::instance().publish(ev);
+}
+
+//----------------------------------------------------------------
+
+Ctrl::CorrelationId
 CuiSender::reqManagePlayer(Ctrl::PlayerAction action,
                            const Craps::PlayerId& playerId,
                            const std::string& name,

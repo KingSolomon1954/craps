@@ -7,6 +7,7 @@
 #include <cui/menus/MenuControl.h>
 #include <cui/menus/MenuConfigure.h>
 #include <cui/menus/MenuPlayers.h>
+#include <cui/menus/MenuTable.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiUtils.h>
 #include <gen/Logger.h>
@@ -157,6 +158,7 @@ MenuControl::doPlayers()
 void
 MenuControl::doTables()
 {
+    SurfaceManager::instance().pushSurface(&MenuTable::instance());
 }
 
 //----------------------------------------------------------------

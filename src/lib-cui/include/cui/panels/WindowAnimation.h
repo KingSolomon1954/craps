@@ -33,6 +33,7 @@ public:
     bool onDiceThrowStart();   // true if the dice will be animated
     void onDiceNewValue(int d1, int d2, int rollCount);
     void onNewShooter(const Craps::PlayerId& id);
+    void onTableSwitched();   // Back to the no-roll-yet display
     void onRosterChanged();   // Shooter may have a new name or have left
     /// @}
 

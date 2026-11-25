@@ -36,14 +36,9 @@
 
 ### Implement WindowMessageArea
 
-### Complete Switch Table feature:
-
-- needs to carry forward buddy players to the newly switched to table
-- maybe a dialog box should prompt the user to carry forward buddies
-- maybe should be a user prefence how to behave
-
 ## Done
 
+(Done) Completed Switch Table feature\
 (Done) Implemented doBetFlags in MenuBetting\
 (Done) Implemented AutoOdds capability\
 (Done) Implemented newly re-defined QuickBets capability\

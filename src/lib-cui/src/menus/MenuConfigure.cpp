@@ -47,8 +47,9 @@ MenuConfigure::instance()
 // 5  │ [a] AutoOdds            │
 // 6  │ [t] Timed Rolls         │
 // 7  │ [s] Animation Speed     │
-// 8  │ [. or esc] Back         │
-// 9  └─────────────────────────┘
+// 8  │ [b] Buddies Follow      │
+// 9  │ [. or esc] Back         │
+// 10 └─────────────────────────┘
 //
 void
 MenuConfigure::fillWindow()
@@ -66,7 +67,8 @@ MenuConfigure::fillWindow()
     mvwaddstr(pWin_, 5, 2, "[a] AutoOdds");
     mvwaddstr(pWin_, 6, 2, "[t] Timed Rolls");
     mvwaddstr(pWin_, 7, 2, "[s] Animation Speed");
-    mvwaddstr(pWin_, 8, 2, "[. or esc] Back");
+    mvwaddstr(pWin_, 8, 2, "[b] Buddies Follow");
+    mvwaddstr(pWin_, 9, 2, "[. or esc] Back");
 }
 
 //----------------------------------------------------------------
@@ -130,6 +132,7 @@ MenuConfigure::handleKey(int ch)
     case 'a': doAutoBets();          break;
     case 't': doTimedRolls();        break;
     case 's': doAnimationSpeed();    break;
+    case 'b': doBuddiesFollow();     break;
     case '.':
     case 27 : back();                break;
     default : handled = false;       break;
@@ -167,6 +170,14 @@ void
 MenuConfigure::doTimedRolls()
 {
     // TODO
+}
+
+//----------------------------------------------------------------
+
+void
+MenuConfigure::doBuddiesFollow()
+{
+    OperationManager::instance().chooseBuddyFollow();
 }
 
 //----------------------------------------------------------------

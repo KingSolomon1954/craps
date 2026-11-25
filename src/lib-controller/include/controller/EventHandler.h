@@ -42,6 +42,8 @@ private:
     void onReqSetAnimationSpeed(const Ctrl::ReqSetAnimationSpeed& ev) const;
     void onReqSetRollHistoryFormat(const Ctrl::ReqSetRollHistoryFormat& ev) const;
     void onReqSwitchPlayer(const Ctrl::ReqSwitchPlayer& ev) const;
+    void onReqSwitchTable(const Ctrl::ReqSwitchTable& ev) const;
+    void onReqSetBuddyFollow(const Ctrl::ReqSetBuddyFollow& ev) const;
     void onReqManagePlayer(const Ctrl::ReqManagePlayer& ev) const;
     void onReqTerminate(const Ctrl::ReqTerminate& ev)     const;
     void setLastFill(const Craps::PlayerId& playerId,
