@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="12457134824737865661">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="describe"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="to_string"/>
+  </FileInfo>
+</analyzerinfo>

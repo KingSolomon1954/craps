@@ -10,7 +10,8 @@ var searchData=
   ['menupivot_7',['MenuPivot',['../classCui_1_1MenuPivot.html',1,'Cui']]],
   ['menuplacebet_8',['MenuPlaceBet',['../classCui_1_1MenuPlaceBet.html',1,'Cui']]],
   ['menuplayers_9',['MenuPlayers',['../classCui_1_1MenuPlayers.html',1,'Cui']]],
-  ['messagetext_10',['MessageText',['../structCui_1_1DialogMessage_1_1MessageText.html',1,'Cui::DialogMessage']]],
-  ['money_11',['Money',['../classGen_1_1Money.html',1,'Gen']]],
-  ['multilayerconfig_12',['MultiLayerConfig',['../classGen_1_1MultiLayerConfig.html',1,'Gen']]]
+  ['menutable_10',['MenuTable',['../classCui_1_1MenuTable.html',1,'Cui']]],
+  ['messagetext_11',['MessageText',['../structCui_1_1DialogMessage_1_1MessageText.html',1,'Cui::DialogMessage']]],
+  ['money_12',['Money',['../classGen_1_1Money.html',1,'Gen']]],
+  ['multilayerconfig_13',['MultiLayerConfig',['../classGen_1_1MultiLayerConfig.html',1,'Gen']]]
 ];

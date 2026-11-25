@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">1048</td>
-            <td class="headerCovTableEntry">1053</td>
+            <td class="headerCovTableEntry">1071</td>
+            <td class="headerCovTableEntry">1076</td>
             <td class="headerCovTableEntryHi">99.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">64</td>
-            <td class="headerCovTableEntry">65</td>
-            <td class="headerCovTableEntryHi">98.5 %</td>
+            <td class="headerCovTableEntry">68</td>
+            <td class="headerCovTableEntry">69</td>
+            <td class="headerCovTableEntryHi">98.6 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -93,32 +93,32 @@
 <a name="31"><span class="lineNum">      31 </span>            :     Player* p6 = nullptr;</a>
 <a name="32"><span class="lineNum">      32 </span>            :     Player* p7 = nullptr;</a>
 <a name="33"><span class="lineNum">      33 </span>            : </a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineCov">         43 :     CrapsTableFixture()</span></a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineCov">         43 :     {</span></a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineCov">         86 :         p1 = Player::createPlayer(&quot;Player1&quot;);</span></a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         86 :         p2 = Player::createPlayer(&quot;Player2&quot;);</span></a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">         86 :         p3 = Player::createPlayer(&quot;Player3&quot;);</span></a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">         86 :         p4 = Player::createPlayer(&quot;Player4&quot;);</span></a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">         86 :         p5 = Player::createPlayer(&quot;Player5&quot;);</span></a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         86 :         p6 = Player::createPlayer(&quot;Player6&quot;);</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">         43 :         p7 = Player::createPlayer(&quot;Player7&quot;);</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">         45 :     CrapsTableFixture()</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">         45 :     {</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">         90 :         p1 = Player::createPlayer(&quot;Player1&quot;);</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         90 :         p2 = Player::createPlayer(&quot;Player2&quot;);</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">         90 :         p3 = Player::createPlayer(&quot;Player3&quot;);</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">         90 :         p4 = Player::createPlayer(&quot;Player4&quot;);</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">         90 :         p5 = Player::createPlayer(&quot;Player5&quot;);</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         90 :         p6 = Player::createPlayer(&quot;Player6&quot;);</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">         45 :         p7 = Player::createPlayer(&quot;Player7&quot;);</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">         43 :         config.maxSessions = 50;</span></a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         43 :         config.maxRecentRolls = 25;</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">         45 :         config.maxSessions = 50;</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         45 :         config.maxRecentRolls = 25;</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :         // CrapsTable never touches files, so one TableConfig can be</a>
 <a name="47"><span class="lineNum">      47 </span>            :         // used in all unit tests.</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         43 :     }</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         45 :     }</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">         43 :    ~CrapsTableFixture()</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">         45 :    ~CrapsTableFixture()</span></a>
 <a name="51"><span class="lineNum">      51 </span>            :     {</a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         43 :         delete p1;</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         43 :         delete p2;</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">         43 :         delete p3;</span></a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">         43 :         delete p4;</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">         43 :         delete p5;</span></a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">         43 :         delete p6;</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">         43 :         delete p7;</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">         43 :     }</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         45 :         delete p1;</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         45 :         delete p2;</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">         45 :         delete p3;</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">         45 :         delete p4;</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">         45 :         delete p5;</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">         45 :         delete p6;</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">         45 :         delete p7;</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">         45 :     }</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : };</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span>            : //----------------------------------------------------------------</a>
@@ -3325,6 +3325,43 @@
 <a name="3263"><span class="lineNum">    3263 </span><span class="lineCov">          1 :     CHECK(cs.placeRepeaters.buckets(4).empty());</span></a>
 <a name="3264"><span class="lineNum">    3264 </span><span class="lineCov">          1 :     CHECK(cs.buyRepeaters.buckets(4).empty());</span></a>
 <a name="3265"><span class="lineNum">    3265 </span><span class="lineCov">          1 : }</span></a>
+<a name="3266"><span class="lineNum">    3266 </span>            : </a>
+<a name="3267"><span class="lineNum">    3267 </span>            : //----------------------------------------------------------------</a>
+<a name="3268"><span class="lineNum">    3268 </span>            : </a>
+<a name="3269"><span class="lineNum">    3269 </span><span class="lineCov">          2 : TEST_CASE_FIXTURE(CrapsTableFixture, &quot;CrapsTable:shutdown records the players the session had&quot;)</span></a>
+<a name="3270"><span class="lineNum">    3270 </span>            : {</a>
+<a name="3271"><span class="lineNum">    3271 </span><span class="lineCov">          2 :     CrapsTable t(&quot;Table-1&quot;, config);</span></a>
+<a name="3272"><span class="lineNum">    3272 </span><span class="lineCov">          1 :     REQUIRE(p1-&gt;joinTable(t));</span></a>
+<a name="3273"><span class="lineNum">    3273 </span><span class="lineCov">          1 :     REQUIRE(p2-&gt;joinTable(t));</span></a>
+<a name="3274"><span class="lineNum">    3274 </span>            : </a>
+<a name="3275"><span class="lineNum">    3275 </span><span class="lineCov">          1 :     t.shutdown();                  // Players leave first, then the table closes</span></a>
+<a name="3276"><span class="lineNum">    3276 </span><span class="lineCov">          1 :     CHECK(t.getNumPlayers() == 0);</span></a>
+<a name="3277"><span class="lineNum">    3277 </span>            : </a>
+<a name="3278"><span class="lineNum">    3278 </span><span class="lineCov">          1 :     const YAML::Node history = t.toYAML()[&quot;SessionStats&quot;][&quot;history&quot;];</span></a>
+<a name="3279"><span class="lineNum">    3279 </span><span class="lineCov">          1 :     REQUIRE(history.IsSequence());</span></a>
+<a name="3280"><span class="lineNum">    3280 </span><span class="lineCov">          1 :     REQUIRE(history.size() &gt;= 1);</span></a>
+<a name="3281"><span class="lineNum">    3281 </span><span class="lineCov">          1 :     CHECK(history[history.size() - 1][&quot;numPlayers&quot;].as&lt;unsigned&gt;() == 2);</span></a>
+<a name="3282"><span class="lineNum">    3282 </span><span class="lineCov">          1 : }</span></a>
+<a name="3283"><span class="lineNum">    3283 </span>            : </a>
+<a name="3284"><span class="lineNum">    3284 </span>            : //----------------------------------------------------------------</a>
+<a name="3285"><span class="lineNum">    3285 </span>            : </a>
+<a name="3286"><span class="lineNum">    3286 </span><span class="lineCov">          2 : TEST_CASE_FIXTURE(CrapsTableFixture, &quot;CrapsTable:close counts the players seated or the number given&quot;)</span></a>
+<a name="3287"><span class="lineNum">    3287 </span>            : {</a>
+<a name="3288"><span class="lineNum">    3288 </span><span class="lineCov">          2 :     CrapsTable t(&quot;Table-1&quot;, config);</span></a>
+<a name="3289"><span class="lineNum">    3289 </span><span class="lineCov">          1 :     REQUIRE(p1-&gt;joinTable(t));</span></a>
+<a name="3290"><span class="lineNum">    3290 </span><span class="lineCov">          1 :     REQUIRE(p2-&gt;joinTable(t));</span></a>
+<a name="3291"><span class="lineNum">    3291 </span><span class="lineCov">          1 :     REQUIRE(p3-&gt;joinTable(t));</span></a>
+<a name="3292"><span class="lineNum">    3292 </span>            : </a>
+<a name="3293"><span class="lineNum">    3293 </span><span class="lineCov">          1 :     t.close();                     // Counts who is seated</span></a>
+<a name="3294"><span class="lineNum">    3294 </span><span class="lineCov">          1 :     t.close(5u);                   // Counts what it is told</span></a>
+<a name="3295"><span class="lineNum">    3295 </span>            : </a>
+<a name="3296"><span class="lineNum">    3296 </span><span class="lineCov">          1 :     const YAML::Node history = t.toYAML()[&quot;SessionStats&quot;][&quot;history&quot;];</span></a>
+<a name="3297"><span class="lineNum">    3297 </span><span class="lineCov">          1 :     REQUIRE(history.size() &gt;= 2);</span></a>
+<a name="3298"><span class="lineNum">    3298 </span><span class="lineCov">          1 :     CHECK(history[history.size() - 2][&quot;numPlayers&quot;].as&lt;unsigned&gt;() == 3);</span></a>
+<a name="3299"><span class="lineNum">    3299 </span><span class="lineCov">          1 :     CHECK(history[history.size() - 1][&quot;numPlayers&quot;].as&lt;unsigned&gt;() == 5);</span></a>
+<a name="3300"><span class="lineNum">    3300 </span><span class="lineCov">          1 : }</span></a>
+<a name="3301"><span class="lineNum">    3301 </span>            : </a>
+<a name="3302"><span class="lineNum">    3302 </span>            : //----------------------------------------------------------------</a>
 </pre>
       </td>
     </tr>

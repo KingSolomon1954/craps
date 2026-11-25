@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">48</td>
-            <td class="headerCovTableEntry">66</td>
-            <td class="headerCovTableEntryLo">72.7 %</td>
+            <td class="headerCovTableEntry">59</td>
+            <td class="headerCovTableEntry">79</td>
+            <td class="headerCovTableEntryLo">74.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -125,97 +125,127 @@
 <a name="63"><span class="lineNum">      63 </span>            :     true if the file was readable and had the expected sections.</a>
 <a name="64"><span class="lineNum">      64 </span>            : */</a>
 <a name="65"><span class="lineNum">      65 </span>            : bool</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          6 : UserState::read(const fs::path&amp; file, UserState&amp; state, std::string&amp; whyNot)</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">         17 : UserState::read(const fs::path&amp; file, UserState&amp; state, std::string&amp; whyNot)</span></a>
 <a name="67"><span class="lineNum">      67 </span>            : {</a>
 <a name="68"><span class="lineNum">      68 </span>            :     try</a>
 <a name="69"><span class="lineNum">      69 </span>            :     {</a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">          7 :         const YAML::Node root = YAML::LoadFile(file.string());</span></a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">          5 :         const YAML::Node last = root[&quot;last&quot;];</span></a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">          5 :         if (!last || !last.IsMap())</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">         18 :         const YAML::Node root = YAML::LoadFile(file.string());</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">         16 :         const YAML::Node last = root[&quot;last&quot;];</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">         16 :         if (!last || !last.IsMap())</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :         {</a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineCov">          2 :             whyNot = &quot;no \&quot;last\&quot; section&quot;;</span></a>
 <a name="75"><span class="lineNum">      75 </span><span class="lineCov">          2 :             return false;</span></a>
 <a name="76"><span class="lineNum">      76 </span>            :         }</a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">          3 :         UserState s;</span></a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          3 :         s.table      = last[&quot;table&quot;].as&lt;std::string&gt;();</span></a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">          3 :         s.userPlayer = last[&quot;userPlayer&quot;].as&lt;std::string&gt;();</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         14 :         UserState s;</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">         14 :         s.table      = last[&quot;table&quot;].as&lt;std::string&gt;();</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">         14 :         s.userPlayer = last[&quot;userPlayer&quot;].as&lt;std::string&gt;();</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">          3 :         const YAML::Node b = last[&quot;buddyPlayers&quot;];</span></a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          3 :         if (!b || !b.IsSequence())</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">         14 :         const YAML::Node b = last[&quot;buddyPlayers&quot;];</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">         14 :         if (!b || !b.IsSequence())</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :         {</a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineCov">          1 :             whyNot = &quot;no buddyPlayers list&quot;;</span></a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineCov">          1 :             return false;</span></a>
 <a name="87"><span class="lineNum">      87 </span>            :         }</a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">          4 :         for (const auto&amp; n : b)</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">         15 :         for (const auto&amp; n : b)</span></a>
 <a name="89"><span class="lineNum">      89 </span>            :         {</a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineCov">          2 :             const std::string f = n.as&lt;std::string&gt;();</span></a>
 <a name="91"><span class="lineNum">      91 </span><span class="lineCov">          2 :             if (!f.empty())</span></a>
 <a name="92"><span class="lineNum">      92 </span>            :             {</a>
 <a name="93"><span class="lineNum">      93 </span><span class="lineCov">          2 :                 s.buddies.push_back(f);</span></a>
 <a name="94"><span class="lineNum">      94 </span>            :             }</a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">          4 :         }</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">         15 :         }</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">          2 :         state = std::move(s);</span></a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">          2 :         return true;</span></a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">          5 :     }</span></a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">          1 :     catch (const std::exception&amp; e)</span></a>
-<a name="101"><span class="lineNum">     101 </span>            :     {</a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">          1 :         whyNot = e.what();</span></a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">          1 :         return false;</span></a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">          1 :     }</span></a>
-<a name="105"><span class="lineNum">     105 </span>            : }</a>
-<a name="106"><span class="lineNum">     106 </span>            : </a>
-<a name="107"><span class="lineNum">     107 </span>            : /*-----------------------------------------------------------*//**</a>
-<a name="108"><span class="lineNum">     108 </span>            : </a>
-<a name="109"><span class="lineNum">     109 </span>            : Writes state.yaml into stateDir. The file is written to a temporary</a>
-<a name="110"><span class="lineNum">     110 </span>            : name and renamed over the old one.</a>
-<a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span>            : @throw std::runtime_error</a>
-<a name="113"><span class="lineNum">     113 </span>            :     On failure.</a>
-<a name="114"><span class="lineNum">     114 </span>            : */</a>
-<a name="115"><span class="lineNum">     115 </span>            : void</a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">          2 : UserState::save(const fs::path&amp; stateDir) const</span></a>
-<a name="117"><span class="lineNum">     117 </span>            : {</a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">          2 :     YAML::Node list(YAML::NodeType::Sequence);</span></a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">          4 :     for (const auto&amp; b : buddies)</span></a>
-<a name="120"><span class="lineNum">     120 </span>            :     {</a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">          2 :         list.push_back(b);</span></a>
-<a name="122"><span class="lineNum">     122 </span>            :     }</a>
-<a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">          2 :     YAML::Node last;</span></a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineCov">          2 :     last[&quot;table&quot;]        = table;</span></a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          2 :     last[&quot;userPlayer&quot;]   = userPlayer;</span></a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          2 :     last[&quot;buddyPlayers&quot;] = list;</span></a>
-<a name="128"><span class="lineNum">     128 </span>            : </a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">          2 :     YAML::Node root;</span></a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">          2 :     root[&quot;last&quot;] = last;</span></a>
-<a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">          2 :     YAML::Emitter out;</span></a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">          2 :     out &lt;&lt; YAML::Comment(&quot;Written by the game at quit. Safe to delete.&quot;);</span></a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">          2 :     out &lt;&lt; root;</span></a>
-<a name="135"><span class="lineNum">     135 </span>            : </a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">          2 :     const fs::path path = stateDir / FileName;</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          2 :     const fs::path tmp  = path.string() + &quot;.tmp&quot;;</span></a>
-<a name="138"><span class="lineNum">     138 </span>            :     {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">          2 :         std::ofstream f(tmp);</span></a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">          2 :         f &lt;&lt; out.c_str() &lt;&lt; &quot;\n&quot;;</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          2 :         if (!f)</span></a>
-<a name="142"><span class="lineNum">     142 </span>            :         {</a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :             throw std::runtime_error(&quot;UserState::save(): unable to write &quot; +</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :                                      tmp.string());</span></a>
-<a name="145"><span class="lineNum">     145 </span>            :         }</a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">          2 :     }</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">          2 :     std::error_code ec;</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">          2 :     fs::rename(tmp, path, ec);</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          2 :     if (ec)</span></a>
-<a name="150"><span class="lineNum">     150 </span>            :     {</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :         throw std::runtime_error(&quot;UserState::save(): rename failed for &quot; +</span></a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :                                  path.string() + &quot;; &quot; + ec.message());</span></a>
-<a name="153"><span class="lineNum">     153 </span>            :     }</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">          2 : }</span></a>
-<a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span>            : //----------------------------------------------------------------</a>
+<a name="97"><span class="lineNum">      97 </span>            :         // Optional and forgiving: anything unusable is just not remembered</a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">         13 :         const YAML::Node settings = root[&quot;settings&quot;];</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">         13 :         if (settings &amp;&amp; settings.IsMap() &amp;&amp; settings[&quot;animationSpeed&quot;])</span></a>
+<a name="100"><span class="lineNum">     100 </span>            :         {</a>
+<a name="101"><span class="lineNum">     101 </span>            :             try</a>
+<a name="102"><span class="lineNum">     102 </span>            :             {</a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">          9 :                 s.animationSpeed = parseAnimationSpeed(</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">         18 :                     settings[&quot;animationSpeed&quot;].as&lt;std::string&gt;());</span></a>
+<a name="105"><span class="lineNum">     105 </span>            :             }</a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 :             catch (const std::exception&amp;) {}</span></a>
+<a name="107"><span class="lineNum">     107 </span>            :         }</a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">         13 :         if (settings &amp;&amp; settings.IsMap() &amp;&amp; settings[&quot;rollHistoryFormat&quot;])</span></a>
+<a name="109"><span class="lineNum">     109 </span>            :         {</a>
+<a name="110"><span class="lineNum">     110 </span>            :             try</a>
+<a name="111"><span class="lineNum">     111 </span>            :             {</a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">          5 :                 s.rollHistoryFormat = parseRollHistoryFormat(</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         10 :                     settings[&quot;rollHistoryFormat&quot;].as&lt;std::string&gt;());</span></a>
+<a name="114"><span class="lineNum">     114 </span>            :             }</a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :             catch (const std::exception&amp;) {}</span></a>
+<a name="116"><span class="lineNum">     116 </span>            :         }</a>
+<a name="117"><span class="lineNum">     117 </span>            : </a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">         13 :         state = std::move(s);</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">         13 :         return true;</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">         16 :     }</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">          1 :     catch (const std::exception&amp; e)</span></a>
+<a name="122"><span class="lineNum">     122 </span>            :     {</a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">          1 :         whyNot = e.what();</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">          1 :         return false;</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">          1 :     }</span></a>
+<a name="126"><span class="lineNum">     126 </span>            : }</a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span>            : /*-----------------------------------------------------------*//**</a>
+<a name="129"><span class="lineNum">     129 </span>            : </a>
+<a name="130"><span class="lineNum">     130 </span>            : Writes state.yaml into stateDir. The file is written to a temporary</a>
+<a name="131"><span class="lineNum">     131 </span>            : name and renamed over the old one.</a>
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<a name="133"><span class="lineNum">     133 </span>            : @throw std::runtime_error</a>
+<a name="134"><span class="lineNum">     134 </span>            :     On failure.</a>
+<a name="135"><span class="lineNum">     135 </span>            : */</a>
+<a name="136"><span class="lineNum">     136 </span>            : void</a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">         11 : UserState::save(const fs::path&amp; stateDir) const</span></a>
+<a name="138"><span class="lineNum">     138 </span>            : {</a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">         11 :     YAML::Node list(YAML::NodeType::Sequence);</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">         13 :     for (const auto&amp; b : buddies)</span></a>
+<a name="141"><span class="lineNum">     141 </span>            :     {</a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">          2 :         list.push_back(b);</span></a>
+<a name="143"><span class="lineNum">     143 </span>            :     }</a>
+<a name="144"><span class="lineNum">     144 </span>            : </a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">         11 :     YAML::Node last;</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">         11 :     last[&quot;table&quot;]        = table;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">         11 :     last[&quot;userPlayer&quot;]   = userPlayer;</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">         11 :     last[&quot;buddyPlayers&quot;] = list;</span></a>
+<a name="149"><span class="lineNum">     149 </span>            : </a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">         11 :     YAML::Node root;</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">         11 :     root[&quot;last&quot;] = last;</span></a>
+<a name="152"><span class="lineNum">     152 </span>            : </a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">         11 :     if (animationSpeed)</span></a>
+<a name="154"><span class="lineNum">     154 </span>            :     {</a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">          8 :         root[&quot;settings&quot;][&quot;animationSpeed&quot;] = toString(*animationSpeed);</span></a>
+<a name="156"><span class="lineNum">     156 </span>            :     }</a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">         11 :     if (rollHistoryFormat)</span></a>
+<a name="158"><span class="lineNum">     158 </span>            :     {</a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">          4 :         root[&quot;settings&quot;][&quot;rollHistoryFormat&quot;] = toString(*rollHistoryFormat);</span></a>
+<a name="160"><span class="lineNum">     160 </span>            :     }</a>
+<a name="161"><span class="lineNum">     161 </span>            : </a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">         11 :     YAML::Emitter out;</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">         11 :     out &lt;&lt; YAML::Comment(&quot;Written by the game at quit. Safe to delete.&quot;);</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">         11 :     out &lt;&lt; root;</span></a>
+<a name="165"><span class="lineNum">     165 </span>            : </a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">         11 :     const fs::path path = stateDir / FileName;</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">         11 :     const fs::path tmp  = path.string() + &quot;.tmp&quot;;</span></a>
+<a name="168"><span class="lineNum">     168 </span>            :     {</a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">         11 :         std::ofstream f(tmp);</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">         11 :         f &lt;&lt; out.c_str() &lt;&lt; &quot;\n&quot;;</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">         11 :         if (!f)</span></a>
+<a name="172"><span class="lineNum">     172 </span>            :         {</a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :             throw std::runtime_error(&quot;UserState::save(): unable to write &quot; +</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :                                      tmp.string());</span></a>
+<a name="175"><span class="lineNum">     175 </span>            :         }</a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">         11 :     }</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">         11 :     std::error_code ec;</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">         11 :     fs::rename(tmp, path, ec);</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">         11 :     if (ec)</span></a>
+<a name="180"><span class="lineNum">     180 </span>            :     {</a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :         throw std::runtime_error(&quot;UserState::save(): rename failed for &quot; +</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :                                  path.string() + &quot;; &quot; + ec.message());</span></a>
+<a name="183"><span class="lineNum">     183 </span>            :     }</a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">         11 : }</span></a>
+<a name="185"><span class="lineNum">     185 </span>            : </a>
+<a name="186"><span class="lineNum">     186 </span>            : //----------------------------------------------------------------</a>
 </pre>
       </td>
     </tr>

@@ -115,10 +115,19 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a0d048b4332b71839f28bcd90177eb3d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The player operations on <a class="el" href="classCui_1_1MenuPlayers.html" title="Display choices for game control and configuration.">MenuPlayers</a>.  <a href="#a0d048b4332b71839f28bcd90177eb3d8">More...</a><br /></td></tr>
 <tr class="separator:a0d048b4332b71839f28bcd90177eb3d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc785797d41af03f62013485d84935fc" id="r_abc785797d41af03f62013485d84935fc"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc785797d41af03f62013485d84935fc">TableOp</a> { <a class="el" href="#abc785797d41af03f62013485d84935fca4ee29ca12c7d126654bd0e5275de6135">List</a>
+, <a class="el" href="#abc785797d41af03f62013485d84935fcabbc155fb2b111bf61c4f5ff892915e6b">Switch</a>
+ }</td></tr>
+<tr class="memdesc:abc785797d41af03f62013485d84935fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The table operations on <a class="el" href="classCui_1_1MenuTable.html" title="The table menu, from Control, Tables.">MenuTable</a>.  <a href="#abc785797d41af03f62013485d84935fc">More...</a><br /></td></tr>
+<tr class="separator:abc785797d41af03f62013485d84935fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
+<tr class="memitem:a6e8dc9264d8c9fbe58244e63c9a7df9e" id="r_a6e8dc9264d8c9fbe58244e63c9a7df9e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e8dc9264d8c9fbe58244e63c9a7df9e">tableOperation</a> (<a class="el" href="#abc785797d41af03f62013485d84935fc">TableOp</a> op)</td></tr>
+<tr class="separator:a6e8dc9264d8c9fbe58244e63c9a7df9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a572617eaebd3e3dc052a5c289461d9be" id="r_a572617eaebd3e3dc052a5c289461d9be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a572617eaebd3e3dc052a5c289461d9be">chooseBuddyFollow</a> ()</td></tr>
+<tr class="separator:a572617eaebd3e3dc052a5c289461d9be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04003b71064266007f29a182863d374e" id="r_a04003b71064266007f29a182863d374e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04003b71064266007f29a182863d374e">playerOperation</a> (<a class="el" href="#a0d048b4332b71839f28bcd90177eb3d8">PlayerOp</a> op)</td></tr>
 <tr class="separator:a04003b71064266007f29a182863d374e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8457be9b846456d3f9d07d0c611f0b5e" id="r_a8457be9b846456d3f9d07d0c611f0b5e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8457be9b846456d3f9d07d0c611f0b5e">makeBet</a> ()</td></tr>
@@ -177,6 +186,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aef94804f061fc3978445cc369f155e63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6029dd6dd042deda59cd1f354499720" id="r_ac6029dd6dd042deda59cd1f354499720"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6029dd6dd042deda59cd1f354499720">onRspManagePlayer</a> (const <a class="el" href="structCtrl_1_1RspManagePlayer.html">Ctrl::RspManagePlayer</a> &amp;response)</td></tr>
 <tr class="separator:ac6029dd6dd042deda59cd1f354499720"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb12f9002d0c8ff762dde43bd0220416" id="r_afb12f9002d0c8ff762dde43bd0220416"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb12f9002d0c8ff762dde43bd0220416">onRspSwitchTable</a> (const <a class="el" href="structCtrl_1_1RspSwitchTable.html">Ctrl::RspSwitchTable</a> &amp;response)</td></tr>
+<tr class="separator:afb12f9002d0c8ff762dde43bd0220416"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a698b6d92066b6b6910581976a4e98f9c" id="r_a698b6d92066b6b6910581976a4e98f9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a698b6d92066b6b6910581976a4e98f9c">onErrorAcknowledged</a> ()</td></tr>
 <tr class="separator:a698b6d92066b6b6910581976a4e98f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Observers</div></td></tr>
@@ -235,6 +246,36 @@ Public Member Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a0d048b4332b71839f28bcd90177eb3d8acc4ad94a53c093268bbec3f96d8d49de" name="a0d048b4332b71839f28bcd90177eb3d8acc4ad94a53c093268bbec3f96d8d49de"></a>BuddyJoins&#160;</td><td class="fielddoc"><p>A buddy sits at the table. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a0d048b4332b71839f28bcd90177eb3d8a0a15c7ebdb469586619f8e177d0bd755" name="a0d048b4332b71839f28bcd90177eb3d8a0a15c7ebdb469586619f8e177d0bd755"></a>BuddyLeaves&#160;</td><td class="fielddoc"><p>A buddy leaves the table. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="abc785797d41af03f62013485d84935fc" name="abc785797d41af03f62013485d84935fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc785797d41af03f62013485d84935fc">&#9670;&#160;</a></span>TableOp</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#abc785797d41af03f62013485d84935fc">Cui::OperationManager::TableOp</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The table operations on <a class="el" href="classCui_1_1MenuTable.html" title="The table menu, from Control, Tables.">MenuTable</a>. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="abc785797d41af03f62013485d84935fca4ee29ca12c7d126654bd0e5275de6135" name="abc785797d41af03f62013485d84935fca4ee29ca12c7d126654bd0e5275de6135"></a>List&#160;</td><td class="fielddoc"><p>Show the tables. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abc785797d41af03f62013485d84935fcabbc155fb2b111bf61c4f5ff892915e6b" name="abc785797d41af03f62013485d84935fcabbc155fb2b111bf61c4f5ff892915e6b"></a>Switch&#160;</td><td class="fielddoc"><p>Move to another table. </p>
 </td></tr>
 </table>
 
@@ -369,6 +410,23 @@ Public Member Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool OperationManager::chooseAnimationSpeed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a572617eaebd3e3dc052a5c289461d9be" name="a572617eaebd3e3dc052a5c289461d9be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a572617eaebd3e3dc052a5c289461d9be">&#9670;&#160;</a></span>chooseBuddyFollow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool OperationManager::chooseBuddyFollow </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -778,6 +836,23 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afb12f9002d0c8ff762dde43bd0220416" name="afb12f9002d0c8ff762dde43bd0220416"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb12f9002d0c8ff762dde43bd0220416">&#9670;&#160;</a></span>onRspSwitchTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void OperationManager::onRspSwitchTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structCtrl_1_1RspSwitchTable.html">Ctrl::RspSwitchTable</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>response</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aba045708d0f98099f52fdfb0e2066f5a" name="aba045708d0f98099f52fdfb0e2066f5a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba045708d0f98099f52fdfb0e2066f5a">&#9670;&#160;</a></span>onRspUndoBet()</h2>
 
@@ -917,6 +992,23 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a6e8dc9264d8c9fbe58244e63c9a7df9e" name="a6e8dc9264d8c9fbe58244e63c9a7df9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e8dc9264d8c9fbe58244e63c9a7df9e">&#9670;&#160;</a></span>tableOperation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool OperationManager::tableOperation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#abc785797d41af03f62013485d84935fc">TableOp</a></td>          <td class="paramname"><span class="paramname"><em>op</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a41b0b9af1cff92e7182a9e83830838e5" name="a41b0b9af1cff92e7182a9e83830838e5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a41b0b9af1cff92e7182a9e83830838e5">&#9670;&#160;</a></span>undoLastBet()</h2>
 
@@ -941,7 +1033,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 24 2026 15:16:03 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Nov 25 2026 16:21:12 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

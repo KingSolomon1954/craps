@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -379,11 +379,11 @@
 <a name="317"><span class="lineNum">     317 </span>            :     content, otherwise false.</a>
 <a name="318"><span class="lineNum">     318 </span>            : */</a>
 <a name="319"><span class="lineNum">     319 </span>            : bool</a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineCov">        379 : StringUtils::insensitivePredicate(</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineCov">        439 : StringUtils::insensitivePredicate(</span></a>
 <a name="321"><span class="lineNum">     321 </span>            :     const std::string::value_type &amp;s1,</a>
 <a name="322"><span class="lineNum">     322 </span>            :     const std::string::value_type &amp;s2)</a>
 <a name="323"><span class="lineNum">     323 </span>            : {</a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineCov">        379 :     return toupper(s1) == toupper(s2);</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">        439 :     return toupper(s1) == toupper(s2);</span></a>
 <a name="325"><span class="lineNum">     325 </span>            : }</a>
 <a name="326"><span class="lineNum">     326 </span>            : </a>
 <a name="327"><span class="lineNum">     327 </span>            : /*-----------------------------------------------------------*//**</a>
@@ -401,13 +401,13 @@
 <a name="339"><span class="lineNum">     339 </span>            :     content, otherwise false.</a>
 <a name="340"><span class="lineNum">     340 </span>            : */</a>
 <a name="341"><span class="lineNum">     341 </span>            : bool</a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineCov">        457 : StringUtils::insensitiveEquals(const std::string&amp; s1, const std::string&amp; s2)</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineCov">        419 : StringUtils::insensitiveEquals(const std::string&amp; s1, const std::string&amp; s2)</span></a>
 <a name="343"><span class="lineNum">     343 </span>            : {</a>
-<a name="344"><span class="lineNum">     344 </span><span class="lineCov">        457 :     return s1.size() == s2.size() &amp;&amp; std::equal(</span></a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineCov">        419 :     return s1.size() == s2.size() &amp;&amp; std::equal(</span></a>
 <a name="345"><span class="lineNum">     345 </span>            :         s1.begin(),</a>
 <a name="346"><span class="lineNum">     346 </span>            :         s1.end(),</a>
 <a name="347"><span class="lineNum">     347 </span>            :         s2.begin(),</a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">        457 :         insensitivePredicate);</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">        419 :         insensitivePredicate);</span></a>
 <a name="349"><span class="lineNum">     349 </span>            : }</a>
 <a name="350"><span class="lineNum">     350 </span>            : </a>
 <a name="351"><span class="lineNum">     351 </span>            : /*-----------------------------------------------------------*//**</a>

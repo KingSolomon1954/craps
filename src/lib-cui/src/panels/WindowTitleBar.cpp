@@ -42,6 +42,7 @@ void
 WindowTitleBar::initTableInfo()
 {
     tableName_  = Ctrl::CrapsReaders::readTableName();
+    if (tableName_.length() > Layout::f3Cols) tableName_.erase(Layout::f3Cols);
     auto r = Ctrl::CrapsReaders::readTableMinMaxRules();
     buildRulesField(r.minLineBet, r.maxLineBet, r.maxOdds);
 }
@@ -59,7 +60,14 @@ WindowTitleBar::buildRulesField(unsigned minLineBet,
     std::string maxStr  = "Max $" + std::to_string(maxLineBet);
     std::string oddsStr = "Odds " + std::to_string(maxOdds) + "x";
     rules_ = minStr + " " + maxStr + " " + oddsStr;
-    
+
+    // High limits don't fit in full. Use the short form, $min-$max.
+    if (rules_.length() > L::f4Cols)
+    {
+        rules_ = "$" + std::to_string(minLineBet) + "-$" +
+                 std::to_string(maxLineBet) + " " + oddsStr;
+    }
+
     // Force rules_ to fit in width of the field
     if (rules_.length() > L::f4Cols) rules_.erase(L::f4Cols);
 }
@@ -185,6 +193,16 @@ WindowTitleBar::onDiceNewValue(unsigned d1, unsigned d2, unsigned rollCount)
 {
     (void) d1; (void) d2;
     rollCount_ = rollCount;
+}
+
+//----------------------------------------------------------------
+
+void
+WindowTitleBar::onTableSwitched()
+{
+    initTableInfo();
+    point_     = 0;
+    rollCount_ = 0;
 }
 
 //----------------------------------------------------------------

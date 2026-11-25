@@ -8,6 +8,7 @@
 #include <controller/AnimationSpeed.h>
 #include <controller/BetFlags.h>
 #include <controller/BetSpec.h>
+#include <controller/BuddyFollow.h>
 #include <controller/RollHistoryFormat.h>
 #include <craps/CrapsTypes.h>
 #include <craps/EnumBetName.h>
@@ -43,6 +44,8 @@ enum class EventType
     ReqSetAnimationSpeed,
     ReqSetRollHistoryFormat,
     ReqSwitchPlayer,
+    ReqSwitchTable,
+    ReqSetBuddyFollow,
     ReqManagePlayer,
     ReqTerminate,
 
@@ -57,6 +60,7 @@ enum class EventType
     RspSetBetFlags,
     RspChangeBet,              // not yet implemented
     RspSwitchPlayer,
+    RspSwitchTable,
     RspManagePlayer,
 
     // Unsolicited
@@ -79,6 +83,7 @@ enum class EventType
     UslBetRemoved,
     UslBetChanged,
     UslUserPlayerSwitched,
+    UslTableSwitched,
     UslPlayerRenamed,
     UslRollHistoryFormatChanged,
 
@@ -511,6 +516,69 @@ struct RspSwitchPlayer : public GameEvent
 
     RspSwitchPlayer()
         : GameEvent{EventSource::Controller, EventType::RspSwitchPlayer}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Ask to move the user player, and the buddies who follow, to another
+/// table. Betting must be open. Bets on the table come down and the money
+/// is returned. The answer is RspSwitchTable.
+struct ReqSwitchTable : public GameEvent
+{
+    Craps::TableId tableId;          ///< The table to go to
+    bool           buddiesFollow = true;   ///< Buddies at the table go along
+
+    ReqSwitchTable()
+        : GameEvent{EventSource::View, EventType::ReqSwitchTable}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Answer to ReqSwitchTable. If not switched, the table, the players and
+/// their bets are as they were, and error says why.
+struct RspSwitchTable : public GameEvent
+{
+    bool           switched = false;
+    Craps::TableId fromTableId;      ///< The table when asked
+    Craps::TableId toTableId;        ///< The table asked for
+    std::string    toTableName;      ///< Its name, for the message
+    unsigned       numBuddiesFollowed = 0;   ///< Buddies now at the new table
+    unsigned       numBuddiesLeft     = 0;   ///< Buddies who left the game
+    unsigned       numBetsReturned    = 0;   ///< Bets that came down
+    Gen::ErrorPass error;
+
+    RspSwitchTable()
+        : GameEvent{EventSource::Controller, EventType::RspSwitchTable}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// The table changed. Sent after RspSwitchTable, only when the switch
+/// happened. Everything the View shows about the table, its players and
+/// the bets is stale.
+struct UslTableSwitched : public GameEvent
+{
+    Craps::TableId fromTableId;
+    Craps::TableId toTableId;
+
+    UslTableSwitched()
+        : GameEvent{EventSource::Controller, EventType::UslTableSwitched}
+    {}
+};
+
+//----------------------------------------------------------------
+
+/// Change what the buddies do when the user player changes tables. It is
+/// kept with the user player. No response.
+struct ReqSetBuddyFollow : public GameEvent
+{
+    BuddyFollow value = BuddyFollow::Follow;
+
+    ReqSetBuddyFollow()
+        : GameEvent{EventSource::View, EventType::ReqSetBuddyFollow}
     {}
 };
 

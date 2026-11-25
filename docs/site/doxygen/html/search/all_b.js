@@ -50,7 +50,7 @@ var searchData=
   ['lineinput_2ecpp_47',['LineInput.cpp',['../LineInput_8cpp.html',1,'']]],
   ['lineinput_2eh_48',['LineInput.h',['../LineInput_8h.html',1,'']]],
   ['linenum_49',['lineNum',['../classGen_1_1ErrorPass.html#af1f511268d66b0055936fcb2d6230ca0',1,'Gen::ErrorPass']]],
-  ['list_50',['List',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8a4ee29ca12c7d126654bd0e5275de6135',1,'Cui::OperationManager']]],
+  ['list_50',['List',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8a4ee29ca12c7d126654bd0e5275de6135',1,'Cui::OperationManager::List'],['../classCui_1_1OperationManager.html#abc785797d41af03f62013485d84935fca4ee29ca12c7d126654bd0e5275de6135',1,'Cui::OperationManager::List']]],
   ['listasstring_51',['listAsString',['../namespaceEnumBetName.html#a9dde1d1a15ec792696abe3f535a83f97',1,'EnumBetName']]],
   ['listbuddies_52',['ListBuddies',['../classCui_1_1OperationManager.html#a0d048b4332b71839f28bcd90177eb3d8ab7e6f4708f177cb16ca7fa4c1c57b850',1,'Cui::OperationManager']]],
   ['listlayers_53',['listLayers',['../classGen_1_1MultiLayerConfig.html#a0978a8ba93ea8888d38fff724a5139ad',1,'Gen::MultiLayerConfig']]],

@@ -596,6 +596,16 @@ CrapsReaders::readTableName()
 }
 
 //----------------------------------------------------------------
+//
+// What the user's buddies do when the user changes tables.
+//
+BuddyFollow
+CrapsReaders::readBuddyFollow()
+{
+    return Gbl::pPlayerMgr->userPrefs().buddyFollow();
+}
+
+//----------------------------------------------------------------
 
 CrapsReaders::TableMinMaxRules
 CrapsReaders::readTableMinMaxRules()

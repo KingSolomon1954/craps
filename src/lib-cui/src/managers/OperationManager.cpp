@@ -18,6 +18,7 @@
 #include <controller/AnimationSpeed.h>
 #include <controller/AutoOdds.h>
 #include <controller/BetSpec.h>
+#include <controller/BuddyFollow.h>
 #include <controller/QuickBets.h>
 #include <controller/CrapsReaders.h>
 #include <controller/RollHistoryFormat.h>
@@ -1655,9 +1656,9 @@ OperationManager::onErrorAcknowledged()
 {
     if (stage_ != Stage::AwaitingErrorAcknowledgement) return;
 
-    if (type_ == OperationType::Player)
+    if (type_ == OperationType::Player || type_ == OperationType::Table)
     {
-        // Back to the Player menu, which is still on the stack.
+        // Back to the Player or Table menu, still on the stack.
         finish();
         return;
     }
@@ -1698,6 +1699,26 @@ void
 OperationManager::onConfirmationResult(SurfaceBase::OperationResult result)
 {
     if (stage_ != Stage::AwaitingConfirmation) return;
+
+    if (type_ == OperationType::Table)
+    {
+        using R = SurfaceBase::OperationResult;
+        if (tableStep_ == TableStep::ConfirmBets)
+        {
+            if (result == R::Yes) afterBetsConfirmed();
+            else                  finish();
+        }
+        else if (result == R::Yes || result == R::No)   // AskBuddies
+        {
+            buddiesFollow_ = (result == R::Yes);
+            sendTableRequest();
+        }
+        else
+        {
+            finish();                 // Esc: don't switch at all
+        }
+        return;
+    }
 
     if (type_ == OperationType::Player)
     {
@@ -1772,6 +1793,9 @@ OperationManager::finish()
     text_.clear();
     description_.clear();
     askingDescription_ = false;
+    tableChoices_.clear();
+    targetTableId_.clear();
+    targetTableName_.clear();
 }
 
 //----------------------------------------------------------------
@@ -1937,6 +1961,249 @@ OperationManager::playerOperation(PlayerOp op)
 
 //----------------------------------------------------------------
 //
+// Table operations, started from MenuTable
+//
+//   List     show the tables, the one you are at marked "(current)"
+//   Switch   pick a table, [confirm if bets are on the table],
+//            [ask if buddies go along, per the Configure setting], request
+//
+// After a successful Switch the screen returns to the table.
+//
+bool
+OperationManager::tableOperation(TableOp op)
+{
+    if (isActive()) return false;
+
+    Craps::TableId currentId;
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::getActiveCrapsTable(currentId, ep);
+
+    std::vector<DialogPicker::Item> items;
+    std::vector<Craps::TableId> choices;
+    for (const auto& t : Ctrl::CrapsReaders::readTableList())
+    {
+        const bool isCurrent = (t.tableId == currentId);
+        if (op == TableOp::Switch && isCurrent) continue;
+
+        DialogPicker::Item item;
+        item.text        = t.tableName;
+        item.note        = (op == TableOp::List && isCurrent) ? "(current)" : "";
+        item.description = t.shortDescription;
+        item.tag         = choices.size();
+        items.push_back(std::move(item));
+        choices.push_back(t.tableId);
+    }
+
+    if (op == TableOp::Switch && items.empty())
+    {
+        showNotice("No other tables", "There is no other table to go to.");
+        return true;
+    }
+
+    type_      = OperationType::Table;
+    tableOp_   = op;
+    tableStep_ = TableStep::PickTable;
+    tableChoices_ = std::move(choices);
+    targetTableId_.clear();
+    targetTableName_.clear();
+    buddiesFollow_ = true;
+
+    stage_ = Stage::AwaitingPick;
+    DialogPicker::instance().configure(
+        op == TableOp::List ? "Tables" : "Switch to Table", std::move(items),
+        op == TableOp::List ? DialogPicker::Mode::Show
+                            : DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
+    return true;
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onTablePick(bool accepted, std::size_t tag)
+{
+    if (!accepted || tableOp_ != TableOp::Switch ||
+        tag >= tableChoices_.size())
+    {
+        finish();        // Cancelled, or just looking at the list
+        return;
+    }
+
+    targetTableId_ = tableChoices_[tag];
+    for (const auto& t : Ctrl::CrapsReaders::readTableList())
+    {
+        if (t.tableId == targetTableId_) targetTableName_ = t.tableName;
+    }
+
+    unsigned numBets = 0;
+    Gen::ErrorPass ep;
+    (void) Ctrl::CrapsReaders::readPlayerNumBetsOnTable(
+               Ctrl::CrapsReaders::getUserPlayerId(), numBets, ep);
+    if (numBets > 0)
+    {
+        tableStep_ = TableStep::ConfirmBets;
+        askConfirmation("Switch to " + targetTableName_ +
+                        "? Bets on the table are returned");
+    }
+    else
+    {
+        afterBetsConfirmed();
+    }
+}
+
+//----------------------------------------------------------------
+//
+// Settle whether the buddies go along, asking if the person said to.
+// Nothing to ask when no buddy is at the table.
+//
+void
+OperationManager::afterBetsConfirmed()
+{
+    unsigned numBuddies = 0;
+    for (const auto& p : Ctrl::CrapsReaders::readPlayerRoster())
+    {
+        if (p.kind == Ctrl::PlayerKind::Buddy && p.atTable) ++numBuddies;
+    }
+
+    buddiesFollow_ = true;
+    if (numBuddies == 0)
+    {
+        sendTableRequest();
+        return;
+    }
+
+    switch (Ctrl::CrapsReaders::readBuddyFollow())
+    {
+    case Ctrl::BuddyFollow::Follow:
+        buddiesFollow_ = true;
+        sendTableRequest();
+        break;
+    case Ctrl::BuddyFollow::Stay:
+        buddiesFollow_ = false;
+        sendTableRequest();
+        break;
+    case Ctrl::BuddyFollow::Ask:
+        tableStep_ = TableStep::AskBuddies;
+        askConfirmation(std::string("Do your buddy ") +
+                        (numBuddies == 1 ? "player goes" : "players go") +
+                        " to " + targetTableName_ + " with you?");
+        break;
+    }
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::sendTableRequest()
+{
+    stage_ = Stage::AwaitingResponse;
+    correlationId_ = CuiSender::instance().reqSwitchTable(
+        targetTableId_, buddiesFollow_);
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onRspSwitchTable(const Ctrl::RspSwitchTable& ev)
+{
+    if (stage_ != Stage::AwaitingResponse ||
+        type_  != OperationType::Table    ||
+        ev.correlationId != correlationId_)
+    {
+        LOG_WARN("OperationManager::onRspSwitchTable(): ignoring "
+                 "unmatched RspSwitchTable");
+        return;
+    }
+
+    if (!ev.switched)
+    {
+        showError(ev.error, "Table Error", "Unable to Switch Table");
+        return;
+    }
+
+    // Back to the table, now at the new place.
+    SurfaceManager::instance().popToRoot();
+    finish();
+
+    auto count = [](unsigned n, const char* one, const char* many)
+    {
+        return std::to_string(n) + " " + (n == 1 ? one : many);
+    };
+    std::string detail;
+    if (ev.numBuddiesFollowed > 0)
+    {
+        detail += count(ev.numBuddiesFollowed, "buddy player", "buddy players")
+                  + " came with you. ";
+    }
+    if (ev.numBuddiesLeft > 0)
+    {
+        detail += count(ev.numBuddiesLeft, "buddy player", "buddy players")
+                  + " left the game. Use Buddy Joins Table to seat them. ";
+    }
+    if (ev.numBetsReturned > 0)
+    {
+        detail += count(ev.numBetsReturned, "bet was", "bets were")
+                  + " returned.";
+    }
+    showNotice("Now at " + ev.toTableName, detail);
+}
+
+//----------------------------------------------------------------
+//
+// Pick what the buddy players do when the user player changes tables.
+//
+bool
+OperationManager::chooseBuddyFollow()
+{
+    if (isActive()) return false;
+
+    using Ctrl::BuddyFollow;
+    const auto current = Ctrl::CrapsReaders::readBuddyFollow();
+
+    auto label = [](BuddyFollow b) -> const char*
+    {
+        switch (b)
+        {
+        case BuddyFollow::Follow: return "Follow";
+        case BuddyFollow::Stay:   return "Stay";
+        case BuddyFollow::Ask:    return "Ask";
+        }
+        return "";
+    };
+    auto describe = [](BuddyFollow b) -> const char*
+    {
+        switch (b)
+        {
+        case BuddyFollow::Follow: return "buddies go to the new table with you";
+        case BuddyFollow::Stay:   return "buddies leave the game";
+        case BuddyFollow::Ask:    return "ask each time buddies are at the table";
+        }
+        return "";
+    };
+
+    std::vector<DialogPicker::Item> items;
+    std::size_t index = 0;
+    for (auto b : Ctrl::AllBuddyFollows)
+    {
+        DialogPicker::Item item;
+        item.tag         = index++;
+        item.text        = label(b);
+        item.note        = (b == current) ? "(current)" : "";
+        item.description = describe(b);
+        items.push_back(std::move(item));
+    }
+
+    type_  = OperationType::BuddyFollow;
+    stage_ = Stage::AwaitingPick;
+    DialogPicker::instance().configure("Buddies Follow on Table Switch",
+                                       std::move(items),
+                                       DialogPicker::Mode::Pick);
+    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
+    return true;
+}
+
+//----------------------------------------------------------------
+//
 // Ask for a player name. The dialog refuses names that are not valid or
 // that another player (other than exceptId) already has, and says why,
 // so the person can fix it without leaving the dialog.
@@ -2053,6 +2320,24 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
         stage_ = Stage::AwaitingResponse;
         correlationId_ = CuiSender::instance().reqApplyQuickBets(
             Ctrl::CrapsReaders::getUserPlayerId(), quickBetNames_[tag]);
+        return;
+    }
+
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::Table)
+    {
+        (void)playerId; (void)betId;
+        onTablePick(accepted, tag);
+        return;
+    }
+
+    if (stage_ == Stage::AwaitingPick && type_ == OperationType::BuddyFollow)
+    {
+        if (accepted && tag < Ctrl::AllBuddyFollows.size())
+        {
+            CuiSender::instance().reqSetBuddyFollow(
+                Ctrl::AllBuddyFollows[tag]);
+        }
+        finish();
         return;
     }
 

@@ -91,6 +91,7 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="classCtrl_1_1TableManager-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Ctrl::TableManager Class Reference</div></div>
@@ -102,6 +103,12 @@ $(function(){ initResizable(false); });
 
 <p><code>#include &lt;<a class="el" href="TableManager_8h_source.html">TableManager.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCtrl_1_1TableManager_1_1SwitchResult.html">SwitchResult</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">What a switch did, for the answer to the View.  <a href="structCtrl_1_1TableManager_1_1SwitchResult.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a94e29d86bc4a46f603d259e25720f82f" id="r_a94e29d86bc4a46f603d259e25720f82f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94e29d86bc4a46f603d259e25720f82f">Tables</a> = std::vector&lt;<a class="el" href="classCraps_1_1CrapsTable.html">Craps::CrapsTable</a>*&gt;</td></tr>
@@ -117,8 +124,8 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modifiers</div></td></tr>
 <tr class="memitem:ab41ed8619d701d58e2b4ba9013d01f32" id="r_ab41ed8619d701d58e2b4ba9013d01f32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab41ed8619d701d58e2b4ba9013d01f32">shutdown</a> ()</td></tr>
 <tr class="separator:ab41ed8619d701d58e2b4ba9013d01f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e770f372ce2a5f12a5edba4daba937c" id="r_a0e770f372ce2a5f12a5edba4daba937c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e770f372ce2a5f12a5edba4daba937c">switchCrapsTable</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;toTableId, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
-<tr class="separator:a0e770f372ce2a5f12a5edba4daba937c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a189a09178c76f12fa634230188793c19" id="r_a189a09178c76f12fa634230188793c19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a189a09178c76f12fa634230188793c19">switchCrapsTable</a> (const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;toTableId, bool buddiesFollow, <a class="el" href="structCtrl_1_1TableManager_1_1SwitchResult.html">SwitchResult</a> &amp;result, <a class="el" href="classGen_1_1ErrorPass.html">Gen::ErrorPass</a> &amp;ep)</td></tr>
+<tr class="separator:a189a09178c76f12fa634230188793c19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Observers</div></td></tr>
 <tr class="memitem:a1f5af5d2fe13a75c82ec0ea234632d50" id="r_a1f5af5d2fe13a75c82ec0ea234632d50"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classCtrl_1_1TableManifest.html#a4e5f1e35c174ecb7fc0f035d6af40deb">TableManifest::TableList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f5af5d2fe13a75c82ec0ea234632d50">getTableList</a> () const</td></tr>
 <tr class="separator:a1f5af5d2fe13a75c82ec0ea234632d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,8 +141,19 @@ Public Member Functions</h2></td></tr>
 <ul>
 <li>loadCrapsTable() reads the table's file once, keeps it as a <a class="el" href="classCtrl_1_1YamlFile.html" title="One YAML file, held as a document made of named sections.">YamlFile</a> and builds the CrapsTable from its "Table" section. </li>
 <li><a class="el" href="#ab41ed8619d701d58e2b4ba9013d01f32">shutdown()</a> shuts the current table down, which in turn shuts down all of its players and merges the session into their stats and the table's. It then takes a fresh snapshot of the table and writes its file. Failures are logged with LOG_ERROR. Call it once at quit, and before <a class="el" href="classCtrl_1_1PlayerManager.html#a96cfc316c4fcd368e2d34c881518ce73">PlayerManager::shutdown()</a>, which saves the players afterward. </li>
-<li><a class="el" href="#a0e770f372ce2a5f12a5edba4daba937c">switchCrapsTable()</a> saves the table it is leaving, after closing it. </li>
+<li><a class="el" href="#a189a09178c76f12fa634230188793c19">switchCrapsTable()</a> moves the user player, and the buddies who follow, to another table. See below.</li>
 </ul>
+<dl class="section user"><dt>Switching tables</dt><dd></dd></dl>
+<p><a class="el" href="#a189a09178c76f12fa634230188793c19">switchCrapsTable()</a> loads the new table first, so a table file that cannot be read leaves everything as it was. After that it does not fail:</p>
+<ul>
+<li>Betting must be open. Every seated player ends the session at the old table: bets come down, money returns to the player, stats merge. </li>
+<li>The old table is closed, which records its session, and saved. </li>
+<li>The new table becomes the active one (<a class="el" href="classGbl.html#a80e96367c3a85a34920f6b4a1e8ccae3">Gbl::pTable</a>) and the user player, then each buddy who follows, joins it, in the seating order they had. The user is the shooter. Buddies who do not follow are saved and are out of the game until someone seats them. </li>
+<li>The old table object is kept in retired_ rather than deleted. Another thread may be reading the table as the switch happens, and a retired table is a closed, empty one, which is safe to read. </li>
+<li>Undo history is cleared, and <a class="el" href="classCtrl_1_1AutoOdds.html" title="One player&#39;s automatic odds settings.">AutoOdds</a> forgets the bets it had handled. </li>
+<li>The players' files are saved.</li>
+</ul>
+<p>The caller, <a class="el" href="classCtrl_1_1EventHandler.html" title="Processes GameEvents for lib-controller.">EventHandler</a>, answers the View and sends the events that tell it the table changed. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a94e29d86bc4a46f603d259e25720f82f" name="a94e29d86bc4a46f603d259e25720f82f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94e29d86bc4a46f603d259e25720f82f">&#9670;&#160;</a></span>Tables</h2>
@@ -259,8 +277,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0e770f372ce2a5f12a5edba4daba937c" name="a0e770f372ce2a5f12a5edba4daba937c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e770f372ce2a5f12a5edba4daba937c">&#9670;&#160;</a></span>switchCrapsTable()</h2>
+<a id="a189a09178c76f12fa634230188793c19" name="a189a09178c76f12fa634230188793c19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a189a09178c76f12fa634230188793c19">&#9670;&#160;</a></span>switchCrapsTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -269,6 +287,16 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="namespaceGen.html#a07398fc4efb326972c1462a5903a5114">Gen::ReturnCode</a> TableManager::switchCrapsTable </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespaceCraps.html#a2d6cc59e8ed3ada470393b645849a7e5">Craps::TableId</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>toTableId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>buddiesFollow</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCtrl_1_1TableManager_1_1SwitchResult.html">SwitchResult</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>result</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -287,7 +315,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 24 2026 15:16:03 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Nov 25 2026 16:21:12 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -53,6 +53,7 @@ public:
     /// @name Modifiers
     /// @{
     void shutdown();
+    void savePlayers();    // Writes every loaded player's file
     Gen::ReturnCode switchPlayer(const Craps::PlayerId& toPlayerId,
                                  Gen::ErrorPass& ep);
     PlayerPrefs& userPrefs();

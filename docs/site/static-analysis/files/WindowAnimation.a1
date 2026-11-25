@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="10059373724511923130">
+<analyzerinfo hash="13847869798605578684">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_HLINE"/>
     <functioncall functionName="ACS_LLCORNER"/>
@@ -22,6 +22,7 @@
     <functioncall functionName="Settling"/>
     <functioncall functionName="ShowingRoll"/>
     <functioncall functionName="WindowAnimation"/>
+    <functioncall functionName="ZeroRoll"/>
     <functioncall functionName="animationEnabled"/>
     <functioncall functionName="animationHeight"/>
     <functioncall functionName="animationLeftCol"/>

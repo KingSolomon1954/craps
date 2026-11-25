@@ -178,3 +178,65 @@ QuickBets:
 }
 
 //----------------------------------------------------------------
+
+//----------------------------------------------------------------
+
+TEST_CASE("PlayerPrefs:buddies follow by default")
+{
+    PlayerPrefs prefs;
+    CHECK((prefs.buddyFollow() == Ctrl::BuddyFollow::Follow));
+    CHECK(prefs.toYAML()["BuddiesFollow"].as<std::string>() == "follow");
+
+    prefs.fromYAML(YAML::Node());              // Nothing saved
+    CHECK((prefs.buddyFollow() == Ctrl::BuddyFollow::Follow));
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("PlayerPrefs:buddies follow round trip")
+{
+    for (auto choice : Ctrl::AllBuddyFollows)
+    {
+        PlayerPrefs src;
+        src.setBuddyFollow(choice);
+
+        PlayerPrefs dst;
+        dst.setBuddyFollow(choice == Ctrl::BuddyFollow::Stay
+                               ? Ctrl::BuddyFollow::Ask
+                               : Ctrl::BuddyFollow::Stay);
+        dst.fromYAML(src.toYAML());
+        CHECK((dst.buddyFollow() == choice));
+    }
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("PlayerPrefs:buddies follow ignores what it cannot read")
+{
+    PlayerPrefs prefs;
+    prefs.setBuddyFollow(Ctrl::BuddyFollow::Stay);
+
+    YAML::Node n = PlayerPrefs().toYAML();
+    n["BuddiesFollow"] = "sometimes";          // Not one of the words
+    prefs.fromYAML(n);
+    CHECK((prefs.buddyFollow() == Ctrl::BuddyFollow::Follow));
+
+    n["BuddiesFollow"] = " ASK ";              // Case and blanks do not matter
+    prefs.fromYAML(n);
+    CHECK((prefs.buddyFollow() == Ctrl::BuddyFollow::Ask));
+}
+
+//----------------------------------------------------------------
+
+TEST_CASE("BuddyFollow:words")
+{
+    for (auto choice : Ctrl::AllBuddyFollows)
+    {
+        const auto parsed = Ctrl::parseBuddyFollow(Ctrl::toString(choice));
+        REQUIRE(parsed.has_value());
+        CHECK((*parsed == choice));
+    }
+    CHECK_FALSE(Ctrl::parseBuddyFollow("").has_value());
+}
+
+//----------------------------------------------------------------

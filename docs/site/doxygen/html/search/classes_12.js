@@ -36,5 +36,6 @@ var searchData=
   ['usltablebetschanged_33',['UslTableBetsChanged',['../structCtrl_1_1UslTableBetsChanged.html',1,'Ctrl']]],
   ['usltablelastrollstatschanged_34',['UslTableLastRollStatsChanged',['../structCtrl_1_1UslTableLastRollStatsChanged.html',1,'Ctrl']]],
   ['usltablesessionstatschanged_35',['UslTableSessionStatsChanged',['../structCtrl_1_1UslTableSessionStatsChanged.html',1,'Ctrl']]],
-  ['usluserplayerswitched_36',['UslUserPlayerSwitched',['../structCtrl_1_1UslUserPlayerSwitched.html',1,'Ctrl']]]
+  ['usltableswitched_36',['UslTableSwitched',['../structCtrl_1_1UslTableSwitched.html',1,'Ctrl']]],
+  ['usluserplayerswitched_37',['UslUserPlayerSwitched',['../structCtrl_1_1UslUserPlayerSwitched.html',1,'Ctrl']]]
 ];

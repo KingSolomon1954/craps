@@ -34,6 +34,7 @@ add_library(cui STATIC
     src/menus/MenuOddsBet.cpp
     src/menus/MenuPivot.cpp
     src/menus/MenuPlayers.cpp
+    src/menus/MenuTable.cpp
     src/menus/MenuNavBarViews.cpp
     src/panels/PlayerAreaAllPlayers.cpp
     src/panels/PlayerAreaOnePlayer.cpp

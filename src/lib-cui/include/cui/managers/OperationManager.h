@@ -45,8 +45,17 @@ public:
         BuddyLeaves    ///< A buddy leaves the table
     };
 
+    /// The table operations on MenuTable
+    enum class TableOp
+    {
+        List,          ///< Show the tables
+        Switch         ///< Move to another table
+    };
+
     /// @name Modifiers
     /// @{
+    bool tableOperation(TableOp op);    // Workflow: Table menu operations
+    bool chooseBuddyFollow();           // Workflow: Pick what buddies do on a switch
     bool playerOperation(PlayerOp op);  // Workflow: Player menu operations
     void makeBet();      // Workflow: Asynchronous bet operation
     bool removeBets();   // Workflow: Pick one of your bets to take down
@@ -79,6 +88,7 @@ public:
     void onTextResult(bool accepted, const std::string& text);
     void onRspSwitchPlayer(const Ctrl::RspSwitchPlayer& response);
     void onRspManagePlayer(const Ctrl::RspManagePlayer& response);
+    void onRspSwitchTable(const Ctrl::RspSwitchTable& response);
     void onErrorAcknowledged();
     /// @}
 
@@ -105,6 +115,8 @@ private:
         AutoOdds,
         Quit,
         Player,
+        Table,
+        BuddyFollow,
         AnimationSpeed,
         RollHistoryFormat
     };
@@ -163,6 +175,15 @@ private:
     Stage stage_                       = Stage::Idle;
     Ctrl::CorrelationId correlationId_ = 0;
 
+    // Table operation in progress
+    enum class TableStep { PickTable, ConfirmBets, AskBuddies };
+    TableOp        tableOp_   = TableOp::List;
+    TableStep      tableStep_ = TableStep::PickTable;
+    std::vector<Craps::TableId> tableChoices_;   // What the pick list offered
+    Craps::TableId targetTableId_;
+    std::string    targetTableName_;
+    bool           buddiesFollow_ = true;
+
     // Player operation in progress
     PlayerOp        playerOp_   = PlayerOp::List;
     Craps::PlayerId targetId_;       // Player picked, or the user player
@@ -198,6 +219,9 @@ private:
                     const std::string& initial,
                     const Craps::PlayerId& exceptId);
     void sendPlayerRequest();
+    void onTablePick(bool accepted, std::size_t tag);
+    void afterBetsConfirmed();
+    void sendTableRequest();
     const char* playerOpVerb() const;
     void sendNextRemoval();
     void onRemovalResult(bool accepted, const Gen::ErrorPass& error);

@@ -1,27 +1,32 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="15809920334260543678">
+<analyzerinfo hash="14529737144766806081">
   <FileInfo check="Uninitialized variables">
-    <unsafe-usage my-id="/work/src/lib-controller/src/UndoBet.cpp:21:1" my-argnr="1" my-argname="bet" file="/work/src/lib-controller/src/UndoBet.cpp" line="23" col="47" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-controller/src/UndoBet.cpp:22:1" my-argnr="1" my-argname="bet" file="/work/src/lib-controller/src/UndoBet.cpp" line="24" col="47" value="0"/>
   </FileInfo>
   <FileInfo check="CheckUnusedFunctions">
-    <functiondecl functionName="betText" lineNumber="21"/>
+    <functiondecl functionName="betText" lineNumber="22"/>
     <functioncall functionName="Fail"/>
     <functioncall functionName="Success"/>
     <functioncall functionName="UndoBet"/>
     <functioncall functionName="UndoBetAdded"/>
+    <functioncall functionName="UndoBetFlagsChanged"/>
     <functioncall functionName="UndoBetModifiedAmount"/>
     <functioncall functionName="UndoBetRemoved"/>
     <functioncall functionName="back"/>
     <functioncall functionName="betId"/>
+    <functioncall functionName="betLabel"/>
     <functioncall functionName="betName"/>
     <functioncall functionName="betText"/>
     <functioncall functionName="contractAmount"/>
     <functioncall functionName="describe"/>
     <functioncall functionName="empty"/>
     <functioncall functionName="error"/>
+    <functioncall functionName="flagOneRoll"/>
+    <functioncall functionName="flagStanding"/>
     <functioncall functionName="front"/>
     <functioncall functionName="move"/>
     <functioncall functionName="oddsAmount"/>
+    <functioncall functionName="oneRoll_"/>
     <functioncall functionName="pBet_"/>
     <functioncall functionName="pivot"/>
     <functioncall functionName="player"/>
@@ -31,7 +36,9 @@
     <functioncall functionName="removeBet"/>
     <functioncall functionName="restoreAmounts"/>
     <functioncall functionName="restoreBet"/>
+    <functioncall functionName="setBetFlags"/>
     <functioncall functionName="size"/>
+    <functioncall functionName="standing_"/>
     <functioncall functionName="toString"/>
     <functioncall functionName="to_string"/>
     <functioncall functionName="undo"/>

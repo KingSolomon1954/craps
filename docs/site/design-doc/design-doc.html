@@ -74,7 +74,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#craps-engine">Craps Engine</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#players">Players</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tables">Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tables">Tables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#table-switch-purpose">Table Switch Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-switch-participants">Table Switch Participants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-switch-steps">Table Switch Steps</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#betting">Betting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#statistics">Statistics</a></li>
 </ul>
@@ -576,7 +581,52 @@ its own paragraph. See <a class="reference external" href="http://www.extremepro
 </section>
 <section id="tables">
 <h3>Tables<a class="headerlink" href="#tables" title="Link to this heading"></a></h3>
-<p>TBS</p>
+<section id="table-switch-purpose">
+<h4>Table Switch Purpose<a class="headerlink" href="#table-switch-purpose" title="Link to this heading"></a></h4>
+<p>The game comes with several tables, listed in <code class="docutils literal notranslate"><span class="pre">tables.yaml</span></code>. The user
+player can move to another one during play, with or without the buddy
+players. The tables are fixed by the installation. Making a table is not a
+function of the game.</p>
+</section>
+<section id="table-switch-participants">
+<h4>Table Switch Participants<a class="headerlink" href="#table-switch-participants" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TableManager</span></code> owns the current <code class="docutils literal notranslate"><span class="pre">CrapsTable</span></code> and the file it came
+from. <code class="docutils literal notranslate"><span class="pre">switchCrapsTable()</span></code> does the whole switch. <code class="docutils literal notranslate"><span class="pre">CrapsTable</span></code> knows
+nothing of files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EventHandler</span></code> answers <code class="docutils literal notranslate"><span class="pre">ReqSwitchTable</span></code> with <code class="docutils literal notranslate"><span class="pre">RspSwitchTable</span></code>, then
+sends <code class="docutils literal notranslate"><span class="pre">UslTableSwitched</span></code> and the new table’s snapshot events.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BuddyFollow</span></code> (<code class="docutils literal notranslate"><span class="pre">Follow</span></code>, <code class="docutils literal notranslate"><span class="pre">Stay</span></code>, <code class="docutils literal notranslate"><span class="pre">Ask</span></code>) is kept in <code class="docutils literal notranslate"><span class="pre">PlayerPrefs</span></code>
+with the user player. <code class="docutils literal notranslate"><span class="pre">ReqSetBuddyFollow</span></code> changes it. With <code class="docutils literal notranslate"><span class="pre">Ask</span></code> the
+View asks, then sends the answer in <code class="docutils literal notranslate"><span class="pre">ReqSwitchTable</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OperationManager</span></code> runs the Table operations for <code class="docutils literal notranslate"><span class="pre">MenuTable</span></code>, and the
+Buddies Follow choice for <code class="docutils literal notranslate"><span class="pre">MenuConfigure</span></code>.</p></li>
+</ul>
+</section>
+<section id="table-switch-steps">
+<h4>Table Switch Steps<a class="headerlink" href="#table-switch-steps" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p>Check: the table is in the manifest, is not the current one, and betting
+is open. Load the new table file. A file that cannot be read fails the
+request and nothing has changed. After this point the switch does not
+fail.</p></li>
+<li><p>Every seated player ends the session at the old table: bets come down,
+the money is returned and statistics are merged.</p></li>
+<li><p>The undo stacks are cleared. The old table is closed, which records the
+session with the number of players it had, and its file is saved.</p></li>
+<li><p>The new table becomes <code class="docutils literal notranslate"><span class="pre">Gbl::pTable</span></code>. The user player and, if they follow,
+the buddies join it in the seating order they had. The user is the
+shooter.</p></li>
+<li><p>The players’ files are saved and AutoOdds forgets what it handled.</p></li>
+</ol>
+<p>The old table object is retired, not deleted. The View reads the table
+directly through <code class="docutils literal notranslate"><span class="pre">CrapsReaders</span></code>, and it may be in the middle of a read on
+the CUI thread as the switch happens. A retired table is closed and empty,
+so a late read is safe. Retired tables are released when the game ends.</p>
+<p>On <code class="docutils literal notranslate"><span class="pre">UslTableSwitched</span></code> the View clears the roll list, resets the title bar
+and the dice window, and refreshes the roster. The numbers for the house
+and the players arrive in the snapshot events that follow it.</p>
+</section>
 </section>
 <section id="betting">
 <h3>Betting<a class="headerlink" href="#betting" title="Link to this heading"></a></h3>

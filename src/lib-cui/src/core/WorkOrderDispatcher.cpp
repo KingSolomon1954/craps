@@ -5,6 +5,7 @@
 //----------------------------------------------------------------
 
 #include <cui/core/WorkOrderDispatcher.h>
+#include <cui/core/RollLog.h>
 #include <cui/managers/ColorManager.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/managers/OperationManager.h>
@@ -103,6 +104,7 @@ WorkOrderDispatcher::passesThrough(const WorkOrderEvent& woe)
                    std::is_same_v<T, Ctrl::RspEditAutoOdds>   ||
                    std::is_same_v<T, Ctrl::RspSetBetFlags>    ||
                    std::is_same_v<T, Ctrl::RspSwitchPlayer>   ||
+                   std::is_same_v<T, Ctrl::RspSwitchTable>    ||
                    std::is_same_v<T, Ctrl::RspManagePlayer>;
         },
         woe.event);
@@ -585,6 +587,22 @@ WorkOrderDispatcher::process(const Ctrl::UslUserPlayerSwitched& ev)
 //----------------------------------------------------------------
 
 void
+WorkOrderDispatcher::process(const Ctrl::UslTableSwitched& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(UslTableSwitched)");
+    (void) ev;
+    // A different table: its name, rules, rolls and point. The roll
+    // list and the title bar start over. The house numbers and the
+    // players' bets arrive as the table's snapshot events that follow.
+    RollLog::instance().clear();
+    WindowTitleBar::instance().onTableSwitched();
+    WindowAnimation::instance().onTableSwitched();
+    refreshRoster();
+}
+
+//----------------------------------------------------------------
+
+void
 WorkOrderDispatcher::process(const Ctrl::UslPlayerRenamed& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(UslPlayerRenamed)");
@@ -599,6 +617,15 @@ WorkOrderDispatcher::process(const Ctrl::RspSwitchPlayer& ev)
 {
     LOG_TRACE("WorkOrderDispatcher::process(RspSwitchPlayer)");
     OperationManager::instance().onRspSwitchPlayer(ev);
+}
+
+//----------------------------------------------------------------
+
+void
+WorkOrderDispatcher::process(const Ctrl::RspSwitchTable& ev)
+{
+    LOG_TRACE("WorkOrderDispatcher::process(RspSwitchTable)");
+    OperationManager::instance().onRspSwitchTable(ev);
 }
 
 //----------------------------------------------------------------

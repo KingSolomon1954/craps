@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="1921262688248126748">
+<analyzerinfo hash="13390646481475162894">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="LOG_DEBUG"/>
     <functioncall functionName="LOG_TRACE"/>
     <functioncall functionName="instance"/>
     <functioncall functionName="publish"/>
-    <functioncall functionName="toString"/>
     <functioncall functionName="to_string"/>
   </FileInfo>
 </analyzerinfo>

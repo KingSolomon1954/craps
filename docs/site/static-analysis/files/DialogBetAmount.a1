@@ -1,19 +1,20 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="6569112701050884107">
+<analyzerinfo hash="2105874905370958600">
   <FileInfo check="CheckUnusedFunctions">
-    <functiondecl functionName="padLine" lineNumber="39"/>
-    <functiondecl functionName="payoutLabel" lineNumber="50"/>
-    <functiondecl functionName="referencePayoutDetails" lineNumber="69"/>
-    <functiondecl functionName="money" lineNumber="87"/>
-    <functiondecl functionName="expectedMoney" lineNumber="95"/>
-    <functiondecl functionName="signedMoney" lineNumber="107"/>
-    <functiondecl functionName="percent" lineNumber="117"/>
-    <functiondecl functionName="profileFor" lineNumber="143"/>
-    <functiondecl functionName="referenceFor" lineNumber="433"/>
+    <functiondecl functionName="padLine" lineNumber="38"/>
+    <functiondecl functionName="payoutLabel" lineNumber="49"/>
+    <functiondecl functionName="referencePayoutDetails" lineNumber="68"/>
+    <functiondecl functionName="money" lineNumber="86"/>
+    <functiondecl functionName="expectedMoney" lineNumber="94"/>
+    <functiondecl functionName="signedMoney" lineNumber="106"/>
+    <functiondecl functionName="percent" lineNumber="116"/>
+    <functiondecl functionName="profileFor" lineNumber="142"/>
+    <functiondecl functionName="referenceFor" lineNumber="432"/>
     <functioncall functionName="ACS_HLINE"/>
     <functioncall functionName="ACS_LTEE"/>
     <functioncall functionName="ACS_RTEE"/>
     <functioncall functionName="All"/>
+    <functioncall functionName="AutoOddsPrompt"/>
     <functioncall functionName="Cancel"/>
     <functioncall functionName="Dialog"/>
     <functioncall functionName="DialogBase"/>
@@ -21,7 +22,7 @@
     <functioncall functionName="Money"/>
     <functioncall functionName="Prompts"/>
     <functioncall functionName="Right"/>
-    <functioncall functionName="autoFill"/>
+    <functioncall functionName="autoOddsSetOrUnset"/>
     <functioncall functionName="back"/>
     <functioncall functionName="beep"/>
     <functioncall functionName="box"/>
@@ -34,12 +35,13 @@
     <functioncall functionName="cursorPosition"/>
     <functioncall functionName="data"/>
     <functioncall functionName="details"/>
-    <functioncall functionName="doAutoFill"/>
+    <functioncall functionName="doAutoOdds"/>
     <functioncall functionName="doEnter"/>
     <functioncall functionName="doHelp"/>
-    <functioncall functionName="doQuickBet"/>
+    <functioncall functionName="doQuickBets"/>
     <functioncall functionName="doupdate"/>
     <functioncall functionName="drawAmountLimits"/>
+    <functioncall functionName="drawAutoOddsPrompt"/>
     <functioncall functionName="drawBorders"/>
     <functioncall functionName="drawInput"/>
     <functioncall functionName="drawPrompts"/>
@@ -56,7 +58,6 @@
     <functioncall functionName="format"/>
     <functioncall functionName="front"/>
     <functioncall functionName="getActiveTableStats"/>
-    <functioncall functionName="getAutoFill"/>
     <functioncall functionName="getBetName"/>
     <functioncall functionName="getContractAmount"/>
     <functioncall functionName="getLastFill"/>
@@ -87,7 +88,7 @@
     <functioncall functionName="prepLineInput"/>
     <functioncall functionName="processAmount"/>
     <functioncall functionName="profileFor"/>
-    <functioncall functionName="quickBet"/>
+    <functioncall functionName="quickBetsSetOrAdd"/>
     <functioncall functionName="readBetAmountLimits"/>
     <functioncall functionName="readInputAmount"/>
     <functioncall functionName="referenceFor"/>
@@ -110,8 +111,10 @@
     <functioncall functionName="substr"/>
     <functioncall functionName="tally"/>
     <functioncall functionName="tallyPoint"/>
+    <functioncall functionName="text"/>
     <functioncall functionName="toString"/>
     <functioncall functionName="to_string"/>
+    <functioncall functionName="touchwin"/>
     <functioncall functionName="transfer"/>
     <functioncall functionName="true"/>
     <functioncall functionName="value"/>

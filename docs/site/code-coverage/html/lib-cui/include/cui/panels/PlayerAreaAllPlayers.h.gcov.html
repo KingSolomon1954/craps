@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -120,9 +120,9 @@
 <a name="58"><span class="lineNum">      58 </span>            :                        Gen::Money             amountLose);</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span>            :     void rebuild();</a>
-<a name="62"><span class="lineNum">      62 </span>            :     void onPlayerJoinedTable(const Craps::PlayerId&amp; playerId);</a>
-<a name="63"><span class="lineNum">      63 </span>            :     void onPlayerLeftTable  (const Craps::PlayerId&amp; playerId);</a>
+<a name="61"><span class="lineNum">      61 </span>            :     void onResolveBetsEnd();</a>
+<a name="62"><span class="lineNum">      62 </span>            :     void onBetRemoved(const Craps::PlayerId&amp; playerId, Craps::BetId betId);</a>
+<a name="63"><span class="lineNum">      63 </span>            :     void rebuild();</a>
 <a name="64"><span class="lineNum">      64 </span>            :     /// @}</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
 <a name="66"><span class="lineNum">      66 </span>            :     /// @name Observers</a>
@@ -354,27 +354,30 @@
 <a name="292"><span class="lineNum">     292 </span>            : </a>
 <a name="293"><span class="lineNum">     293 </span>            : private:</a>
 <a name="294"><span class="lineNum">     294 </span>            :     void buildPlayerInfo();</a>
-<a name="295"><span class="lineNum">     295 </span>            :     std::size_t removePlayer(const Craps::PlayerId&amp; playerId);</a>
-<a name="296"><span class="lineNum">     296 </span>            : </a>
-<a name="297"><span class="lineNum">     297 </span>            :     void drawPlayerHeaders();</a>
-<a name="298"><span class="lineNum">     298 </span>            :     void drawSectionHeader(int startCol);</a>
-<a name="299"><span class="lineNum">     299 </span>            :     void drawLabels();</a>
-<a name="300"><span class="lineNum">     300 </span>            :     void drawBetMarkers();</a>
-<a name="301"><span class="lineNum">     301 </span>            :     void drawBetMarker(int row, int col, BetState state, short colorPair);</a>
-<a name="302"><span class="lineNum">     302 </span>            :     void drawWideCharacter(int row, int col,</a>
-<a name="303"><span class="lineNum">     303 </span>            :                            wchar_t ch, short colorPair);</a>
-<a name="304"><span class="lineNum">     304 </span>            :     wchar_t chooseInitial(std::string_view name) const;</a>
-<a name="305"><span class="lineNum">     305 </span>            :     std::size_t getPlayerIndex(const Craps::PlayerId&amp; playerId) const;</a>
-<a name="306"><span class="lineNum">     306 </span>            :     std::size_t getBetIndex(CuiUtils::CuiBetName betName,</a>
-<a name="307"><span class="lineNum">     307 </span>            :                             std::size_t playerIndex) const;</a>
-<a name="308"><span class="lineNum">     308 </span>            :     BetState calcBetState(Gen::Money contractAmount,</a>
-<a name="309"><span class="lineNum">     309 </span>            :                           Gen::Money oddsAmount) const;</a>
-<a name="310"><span class="lineNum">     310 </span>            :     wchar_t getMarker(BetState s) const;</a>
-<a name="311"><span class="lineNum">     311 </span>            : };</a>
-<a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span>            : } // namespace Cui</a>
-<a name="314"><span class="lineNum">     314 </span>            : </a>
-<a name="315"><span class="lineNum">     315 </span>            : //----------------------------------------------------------------</a>
+<a name="295"><span class="lineNum">     295 </span>            : </a>
+<a name="296"><span class="lineNum">     296 </span>            :     void drawPlayerHeaders();</a>
+<a name="297"><span class="lineNum">     297 </span>            :     void drawSectionHeader(int startCol);</a>
+<a name="298"><span class="lineNum">     298 </span>            :     void drawLabels();</a>
+<a name="299"><span class="lineNum">     299 </span>            :     void drawBetMarkers();</a>
+<a name="300"><span class="lineNum">     300 </span>            :     void drawBetMarker(int row, int col, BetState state, short colorPair);</a>
+<a name="301"><span class="lineNum">     301 </span>            :     void drawWideCharacter(int row, int col,</a>
+<a name="302"><span class="lineNum">     302 </span>            :                            wchar_t ch, short colorPair);</a>
+<a name="303"><span class="lineNum">     303 </span>            :     wchar_t chooseInitial(std::string_view name) const;</a>
+<a name="304"><span class="lineNum">     304 </span>            :     std::size_t getPlayerIndex(const Craps::PlayerId&amp; playerId) const;</a>
+<a name="305"><span class="lineNum">     305 </span>            :     std::size_t findBetRow(BetName betName, unsigned pivot) const;</a>
+<a name="306"><span class="lineNum">     306 </span>            :     void clearBetId(Craps::BetId betId);</a>
+<a name="307"><span class="lineNum">     307 </span>            :     void applyBet(const Craps::PlayerId&amp; playerId, Craps::BetId betId,</a>
+<a name="308"><span class="lineNum">     308 </span>            :                   BetName betName, Gen::Money contractAmount,</a>
+<a name="309"><span class="lineNum">     309 </span>            :                   Gen::Money oddsAmount, unsigned pivot);</a>
+<a name="310"><span class="lineNum">     310 </span>            :     void resyncFromModel();</a>
+<a name="311"><span class="lineNum">     311 </span>            :     BetState calcBetState(Gen::Money contractAmount,</a>
+<a name="312"><span class="lineNum">     312 </span>            :                           Gen::Money oddsAmount) const;</a>
+<a name="313"><span class="lineNum">     313 </span>            :     wchar_t getMarker(BetState s) const;</a>
+<a name="314"><span class="lineNum">     314 </span>            : };</a>
+<a name="315"><span class="lineNum">     315 </span>            : </a>
+<a name="316"><span class="lineNum">     316 </span>            : } // namespace Cui</a>
+<a name="317"><span class="lineNum">     317 </span>            : </a>
+<a name="318"><span class="lineNum">     318 </span>            : //----------------------------------------------------------------</a>
 </pre>
       </td>
     </tr>

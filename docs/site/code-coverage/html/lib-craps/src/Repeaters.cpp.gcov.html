@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -74,20 +74,20 @@
 <a name="12"><span class="lineNum">      12 </span>            : </a>
 <a name="13"><span class="lineNum">      13 </span>            : //----------------------------------------------------------------</a>
 <a name="14"><span class="lineNum">      14 </span>            : </a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">       3437 : Repeaters::Repeaters(const DiceNums&amp; numbers)</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">       3839 : Repeaters::Repeaters(const DiceNums&amp; numbers)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">      24847 :     for (const unsigned n : numbers)</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">      21410 :         buckets_[n];   // Create an empty entry</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       3437 : }</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">      27877 :     for (const unsigned n : numbers)</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">      24038 :         buckets_[n];   // Create an empty entry</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       3839 : }</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            : //----------------------------------------------------------------</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            : void</a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">     800297 : Repeaters::hit(unsigned number)</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">     800304 : Repeaters::hit(unsigned number)</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : {</a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">     800297 :     if (buckets_.contains(number))</span></a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">     800288 :         running_[number]++;</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">     800297 : }</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">     800304 :     if (buckets_.contains(number))</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">     800295 :         running_[number]++;</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">     800304 : }</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span>            : //----------------------------------------------------------------</a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
@@ -126,17 +126,17 @@
 <a name="64"><span class="lineNum">      64 </span>            : //----------------------------------------------------------------</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
 <a name="66"><span class="lineNum">      66 </span>            : void</a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">         40 : Repeaters::merge(const Repeaters&amp; session)</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">         52 : Repeaters::merge(const Repeaters&amp; session)</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : {</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">        292 :     for (const auto&amp; [number, buckets] : session.buckets_)</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">        388 :     for (const auto&amp; [number, buckets] : session.buckets_)</span></a>
 <a name="70"><span class="lineNum">      70 </span>            :     {</a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">        252 :         const auto mine = buckets_.find(number);</span></a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        252 :         if (mine == buckets_.end())</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">        336 :         const auto mine = buckets_.find(number);</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        336 :         if (mine == buckets_.end())</span></a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :             continue;</span></a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">        274 :         for (const auto&amp; [hits, times] : buckets)</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">        358 :         for (const auto&amp; [hits, times] : buckets)</span></a>
 <a name="75"><span class="lineNum">      75 </span><span class="lineCov">         22 :             mine-&gt;second[hits] += times;</span></a>
 <a name="76"><span class="lineNum">      76 </span>            :     }</a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">         40 : }</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">         52 : }</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span>            : //----------------------------------------------------------------</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
@@ -198,17 +198,17 @@
 <a name="136"><span class="lineNum">     136 </span>            : //----------------------------------------------------------------</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span>            : YAML::Node</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">         31 : Repeaters::toYAML() const</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">         35 : Repeaters::toYAML() const</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : {</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         31 :     YAML::Node node(YAML::NodeType::Map);</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        249 :     for (const auto&amp; [number, buckets] : buckets_)</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         35 :     YAML::Node node(YAML::NodeType::Map);</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        285 :     for (const auto&amp; [number, buckets] : buckets_)</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :     {</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        218 :         YAML::Node entry(YAML::NodeType::Map);</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        230 :         for (const auto&amp; [hits, times] : buckets)</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        250 :         YAML::Node entry(YAML::NodeType::Map);</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        262 :         for (const auto&amp; [hits, times] : buckets)</span></a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineCov">         12 :             entry[std::to_string(hits)] = times;</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">        218 :         node[std::to_string(number)] = entry;</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        218 :     }</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">         31 :     return node;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">        250 :         node[std::to_string(number)] = entry;</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        250 :     }</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">         35 :     return node;</span></a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span>            : //----------------------------------------------------------------</a>

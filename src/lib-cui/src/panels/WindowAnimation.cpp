@@ -185,8 +185,20 @@ WindowAnimation::startAnimation()
 }
 
 //----------------------------------------------------------------
+
+void
+WindowAnimation::onTableSwitched()
+{
+    // Betting was open, so no animation is running. A new table has had
+    // no rolls yet. onRosterChanged() follows and finds the shooter.
+    Gen::TimerManager::instance().cancelTimer(timerId_);
+    lastRoll_ = DiceRoll{};
+    state_    = AnimationState::ZeroRoll;
+}
+
+//----------------------------------------------------------------
 //
-// Called by animation rendering when dice finally lands at 
+// Called by animation rendering when dice finally lands at
 // final resting spot.
 //
 void

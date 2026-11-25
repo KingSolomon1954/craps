@@ -22,5 +22,5 @@ var searchData=
   ['stats_19',['stats',['../structCtrl_1_1UslTableLastRollStatsChanged.html#a91018ec4fa25c8bace2e8bd43b88052d',1,'Ctrl::UslTableLastRollStatsChanged::stats'],['../structCtrl_1_1UslPlayerLastRollStatsChanged.html#a7848c23384d4bb6d5a22aca98d2cdff4',1,'Ctrl::UslPlayerLastRollStatsChanged::stats']]],
   ['status_20',['status',['../structCtrl_1_1BetExecutor_1_1Outcome.html#a5adf607057f69d10f04b111599f35929',1,'Ctrl::BetExecutor::Outcome']]],
   ['style_21',['style',['../structCraps_1_1TableRules_1_1OddsLimit.html#a65d81f41df4be1c2845919c75560fdc4',1,'Craps::TableRules::OddsLimit']]],
-  ['switched_22',['switched',['../structCtrl_1_1RspSwitchPlayer.html#a6c52179b37a95c4a4a09c67c8f74c59b',1,'Ctrl::RspSwitchPlayer']]]
+  ['switched_22',['switched',['../structCtrl_1_1RspSwitchPlayer.html#a6c52179b37a95c4a4a09c67c8f74c59b',1,'Ctrl::RspSwitchPlayer::switched'],['../structCtrl_1_1RspSwitchTable.html#acdf86a92730acf5d6851f8b3d8c2a882',1,'Ctrl::RspSwitchTable::switched']]]
 ];

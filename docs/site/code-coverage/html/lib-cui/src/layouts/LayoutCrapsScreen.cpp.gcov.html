@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">84</td>
+            <td class="headerCovTableEntry">82</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -226,79 +226,73 @@
 <a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col5, ACS_TTEE);</span></a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col6, ACS_TTEE);</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
-<a name="167"><span class="lineNum">     167 </span>            :     // Bottom border</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderBotRow, O::colComeDont1, ACS_BTEE);</span></a>
-<a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span>            :     // Left border    </a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderLeftCol, ACS_LTEE);</span></a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderLeftCol, ACS_LTEE);</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderLeftCol, ACS_LTEE);</span></a>
-<a name="174"><span class="lineNum">     174 </span>            :     </a>
-<a name="175"><span class="lineNum">     175 </span>            :     // Right border    </a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderRightCol, ACS_RTEE);</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderRightCol, ACS_RTEE);</span></a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderRightCol, ACS_RTEE);</span></a>
+<a name="167"><span class="lineNum">     167 </span>            :     // Left border    </a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderLeftCol, ACS_LTEE);</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderLeftCol, ACS_LTEE);</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderLeftCol, ACS_LTEE);</span></a>
+<a name="171"><span class="lineNum">     171 </span>            :     </a>
+<a name="172"><span class="lineNum">     172 </span>            :     // Right border    </a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderRightCol, ACS_RTEE);</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderRightCol, ACS_RTEE);</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderRightCol, ACS_RTEE);</span></a>
+<a name="176"><span class="lineNum">     176 </span>            : </a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     CuiUtils::transfer(pWin_);</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     CuiUtils::transfer(pWin_);</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span>            : //----------------------------------------------------------------</a>
-<a name="184"><span class="lineNum">     184 </span>            : //</a>
-<a name="185"><span class="lineNum">     185 </span>            : // Restores table area junctions to a smooth square</a>
-<a name="186"><span class="lineNum">     186 </span>            : //</a>
-<a name="187"><span class="lineNum">     187 </span>            : void</a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 : LayoutCrapsScreen::eraseExternalJunctionsOnePlayer()</span></a>
-<a name="189"><span class="lineNum">     189 </span>            : {</a>
-<a name="190"><span class="lineNum">     190 </span>            :     using L = LayoutCrapsScreen;</a>
-<a name="191"><span class="lineNum">     191 </span>            :     using O = LayoutOnePlayer;</a>
-<a name="192"><span class="lineNum">     192 </span>            : </a>
-<a name="193"><span class="lineNum">     193 </span>            :     // Top border</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col2, ACS_HLINE);</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col3, ACS_HLINE);</span></a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col4, ACS_HLINE);</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col5, ACS_HLINE);</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col6, ACS_HLINE);</span></a>
-<a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span>            :     // Bottom border</a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderBotRow, O::colComeDont1, ACS_HLINE);</span></a>
-<a name="202"><span class="lineNum">     202 </span>            : </a>
-<a name="203"><span class="lineNum">     203 </span>            :     // Left border    </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderLeftCol, ACS_VLINE);</span></a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderLeftCol, ACS_VLINE);</span></a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderLeftCol, ACS_VLINE);</span></a>
-<a name="207"><span class="lineNum">     207 </span>            :     </a>
-<a name="208"><span class="lineNum">     208 </span>            :     // Right border    </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderRightCol, ACS_VLINE);</span></a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderRightCol, ACS_VLINE);</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderRightCol, ACS_VLINE);</span></a>
-<a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span>            :     // Doesn't need transfer(). Erase is always followed by draw()</a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="215"><span class="lineNum">     215 </span>            : </a>
-<a name="216"><span class="lineNum">     216 </span>            : //----------------------------------------------------------------</a>
-<a name="217"><span class="lineNum">     217 </span>            : //</a>
-<a name="218"><span class="lineNum">     218 </span>            : // Fix up junctions for outer borders for title bar</a>
-<a name="219"><span class="lineNum">     219 </span>            : //</a>
-<a name="220"><span class="lineNum">     220 </span>            : void</a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 : LayoutCrapsScreen::drawExternalJunctionsTitleBar()</span></a>
-<a name="222"><span class="lineNum">     222 </span>            : {</a>
-<a name="223"><span class="lineNum">     223 </span>            :     using L = LayoutCrapsScreen;</a>
-<a name="224"><span class="lineNum">     224 </span>            :     using T = LayoutTitleBar;</a>
-<a name="225"><span class="lineNum">     225 </span>            : </a>
-<a name="226"><span class="lineNum">     226 </span>            :     // Top border</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderTopRow, T::col1, ACS_TTEE);</span></a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderTopRow, T::col2, ACS_TTEE);</span></a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderTopRow, T::col3, ACS_TTEE);</span></a>
-<a name="230"><span class="lineNum">     230 </span>            : </a>
-<a name="231"><span class="lineNum">     231 </span>            :     // Bottom border</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderBotRow, T::col1, ACS_BTEE);</span></a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderBotRow, T::col2, ACS_BTEE);</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderBotRow, T::col3, ACS_BTEE);</span></a>
-<a name="235"><span class="lineNum">     235 </span>            : </a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :     CuiUtils::transfer(pWin_);</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="238"><span class="lineNum">     238 </span>            : </a>
-<a name="239"><span class="lineNum">     239 </span>            : //----------------------------------------------------------------</a>
+<a name="180"><span class="lineNum">     180 </span>            : //----------------------------------------------------------------</a>
+<a name="181"><span class="lineNum">     181 </span>            : //</a>
+<a name="182"><span class="lineNum">     182 </span>            : // Restores table area junctions to a smooth square</a>
+<a name="183"><span class="lineNum">     183 </span>            : //</a>
+<a name="184"><span class="lineNum">     184 </span>            : void</a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 : LayoutCrapsScreen::eraseExternalJunctionsOnePlayer()</span></a>
+<a name="186"><span class="lineNum">     186 </span>            : {</a>
+<a name="187"><span class="lineNum">     187 </span>            :     using L = LayoutCrapsScreen;</a>
+<a name="188"><span class="lineNum">     188 </span>            :     using O = LayoutOnePlayer;</a>
+<a name="189"><span class="lineNum">     189 </span>            : </a>
+<a name="190"><span class="lineNum">     190 </span>            :     // Top border</a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col2, ACS_HLINE);</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col3, ACS_HLINE);</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col4, ACS_HLINE);</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col5, ACS_HLINE);</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::playerAreaBorderTopRow, O::col6, ACS_HLINE);</span></a>
+<a name="196"><span class="lineNum">     196 </span>            : </a>
+<a name="197"><span class="lineNum">     197 </span>            :     // Left border    </a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderLeftCol, ACS_VLINE);</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderLeftCol, ACS_VLINE);</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderLeftCol, ACS_VLINE);</span></a>
+<a name="201"><span class="lineNum">     201 </span>            :     </a>
+<a name="202"><span class="lineNum">     202 </span>            :     // Right border    </a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowField,    L::playerAreaBorderRightCol, ACS_VLINE);</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowCraps,    L::playerAreaBorderRightCol, ACS_VLINE);</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, O::rowLineBets, L::playerAreaBorderRightCol, ACS_VLINE);</span></a>
+<a name="206"><span class="lineNum">     206 </span>            : </a>
+<a name="207"><span class="lineNum">     207 </span>            :     // Doesn't need transfer(). Erase is always followed by draw()</a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="209"><span class="lineNum">     209 </span>            : </a>
+<a name="210"><span class="lineNum">     210 </span>            : //----------------------------------------------------------------</a>
+<a name="211"><span class="lineNum">     211 </span>            : //</a>
+<a name="212"><span class="lineNum">     212 </span>            : // Fix up junctions for outer borders for title bar</a>
+<a name="213"><span class="lineNum">     213 </span>            : //</a>
+<a name="214"><span class="lineNum">     214 </span>            : void</a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : LayoutCrapsScreen::drawExternalJunctionsTitleBar()</span></a>
+<a name="216"><span class="lineNum">     216 </span>            : {</a>
+<a name="217"><span class="lineNum">     217 </span>            :     using L = LayoutCrapsScreen;</a>
+<a name="218"><span class="lineNum">     218 </span>            :     using T = LayoutTitleBar;</a>
+<a name="219"><span class="lineNum">     219 </span>            : </a>
+<a name="220"><span class="lineNum">     220 </span>            :     // Top border</a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderTopRow, T::col1, ACS_TTEE);</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderTopRow, T::col2, ACS_TTEE);</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderTopRow, T::col3, ACS_TTEE);</span></a>
+<a name="224"><span class="lineNum">     224 </span>            : </a>
+<a name="225"><span class="lineNum">     225 </span>            :     // Bottom border</a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderBotRow, T::col1, ACS_BTEE);</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderBotRow, T::col2, ACS_BTEE);</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     mvwaddch(pWin_, L::titleBarBorderBotRow, T::col3, ACS_BTEE);</span></a>
+<a name="229"><span class="lineNum">     229 </span>            : </a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :     CuiUtils::transfer(pWin_);</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="232"><span class="lineNum">     232 </span>            : </a>
+<a name="233"><span class="lineNum">     233 </span>            : //----------------------------------------------------------------</a>
 </pre>
       </td>
     </tr>

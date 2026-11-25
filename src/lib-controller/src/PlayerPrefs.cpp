@@ -58,6 +58,22 @@ PlayerPrefs::autoOdds() const
 
 //----------------------------------------------------------------
 
+void
+PlayerPrefs::setBuddyFollow(BuddyFollow value)
+{
+    buddyFollow_ = value;
+}
+
+//----------------------------------------------------------------
+
+BuddyFollow
+PlayerPrefs::buddyFollow() const
+{
+    return buddyFollow_;
+}
+
+//----------------------------------------------------------------
+
 YAML::Node
 PlayerPrefs::toYAML() const
 {
@@ -65,6 +81,7 @@ PlayerPrefs::toYAML() const
     node["LastFills"] = lastFill_.toYAML();
     node["QuickBets"] = quickBets_.toYAML();
     node["AutoOdds"]  = autoOdds_.toYAML();
+    node["BuddiesFollow"] = toString(buddyFollow_);
     return node;
 }
 
@@ -81,12 +98,23 @@ PlayerPrefs::fromYAML(const YAML::Node& node)
         lastFill_.fromYAML(node["LastFills"]);
         quickBets_.fromYAML(node["QuickBets"]);
         autoOdds_.fromYAML(node["AutoOdds"]);
+
+        buddyFollow_ = BuddyFollow::Follow;
+        const YAML::Node follow = node["BuddiesFollow"];
+        if (follow.IsDefined() && follow.IsScalar())
+        {
+            if (auto v = parseBuddyFollow(follow.as<std::string>()))
+            {
+                buddyFollow_ = *v;
+            }
+        }
     }
     else
     {
         lastFill_.clear();
         quickBets_.clear();
         autoOdds_.fromYAML(YAML::Node());
+        buddyFollow_ = BuddyFollow::Follow;
     }
 }
 

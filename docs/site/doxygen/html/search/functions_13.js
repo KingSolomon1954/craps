@@ -37,5 +37,6 @@ var searchData=
   ['usltablebetschanged_34',['UslTableBetsChanged',['../structCtrl_1_1UslTableBetsChanged.html#af91f6229f17ca3146e4be88cc3a3cad8',1,'Ctrl::UslTableBetsChanged']]],
   ['usltablelastrollstatschanged_35',['UslTableLastRollStatsChanged',['../structCtrl_1_1UslTableLastRollStatsChanged.html#aeb25315be915053966955d818430bf78',1,'Ctrl::UslTableLastRollStatsChanged']]],
   ['usltablesessionstatschanged_36',['UslTableSessionStatsChanged',['../structCtrl_1_1UslTableSessionStatsChanged.html#a4bc9d22e6ecb41453677791a05fe5a3b',1,'Ctrl::UslTableSessionStatsChanged']]],
-  ['usluserplayerswitched_37',['UslUserPlayerSwitched',['../structCtrl_1_1UslUserPlayerSwitched.html#acbba0db7c6c245e072871cd5b64a3178',1,'Ctrl::UslUserPlayerSwitched']]]
+  ['usltableswitched_37',['UslTableSwitched',['../structCtrl_1_1UslTableSwitched.html#a97aa02c8856b23bbe68bd06c9339842b',1,'Ctrl::UslTableSwitched']]],
+  ['usluserplayerswitched_38',['UslUserPlayerSwitched',['../structCtrl_1_1UslUserPlayerSwitched.html#acbba0db7c6c245e072871cd5b64a3178',1,'Ctrl::UslUserPlayerSwitched']]]
 ];

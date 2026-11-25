@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="10615846719686907998">
+<analyzerinfo hash="2389519560488682938">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_HLINE"/>
     <functioncall functionName="ACS_LTEE"/>
@@ -29,6 +29,7 @@
     <functioncall functionName="activateDialogBetAmount"/>
     <functioncall functionName="activateMenuOddsBet"/>
     <functioncall functionName="activateMenuPivot"/>
+    <functioncall functionName="applyQuickBets"/>
     <functioncall functionName="assert"/>
     <functioncall functionName="back"/>
     <functioncall functionName="badBet"/>
@@ -47,6 +48,7 @@
     <functioncall functionName="doRemoveBets"/>
     <functioncall functionName="doRollDice"/>
     <functioncall functionName="doUndoLastBet"/>
+    <functioncall functionName="empty"/>
     <functioncall functionName="false"/>
     <functioncall functionName="fillWindow"/>
     <functioncall functionName="getUserPlayer"/>
@@ -63,6 +65,7 @@
     <functioncall functionName="populateCarrier"/>
     <functioncall functionName="pushSurface"/>
     <functioncall functionName="readBetIsAllowed"/>
+    <functioncall functionName="readFlagBets"/>
     <functioncall functionName="readPlayerHaveAnyOddsCapableBet"/>
     <functioncall functionName="removeBets"/>
     <functioncall functionName="repos"/>

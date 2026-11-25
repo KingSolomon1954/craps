@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="14904049706425813698">
+<analyzerinfo hash="17256694787810181119">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_HLINE"/>
     <functioncall functionName="ACS_LTEE"/>
@@ -75,10 +75,12 @@
     <functioncall functionName="runtime_error"/>
     <functioncall functionName="setBetId"/>
     <functioncall functionName="setBetName"/>
+    <functioncall functionName="setContractAmount"/>
     <functioncall functionName="setDesireOdds"/>
     <functioncall functionName="setOperationResult"/>
     <functioncall functionName="setPivot"/>
     <functioncall functionName="shortCircuit"/>
+    <functioncall functionName="shortCircuited_"/>
     <functioncall functionName="size"/>
     <functioncall functionName="sort"/>
     <functioncall functionName="sortBetsByCreated"/>

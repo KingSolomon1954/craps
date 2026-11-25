@@ -37,11 +37,11 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">6</td>
-            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -82,14 +82,14 @@
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">         12 : betEntriesToYAML(const Container&amp; entries)</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">         12 :     YAML::Node seq(YAML::NodeType::Sequence);</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">         27 :     for (const auto&amp; e : entries)</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">         19 :     for (const auto&amp; e : entries)</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     {</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         15 :         YAML::Node n;</span></a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">         15 :         n[&quot;betName&quot;]   = EnumBetName::toString(e.betName);</span></a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">         15 :         n[&quot;pivot&quot;]     = e.pivot;</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">         15 :         n[&quot;isOddsBet&quot;] = e.isOddsBet;</span></a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">         15 :         n[&quot;amount&quot;]    = e.amount;</span></a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">         15 :         seq.push_back(n);</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          7 :         YAML::Node n;</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">          7 :         n[&quot;betName&quot;]   = EnumBetName::toString(e.betName);</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          7 :         n[&quot;pivot&quot;]     = e.pivot;</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          7 :         n[&quot;isOddsBet&quot;] = e.isOddsBet;</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">          7 :         n[&quot;amount&quot;]    = e.amount;</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          7 :         seq.push_back(n);</span></a>
 <a name="31"><span class="lineNum">      31 </span>            :     }</a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineCov">         12 :     return seq;</span></a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 : }</span></a>
@@ -100,32 +100,32 @@
 <a name="38"><span class="lineNum">      38 </span>            : /// entries, are logged and skipped. who is the log message prefix.</a>
 <a name="39"><span class="lineNum">      39 </span>            : template &lt;class Entry, class AddFn&gt;</a>
 <a name="40"><span class="lineNum">      40 </span>            : void</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         25 : betEntriesFromYAML(const YAML::Node&amp; node, const std::string&amp; who, AddFn add)</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         17 : betEntriesFromYAML(const YAML::Node&amp; node, const std::string&amp; who, AddFn add)</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         25 :     if (!node.IsDefined() || node.IsNull())</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         17 :     if (!node.IsDefined() || node.IsNull())</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :     {</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          8 :         return;</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          3 :         return;</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :     }</a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">         17 :     if (!node.IsSequence())</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">         14 :     if (!node.IsSequence())</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :     {</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">          5 :         LOG_WARN(who + &quot;not a sequence; ignoring it&quot;);</span></a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          5 :         return;</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">          3 :         LOG_WARN(who + &quot;not a sequence; ignoring it&quot;);</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          3 :         return;</span></a>
 <a name="51"><span class="lineNum">      51 </span>            :     }</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         58 :     for (const auto&amp; n : node)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         38 :     for (const auto&amp; n : node)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :     {</a>
 <a name="55"><span class="lineNum">      55 </span>            :         try</a>
 <a name="56"><span class="lineNum">      56 </span>            :         {</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">         34 :             Entry e;</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">         40 :             e.betName   = EnumBetName::fromString(n[&quot;betName&quot;].as&lt;std::string&gt;());</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">         31 :             e.pivot     = n[&quot;pivot&quot;].as&lt;size_t&gt;();</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">         27 :             e.isOddsBet = n[&quot;isOddsBet&quot;].as&lt;bool&gt;();</span></a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">         30 :             e.amount    = n[&quot;amount&quot;].as&lt;Gen::Money&gt;();</span></a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">         24 :             add(e);</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">         16 :             Entry e;</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">         18 :             e.betName   = EnumBetName::fromString(n[&quot;betName&quot;].as&lt;std::string&gt;());</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">         15 :             e.pivot     = n[&quot;pivot&quot;].as&lt;size_t&gt;();</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">         13 :             e.isOddsBet = n[&quot;isOddsBet&quot;].as&lt;bool&gt;();</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">         15 :             e.amount    = n[&quot;amount&quot;].as&lt;Gen::Money&gt;();</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">         11 :             add(e);</span></a>
 <a name="63"><span class="lineNum">      63 </span>            :         }</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">         10 :         catch (const std::exception&amp; ex)</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          5 :         catch (const std::exception&amp; ex)</span></a>
 <a name="65"><span class="lineNum">      65 </span>            :         {</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">         10 :             LOG_WARN(who + &quot;skipping bad entry: &quot; + ex.what());</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          5 :             LOG_WARN(who + &quot;skipping bad entry: &quot; + ex.what());</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :         }</a>
 <a name="68"><span class="lineNum">      68 </span>            :     }</a>
 <a name="69"><span class="lineNum">      69 </span>            : }</a>
@@ -134,24 +134,23 @@
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span>            : @file BetEntryYaml.h</a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span>            : @brief Shared YAML form of LastFill, AutoFill and QuickBet entries</a>
+<a name="75"><span class="lineNum">      75 </span>            : @brief Shared YAML form of a list of bet entries (LastFill today)</a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
-<a name="77"><span class="lineNum">      77 </span>            : Those three classes each hold a list of entries with the same four</a>
-<a name="78"><span class="lineNum">      78 </span>            : fields. This is the one place that knows how such a list looks in a</a>
-<a name="79"><span class="lineNum">      79 </span>            : player file, so the three cannot drift apart:</a>
-<a name="80"><span class="lineNum">      80 </span>            : </a>
-<a name="81"><span class="lineNum">      81 </span>            : @code</a>
-<a name="82"><span class="lineNum">      82 </span>            : - betName: PassLine</a>
-<a name="83"><span class="lineNum">      83 </span>            :   pivot: 0</a>
-<a name="84"><span class="lineNum">      84 </span>            :   isOddsBet: false</a>
-<a name="85"><span class="lineNum">      85 </span>            :   amount: 50</a>
-<a name="86"><span class="lineNum">      86 </span>            : @endcode</a>
-<a name="87"><span class="lineNum">      87 </span>            : </a>
-<a name="88"><span class="lineNum">      88 </span>            : */</a>
-<a name="89"><span class="lineNum">      89 </span>            : </a>
-<a name="90"><span class="lineNum">      90 </span>            : } // namespace Ctrl</a>
-<a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span>            : //----------------------------------------------------------------</a>
+<a name="77"><span class="lineNum">      77 </span>            : Classes that hold a list of entries with these four fields use this, so</a>
+<a name="78"><span class="lineNum">      78 </span>            : there is one place that knows how such a list looks in a player file:</a>
+<a name="79"><span class="lineNum">      79 </span>            : </a>
+<a name="80"><span class="lineNum">      80 </span>            : @code</a>
+<a name="81"><span class="lineNum">      81 </span>            : - betName: PassLine</a>
+<a name="82"><span class="lineNum">      82 </span>            :   pivot: 0</a>
+<a name="83"><span class="lineNum">      83 </span>            :   isOddsBet: false</a>
+<a name="84"><span class="lineNum">      84 </span>            :   amount: 50</a>
+<a name="85"><span class="lineNum">      85 </span>            : @endcode</a>
+<a name="86"><span class="lineNum">      86 </span>            : </a>
+<a name="87"><span class="lineNum">      87 </span>            : */</a>
+<a name="88"><span class="lineNum">      88 </span>            : </a>
+<a name="89"><span class="lineNum">      89 </span>            : } // namespace Ctrl</a>
+<a name="90"><span class="lineNum">      90 </span>            : </a>
+<a name="91"><span class="lineNum">      91 </span>            : //----------------------------------------------------------------</a>
 </pre>
       </td>
     </tr>

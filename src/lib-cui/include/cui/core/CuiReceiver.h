@@ -32,6 +32,7 @@ private:
     void onRspMakeBet                (const Ctrl::RspMakeBet& ev)                   const;
     void onRspOddsBet                (const Ctrl::RspOddsBet& ev)                   const;
     void onRspSwitchPlayer           (const Ctrl::RspSwitchPlayer& ev)              const;
+    void onRspSwitchTable            (const Ctrl::RspSwitchTable& ev)               const;
     void onRspManagePlayer           (const Ctrl::RspManagePlayer& ev)              const;
     void onBettingClosed             (const Ctrl::UslBettingClosed& ev)             const;
     void onDiceNewValue              (const Ctrl::UslDiceNewValue& ev)              const;
@@ -67,6 +68,7 @@ private:
     void onPlayerJoinedTable         (const Ctrl::UslPlayerJoinedTable& ev)         const;
     void onPlayerLeftTable           (const Ctrl::UslPlayerLeftTable& ev)           const;
     void onUserPlayerSwitched        (const Ctrl::UslUserPlayerSwitched& ev)        const;
+    void onTableSwitched             (const Ctrl::UslTableSwitched& ev)             const;
     void onPlayerRenamed             (const Ctrl::UslPlayerRenamed& ev)             const;
 };
 
