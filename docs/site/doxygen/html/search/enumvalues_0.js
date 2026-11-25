@@ -9,5 +9,6 @@ var searchData=
   ['any7_6',['Any7',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3ea0e0784c9d3cd39c5223753d069e05a6a',1,'Cui::CuiUtils']]],
   ['any711_7',['Any711',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3eab4e0be525a5132569f2ebbc3abc47c4a',1,'Cui::CuiUtils::Any711'],['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84ab4e0be525a5132569f2ebbc3abc47c4a',1,'Any711:&#160;EnumBetName.h']]],
   ['anycraps_8',['AnyCraps',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3eafe81824d3f125c690ffe1ca525a2b24e',1,'Cui::CuiUtils::AnyCraps'],['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84afe81824d3f125c690ffe1ca525a2b24e',1,'AnyCraps:&#160;EnumBetName.h']]],
-  ['anyseven_9',['AnySeven',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84ad511507f8a28b4c18351f518cf50910c',1,'EnumBetName.h']]]
+  ['anyseven_9',['AnySeven',['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84ad511507f8a28b4c18351f518cf50910c',1,'EnumBetName.h']]],
+  ['ask_10',['Ask',['../namespaceCtrl.html#a2621e11860f8cd604acd20910cb5dc3daa0b271a9d8aa8e7473922164d6a1c03c',1,'Ctrl']]]
 ];

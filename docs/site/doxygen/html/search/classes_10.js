@@ -10,5 +10,6 @@ var searchData=
   ['stringutils_7',['StringUtils',['../classGen_1_1StringUtils.html',1,'Gen']]],
   ['summary_8',['Summary',['../structCraps_1_1SessionHistory_1_1Summary.html',1,'Craps::SessionHistory']]],
   ['surfacebase_9',['SurfaceBase',['../classCui_1_1SurfaceBase.html',1,'Cui']]],
-  ['surfacemanager_10',['SurfaceManager',['../classCui_1_1SurfaceManager.html',1,'Cui']]]
+  ['surfacemanager_10',['SurfaceManager',['../classCui_1_1SurfaceManager.html',1,'Cui']]],
+  ['switchresult_11',['SwitchResult',['../structCtrl_1_1TableManager_1_1SwitchResult.html',1,'Ctrl::TableManager']]]
 ];

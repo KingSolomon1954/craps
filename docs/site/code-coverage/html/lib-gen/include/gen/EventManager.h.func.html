@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">38</td>
-            <td class="headerCovTableEntry">128</td>
-            <td class="headerCovTableEntryLo">29.7 %</td>
+            <td class="headerCovTableEntry">180</td>
+            <td class="headerCovTableEntryLo">21.1 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -61,7 +61,7 @@
     </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#104">Gen::EventManager::processEvents()</a></td>
-              <td class="coverFnHi">44</td>
+              <td class="coverFnHi">63</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;(anonymous namespace)::DiceRolled&gt;((anonymous namespace)::DiceRolled const&amp;)</a></td>
@@ -84,6 +84,10 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqUndoBet&gt;(Ctrl::ReqUndoBet const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::RspMakeBet&gt;(Ctrl::RspMakeBet const&amp;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
@@ -92,16 +96,12 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::RspUndoBet&gt;(Ctrl::RspUndoBet const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslBetMade&gt;(Ctrl::UslBetMade const&amp;)</a></td>
-              <td class="coverFnHi">200137</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqAutoFill&gt;(Ctrl::ReqAutoFill const&amp;)</a></td>
-              <td class="coverFnLo">0</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqQuickBet&gt;(Ctrl::ReqQuickBet const&amp;)</a></td>
-              <td class="coverFnLo">0</td>
+              <td class="coverFnHi">200173</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqRollDice&gt;(Ctrl::ReqRollDice const&amp;)</a></td>
@@ -112,24 +112,52 @@
               <td class="coverFnHi">100009</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqRemoveBet&gt;(Ctrl::ReqRemoveBet const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqTerminate&gt;(Ctrl::ReqTerminate const&amp;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::RspRemoveBet&gt;(Ctrl::RspRemoveBet const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslBetChanged&gt;(Ctrl::UslBetChanged const&amp;)</a></td>
-              <td class="coverFnHi">200027</td>
+              <td class="coverFnHi">200045</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslBetRemoved&gt;(Ctrl::UslBetRemoved const&amp;)</a></td>
-              <td class="coverFnHi">200069</td>
+              <td class="coverFnHi">200078</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslNewShooter&gt;(Ctrl::UslNewShooter const&amp;)</a></td>
               <td class="coverFnHi">3</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqSetBetFlags&gt;(Ctrl::ReqSetBetFlags const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqSwitchTable&gt;(Ctrl::ReqSwitchTable const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::RspSetBetFlags&gt;(Ctrl::RspSetBetFlags const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::RspSwitchTable&gt;(Ctrl::RspSwitchTable const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslBetResolved&gt;(Ctrl::UslBetResolved const&amp;)</a></td>
               <td class="coverFnHi">200060</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqEditAutoOdds&gt;(Ctrl::ReqEditAutoOdds const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqManagePlayer&gt;(Ctrl::ReqManagePlayer const&amp;)</a></td>
@@ -137,6 +165,10 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqSwitchPlayer&gt;(Ctrl::ReqSwitchPlayer const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::RspEditAutoOdds&gt;(Ctrl::RspEditAutoOdds const&amp;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -149,23 +181,47 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslDiceNewValue&gt;(Ctrl::UslDiceNewValue const&amp;)</a></td>
-              <td class="coverFnHi">400088</td>
+              <td class="coverFnHi">400092</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqEditQuickBets&gt;(Ctrl::ReqEditQuickBets const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::RspEditQuickBets&gt;(Ctrl::RspEditQuickBets const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslBettingClosed&gt;(Ctrl::UslBettingClosed const&amp;)</a></td>
-              <td class="coverFnHi">400088</td>
+              <td class="coverFnHi">400092</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslBettingOpened&gt;(Ctrl::UslBettingOpened const&amp;)</a></td>
-              <td class="coverFnHi">400088</td>
+              <td class="coverFnHi">400092</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPlayerRenamed&gt;(Ctrl::UslPlayerRenamed const&amp;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslTableSwitched&gt;(Ctrl::UslTableSwitched const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqApplyQuickBets&gt;(Ctrl::ReqApplyQuickBets const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqSetBuddyFollow&gt;(Ctrl::ReqSetBuddyFollow const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::RspApplyQuickBets&gt;(Ctrl::RspApplyQuickBets const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslDiceThrowStart&gt;(Ctrl::UslDiceThrowStart const&amp;)</a></td>
-              <td class="coverFnHi">400088</td>
+              <td class="coverFnHi">400092</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPassLineWinner&gt;(Ctrl::UslPassLineWinner const&amp;)</a></td>
@@ -173,39 +229,39 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslResolveBetsEnd&gt;(Ctrl::UslResolveBetsEnd const&amp;)</a></td>
-              <td class="coverFnHi">400088</td>
+              <td class="coverFnHi">400092</td>
             </tr>
     <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslAutoFillChanged&gt;(Ctrl::UslAutoFillChanged const&amp;)</a></td>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslAutoOddsApplied&gt;(Ctrl::UslAutoOddsApplied const&amp;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPlayerLeftTable&gt;(Ctrl::UslPlayerLeftTable const&amp;)</a></td>
-              <td class="coverFnHi">27</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslQuickBetChanged&gt;(Ctrl::UslQuickBetChanged const&amp;)</a></td>
-              <td class="coverFnLo">0</td>
+              <td class="coverFnHi">29</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPointEstablished&gt;(Ctrl::UslPointEstablished const&amp;)</a></td>
-              <td class="coverFnHi">100027</td>
+              <td class="coverFnHi">100030</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslResolveBetsStart&gt;(Ctrl::UslResolveBetsStart const&amp;)</a></td>
-              <td class="coverFnHi">400088</td>
+              <td class="coverFnHi">400092</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslTableBetsChanged&gt;(Ctrl::UslTableBetsChanged const&amp;)</a></td>
-              <td class="coverFnHi">800294</td>
+              <td class="coverFnHi">800363</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqSetAnimationSpeed&gt;(Ctrl::ReqSetAnimationSpeed const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPlayerBetsChanged&gt;(Ctrl::UslPlayerBetsChanged const&amp;)</a></td>
-              <td class="coverFnHi">600168</td>
+              <td class="coverFnHi">600221</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPlayerJoinedTable&gt;(Ctrl::UslPlayerJoinedTable const&amp;)</a></td>
-              <td class="coverFnHi">121</td>
+              <td class="coverFnHi">151</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslUserPlayerSwitched&gt;(Ctrl::UslUserPlayerSwitched const&amp;)</a></td>
@@ -217,15 +273,23 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslTableBalanceChanged&gt;(Ctrl::UslTableBalanceChanged const&amp;)</a></td>
-              <td class="coverFnHi">200072</td>
+              <td class="coverFnHi">200074</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::ReqSetRollHistoryFormat&gt;(Ctrl::ReqSetRollHistoryFormat const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPlayerBalanceChanged&gt;(Ctrl::UslPlayerBalanceChanged const&amp;)</a></td>
-              <td class="coverFnHi">600168</td>
+              <td class="coverFnHi">600219</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslRollHistoryFormatChanged&gt;(Ctrl::UslRollHistoryFormatChanged const&amp;)</a></td>
+              <td class="coverFnLo">0</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslTableSessionStatsChanged&gt;(Ctrl::UslTableSessionStatsChanged const&amp;)</a></td>
-              <td class="coverFnHi">400087</td>
+              <td class="coverFnHi">400091</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPlayerSessionStatsChanged&gt;(Ctrl::UslPlayerSessionStatsChanged const&amp;)</a></td>
@@ -233,19 +297,19 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslTableLastRollStatsChanged&gt;(Ctrl::UslTableLastRollStatsChanged const&amp;)</a></td>
-              <td class="coverFnHi">400087</td>
+              <td class="coverFnHi">400091</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#78">void Gen::EventManager::publish&lt;Ctrl::UslPlayerLastRollStatsChanged&gt;(Ctrl::UslPlayerLastRollStatsChanged const&amp;)</a></td>
-              <td class="coverFnHi">400092</td>
+              <td class="coverFnHi">400096</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#135">Gen::EventManager::dispatch(std::any const&amp;)</a></td>
-              <td class="coverFnHi">7002036</td>
+              <td class="coverFnHi">7002345</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#44">Gen::EventManager::instance()</a></td>
-              <td class="coverFnHi">7002027</td>
+              <td class="coverFnHi">7002336</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;(anonymous namespace)::DiceRolled&gt;(std::function&lt;void ((anonymous namespace)::DiceRolled const&amp;)&gt;)</a></td>
@@ -264,6 +328,10 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqUndoBet&gt;(std::function&lt;void (Ctrl::ReqUndoBet const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::RspMakeBet&gt;(std::function&lt;void (Ctrl::RspMakeBet const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
@@ -272,15 +340,11 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::RspUndoBet&gt;(std::function&lt;void (Ctrl::RspUndoBet const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslBetMade&gt;(std::function&lt;void (Ctrl::UslBetMade const&amp;)&gt;)</a></td>
-              <td class="coverFnLo">0</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqAutoFill&gt;(std::function&lt;void (Ctrl::ReqAutoFill const&amp;)&gt;)</a></td>
-              <td class="coverFnLo">0</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqQuickBet&gt;(std::function&lt;void (Ctrl::ReqQuickBet const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -292,7 +356,23 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqRemoveBet&gt;(std::function&lt;void (Ctrl::ReqRemoveBet const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqTerminate&gt;(std::function&lt;void (Ctrl::ReqTerminate const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::RspRemoveBet&gt;(std::function&lt;void (Ctrl::RspRemoveBet const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslBetChanged&gt;(std::function&lt;void (Ctrl::UslBetChanged const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslBetRemoved&gt;(std::function&lt;void (Ctrl::UslBetRemoved const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -300,7 +380,27 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqSetBetFlags&gt;(std::function&lt;void (Ctrl::ReqSetBetFlags const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqSwitchTable&gt;(std::function&lt;void (Ctrl::ReqSwitchTable const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::RspSetBetFlags&gt;(std::function&lt;void (Ctrl::RspSetBetFlags const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::RspSwitchTable&gt;(std::function&lt;void (Ctrl::RspSwitchTable const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslBetResolved&gt;(std::function&lt;void (Ctrl::UslBetResolved const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqEditAutoOdds&gt;(std::function&lt;void (Ctrl::ReqEditAutoOdds const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -309,6 +409,10 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqSwitchPlayer&gt;(std::function&lt;void (Ctrl::ReqSwitchPlayer const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::RspEditAutoOdds&gt;(std::function&lt;void (Ctrl::RspEditAutoOdds const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -324,6 +428,14 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqEditQuickBets&gt;(std::function&lt;void (Ctrl::ReqEditQuickBets const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::RspEditQuickBets&gt;(std::function&lt;void (Ctrl::RspEditQuickBets const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslBettingClosed&gt;(std::function&lt;void (Ctrl::UslBettingClosed const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
@@ -333,6 +445,22 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslPlayerRenamed&gt;(std::function&lt;void (Ctrl::UslPlayerRenamed const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslTableSwitched&gt;(std::function&lt;void (Ctrl::UslTableSwitched const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqApplyQuickBets&gt;(std::function&lt;void (Ctrl::ReqApplyQuickBets const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqSetBuddyFollow&gt;(std::function&lt;void (Ctrl::ReqSetBuddyFollow const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::RspApplyQuickBets&gt;(std::function&lt;void (Ctrl::RspApplyQuickBets const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -348,15 +476,11 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslAutoFillChanged&gt;(std::function&lt;void (Ctrl::UslAutoFillChanged const&amp;)&gt;)</a></td>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslAutoOddsApplied&gt;(std::function&lt;void (Ctrl::UslAutoOddsApplied const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslPlayerLeftTable&gt;(std::function&lt;void (Ctrl::UslPlayerLeftTable const&amp;)&gt;)</a></td>
-              <td class="coverFnLo">0</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslQuickBetChanged&gt;(std::function&lt;void (Ctrl::UslQuickBetChanged const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -365,6 +489,10 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslTableBetsChanged&gt;(std::function&lt;void (Ctrl::UslTableBetsChanged const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqSetAnimationSpeed&gt;(std::function&lt;void (Ctrl::ReqSetAnimationSpeed const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -384,7 +512,15 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::ReqSetRollHistoryFormat&gt;(std::function&lt;void (Ctrl::ReqSetRollHistoryFormat const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslPlayerBalanceChanged&gt;(std::function&lt;void (Ctrl::UslPlayerBalanceChanged const&amp;)&gt;)</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#57">void Gen::EventManager::subscribe&lt;Ctrl::UslRollHistoryFormatChanged&gt;(std::function&lt;void (Ctrl::UslRollHistoryFormatChanged const&amp;)&gt;)</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -405,15 +541,15 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#24">Gen::EventManager::EventManager()</a></td>
-              <td class="coverFnHi">44</td>
+              <td class="coverFnHi">63</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#29">Gen::EventManager::~EventManager()</a></td>
-              <td class="coverFnHi">44</td>
+              <td class="coverFnHi">63</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#115">Gen::EventManager::processEvents()::{lambda()#1}::operator()() const</a></td>
-              <td class="coverFnHi">8210900</td>
+              <td class="coverFnHi">8186348</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;(anonymous namespace)::DiceRolled&gt;(std::function&lt;void ((anonymous namespace)::DiceRolled const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
@@ -432,6 +568,10 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqUndoBet&gt;(std::function&lt;void (Ctrl::ReqUndoBet const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::RspMakeBet&gt;(std::function&lt;void (Ctrl::RspMakeBet const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
@@ -440,15 +580,11 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::RspUndoBet&gt;(std::function&lt;void (Ctrl::RspUndoBet const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslBetMade&gt;(std::function&lt;void (Ctrl::UslBetMade const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
-              <td class="coverFnLo">0</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqAutoFill&gt;(std::function&lt;void (Ctrl::ReqAutoFill const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
-              <td class="coverFnLo">0</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqQuickBet&gt;(std::function&lt;void (Ctrl::ReqQuickBet const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -460,7 +596,23 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqRemoveBet&gt;(std::function&lt;void (Ctrl::ReqRemoveBet const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqTerminate&gt;(std::function&lt;void (Ctrl::ReqTerminate const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::RspRemoveBet&gt;(std::function&lt;void (Ctrl::RspRemoveBet const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslBetChanged&gt;(std::function&lt;void (Ctrl::UslBetChanged const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslBetRemoved&gt;(std::function&lt;void (Ctrl::UslBetRemoved const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -468,7 +620,27 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqSetBetFlags&gt;(std::function&lt;void (Ctrl::ReqSetBetFlags const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqSwitchTable&gt;(std::function&lt;void (Ctrl::ReqSwitchTable const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::RspSetBetFlags&gt;(std::function&lt;void (Ctrl::RspSetBetFlags const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::RspSwitchTable&gt;(std::function&lt;void (Ctrl::RspSwitchTable const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslBetResolved&gt;(std::function&lt;void (Ctrl::UslBetResolved const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqEditAutoOdds&gt;(std::function&lt;void (Ctrl::ReqEditAutoOdds const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -477,6 +649,10 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqSwitchPlayer&gt;(std::function&lt;void (Ctrl::ReqSwitchPlayer const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::RspEditAutoOdds&gt;(std::function&lt;void (Ctrl::RspEditAutoOdds const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -492,6 +668,14 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqEditQuickBets&gt;(std::function&lt;void (Ctrl::ReqEditQuickBets const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::RspEditQuickBets&gt;(std::function&lt;void (Ctrl::RspEditQuickBets const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslBettingClosed&gt;(std::function&lt;void (Ctrl::UslBettingClosed const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
@@ -501,6 +685,22 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslPlayerRenamed&gt;(std::function&lt;void (Ctrl::UslPlayerRenamed const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslTableSwitched&gt;(std::function&lt;void (Ctrl::UslTableSwitched const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqApplyQuickBets&gt;(std::function&lt;void (Ctrl::ReqApplyQuickBets const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqSetBuddyFollow&gt;(std::function&lt;void (Ctrl::ReqSetBuddyFollow const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::RspApplyQuickBets&gt;(std::function&lt;void (Ctrl::RspApplyQuickBets const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -516,15 +716,11 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslAutoFillChanged&gt;(std::function&lt;void (Ctrl::UslAutoFillChanged const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslAutoOddsApplied&gt;(std::function&lt;void (Ctrl::UslAutoOddsApplied const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslPlayerLeftTable&gt;(std::function&lt;void (Ctrl::UslPlayerLeftTable const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
-              <td class="coverFnLo">0</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslQuickBetChanged&gt;(std::function&lt;void (Ctrl::UslQuickBetChanged const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -533,6 +729,10 @@
             </tr>
     <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslTableBetsChanged&gt;(std::function&lt;void (Ctrl::UslTableBetsChanged const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqSetAnimationSpeed&gt;(std::function&lt;void (Ctrl::ReqSetAnimationSpeed const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
@@ -552,7 +752,15 @@
               <td class="coverFnLo">0</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::ReqSetRollHistoryFormat&gt;(std::function&lt;void (Ctrl::ReqSetRollHistoryFormat const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslPlayerBalanceChanged&gt;(std::function&lt;void (Ctrl::UslPlayerBalanceChanged const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
+              <td class="coverFnLo">0</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="EventManager.h.gcov.html#65">Gen::EventManager::subscribe&lt;Ctrl::UslRollHistoryFormatChanged&gt;(std::function&lt;void (Ctrl::UslRollHistoryFormatChanged const&amp;)&gt;)::{lambda(std::any const&amp;)#1}::operator()(std::any const&amp;) const</a></td>
               <td class="coverFnLo">0</td>
             </tr>
     <tr>

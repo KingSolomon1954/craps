@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="13305755691649869917">
+<analyzerinfo hash="11927436162013040018">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="EP_SET"/>
     <functioncall functionName="ExistsError"/>
@@ -21,6 +21,7 @@
     <functioncall functionName="betName"/>
     <functioncall functionName="bettingOpen_"/>
     <functioncall functionName="buyCommission"/>
+    <functioncall functionName="canTakeFlag"/>
     <functioncall functionName="ceilDivide"/>
     <functioncall functionName="contains"/>
     <functioncall functionName="contractAmount"/>

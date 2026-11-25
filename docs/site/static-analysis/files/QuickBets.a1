@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="441003787902274770">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="/work/src/lib-controller/src/QuickBets.cpp:127:1" my-argnr="1" my-argname="a" file="/work/src/lib-controller/src/QuickBets.cpp" line="129" col="12" value="0"/>
+    <unsafe-usage my-id="/work/src/lib-controller/src/QuickBets.cpp:127:1" my-argnr="2" my-argname="b" file="/work/src/lib-controller/src/QuickBets.cpp" line="129" col="24" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl functionName="sameNameIgnoringCase" lineNumber="127"/>
+    <functioncall functionName="BetPlan"/>
+    <functioncall functionName="BetSpec"/>
+    <functioncall functionName="IsDefined"/>
+    <functioncall functionName="IsNull"/>
+    <functioncall functionName="IsSequence"/>
+    <functioncall functionName="LOG_WARN"/>
+    <functioncall functionName="MaxEntries"/>
+    <functioncall functionName="MaxNameLength"/>
+    <functioncall functionName="MaxSpecsPerEntry"/>
+    <functioncall functionName="Money"/>
+    <functioncall functionName="Sequence"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="bets"/>
+    <functioncall functionName="checkName"/>
+    <functioncall functionName="checkSpec"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="equal"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="find_if"/>
+    <functioncall functionName="fromString"/>
+    <functioncall functionName="isPlanOddsBet"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="plans_"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="resize"/>
+    <functioncall functionName="sameNameIgnoringCase"/>
+    <functioncall functionName="sameSpot"/>
+    <functioncall functionName="seq"/>
+    <functioncall functionName="set"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="stable_partition"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="tidy"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="tolower"/>
+    <functioncall functionName="true"/>
+    <functioncall functionName="what"/>
+  </FileInfo>
+</analyzerinfo>

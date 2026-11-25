@@ -146,7 +146,7 @@ TBS
 Tables
 ------
 
-TBS
+.. include:: TableSwitch.inc
 
 Betting
 -------

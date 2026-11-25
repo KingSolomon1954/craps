@@ -1,15 +1,16 @@
 <map id="src/lib&#45;cui/include/cui/core/RollLog.h" name="src/lib&#45;cui/include/cui/core/RollLog.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="246,5,387,45"/>
-<area shape="rect" id="Node000002" href="$DialogDeepRollHistory_8h.html" title=" " alt="" coords="96,93,297,148"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="283,56,232,95,229,91,280,52"/>
-<area shape="rect" id="Node000004" href="$WindowRollHistory_8h.html" title=" " alt="" coords="368,101,599,141"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="363,50,451,98,448,103,361,54"/>
-<area shape="rect" id="Node000003" href="$DialogDeepRollHistory_8cpp.html" title=" " alt="" coords="5,196,204,236"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="163,160,125,198,121,194,159,156"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="253,5,394,45"/>
+<area shape="rect" id="Node000002" href="$DialogDeepRollHistory_8h.html" title=" " alt="" coords="44,93,245,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="276,54,196,96,194,91,274,49"/>
+<area shape="rect" id="Node000004" href="$WindowRollHistory_8h.html" title=" " alt="" coords="388,101,619,141"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="373,49,468,98,466,103,370,54"/>
 <area shape="rect" id="Node000005" href="$WorkOrderDispatcher_8cpp.html" title=" " alt="" coords="228,196,419,236"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="441,150,357,198,354,194,438,145"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="326,59,326,195,321,195,321,59"/>
+<area shape="rect" id="Node000003" href="$DialogDeepRollHistory_8cpp.html" title=" " alt="" coords="5,196,204,236"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="130,162,115,197,110,195,126,160"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="456,149,361,198,358,194,454,145"/>
 <area shape="rect" id="Node000006" href="$WindowRollHistory_8cpp.html" title=" " alt="" coords="443,196,617,236"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="501,152,523,195,518,197,497,154"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="515,153,527,195,522,197,510,155"/>
 <area shape="rect" id="Node000007" href="$ScreenCrapsTable_8cpp.html" title=" " alt="" coords="642,196,810,236"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="546,143,678,193,676,198,544,148"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="562,144,682,193,680,198,560,149"/>
 </map>

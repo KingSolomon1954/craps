@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">25</td>
+            <td class="headerCovTableEntry">30</td>
             <td class="headerCovTableEntry">43</td>
-            <td class="headerCovTableEntryLo">58.1 %</td>
+            <td class="headerCovTableEntryLo">69.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">9</td>
             <td class="headerCovTableEntry">12</td>
-            <td class="headerCovTableEntryLo">66.7 %</td>
+            <td class="headerCovTableEntryMed">75.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -79,13 +79,13 @@
 <a name="17"><span class="lineNum">      17 </span>            : //----------------------------------------------------------------</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
 <a name="19"><span class="lineNum">      19 </span>            : Gen::ReturnCode</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 : LastFill::getLastFill(LastFillEntry&amp; lfe)</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">          1 : LastFill::getLastFill(LastFillEntry&amp; lfe)</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :     auto it = findEntry(lfe);</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :     if (it != fills_.end())</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          1 :     auto it = findEntry(lfe);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          1 :     if (it != fills_.end())</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     {</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :         lfe.amount = it-&gt;amount;  // Replace amount</span></a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :         return Gen::ReturnCode::Success;</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          1 :         lfe.amount = it-&gt;amount;  // Replace amount</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">          1 :         return Gen::ReturnCode::Success;</span></a>
 <a name="27"><span class="lineNum">      27 </span>            :     }</a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :     return Gen::ReturnCode::Fail;</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : }</a>
@@ -93,18 +93,18 @@
 <a name="31"><span class="lineNum">      31 </span>            : //----------------------------------------------------------------</a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span>            : void</a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineCov">         30 : LastFill::setLastFill(const LastFillEntry&amp; lfe)</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">         33 : LastFill::setLastFill(const LastFillEntry&amp; lfe)</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : {</a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineCov">         30 :     auto it = findEntry(lfe);</span></a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         30 :     if (it != fills_.end())</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">         33 :     auto it = findEntry(lfe);</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         33 :     if (it != fills_.end())</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :     {</a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineCov">          1 :         it-&gt;amount = lfe.amount;  // Replace amount only</span></a>
 <a name="40"><span class="lineNum">      40 </span>            :     }</a>
 <a name="41"><span class="lineNum">      41 </span>            :     else</a>
 <a name="42"><span class="lineNum">      42 </span>            :     {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         29 :         fills_.push_back(lfe);    // No match: add new entry</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         32 :         fills_.push_back(lfe);    // No match: add new entry</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :     }</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         30 : }</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         33 : }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span>            : //----------------------------------------------------------------</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
@@ -122,27 +122,27 @@
 <a name="60"><span class="lineNum">      60 </span>            : //----------------------------------------------------------------</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span>            : const LastFill::LastFills&amp;</a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">         19 : LastFill::getLastFills()</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">         22 : LastFill::getLastFills()</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : {</a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">         19 :     return fills_;</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">         22 :     return fills_;</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : }</a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
 <a name="68"><span class="lineNum">      68 </span>            : //----------------------------------------------------------------</a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span>            : void</a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">          5 : LastFill::clear()</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">          6 : LastFill::clear()</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : {</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">          5 :     fills_.clear();</span></a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">          5 : }</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">          6 :     fills_.clear();</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">          6 : }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span>            : //----------------------------------------------------------------</a>
 <a name="77"><span class="lineNum">      77 </span>            : //</a>
 <a name="78"><span class="lineNum">      78 </span>            : // Entries as a YAML sequence, in the order they were first set.</a>
 <a name="79"><span class="lineNum">      79 </span>            : //</a>
 <a name="80"><span class="lineNum">      80 </span>            : YAML::Node</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          6 : LastFill::toYAML() const</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">         12 : LastFill::toYAML() const</span></a>
 <a name="82"><span class="lineNum">      82 </span>            : {</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          6 :     return betEntriesToYAML(fills_);</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">         12 :     return betEntriesToYAML(fills_);</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : }</a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
 <a name="86"><span class="lineNum">      86 </span>            : //----------------------------------------------------------------</a>
@@ -153,26 +153,26 @@
 <a name="91"><span class="lineNum">      91 </span>            : // never bet.</a>
 <a name="92"><span class="lineNum">      92 </span>            : //</a>
 <a name="93"><span class="lineNum">      93 </span>            : void</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">         11 : LastFill::fromYAML(const YAML::Node&amp; node)</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">         17 : LastFill::fromYAML(const YAML::Node&amp; node)</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : {</a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">         11 :     fills_.clear();</span></a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">         22 :     betEntriesFromYAML&lt;LastFillEntry&gt;(node, &quot;LastFill::fromYAML(): &quot;,</span></a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">         10 :         [this](const LastFillEntry&amp; e) { setLastFill(e); });  // collapses dups</span></a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">         11 : }</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">         17 :     fills_.clear();</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">         34 :     betEntriesFromYAML&lt;LastFillEntry&gt;(node, &quot;LastFill::fromYAML(): &quot;,</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">         11 :         [this](const LastFillEntry&amp; e) { setLastFill(e); });  // collapses dups</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">         17 : }</span></a>
 <a name="100"><span class="lineNum">     100 </span>            : </a>
 <a name="101"><span class="lineNum">     101 </span>            : //----------------------------------------------------------------</a>
 <a name="102"><span class="lineNum">     102 </span>            : //</a>
 <a name="103"><span class="lineNum">     103 </span>            : // Look for an existing entry with same betName, pivot, and isOddsBet</a>
 <a name="104"><span class="lineNum">     104 </span>            : //</a>
 <a name="105"><span class="lineNum">     105 </span>            : LastFill::LastFills::iterator</a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineCov">         30 : LastFill::findEntry(const LastFillEntry&amp; lfe)</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">         34 : LastFill::findEntry(const LastFillEntry&amp; lfe)</span></a>
 <a name="107"><span class="lineNum">     107 </span>            : {</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">         30 :     return std::find_if(fills_.begin(), fills_.end(),</span></a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">         10 :         [&amp;](const LastFillEntry&amp; existing) {</span></a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">         10 :             return existing.betName   == lfe.betName</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">          3 :                 &amp;&amp; existing.pivot     == lfe.pivot</span></a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">         13 :                 &amp;&amp; existing.isOddsBet == lfe.isOddsBet;</span></a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         30 :         });</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">         34 :     return std::find_if(fills_.begin(), fills_.end(),</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">         13 :         [&amp;](const LastFillEntry&amp; existing) {</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">         13 :             return existing.betName   == lfe.betName</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">          4 :                 &amp;&amp; existing.pivot     == lfe.pivot</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">         17 :                 &amp;&amp; existing.isOddsBet == lfe.isOddsBet;</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         34 :         });</span></a>
 <a name="114"><span class="lineNum">     114 </span>            : }</a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
 <a name="116"><span class="lineNum">     116 </span>            : //----------------------------------------------------------------</a>

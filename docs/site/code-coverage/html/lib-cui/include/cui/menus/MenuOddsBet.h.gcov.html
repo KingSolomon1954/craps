@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -149,44 +149,45 @@
 <a name="87"><span class="lineNum">      87 </span>            :     void logBetInfo(const BetInfo&amp; bi);</a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span>            :     bool shortCircuit();</a>
-<a name="90"><span class="lineNum">      90 </span>            : </a>
-<a name="91"><span class="lineNum">      91 </span>            :     // Window creation and drawing</a>
-<a name="92"><span class="lineNum">      92 </span>            :     void calcSize();</a>
-<a name="93"><span class="lineNum">      93 </span>            :     void resizeWindow();</a>
-<a name="94"><span class="lineNum">      94 </span>            :     void drawBorders();</a>
-<a name="95"><span class="lineNum">      95 </span>            :     void drawStaticContent();</a>
-<a name="96"><span class="lineNum">      96 </span>            :     void populate();</a>
-<a name="97"><span class="lineNum">      97 </span>            : </a>
-<a name="98"><span class="lineNum">      98 </span>            :     // Processing hotKeys</a>
-<a name="99"><span class="lineNum">      99 </span>            :     void back();</a>
-<a name="100"><span class="lineNum">     100 </span>            :     void processSelection(const Craps::BetId&amp; betId);</a>
-<a name="101"><span class="lineNum">     101 </span>            :     BetInfo&amp; findBet(const Craps::BetId&amp; betId);</a>
-<a name="102"><span class="lineNum">     102 </span>            :     void populateCarrier(const BetInfo&amp; bet);</a>
-<a name="103"><span class="lineNum">     103 </span>            :     void activateDialogBetAmount();</a>
-<a name="104"><span class="lineNum">     104 </span>            : };</a>
-<a name="105"><span class="lineNum">     105 </span>            : </a>
-<a name="106"><span class="lineNum">     106 </span>            : /*-----------------------------------------------------------*//**</a>
-<a name="107"><span class="lineNum">     107 </span>            : </a>
-<a name="108"><span class="lineNum">     108 </span>            : @class MenuOddsBet</a>
-<a name="109"><span class="lineNum">     109 </span>            : </a>
-<a name="110"><span class="lineNum">     110 </span>            : @brief Display choices for making odds bets</a>
-<a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span>            : Responsibilities of MenuOddsBet:</a>
-<a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span>            : @li Key bindings for the menu</a>
-<a name="115"><span class="lineNum">     115 </span>            : </a>
-<a name="116"><span class="lineNum">     116 </span>            : @li Process input keys </a>
-<a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span>            : @li Takes action on input keys </a>
-<a name="119"><span class="lineNum">     119 </span>            : </a>
-<a name="120"><span class="lineNum">     120 </span>            : @li Renders the menu on screen</a>
-<a name="121"><span class="lineNum">     121 </span>            : </a>
-<a name="122"><span class="lineNum">     122 </span>            : */</a>
-<a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span>            : } // namespace Cui</a>
-<a name="125"><span class="lineNum">     125 </span>            : </a>
-<a name="126"><span class="lineNum">     126 </span>            : //----------------------------------------------------------------</a>
-<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="90"><span class="lineNum">      90 </span>            :     bool shortCircuited_ = false;   // The amount dialog was pushed for us</a>
+<a name="91"><span class="lineNum">      91 </span>            : </a>
+<a name="92"><span class="lineNum">      92 </span>            :     // Window creation and drawing</a>
+<a name="93"><span class="lineNum">      93 </span>            :     void calcSize();</a>
+<a name="94"><span class="lineNum">      94 </span>            :     void resizeWindow();</a>
+<a name="95"><span class="lineNum">      95 </span>            :     void drawBorders();</a>
+<a name="96"><span class="lineNum">      96 </span>            :     void drawStaticContent();</a>
+<a name="97"><span class="lineNum">      97 </span>            :     void populate();</a>
+<a name="98"><span class="lineNum">      98 </span>            : </a>
+<a name="99"><span class="lineNum">      99 </span>            :     // Processing hotKeys</a>
+<a name="100"><span class="lineNum">     100 </span>            :     void back();</a>
+<a name="101"><span class="lineNum">     101 </span>            :     void processSelection(const Craps::BetId&amp; betId);</a>
+<a name="102"><span class="lineNum">     102 </span>            :     BetInfo&amp; findBet(const Craps::BetId&amp; betId);</a>
+<a name="103"><span class="lineNum">     103 </span>            :     void populateCarrier(const BetInfo&amp; bet);</a>
+<a name="104"><span class="lineNum">     104 </span>            :     void activateDialogBetAmount();</a>
+<a name="105"><span class="lineNum">     105 </span>            : };</a>
+<a name="106"><span class="lineNum">     106 </span>            : </a>
+<a name="107"><span class="lineNum">     107 </span>            : /*-----------------------------------------------------------*//**</a>
+<a name="108"><span class="lineNum">     108 </span>            : </a>
+<a name="109"><span class="lineNum">     109 </span>            : @class MenuOddsBet</a>
+<a name="110"><span class="lineNum">     110 </span>            : </a>
+<a name="111"><span class="lineNum">     111 </span>            : @brief Display choices for making odds bets</a>
+<a name="112"><span class="lineNum">     112 </span>            : </a>
+<a name="113"><span class="lineNum">     113 </span>            : Responsibilities of MenuOddsBet:</a>
+<a name="114"><span class="lineNum">     114 </span>            : </a>
+<a name="115"><span class="lineNum">     115 </span>            : @li Key bindings for the menu</a>
+<a name="116"><span class="lineNum">     116 </span>            : </a>
+<a name="117"><span class="lineNum">     117 </span>            : @li Process input keys </a>
+<a name="118"><span class="lineNum">     118 </span>            : </a>
+<a name="119"><span class="lineNum">     119 </span>            : @li Takes action on input keys </a>
+<a name="120"><span class="lineNum">     120 </span>            : </a>
+<a name="121"><span class="lineNum">     121 </span>            : @li Renders the menu on screen</a>
+<a name="122"><span class="lineNum">     122 </span>            : </a>
+<a name="123"><span class="lineNum">     123 </span>            : */</a>
+<a name="124"><span class="lineNum">     124 </span>            : </a>
+<a name="125"><span class="lineNum">     125 </span>            : } // namespace Cui</a>
+<a name="126"><span class="lineNum">     126 </span>            : </a>
+<a name="127"><span class="lineNum">     127 </span>            : //----------------------------------------------------------------</a>
+<a name="128"><span class="lineNum">     128 </span>            : </a>
 </pre>
       </td>
     </tr>

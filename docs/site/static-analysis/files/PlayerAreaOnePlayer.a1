@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="20879543887524603">
+<analyzerinfo hash="17290767465897473516">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_BTEE"/>
     <functioncall functionName="ACS_TTEE"/>
     <functioncall functionName="A_BOLD"/>
+    <functioncall functionName="A_DIM"/>
     <functioncall functionName="BetId"/>
     <functioncall functionName="COLOR_PAIR"/>
     <functioncall functionName="Come"/>
@@ -76,6 +77,7 @@
     <functioncall functionName="labels_"/>
     <functioncall functionName="lineBetsBorderTopRow"/>
     <functioncall functionName="logWarn"/>
+    <functioncall functionName="lookOf"/>
     <functioncall functionName="mvwaddch"/>
     <functioncall functionName="mvwaddstr"/>
     <functioncall functionName="mvwhline"/>
@@ -92,6 +94,7 @@
     <functioncall functionName="prevPlayerIndex"/>
     <functioncall functionName="push_back"/>
     <functioncall functionName="readBetContractAmount"/>
+    <functioncall functionName="readBetFlagLook"/>
     <functioncall functionName="readBetName"/>
     <functioncall functionName="readBetOddsAmount"/>
     <functioncall functionName="readBetPivot"/>

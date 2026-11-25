@@ -1,15 +1,23 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="7029734179693079103">
+<analyzerinfo hash="13026704104478909740">
   <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Follow"/>
     <functioncall functionName="IsDefined"/>
     <functioncall functionName="IsMap"/>
+    <functioncall functionName="IsScalar"/>
     <functioncall functionName="Map"/>
-    <functioncall functionName="autoFill_"/>
+    <functioncall functionName="Node"/>
+    <functioncall functionName="as"/>
+    <functioncall functionName="autoOdds_"/>
+    <functioncall functionName="buddyFollow_"/>
     <functioncall functionName="clear"/>
     <functioncall functionName="fromYAML"/>
     <functioncall functionName="lastFill_"/>
     <functioncall functionName="node"/>
-    <functioncall functionName="quickBet_"/>
+    <functioncall functionName="parseBuddyFollow"/>
+    <functioncall functionName="quickBets_"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toString"/>
     <functioncall functionName="toYAML"/>
   </FileInfo>
 </analyzerinfo>

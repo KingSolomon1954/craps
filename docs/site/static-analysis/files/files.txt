@@ -13,7 +13,10 @@ Timepoint.a1::/work/src/lib-gen/src/Timepoint.cpp
 TimerManager.a1::/work/src/lib-gen/src/TimerManager.cpp
 Uuid.a1::/work/src/lib-gen/src/Uuid.cpp
 saveMultiLayerConfig.a1::/work/src/lib-gen/src/saveMultiLayerConfig.cpp
-AutoFill.a1::/work/src/lib-controller/src/AutoFill.cpp
+AutoOdds.a1::/work/src/lib-controller/src/AutoOdds.cpp
+BetExecutor.a1::/work/src/lib-controller/src/BetExecutor.cpp
+BetFlags.a1::/work/src/lib-controller/src/BetFlags.cpp
+BetSpec.a1::/work/src/lib-controller/src/BetSpec.cpp
 ConfigCommandLine.a1::/work/src/lib-controller/src/ConfigCommandLine.cpp
 ConfigDefaults.a1::/work/src/lib-controller/src/ConfigDefaults.cpp
 ConfigEnv.a1::/work/src/lib-controller/src/ConfigEnv.cpp
@@ -30,7 +33,7 @@ PlayerManager.a1::/work/src/lib-controller/src/PlayerManager.cpp
 PlayerManifest.a1::/work/src/lib-controller/src/PlayerManifest.cpp
 PlayerPrefs.a1::/work/src/lib-controller/src/PlayerPrefs.cpp
 Properties.a1::/work/src/lib-controller/src/Properties.cpp
-QuickBet.a1::/work/src/lib-controller/src/QuickBet.cpp
+QuickBets.a1::/work/src/lib-controller/src/QuickBets.cpp
 StartChoices.a1::/work/src/lib-controller/src/StartChoices.cpp
 TableManager.a1::/work/src/lib-controller/src/TableManager.cpp
 TableManifest.a1::/work/src/lib-controller/src/TableManifest.cpp
@@ -66,7 +69,8 @@ DialogConfirm.a1::/work/src/lib-cui/src/dialogs/DialogConfirm.cpp
 DialogDeepRollHistory.a1::/work/src/lib-cui/src/dialogs/DialogDeepRollHistory.cpp
 DialogError.a1::/work/src/lib-cui/src/dialogs/DialogError.cpp
 DialogMessage.a1::/work/src/lib-cui/src/dialogs/DialogMessage.cpp
-DialogPickPlayer.a1::/work/src/lib-cui/src/dialogs/DialogPickPlayer.cpp
+DialogPicker.a1::/work/src/lib-cui/src/dialogs/DialogPicker.cpp
+DialogQuickBetsSetAdd.a1::/work/src/lib-cui/src/dialogs/DialogQuickBetsSetAdd.cpp
 DialogTextInput.a1::/work/src/lib-cui/src/dialogs/DialogTextInput.cpp
 LayoutCrapsScreen.a1::/work/src/lib-cui/src/layouts/LayoutCrapsScreen.cpp
 CarrierBet.a1::/work/src/lib-cui/src/managers/CarrierBet.cpp
@@ -74,6 +78,7 @@ ColorManager.a1::/work/src/lib-cui/src/managers/ColorManager.cpp
 LocationManager.a1::/work/src/lib-cui/src/managers/LocationManager.cpp
 OperationManager.a1::/work/src/lib-cui/src/managers/OperationManager.cpp
 SurfaceManager.a1::/work/src/lib-cui/src/managers/SurfaceManager.cpp
+MenuBetFlags.a1::/work/src/lib-cui/src/menus/MenuBetFlags.cpp
 MenuBetting.a1::/work/src/lib-cui/src/menus/MenuBetting.cpp
 MenuConfigure.a1::/work/src/lib-cui/src/menus/MenuConfigure.cpp
 MenuControl.a1::/work/src/lib-cui/src/menus/MenuControl.cpp
@@ -82,6 +87,7 @@ MenuOddsBet.a1::/work/src/lib-cui/src/menus/MenuOddsBet.cpp
 MenuPivot.a1::/work/src/lib-cui/src/menus/MenuPivot.cpp
 MenuPlaceBet.a1::/work/src/lib-cui/src/menus/MenuPlaceBet.cpp
 MenuPlayers.a1::/work/src/lib-cui/src/menus/MenuPlayers.cpp
+MenuTable.a1::/work/src/lib-cui/src/menus/MenuTable.cpp
 PlayerAreaAllPlayers.a1::/work/src/lib-cui/src/panels/PlayerAreaAllPlayers.cpp
 PlayerAreaOnePlayer.a1::/work/src/lib-cui/src/panels/PlayerAreaOnePlayer.cpp
 WindowAnimation.a1::/work/src/lib-cui/src/panels/WindowAnimation.cpp

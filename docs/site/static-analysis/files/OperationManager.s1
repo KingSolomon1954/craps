@@ -1,2 +1,4 @@
 trimmed call:[isspace,size,substr] noreturn:[substr]
 sameIgnoringCase call:[begin,end,equal,size,tolower] noreturn:[equal,tolower]
+typeWords
+findPlan

@@ -110,6 +110,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9ba9917dc775865fc0d2f07ea3cccd9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55822de3db6e26da3de98620b775a994" id="r_a55822de3db6e26da3de98620b775a994"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCtrl_1_1AutoOdds.html">AutoOdds</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55822de3db6e26da3de98620b775a994">autoOdds</a> ()</td></tr>
 <tr class="separator:a55822de3db6e26da3de98620b775a994"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a402a997b76e0a3c7b0e9ed03f2b02859" id="r_a402a997b76e0a3c7b0e9ed03f2b02859"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a402a997b76e0a3c7b0e9ed03f2b02859">setBuddyFollow</a> (<a class="el" href="namespaceCtrl.html#a2621e11860f8cd604acd20910cb5dc3d">BuddyFollow</a> value)</td></tr>
+<tr class="separator:a402a997b76e0a3c7b0e9ed03f2b02859"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f38a1cabc66601969ac94b9331f942c" id="r_a4f38a1cabc66601969ac94b9331f942c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f38a1cabc66601969ac94b9331f942c">fromYAML</a> (const YAML::Node &amp;node)</td></tr>
 <tr class="separator:a4f38a1cabc66601969ac94b9331f942c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Observers</div></td></tr>
@@ -119,12 +121,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5d2e039f5f1db05b95b2a16d2a6bb8b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54944407365b8d0d2af4c9d9f7b2f9a6" id="r_a54944407365b8d0d2af4c9d9f7b2f9a6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classCtrl_1_1AutoOdds.html">AutoOdds</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54944407365b8d0d2af4c9d9f7b2f9a6">autoOdds</a> () const</td></tr>
 <tr class="separator:a54944407365b8d0d2af4c9d9f7b2f9a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefbf6588bf9f66739bcf2c61fd8035c0" id="r_aefbf6588bf9f66739bcf2c61fd8035c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCtrl.html#a2621e11860f8cd604acd20910cb5dc3d">BuddyFollow</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefbf6588bf9f66739bcf2c61fd8035c0">buddyFollow</a> () const</td></tr>
+<tr class="separator:aefbf6588bf9f66739bcf2c61fd8035c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a925ac7ad9180f3fa3c856c1c90894" id="r_a92a925ac7ad9180f3fa3c856c1c90894"><td class="memItemLeft" align="right" valign="top">YAML::Node&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92a925ac7ad9180f3fa3c856c1c90894">toYAML</a> () const</td></tr>
 <tr class="separator:a92a925ac7ad9180f3fa3c856c1c90894"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>One player's controller-level preferences. </p>
-<p>Things the controller remembers for a player that the <a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> model knows nothing about: <a class="el" href="classCtrl_1_1LastFill.html" title="Manages last fill amounts for bets.">LastFill</a>, <a class="el" href="classCtrl_1_1QuickBets.html" title="A player&#39;s named bundles of bets.">QuickBets</a> and <a class="el" href="classCtrl_1_1AutoOdds.html" title="One player&#39;s automatic odds settings.">AutoOdds</a>, which are plain data. To add another, add a member here and a key in <a class="el" href="#a92a925ac7ad9180f3fa3c856c1c90894">toYAML()</a> and <a class="el" href="#a4f38a1cabc66601969ac94b9331f942c">fromYAML()</a>.</p>
+<p>Things the controller remembers for a player that the <a class="el" href="namespaceCraps.html" title="Craps Library (lib-craps)">Craps</a> model knows nothing about: <a class="el" href="classCtrl_1_1LastFill.html" title="Manages last fill amounts for bets.">LastFill</a>, <a class="el" href="classCtrl_1_1QuickBets.html" title="A player&#39;s named bundles of bets.">QuickBets</a> and <a class="el" href="classCtrl_1_1AutoOdds.html" title="One player&#39;s automatic odds settings.">AutoOdds</a>, which are plain data, and what the buddies do when the player changes tables (BuddyFollow). To add another, add a member here and a key in <a class="el" href="#a92a925ac7ad9180f3fa3c856c1c90894">toYAML()</a> and <a class="el" href="#a4f38a1cabc66601969ac94b9331f942c">fromYAML()</a>.</p>
 <p><a class="el" href="classCtrl_1_1PlayerManager.html" title="Managers players.">PlayerManager</a> owns one <a class="el" href="classCtrl_1_1PlayerPrefs.html" title="One player&#39;s controller-level preferences.">PlayerPrefs</a> per player. Observers reach the user's through <a class="el" href="classCtrl_1_1PlayerManager.html#ab0b0c7aaa9d655016062a57e1637dd8a">PlayerManager::userPrefs()</a>. Nothing here is a singleton, so changing who the user is just changes which <a class="el" href="classCtrl_1_1PlayerPrefs.html" title="One player&#39;s controller-level preferences.">PlayerPrefs</a> is returned.</p>
 <p>Persistence: <a class="el" href="#a92a925ac7ad9180f3fa3c856c1c90894">toYAML()</a> produces the player file's "Prefs" section and <a class="el" href="#a4f38a1cabc66601969ac94b9331f942c">fromYAML()</a> restores from it. <a class="el" href="#a4f38a1cabc66601969ac94b9331f942c">fromYAML()</a> is forgiving; a missing or malformed section yields empty preferences and never throws.</p>
 <div class="fragment"><div class="line">Prefs:</div>
@@ -135,9 +139,11 @@ Public Member Functions</h2></td></tr>
 <div class="line">      amount: 50</div>
 <div class="line">  <a class="code hl_class" href="classCtrl_1_1QuickBets.html">QuickBets</a>: [...]    # see <a class="code hl_class" href="classCtrl_1_1QuickBets.html">QuickBets</a>.h</div>
 <div class="line">  <a class="code hl_class" href="classCtrl_1_1AutoOdds.html">AutoOdds</a>: {...}     # see <a class="code hl_class" href="classCtrl_1_1AutoOdds.html">AutoOdds</a>.h</div>
+<div class="line">  BuddiesFollow: follow   # follow, stay or ask; see <a class="code hl_enumeration" href="namespaceCtrl.html#a2621e11860f8cd604acd20910cb5dc3d">BuddyFollow</a>.h</div>
 <div class="ttc" id="aclassCtrl_1_1AutoOdds_html"><div class="ttname"><a href="classCtrl_1_1AutoOdds.html">Ctrl::AutoOdds</a></div><div class="ttdoc">One player's automatic odds settings.</div><div class="ttdef"><b>Definition</b> AutoOdds.h:22</div></div>
 <div class="ttc" id="aclassCtrl_1_1QuickBets_html"><div class="ttname"><a href="classCtrl_1_1QuickBets.html">Ctrl::QuickBets</a></div><div class="ttdoc">A player's named bundles of bets.</div><div class="ttdef"><b>Definition</b> QuickBets.h:18</div></div>
 <div class="ttc" id="agroup__free_html_gga7182e663179cba6d21c5a6619ffc4c84a0094bd807d373137d31ff198a8e8b721"><div class="ttname"><a href="group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a0094bd807d373137d31ff198a8e8b721">BetName::PassLine</a></div><div class="ttdeci">@ PassLine</div><div class="ttdoc">Pass line bet.</div></div>
+<div class="ttc" id="anamespaceCtrl_html_a2621e11860f8cd604acd20910cb5dc3d"><div class="ttname"><a href="namespaceCtrl.html#a2621e11860f8cd604acd20910cb5dc3d">Ctrl::BuddyFollow</a></div><div class="ttdeci">BuddyFollow</div><div class="ttdoc">What the buddy players do when the user player changes tables.</div><div class="ttdef"><b>Definition</b> BuddyFollow.h:20</div></div>
 </div><!-- fragment --><p>Each list is read on its own, so a bad or missing list only empties that list. Keys it does not know, such as the AutoFills of older player files, are ignored and are not written back. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a55822de3db6e26da3de98620b775a994" name="a55822de3db6e26da3de98620b775a994"></a>
@@ -165,6 +171,23 @@ Public Member Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="classCtrl_1_1AutoOdds.html">AutoOdds</a> &amp; PlayerPrefs::autoOdds </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aefbf6588bf9f66739bcf2c61fd8035c0" name="aefbf6588bf9f66739bcf2c61fd8035c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefbf6588bf9f66739bcf2c61fd8035c0">&#9670;&#160;</a></span>buddyFollow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCtrl.html#a2621e11860f8cd604acd20910cb5dc3d">BuddyFollow</a> PlayerPrefs::buddyFollow </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -259,6 +282,23 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a402a997b76e0a3c7b0e9ed03f2b02859" name="a402a997b76e0a3c7b0e9ed03f2b02859"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a402a997b76e0a3c7b0e9ed03f2b02859">&#9670;&#160;</a></span>setBuddyFollow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlayerPrefs::setBuddyFollow </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceCtrl.html#a2621e11860f8cd604acd20910cb5dc3d">BuddyFollow</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a92a925ac7ad9180f3fa3c856c1c90894" name="a92a925ac7ad9180f3fa3c856c1c90894"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a92a925ac7ad9180f3fa3c856c1c90894">&#9670;&#160;</a></span>toYAML()</h2>
 
@@ -283,7 +323,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 24 2026 15:16:03 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Nov 25 2026 16:21:12 for RoyalCraps by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

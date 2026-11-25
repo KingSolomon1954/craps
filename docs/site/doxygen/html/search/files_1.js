@@ -13,6 +13,7 @@ var searchData=
   ['betspec_2eh_10',['BetSpec.h',['../BetSpec_8h.html',1,'']]],
   ['betstats_2ecpp_11',['BetStats.cpp',['../BetStats_8cpp.html',1,'']]],
   ['betstats_2eh_12',['BetStats.h',['../BetStats_8h.html',1,'']]],
-  ['buildinfo_2ecpp_13',['BuildInfo.cpp',['../BuildInfo_8cpp.html',1,'']]],
-  ['buildinfo_2eh_14',['BuildInfo.h',['../BuildInfo_8h.html',1,'']]]
+  ['buddyfollow_2eh_13',['BuddyFollow.h',['../BuddyFollow_8h.html',1,'']]],
+  ['buildinfo_2ecpp_14',['BuildInfo.cpp',['../BuildInfo_8cpp.html',1,'']]],
+  ['buildinfo_2eh_15',['BuildInfo.h',['../BuildInfo_8h.html',1,'']]]
 ];

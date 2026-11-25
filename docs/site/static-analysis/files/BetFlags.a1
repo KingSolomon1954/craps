@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="14473627363156330068">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Buy"/>
+    <functioncall functionName="Default"/>
+    <functioncall functionName="FlagOneRoll"/>
+    <functioncall functionName="FlagStanding"/>
+    <functioncall functionName="Hardway"/>
+    <functioncall functionName="Lay"/>
+    <functioncall functionName="None"/>
+    <functioncall functionName="Odds"/>
+    <functioncall functionName="Off"/>
+    <functioncall functionName="Place"/>
+    <functioncall functionName="Working"/>
+    <functioncall functionName="betName"/>
+    <functioncall functionName="canTakeFlag"/>
+    <functioncall functionName="categoryOf"/>
+    <functioncall functionName="contractAmount"/>
+    <functioncall functionName="false"/>
+    <functioncall functionName="flagOneRoll"/>
+    <functioncall functionName="flagStanding"/>
+    <functioncall functionName="inScope"/>
+    <functioncall functionName="oddsAmount"/>
+    <functioncall functionName="pivot"/>
+    <functioncall functionName="toString"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="true"/>
+  </FileInfo>
+</analyzerinfo>

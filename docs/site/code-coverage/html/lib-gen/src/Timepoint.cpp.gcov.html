@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-11-19 03:37:22</td>
+            <td class="headerValue">2026-11-25 16:20:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -80,11 +80,11 @@
 <a name="18"><span class="lineNum">      18 </span>            : //</a>
 <a name="19"><span class="lineNum">      19 </span>            : // Default constructor: now</a>
 <a name="20"><span class="lineNum">      20 </span>            : //</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">     406553 : Timepoint::Timepoint()</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">     406553 :     : tp_(Clock::now())</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">     407294 : Timepoint::Timepoint()</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">     407294 :     : tp_(Clock::now())</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : {</a>
 <a name="24"><span class="lineNum">      24 </span>            :     // empty</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">     406553 : }</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">     407294 : }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            : //----------------------------------------------------------------</a>
 <a name="28"><span class="lineNum">      28 </span>            : //</a>
@@ -147,9 +147,9 @@
 <a name="85"><span class="lineNum">      85 </span>            : // Convert to ISO8601 string</a>
 <a name="86"><span class="lineNum">      86 </span>            : //</a>
 <a name="87"><span class="lineNum">      87 </span>            : std::string</a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">    1600592 : Timepoint::toString() const</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">    1600791 : Timepoint::toString() const</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : {</a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">    1600592 :     return std::format(&quot;{:%Y-%m-%dT%H:%M:%S}&quot;, tp_);</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">    1600791 :     return std::format(&quot;{:%Y-%m-%dT%H:%M:%S}&quot;, tp_);</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : }</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
 <a name="93"><span class="lineNum">      93 </span>            : //----------------------------------------------------------------</a>
@@ -174,9 +174,9 @@
 <a name="112"><span class="lineNum">     112 </span>            : // Duration between Timepoint and now</a>
 <a name="113"><span class="lineNum">     113 </span>            : //</a>
 <a name="114"><span class="lineNum">     114 </span>            : Timepoint::Duration</a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">         12 : Timepoint::sinceNow() const</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">         17 : Timepoint::sinceNow() const</span></a>
 <a name="116"><span class="lineNum">     116 </span>            : {</a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">         24 :     return Clock::now() - tp_;</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">         34 :     return Clock::now() - tp_;</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : }</a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span>            : //----------------------------------------------------------------</a>
@@ -186,7 +186,7 @@
 <a name="124"><span class="lineNum">     124 </span><span class="lineCov">        425 : bool Timepoint::operator&gt; (const Timepoint&amp; other) const { return tp_ &gt;  other.tp_; }</span></a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 : bool Timepoint::operator&lt;=(const Timepoint&amp; other) const { return tp_ &lt;= other.tp_; }</span></a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 : bool Timepoint::operator&gt;=(const Timepoint&amp; other) const { return tp_ &gt;= other.tp_; }</span></a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          7 : bool Timepoint::operator==(const Timepoint&amp; other) const { return tp_ == other.tp_; }</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          9 : bool Timepoint::operator==(const Timepoint&amp; other) const { return tp_ == other.tp_; }</span></a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineCov">          2 : bool Timepoint::operator!=(const Timepoint&amp; other) const { return tp_ != other.tp_; }</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span>            : //----------------------------------------------------------------</a>
@@ -233,10 +233,10 @@
 <a name="171"><span class="lineNum">     171 </span>            : // Set to now.</a>
 <a name="172"><span class="lineNum">     172 </span>            : //</a>
 <a name="173"><span class="lineNum">     173 </span>            : void</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     200510 : Timepoint::setToNow()</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     200523 : Timepoint::setToNow()</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : {</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">     200510 :     tp_ = Clock::now();</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     200510 : }</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">     200523 :     tp_ = Clock::now();</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     200523 : }</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span>            : //----------------------------------------------------------------</a>
 <a name="180"><span class="lineNum">     180 </span>            : //</a>
@@ -253,9 +253,9 @@
 <a name="191"><span class="lineNum">     191 </span>            : // Stream output operator</a>
 <a name="192"><span class="lineNum">     192 </span>            : //</a>
 <a name="193"><span class="lineNum">     193 </span>            : std::ostream&amp;</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">    1600560 : operator&lt;&lt; (std::ostream&amp; os, const Gen::Timepoint&amp; tp)</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">    1600750 : operator&lt;&lt; (std::ostream&amp; os, const Gen::Timepoint&amp; tp)</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : {</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">    1600560 :     return os &lt;&lt; tp.toString();</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">    1600750 :     return os &lt;&lt; tp.toString();</span></a>
 <a name="197"><span class="lineNum">     197 </span>            : }</a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            : /*-----------------------------------------------------------*//**</a>
@@ -354,19 +354,19 @@
 <a name="292"><span class="lineNum">     292 </span>            : @endcode</a>
 <a name="293"><span class="lineNum">     293 </span>            : */</a>
 <a name="294"><span class="lineNum">     294 </span>            : std::string</a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineCov">         18 : Timepoint::formatDurationWithDays(std::chrono::system_clock::duration dur)</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">         23 : Timepoint::formatDurationWithDays(std::chrono::system_clock::duration dur)</span></a>
 <a name="296"><span class="lineNum">     296 </span>            : {</a>
 <a name="297"><span class="lineNum">     297 </span>            :     using namespace std::chrono;</a>
 <a name="298"><span class="lineNum">     298 </span>            : </a>
 <a name="299"><span class="lineNum">     299 </span>            :     // Extract whole days and remainder</a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineCov">         18 :     auto totalSeconds = duration_cast&lt;seconds&gt;(dur);</span></a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">         18 :     auto daysPart     = duration_cast&lt;days&gt;(totalSeconds);</span></a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineCov">         18 :     auto timePart     = totalSeconds - daysPart;</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">         23 :     auto totalSeconds = duration_cast&lt;seconds&gt;(dur);</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">         23 :     auto daysPart     = duration_cast&lt;days&gt;(totalSeconds);</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">         23 :     auto timePart     = totalSeconds - daysPart;</span></a>
 <a name="303"><span class="lineNum">     303 </span>            : </a>
 <a name="304"><span class="lineNum">     304 </span>            :     // Convert remainder to a time_point so we can format it</a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineCov">         18 :     auto tp = time_point&lt;system_clock, seconds&gt;(timePart);</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineCov">         23 :     auto tp = time_point&lt;system_clock, seconds&gt;(timePart);</span></a>
 <a name="306"><span class="lineNum">     306 </span>            : </a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineCov">         18 :     return std::format(&quot;{}d {:%T}&quot;, daysPart.count(), tp);  // %T = HH:MM:SS</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineCov">         23 :     return std::format(&quot;{}d {:%T}&quot;, daysPart.count(), tp);  // %T = HH:MM:SS</span></a>
 <a name="308"><span class="lineNum">     308 </span>            : }</a>
 <a name="309"><span class="lineNum">     309 </span>            : </a>
 <a name="310"><span class="lineNum">     310 </span>            : //----------------------------------------------------------------</a>

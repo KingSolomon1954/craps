@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<analyzerinfo hash="9030852018949213632">
+<analyzerinfo hash="12492136185237461959">
   <FileInfo check="CheckUnusedFunctions">
     <functioncall functionName="ACS_VLINE"/>
     <functioncall functionName="COLOR_PAIR"/>
@@ -23,6 +23,7 @@
     <functioncall functionName="f2LabelRow"/>
     <functioncall functionName="f2Row"/>
     <functioncall functionName="f3Col"/>
+    <functioncall functionName="f3Cols"/>
     <functioncall functionName="f3Row"/>
     <functioncall functionName="f4Cols"/>
     <functioncall functionName="f4Row"/>

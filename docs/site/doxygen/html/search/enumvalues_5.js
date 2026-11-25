@@ -5,6 +5,7 @@ var searchData=
   ['field_2',['Field',['../classCui_1_1CuiUtils.html#ac3570d034fd1d230278d915fbd5ebc3ea6f16a5f8ff5d75ab84c018adacdfcbb7',1,'Cui::CuiUtils::Field'],['../group__free.html#gga7182e663179cba6d21c5a6619ffc4c84a6f16a5f8ff5d75ab84c018adacdfcbb7',1,'Field:&#160;EnumBetName.h']]],
   ['five_3',['Five',['../namespaceCui.html#aa6cf8f19070f6835163cf3bd900d82ecae5d9de39f7ca1ba2637e5640af3ae8aa',1,'Cui']]],
   ['flatmultiplier_4',['FlatMultiplier',['../structCraps_1_1TableRules.html#a270d637f995e8374f4a0dd7abd160c25a37164a43d11209a0100adea3023500ed',1,'Craps::TableRules']]],
-  ['four_5',['Four',['../namespaceCui.html#aa6cf8f19070f6835163cf3bd900d82eca981b8fcee42e1e726a67a2b9a98ea6e9',1,'Cui']]],
-  ['fullscreen_6',['FullScreen',['../namespaceCui.html#a51c160f309688c51ff594f45a456406fae7ec409749889353b8f83a6b04159420',1,'Cui']]]
+  ['follow_5',['Follow',['../namespaceCtrl.html#a2621e11860f8cd604acd20910cb5dc3da3903aab323863bd2e9b68218a7a65ebd',1,'Ctrl']]],
+  ['four_6',['Four',['../namespaceCui.html#aa6cf8f19070f6835163cf3bd900d82eca981b8fcee42e1e726a67a2b9a98ea6e9',1,'Cui']]],
+  ['fullscreen_7',['FullScreen',['../namespaceCui.html#a51c160f309688c51ff594f45a456406fae7ec409749889353b8f83a6b04159420',1,'Cui']]]
 ];
