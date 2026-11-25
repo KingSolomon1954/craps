@@ -1,4 +1,4 @@
-.. Conventions are the same as in players.inc.
+.. Conventions are the same as in Players.inc.
 
 AutoOdds
 ========

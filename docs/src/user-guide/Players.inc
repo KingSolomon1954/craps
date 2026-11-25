@@ -1,4 +1,4 @@
-.. Conventions are the same as in statistics.inc: **bold** for the first use
+.. Conventions are the same as in Statistics.inc: **bold** for the first use
 .. of a defined term, *italic* for emphasis, ``literal`` for file names,
 .. settings and commands, and Notes for things that commonly surprise people.
 

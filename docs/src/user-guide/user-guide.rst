@@ -31,21 +31,21 @@ User Interface Overview
 
 < give a high-level overview of the interface>
 
-.. include:: players.inc
+.. include:: Players.inc
 
-.. include:: tables.inc
+.. include:: Tables.inc
 
-.. include:: undo.inc
+.. include:: Undo.inc
 
-.. include:: quickbets.inc
+.. include:: QuickBets.inc
 
-.. include:: autoodds.inc
+.. include:: AutoOdds.inc
 
-.. include:: betflags.inc
+.. include:: BetFlags.inc
 
-.. include:: configuration.inc
+.. include:: Configuration.inc
 
-.. include:: statistics.inc
+.. include:: Statistics.inc
 
 Frequently Asked Questions
 ==========================
