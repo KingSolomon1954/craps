@@ -29,12 +29,11 @@
 
 ### Implement Buddy Automation
 
-### OperationManager needs refactor
-
 ### Implement WindowMessageArea
 
 ## Done
 
+(Done) Refactored OperationManager
 (Done) Updated docs with shared intros and content\
 (Done) Design doc re-organization and contents\
 (Done) Completed Switch Table feature\

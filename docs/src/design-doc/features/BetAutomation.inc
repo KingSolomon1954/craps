@@ -95,7 +95,7 @@ Automation Request Flow
 For QuickBets, as built:
 
 #. ``MenuBetting`` ``q`` calls ``OperationManager::applyQuickBets()``, which
-   reads the entries with ``CrapsReaders::readQuickBets()`` and shows
+   starts an ``ApplyQuickBetsOperation``. It reads the entries with ``CrapsReaders::readQuickBets()`` and shows
    them in ``DialogPicker``. The pick list carries each entry's name, so
    the request still names the right entry if the list changes.
 #. The pick sends ``ReqApplyQuickBets`` (player id and entry name).
@@ -107,8 +107,8 @@ For QuickBets, as built:
    and one line for each skipped bet. ``accepted`` means the entry was
    applied, even if some bets were skipped. A refused request has an error
    instead.
-#. ``OperationManager::onRspApplyQuickBets()`` unwinds the menus, and shows a
-   notice only when something was skipped.
+#. ``ApplyQuickBetsOperation::onRspApplyQuickBets()`` unwinds the menus, and
+   shows a notice only when something was skipped.
 
 The bet and balance events that the placements cause redraw the screens in
 the usual way. The View does not need to know which bets were placed.
@@ -116,12 +116,12 @@ the usual way. The View does not need to know which bets were placed.
 Saving a bet into QuickBets, as built:
 
 #. ``DialogBetAmount`` ``q`` puts the typed amount into ``CarrierBet`` and
-   calls ``OperationManager::quickBetsSetOrAdd()``. That makes a ``BetSpec``
-   from the carrier. Line odds get pivot 0, because they sit on the line bet.
+   calls ``OperationManager::quickBetsSetOrAdd()``, which starts a
+   ``SaveToQuickBetsOperation``. That makes a ``BetSpec`` from the carrier. Line odds get pivot 0, because they sit on the line bet.
    A bet that cannot be saved, such as Come odds, is refused with a notice.
 #. ``DialogQuickBetsSetAdd`` offers a new entry (``1``) or the existing
    entries (``a``, ``b``, ...). It reports with
-   ``OperationManager::onQuickBetsChoice()``. A new entry asks for a name in
+   ``SaveToQuickBetsOperation::onQuickBetsChoice()``. A new entry asks for a name in
    ``DialogTextInput``, whose validator uses ``QuickBets::checkName()`` and
    refuses duplicates ignoring case.
 #. ``ReqEditQuickBets`` carries the action (create or add), the name and the
@@ -132,8 +132,9 @@ Saving a bet into QuickBets, as built:
    back at ``DialogBetAmount``, since the operation has no menus to unwind.
 
 Managing entries, as built. ``MenuConfigure`` ``q`` calls
-``OperationManager::manageQuickBets()``. It is a chain of steps, each of which
-pops itself and reports back, so ``manageStep_`` says which one answered:
+``OperationManager::manageQuickBets()``, which starts a
+``ManageQuickBetsOperation``. It is a chain of steps, each of which pops
+itself and reports back, so the operation's ``step_`` says which one answered:
 
 #. Pick the entry in ``DialogPicker``.
 #. Pick the action: rename, change an amount, remove a bet or delete.
