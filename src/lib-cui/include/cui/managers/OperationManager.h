@@ -109,10 +109,6 @@ private:
     enum class OperationType
     {
         None,
-        MakeBet,
-        RemoveBet,
-        UndoBet,
-        BetFlags,
         QuickBets,
         QuickBetsEdit,
         QuickBetsManage,
@@ -130,25 +126,6 @@ private:
         AwaitingPick,
         AwaitingText
     };
-
-    // Taking bets down: what the pick list offered, and what is left to do
-    struct Removal
-    {
-        Craps::BetId betId    = 0;
-        bool         oddsOnly = false;   // Contract bet stays
-    };
-    std::vector<Removal> removalChoices_;
-    std::vector<Removal> removalQueue_;   // Sent one at a time
-    bool removalStarted_ = false;         // Later removals join the first's undo step
-
-    // Bet Flags: pick a bet (Individual only), then pick the change
-    enum class FlagStep { PickBet, PickChange };
-    FlagStep               flagStep_  = FlagStep::PickChange;
-    Ctrl::BetFlags::Scope  flagScope_ = Ctrl::BetFlags::Scope::All;
-    Craps::BetId           flagBetId_ = 0;
-    void pickFlagBet();
-    void pickFlagChange();
-    void onFlagPick(bool accepted, std::size_t tag);
 
     std::vector<std::string> quickBetNames_;   // What the pick list offered
     Ctrl::BetSpec            quickBetSpec_;    // The bet being saved
@@ -200,6 +177,9 @@ private:
 private:
     OperationManager() = default;
     bool begin(std::unique_ptr<Operation> op);
+    template <class Rsp>
+    void route(const char* name, const Rsp& ev,
+               void (Operation::*hook)(const Rsp&));
     void finish();
     void showError(const Gen::ErrorPass& error,
                    const char* defaultType = "Betting Error",
@@ -229,10 +209,6 @@ private:
     void afterBetsConfirmed();
     void sendTableRequest();
     const char* playerOpVerb() const;
-    void sendNextRemoval();
-    void onRemovalResult(bool accepted, const Gen::ErrorPass& error);
-    void doContractBet(const CarrierBet& cb);
-    void doOddsBet(const CarrierBet& cb);
 };
 
 } // namespace Cui

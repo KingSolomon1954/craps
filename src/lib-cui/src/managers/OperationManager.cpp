@@ -5,6 +5,8 @@
 //----------------------------------------------------------------
 
 #include <cui/managers/OperationManager.h>
+#include <cui/operations/BetFlagsOperation.h>
+#include <cui/operations/BetOperations.h>
 #include <cui/operations/QuitOperation.h>
 #include <cui/operations/SettingsOperations.h>
 #include <cui/managers/CarrierBet.h>
@@ -94,483 +96,17 @@ OperationManager::isActive() const
 
 //----------------------------------------------------------------
 
-void
-OperationManager::makeBet()
-{
-    if (isActive())
-    {
-        // TODO can't just log if this happens
-        LOG_WARN("OperationManager::makeBet(): operation already active");
-        return;
-    }
-    
-    type_          = OperationType::MakeBet;
-    stage_         = Stage::AwaitingResponse;
-    const auto& cb = CarrierBet::instance();
-    
-    if (cb.isOddsBet())
-    {
-        doOddsBet(cb);
-    }
-    else
-    {
-        doContractBet(cb);
-    }
-}
 
 //----------------------------------------------------------------
-
-void
-OperationManager::doContractBet(const CarrierBet& cb)
-{
-    correlationId_ = CuiSender::instance().reqMakeBet(
-                         cb.getPlayerId(),
-                         cb.getBetName(),
-                         cb.getContractAmount(),
-                         cb.getPivot());
-    LOG_TRACE("OperationManager::doContractBet(): request correlationId = " +
-              std::to_string(correlationId_));
-}
-
 //----------------------------------------------------------------
 
-void
-OperationManager::doOddsBet(const CarrierBet& cb)
-{
-    LOG_TRACE("OperationManager::doOddsBet(): request correlationId = " +
-              std::to_string(correlationId_));
-    
-    correlationId_ = CuiSender::instance().reqOddsBet(
-                         cb.getPlayerId(),
-                         cb.getBetId(),
-                         cb.getOddsAmount());
-
-}
-
 //----------------------------------------------------------------
-
-void
-OperationManager::onRspMakeBet(const Ctrl::RspMakeBet& ev)
-{
-    LOG_TRACE("OperationManager::onRspMakeBet() "
-              "correlationId = " + std::to_string(correlationId_));
-             
-    if (stage_ != Stage::AwaitingResponse ||
-        type_  != OperationType::MakeBet  ||
-        ev.correlationId != correlationId_)
-    {
-        LOG_WARN("OperationManager::onRspMakeBet(): ignoring "
-                 "unmatched RspMakeBet: rsp.correlationId = "       +
-                 std::to_string(ev.correlationId)                   +
-                 ", have correlationId_ = "                         +
-                 std::to_string(correlationId_));
-        return;
-    }
-
-    if (ev.accepted)
-    {
-        // ReqMakeBet has succeeded. Unwind the active betting workflow.
-        SurfaceManager::instance().popToRoot();
-        finish();
-        return;
-    }
-
-    showError(ev.error);
-}
-
-//----------------------------------------------------------------
-//
-// Lists what can come down from the user player's bets and lets the
-// person pick one entry, or all of them.
-//
-//   - A bet the table allows to be removed: "remove the whole bet".
-//   - A bet with odds: "remove the odds only", leaving the contract bet.
-//     That is the only way to take down the odds on a Pass Line or Come
-//     bet once its point is set, because those contract bets must stay.
-//
-bool
-OperationManager::removeBets()
-{
-    if (isActive()) return false;
-
-    using Reader = Ctrl::CrapsReaders;
-    const auto playerId = Reader::getUserPlayerId();
-
-    Gen::ErrorPass ep;
-    Craps::BetIds betIds;
-    (void) Reader::readPlayerGetBets(playerId, betIds, ep);
-
-    // Newest first; ids grow as bets are made
-    std::sort(betIds.begin(), betIds.end(), std::greater<Craps::BetId>());
-
-    std::vector<DialogPicker::Item> items;
-    std::vector<Removal> choices;
-    std::size_t numBets = 0, numOddsOnly = 0, numLocked = 0;
-
-    auto money = [](Gen::Money m) { return Gen::MoneyUtils::toStringNoCommas(m); };
-
-    for (auto betId : betIds)
-    {
-        Gen::ErrorPass epBet;
-        bool removable = false;
-        BetName    betName  = BetName::Invalid;
-        unsigned   pivot    = 0;
-        Gen::Money contract = 0;
-        Gen::Money odds     = 0;
-
-        if (Reader::readBetIsRemovable(betId, removable, epBet) !=
-                Gen::ReturnCode::Success ||
-            Reader::readBetName(betId, betName, epBet) !=
-                Gen::ReturnCode::Success ||
-            Reader::readBetPivot(betId, pivot, epBet) !=
-                Gen::ReturnCode::Success ||
-            Reader::readBetContractAmount(betId, contract, epBet) !=
-                Gen::ReturnCode::Success ||
-            Reader::readBetOddsAmount(betId, odds, epBet) !=
-                Gen::ReturnCode::Success)
-        {
-            continue;     // Bet went away while we looked
-        }
-
-        const std::string name = EnumBetName::toString(betName) +
-            (pivot != 0 ? " " + std::to_string(pivot) : std::string());
-
-        if (removable)
-        {
-            DialogPicker::Item item;
-            item.playerId    = playerId;
-            item.betId       = betId;
-            item.tag         = choices.size();
-            item.text        = name;
-            item.note        = money(contract);
-            item.description = odds > 0 ? "odds " + money(odds) : "";
-            items.push_back(std::move(item));
-            choices.push_back({betId, false});
-            ++numBets;
-        }
-        else
-        {
-            ++numLocked;
-        }
-
-        if (odds > 0)
-        {
-            DialogPicker::Item item;
-            item.playerId    = playerId;
-            item.betId       = betId;
-            item.tag         = choices.size();
-            item.text        = name + " odds only";
-            item.note        = money(odds);
-            item.description = "keeps " + money(contract) + " bet";
-            items.push_back(std::move(item));
-            choices.push_back({betId, true});
-            if (!removable) ++numOddsOnly;
-        }
-    }
-
-    if (items.empty())
-    {
-        if (numLocked > 0)
-        {
-            showNotice("No bets can be removed",
-                       "Pass Line and Come bets must stay on the table "
-                       "once their point is established.");
-        }
-        else
-        {
-            showNotice("No bets to remove",
-                       "You have no bets on the table.");
-        }
-        return true;
-    }
-
-    // Last, so that pressing Enter on the first line can't do it by accident
-    if (numBets + numOddsOnly > 1)
-    {
-        DialogPicker::Item item;
-        item.playerId = playerId;
-        item.tag      = choices.size();            // One past the end: all
-        item.text     = "All removable";
-        std::string d = std::to_string(numBets) +
-                        (numBets == 1 ? " bet" : " bets");
-        if (numOddsOnly > 0)
-        {
-            d += ", odds on " + std::to_string(numOddsOnly);
-        }
-        item.description = d;
-        items.push_back(std::move(item));
-    }
-
-    removalChoices_ = std::move(choices);
-    type_  = OperationType::RemoveBet;
-    stage_ = Stage::AwaitingPick;
-    DialogPicker::instance().configure("Remove Bets", std::move(items),
-                                           DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-    return true;
-}
 
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-//
-// Send the next queued removal. An odds-only removal is a request to
-// set the odds amount to zero, which the table accepts as taking down
-// the odds. One request at a time; the response sends the next.
-//
-void
-OperationManager::sendNextRemoval()
-{
-    const Removal r = removalQueue_.front();
-    removalQueue_.erase(removalQueue_.begin());
-
-    // Taking down several bets at once is one step for undo
-    const bool joinsPrevious = removalStarted_;
-    removalStarted_ = true;
-
-    const auto playerId = Ctrl::CrapsReaders::getUserPlayerId();
-    stage_ = Stage::AwaitingResponse;
-    correlationId_ = r.oddsOnly
-        ? CuiSender::instance().reqOddsBet(playerId, r.betId, 0, joinsPrevious)
-        : CuiSender::instance().reqRemoveBet(playerId, r.betId, joinsPrevious);
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onRemovalResult(bool accepted, const Gen::ErrorPass& error)
-{
-    if (accepted)
-    {
-        if (!removalQueue_.empty())
-        {
-            sendNextRemoval();
-            return;
-        }
-        SurfaceManager::instance().popToRoot();
-        finish();
-        return;
-    }
-
-    removalQueue_.clear();     // Stop at the first failure
-    showError(error, "Betting Error", "Unable to Remove Bet");
-}
-
-//----------------------------------------------------------------
-//
-// Take back the player's latest bet change. One request. The bet and
-// balance events that follow redraw the screens as for any bet change.
-// On success the betting menus unwind, as after any bet.
-//
-bool
-OperationManager::undoLastBet()
-{
-    if (isActive()) return false;
-
-    type_  = OperationType::UndoBet;
-    stage_ = Stage::AwaitingResponse;
-    correlationId_ = CuiSender::instance().reqUndoBet(
-        Ctrl::CrapsReaders::getUserPlayerId());
-    return true;
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onRspUndoBet(const Ctrl::RspUndoBet& ev)
-{
-    LOG_TRACE("OperationManager::onRspUndoBet() "
-              "correlationId = " + std::to_string(correlationId_));
-
-    if (stage_ != Stage::AwaitingResponse ||
-        type_  != OperationType::UndoBet  ||
-        ev.correlationId != correlationId_)
-    {
-        LOG_WARN("OperationManager::onRspUndoBet(): ignoring "
-                 "unmatched RspUndoBet: rsp.correlationId = " +
-                 std::to_string(ev.correlationId));
-        return;
-    }
-
-    if (ev.accepted)
-    {
-        SurfaceManager::instance().popToRoot();
-        finish();
-        return;
-    }
-    showError(ev.error, "Betting Error", "Unable to Undo");
-}
-
-//----------------------------------------------------------------
-//
-// Bet Flags, from the Bet Flags menu. The scope is what the menu key
-// meant: a category, all bets, or one bet (Scope::Bet).
-//
-// A category or all bets goes straight to the list of five changes. One
-// bet first asks which bet. Each list pops itself; backing out of either
-// returns to the Bet Flags menu, which is still on the stack. The change
-// is one request. See "Bet Flags" in the design document.
-//
-bool
-OperationManager::betFlags(Ctrl::BetFlags::Scope scope)
-{
-    if (isActive()) return false;
-
-    type_      = OperationType::BetFlags;
-    flagScope_ = scope;
-    flagBetId_ = 0;
-
-    if (scope == Ctrl::BetFlags::Scope::Bet) pickFlagBet();
-    else                                     pickFlagChange();
-    return true;
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::pickFlagBet()
-{
-    const auto flagBets = Ctrl::CrapsReaders::readFlagBets();
-    if (flagBets.empty())
-    {
-        showNotice("No Bets to Flag",
-                   "You have no bets that can be turned off or on.");
-        finish();
-        return;
-    }
-
-    std::vector<DialogPicker::Item> items;
-    for (const auto& fb : flagBets)
-    {
-        DialogPicker::Item item;
-        item.playerId    = Ctrl::CrapsReaders::getUserPlayerId();
-        item.betId       = fb.betId;
-        item.tag         = items.size();
-        item.text        = fb.label;
-        item.description = fb.flags;
-        items.push_back(std::move(item));
-    }
-
-    flagStep_ = FlagStep::PickBet;
-    stage_    = Stage::AwaitingPick;
-    DialogPicker::instance().configure("Bet Flags - Which Bet",
-                                       std::move(items),
-                                       DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-}
-
-//----------------------------------------------------------------
-//
-// The five changes, in the order of the design document. The tag is the
-// Change.
-//
-void
-OperationManager::pickFlagChange()
-{
-    using Ctrl::BetFlags::Change;
-
-    // "odds bets" -> "Odds Bets"; one bet is just "Bet"
-    std::string what = Ctrl::BetFlags::scopeText(flagScope_);
-    bool start = true;
-    for (auto& ch : what)
-    {
-        if (start) ch = static_cast<char>(
-            std::toupper(static_cast<unsigned char>(ch)));
-        start = (ch == ' ');
-    }
-
-    std::string title = "Bet Flags - ";
-    if (flagScope_ == Ctrl::BetFlags::Scope::Bet)
-    {
-        for (const auto& fb : Ctrl::CrapsReaders::readFlagBets())
-        {
-            if (fb.betId == flagBetId_) title += fb.label;
-        }
-    }
-    else
-    {
-        title += what;
-    }
-
-    const Change changes[] = {
-        Change::NotWorking, Change::NotWorkingNextRoll,
-        Change::Working,    Change::WorkingNextRoll,
-        Change::TableDefault };
-
-    std::vector<DialogPicker::Item> items;
-    for (auto change : changes)
-    {
-        DialogPicker::Item item;
-        item.playerId = Ctrl::CrapsReaders::getUserPlayerId();
-        item.tag      = static_cast<std::size_t>(change);
-        item.text     = "Set " + what +
-            (change == Change::TableDefault ? " To " : " ") +
-            Ctrl::BetFlags::changeText(change);
-        items.push_back(std::move(item));
-    }
-
-    flagStep_ = FlagStep::PickChange;
-    stage_    = Stage::AwaitingPick;
-    DialogPicker::instance().configure(title, std::move(items),
-                                       DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onFlagPick(bool accepted, std::size_t tag)
-{
-    if (!accepted)
-    {
-        finish();           // Back to the Bet Flags menu
-        return;
-    }
-
-    if (flagStep_ == FlagStep::PickBet)
-    {
-        flagBetId_ = static_cast<Craps::BetId>(tag);   // see onPickResult
-        pickFlagChange();
-        return;
-    }
-
-    stage_ = Stage::AwaitingResponse;
-    correlationId_ = CuiSender::instance().reqSetBetFlags(
-        Ctrl::CrapsReaders::getUserPlayerId(), flagScope_, flagBetId_,
-        static_cast<Ctrl::BetFlags::Change>(tag));
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onRspSetBetFlags(const Ctrl::RspSetBetFlags& ev)
-{
-    LOG_TRACE("OperationManager::onRspSetBetFlags() "
-              "correlationId = " + std::to_string(correlationId_));
-
-    if (stage_ != Stage::AwaitingResponse ||
-        type_  != OperationType::BetFlags ||
-        ev.correlationId != correlationId_)
-    {
-        LOG_WARN("OperationManager::onRspSetBetFlags(): ignoring "
-                 "unmatched RspSetBetFlags: rsp.correlationId = " +
-                 std::to_string(ev.correlationId));
-        return;
-    }
-
-    if (!ev.accepted)
-    {
-        showError(ev.error, "Betting Error", "Unable to Set Bet Flags");
-        return;
-    }
-
-    // Unwind to the table as after any bet, then say what was done.
-    SurfaceManager::instance().popToRoot();
-    showNotice("Bet Flags", ev.message);
-    finish();
-}
 
 //----------------------------------------------------------------
 //
@@ -1495,65 +1031,6 @@ OperationManager::onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& ev)
 //----------------------------------------------------------------
 
 void
-OperationManager::onRspRemoveBet(const Ctrl::RspRemoveBet& ev)
-{
-    LOG_TRACE("OperationManager::onRspRemoveBet() "
-              "correlationId = " + std::to_string(correlationId_));
-
-    if (stage_ != Stage::AwaitingResponse ||
-        type_  != OperationType::RemoveBet ||
-        ev.correlationId != correlationId_)
-    {
-        LOG_WARN("OperationManager::onRspRemoveBet(): ignoring "
-                 "unmatched RspRemoveBet: rsp.correlationId = " +
-                 std::to_string(ev.correlationId));
-        return;
-    }
-    onRemovalResult(ev.accepted, ev.error);
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onRspOddsBet(const Ctrl::RspOddsBet& ev)
-{
-    LOG_TRACE("OperationManager::onRspOddsBet() "
-              "correlationId = " + std::to_string(correlationId_));
-             
-    if (stage_ == Stage::AwaitingResponse &&
-        type_  == OperationType::RemoveBet &&
-        ev.correlationId == correlationId_)
-    {
-        onRemovalResult(ev.accepted, ev.error);   // Odds taken down
-        return;
-    }
-
-    if (stage_ != Stage::AwaitingResponse ||
-        type_  != OperationType::MakeBet  ||
-        ev.correlationId != correlationId_)
-    {
-        LOG_WARN("OperationManager::onRspMakeBet(): ignoring "
-                 "unmatched RspMakeBet: rsp.correlationId = "       +
-                 std::to_string(ev.correlationId)                   +
-                 ", have correlationId_ = "                         +
-                 std::to_string(correlationId_));
-        return;
-    }
-
-    if (ev.accepted)
-    {
-        // ReqOddsBet has succeeded. Unwind the active betting workflow.
-        SurfaceManager::instance().popToRoot();
-        finish();
-        return;
-    }
-
-    showError(ev.error);
-}
-
-//----------------------------------------------------------------
-
-void
 OperationManager::showError(const Gen::ErrorPass& error,
                             const char* defaultType,
                             const char* defaultName)
@@ -1614,8 +1091,99 @@ OperationManager::onErrorAcknowledged()
 //----------------------------------------------------------------
 //
 // The workflows that are their own Operation classes (see
-// cui/operations/). The ones not yet moved are below.
+// cui/operations/). The ones not yet moved are further down.
 //
+
+void
+OperationManager::makeBet()
+{
+    if (!begin(std::make_unique<MakeBetOperation>()))
+    {
+        // TODO can't just log if this happens
+        LOG_WARN("OperationManager::makeBet(): operation already active");
+    }
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::removeBets()
+{
+    return begin(std::make_unique<RemoveBetOperation>());
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::undoLastBet()
+{
+    return begin(std::make_unique<UndoBetOperation>());
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::betFlags(Ctrl::BetFlags::Scope scope)
+{
+    return begin(std::make_unique<BetFlagsOperation>(scope));
+}
+
+//----------------------------------------------------------------
+//
+// The Controller's answers. One that is not for the current Operation (a
+// late answer, or one for another operation) is ignored.
+//
+
+void
+OperationManager::onRspMakeBet(const Ctrl::RspMakeBet& ev)
+{
+    route("RspMakeBet", ev, &Operation::onRspMakeBet);
+}
+
+void
+OperationManager::onRspOddsBet(const Ctrl::RspOddsBet& ev)
+{
+    route("RspOddsBet", ev, &Operation::onRspOddsBet);
+}
+
+void
+OperationManager::onRspRemoveBet(const Ctrl::RspRemoveBet& ev)
+{
+    route("RspRemoveBet", ev, &Operation::onRspRemoveBet);
+}
+
+void
+OperationManager::onRspUndoBet(const Ctrl::RspUndoBet& ev)
+{
+    route("RspUndoBet", ev, &Operation::onRspUndoBet);
+}
+
+void
+OperationManager::onRspSetBetFlags(const Ctrl::RspSetBetFlags& ev)
+{
+    route("RspSetBetFlags", ev, &Operation::onRspSetBetFlags);
+}
+
+//----------------------------------------------------------------
+
+template <class Rsp>
+void
+OperationManager::route(const char* name, const Rsp& ev,
+                        void (Operation::*hook)(const Rsp&))
+{
+    if (current_ && stage_ == Stage::AwaitingResponse &&
+        ev.correlationId == correlationId_)
+    {
+        (current_.get()->*hook)(ev);
+        return;
+    }
+
+    LOG_WARN(std::string("OperationManager: ignoring unmatched ") + name +
+             ": rsp.correlationId = " + std::to_string(ev.correlationId) +
+             ", have correlationId_ = " + std::to_string(correlationId_));
+}
+
+//----------------------------------------------------------------
 
 bool
 OperationManager::chooseBuddyFollow()
@@ -1737,14 +1305,10 @@ OperationManager::finish()
     type_          = OperationType::None;
     stage_         = Stage::Idle;
     correlationId_ = 0;
-    removalChoices_.clear();
-    removalQueue_.clear();
-    removalStarted_ = false;
     quickBetNames_.clear();
     quickBetTarget_.clear();
     manageEntry_.clear();
     manageBetIndex_ = 0;
-    flagBetId_ = 0;
     autoBetName_ = BetName::Invalid;
     autoPoint_   = 0;
     targetId_.clear();
@@ -2165,58 +1729,10 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
         return;
     }
 
-    if (stage_ == Stage::AwaitingPick && type_ == OperationType::BetFlags)
-    {
-        (void)playerId;
-        // The bet list hands back the bet id; the change list the tag.
-        onFlagPick(accepted, flagStep_ == FlagStep::PickBet ? betId : tag);
-        return;
-    }
-
     if (stage_ == Stage::AwaitingPick && type_ == OperationType::AutoOdds)
     {
         (void)playerId; (void)betId;
         onAutoPick(accepted, tag);
-        return;
-    }
-
-    if (stage_ == Stage::AwaitingPick && type_ == OperationType::RemoveBet)
-    {
-        (void)playerId; (void)betId;
-        if (!accepted || tag > removalChoices_.size())
-        {
-            finish();       // Cancelled; stay on the betting menu
-            return;
-        }
-
-        // tag is an index into removalChoices_; one past the end means
-        // "all of them".
-        if (tag == removalChoices_.size())
-        {
-            removalQueue_ = removalChoices_;   // All is already the right set
-            // Choices hold both "whole" and "odds only" for a Don't bet
-            // with odds. Keep just one removal per bet: the whole bet.
-            std::vector<Removal> unique;
-            for (const auto& r : removalChoices_)
-            {
-                bool seen = false;
-                for (auto& u : unique)
-                {
-                    if (u.betId == r.betId)
-                    {
-                        seen = true;
-                        if (!r.oddsOnly) u.oddsOnly = false;
-                    }
-                }
-                if (!seen) unique.push_back(r);
-            }
-            removalQueue_ = std::move(unique);
-        }
-        else
-        {
-            removalQueue_.assign(1, removalChoices_[tag]);
-        }
-        sendNextRemoval();
         return;
     }
 

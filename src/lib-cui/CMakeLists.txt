@@ -36,6 +36,8 @@ add_library(cui STATIC
     src/menus/MenuPlayers.cpp
     src/menus/MenuTable.cpp
     src/menus/MenuNavBarViews.cpp
+    src/operations/BetFlagsOperation.cpp
+    src/operations/BetOperations.cpp
     src/operations/Operation.cpp
     src/operations/QuitOperation.cpp
     src/operations/SettingsOperations.cpp

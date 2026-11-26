@@ -9,6 +9,7 @@
 #include <controller/GameEvents.h>
 #include <cui/bases/SurfaceBase.h>
 #include <cui/dialogs/DialogPicker.h>
+#include <gen/ErrorPass.h>
 #include <string>
 #include <vector>
 
@@ -55,6 +56,15 @@ public:
     virtual void onText(bool accepted, const std::string& text);
     virtual void onConfirm(SurfaceBase::OperationResult result);
 
+    /// The Controller's answer to the request this Operation sent. Only
+    /// an answer with the right correlation id gets here. An Operation
+    /// overrides the ones it can receive.
+    virtual void onRspMakeBet(const Ctrl::RspMakeBet& rsp);
+    virtual void onRspOddsBet(const Ctrl::RspOddsBet& rsp);
+    virtual void onRspRemoveBet(const Ctrl::RspRemoveBet& rsp);
+    virtual void onRspUndoBet(const Ctrl::RspUndoBet& rsp);
+    virtual void onRspSetBetFlags(const Ctrl::RspSetBetFlags& rsp);
+
     /// The error dialog has closed. By default, unwind to the root screen
     /// and finish.
     virtual void onErrorAcknowledged();
@@ -70,6 +80,23 @@ protected:
     /// Show a pick list and wait for the answer in onPick().
     void pickFrom(const std::string& title,
                   std::vector<DialogPicker::Item> items);
+
+    /// A request has been sent: wait for the answer with this correlation
+    /// id in one of the onRsp hooks.
+    void awaitResponse(Ctrl::CorrelationId id);
+
+    /// Show an error dialog and wait for it to be acknowledged. The labels
+    /// are used when the error has none of its own.
+    void showError(const Gen::ErrorPass& error,
+                   const char* defaultType = "Betting Error",
+                   const char* defaultName = "Unable to Make Bet");
+
+    /// Show a notice. It does not wait for anything.
+    void showNotice(const std::string& brief, const std::string& detail);
+
+    /// Unwind the menus and dialogs to the table, as after any bet, and
+    /// finish.
+    void finishAtRoot();
 
     /// Ask a yes or no question and wait for the answer in onConfirm().
     void askConfirmation(const std::string& question);

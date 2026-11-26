@@ -46,6 +46,24 @@ Operation::onConfirm(SurfaceBase::OperationResult)
 
 //----------------------------------------------------------------
 
+// A response nobody asked this Operation for. Ignore it.
+#define UNEXPECTED_RESPONSE(Type, name)                                  \
+void                                                                     \
+Operation::name(const Ctrl::Type&)                                       \
+{                                                                        \
+    LOG_WARN("Operation::" #name "(): unexpected response, ignored");    \
+}
+
+UNEXPECTED_RESPONSE(RspMakeBet,     onRspMakeBet)
+UNEXPECTED_RESPONSE(RspOddsBet,     onRspOddsBet)
+UNEXPECTED_RESPONSE(RspRemoveBet,   onRspRemoveBet)
+UNEXPECTED_RESPONSE(RspUndoBet,     onRspUndoBet)
+UNEXPECTED_RESPONSE(RspSetBetFlags, onRspSetBetFlags)
+
+#undef UNEXPECTED_RESPONSE
+
+//----------------------------------------------------------------
+
 void
 Operation::onErrorAcknowledged()
 {
@@ -61,6 +79,43 @@ void
 Operation::finish()
 {
     OperationManager::instance().finish();
+}
+
+//----------------------------------------------------------------
+
+void
+Operation::awaitResponse(Ctrl::CorrelationId id)
+{
+    auto& mgr = OperationManager::instance();
+    mgr.stage_         = OperationManager::Stage::AwaitingResponse;
+    mgr.correlationId_ = id;
+}
+
+//----------------------------------------------------------------
+
+void
+Operation::showError(const Gen::ErrorPass& error,
+                     const char* defaultType,
+                     const char* defaultName)
+{
+    OperationManager::instance().showError(error, defaultType, defaultName);
+}
+
+//----------------------------------------------------------------
+
+void
+Operation::showNotice(const std::string& brief, const std::string& detail)
+{
+    OperationManager::instance().showNotice(brief, detail);
+}
+
+//----------------------------------------------------------------
+
+void
+Operation::finishAtRoot()
+{
+    SurfaceManager::instance().popToRoot();
+    finish();
 }
 
 //----------------------------------------------------------------
