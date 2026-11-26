@@ -109,10 +109,6 @@ private:
     enum class OperationType
     {
         None,
-        QuickBets,
-        QuickBetsEdit,
-        QuickBetsManage,
-        AutoOdds,
         Player,
         Table
     };
@@ -127,26 +123,7 @@ private:
         AwaitingText
     };
 
-    std::vector<std::string> quickBetNames_;   // What the pick list offered
-    Ctrl::BetSpec            quickBetSpec_;    // The bet being saved
-    std::string              quickBetTarget_;  // Entry to add to, or new name
-
-    // Managing QuickBets: one pick list or prompt per step
-    enum class ManageStep { PickEntry, PickAction, PickBet, AskName, AskAmount,
-                            ConfirmDelete };
-    ManageStep               manageStep_ = ManageStep::PickEntry;
-    Ctrl::ReqEditQuickBets::Action manageAction_ = Ctrl::ReqEditQuickBets::Action::Rename;
-    std::string              manageEntry_;     // Entry being managed
-    std::size_t              manageBetIndex_ = 0;
-
-    // AutoOdds, from the Configuration menu: one pick list or prompt per step
-    enum class AutoStep { PickAction, PickType, PickPoint, AskMultiple,
-                          ConfirmClear };
-    AutoStep                 autoStep_ = AutoStep::PickAction;
-    BetName                  autoBetName_ = BetName::Invalid;
-    unsigned                 autoPoint_   = 0;       // 0 means all points
-    bool                     autoTurnOn_  = false;
-    std::string              autoOddsStatus_;
+    std::string autoOddsStatus_;    // What AutoOdds just did, for the status line
 
     // The workflow in progress, if it is an Operation. The others are
     // still done by the functions below, with the state above.
@@ -187,20 +164,6 @@ private:
     void showNotice(const std::string& brief, const std::string& detail);
     void askConfirmation(const std::string& question);
     void askForDescription();
-    void askForQuickBetsName();
-    void sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action action);
-    void sendManageRequest(const std::string& text = std::string());
-    void onManagePick(bool accepted, std::size_t tag);
-    void pickManageAction();
-    void pickManageBet(Ctrl::ReqEditQuickBets::Action action);
-    void onAutoPick(bool accepted, std::size_t tag);
-    void pickAutoAction();
-    void pickAutoType();
-    void pickAutoPoint();
-    void askAutoMultiple();
-    void sendAutoRequest(Ctrl::ReqEditAutoOdds request);
-    void askManageName();
-    void askManageAmount();
     void askForName(const std::string& title,
                     const std::string& initial,
                     const Craps::PlayerId& exceptId);

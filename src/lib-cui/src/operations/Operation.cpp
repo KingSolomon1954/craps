@@ -38,6 +38,15 @@ Operation::onText(bool, const std::string&)
 //----------------------------------------------------------------
 
 void
+Operation::onQuickBetsChoice(bool, std::size_t)
+{
+    LOG_WARN("Operation::onQuickBetsChoice(): unexpected choice");
+    finish();
+}
+
+//----------------------------------------------------------------
+
+void
 Operation::onConfirm(SurfaceBase::OperationResult)
 {
     LOG_WARN("Operation::onConfirm(): unexpected confirmation result");
@@ -59,6 +68,9 @@ UNEXPECTED_RESPONSE(RspOddsBet,     onRspOddsBet)
 UNEXPECTED_RESPONSE(RspRemoveBet,   onRspRemoveBet)
 UNEXPECTED_RESPONSE(RspUndoBet,     onRspUndoBet)
 UNEXPECTED_RESPONSE(RspSetBetFlags, onRspSetBetFlags)
+UNEXPECTED_RESPONSE(RspApplyQuickBets, onRspApplyQuickBets)
+UNEXPECTED_RESPONSE(RspEditQuickBets,  onRspEditQuickBets)
+UNEXPECTED_RESPONSE(RspEditAutoOdds,   onRspEditAutoOdds)
 
 #undef UNEXPECTED_RESPONSE
 
@@ -128,6 +140,29 @@ Operation::pickFrom(const std::string& title,
     DialogPicker::instance().configure(title, std::move(items),
                                        DialogPicker::Mode::Pick);
     SurfaceManager::instance().pushSurface(&DialogPicker::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+Operation::askText(const std::string& title,
+                   const std::string& prompt,
+                   const std::string& initial,
+                   std::size_t maxChars,
+                   DialogTextInput::Validator validator)
+{
+    OperationManager::instance().stage_ = OperationManager::Stage::AwaitingText;
+    DialogTextInput::instance().configure(title, prompt, initial, maxChars,
+                                          std::move(validator));
+    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
+}
+
+//----------------------------------------------------------------
+
+void
+Operation::awaitPick()
+{
+    OperationManager::instance().stage_ = OperationManager::Stage::AwaitingPick;
 }
 
 //----------------------------------------------------------------

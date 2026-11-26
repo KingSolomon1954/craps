@@ -7,6 +7,9 @@
 #include <cui/managers/OperationManager.h>
 #include <cui/operations/BetFlagsOperation.h>
 #include <cui/operations/BetOperations.h>
+#include <cui/operations/AutoOddsOperations.h>
+#include <cui/operations/OperationText.h>
+#include <cui/operations/QuickBetsOperations.h>
 #include <cui/operations/QuitOperation.h>
 #include <cui/operations/SettingsOperations.h>
 #include <cui/managers/CarrierBet.h>
@@ -38,27 +41,6 @@
 
 using namespace Cui;
 
-namespace {
-
-std::string
-trimmed(const std::string& s)
-{
-    std::size_t b = 0, e = s.size();
-    while (b < e && std::isspace(static_cast<unsigned char>(s[b]))) b++;
-    while (e > b && std::isspace(static_cast<unsigned char>(s[e - 1]))) e--;
-    return s.substr(b, e - b);
-}
-
-bool
-sameIgnoringCase(const std::string& a, const std::string& b)
-{
-    return a.size() == b.size() &&
-        std::equal(a.begin(), a.end(), b.begin(), [](char x, char y) {
-            return std::tolower(static_cast<unsigned char>(x)) ==
-                   std::tolower(static_cast<unsigned char>(y)); });
-}
-
-} // namespace
 
 //----------------------------------------------------------------
 
@@ -109,516 +91,14 @@ OperationManager::isActive() const
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-//
-// Pick one of the user's QuickBets entries and apply it. The pick list
-// shows each entry's name and a short description of its bets. Applying
-// is one request; the answer says what was placed and what was skipped.
-//
-bool
-OperationManager::applyQuickBets()
-{
-    if (isActive()) return false;
-
-    const auto plans = Ctrl::CrapsReaders::readQuickBets();
-    if (plans.empty())
-    {
-        showNotice("No QuickBets",
-                   "You have not set up any QuickBets yet.");
-        return true;
-    }
-
-    quickBetNames_.clear();
-    std::vector<DialogPicker::Item> items;
-    for (const auto& plan : plans)
-    {
-        DialogPicker::Item item;
-        item.tag         = quickBetNames_.size();
-        item.text        = plan.name;
-        item.description = Ctrl::describe(plan);
-        items.push_back(std::move(item));
-        quickBetNames_.push_back(plan.name);
-    }
-
-    type_  = OperationType::QuickBets;
-    stage_ = Stage::AwaitingPick;
-    DialogPicker::instance().configure("QuickBets - Apply",
-                                           std::move(items),
-                                           DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-    return true;
-}
-
-//----------------------------------------------------------------
-//
-// Save the bet being entered into a QuickBets entry. DialogBetAmount
-// calls this with the amount already in CarrierBet. The player picks a
-// new entry or an existing one to add to. A new entry asks for a name.
-// Afterwards the player is back at DialogBetAmount, with a notice saying
-// what happened, so the bet can still be placed.
-//
-bool
-OperationManager::quickBetsSetOrAdd()
-{
-    if (isActive()) return false;
-
-    const auto& cb = CarrierBet::instance();
-    Ctrl::BetSpec spec;
-    spec.betName = cb.getBetName();
-    spec.isOdds  = cb.isOddsBet();
-    spec.pivot   = cb.getPivot();
-    spec.amount  = spec.isOdds ? cb.getOddsAmount() : cb.getContractAmount();
-    if (spec.isOdds && Ctrl::isPlanOddsBet(spec.betName))
-    {
-        spec.pivot = 0;          // Line odds sit on the line bet
-    }
-
-    if (const auto why = Ctrl::QuickBets::checkSpec(spec); !why.empty())
-    {
-        showNotice("Can't save to QuickBets", why);
-        return true;
-    }
-
-    std::string betText = EnumBetName::toString(spec.betName) + " bet";
-    if (spec.pivot != 0) betText += " " + std::to_string(spec.pivot);
-    if (spec.isOdds)     betText += " odds";
-    betText += " " + Gen::MoneyUtils::toString(spec.amount);
-
-    quickBetSpec_ = spec;
-    quickBetNames_.clear();
-    std::vector<DialogQuickBetsSetAdd::Entry> entries;
-    for (const auto& plan : Ctrl::CrapsReaders::readQuickBets())
-    {
-        entries.push_back({plan.name, Ctrl::describe(plan)});
-        quickBetNames_.push_back(plan.name);
-    }
-
-    type_  = OperationType::QuickBetsEdit;
-    stage_ = Stage::AwaitingPick;
-    DialogQuickBetsSetAdd::instance().configure(betText, std::move(entries));
-    SurfaceManager::instance().pushSurface(&DialogQuickBetsSetAdd::instance());
-    return true;
-}
 
 //----------------------------------------------------------------
 
-void
-OperationManager::onQuickBetsChoice(bool accepted, std::size_t index)
-{
-    if (stage_ != Stage::AwaitingPick || type_ != OperationType::QuickBetsEdit)
-        return;
-
-    if (!accepted)
-    {
-        finish();
-        return;
-    }
-
-    if (index == DialogQuickBetsSetAdd::NewEntry)
-    {
-        askForQuickBetsName();
-        return;
-    }
-    if (index >= quickBetNames_.size())
-    {
-        finish();
-        return;
-    }
-
-    quickBetTarget_ = quickBetNames_[index];
-    sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action::AddBet);
-}
-
 //----------------------------------------------------------------
-//
-// Name for a new QuickBets entry. The dialog says why a name is refused,
-// so it can be fixed without leaving.
-//
-void
-OperationManager::askForQuickBetsName()
-{
-    const auto plans = Ctrl::CrapsReaders::readQuickBets();
-
-    auto validator = [plans](const std::string& raw) -> std::string
-    {
-        const std::string name = trimmed(raw);
-        if (auto why = Ctrl::QuickBets::checkName(name); !why.empty())
-        {
-            return why;
-        }
-        for (const auto& p : plans)
-        {
-            if (sameIgnoringCase(p.name, name))
-            {
-                return "An entry named " + p.name + " already exists.";
-            }
-        }
-        if (plans.size() >= Ctrl::QuickBets::MaxEntries)
-        {
-            return "You already have " +
-                   std::to_string(Ctrl::QuickBets::MaxEntries) +
-                   " entries. Delete one first.";
-        }
-        return std::string();
-    };
-
-    stage_ = Stage::AwaitingText;
-    DialogTextInput::instance().configure(
-        "New QuickBets Entry", "Name: ", "",
-        Ctrl::QuickBets::MaxNameLength, std::move(validator));
-    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
-}
 
 //----------------------------------------------------------------
 
-void
-OperationManager::sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action action)
-{
-    stage_ = Stage::AwaitingResponse;
-
-    Ctrl::ReqEditQuickBets req;
-    req.playerId = Ctrl::CrapsReaders::getUserPlayerId();
-    req.action   = action;
-    req.name     = quickBetTarget_;
-    req.spec     = quickBetSpec_;
-    correlationId_ = CuiSender::instance().reqEditQuickBets(std::move(req));
-}
-
 //----------------------------------------------------------------
-//
-// AutoOdds, from the Configuration menu.
-//
-// One pick list of things to do:
-//
-//   turn on / turn off   one request
-//   show multiples       a notice, no request
-//   set a multiple       pick bet type, pick point (or all), type the
-//                        multiple (0 clears), one request
-//   3-4-5 preset         one request
-//   clear all            confirm, one request
-//
-// The pick lists and prompts each pop themselves and report here, so
-// autoStep_ says which one just answered.
-//
-bool
-OperationManager::manageAutoOdds()
-{
-    if (isActive()) return false;
-
-    type_ = OperationType::AutoOdds;
-    pickAutoAction();
-    return true;
-}
-
-//----------------------------------------------------------------
-
-namespace {
-
-const char*
-typeWords(BetName b)
-{
-    switch (b)
-    {
-    case BetName::PassLine: return "Pass Line";
-    case BetName::DontPass: return "Don't Pass";
-    case BetName::Come:     return "Come";
-    case BetName::DontCome: return "Don't Come";
-    default:                return "?";
-    }
-}
-
-} // namespace
-
-//----------------------------------------------------------------
-
-void
-OperationManager::pickAutoAction()
-{
-    const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
-    autoTurnOn_ = !ao.enabled();
-
-    std::vector<DialogPicker::Item> items;
-    auto add = [&](std::size_t tag, const std::string& text, const char* desc)
-    {
-        DialogPicker::Item item;
-        item.tag         = tag;
-        item.text        = text;
-        item.description = desc;
-        items.push_back(std::move(item));
-    };
-    add(0, autoTurnOn_ ? "Turn on" : "Turn off",
-        autoTurnOn_ ? "AutoOdds is off now" : "AutoOdds is on now");
-    add(1, "List Bets",        "what is set for each bet type");
-    add(2, "Set AutoOdds Bet", "pick a bet type and point");
-    add(3, "3-4-5 preset",     "3x on 4 and 10, 4x on 5 and 9, 5x on 6 and 8");
-    add(4, "Clear all",        "remove every bet");
-
-    stage_    = Stage::AwaitingPick;
-    autoStep_ = AutoStep::PickAction;
-    DialogPicker::instance().configure("AutoOdds - Configure",
-                                           std::move(items),
-                                           DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::pickAutoType()
-{
-    const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
-
-    std::vector<DialogPicker::Item> items;
-    std::size_t tag = 0;
-    for (BetName b : Ctrl::AutoOdds::oddsBetNames())
-    {
-        DialogPicker::Item item;
-        item.tag         = tag++;
-        item.text        = typeWords(b);
-        item.description = ao.summary(b);
-        items.push_back(std::move(item));
-    }
-
-    stage_    = Stage::AwaitingPick;
-    autoStep_ = AutoStep::PickType;
-    DialogPicker::instance().configure("AutoOdds - Which bet?",
-                                           std::move(items),
-                                           DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::pickAutoPoint()
-{
-    const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
-
-    std::vector<DialogPicker::Item> items;
-    std::size_t tag = 0;
-    for (unsigned point : Ctrl::AutoOdds::points())
-    {
-        DialogPicker::Item item;
-        item.tag  = tag++;
-        item.text = "Point " + std::to_string(point);
-        item.description = ao.setting(autoBetName_, point).toString();
-        items.push_back(std::move(item));
-    }
-    DialogPicker::Item all;
-    all.tag         = tag;
-    all.text        = "All points";
-    all.description = "the same setting for every point";
-    items.push_back(std::move(all));
-
-    stage_    = Stage::AwaitingPick;
-    autoStep_ = AutoStep::PickPoint;
-    DialogPicker::instance().configure(
-        std::string("AutoOdds - ") + typeWords(autoBetName_) + ", which point?",
-        std::move(items), DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::askAutoMultiple()
-{
-    auto validator = [](const std::string& raw) -> std::string
-    {
-        Ctrl::AutoOdds::Setting setting;
-        return Ctrl::AutoOdds::parseSetting(raw, setting);
-    };
-
-    const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
-    const auto current = (autoPoint_ == 0) ? Ctrl::AutoOdds::Setting{}
-                       : ao.setting(autoBetName_, autoPoint_);
-
-    stage_    = Stage::AwaitingText;
-    autoStep_ = AutoStep::AskMultiple;
-    DialogTextInput::instance().configure(
-        std::string("AutoOdds ") + typeWords(autoBetName_) +
-            (autoPoint_ == 0 ? ", all points" : " " + std::to_string(autoPoint_)),
-        "Amount like 50, or 3x the bet (0 clears): ",
-        current.isSet() ? current.toString() : std::string(),
-        10, std::move(validator));
-    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onAutoPick(bool accepted, std::size_t tag)
-{
-    if (!accepted)
-    {
-        finish();       // Cancelled; stay on the Configure menu
-        return;
-    }
-
-    switch (autoStep_)
-    {
-    case AutoStep::PickAction:
-        switch (tag)
-        {
-        case 0:
-        {
-            Ctrl::ReqEditAutoOdds req;
-            req.action  = Ctrl::ReqEditAutoOdds::Action::SetEnabled;
-            req.enabled = autoTurnOn_;
-            sendAutoRequest(std::move(req));
-            return;
-        }
-        case 1:
-        {
-            const Ctrl::AutoOdds ao = Ctrl::CrapsReaders::readAutoOdds();
-            std::string detail;
-            for (BetName b : Ctrl::AutoOdds::oddsBetNames())
-            {
-                std::string label = std::string(typeWords(b)) + ":";
-                label.resize(12, ' ');
-                detail += label + ao.summary(b) + "\n";
-            }
-            detail += "\nAutoOdds is ";
-            detail += ao.enabled() ? "on." : "off.";
-            finish();
-            showNotice("AutoOdds - List Bets", detail);
-            return;
-        }
-        case 2:
-            pickAutoType();
-            return;
-        case 3:
-        {
-            Ctrl::ReqEditAutoOdds req;
-            req.action = Ctrl::ReqEditAutoOdds::Action::Preset345;
-            sendAutoRequest(std::move(req));
-            return;
-        }
-        case 4:
-            autoStep_ = AutoStep::ConfirmClear;
-            askConfirmation("Clear every AutoOdds multiple?");
-            return;
-        default:
-            finish();
-            return;
-        }
-
-    case AutoStep::PickType:
-    {
-        const auto& names = Ctrl::AutoOdds::oddsBetNames();
-        if (tag >= names.size())
-        {
-            finish();
-            return;
-        }
-        autoBetName_ = names[tag];
-        pickAutoPoint();
-        return;
-    }
-
-    case AutoStep::PickPoint:
-    {
-        const auto& points = Ctrl::AutoOdds::points();
-        if (tag > points.size())
-        {
-            finish();
-            return;
-        }
-        autoPoint_ = (tag == points.size()) ? 0u : points[tag];
-        askAutoMultiple();
-        return;
-    }
-
-    default:
-        finish();
-        return;
-    }
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::sendAutoRequest(Ctrl::ReqEditAutoOdds request)
-{
-    request.playerId = Ctrl::CrapsReaders::getUserPlayerId();
-    stage_           = Stage::AwaitingResponse;
-    correlationId_   = CuiSender::instance().reqEditAutoOdds(std::move(request));
-}
-
-//----------------------------------------------------------------
-//
-// From the bet amount dialog while entering odds: set AutoOdds for this
-// bet type and point to exactly the amount entered. An amount of zero
-// unsets it. One request, and the player stays in the amount dialog, with
-// a notice.
-//
-bool
-OperationManager::autoOddsSetOrUnset()
-{
-    if (isActive()) return false;
-
-    const auto& cb = CarrierBet::instance();
-    if (!cb.isOddsBet() || !Ctrl::AutoOdds::isOddsBetName(cb.getBetName()))
-    {
-        return true;
-    }
-
-    unsigned point = cb.getPivot();
-    if (point == 0)
-    {
-        Craps::TableId tableId;
-        Gen::ErrorPass ep;
-        if (Ctrl::CrapsReaders::getActiveCrapsTable(tableId, ep) ==
-                Gen::ReturnCode::Success)
-        {
-            Ctrl::CrapsReaders::readTablePoint(tableId, point, ep);
-        }
-    }
-    if (!Ctrl::AutoOdds::isPoint(point))
-    {
-        showNotice("AutoOdds", "There is no point yet, so there is no "
-                   "point to set AutoOdds for.");
-        return true;
-    }
-
-    Ctrl::ReqEditAutoOdds req;
-    req.action  = Ctrl::ReqEditAutoOdds::Action::Set;
-    req.betName = cb.getBetName();
-    req.point   = point;
-    req.amount  = cb.getOddsAmount();       // Zero unsets
-
-    type_ = OperationType::AutoOdds;
-    sendAutoRequest(std::move(req));
-    return true;
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onRspEditAutoOdds(const Ctrl::RspEditAutoOdds& ev)
-{
-    LOG_TRACE("OperationManager::onRspEditAutoOdds() "
-              "correlationId = " + std::to_string(correlationId_));
-
-    if (stage_ != Stage::AwaitingResponse ||
-        type_  != OperationType::AutoOdds ||
-        ev.correlationId != correlationId_)
-    {
-        LOG_WARN("OperationManager::onRspEditAutoOdds(): ignoring "
-                 "unmatched RspEditAutoOdds: rsp.correlationId = " +
-                 std::to_string(ev.correlationId));
-        return;
-    }
-
-    if (!ev.accepted)
-    {
-        showError(ev.error, "AutoOdds Error", "Unable to Save AutoOdds");
-        return;
-    }
-
-    finish();
-    SurfaceManager::instance().draw();      // The status line may have changed
-    showNotice("AutoOdds", ev.message);
-}
 
 //----------------------------------------------------------------
 //
@@ -658,378 +138,8 @@ OperationManager::autoOddsStatus() const
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-//
-// Managing QuickBets, from the Configuration menu.
-//
-// Pick an entry, then pick what to do with it: rename it, change the
-// amount of one of its bets, remove one of its bets, or delete it. Each
-// action asks what it needs (a name, a bet, an amount, a confirmation)
-// and then sends one ReqEditQuickBets. New entries are made from the bet
-// amount dialog, where the bet is already chosen.
-//
-// The pick lists and prompts each pop themselves and report here, so
-// manageStep_ says which one just answered.
-//
-bool
-OperationManager::manageQuickBets()
-{
-    if (isActive()) return false;
-
-    const auto plans = Ctrl::CrapsReaders::readQuickBets();
-    if (plans.empty())
-    {
-        showNotice("No QuickBets",
-                   "You have not set up any QuickBets yet. While you enter "
-                   "a bet, press q to save it into one.");
-        return true;
-    }
-
-    quickBetNames_.clear();
-    std::vector<DialogPicker::Item> items;
-    for (const auto& plan : plans)
-    {
-        DialogPicker::Item item;
-        item.tag         = quickBetNames_.size();
-        item.text        = plan.name;
-        item.description = Ctrl::describe(plan);
-        items.push_back(std::move(item));
-        quickBetNames_.push_back(plan.name);
-    }
-
-    type_       = OperationType::QuickBetsManage;
-    stage_      = Stage::AwaitingPick;
-    manageStep_ = ManageStep::PickEntry;
-    DialogPicker::instance().configure("QuickBets - Change which entry?",
-                                           std::move(items),
-                                           DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-    return true;
-}
 
 //----------------------------------------------------------------
-
-namespace {
-
-const Ctrl::BetPlan*
-findPlan(const std::vector<Ctrl::BetPlan>& plans, const std::string& name)
-{
-    for (const auto& p : plans)
-    {
-        if (p.name == name) return &p;
-    }
-    return nullptr;
-}
-
-} // namespace
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onManagePick(bool accepted, std::size_t tag)
-{
-    using Action = Ctrl::ReqEditQuickBets::Action;
-
-    if (!accepted)
-    {
-        finish();       // Cancelled; stay on the Configure menu
-        return;
-    }
-
-    switch (manageStep_)
-    {
-    case ManageStep::PickEntry:
-        if (tag >= quickBetNames_.size())
-        {
-            finish();
-            return;
-        }
-        manageEntry_ = quickBetNames_[tag];
-        pickManageAction();
-        return;
-
-    case ManageStep::PickAction:
-        switch (tag)
-        {
-        case 0:
-            askManageName();
-            return;
-        case 1:
-            pickManageBet(Action::SetAmount);
-            return;
-        case 2:
-        {
-            const auto plans = Ctrl::CrapsReaders::readQuickBets();
-            const auto* plan = findPlan(plans, manageEntry_);
-            if (plan != nullptr && plan->specs.size() <= 1)
-            {
-                finish();
-                showNotice("Can't remove the bet",
-                           manageEntry_ + " has only one bet. Delete the "
-                           "entry instead.");
-                return;
-            }
-            pickManageBet(Action::RemoveBet);
-            return;
-        }
-        case 3:
-            manageStep_ = ManageStep::ConfirmDelete;
-            askConfirmation("Delete the QuickBets entry " + manageEntry_ + "?");
-            return;
-        default:
-            finish();
-            return;
-        }
-
-    case ManageStep::PickBet:
-        manageBetIndex_ = tag;
-        if (manageAction_ == Action::SetAmount)
-        {
-            askManageAmount();
-        }
-        else
-        {
-            sendManageRequest();
-        }
-        return;
-
-    default:
-        finish();
-        return;
-    }
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::pickManageAction()
-{
-    std::vector<DialogPicker::Item> items;
-    auto add = [&](std::size_t tag, const char* text, const char* desc)
-    {
-        DialogPicker::Item item;
-        item.tag         = tag;
-        item.text        = text;
-        item.description = desc;
-        items.push_back(std::move(item));
-    };
-    add(0, "Rename",           "give the entry another name");
-    add(1, "Change an amount", "set a different amount for one bet");
-    add(2, "Remove a bet",     "take one bet out of the entry");
-    add(3, "Delete",           "delete the whole entry");
-
-    stage_      = Stage::AwaitingPick;
-    manageStep_ = ManageStep::PickAction;
-    DialogPicker::instance().configure("QuickBets - " + manageEntry_,
-                                           std::move(items),
-                                           DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::pickManageBet(Ctrl::ReqEditQuickBets::Action action)
-{
-    const auto plans = Ctrl::CrapsReaders::readQuickBets();
-    const auto* plan = findPlan(plans, manageEntry_);
-    if (plan == nullptr || plan->specs.empty())
-    {
-        finish();
-        showNotice("QuickBets", "That entry is no longer there.");
-        return;
-    }
-
-    std::vector<DialogPicker::Item> items;
-    for (std::size_t i = 0; i < plan->specs.size(); ++i)
-    {
-        DialogPicker::Item item;
-        item.tag  = i;
-        item.text = Ctrl::describe(plan->specs[i]);
-        items.push_back(std::move(item));
-    }
-
-    manageAction_ = action;
-    stage_        = Stage::AwaitingPick;
-    manageStep_   = ManageStep::PickBet;
-    DialogPicker::instance().configure(
-        (action == Ctrl::ReqEditQuickBets::Action::SetAmount
-             ? "Change the amount of which bet?" : "Remove which bet?"),
-        std::move(items), DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::askManageName()
-{
-    const auto plans = Ctrl::CrapsReaders::readQuickBets();
-    const std::string current = manageEntry_;
-
-    auto validator = [plans, current](const std::string& raw) -> std::string
-    {
-        const std::string name = trimmed(raw);
-        if (auto why = Ctrl::QuickBets::checkName(name); !why.empty())
-        {
-            return why;
-        }
-        for (const auto& p : plans)
-        {
-            if (p.name != current && sameIgnoringCase(p.name, name))
-            {
-                return "An entry named " + p.name + " already exists.";
-            }
-        }
-        return std::string();
-    };
-
-    manageAction_ = Ctrl::ReqEditQuickBets::Action::Rename;
-    stage_        = Stage::AwaitingText;
-    manageStep_   = ManageStep::AskName;
-    DialogTextInput::instance().configure(
-        "Rename " + manageEntry_, "Name: ", manageEntry_,
-        Ctrl::QuickBets::MaxNameLength, std::move(validator));
-    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::askManageAmount()
-{
-    const auto plans = Ctrl::CrapsReaders::readQuickBets();
-    const auto* plan = findPlan(plans, manageEntry_);
-    if (plan == nullptr || manageBetIndex_ >= plan->specs.size())
-    {
-        finish();
-        showNotice("QuickBets", "That bet is no longer in the entry.");
-        return;
-    }
-    const Ctrl::BetSpec& spec = plan->specs[manageBetIndex_];
-
-    auto validator = [](const std::string& raw) -> std::string
-    {
-        const std::string text = trimmed(raw);
-        if (text.empty())
-        {
-            return "Enter an amount.";
-        }
-        if (!std::all_of(text.begin(), text.end(),
-                         [](unsigned char c) { return std::isdigit(c); }))
-        {
-            return "Use digits only.";
-        }
-        if (text.size() > 7 || std::stoul(text) == 0)
-        {
-            return "Enter an amount more than zero.";
-        }
-        return std::string();
-    };
-
-    stage_      = Stage::AwaitingText;
-    manageStep_ = ManageStep::AskAmount;
-    DialogTextInput::instance().configure(
-        "Amount for " + Ctrl::describe(spec), "Amount: $",
-        std::to_string(spec.amount), 7, std::move(validator));
-    SurfaceManager::instance().pushSurface(&DialogTextInput::instance());
-}
-
-//----------------------------------------------------------------
-//
-// Sends the request for the action chosen. text is the new name or the
-// typed amount, when the action has one.
-//
-void
-OperationManager::sendManageRequest(const std::string& text)
-{
-    using Action = Ctrl::ReqEditQuickBets::Action;
-
-    Ctrl::ReqEditQuickBets req;
-    req.playerId = Ctrl::CrapsReaders::getUserPlayerId();
-    req.action   = manageAction_;
-    req.name     = manageEntry_;
-    req.index    = manageBetIndex_;
-    if (manageAction_ == Action::Rename)
-    {
-        req.newName = text;
-    }
-    else if (manageAction_ == Action::SetAmount)
-    {
-        req.amount = static_cast<Gen::Money>(std::stoul(text));
-    }
-
-    stage_         = Stage::AwaitingResponse;
-    correlationId_ = CuiSender::instance().reqEditQuickBets(std::move(req));
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onRspEditQuickBets(const Ctrl::RspEditQuickBets& ev)
-{
-    LOG_TRACE("OperationManager::onRspEditQuickBets() "
-              "correlationId = " + std::to_string(correlationId_));
-
-    const bool ours = type_ == OperationType::QuickBetsEdit ||
-                      type_ == OperationType::QuickBetsManage;
-    if (stage_ != Stage::AwaitingResponse || !ours ||
-        ev.correlationId != correlationId_)
-    {
-        LOG_WARN("OperationManager::onRspEditQuickBets(): ignoring "
-                 "unmatched RspEditQuickBets: rsp.correlationId = " +
-                 std::to_string(ev.correlationId));
-        return;
-    }
-
-    if (!ev.accepted)
-    {
-        showError(ev.error, "QuickBets Error", "Unable to Save QuickBets");
-        return;
-    }
-
-    // Stay where we are: the bet amount dialog or the Configure menu
-    const bool managing = (type_ == OperationType::QuickBetsManage);
-    finish();
-    showNotice(managing ? "QuickBets changed" : "Saved to QuickBets", ev.message);
-}
-
-//----------------------------------------------------------------
-
-void
-OperationManager::onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& ev)
-{
-    LOG_TRACE("OperationManager::onRspApplyQuickBets() "
-              "correlationId = " + std::to_string(correlationId_));
-
-    if (stage_ != Stage::AwaitingResponse   ||
-        type_  != OperationType::QuickBets  ||
-        ev.correlationId != correlationId_)
-    {
-        LOG_WARN("OperationManager::onRspApplyQuickBets(): ignoring "
-                 "unmatched RspApplyQuickBets: rsp.correlationId = " +
-                 std::to_string(ev.correlationId));
-        return;
-    }
-
-    if (!ev.accepted)
-    {
-        showError(ev.error, "Betting Error", "Unable to Apply QuickBets");
-        return;
-    }
-
-    // Unwind to the table as after any bet. Say so if some bets were
-    // not placed; a clean result needs no message.
-    SurfaceManager::instance().popToRoot();
-    if (ev.skipped > 0)
-    {
-        showNotice("QuickBets \"" + ev.name + "\": " + ev.headline,
-                   ev.skippedDetail);
-    }
-    finish();
-}
-
-//----------------------------------------------------------------
-
 void
 OperationManager::showError(const Gen::ErrorPass& error,
                             const char* defaultType,
@@ -1068,16 +178,6 @@ OperationManager::onErrorAcknowledged()
     if (type_ == OperationType::Player || type_ == OperationType::Table)
     {
         // Back to the Player or Table menu, still on the stack.
-        finish();
-        return;
-    }
-
-    if (type_ == OperationType::QuickBetsEdit ||
-        type_ == OperationType::QuickBetsManage ||
-        type_ == OperationType::AutoOdds)
-    {
-        // Back to where the person was: the bet amount dialog, or the
-        // Configure menu. Both are still on the stack.
         finish();
         return;
     }
@@ -1129,6 +229,57 @@ OperationManager::betFlags(Ctrl::BetFlags::Scope scope)
 }
 
 //----------------------------------------------------------------
+
+bool
+OperationManager::applyQuickBets()
+{
+    return begin(std::make_unique<ApplyQuickBetsOperation>());
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::quickBetsSetOrAdd()
+{
+    return begin(std::make_unique<SaveToQuickBetsOperation>());
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::manageQuickBets()
+{
+    return begin(std::make_unique<ManageQuickBetsOperation>());
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::manageAutoOdds()
+{
+    return begin(std::make_unique<ConfigureAutoOddsOperation>());
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::autoOddsSetOrUnset()
+{
+    return begin(std::make_unique<SetAutoOddsOperation>());
+}
+
+//----------------------------------------------------------------
+
+void
+OperationManager::onQuickBetsChoice(bool accepted, std::size_t index)
+{
+    if (current_ && stage_ == Stage::AwaitingPick)
+    {
+        current_->onQuickBetsChoice(accepted, index);
+    }
+}
+
+//----------------------------------------------------------------
 //
 // The Controller's answers. One that is not for the current Operation (a
 // late answer, or one for another operation) is ignored.
@@ -1162,6 +313,24 @@ void
 OperationManager::onRspSetBetFlags(const Ctrl::RspSetBetFlags& ev)
 {
     route("RspSetBetFlags", ev, &Operation::onRspSetBetFlags);
+}
+
+void
+OperationManager::onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& ev)
+{
+    route("RspApplyQuickBets", ev, &Operation::onRspApplyQuickBets);
+}
+
+void
+OperationManager::onRspEditQuickBets(const Ctrl::RspEditQuickBets& ev)
+{
+    route("RspEditQuickBets", ev, &Operation::onRspEditQuickBets);
+}
+
+void
+OperationManager::onRspEditAutoOdds(const Ctrl::RspEditAutoOdds& ev)
+{
+    route("RspEditAutoOdds", ev, &Operation::onRspEditAutoOdds);
 }
 
 //----------------------------------------------------------------
@@ -1261,35 +430,6 @@ OperationManager::onConfirmationResult(SurfaceBase::OperationResult result)
         return;
     }
 
-    if (type_ == OperationType::QuickBetsManage)
-    {
-        if (result == SurfaceBase::OperationResult::Yes)
-        {
-            manageAction_ = Ctrl::ReqEditQuickBets::Action::Delete;
-            sendManageRequest();
-        }
-        else
-        {
-            finish();
-        }
-        return;
-    }
-
-    if (type_ == OperationType::AutoOdds)
-    {
-        if (result == SurfaceBase::OperationResult::Yes)
-        {
-            Ctrl::ReqEditAutoOdds req;
-            req.action = Ctrl::ReqEditAutoOdds::Action::Clear;
-            sendAutoRequest(std::move(req));
-        }
-        else
-        {
-            finish();
-        }
-        return;
-    }
-
 }
 
 //----------------------------------------------------------------
@@ -1305,12 +445,6 @@ OperationManager::finish()
     type_          = OperationType::None;
     stage_         = Stage::Idle;
     correlationId_ = 0;
-    quickBetNames_.clear();
-    quickBetTarget_.clear();
-    manageEntry_.clear();
-    manageBetIndex_ = 0;
-    autoBetName_ = BetName::Invalid;
-    autoPoint_   = 0;
     targetId_.clear();
     text_.clear();
     description_.clear();
@@ -1722,35 +856,6 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
         return;
     }
 
-    if (stage_ == Stage::AwaitingPick && type_ == OperationType::QuickBetsManage)
-    {
-        (void)playerId; (void)betId;
-        onManagePick(accepted, tag);
-        return;
-    }
-
-    if (stage_ == Stage::AwaitingPick && type_ == OperationType::AutoOdds)
-    {
-        (void)playerId; (void)betId;
-        onAutoPick(accepted, tag);
-        return;
-    }
-
-    if (stage_ == Stage::AwaitingPick && type_ == OperationType::QuickBets)
-    {
-        (void)playerId; (void)betId;
-        if (!accepted || tag >= quickBetNames_.size())
-        {
-            quickBetNames_.clear();
-            finish();       // Cancelled; stay on the betting menu
-            return;
-        }
-        stage_ = Stage::AwaitingResponse;
-        correlationId_ = CuiSender::instance().reqApplyQuickBets(
-            Ctrl::CrapsReaders::getUserPlayerId(), quickBetNames_[tag]);
-        return;
-    }
-
     if (stage_ == Stage::AwaitingPick && type_ == OperationType::Table)
     {
         (void)playerId; (void)betId;
@@ -1818,48 +923,6 @@ OperationManager::onTextResult(bool accepted, const std::string& text)
     if (current_ && stage_ == Stage::AwaitingText)
     {
         current_->onText(accepted, text);
-        return;
-    }
-
-    if (stage_ == Stage::AwaitingText && type_ == OperationType::QuickBetsEdit)
-    {
-        if (!accepted)
-        {
-            finish();
-            return;
-        }
-        quickBetTarget_ = trimmed(text);
-        sendQuickBetsEdit(Ctrl::ReqEditQuickBets::Action::Create);
-        return;
-    }
-
-    if (stage_ == Stage::AwaitingText && type_ == OperationType::QuickBetsManage)
-    {
-        if (!accepted)
-        {
-            finish();
-            return;
-        }
-        sendManageRequest(trimmed(text));
-        return;
-    }
-
-    if (stage_ == Stage::AwaitingText && type_ == OperationType::AutoOdds)
-    {
-        if (!accepted)
-        {
-            finish();
-            return;
-        }
-        Ctrl::ReqEditAutoOdds req;
-        req.betName  = autoBetName_;
-        req.point    = autoPoint_;
-        Ctrl::AutoOdds::Setting setting;
-        Ctrl::AutoOdds::parseSetting(text, setting);    // Validated already
-        req.multiple = setting.multiple;
-        req.amount   = setting.amount;
-        req.action   = Ctrl::ReqEditAutoOdds::Action::Set;
-        sendAutoRequest(std::move(req));
         return;
     }
 
