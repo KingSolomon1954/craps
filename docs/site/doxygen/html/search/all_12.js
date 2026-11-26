@@ -6,7 +6,7 @@ var searchData=
   ['savemultilayerconfig_2eh_3',['saveMultiLayerConfig.h',['../saveMultiLayerConfig_8h.html',1,'']]],
   ['saveplayers_4',['savePlayers',['../classCtrl_1_1PlayerManager.html#a00cf8cffabdd30e571fadeb58f2179da',1,'Ctrl::PlayerManager']]],
   ['savetofile_5',['saveToFile',['../classCtrl_1_1PlayerManifest.html#ad1a57c9a700598e828d1af8c04ddf34b',1,'Ctrl::PlayerManifest']]],
-  ['scope_6',['Scope',['../namespaceCtrl_1_1BetFlags.html#ab7b2fa4040714e6d801a4f078d986cb6',1,'Ctrl::BetFlags']]],
+  ['scope_6',['Scope',['../namespaceCtrl_1_1BetFlags.html#ab7b2fa4040714e6d801a4f078d986cb6',1,'Ctrl::BetFlags::Scope'],['../MenuBetFlags_8cpp.html#ab7b2fa4040714e6d801a4f078d986cb6',1,'Scope:&#160;BetFlags.h']]],
   ['scope_7',['scope',['../structCtrl_1_1ReqSetBetFlags.html#a2b33d4355cfb4fde46d3084b020af727',1,'Ctrl::ReqSetBetFlags']]],
   ['scopetext_8',['scopeText',['../namespaceCtrl_1_1BetFlags.html#a17556d4061da1d554f3c7364352ac0df',1,'Ctrl::BetFlags']]],
   ['screenbase_9',['ScreenBase',['../classCui_1_1ScreenBase.html',1,'Cui::ScreenBase'],['../classCui_1_1ScreenBase.html#a83bf02a445baffee3d6aadb852527521',1,'Cui::ScreenBase::ScreenBase()']]],

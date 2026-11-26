@@ -4,7 +4,7 @@
 
 Name
 ====
-|AppName| - C++ Application
+|AppName| - a craps game for the Linux terminal
 
 Synopsis
 ========

@@ -14,7 +14,23 @@ It contains information useful for operating this application.
 Introduction
 ============
 
-<explain the purpose of the user guide>
+This guide shows you how to play |AppName| and how to get the most from it.
+It is for the person at the keyboard. It does not assume that you know the
+game of craps, but it does not teach the rules of craps either. It explains
+how |AppName| works, what its menus and settings do, and what the numbers on
+the screen mean.
+
+The guide is arranged by what you want to do:
+
+* **Players** and **Tables** cover who is playing and where.
+* **Undo**, **QuickBets**, **AutoOdds** and **Bet Flags** cover the ways to
+  place, change and take back bets with fewer keystrokes.
+* **Configuring** |AppName| covers the files the game keeps, and the
+  settings you may change.
+* **Statistics** explains the records the game keeps of how you, the table
+  and the dice are doing.
+
+How the game is built is described in the design document.
 
 System requirements
 ===================
@@ -31,21 +47,21 @@ User Interface Overview
 
 < give a high-level overview of the interface>
 
-.. include:: players.inc
+.. include:: Players.inc
 
-.. include:: tables.inc
+.. include:: Tables.inc
 
-.. include:: undo.inc
+.. include:: Undo.inc
 
-.. include:: quickbets.inc
+.. include:: QuickBets.inc
 
-.. include:: autoodds.inc
+.. include:: AutoOdds.inc
 
-.. include:: betflags.inc
+.. include:: BetFlags.inc
 
-.. include:: configuration.inc
+.. include:: Configuration.inc
 
-.. include:: statistics.inc
+.. include:: Statistics.inc
 
 Frequently Asked Questions
 ==========================

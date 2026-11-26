@@ -1,9 +1,7 @@
 <map id="Ctrl::RspSwitchTable" name="Ctrl::RspSwitchTable">
-<area shape="rect" id="Node000001" title=" " alt="" coords="111,123,266,148"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="66,93,221,119"/>
 <area shape="rect" id="Node000002" href="$structCtrl_1_1GameEvent.html" title="Base class for all Events." alt="" coords="5,5,135,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,38,179,121,175,125,90,42"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="159,5,218,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,44,191,123,186,123,186,44"/>
-<area shape="rect" id="Node000004" href="$classGen_1_1ErrorPass.html" title="A generic error payload for value&#45;based error handling." alt="" coords="248,5,364,31"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="305,45,296,74,279,100,260,115,238,125,236,120,257,110,275,97,291,71,300,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,39,135,91,131,95,87,43"/>
+<area shape="rect" id="Node000003" href="$classGen_1_1ErrorPass.html" title="A generic error payload for value&#45;based error handling." alt="" coords="159,5,275,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="200,43,156,95,152,91,196,39"/>
 </map>

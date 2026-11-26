@@ -48,7 +48,7 @@ var searchData=
   ['plan_45',['Plan',['../structCtrl_1_1AutoOdds_1_1Plan.html',1,'Ctrl::AutoOdds']]],
   ['plan_46',['plan',['../classCtrl_1_1AutoOdds.html#a54b1497c354f75d3e6c2daed7be5d894',1,'Ctrl::AutoOdds']]],
   ['plans_47',['plans',['../classCtrl_1_1QuickBets.html#a64bda340871f9d68659ef9878280bcbb',1,'Ctrl::QuickBets']]],
-  ['player_48',['Player',['../classCraps_1_1Player.html',1,'Craps::Player'],['../classCraps_1_1CrapsBet.html#a7f4241aa9ecc051c75f779af132a52ed',1,'Craps::CrapsBet::Player'],['../classCraps_1_1CrapsTable.html#a7f4241aa9ecc051c75f779af132a52ed',1,'Craps::CrapsTable::Player'],['../classCraps_1_1Player.html#a3507759c1ad0cb438d1e5d7833ec083b',1,'Craps::Player::Player()']]],
+  ['player_48',['Player',['../classCraps_1_1Player.html',1,'Craps::Player'],['../classCraps_1_1CrapsBet.html#a7f4241aa9ecc051c75f779af132a52ed',1,'Craps::CrapsBet::Player()'],['../classCraps_1_1CrapsTable.html#a7f4241aa9ecc051c75f779af132a52ed',1,'Craps::CrapsTable::Player()'],['../classCraps_1_1Player.html#a3507759c1ad0cb438d1e5d7833ec083b',1,'Craps::Player::Player()']]],
   ['player_49',['player',['../classCraps_1_1CrapsBet.html#a0b90c0e44e65fd2ff8f3b33f04b7053b',1,'Craps::CrapsBet']]],
   ['player_2ecpp_50',['Player.cpp',['../Player_8cpp.html',1,'']]],
   ['player_2eh_51',['Player.h',['../Player_8h.html',1,'']]],

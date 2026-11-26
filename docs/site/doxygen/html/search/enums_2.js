@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['category_0',['Category',['../namespaceCtrl_1_1BetFlags.html#a3dfd8a5341aca3e0ab87b2515d544037',1,'Ctrl::BetFlags']]],
+  ['category_0',['Category',['../namespaceCtrl_1_1BetFlags.html#a3dfd8a5341aca3e0ab87b2515d544037',1,'Ctrl::BetFlags::Category'],['../MenuBetFlags_8cpp.html#a3dfd8a5341aca3e0ab87b2515d544037',1,'Category:&#160;BetFlags.h']]],
   ['change_1',['Change',['../namespaceCtrl_1_1BetFlags.html#a3286a15c9036eaadf2b45dbef95988df',1,'Ctrl::BetFlags']]],
   ['charset_2',['Charset',['../classCui_1_1LineInput.html#a56247a9f13bb3b6f4b0587380cb08984',1,'Cui::LineInput']]],
   ['color_3',['Color',['../namespaceCui.html#af8072f8108d9c65cfa74f7129ff4262a',1,'Cui']]],
