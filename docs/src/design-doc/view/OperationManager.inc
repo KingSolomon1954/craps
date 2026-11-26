@@ -54,6 +54,18 @@ Responsibilities
 
 * **Complete or cancel operations.** Release the active operation's state when its lifecycle has finished, ensuring that subsequent operations can begin.
 
+Collaborators
+^^^^^^^^^^^^^
+
+* ``CuiSender``: publishes the requests the operations issue
+* ``WorkOrderDispatcher``: delivers the responses and results to it
+* ``SurfaceManager``: pushes, pops and unwinds the menus and dialogs
+* Menus, such as ``MenuBetting`` and ``MenuPlayers``: start operations
+* Dialogs, such as ``DialogPicker``, ``DialogConfirm``, ``DialogBetAmount``
+  and ``DialogError``: collect choices and confirmations, and report
+  results
+* ``CrapsReaders``: what it needs to know to offer choices
+
 Operating Constraints
 ^^^^^^^^^^^^^^^^^^^^^
 

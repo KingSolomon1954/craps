@@ -5,6 +5,20 @@ A player can take back bet changes made since the last roll: a bet placed,
 a bet's amount or odds changed, or a bet taken down. Undo is limited to
 bets. Settings, rolls and the state of the game are never undone.
 
+Undo Vocabulary
+^^^^^^^^^^^^^^^
+
+Step
+   One recorded change that Undo takes back at one press. It is one bet
+   change, or a group of them.
+
+Group
+   Several changes taken back together. One QuickBets application, one flag
+   request and one AutoOdds application are each a group.
+
+Stack
+   A player's steps, last in first out.
+
 Undo Participants
 ^^^^^^^^^^^^^^^^^
 
@@ -109,3 +123,18 @@ bet's previous standing state and one roll override, and restores them with
 happen. See "Bet Flags". The earlier ``UndoBetModifiedFlags`` class was
 removed because it restored a bet by overwriting it, which skipped the table
 and its events.
+
+Undo Persistence
+^^^^^^^^^^^^^^^^
+
+None. The stacks live in memory only. They are cleared at every roll, so a
+game never has anything to undo at the start.
+
+Undo Related Features
+^^^^^^^^^^^^^^^^^^^^^
+
+* :ref:`Betting` records a step for each bet it makes, changes or removes.
+* :ref:`Bet Automation` records one group for each plan or AutoOdds it
+  applies.
+* :ref:`Bet Flags` records a group for each flag request.
+* :ref:`Table Switching` and a buddy leaving the table clear the stacks.

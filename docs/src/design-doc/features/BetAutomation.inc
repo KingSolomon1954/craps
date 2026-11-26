@@ -295,31 +295,15 @@ are moved before odds, and a plan is cut to 12 bets. A plan with no name or
 no bets left is skipped. Old-form entries, which have no ``name``, are
 skipped the same way.
 
-Automation Staging
-^^^^^^^^^^^^^^^^^^
+Automation Related Features
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Remove AutoFill and the single QuickBet, with their tests, events,
-   dialog entries, YAML and documentation.
-#. ``BetSpec``, bet plans and ``BetExecutor``, with the single undo step,
-   the summary event, ``QuickBets`` data and persistence, and the Betting
-   menu key to apply an entry. Done.
-#. The Set or Add dialog in ``DialogBetAmount`` and the Configuration menu
-   pages for QuickBets. Done. Entries are made in the bet amount dialog and
-   changed in the Configuration menu.
-#. AutoOdds: settings and persistence, the pass on ``UslBettingOpened``,
-   the ``DialogBetAmount`` entry, the Configuration menu pages, the master
-   switch and its indicator. Done. Only the user player is automated.
-#. Buddy automation rules and their triggers.
-
-Automation Open Items
-^^^^^^^^^^^^^^^^^^^^^
-
-* Whether AutoOdds should also offer a "maximum the table allows" setting
-  in place of a multiple.
-* A place for the Message area to show summaries before the Message area
-  exists. Until then the summary of an application that skipped bets is
-  shown in a notice dialog, and a clean application shows nothing. The
-  executor logs every application. AutoOdds shows a short status in the
-  middle of the bottom bar.
-* Whether QuickBets entries should be shared between a user and the buddies,
-  or only per player.
+* :ref:`Betting` is the path that every automated bet goes through, so the
+  table's rules and limits apply to it unchanged.
+* :ref:`Undo of Bet Changes` takes back everything one QuickBets or
+  AutoOdds application placed, as one step.
+* :ref:`Players and Buddies` keep the plans and settings in their
+  preferences. Buddy automation is the part not built yet.
+* :ref:`Table Switching` can leave a saved amount below the new table's
+  minimum. The game reports the bet as skipped and the person changes the
+  plan if they wish.

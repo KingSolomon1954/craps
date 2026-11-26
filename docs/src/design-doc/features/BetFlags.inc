@@ -40,6 +40,21 @@ Category
    A group of bets that a flag change can be applied to together: *All*,
    *Odds*, *Place*, *Buy*, *Lay* and *Hardways*.
 
+Bet Flag Participants
+^^^^^^^^^^^^^^^^^^^^^
+
+* ``CrapsBet`` holds the standing state and the one-roll override and
+  answers whether it is live on a roll.
+* ``CrapsTable::setBetFlags()`` is the one way to change flags in the running
+  game. It checks legality and that betting is open, then publishes the
+  bet changed event. ``Player::setBetFlags()`` is the player's side of it.
+* ``BetFlags`` (in the Controller) names the scopes and the changes, says
+  which bets are in a scope, and turns a change into a new state.
+* ``EventHandler`` answers ``ReqSetBetFlags`` with ``RspSetBetFlags`` and
+  records the undo group.
+* ``UndoBetFlagsChanged`` keeps the previous state of one bet.
+* ``MenuBetFlags`` and ``OperationManager`` run the menus and the request.
+
 Bet Flag Legality
 ^^^^^^^^^^^^^^^^^
 
@@ -196,21 +211,16 @@ otherwise. No room is taken, so large amounts are not affected. The bet
 dialogs already say that a bet is off on the come-out roll by default, and
 that text is kept. If a terminal cannot dim, the bet is shown without bold.
 
-Bet Flag Staging
-^^^^^^^^^^^^^^^^
+Bet Flag Persistence
+^^^^^^^^^^^^^^^^^^^^
 
-#. The model: the states, the live test, the evaluation changes, clearing
-   after a roll, ``CrapsTable::setBetFlags`` and unit tests for all of them.
-#. The Controller: ``ReqSetBetFlags`` and ``RspSetBetFlags``, the handler,
-   ``UndoBetFlagsChanged`` and readers for the View.
-#. The CUI: the category menu (``MenuBetFlags``), the pick lists and
-   their flow in ``OperationManager::betFlags()``, the bet area display
-   (``PlayerAreaOnePlayer``, through ``CrapsReaders::readBetFlagLook()``) and
-   the user guide page.
+None. Flags belong to a bet, and bets are not saved between games, so a
+new bet always starts as Default with no override.
 
-Bet Flag Open Items
-^^^^^^^^^^^^^^^^^^^
+Bet Flag Related Features
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* How the dim and underline look on the terminals the game is played on. They
-  are one place in ``PlayerAreaOnePlayer::drawOneBet`` to change.
-* Flags in QuickBets entries and for buddies. Neither exists yet.
+* :ref:`Betting` makes the bets that carry the flags.
+* :ref:`Undo of Bet Changes` takes back a flag change.
+* :ref:`Bet Automation` does not set flags. A bet it places starts as
+  Default.
