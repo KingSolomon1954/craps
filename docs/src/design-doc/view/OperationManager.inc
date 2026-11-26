@@ -2,13 +2,26 @@
 Purpose
 ^^^^^^^
 
-``OperationManager`` coordinates the lifecycle of multi-stage user operations in the CUI.
+``OperationManager`` runs the multi-stage tasks that the person starts from
+the CUI, one at a time.
 
-An operation represents a user-initiated task that may involve navigating a chain of menus, obtaining user confirmation, issuing an asynchronous request to the Craps Engine, processing the corresponding response, and presenting any resulting errors.
+A task, called an **operation**, may involve navigating a chain of menus and
+dialogs, obtaining the person's confirmation, issuing an asynchronous request
+to the Craps Engine, processing the corresponding response, and presenting
+any resulting error.
 
-The manager maintains the state of the active operation and determines what action should occur as the operation progresses through its stages.
+The work is split in two:
 
-Although betting is a primary use case, ``OperationManager`` is not specific to betting. It supports any CUI operation that requires coordinated interaction across menus, dialogs, and asynchronous request/response events.
+* Each operation is its own class, derived from ``Operation``, in
+  ``lib-cui/src/operations/``. It knows its own steps, what to show next, and
+  what request to send. It exists only while its operation is running.
+* ``OperationManager`` starts an operation, remembers what it is waiting for,
+  and hands it each dialog answer and each response. It knows nothing of what
+  any operation does.
+
+``OperationManager`` is not specific to betting. It supports any CUI
+operation that needs coordinated interaction across menus, dialogs and
+asynchronous request/response events.
 
 Use Cases
 ^^^^^^^^^
@@ -16,47 +29,143 @@ Use Cases
 Making a bet
 ~~~~~~~~~~~~
 
-A player navigates through one or more betting menus to configure a bet. When the player has completed the required selections, the CUI issues a ``ReqMakeBet`` request event to the Craps Engine.
+A player navigates through one or more betting menus to configure a bet. When
+the player has completed the required selections, the menu calls
+``OperationManager::makeBet()``, which starts a ``MakeBetOperation``. The
+operation issues a ``ReqMakeBet`` request event to the Craps Engine and waits.
 
-``OperationManager`` tracks the operation, associates the request with its eventual response, and determines the next action based on the result.
-
-* **Success:** The betting menu chain is unwound, returning the player to the appropriate underlying screen.
-* **Failure:** An error dialog is presented. After the player acknowledges the error, the error dialog is dismissed and the betting menu chain is unwound or otherwise restored according to the intended interaction.
+* **Success:** The betting menu chain is unwound, returning the player to the
+  appropriate underlying screen, and the operation finishes.
+* **Failure:** An error dialog is presented. After the player acknowledges the
+  error, the operation finishes and the player is left where the operation
+  says: for a bet, back at the table.
 
 Quitting the game
 ~~~~~~~~~~~~~~~~~
 
-When the player requests to quit, the CUI presents a ``DialogConfirmation``. The manager associates the confirmation response with the pending quit operation.
+When the player requests to quit, the menu calls
+``OperationManager::confirmQuit()``. A ``QuitOperation`` presents a
+``DialogConfirm``.
 
-* **Confirmed:** The manager initiates the quit request by publishing the appropriate asynchronous request event.
-* **Cancelled:** The operation is abandoned, and the player returns to the preceding interface without issuing the quit request.
+* **Confirmed:** The operation publishes the quit request.
+* **Cancelled:** The operation finishes without issuing the request, and the
+  player returns to the preceding screen.
 
-Other operations requiring confirmation or multi-stage interaction follow the same general pattern.
+Other operations follow the same pattern.
 
 Responsibilities
 ^^^^^^^^^^^^^^^^
 
-* **Track the active operation.** Maintain the identity, type, and current stage of the operation in progress.
+* **Start an operation.** Make the ``Operation`` the menu asked for, if none
+  is running, and tell it to start.
 
-* **Coordinate multi-stage workflows.** Track progress through menu selection, confirmation, request submission, response processing, error acknowledgement, and completion as applicable.
+* **Track what it is waiting for.** Hold the stage (a response, a pick, a text
+  entry, a confirmation or an error acknowledgement) and the correlation ID
+  of the request in flight.
 
-* **Initiate asynchronous requests.** Publish the appropriate request event when the operation reaches the stage at which the request should be issued. For example, publish ``ReqMakeBet`` when a bet has been fully configured.
+* **Pass on dialog answers.** Hand a pick, a text, a confirmation or an
+  error acknowledgement to the running operation, if it is the kind of answer
+  it is waiting for.
 
-* **Correlate requests and responses.** Retain the correlation ID and any necessary operation context so that an incoming response event can be matched to the active request and operation.
+* **Correlate requests and responses.** Pass a response to the running
+  operation only if it carries the correlation ID of the request in flight.
+  Anything else is logged and ignored.
 
-* **Process operation results.** Determine whether the response indicates success or failure and advance the operation accordingly.
+* **Show errors and notices.** Present the error dialog or the notice an
+  operation asks for.
 
-* **Coordinate error handling.** On failure, request presentation of the appropriate error dialog, retain the operation context while the dialog is active, and process the player's acknowledgement.
+* **Release finished operations.** Keep the one that has just finished until
+  the hook that finished it returns, then drop it when the next one starts.
 
-* **Manage surface-stack transitions.** Initiate the appropriate dismissal or unwinding of menus and dialogs when the operation succeeds, is cancelled, or finishes error handling. Leave actual surface-stack manipulation to ``SurfaceManager``.
+* **Keep the AutoOdds status line.** The one piece of state that does not
+  belong to an operation.
 
-* **Handle confirmation outcomes.** Associate confirmation responses with the operation that requested them and proceed according to the player's decision.
+Operation CRC Card
+^^^^^^^^^^^^^^^^^^
 
-* **Complete or cancel operations.** Release the active operation's state when its lifecycle has finished, ensuring that subsequent operations can begin.
+One multi-stage task, from the first dialog to the last.
+
+**Responsibilities**
+
+* **Say what the first dialog is** (``start()``).
+* **Decide what each answer means** and what comes next: another dialog, a
+  request, a notice or the end. It overrides only the hooks its task can
+  receive: ``onPick``, ``onText``, ``onConfirm``, ``onQuickBetsChoice``,
+  ``onErrorAcknowledged`` and the ``onRsp`` hook for each response.
+* **Own its state.** The choices offered, the step it is on and what the
+  person has picked are members of the operation, so a finished operation
+  leaves nothing behind.
+* **Say where the person is left** after success, cancel and error: back on
+  the menu that started it, or unwound to the table.
+
+An operation reaches the screen only through the helpers the base class
+provides (``pickFrom``, ``askText``, ``askConfirmation``, ``showError``,
+``showNotice``, ``awaitResponse``, ``finish`` and ``finishAtRoot``). A hook
+that is not overridden logs a warning and ignores the response, or ends the
+operation if it is a dialog answer, so that the person is never left stuck.
+
+**Collaborators**
+
+* ``OperationManager``: starts it and passes it what happens
+* ``CuiSender``: publishes its request
+* ``CrapsReaders``: what it needs to know to offer choices
+* ``SurfaceManager``: unwinds the menus
+* The dialogs: ``DialogPicker``, ``DialogTextInput``, ``DialogConfirm``,
+  ``DialogError``
+
+Operations
+^^^^^^^^^^
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - Operation
+     - Started from
+   * - ``MakeBetOperation``, ``RemoveBetOperation``, ``UndoBetOperation``
+     - The betting menus and ``DialogBetAmount``. See :ref:`Betting`.
+   * - ``BetFlagsOperation``
+     - ``MenuBetFlags``. See :ref:`Bet Flags`.
+   * - ``ApplyQuickBetsOperation``, ``SaveToQuickBetsOperation``,
+       ``ManageQuickBetsOperation``, ``ConfigureAutoOddsOperation``,
+       ``SetAutoOddsOperation``
+     - The betting menu, ``DialogBetAmount`` and ``MenuConfigure``. See
+       :ref:`Bet Automation`.
+   * - ``ShowPlayersOperation``, ``SwitchPlayerOperation``,
+       ``RenamePlayerOperation``, ``CreatePlayerOperation``,
+       ``DeletePlayerOperation``, ``BuddyJoinsOperation``,
+       ``BuddyLeavesOperation``
+     - ``MenuPlayers``. See :ref:`Players and Buddies`.
+   * - ``ListTablesOperation``, ``SwitchTableOperation``
+     - ``MenuTable``. See :ref:`Table Switching`.
+   * - ``BuddyFollowOperation``, ``AnimationSpeedOperation``,
+       ``RollHistoryFormatOperation``
+     - ``MenuConfigure``.
+   * - ``QuitOperation``
+     - The main menu.
+
+Adding an Operation
+^^^^^^^^^^^^^^^^^^^
+
+#. Derive a class from ``Operation``, in a header under
+   ``include/cui/operations/`` and a source file under ``src/operations/``,
+   and add the source to ``CMakeLists.txt``.
+#. In ``start()``, show the first dialog with ``pickFrom()``, ``askText()`` or
+   ``askConfirmation()``, or send the request with ``awaitResponse()``.
+#. Override the hook for each answer the operation can receive. Keep each
+   hook short: a ``switch`` on a ``Step`` that calls a method named for what
+   it does.
+#. End with ``finish()``, or ``finishAtRoot()`` to unwind to the table. Do
+   not touch the manager's state.
+#. Add a function to ``OperationManager`` that calls
+   ``begin(std::make_unique<YourOperation>())``.
+#. A new kind of response needs an ``onRsp`` hook in ``Operation`` and a
+   forwarding function in ``OperationManager``, which names the hook once.
 
 Collaborators
 ^^^^^^^^^^^^^
 
+* ``Operation`` and its subclasses: the work that is started and run
 * ``CuiSender``: publishes the requests the operations issue
 * ``WorkOrderDispatcher``: delivers the responses and results to it
 * ``SurfaceManager``: pushes, pops and unwinds the menus and dialogs
@@ -64,12 +173,11 @@ Collaborators
 * Dialogs, such as ``DialogPicker``, ``DialogConfirm``, ``DialogBetAmount``
   and ``DialogError``: collect choices and confirmations, and report
   results
-* ``CrapsReaders``: what it needs to know to offer choices
 
 Operating Constraints
 ^^^^^^^^^^^^^^^^^^^^^
 
-* **One active operation at a time.** The CUI may have at most one operation managed by ``OperationManager`` in progress. A new operation must not overwrite or interfere with an existing operation.
+* **One active operation at a time.** The CUI may have at most one operation in progress. A request to start another is refused and does nothing.
 
 * **Asynchronous request/response processing.** Issuing a request does not imply that the operation has succeeded. The operation remains active until its result has been processed and any required follow-up interaction has completed.
 
@@ -77,7 +185,7 @@ Operating Constraints
 
 * **CUI thread ownership.** All operation-state transitions and resulting CUI actions must respect the CUI's thread-ownership rules. Incoming events from other threads must be routed to the CUI thread before they cause UI or operation-state changes.
 
-* **Separation of responsibilities.** ``OperationManager`` coordinates operations; menus collect choices; dialogs communicate information and collect confirmation or acknowledgement; ``SurfaceManager`` manages the surface stack; and the Craps Engine executes game operations and reports their results.
+* **Separation of responsibilities.** ``OperationManager`` starts operations and routes to them; each ``Operation`` decides what happens next; menus collect choices; dialogs communicate information and collect confirmation or acknowledgement; ``SurfaceManager`` manages the surface stack; and the Craps Engine executes game operations and reports their results.
 
 Completion
 ^^^^^^^^^^
@@ -86,4 +194,4 @@ An operation is complete when its intended outcome has been reached and all requ
 
 Depending on the operation, completion may follow a successful response, cancellation of a confirmation, or acknowledgement of an error.
 
-Once complete, the manager releases the operation's state and becomes available to coordinate the next operation.
+Once complete, the operation is released and the manager is available to start the next one.

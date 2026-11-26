@@ -42,9 +42,10 @@ Betting Participants
   name, the pivot and the amount. They ask the table, through
   ``CrapsReaders``, whether the bet is allowed and what the limits are, so
   the person is told early. They do not decide anything.
-* ``OperationManager`` runs the Make Bet, Remove Bet and Odds operations. It
-  sends the request, waits for the matching response and unwinds the menus.
-  See :ref:`OperationManager CRC Card`.
+* ``OperationManager`` starts the Make Bet and Remove Bet operations
+  (``MakeBetOperation``, ``RemoveBetOperation``). Each sends its request,
+  waits for the matching response and unwinds the menus. See
+  :ref:`OperationManager CRC Card`.
 * ``EventHandler`` answers ``ReqMakeBet``, ``ReqOddsBet`` and
   ``ReqRemoveBet`` and records an undo step for each change that succeeds.
 * ``Player`` makes, changes and removes the bets of one player and moves the
@@ -59,7 +60,7 @@ Betting Flow
    enters an amount in ``DialogBetAmount``, which shows the table's
    minimum, maximum and increment for that bet. The choices are collected
    in a ``CarrierBet``.
-#. ``OperationManager`` sends ``ReqMakeBet`` with the player, bet name, pivot
+#. ``MakeBetOperation`` sends ``ReqMakeBet`` with the player, bet name, pivot
    and amount.
 #. ``EventHandler`` calls ``Player::makeOrChangeBet()``. A player has one
    bet for each spot, as at a real table, so asking for a bet the player
@@ -79,7 +80,7 @@ Betting Flow
    with ``RspMakeBet``. It has ``accepted``, the ``betId``, and for a change
    it has ``changed`` and the ``previousAmount``. A refusal has the reason.
 #. The View updates the player area from the events and the
-   ``OperationManager`` closes the dialogs on the response. A refusal is shown
+   ``MakeBetOperation`` closes the dialogs on the response. A refusal is shown
    to the person in an error dialog and nothing has changed.
 
 Odds are a second request, ``ReqOddsBet``, on a bet that already has its
