@@ -1,7 +1,5 @@
 <map id="Ctrl::UslTableSwitched" name="Ctrl::UslTableSwitched">
-<area shape="rect" id="Node000001" title=" " alt="" coords="45,108,212,133"/>
-<area shape="rect" id="Node000002" href="$structCtrl_1_1GameEvent.html" title="Base class for all Events." alt="" coords="5,5,135,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,42,124,107,120,109,82,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="159,5,218,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,44,138,109,133,107,173,41"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,172,104"/>
+<area shape="rect" id="Node000002" href="$structCtrl_1_1GameEvent.html" title="Base class for all Events." alt="" coords="24,5,153,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,44,91,79,86,79,86,44"/>
 </map>

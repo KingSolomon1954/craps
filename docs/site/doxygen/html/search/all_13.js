@@ -26,7 +26,7 @@ var searchData=
   ['tables_23',['Tables',['../classCtrl_1_1TableManager.html#a94e29d86bc4a46f603d259e25720f82f',1,'Ctrl::TableManager']]],
   ['tablesdir_24',['tablesDir',['../structCtrl_1_1StartChoices_1_1Request.html#a938bff00f2aaba0a48bc1af227eef4f2',1,'Ctrl::StartChoices::Request']]],
   ['tablesmanifest_25',['TablesManifest',['../classCtrl_1_1ConfigSeed.html#ac5e16af71066ab7cb46e7a0ba0aabe83',1,'Ctrl::ConfigSeed']]],
-  ['tablestats_26',['TableStats',['../classCraps_1_1TableStats.html',1,'Craps::TableStats'],['../classCraps_1_1CrapsBet.html#a6b9fae6c72d9a9a0a9158eee4044684f',1,'Craps::CrapsBet::TableStats'],['../classCraps_1_1TableStats.html#a63baa42af159b6ae04cba4d4b7619557',1,'Craps::TableStats::TableStats()']]],
+  ['tablestats_26',['TableStats',['../classCraps_1_1TableStats.html',1,'Craps::TableStats'],['../classCraps_1_1CrapsBet.html#a6b9fae6c72d9a9a0a9158eee4044684f',1,'Craps::CrapsBet::TableStats()'],['../classCraps_1_1TableStats.html#a63baa42af159b6ae04cba4d4b7619557',1,'Craps::TableStats::TableStats()']]],
   ['tablestats_2ecpp_27',['TableStats.cpp',['../TableStats_8cpp.html',1,'']]],
   ['tablestats_2eh_28',['TableStats.h',['../TableStats_8h.html',1,'']]],
   ['tag_29',['tag',['../structCui_1_1DialogPicker_1_1Item.html#a3d4860c876184bc3591ec8f9536be15c',1,'Cui::DialogPicker::Item']]],

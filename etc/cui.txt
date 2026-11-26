@@ -946,25 +946,38 @@ Table Menu
     ┌────────────────────────┐
     │ Table Menu             │
     ├────────────────────────┤
-    │ [d] Display Tables     │
-    │ [s] Switch Table       │
-    │ [c] Create Table       │
+    │ [l] List Tables        │
+    │ [s] Switch to Table    │
     │ [. or esc] Back        │
     └────────────────────────┘
 
-    [s] Switch Table
-        Dynamic built menu of available tables.
+    It may be a future option to allow the user to create a new table,
+    but for now the several Table choices will be included with install,
+    similar to buddy players.
 
-        ┌─────────────────────────────────┐
-        │ Switch Table                    │
-        ├─────────────────────────────────┤
-        │ [1] Las Vegas Daytime           │
-        │ [2] Las Vegas High Roller       │
-        │ [3] Las Vegas 10x Odds          │
-        │ [. or esc] Back                 │
-        └─────────────────────────────────┘
+    The List Tables dialog:
 
-        Return to sticky Control Menu
+    ┌────────────────────────────────────────────────────────────────────────┐
+    │ Tables                                                                 │
+    ├────────────────────────────────────────────────────────────────────────┤
+    │ Las Vegas Daytime           | Lower minimums 5x odds                   │
+    │ Las Vegas High Roller       | Higher table limits 10x odds             │
+    │ Las Vegas Strip   (current) | Min $10 Max $2000                        │
+    │ Casino de Monte Carlo       | Min $5 Max $1000 3x4x5x odds             │
+    ├────────────────────────────────────────────────────────────────────────┤
+    │ [. or enter or esc] Back                                               │
+    └────────────────────────────────────────────────────────────────────────┘
+
+    The Switch Tables dialog:
+
+    ┌─────────────────────────────────┐
+    │ Switch to Table                 │
+    ├─────────────────────────────────┤
+    │ [a] Las Vegas Daytime           │
+    │ [b] Las Vegas High Roller       │
+    │ [c] Casino de Monte Carlo       │
+    │ [. or esc] Back                 │
+    └─────────────────────────────────┘
 
 Configure Menu
 ──────────────

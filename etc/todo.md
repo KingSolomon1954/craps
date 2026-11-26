@@ -25,9 +25,6 @@
 
 ### Want illegal bets to be unselectable in menus (grayed-out)
 
-### Design-doc and user-guide include files
-- Change case on include files, differs between folders
-
 ### Update Readme.md for GitHub consumption
 
 ### Implement Buddy Automation
@@ -38,6 +35,8 @@
 
 ## Done
 
+(Done) Updated docs with shared intros and content\
+(Done) Design doc re-organization and contents\
 (Done) Completed Switch Table feature\
 (Done) Implemented doBetFlags in MenuBetting\
 (Done) Implemented AutoOdds capability\
