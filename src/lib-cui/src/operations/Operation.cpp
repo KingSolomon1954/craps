@@ -71,6 +71,9 @@ UNEXPECTED_RESPONSE(RspSetBetFlags, onRspSetBetFlags)
 UNEXPECTED_RESPONSE(RspApplyQuickBets, onRspApplyQuickBets)
 UNEXPECTED_RESPONSE(RspEditQuickBets,  onRspEditQuickBets)
 UNEXPECTED_RESPONSE(RspEditAutoOdds,   onRspEditAutoOdds)
+UNEXPECTED_RESPONSE(RspSwitchPlayer,   onRspSwitchPlayer)
+UNEXPECTED_RESPONSE(RspManagePlayer,   onRspManagePlayer)
+UNEXPECTED_RESPONSE(RspSwitchTable,    onRspSwitchTable)
 
 #undef UNEXPECTED_RESPONSE
 
@@ -134,11 +137,11 @@ Operation::finishAtRoot()
 
 void
 Operation::pickFrom(const std::string& title,
-                    std::vector<DialogPicker::Item> items)
+                    std::vector<DialogPicker::Item> items,
+                    DialogPicker::Mode mode)
 {
     OperationManager::instance().stage_ = OperationManager::Stage::AwaitingPick;
-    DialogPicker::instance().configure(title, std::move(items),
-                                       DialogPicker::Mode::Pick);
+    DialogPicker::instance().configure(title, std::move(items), mode);
     SurfaceManager::instance().pushSurface(&DialogPicker::instance());
 }
 

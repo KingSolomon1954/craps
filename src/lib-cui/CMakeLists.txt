@@ -40,9 +40,11 @@ add_library(cui STATIC
     src/operations/BetFlagsOperation.cpp
     src/operations/BetOperations.cpp
     src/operations/Operation.cpp
+    src/operations/PlayerOperations.cpp
     src/operations/QuickBetsOperations.cpp
     src/operations/QuitOperation.cpp
     src/operations/SettingsOperations.cpp
+    src/operations/TableOperations.cpp
     src/panels/PlayerAreaAllPlayers.cpp
     src/panels/PlayerAreaOnePlayer.cpp
     src/panels/WindowAnimation.cpp

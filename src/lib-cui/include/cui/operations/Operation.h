@@ -72,6 +72,9 @@ public:
     virtual void onRspApplyQuickBets(const Ctrl::RspApplyQuickBets& rsp);
     virtual void onRspEditQuickBets(const Ctrl::RspEditQuickBets& rsp);
     virtual void onRspEditAutoOdds(const Ctrl::RspEditAutoOdds& rsp);
+    virtual void onRspSwitchPlayer(const Ctrl::RspSwitchPlayer& rsp);
+    virtual void onRspManagePlayer(const Ctrl::RspManagePlayer& rsp);
+    virtual void onRspSwitchTable(const Ctrl::RspSwitchTable& rsp);
 
     /// The error dialog has closed. By default, unwind to the root screen
     /// and finish.
@@ -85,9 +88,11 @@ protected:
     /// that called this returns.
     void finish();
 
-    /// Show a pick list and wait for the answer in onPick().
+    /// Show a pick list and wait for the answer in onPick(). In Show mode the
+    /// list is only to look at; it still ends in onPick().
     void pickFrom(const std::string& title,
-                  std::vector<DialogPicker::Item> items);
+                  std::vector<DialogPicker::Item> items,
+                  DialogPicker::Mode mode = DialogPicker::Mode::Pick);
 
     /// A request has been sent: wait for the answer with this correlation
     /// id in one of the onRsp hooks.
