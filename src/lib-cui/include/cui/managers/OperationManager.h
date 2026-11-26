@@ -12,7 +12,9 @@
 #include <controller/GameEvents.h>
 #include <cui/bases/SurfaceBase.h>
 #include <cui/managers/CarrierBet.h>
+#include <cui/operations/Operation.h>
 #include <gen/ErrorPass.h>
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
@@ -102,6 +104,8 @@ public:
     /// @}
 
 private:
+    friend class Operation;   // Its protected helpers use the manager's state
+
     enum class OperationType
     {
         None,
@@ -113,12 +117,8 @@ private:
         QuickBetsEdit,
         QuickBetsManage,
         AutoOdds,
-        Quit,
         Player,
-        Table,
-        BuddyFollow,
-        AnimationSpeed,
-        RollHistoryFormat
+        Table
     };
     
     enum class Stage
@@ -171,6 +171,11 @@ private:
     bool                     autoTurnOn_  = false;
     std::string              autoOddsStatus_;
 
+    // The workflow in progress, if it is an Operation. The others are
+    // still done by the functions below, with the state above.
+    std::unique_ptr<Operation> current_;
+    std::unique_ptr<Operation> retired_;   // Finished; freed by the next begin()
+
     OperationType type_                = OperationType::None;
     Stage stage_                       = Stage::Idle;
     Ctrl::CorrelationId correlationId_ = 0;
@@ -194,6 +199,7 @@ private:
 
 private:
     OperationManager() = default;
+    bool begin(std::unique_ptr<Operation> op);
     void finish();
     void showError(const Gen::ErrorPass& error,
                    const char* defaultType = "Betting Error",

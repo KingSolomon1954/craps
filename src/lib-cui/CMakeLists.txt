@@ -36,6 +36,9 @@ add_library(cui STATIC
     src/menus/MenuPlayers.cpp
     src/menus/MenuTable.cpp
     src/menus/MenuNavBarViews.cpp
+    src/operations/Operation.cpp
+    src/operations/QuitOperation.cpp
+    src/operations/SettingsOperations.cpp
     src/panels/PlayerAreaAllPlayers.cpp
     src/panels/PlayerAreaOnePlayer.cpp
     src/panels/WindowAnimation.cpp

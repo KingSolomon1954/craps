@@ -5,6 +5,8 @@
 //----------------------------------------------------------------
 
 #include <cui/managers/OperationManager.h>
+#include <cui/operations/QuitOperation.h>
+#include <cui/operations/SettingsOperations.h>
 #include <cui/managers/CarrierBet.h>
 #include <cui/managers/SurfaceManager.h>
 #include <cui/core/CuiSender.h>
@@ -63,6 +65,23 @@ OperationManager::instance()
 {
     static OperationManager mgr;
     return mgr;
+}
+
+//----------------------------------------------------------------
+//
+// Start a workflow that is an Operation. The previous Operation, if any,
+// finished some time ago and was only kept alive until the hook that
+// finished it returned. It is safe to drop it now.
+//
+bool
+OperationManager::begin(std::unique_ptr<Operation> op)
+{
+    if (isActive()) return false;
+
+    retired_.reset();
+    current_ = std::move(op);
+    current_->start();
+    return true;
 }
 
 //----------------------------------------------------------------
@@ -292,101 +311,8 @@ OperationManager::removeBets()
 }
 
 //----------------------------------------------------------------
-//
-// Pick how fast the dice roll animation plays. The setting applies to
-// the rest of this game and is remembered for the next one. The picker
-// pops itself, which returns to the Configuration menu.
-//
-bool
-OperationManager::chooseAnimationSpeed()
-{
-    if (isActive()) return false;
-
-    using Ctrl::AnimationSpeed;
-    const auto current = Ctrl::CrapsReaders::readAnimationSpeed();
-
-    auto describe = [](AnimationSpeed s) -> const char*
-    {
-        switch (s)
-        {
-        case AnimationSpeed::Off:    return "no animation; the roll shows at once";
-        case AnimationSpeed::Fast:   return "twice as fast as normal";
-        case AnimationSpeed::Normal: return "the usual pace";
-        case AnimationSpeed::Slow:   return "one and a half times slower";
-        }
-        return "";
-    };
-    auto label = [](AnimationSpeed s) -> std::string
-    {
-        std::string t = Ctrl::toString(s);
-        t[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(t[0])));
-        return t;
-    };
-
-    std::vector<DialogPicker::Item> items;
-    std::size_t index = 0;
-    for (auto s : Ctrl::AllAnimationSpeeds)
-    {
-        DialogPicker::Item item;
-        item.tag         = index++;
-        item.text        = label(s);
-        item.note        = (s == current) ? "(current)" : "";
-        item.description = describe(s);
-        items.push_back(std::move(item));
-    }
-
-    type_  = OperationType::AnimationSpeed;
-    stage_ = Stage::AwaitingPick;
-    DialogPicker::instance().configure("Animation Speed", std::move(items),
-                                           DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-    return true;
-}
 
 //----------------------------------------------------------------
-//
-// Pick how the roll history lists the rolls. Same shape as
-// chooseAnimationSpeed(). Keys 1 to 4 pick directly.
-//
-bool
-OperationManager::chooseRollHistoryFormat()
-{
-    if (isActive()) return false;
-
-    using Ctrl::RollHistoryFormat;
-    const auto current = Ctrl::CrapsReaders::readRollHistoryFormat();
-
-    auto sample = [](RollHistoryFormat f) -> const char*
-    {
-        switch (f)
-        {
-        case RollHistoryFormat::Spaced:     return "7 8 6 10";
-        case RollHistoryFormat::Commas:     return "7,8,6,10";
-        case RollHistoryFormat::DiceJoined: return "7(34) 8(44) 6(33) 10(65)";
-        case RollHistoryFormat::DiceComma:  return "7(3,4) 8(4,4) 6(3,3) 10(6,5)";
-        }
-        return "";
-    };
-
-    std::vector<DialogPicker::Item> items;
-    std::size_t index = 0;
-    for (auto f : Ctrl::AllRollHistoryFormats)
-    {
-        DialogPicker::Item item;
-        item.tag         = index++;
-        item.text        = sample(f);
-        item.description = (f == current) ? "current" : "";
-        items.push_back(std::move(item));
-    }
-
-    type_  = OperationType::RollHistoryFormat;
-    stage_ = Stage::AwaitingPick;
-    DialogPicker::instance().configure("Format Roll History",
-                                           std::move(items),
-                                           DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-    return true;
-}
 
 //----------------------------------------------------------------
 //
@@ -1654,6 +1580,12 @@ OperationManager::showError(const Gen::ErrorPass& error,
 void
 OperationManager::onErrorAcknowledged()
 {
+    if (current_ && stage_ == Stage::AwaitingErrorAcknowledgement)
+    {
+        current_->onErrorAcknowledged();
+        return;
+    }
+
     if (stage_ != Stage::AwaitingErrorAcknowledgement) return;
 
     if (type_ == OperationType::Player || type_ == OperationType::Table)
@@ -1680,17 +1612,39 @@ OperationManager::onErrorAcknowledged()
 }
 
 //----------------------------------------------------------------
+//
+// The workflows that are their own Operation classes (see
+// cui/operations/). The ones not yet moved are below.
+//
+
+bool
+OperationManager::chooseBuddyFollow()
+{
+    return begin(std::make_unique<BuddyFollowOperation>());
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::chooseAnimationSpeed()
+{
+    return begin(std::make_unique<AnimationSpeedOperation>());
+}
+
+//----------------------------------------------------------------
+
+bool
+OperationManager::chooseRollHistoryFormat()
+{
+    return begin(std::make_unique<RollHistoryFormatOperation>());
+}
+
+//----------------------------------------------------------------
 
 bool
 OperationManager::confirmQuit()
 {
-    if (isActive()) return false;
-
-    type_ = OperationType::Quit;
-    stage_ = Stage::AwaitingConfirmation;
-    DialogConfirm::instance().configure("Confirm Quit RoyalCraps game");
-    SurfaceManager::instance().pushSurface(&DialogConfirm::instance());
-    return true;
+    return begin(std::make_unique<QuitOperation>());
 }
 
 //----------------------------------------------------------------
@@ -1698,6 +1652,12 @@ OperationManager::confirmQuit()
 void
 OperationManager::onConfirmationResult(SurfaceBase::OperationResult result)
 {
+    if (current_ && stage_ == Stage::AwaitingConfirmation)
+    {
+        current_->onConfirm(result);
+        return;
+    }
+
     if (stage_ != Stage::AwaitingConfirmation) return;
 
     if (type_ == OperationType::Table)
@@ -1762,13 +1722,6 @@ OperationManager::onConfirmationResult(SurfaceBase::OperationResult result)
         return;
     }
 
-    if (type_ != OperationType::Quit) return;
-
-    if (result == SurfaceBase::OperationResult::Yes)
-    {
-        CuiSender::instance().reqTerminate();
-    }
-    finish();
 }
 
 //----------------------------------------------------------------
@@ -1776,6 +1729,11 @@ OperationManager::onConfirmationResult(SurfaceBase::OperationResult result)
 void
 OperationManager::finish()
 {
+    // The Operation that is finishing may be the one running right now.
+    // Keep it until begin() starts the next one. (A second finish() must
+    // not drop it while it is still running.)
+    if (current_) retired_ = std::move(current_);
+
     type_          = OperationType::None;
     stage_         = Stage::Idle;
     correlationId_ = 0;
@@ -2149,58 +2107,6 @@ OperationManager::onRspSwitchTable(const Ctrl::RspSwitchTable& ev)
 }
 
 //----------------------------------------------------------------
-//
-// Pick what the buddy players do when the user player changes tables.
-//
-bool
-OperationManager::chooseBuddyFollow()
-{
-    if (isActive()) return false;
-
-    using Ctrl::BuddyFollow;
-    const auto current = Ctrl::CrapsReaders::readBuddyFollow();
-
-    auto label = [](BuddyFollow b) -> const char*
-    {
-        switch (b)
-        {
-        case BuddyFollow::Follow: return "Follow";
-        case BuddyFollow::Stay:   return "Stay";
-        case BuddyFollow::Ask:    return "Ask";
-        }
-        return "";
-    };
-    auto describe = [](BuddyFollow b) -> const char*
-    {
-        switch (b)
-        {
-        case BuddyFollow::Follow: return "buddies go to the new table with you";
-        case BuddyFollow::Stay:   return "buddies leave the game";
-        case BuddyFollow::Ask:    return "ask each time buddies are at the table";
-        }
-        return "";
-    };
-
-    std::vector<DialogPicker::Item> items;
-    std::size_t index = 0;
-    for (auto b : Ctrl::AllBuddyFollows)
-    {
-        DialogPicker::Item item;
-        item.tag         = index++;
-        item.text        = label(b);
-        item.note        = (b == current) ? "(current)" : "";
-        item.description = describe(b);
-        items.push_back(std::move(item));
-    }
-
-    type_  = OperationType::BuddyFollow;
-    stage_ = Stage::AwaitingPick;
-    DialogPicker::instance().configure("Buddies Follow on Table Switch",
-                                       std::move(items),
-                                       DialogPicker::Mode::Pick);
-    SurfaceManager::instance().pushSurface(&DialogPicker::instance());
-    return true;
-}
 
 //----------------------------------------------------------------
 //
@@ -2246,6 +2152,12 @@ void
 OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
                                Craps::BetId betId, std::size_t tag)
 {
+    if (current_ && stage_ == Stage::AwaitingPick)
+    {
+        current_->onPick(accepted, playerId, betId, tag);
+        return;
+    }
+
     if (stage_ == Stage::AwaitingPick && type_ == OperationType::QuickBetsManage)
     {
         (void)playerId; (void)betId;
@@ -2330,39 +2242,6 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
         return;
     }
 
-    if (stage_ == Stage::AwaitingPick && type_ == OperationType::BuddyFollow)
-    {
-        if (accepted && tag < Ctrl::AllBuddyFollows.size())
-        {
-            CuiSender::instance().reqSetBuddyFollow(
-                Ctrl::AllBuddyFollows[tag]);
-        }
-        finish();
-        return;
-    }
-
-    if (stage_ == Stage::AwaitingPick && type_ == OperationType::AnimationSpeed)
-    {
-        if (accepted && tag < Ctrl::AllAnimationSpeeds.size())
-        {
-            CuiSender::instance().reqSetAnimationSpeed(
-                Ctrl::AllAnimationSpeeds[tag]);
-        }
-        finish();
-        return;
-    }
-
-    if (stage_ == Stage::AwaitingPick && type_ == OperationType::RollHistoryFormat)
-    {
-        if (accepted && tag < Ctrl::AllRollHistoryFormats.size())
-        {
-            CuiSender::instance().reqSetRollHistoryFormat(
-                Ctrl::AllRollHistoryFormats[tag]);
-        }
-        finish();
-        return;
-    }
-
     if (stage_ != Stage::AwaitingPick || type_ != OperationType::Player)
         return;
 
@@ -2420,6 +2299,12 @@ OperationManager::onPickResult(bool accepted, const Craps::PlayerId& playerId,
 void
 OperationManager::onTextResult(bool accepted, const std::string& text)
 {
+    if (current_ && stage_ == Stage::AwaitingText)
+    {
+        current_->onText(accepted, text);
+        return;
+    }
+
     if (stage_ == Stage::AwaitingText && type_ == OperationType::QuickBetsEdit)
     {
         if (!accepted)
