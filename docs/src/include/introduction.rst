@@ -1,5 +1,7 @@
-|AppName| is a single-player Craps game. It offers these
-features:
+|AppName| is a craps game for the Linux terminal. It plays the way a
+casino table does, with the full layout, the real payouts and the house
+commission, and you can play it alone or with computer buddy players at the
+table. It offers these features:
 
 - Line, Odds, Come, Place, Buy, Lay, Field, Hardway, and Proposition Bets
 - Choice of tables: Las Vegas Strip and High Roller
